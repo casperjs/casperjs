@@ -373,24 +373,6 @@
         },
 
         /**
-         * Adds a new navigation step depending on a condition to be evaluated
-         * within current page DOM. Dies on precondition failure with an
-         * optional message to be added to the results.errors Array.
-         *
-         * @param  function  condition  An expression to be evaluated as a Boolean
-         * @param  function  then       The next step to add if precondition succeeded
-         * @param  string
-         */
-        thenIf: function(condition, then, message) {
-            return this.then(function(self) {
-                if (self.evaluate(condition) === true) {
-                    return self.then(then);
-                }
-                return self.die(message);
-            });
-        },
-
-        /**
          * Adds a new navigation step for opening the provided location.
          *
          * @param  string   location  The URL to load
