@@ -104,14 +104,15 @@
          * @param  function  onComplete  An options callback to apply on completion
          */
         checkStep: function(self, onComplete) {
-            if (!self.loadInProgress && typeof(self.steps[self.step]) === "function") {
+            var step = self.steps[self.step];
+            if (!self.loadInProgress && typeof(step) === "function") {
                 var curStepNum = self.step + 1
                 ,   stepInfo   = "Step " + curStepNum + "/" + self.steps.length + ": ";
                 self.log(stepInfo + self.page.evaluate(function() {
                     return document.location.href;
                 }) + ' (HTTP ' + self.currentHTTPStatus + ')', "info");
                 try {
-                    self.steps[self.step](self);
+                    step(self);
                 } catch (e) {
                     self.log("Fatal: " + e, "error");
                 }
@@ -119,7 +120,7 @@
                 self.log(stepInfo + "done in " + time + "ms.", "info");
                 self.step++;
             }
-            if (typeof(self.steps[self.step]) !== "function") {
+            if (typeof(step) !== "function") {
                 self.result.time = new Date().getTime() - self.startTime;
                 self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
                 clearInterval(self.checker);
@@ -189,7 +190,7 @@
          * WebPage#evaluate does, but can also replace values by their
          * placeholer names:
          *
-         *     navigator.evaluate(function() {
+         *     casper.evaluate(function() {
          *         document.querySelector('#username').setAttribute('value', '%username%');
          *         document.querySelector('#password').setAttribute('value', '%password%');
          *         document.querySelector('#submit').click();
@@ -283,6 +284,21 @@
         open: function(location) {
             this.requestUrl = location;
             this.page.open(location);
+            return this;
+        },
+
+        /**
+         * Repeats a step a given number of times.
+         *
+         * @param  Number    times  Number of times to repeat step
+         * @aram   function  step   The step closure
+         * @return Casper
+         * @see    Casper#then
+         */
+        repeat: function(times, step) {
+            for (var i = 0; i < times; i++) {
+                this.then(step);
+            }
             return this;
         },
 
