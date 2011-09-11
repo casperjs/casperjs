@@ -77,6 +77,57 @@
      */
     phantom.Casper.prototype = {
         /**
+         * Encodes a resource using the base64 algorithm synchroneously using
+         * client-side XMLHttpRequest.
+         *
+         * NOTE: we cannot use window.btoa() for some strange reasons here.
+         *
+         * @param  string  url  The url to download
+         * @return string       Base64 encoded result
+         */
+        base64encode: function(url) {
+            return result = this.evaluate(function() {
+                function encode(str) {
+                    var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+                    var out = "", i = 0, len = str.length, c1, c2, c3;
+                    while (i < len) {
+                        c1 = str.charCodeAt(i++) & 0xff;
+                        if (i == len) {
+                            out += CHARS.charAt(c1 >> 2);
+                            out += CHARS.charAt((c1 & 0x3) << 4);
+                            out += "==";
+                            break;
+                        }
+                        c2 = str.charCodeAt(i++);
+                        if (i == len) {
+                            out += CHARS.charAt(c1 >> 2);
+                            out += CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+                            out += CHARS.charAt((c2 & 0xF) << 2);
+                            out += "=";
+                            break;
+                        }
+                        c3 = str.charCodeAt(i++);
+                        out += CHARS.charAt(c1 >> 2);
+                        out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+                        out += CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+                        out += CHARS.charAt(c3 & 0x3F);
+                    }
+                    return out;
+                }
+                function getBinary(url) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", url, false);
+                    xhr.overrideMimeType("text/plain; charset=x-user-defined");
+                    xhr.send(null);
+                    return xhr.responseText;
+                }
+                return encode(getBinary('%url%'));
+            }, {
+                url: url
+            });
+        },
+
+        /**
          * Proxy method for WebPage#render. Adds a clipRect parameter for
          * automatically set page clipRect setting values and sets it back once
          * done.
@@ -291,13 +342,13 @@
          * Repeats a step a given number of times.
          *
          * @param  Number    times  Number of times to repeat step
-         * @aram   function  step   The step closure
+         * @aram   function  then   The step closure
          * @return Casper
          * @see    Casper#then
          */
-        repeat: function(times, step) {
+        repeat: function(times, then) {
             for (var i = 0; i < times; i++) {
-                this.then(step);
+                this.then(then);
             }
             return this;
         },
