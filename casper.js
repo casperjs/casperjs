@@ -217,10 +217,11 @@
          */
         die: function(message, status) {
             this.result.status = 'error';
+            this.result.time = new Date().getTime() - this.startTime;
             message = typeof(message) === "string" && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
             this.log(message, "error");
             if (typeof(this.options.onDie) === "function") {
-                this.options.onDie(this, status);
+                this.options.onDie(this, message, status);
             }
             return this.exit(Number(status) > 0 ? Number(status) : 1);
         },
