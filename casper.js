@@ -26,12 +26,15 @@
     /**
      * Main Casper class. Available options are:
      *
-     *   Type     Name           Default    Description
-     * - Array    clientScripts  ([]):      A collection of script filepaths to include to every page loaded
-     * - String   logLevel       ("error")  Logging level (see logLevels for available values)
-     * - Object   pageSettings   ({}):      PhantomJS's WebPage settings object
-     * - WebPage  page           (null):    An existing WebPage instance
-     * - Boolean  verbose        (false):   Realtime output of log messages
+     * Name              | Type     | Default | Description
+     * ——————————————————+——————————+—————————+————————————————————————————————————————————————————————————————————
+     * clientScripts     | Array    | []      | A collection of script filepaths to include to every page loaded
+     * logLevel          | String   | "error" | Logging level (see logLevels for available values)
+     * onDie             | function | null    | A function to be called when Casper#die() is called
+     * onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
+     * page              | WebPage  | null    | An existing WebPage instance
+     * pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
+     * verbose           | Boolean  | false   | Realtime output of log messages
      *
      * @param  Object  options  Casper options
      * @return Casper
@@ -45,14 +48,13 @@
         }
         // default options
         this.defaults = {
-            clientScripts:  [],
-            logLevel:       "error",
-            onDie:          null,
-            page:           null,
-            pageSettings:   {
-                userAgent: DEFAULT_USER_AGENT,
-            },
-            verbose:        false
+            clientScripts:     [],
+            logLevel:          "error",
+            onDie:             null,
+            onPageInitialized: null,
+            page:              null,
+            pageSettings:      { userAgent: DEFAULT_USER_AGENT },
+            verbose:           false
         };
         // local properties
         this.checker = null;
@@ -398,6 +400,10 @@
             }
             this.page.settings = mergeObjects(this.page.settings, this.options.pageSettings);
             this.started = true;
+            if (typeof(this.options.onPageInitialized) === "function") {
+                this.log("Post-configuring WebPage instance", "debug");
+                this.options.onPageInitialized(this.page);
+            }
             if (typeof(location) === "string" && location.length > 0) {
                 if (typeof(then) === "function") {
                     return this.open(location).then(then);
