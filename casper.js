@@ -1,5 +1,5 @@
 /*!
- * Casper is a navigator for PhantomJS - http://github.com/n1k0/casperjs
+ * Casper is a navigation utility for PhantomJS - http://github.com/n1k0/casperjs
  *
  * Copyright (c) 2011 Nicolas Perriault
  *
@@ -89,41 +89,7 @@
          */
         base64encode: function(url) {
             return result = this.evaluate(function() {
-                function encode(str) {
-                    var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-                    var out = "", i = 0, len = str.length, c1, c2, c3;
-                    while (i < len) {
-                        c1 = str.charCodeAt(i++) & 0xff;
-                        if (i == len) {
-                            out += CHARS.charAt(c1 >> 2);
-                            out += CHARS.charAt((c1 & 0x3) << 4);
-                            out += "==";
-                            break;
-                        }
-                        c2 = str.charCodeAt(i++);
-                        if (i == len) {
-                            out += CHARS.charAt(c1 >> 2);
-                            out += CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
-                            out += CHARS.charAt((c2 & 0xF) << 2);
-                            out += "=";
-                            break;
-                        }
-                        c3 = str.charCodeAt(i++);
-                        out += CHARS.charAt(c1 >> 2);
-                        out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-                        out += CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
-                        out += CHARS.charAt(c3 & 0x3F);
-                    }
-                    return out;
-                }
-                function getBinary(url) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("GET", url, false);
-                    xhr.overrideMimeType("text/plain; charset=x-user-defined");
-                    xhr.send(null);
-                    return xhr.responseText;
-                }
-                return encode(getBinary('%url%'));
+                return __utils__.encode(__utils__.getBinary('%url%'));
             }, {
                 url: url
             });
@@ -263,16 +229,7 @@
          * @see    WebPage#evaluate
          */
         evaluate: function(fn, replacements) {
-            if (replacements && typeof replacements === "object") {
-                fn = fn.toString();
-                for (var p in replacements) {
-                    var match = '%' + p + '%';
-                    do {
-                        fn = fn.replace(match, replacements[p]);
-                    } while(fn.indexOf(match) !== -1);
-                }
-            }
-            return this.page.evaluate(fn);
+            return this.page.evaluate(replaceFunctionPlaceholders(fn, replacements));
         },
 
         /**
@@ -478,6 +435,60 @@
     };
 
     /**
+     * Casper client-side helpers.
+     */
+    phantom.Casper.ClientUtils = function() {
+        /**
+         * Base64 encodes a string, even binary ones. Succeeds where
+         * window.btoa() fails.
+         *
+         * @param  string  str
+         * @return string
+         */
+        this.encode = function(str) {
+            var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+            var out = "", i = 0, len = str.length, c1, c2, c3;
+            while (i < len) {
+                c1 = str.charCodeAt(i++) & 0xff;
+                if (i == len) {
+                    out += CHARS.charAt(c1 >> 2);
+                    out += CHARS.charAt((c1 & 0x3) << 4);
+                    out += "==";
+                    break;
+                }
+                c2 = str.charCodeAt(i++);
+                if (i == len) {
+                    out += CHARS.charAt(c1 >> 2);
+                    out += CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+                    out += CHARS.charAt((c2 & 0xF) << 2);
+                    out += "=";
+                    break;
+                }
+                c3 = str.charCodeAt(i++);
+                out += CHARS.charAt(c1 >> 2);
+                out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+                out += CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+                out += CHARS.charAt(c3 & 0x3F);
+            }
+            return out;
+        };
+
+        /**
+         * Retrieves string contents from a binary file behind an url.
+         *
+         * @param  string  url
+         * @return string
+         */
+        this.getBinary = function(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, false);
+            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+            xhr.send(null);
+            return xhr.responseText;
+        };
+    };
+
+    /**
      * Creates a new WebPage instance for Casper use.
      *
      * @param  Casper  casper  A Casper instance
@@ -504,6 +515,19 @@
                         casper.log('Failed injecting ' + script + ' client side', "debug");
                     }
                 }
+            }
+            // Client utils injection
+            var injected = page.evaluate(replaceFunctionPlaceholders(function() {
+                eval("var ClientUtils = " + decodeURIComponent("%utils%"));
+                __utils__ = new ClientUtils();
+                return __utils__ instanceof ClientUtils;
+            }, {
+                utils: encodeURIComponent(phantom.Casper.ClientUtils.toString())
+            }));
+            if (!injected) {
+                casper.log('Failed to inject Casper client-side utilities!', "debug");
+            } else {
+                casper.log('Successfully injected Casper client-side utilities', "debug");
             }
             casper.loadInProgress = false;
         };
@@ -535,5 +559,26 @@
             }
         }
         return obj1;
+    }
+
+    /**
+     * Replaces a function string contents with placeholders provided by an
+     * Object.
+     *
+     * @param  function  fn            The function
+     * @param  object    replacements  Object containing placeholder replacements
+     * @return string                  A function string representation
+     */
+    function replaceFunctionPlaceholders(fn, replacements) {
+        if (replacements && typeof replacements === "object") {
+            fn = fn.toString();
+            for (var p in replacements) {
+                var match = '%' + p + '%';
+                do {
+                    fn = fn.replace(match, replacements[p]);
+                } while(fn.indexOf(match) !== -1);
+            }
+        }
+        return fn;
     }
 })(phantom);
