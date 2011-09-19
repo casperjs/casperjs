@@ -536,7 +536,7 @@
                 utils: encodeURIComponent(phantom.Casper.ClientUtils.toString())
             }));
             if (!injected) {
-                casper.log('Failed to inject Casper client-side utilities!', "debug");
+                casper.log('Failed to inject Casper client-side utilities!', "warning");
             } else {
                 casper.log('Successfully injected Casper client-side utilities', "debug");
             }
