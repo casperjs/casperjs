@@ -84,12 +84,12 @@
          *
          * NOTE: we cannot use window.btoa() for some strange reasons here.
          *
-         * @param  string  url  The url to download
+         * @param  String  url  The url to download
          * @return string       Base64 encoded result
          */
         base64encode: function(url) {
             return result = this.evaluate(function() {
-                return __utils__.encode(__utils__.getBinary('%url%'));
+                return __utils__.getBase64('%url%');
             }, {
                 url: url
             });
@@ -100,7 +100,7 @@
          * automatically set page clipRect setting values and sets it back once
          * done.
          *
-         * @param  string  targetFile  A target filename
+         * @param  String  targetFile  A target filename
          * @param  mixed   clipRect    An optional clipRect object
          * @return Casper
          */
@@ -179,7 +179,7 @@
         /**
          * Exit phantom on failure, with a logged error message.
          *
-         * @param  string  message  An optional error message
+         * @param  String  message  An optional error message
          * @param  Number  status   An optional exit status code (must be > 0)
          * @return Casper
          */
@@ -197,7 +197,7 @@
         /**
          * Prints something to stdout.
          *
-         * @param  string  text  A string to echo to stdout
+         * @param  String  text  A string to echo to stdout
          * @return Casper
          */
         echo: function(text) {
@@ -237,7 +237,7 @@
          * returns false.
          *
          * @param  function  fn       Expression to evaluate
-         * @param  string    message  Error message to log
+         * @param  String    message  Error message to log
          * @return Casper
          */
         evaluateOrDie: function(fn, message) {
@@ -261,9 +261,9 @@
         /**
          * Logs a message.
          *
-         * @param  string  message  The message to log
-         * @param  string  level    The log message level (from Casper.logLevels property)
-         * @param  string  space    Space from where the logged event occured (default: "phantom")
+         * @param  String  message  The message to log
+         * @param  String  level    The log message level (from Casper.logLevels property)
+         * @param  String  space    Space from where the logged event occured (default: "phantom")
          * @return Casper
          */
         log: function(message, level, space) {
@@ -289,7 +289,7 @@
          * callback argument would defeat the whole purpose of Casper
          * actually).
          *
-         * @param  string  location  The url to open
+         * @param  String  location  The url to open
          * @return Casper
          */
         open: function(location) {
@@ -333,7 +333,7 @@
         /**
          * Configures and start the Casper.
          *
-         * @param  string   location  An optional location to open on start
+         * @param  String   location  An optional location to open on start
          * @param  function then      Next step function to execute on page loaded (optional)
          * @return Casper
          */
@@ -406,7 +406,7 @@
         /**
          * Adds a new navigation step for opening the provided location.
          *
-         * @param  string   location  The URL to load
+         * @param  String   location  The URL to load
          * @param  function then      Next step function to execute on page loaded (optional)
          * @return Casper
          * @see    Casper#open
@@ -422,7 +422,7 @@
          * Adds a new navigation step for opening and evaluate an expression
          * against the DOM retrieved from the provided location.
          *
-         * @param  string    location      The url to open
+         * @param  String    location      The url to open
          * @param  function  fn            The function to be evaluated within current page DOM
          * @param  object    replacements  Optional replacements to performs, eg. for '%foo%' => {foo: 'bar'}
          * @return Casper
@@ -442,7 +442,7 @@
          * Base64 encodes a string, even binary ones. Succeeds where
          * window.btoa() fails.
          *
-         * @param  string  str
+         * @param  String  str
          * @return string
          */
         this.encode = function(str) {
@@ -474,9 +474,20 @@
         };
 
         /**
+         * Downloads a resource behind an url and returns its base64-encoded
+         * contents.
+         *
+         * @param  String  url  The resource url
+         * @return String       Base64 contents string
+         */
+        this.getBase64 = function(url) {
+            return this.encode(this.getBinary(url));
+        };
+
+        /**
          * Retrieves string contents from a binary file behind an url.
          *
-         * @param  string  url
+         * @param  String  url
          * @return string
          */
         this.getBinary = function(url) {
