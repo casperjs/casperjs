@@ -2,8 +2,9 @@
 
 Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It eases the process of defining a full navigation scenario and provides useful high-level function, methods & syntaxic sugar for doing common tasks such as:
 
-- chaining navigation steps
+- defining & ordering navigation steps
 - capturing screenshots of a page (or an area)
+- making assertions on remote DOM
 - logging events
 - evaluating dynamic code within the remote page environment
 - retrieve base64 encoded version of remote resources
@@ -194,7 +195,43 @@ casper.run ->
 
 ## Casper.js API Documentation
 
-Code is quite heavily documented using `jsdoc`, but here are the whole API documentation with sample examples supplied:
+Code is quite heavily documented using `jsdoc`, but below you'll find the whole API documentation with added sample code added.
+
+### Casper([Object options])
+
+Casper constructor accepts a single `options` argument which is an object. Available options are:
+
+```
+Name              | Type     | Default | Description
+——————————————————+——————————+—————————+————————————————————————————————————————————————————————————————————
+clientScripts     | Array    | []      | A collection of script filepaths to include to every page loaded
+logLevel          | String   | "error" | Logging level (see logLevels for available values)
+onDie             | function | null    | A function to be called when Casper#die() is called
+onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
+page              | WebPage  | null    | An existing WebPage instance
+pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
+verbose           | Boolean  | false   | Realtime output of log messages
+```
+
+Example:
+
+``` javascript
+phantom.injectJs('path/to/casper.js');
+
+var casper = new phantom.Casper({
+    clientScripts:  [
+        'includes/jquery.js',
+        'includes/underscore.js'
+    ],
+    logLevel: "info",
+    pageSettings: {
+        loadImages:  false,
+        loadPlugins: false
+    }
+});
+```
+
+But no worry, usually you'll just need to instantiate Casper using `new phantom.Casper()`.
 
 ### Casper#base64encode(String url)
 
@@ -292,8 +329,8 @@ casper.evaluate(function() {
     document.querySelector('#password').setAttribute('value', '%password%');
     document.querySelector('#submit').click();
 }, {
-    username: 'Bazoonga',
-    password: 'baz00nga'
+    username: 'sheldon.cooper',
+    password: 'b4z1ng4'
 });
 ```
 
@@ -441,6 +478,20 @@ casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).thenOpen('http://yahoo.fr/', function(self) {
     self.echo("Now I'm in your yahoo.")
+}).run();
+```
+
+### Casper#thenOpenAndEvaluate(String location[, function then, Object replacements])
+
+Basically a shortcut for opening an url and evaluate code against remote DOM environment.
+
+Example:
+
+``` javascript
+casper.start('http://google.fr/').then(function(self) {
+    self.echo("I'm in your google.");
+}).thenOpenAndEvaluate('http://yahoo.fr/', function() {
+    document.querySelector['form'].submit();
 }).run();
 ```
 
