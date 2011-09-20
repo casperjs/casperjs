@@ -331,7 +331,7 @@
         },
 
         /**
-         * Configures and start the Casper.
+         * Configures and starts Casper.
          *
          * @param  String   location  An optional location to open on start
          * @param  function then      Next step function to execute on page loaded (optional)

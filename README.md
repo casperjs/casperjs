@@ -1,47 +1,62 @@
 # Casper.js
 
-Casper is a navigation utility for [PhantomJS](http://www.phantomjs.org/).
+Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It eases the process of defining a full navigation scenario and provides useful high-level function, methods & syntaxic sugar for doing common tasks such as:
 
-More documentation to come soon, I swear. If you just can't wait, here's a sample script:
+- chaining navigation steps
+- capturing screenshots of a page (or an area)
+- logging events
+- evaluating dynamic code within the remote page environment
+- retrieve base64 encoded version of remote resources
+- catch errors and react accordingly
 
-    phantom.injectJs('casper.js');
+## Quickstart
 
-    // User defined functions
-    function q() {
-        document.querySelector('input[name="q"]').setAttribute('value', '%term%');
-        document.querySelector('form[name="f"]').submit();
-    }
+In the following example, we'll query google for two terms consecutively, `capser` and `homer`, and aggregate the result links in a standard Array. Running the script will output a standard JSON string containing both the logs and the results:
 
-    function getLinks() {
-        return Array.prototype.map.call(document.querySelectorAll('h3.r a'), function(e) {
-            return e.getAttribute('href');
-        });
-    }
+``` javascript
+phantom.injectJs('path/to/casper.js');
 
-    // Casper suite
-    var links = [];
-    var casper = new phantom.Casper()
-        .start('http://google.fr/')
-        .thenEvaluate(q, {
-            term: 'casper',
-        })
-        .then(function(self) {
-            links = self.evaluate(getLinks);
-        })
-        .thenEvaluate(q, {
-            term: 'homer',
-        })
-        .then(function(self) {
-            links = links.concat(self.evaluate(getLinks));
-        })
-        .run(function(self) {
-            self.echo(JSON.stringify({
-                result: self.result,
-                links: links
-            }, null, '  '));
-            self.exit();
-        })
-    ;
+// User defined functions
+function q() {
+    document.querySelector('input[name="q"]').setAttribute('value', '%term%');
+    document.querySelector('form[name="f"]').submit();
+}
+
+function getLinks() {
+    var links = document.querySelectorAll('h3.r a');
+    return Array.prototype.map.call(links, function(e) {
+        return e.getAttribute('href');
+    });
+}
+
+// Casper suite
+var links = [];
+var casper = new phantom.Casper({
+    logLevel: "info"
+});
+casper.start('http://google.fr/')
+    .thenEvaluate(q, {
+        term: 'casper'
+    })
+    .then(function(self) {
+        links = self.evaluate(getLinks);
+    })
+    .thenEvaluate(q, {
+        term: 'homer'
+    })
+    .then(function(self) {
+        links = links.concat(self.evaluate(getLinks));
+    })
+    .run(function(self) {
+        self.echo(JSON.stringify({
+            result: self.result,
+            links: links
+        }, null, '  '));
+        self.exit();
+    })
+;
+```
+**Hint:** Method chaining is not mandatory but provided as an alternative way to structure your code.
 
 Run it:
 
@@ -143,8 +158,296 @@ Run it:
         "http://www.homeralaska.org/",
         "http://homeralaska.com/"
       ]
-}
+    }
+
+### CoffeeScript
+
+You can also write Casper scripts using the [CoffeeScript syntax](http://jashkenas.github.com/coffee-script/):
+
+``` coffeescript
+phantom.injectJs "path/to/casper.js"
+
+q = ->
+    document.querySelector('input[name="q"]').setAttribute "value", "%term%"
+    document.querySelector('form[name="f"]').submit()
+
+getLinks = ->
+    links = document.querySelectorAll("h3.r a")
+    Array::map.call links, (e) ->
+        e.getAttribute "href"
+
+links = []
+
+casper = new phantom.Casper verbose: true, logLevel: "debug"
+casper.start "http://google.fr/"
+casper.thenEvaluate q, term: "casper"
+casper.then -> links = casper.evaluate getLinks
+casper.thenEvaluate q, term: "homer"
+casper.then -> links = links.concat casper.evaluate getLinks
+casper.run ->
+    out =
+        result: casper.result
+        links:  links
+    casper.echo JSON.stringify out, null, "    "
+    casper.exit()
+```
+
+## Casper.js API Documentation
+
+Code is quite heavily documented using `jsdoc`, but here are the whole API documentation with sample examples supplied:
+
+### Casper#base64encode(String url)
+
+Encodes a resource using the base64 algorithm synchroneously using client-side XMLHttpRequest.
+
+NOTE: we cannot use `window.btoa()` because it fails miserably in the version of WebKit shipping with PhantomJS.
+
+Example: retrieving google logo image encoded in base64:
+
+``` javascript
+var base64logo = null;
+casper.start('http://www.google.fr/', function(self) {
+    base64logo = self.base64encode('http://www.google.fr/images/srpr/logo3w.png');
+}).run(function() {
+    self.echo(base64logo);
+});
+```
+
+### Casper#capture(String targetFilepath, Object clipRect)
+
+Proxy method for PhantomJS' `WebPage#render`. Adds a clipRect parameter for automatically setting page clipRect setting values and sets it back once done.
+
+Example:
+
+``` javascript
+casper.start('http://www.google.fr/', function(self) {
+    self.capture('google.png', {
+        top: 100,
+        left: 100,
+        width: 500,
+        height: 400
+    });
+}).run();
+```
+
+### Casper#debugHTML()
+
+Logs the HTML code of the current page directly to the standard output, for debugging purpose.
+
+Example:
+
+``` javascript
+casper.start('http://www.google.fr/', function(self) {
+    self.debugHTML();
+}).run();
+```
+
+### Casper#debugPage()
+
+Logs the textual contents of the current page directly to the standard output, for debugging purpose.
+
+Example:
+
+``` javascript
+casper.start('http://www.google.fr/', function(self) {
+    self.debugPage();
+}).run();
+```
+
+### Casper#die(String message[, int status])
+
+Exits phantom with a logged error message and an optional exit status code.
+
+Example:
+
+``` javascript
+casper.start('http://www.google.fr/', function(self) {
+    self.die("Fail.", 1);
+}).run();
+```
+
+### Casper#echo(String message)
+
+Prints something to stdout.
+
+Example:
+
+``` javascript
+casper.start('http://www.google.fr/', function(self) {
+    self.echo('Page title is: ' + self.evaluate(function() {
+        return document.title;
+    }));
+}).run();
+```
+
+### Casper#evaluate(function fn[, Object replacements])
+
+Evaluates an expression in the page context, a bit like what PhantomJS' `WebPage#evaluate` does, but can also replace values by their placeholer names.
+
+Example:
+
+``` javascript
+casper.evaluate(function() {
+    document.querySelector('#username').setAttribute('value', '%username%');
+    document.querySelector('#password').setAttribute('value', '%password%');
+    document.querySelector('#submit').click();
+}, {
+    username: 'Bazoonga',
+    password: 'baz00nga'
+});
+```
+
+### Casper#evaluateOrDie(function fn[, String message])
+
+Evaluates an expression within the current page DOM and `die()` if it returns anything but `true`.
+
+Example:
+
+``` javascript
+casper.start('http://foo.bar/home', function(self) {
+    self.evaluateOrDie(function() {
+        return /logged in/.match(document.title);
+    }, 'not authenticated');
+}).run();
+```
+
+### Casper#exit([int status])
+
+Exits PhantomJS with an optional exit status code.
+
+### Casper#log(String message[, String level, String space)
+
+Logs a message with an optional level in an optional space. Available levels are `debug`, `info`, `warning` and `error`. A space is a kind of namespace you can set for filtering your logs. By default, Casper logs messages in two distinct spaces: `phantom` and `remote`, to distinguish what happens in the PhantomJS environment from the remote one.
+
+Example:
+
+``` javascript
+casper.start('http://www.google.fr/', function(self) {
+    self.log("I'm logging an error", "error");
+}).run();
+```
+
+### Casper#repeat(int times, function then)
+
+Repeats a navigation step a given number of times.
+
+Example:
+
+``` javascript
+var i = 0;
+casper.start('http://foo.bar/home', function(self) {
+    self.evaluateOrDie(function() {
+        return /logged in/.match(document.title);
+    }, 'not authenticated');
+}).repeat(5, function(self) {
+    self.echo("I am step #" + ++i);
+}).run();
+```
+
+### Casper#run(fn onComplete[, int time])
+
+Runs the whole suite of steps and optionally executes a callback when they've all been done. Obviously, **calling this method is mandatory** in order to run the Casper navigation suite.
+
+Casper suite **won't run**:
+
+``` javascript
+casper.start('http://foo.bar/home', function(self) {
+    // ...
+}).then(function(self) {
+    // ...
+});
+```
+
+Casper suite **will run**:
+
+``` javascript
+casper.start('http://foo.bar/home', function(self) {
+    // ...
+}).then(function(self) {
+    // ...
+}).run();
+```
+
+### Casper#start(String url[, function then])
+
+Configures and starts Casper, then open the provided `url` and optionnaly adds the step provided by the `then` argument.
+
+Example:
+
+``` javascript
+casper.start('http://google.fr/', function(self) {
+    self.echo("I'm loaded.");
+}).run();
+```
+
+Alternatively:
+
+``` javascript
+casper.start('http://google.fr/');
+casper.then(function(self) {
+    self.echo("I'm loaded.");
+});
+casper.run();
+```
+
+Please note that **you must call the `start()` method in order to be able to add navigation steps** and run the suite. If you don't you'll get an error message inviting you to do so anyway.
+
+### Casper#then(function fn)
+
+The standard way to add a new navigation step to the Casper suite by provide a callback function which will be executed when the requested page is loaded.
+
+Example:
+
+``` javascript
+casper.start('http://google.fr/').then(function(self) {
+    self.echo("I'm in your google.");
+}).run();
+```
+
+Please note that usage of the `self` argument is not mandatory, it's just pythonic-like syntaxic sugar. You can perfectly use this alternative:
+
+``` javascript
+casper.start('http://google.fr/').then(function() {
+    casper.echo("I'm in your google.");
+}).run();
+```
+
+If you want to open a page as a next step in your navigation scenario, please refer to the `Casper#thenOpen()` method documentation.
+
+### Casper#thenEvaluate(function fn[, Object replacements])
+
+Adds a new navigation step to perform code evaluation within the current retrieved page DOM.
+
+Example:
+
+``` javascript
+// Querying for "Chuck Norris" on Google
+casper.start('http://google.fr/').thenEvaluate(function() {
+    document.querySelector('input[name="q"]').setAttribute('value', '%term%');
+    document.querySelector('form[name="f"]').submit();
+}, {
+    term: 'Chuck Norris'
+}).run();
+```
+
+### Casper#thenOpen(String location[, function then])
+
+Adds a new navigation step for opening a new location, and optionnaly add a next step when its loaded.
+
+Example:
+
+``` javascript
+casper.start('http://google.fr/').then(function(self) {
+    self.echo("I'm in your google.");
+}).thenOpen('http://yahoo.fr/', function(self) {
+    self.echo("Now I'm in your yahoo.")
+}).run();
+```
+
+## Licensing
+
+`Casper.js` is released under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 
 ## Now what
 
-Feel free to play with the code and report an issue on github. I'm also reachable [on twitter](https://twitter.com/n1k0).
+Feel free to play with the code and [report an issue on github](https://github.com/n1k0/casperjs/issues). I'm also reachable [on twitter](https://twitter.com/n1k0).
