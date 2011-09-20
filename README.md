@@ -208,7 +208,7 @@ Example: retrieving google logo image encoded in base64:
 var base64logo = null;
 casper.start('http://www.google.fr/', function(self) {
     base64logo = self.base64encode('http://www.google.fr/images/srpr/logo3w.png');
-}).run(function() {
+}).run(function(self) {
     self.echo(base64logo);
 });
 ```
