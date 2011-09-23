@@ -17,6 +17,11 @@ In the following example, we'll query google for two terms consecutively, `capse
 ``` javascript
 phantom.injectJs('path/to/casper.js');
 
+var links = [];
+var casper = new phantom.Casper({
+    logLevel: "info"
+});
+
 // User defined functions
 function q() {
     document.querySelector('input[name="q"]').setAttribute('value', '%term%');
@@ -31,10 +36,6 @@ function getLinks() {
 }
 
 // Casper suite
-var links = [];
-var casper = new phantom.Casper({
-    logLevel: "info"
-});
 casper.start('http://google.fr/')
     .thenEvaluate(q, {
         term: 'casper'
@@ -161,7 +162,7 @@ Run it:
       ]
     }
 
-### CoffeeScript
+## CoffeeScript
 
 You can also write Casper scripts using the [CoffeeScript syntax](http://jashkenas.github.com/coffee-script/):
 
@@ -174,8 +175,7 @@ q = ->
 
 getLinks = ->
     links = document.querySelectorAll("h3.r a")
-    Array::map.call links, (e) ->
-        e.getAttribute "href"
+    Array::map.call links, (e) -> e.getAttribute "href"
 
 links = []
 
@@ -192,6 +192,8 @@ casper.run ->
     casper.echo JSON.stringify out, null, "    "
     casper.exit()
 ```
+
+Just remember to suffix your script with the `coffee` extension.
 
 ## Casper.js API Documentation
 
@@ -492,6 +494,52 @@ casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).thenOpenAndEvaluate('http://yahoo.fr/', function() {
     document.querySelector['form'].submit();
+}).run();
+```
+
+## Client-side utils
+
+Casper ships with a few client-side utilitites which are injected in the remote DOM environement, and accessible from there through the `__utils__` object instance of the `phantom.Casper.ClientUtils` class.
+
+### CasperUtils#getBase64(String url)
+
+This method will retrieved a base64 encoded version of any resource behind an url. For example, let's imagine we want to retrieve the base64 representation of some website's logo:
+
+``` javascript
+var logo = null;
+casper.start('http://foo.bar/', function(self) {
+    var imgUrl = document.querySelector('img.logo').getAttribute('src');
+    logo = self.evaluate(function() {
+        return__utils__.getBase64(imgUrl);
+    };
+}).run(function(self) {
+    self.echo(logo).exit();
+});
+```
+
+## Extending Casper
+
+Sometimes it can be convenient to add your own methods to the `Casper` class; it's easily doable as illustrated below:
+
+``` javascript
+phantom.injectJs("path/to/casper.js");
+
+phantom.Casper.prototype.renderJSON = function(fn) {
+    try {
+        return this.echo(JSON.stringify(self.evaluate(fn), null, '  ')).exit();
+    } catch (err) {
+        return this.die('JSON export error: ' + err.message);
+    }
+};
+
+new phantom.Casper().start('http://www.liberation.fr/', function(self) {
+    self.renderJSON(function() {
+        var articles = document.querySelectorAll('h3');
+        Array.prototype.map.call(articles, function(e) {
+            return e.innerText;
+        });
+        return articles;
+    });
 }).run();
 ```
 
