@@ -508,8 +508,8 @@ This method will retrieved a base64 encoded version of any resource behind an ur
 ``` javascript
 var logo = null;
 casper.start('http://foo.bar/', function(self) {
-    var imgUrl = document.querySelector('img.logo').getAttribute('src');
     logo = self.evaluate(function() {
+        var imgUrl = document.querySelector('img.logo').getAttribute('src');
         return__utils__.getBase64(imgUrl);
     };
 }).run(function(self) {
