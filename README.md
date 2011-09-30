@@ -248,7 +248,7 @@ var base64logo = null;
 casper.start('http://www.google.fr/', function(self) {
     base64logo = self.base64encode('http://www.google.fr/images/srpr/logo3w.png');
 }).run(function(self) {
-    self.echo(base64logo);
+    self.echo(base64logo).exit();
 });
 ```
 
@@ -266,7 +266,23 @@ casper.start('http://www.google.fr/', function(self) {
         width: 500,
         height: 400
     });
-}).run();
+}).run(function(self) {
+    self.exit();
+});
+```
+
+### Casper#captureSelector(String targetFile, String selector)
+
+Captures the page area containing the provided selector.
+
+Example:
+
+``` javascript
+casper.start('http://www.weather.com/', function(self) {
+    self.captureSelector('weather.png', '.twc-story-block');
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#debugHTML()
@@ -278,7 +294,9 @@ Example:
 ``` javascript
 casper.start('http://www.google.fr/', function(self) {
     self.debugHTML();
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#debugPage()
@@ -290,7 +308,9 @@ Example:
 ``` javascript
 casper.start('http://www.google.fr/', function(self) {
     self.debugPage();
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#die(String message[, int status])
@@ -302,7 +322,9 @@ Example:
 ``` javascript
 casper.start('http://www.google.fr/', function(self) {
     self.die("Fail.", 1);
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#echo(String message)
@@ -316,7 +338,9 @@ casper.start('http://www.google.fr/', function(self) {
     self.echo('Page title is: ' + self.evaluate(function() {
         return document.title;
     }));
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#evaluate(function fn[, Object replacements])
@@ -347,7 +371,9 @@ casper.start('http://foo.bar/home', function(self) {
     self.evaluateOrDie(function() {
         return /logged in/.match(document.title);
     }, 'not authenticated');
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#exit([int status])
@@ -363,7 +389,9 @@ Example:
 ``` javascript
 casper.start('http://www.google.fr/', function(self) {
     self.log("I'm logging an error", "error");
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#repeat(int times, function then)
@@ -380,7 +408,9 @@ casper.start('http://foo.bar/home', function(self) {
     }, 'not authenticated');
 }).repeat(5, function(self) {
     self.echo("I am step #" + ++i);
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#run(fn onComplete[, int time])
@@ -416,7 +446,9 @@ Example:
 ``` javascript
 casper.start('http://google.fr/', function(self) {
     self.echo("I'm loaded.");
-}).run();
+}).run(function() {
+    self.exit();
+});
 ```
 
 Alternatively:
@@ -426,8 +458,24 @@ casper.start('http://google.fr/');
 casper.then(function(self) {
     self.echo("I'm loaded.");
 });
-casper.run();
+casper.run(function(self) {
+    self.exit();
+});
 ```
+
+Or alternatively:
+
+``` javascript
+casper.start('http://google.fr/');
+casper.then(function() {
+    casper.echo("I'm loaded.");
+});
+casper.run(function() {
+    casper.exit();
+});
+```
+
+Matter of taste!
 
 Please note that **you must call the `start()` method in order to be able to add navigation steps** and run the suite. If you don't you'll get an error message inviting you to do so anyway.
 
@@ -440,7 +488,9 @@ Example:
 ``` javascript
 casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 Please note that usage of the `self` argument is not mandatory, it's just pythonic-like syntaxic sugar. You can perfectly use this alternative:
@@ -448,7 +498,9 @@ Please note that usage of the `self` argument is not mandatory, it's just python
 ``` javascript
 casper.start('http://google.fr/').then(function() {
     casper.echo("I'm in your google.");
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 If you want to open a page as a next step in your navigation scenario, please refer to the `Casper#thenOpen()` method documentation.
@@ -466,7 +518,9 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     document.querySelector('form[name="f"]').submit();
 }, {
     term: 'Chuck Norris'
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#thenOpen(String location[, function then])
@@ -480,7 +534,9 @@ casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).thenOpen('http://yahoo.fr/', function(self) {
     self.echo("Now I'm in your yahoo.")
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ### Casper#thenOpenAndEvaluate(String location[, function then, Object replacements])
@@ -494,7 +550,9 @@ casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).thenOpenAndEvaluate('http://yahoo.fr/', function() {
     document.querySelector['form'].submit();
-}).run();
+}).run(function(self) {
+    self.exit();
+});
 ```
 
 ## Client-side utils
@@ -524,23 +582,33 @@ Sometimes it can be convenient to add your own methods to the `Casper` class; it
 ``` javascript
 phantom.injectJs("path/to/casper.js");
 
-phantom.Casper.prototype.renderJSON = function(fn) {
-    try {
-        return this.echo(JSON.stringify(self.evaluate(fn), null, '  ')).exit();
-    } catch (err) {
-        return this.die('JSON export error: ' + err.message);
-    }
-};
-
-new phantom.Casper().start('http://www.liberation.fr/', function(self) {
-    self.renderJSON(function() {
-        var articles = document.querySelectorAll('h3');
-        Array.prototype.map.call(articles, function(e) {
+phantom.Casper.prototype.fetchTexts = function(selector) {
+    return this.evaluate(function() {
+        var elements = document.querySelectorAll(selector);
+        return Array.prototype.map.call(elements, function(e) {
             return e.innerText;
         });
-        return articles;
+    }, {
+        selector: selector
     });
-}).run();
+};
+
+phantom.Casper.prototype.renderJSON = function(what) {
+    return this.echo(JSON.stringify(what, null, '  ')).exit();
+};
+
+var articles = [];
+new phantom.Casper()
+    .start('http://www.liberation.fr/', function(self) {
+        articles = self.fetchTexts('h3');
+    })
+    .thenOpen('http://www.lemonde.fr/', function(self) {
+        articles.concat(self.fetchTexts('h2.article'));
+    })
+    .run(function(self) {
+        self.renderJSON(articles);
+    })
+;
 ```
 
 ## Licensing
