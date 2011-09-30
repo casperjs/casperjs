@@ -117,6 +117,23 @@
         },
 
         /**
+         * Captures the page area containing the provided selector.
+         *
+         * @param  String  targetFile  Target destination file path.
+         * @param  String  selector    CSS3 selector
+         * @return Casper
+         */
+        captureSelector: function(targetFile, selector) {
+            return this.capture(targetFile, self.evaluate(function() {
+                try {
+                    return document.querySelector(selector).getBoundingClientRect();
+                } catch (e) {
+                    console.log('unable to fetch bounds for element ' + selector);
+                }
+            }));
+        },
+
+        /**
          * Checks for any further navigation step to process.
          *
          * @param  Casper    self        A self reference
@@ -338,6 +355,9 @@
          * @return Casper
          */
         start: function(location, then) {
+            if (this.started) {
+                this.log("start failed: Casper has already started!", "error");
+            }
             this.log('Starting…', "info");
             this.startTime = new Date().getTime();
             this.steps = [];
