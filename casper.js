@@ -631,7 +631,7 @@
         if (phantom.version.major <= 1 && phantom.version.minor < 3) {
             return what instanceof WebPage;
         } else {
-            return what.indexOf('WebPage(') === 0;
+            return what.toString().indexOf('WebPage(') === 0;
         }
     }
 })(phantom);
