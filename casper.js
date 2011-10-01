@@ -31,6 +31,7 @@
      * clientScripts     | Array    | []      | A collection of script filepaths to include to every page loaded
      * logLevel          | String   | "error" | Logging level (see logLevels for available values)
      * onDie             | function | null    | A function to be called when Casper#die() is called
+     * onError           | function | null    | A function to be called when an "error" level event occurs
      * onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
      * page              | WebPage  | null    | An existing WebPage instance
      * pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
@@ -51,6 +52,7 @@
             clientScripts:     [],
             logLevel:          "error",
             onDie:             null,
+            onError:           null,
             onPageInitialized: null,
             page:              null,
             pageSettings:      { userAgent: DEFAULT_USER_AGENT },
@@ -286,6 +288,9 @@
         log: function(message, level, space) {
             level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
             space = space ? space : "phantom";
+            if (level === "error" && typeof(this.options.onError) === "function") {
+                this.options.onError(this, message, space);
+            }
             if (this.logLevels.indexOf(level) < this.logLevels.indexOf(this.options.logLevel)) {
                 return this; // skip logging
             }

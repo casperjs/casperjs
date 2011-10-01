@@ -222,13 +222,17 @@ phantom.injectJs('path/to/casper.js');
 
 var casper = new phantom.Casper({
     clientScripts:  [
-        'includes/jquery.js',
-        'includes/underscore.js'
+        'includes/jquery.js',      // These two scripts will be injected in remote
+        'includes/underscore.js'   // DOM on every request
     ],
-    logLevel: "info",
+    logLevel: "info",              // Only "info" level messages will be logged
+    onError: function(self, m) {   // Any "error" level message will be written
+        console.log('FATAL:' + m); // on the console output and PhantomJS will
+        self.exit();               // terminate
+    },
     pageSettings: {
-        loadImages:  false,
-        loadPlugins: false
+        loadImages:  false,        // The WebPage instance used by Casper will
+        loadPlugins: false         // use these settings
     }
 });
 ```
