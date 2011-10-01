@@ -581,6 +581,23 @@
     }
 
     /**
+     * Checks if the provided var is a WebPage instance
+     *
+     * @param  mixed  what
+     * @return Boolean
+     */
+    function isWebPage(what) {
+        if (!what || typeof(what) !== "object") {
+            return false;
+        }
+        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
+            return what instanceof WebPage;
+        } else {
+            return what.toString().indexOf('WebPage(') === 0;
+        }
+    }
+
+    /**
      * Object recursive merging utility.
      *
      * @param  object  obj1  the destination object
@@ -621,22 +638,5 @@
             }
         }
         return fn;
-    }
-
-    /**
-     * Checks if the provided var is a WebPage instance
-     *
-     * @param  mixed  what
-     * @return Boolean
-     */
-    function isWebPage(what) {
-        if (!what || typeof(what) !== "object") {
-            return false;
-        }
-        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
-            return what instanceof WebPage;
-        } else {
-            return what.toString().indexOf('WebPage(') === 0;
-        }
     }
 })(phantom);
