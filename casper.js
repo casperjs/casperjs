@@ -368,8 +368,8 @@
                 this.options.logLevel = "warning";
             }
             // WebPage
-            if (!(this.page instanceof WebPage)) {
-                if (this.options.page instanceof WebPage) {
+            if (!isWebPage(this.page)) {
+                if (isWebPage(this.options.page)) {
                     this.page = this.options.page;
                 } else {
                     this.page = createPage(this);
@@ -526,7 +526,12 @@
      * @return WebPage
      */
     function createPage(casper) {
-        var page = new WebPage();
+        var page;
+        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
+            page = new WebPage();
+        } else {
+            page = require('webpage').create();
+        }
         page.onConsoleMessage = function(msg) {
             casper.log(msg, "info", "remote");
         };
@@ -611,5 +616,22 @@
             }
         }
         return fn;
+    }
+
+    /**
+     * Checks if the provided var is a WebPage instance
+     *
+     * @param  mixed  what
+     * @return Boolean
+     */
+    function isWebPage(what) {
+        if (!what || typeof(what) !== "object") {
+            return false;
+        }
+        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
+            return what instanceof WebPage;
+        } else {
+            return what.indexOf('WebPage(') === 0;
+        }
     }
 })(phantom);
