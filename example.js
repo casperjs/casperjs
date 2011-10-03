@@ -6,14 +6,15 @@ function q() {
 }
 
 function getLinks() {
-    return Array.prototype.map.call(document.querySelectorAll('h3.r a'), function(e) {
+    var links = document.querySelectorAll('h3.r a');
+    return [].map.call(links, function(e) {
         return e.getAttribute('href');
     });
 }
 
 var links = [];
 var casper = new phantom.Casper({
-    logLevel: "info",
+    logLevel: "debug",
     verbose: true
 })
     .start('http://google.fr/')
@@ -28,6 +29,10 @@ var casper = new phantom.Casper({
     })
     .then(function(self) {
         links = links.concat(self.evaluate(getLinks));
+        self.log("Click on 1st result link").click('h3.r a');
+    })
+    .then(function(self) {
+        self.debugPage();
     })
     .run(function(self) {
         self.echo(JSON.stringify({

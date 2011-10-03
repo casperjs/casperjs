@@ -256,6 +256,32 @@ casper.start('http://www.google.fr/', function(self) {
 });
 ```
 
+### Casper#click(String selector)
+
+Emulates a click on the element from the provided selector, if possible. In case of success, `true` is returned.
+
+Example:
+
+```javascript
+casper.start('http://google.fr/')
+    .thenEvaluate(function() {
+        document.querySelector('input[name="q"]').setAttribute('value', '%term%');
+        document.querySelector('form[name="f"]').submit();
+    }, {
+        term: 'CasperJS'
+    })
+    .then(function(self) {
+        // Click on 1st result link
+        if (self.click('h3.r a')) {
+            console.log('clicked ok')
+        }
+    })
+    .run(function(self) {
+        self.debugPage();
+    })
+;
+```
+
 ### Casper#capture(String targetFilepath, Object clipRect)
 
 Proxy method for PhantomJS' `WebPage#render`. Adds a clipRect parameter for automatically setting page clipRect setting values and sets it back once done.

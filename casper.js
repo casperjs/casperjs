@@ -172,6 +172,41 @@
         },
 
         /**
+         * Emulates a click on the element from the provided selector, if
+         * possible. In case of success, `true` is returned.
+         *
+         * @param  String   selector  A DOM CSS3 compatible selector
+         * @return Boolean
+         */
+        click: function(selector) {
+            this.log("click on selector: " + selector, "debug");
+            return this.evaluate(function() {
+                var s = '%selector%';
+                try {
+                    var elem = document.querySelector(s);
+                } catch (e) {
+                    console.log('invalid selector: ' + s);
+                    return false;
+                }
+                if (!elem) {
+                    console.log('selector "' + s + '" did not find any matching element');
+                    return false;
+                }
+                var evt = document.createEvent("MouseEvents");
+                evt.initMouseEvent("click", true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
+                if (elem.dispatchEvent(evt)) {
+                    return true;
+                }
+                if (elem.hasAttribute('href')) {
+                    document.location = elem.getAttribute('href');
+                    return true;
+                }
+            }, {
+                selector: selector.replace("'", "\'")
+            });
+        },
+
+        /**
          * Logs the HTML code of the current page.
          *
          * @return Casper
@@ -581,23 +616,6 @@
     }
 
     /**
-     * Checks if the provided var is a WebPage instance
-     *
-     * @param  mixed  what
-     * @return Boolean
-     */
-    function isWebPage(what) {
-        if (!what || typeof(what) !== "object") {
-            return false;
-        }
-        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
-            return what instanceof WebPage;
-        } else {
-            return what.toString().indexOf('WebPage(') === 0;
-        }
-    }
-
-    /**
      * Object recursive merging utility.
      *
      * @param  object  obj1  the destination object
@@ -638,5 +656,22 @@
             }
         }
         return fn;
+    }
+
+    /**
+     * Checks if the provided var is a WebPage instance
+     *
+     * @param  mixed  what
+     * @return Boolean
+     */
+    function isWebPage(what) {
+        if (!what || typeof(what) !== "object") {
+            return false;
+        }
+        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
+            return what instanceof WebPage;
+        } else {
+            return what.toString().indexOf('WebPage(') === 0;
+        }
     }
 })(phantom);
