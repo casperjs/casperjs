@@ -495,6 +495,18 @@
     };
 
     /**
+     * Extends Casper's prototype with provided one.
+     *
+     * @param  Object  proto  Prototype methods to add to Casper
+     */
+    phantom.Casper.extend = function(proto) {
+        if (typeof(proto) !== "object") {
+            throw "extends() only accept objects";
+        }
+        mergeObjects(phantom.Casper.prototype, proto);
+    };
+
+    /**
      * Casper client-side helpers.
      */
     phantom.Casper.ClientUtils = function() {

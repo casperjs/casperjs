@@ -607,38 +607,37 @@ casper.start('http://foo.bar/', function(self) {
 
 ## Extending Casper
 
-Sometimes it can be convenient to add your own methods to the `Casper` class; it's easily doable as illustrated below:
+Sometimes it can be convenient to add your own methods to the `Casper` class; it's easily doable using the `Casper.extend()` method as illustrated below:
 
 ``` javascript
 phantom.injectJs("path/to/casper.js");
 
-phantom.Casper.prototype.fetchTexts = function(selector) {
-    return this.evaluate(function() {
-        var elements = document.querySelectorAll(selector);
-        return Array.prototype.map.call(elements, function(e) {
-            return e.innerText;
+phantom.Casper.extend({
+    fetchTexts: function(selector) {
+        return this.evaluate(function() {
+            var elements = document.querySelectorAll('%selector%');
+            return Array.prototype.map.call(elements, function(e) {
+                return e.innerText;
+            });
+        }, {
+            selector: selector.replace("'", "\'")
         });
-    }, {
-        selector: selector
-    });
-};
+    },
 
-phantom.Casper.prototype.renderJSON = function(what) {
-    return this.echo(JSON.stringify(what, null, '  ')).exit();
-};
+    renderJSON: function(what) {
+        return this.echo(JSON.stringify(what, null, '  ')).exit();
+    }
+});
 
 var articles = [];
-new phantom.Casper()
-    .start('http://www.liberation.fr/', function(self) {
-        articles = self.fetchTexts('h3');
-    })
-    .thenOpen('http://www.lemonde.fr/', function(self) {
-        articles.concat(self.fetchTexts('h2.article'));
-    })
-    .run(function(self) {
-        self.renderJSON(articles);
-    })
-;
+
+new phantom.Casper().start('http://www.liberation.fr/', function(self) {
+    articles = self.fetchTexts('h3');
+}).thenOpen('http://www.lemonde.fr/', function(self) {
+    articles.concat(self.fetchTexts('h2.article'));
+}).run(function(self) {
+    self.renderJSON(articles);
+});
 ```
 
 ## Licensing
