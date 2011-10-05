@@ -580,7 +580,12 @@
         };
         page.onLoadFinished = function(status) {
             if (status !== "success") {
-                casper.log('Loading resource failed with status=' + status + ': ' + casper.requestUrl, "info");
+                var message = 'Loading resource failed with status=' + status;
+                if (casper.currentHTTPStatus) {
+                    message += ' (HTTP ' + casper.currentHTTPStatus + ')';
+                }
+                message += ': ' + casper.requestUrl;
+                casper.log(message, "warning");
             }
             if (casper.options.clientScripts) {
                 for (var i = 0; i < casper.options.clientScripts.length; i++) {
