@@ -579,7 +579,7 @@
      */
     function createPage(casper) {
         var page;
-        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
+        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof(require) === "function") {
             page = new WebPage();
         } else {
             page = require('webpage').create();
@@ -642,7 +642,7 @@
         if (!what || typeof(what) !== "object") {
             return false;
         }
-        if (phantom.version.major <= 1 && phantom.version.minor < 3) {
+        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof(require) === "function") {
             return what instanceof WebPage;
         } else {
             return what.toString().indexOf('WebPage(') === 0;
