@@ -546,6 +546,20 @@
         };
 
         /**
+         * Checks if a given DOM element exists in remote page.
+         *
+         * @param  String  selector  CSS3 selector
+         * @return Boolean
+         */
+        this.exists = function(selector) {
+            try {
+                return document.querySelectorAll(selector).length > 0;
+            } catch (e) {
+                return false;
+            }
+        };
+
+        /**
          * Downloads a resource behind an url and returns its base64-encoded
          * contents.
          *
