@@ -298,16 +298,18 @@
          *
          * @param  String  selector  A CSS3 selector to the target form to fill
          * @param  Object  values    Field values
+         * @param  Boolean submit    Submit the form?
          */
-        fill: function(selector, values) {
+        fill: function(selector, values, submit) {
             if (!typeof(values) === "object") {
                 throw "form values must be an object";
             }
             return this.evaluate(function() {
-                __utils__.fill('%selector%', JSON.parse('%values%'));
+                __utils__.fill('%selector%', JSON.parse('%values%'), JSON.parse('%submit%'));
             }, {
                 selector: selector.replace("'", "\'"),
                 values:   JSON.stringify(values).replace("'", "\'"),
+                submit:   JSON.stringify(submit)
             });
         },
 
@@ -588,18 +590,18 @@
         };
 
         /**
-         * Fills a form with provided field values.
+         * Fills a form with provided field values, and optionnaly submits it.
          *
          * @param  HTMLElement|String  form  A form element, or a CSS3 selector to a form element
          * @param  Object              vals  Field values
          */
-        this.fill = function(form, vals) {
+        this.fill = function(form, vals, submit) {
+            submit = typeof(submit) !== "undefined" || false;
             if (!(form instanceof HTMLElement) || typeof(form) === "string") {
                 form = document.querySelector(form);
-                console.log('found via selector')
             }
             if (!form) {
-                console.log('form not found or invalid');
+                console.log('form not found or invalid selector provided:');
                 return;
             }
             for (var name in vals) {
@@ -613,6 +615,9 @@
                     continue;
                 }
                 this.setField(field, value);
+            }
+            if (submit) {
+                form.submit();
             }
         };
 
@@ -651,6 +656,8 @@
             if (!field instanceof HTMLElement) {
                 console.log('the field must be an HTMLElement');
                 return;
+            } else {
+                console.log('set "' + field.getAttribute('name') + '" value to ' + value);
             }
             value = value || "";
             switch (field.nodeName.toLowerCase()) {

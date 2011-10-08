@@ -16,36 +16,32 @@ Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It
 In the following example, we'll query google for two terms consecutively, `capser` and `homer`, and aggregate the result links in a standard Array. Running the script will output a standard JSON string containing both the logs and the results:
 
 ``` javascript
-phantom.injectJs('path/to/casper.js');
-
-var links = [];
-var casper = new phantom.Casper({
-    logLevel: "info"
-});
-
-// User defined functions
-function q() {
-    document.querySelector('input[name="q"]').setAttribute('value', '%term%');
-    document.querySelector('form[name="f"]').submit();
-}
-
 function getLinks() {
     var links = document.querySelectorAll('h3.r a');
     return Array.prototype.map.call(links, function(e) {
-        return e.getAttribute('href');
+        return {
+            title: e.innerText,
+            href:  e.getAttribute('href')
+        };
     });
 }
 
-// Casper suite
-casper.start('http://google.fr/')
-    .thenEvaluate(q, {
-        term: 'casper'
+var links = [];
+var casper = new phantom.Casper({
+    logLevel: "debug",
+    verbose: true
+})
+    .start('http://google.fr/')
+    .then(function(self) {
+        self.fill('form[name=f]', {
+            q: 'casperjs'
+        }, true);
     })
     .then(function(self) {
         links = self.evaluate(getLinks);
-    })
-    .thenEvaluate(q, {
-        term: 'homer'
+        self.fill('form[name=f]', {
+            q: 'plop'
+        }, true);
     })
     .then(function(self) {
         links = links.concat(self.evaluate(getLinks));
@@ -425,9 +421,9 @@ casper.start('http://www.google.fr/', function(self) {
 });
 ```
 
-### Casper#fill(String selector, Object values)
+### Casper#fill(String selector, Object values, Boolean submit)
 
-Fills the fields of a form with given values.
+Fills the fields of a form with given values and optionnaly submit it.
 
 Example:
 
@@ -438,8 +434,7 @@ casper.start('http://some.tld/contact.form', function(self) {
         'content': 'So be careful.',
         'name':    'Chuck Norris',
         'email':   'chuck@norris.com',
-    });
-    self.click('input[type=submit]');
+    }, true);
 }).then(function(self) {
     self.evaluateOrDie(function() {
         return /message sent/.test(document.body.innerText);
@@ -449,7 +444,7 @@ casper.start('http://some.tld/contact.form', function(self) {
 });
 ```
 
-**WARNING:** Please don't use Casper nor PhantomJS to send spam, or I call the Chuck.
+**WARNING:** Please don't use CasperJS nor PhantomJS to send spam, or I'll be calling the Chuck. More seriously, please don't.
 
 ### Casper#repeat(int times, function then)
 
