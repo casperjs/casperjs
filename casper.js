@@ -181,26 +181,7 @@
         click: function(selector) {
             this.log("click on selector: " + selector, "debug");
             return this.evaluate(function() {
-                var s = '%selector%';
-                try {
-                    var elem = document.querySelector(s);
-                } catch (e) {
-                    console.log('invalid selector: ' + s);
-                    return false;
-                }
-                if (!elem) {
-                    console.log('selector "' + s + '" did not find any matching element');
-                    return false;
-                }
-                var evt = document.createEvent("MouseEvents");
-                evt.initMouseEvent("click", true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
-                if (elem.dispatchEvent(evt)) {
-                    return true;
-                }
-                if (elem.hasAttribute('href')) {
-                    document.location = elem.getAttribute('href');
-                    return true;
-                }
+                return __utils__.click('%selector%');
             }, {
                 selector: selector.replace("'", "\'")
             });
@@ -310,6 +291,24 @@
         exit: function(status) {
             phantom.exit(status);
             return this;
+        },
+
+        /**
+         * Fills a form with provided field values.
+         *
+         * @param  String  selector  A CSS3 selector to the target form to fill
+         * @param  Object  values    Field values
+         */
+        fill: function(selector, values) {
+            if (!typeof(values) === "object") {
+                throw "form values must be an object";
+            }
+            return this.evaluate(function() {
+                __utils__.fill('%selector%', JSON.parse('%values%'));
+            }, {
+                selector: selector.replace("'", "\'"),
+                values:   JSON.stringify(values).replace("'", "\'"),
+            });
         },
 
         /**
@@ -511,6 +510,35 @@
      */
     phantom.Casper.ClientUtils = function() {
         /**
+         * Clicks on the DOM element behind the provided selector.
+         *
+         * @param  String  selector  A CSS3 selector to the element to click
+         * @return Boolean
+         */
+        this.click = function(selector) {
+            try {
+                var elem = document.querySelector(selector);
+            } catch (e) {
+                console.log('invalid selector: ' + selector);
+                return false;
+            }
+            if (!elem) {
+                console.log('selector "' + selector + '" did not find any matching element');
+                return false;
+            }
+            var evt = document.createEvent("MouseEvents");
+            evt.initMouseEvent("click", true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
+            if (elem.dispatchEvent(evt)) {
+                return true;
+            }
+            if (elem.hasAttribute('href')) {
+                document.location = elem.getAttribute('href');
+                return true;
+            }
+            return false;
+        };
+
+        /**
          * Base64 encodes a string, even binary ones. Succeeds where
          * window.btoa() fails.
          *
@@ -560,6 +588,36 @@
         };
 
         /**
+         * Fills a form with provided field values.
+         *
+         * @param  HTMLElement|String  form  A form element, or a CSS3 selector to a form element
+         * @param  Object              vals  Field values
+         */
+        this.fill = function(form, vals) {
+            if (!(form instanceof HTMLElement) || typeof(form) === "string") {
+                form = document.querySelector(form);
+                console.log('found via selector')
+            }
+            if (!form) {
+                console.log('form not found or invalid');
+                return;
+            }
+            console.log('form is ' + (typeof(form)))
+            for (var name in vals) {
+                if (!vals.hasOwnProperty(name)) {
+                    continue;
+                }
+                var field = form.querySelector('[name="' + name + '"]')
+                ,   value = vals[name];
+                if (!field) {
+                    console.log('no field named "' + name + '" in form');
+                    continue;
+                }
+                this.setField(field, value);
+            }
+        };
+
+        /**
          * Downloads a resource behind an url and returns its base64-encoded
          * contents.
          *
@@ -583,6 +641,46 @@
             xhr.send(null);
             return xhr.responseText;
         };
+
+        /**
+         * Sets a field value. Fails silently, but log error messages.
+         *
+         * @param  HTMLElement  field  The field element
+         * @param  mixed        value  The field value to set
+         */
+        this.setField = function(field, value) {
+            if (!field instanceof HTMLElement) {
+                console.log('the field must be an HTMLElement');
+                return;
+            }
+            value = value || "";
+            switch (field.nodeName.toLowerCase()) {
+                case "input":
+                    var type = field.getAttribute('type') || "text";
+                    switch (type.toLowerCase()) {
+                        case "text":
+                        case "password":
+                        default:
+                            field.setAttribute('value', value);
+                            break;
+                        case "checkbox":
+                            field.setAttribute('checked', value ? "checked" : "");
+                            break;
+                        case "radio":
+                            field.click();
+                            break;
+                    }
+                    break;
+                case "textarea":
+                    field.innerText = value;
+                    break;
+                case "select":
+                    console.log('select tag fillin not implemented');
+                    break;
+                default:
+                    console.log('unsupported field type: ' + type);
+            }
+        }
     };
 
     /**
