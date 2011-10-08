@@ -35,6 +35,7 @@
      * onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
      * page              | WebPage  | null    | An existing WebPage instance
      * pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
+     * timeout           | Number   | null    | Max timeout in milliseconds
      * verbose           | Boolean  | false   | Realtime output of log messages
      *
      * @param  Object  options  Casper options
@@ -56,6 +57,7 @@
             onPageInitialized: null,
             page:              null,
             pageSettings:      { userAgent: DEFAULT_USER_AGENT },
+            timeout:           null,
             verbose:           false
         };
         // local properties
@@ -418,6 +420,12 @@
             }
             this.page.settings = mergeObjects(this.page.settings, this.options.pageSettings);
             this.started = true;
+            if (typeof(this.options.timeout) === "number" && this.options.timeout > 0) {
+                self.log("execution timeout set to " + this.options.timeout + 'ms', "info");
+                setTimeout(function(self) {
+                    self.log("timeout of " + self.options.timeout + "ms exceeded", "info").exit();
+                }, this.options.timeout, this);
+            }
             if (typeof(this.options.onPageInitialized) === "function") {
                 this.log("Post-configuring WebPage instance", "debug");
                 this.options.onPageInitialized(this.page);

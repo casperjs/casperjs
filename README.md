@@ -209,6 +209,7 @@ onDie             | function | null    | A function to be called when Casper#die
 onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
 page              | WebPage  | null    | An existing WebPage instance
 pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
+timeout           | Number   | null    | Max timeout in milliseconds
 verbose           | Boolean  | false   | Realtime output of log messages
 ```
 
