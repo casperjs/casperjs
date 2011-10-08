@@ -602,7 +602,6 @@
                 console.log('form not found or invalid');
                 return;
             }
-            console.log('form is ' + (typeof(form)))
             for (var name in vals) {
                 if (!vals.hasOwnProperty(name)) {
                     continue;
