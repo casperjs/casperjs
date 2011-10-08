@@ -1,13 +1,14 @@
 # Casper.js
 
-Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It eases the process of defining a full navigation scenario and provides useful high-level function, methods & syntaxic sugar for doing common tasks such as:
+Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It eases the process of defining a full navigation scenario and provides useful high-level functions, methods & syntaxic sugar for doing common tasks such as:
 
 - defining & ordering navigation steps
+- filling forms
+- clicking links
 - capturing screenshots of a page (or an area)
 - making assertions on remote DOM
 - logging events
-- evaluating dynamic code within the remote page environment
-- retrieve base64 encoded version of remote resources
+- download base64 encoded resources, even binary ones
 - catch errors and react accordingly
 
 ## Quickstart
