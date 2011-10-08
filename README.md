@@ -424,6 +424,32 @@ casper.start('http://www.google.fr/', function(self) {
 });
 ```
 
+### Casper#fill(String selector, Object values)
+
+Fills the fields of a form with given values.
+
+Example:
+
+```javascript
+casper.start('http://some.tld/contact.form', function(self) {
+    self.fill('form#contact-form', {
+        'subject': 'I am watching you',
+        'content': 'So be careful.',
+        'name':    'Chuck Norris',
+        'email':   'chuck@norris.com',
+    });
+    self.click('input[type=submit]');
+}).then(function(self) {
+    self.evaluateOrDie(function() {
+        return /message sent/.test(document.body.innerText);
+    }, 'sending message failed');
+}).run(function(self) {
+    self.echo('message sent').exit();
+});
+```
+
+**WARNING:** Please don't use Casper nor PhantomJS to send spam, or I call the Chuck.
+
 ### Casper#repeat(int times, function then)
 
 Repeats a navigation step a given number of times.
