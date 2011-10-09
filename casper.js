@@ -248,8 +248,8 @@
          * placeholer names:
          *
          *     casper.evaluate(function() {
-         *         document.querySelector('#username').setAttribute('value', '%username%');
-         *         document.querySelector('#password').setAttribute('value', '%password%');
+         *         document.querySelector('#username').value = '%username%';
+         *         document.querySelector('#password').value = '%password%';
          *         document.querySelector('#submit').click();
          *     }, {
          *         username: 'Bazoonga',
@@ -672,27 +672,31 @@
                 case "input":
                     var type = field.getAttribute('type') || "text";
                     switch (type.toLowerCase()) {
-                        case "text":
                         case "password":
-                        default:
-                            field.setAttribute('value', value);
+                        case "text":
+                        case "textarea":
+                            field.value = value;
                             break;
                         case "checkbox":
                             field.setAttribute('checked', value ? "checked" : "");
                             break;
+                        case "file":
+                            console.log("file field filling is not supported");
+                            break;
                         case "radio":
                             field.click();
                             break;
+                        default:
+                            console.log("unsupported field type: " + type);
+                            break;
                     }
-                    break;
-                case "textarea":
-                    field.innerText = value;
                     break;
                 case "select":
                     console.log('select tag fillin not implemented');
                     break;
                 default:
                     console.log('unsupported field type: ' + type);
+                    break;
             }
         }
     };
