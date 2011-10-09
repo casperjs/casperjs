@@ -13,7 +13,7 @@ Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It
 
 ## Quickstart
 
-In the following example, we'll query google for two terms consecutively, `capser` and `homer`, and aggregate the result links in a standard Array. Running the script will output a standard JSON string containing both the logs and the results:
+In the following example, we'll query google for two terms consecutively, `capserjs` and `phantomjs`, and aggregate the result links in a standard Array. Then we'll output the result to the console:
 
 ``` javascript
 function getLinks() {
@@ -28,30 +28,35 @@ function getLinks() {
 
 var links = [];
 var casper = new phantom.Casper({
-    logLevel: "debug",
-    verbose: true
+    logLevel:   "info", // we only want "info" or higher level log messages
+    loadImages: false,  // do not download images to save bandwidth
+    loadPlugins: false, // do not load plugins to save kitten
+    verbose: true       // write log messages to the console
 })
     .start('http://google.fr/')
     .then(function(self) {
+        // search for 'casperjs' from google form
         self.fill('form[name=f]', {
             q: 'casperjs'
         }, true);
     })
     .then(function(self) {
+        // aggregate results for the 'casperjs' search
         links = self.evaluate(getLinks);
+        // now search for 'phantomjs' by fillin the form again
         self.fill('form[name=f]', {
-            q: 'plop'
+            q: 'phantomjs'
         }, true);
     })
     .then(function(self) {
+        // aggregate results for the 'phantomjs' search
         links = links.concat(self.evaluate(getLinks));
     })
     .run(function(self) {
-        self.echo(JSON.stringify({
-            result: self.result,
-            links: links
-        }, null, '  '));
-        self.exit();
+        // echo results in some pretty fashion
+        self.echo(links.map(function(i) {
+            return i.title + ' (' + i.href + ')';
+        }).join('\n')).exit();
     })
 ;
 ```
@@ -60,104 +65,39 @@ var casper = new phantom.Casper({
 Run it:
 
     $ phantomjs example.js
-    {
-      "result": {
-        "log": [
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Starting…",
-            "date": "Mon Sep 05 2011 16:10:56 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Running suite: 4 steps",
-            "date": "Mon Sep 05 2011 16:10:56 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 1/4: http://www.google.fr/ (HTTP 301)",
-            "date": "Mon Sep 05 2011 16:10:57 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 1/4: done in 1259ms.",
-            "date": "Mon Sep 05 2011 16:10:57 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 2/4: http://www.google.fr/search?sclient=psy&hl=fr&site=&source=hp&q=casper&pbx=1&oq=&aq=&aqi=&aql=&gs_sm=&gs_upl= (HTTP 301)",
-            "date": "Mon Sep 05 2011 16:10:58 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 2/4: done in 2145ms.",
-            "date": "Mon Sep 05 2011 16:10:58 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 3/4: http://www.google.fr/search?sclient=psy&hl=fr&site=&source=hp&q=casper&pbx=1&oq=&aq=&aqi=&aql=&gs_sm=&gs_upl= (HTTP 301)",
-            "date": "Mon Sep 05 2011 16:10:58 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 3/4: done in 2390ms.",
-            "date": "Mon Sep 05 2011 16:10:58 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 4/4: http://www.google.fr/search?sclient=psy&hl=fr&source=hp&q=homer&pbx=1&oq=&aq=&aqi=&aql=&gs_sm=&gs_upl= (HTTP 301)",
-            "date": "Mon Sep 05 2011 16:10:59 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Step 4/4: done in 3077ms.",
-            "date": "Mon Sep 05 2011 16:10:59 GMT+0200 (CEST)"
-          },
-          {
-            "level": "info",
-            "space": "phantom",
-            "message": "Done 4 steps in 3077ms.",
-            "date": "Mon Sep 05 2011 16:10:59 GMT+0200 (CEST)"
-          }
-        ],
-        "status": "success",
-        "time": 3077
-      },
-      "links": [
-        "http://fr.wikipedia.org/wiki/Casper_le_gentil_fant%C3%B4me",
-        "http://fr.wikipedia.org/wiki/Casper",
-        "http://casperflights.com/",
-        "http://www.allocine.fr/film/fichefilm_gen_cfilm=13018.html",
-        "/search?q=casper&hl=fr&prmd=ivns&tbm=isch&tbo=u&source=univ&sa=X&ei=cdhkTurpFa364QTB5uGeCg&ved=0CFkQsAQ",
-        "http://www.youtube.com/watch?v=Kuvo0QMiNEE",
-        "http://www.youtube.com/watch?v=W7cW5YlHaeQ",
-        "http://www.imdb.com/title/tt0112642/",
-        "http://blog.caspie.net/",
-        "http://www.casperwy.gov/",
-        "http://www.lequipe.fr/Cyclisme/CyclismeFicheCoureur147.html",
-        "http://homer-simpson-tv.blog4ever.com/",
-        "http://fr.wikipedia.org/wiki/Homer_Simpson",
-        "http://en.wikipedia.org/wiki/Homer",
-        "/search?q=homer&hl=fr&prmd=ivnsb&tbm=isch&tbo=u&source=univ&sa=X&ei=cthkTr73Hefh4QSUmt3UCg&ved=0CEQQsAQ",
-        "http://www.youtube.com/watch?v=Ajd08hgerRo",
-        "http://www.koreus.com/video/homer-simpson-photo-39-ans.html",
-        "http://www.nrel.gov/homer/",
-        "http://www.luds.net/homer.php",
-        "http://www.thesimpsons.com/bios/bios_family_homer.htm",
-        "http://www.homeralaska.org/",
-        "http://homeralaska.com/"
-      ]
-    }
+    [info] [phantom] Starting…
+    [info] [phantom] Running suite: 3 steps
+    [info] [phantom] Step 1/3: http://www.google.fr/ (HTTP 301)
+    [info] [remote] set "q" value to casperjs
+    [info] [remote] submitting form to /search, HTTP GET
+    [info] [phantom] Step 1/3: done in 1592ms.
+    [info] [phantom] Step 2/3: http://www.google.fr/search?sclient=psy-ab&hl=fr&site=&source=hp&q=casperjs&pbx=1&oq=&aq=&aqi=&aql=&gs_sm=&gs_upl= (HTTP 301)
+    [info] [remote] set "q" value to phantomjs
+    [info] [remote] submitting form to /search, HTTP GET
+    [info] [phantom] Step 2/3: done in 3091ms.
+    [info] [phantom] Step 3/3: http://www.google.fr/search?sclient=psy-ab&hl=fr&source=hp&q=phantomjs&pbx=1&oq=&aq=&aqi=&aql=&gs_sm=&gs_upl= (HTTP 301)
+    [info] [phantom] Step 3/3: done in 3862ms.
+    [info] [phantom] Done 3 steps in 4111ms.
+    n1k0/casperjs - GitHub (https://github.com/n1k0/casperjs)
+    #2: Some functionality has broken due to 1.3 update - Issues - n1k0 ... (https://github.com/n1k0/casperjs/issues/2)
+    Commit History for n1k0/casperjs - GitHub (https://github.com/n1k0/casperjs/commits/master)
+    #1: Way to step forward and backwards - Issues - n1k0/casperjs ... (https://github.com/n1k0/casperjs/issues/1)
+    Casper Js | Facebook (http://www.facebook.com/people/Casper-Js/100000337260665)
+    Casper Js Profiles | Facebook (http://www.facebook.com/public/Casper-Js)
+    hashtags.org - CasperJS (http://hashtags.org/tag/CasperJS/)
+    Zerotohundred.com - View Profile: Casper JS (http://www.zerotohundred.com/newforums/members/casper-js.html)
+    J S Enterprises in Casper, WY | Casper J S Enterprises - YP.com (http://www.yellowpages.com/casper-wy/j-s-enterprises)
+    Best Guitat Backing Traks Free Download: ICFMeister, Handy Backup ... (http://www.softwaregeek.com/guitat-backing-traks/p2.html)
+    PhantomJS: Headless WebKit with JavaScript API (http://www.phantomjs.org/)
+    phantomjs - headless WebKit with JavaScript API - Google Project ... (http://code.google.com/p/phantomjs/)
+    QuickStart - phantomjs - 5-Minute Guide - headless WebKit with ... (http://code.google.com/p/phantomjs/wiki/QuickStart)
+    Paris JS #10 : Introduction à PhantomJS, un navigateur webkit ... (http://svay.com/blog/index/post/2011/08/31/Paris-JS-10-%3A-Introduction-%C3%A0-PhantomJS,-un-navigateur-webkit-headless)
+    ariya/phantomjs - GitHub (https://github.com/ariya/phantomjs)
+    twitter.com/search/%23%23PhantomJS/grid (http://twitter.com/search/%23%23PhantomJS/grid)
+    Phantom.js | Pilvee blog (http://pilvee.com/blog/tag/phantom-js/)
+    don't code today what you can't debug tomorrow: PhantomJS ... (http://ariya.blogspot.com/2011/01/phantomjs-minimalistic-headless-webkit.html)
+    DailyJS: PhantomJS, load.js, Phantom Limb, OpenOdyssey (http://dailyjs.com/2011/01/28/phantoms/)
+    PhantomJS: The Power of WebKit but Without the Broswer (http://www.readwriteweb.com/hack/2011/03/phantomjs-the-power-of-webkit.php)
 
 ## CoffeeScript
 
