@@ -616,7 +616,7 @@
                 if (!vals.hasOwnProperty(name)) {
                     continue;
                 }
-                var field = form.querySelector('[name="' + name + '"]')
+                var field = form.querySelectorAll('[name="' + name + '"]')
                 ,   value = vals[name];
                 if (!field) {
                     console.log('no field named "' + name + '" in form');
@@ -657,19 +657,23 @@
         };
 
         /**
-         * Sets a field value. Fails silently, but log error messages.
+         * Sets a field (or a set of fields) value. Fails silently, but log
+         * error messages.
          *
-         * @param  HTMLElement  field  The field element
-         * @param  mixed        value  The field value to set
+         * @param  HTMLElement|NodeList  field  One or more element defining a field
+         * @param  mixed                 value  The field value to set
          */
         this.setField = function(field, value) {
-            if (!field instanceof HTMLElement) {
-                console.log('the field must be an HTMLElement');
-                return;
-            } else {
-                console.log('set "' + field.getAttribute('name') + '" value to ' + value);
-            }
+            var fields;
             value = value || "";
+            if (field instanceof NodeList) {
+                fields = field;
+                field = fields[0];
+            }
+            if (!field instanceof HTMLElement) {
+                console.log('invalid field type; only HTMLElement and NodeList are supported');
+            }
+            console.log('set "' + field.getAttribute('name') + '" value to ' + value);
             var nodeName = field.nodeName.toLowerCase();
             switch (nodeName) {
                 case "input":
@@ -700,16 +704,20 @@
                             console.log("file field filling is not supported");
                             break;
                         case "radio":
-                            field.click();
+                            if (fields) {
+                                Array.prototype.forEach.call(fields, function(e) {
+                                    e.checked = (e.value === value);
+                                });
+                            } else {
+                                console.log('radio elements are empty');
+                            }
                             break;
                         default:
-                            console.log("unsupported field type: " + type);
+                            console.log("unsupported input field type: " + type);
                             break;
                     }
                     break;
                 case "select":
-                    console.log('select tag fillin not implemented');
-                    break;
                 case "textarea":
                     field.value = value;
                     break;
