@@ -27,6 +27,10 @@ phantom.Casper.extend({
         }
     },
 
+    assertEval: function(fn, message) {
+        return this.assert(this.evaluate(fn), message);
+    },
+
     assertEvalEquals: function(fn, expected, message) {
         return this.assertEquals(this.evaluate(fn), expected, message);
     },
