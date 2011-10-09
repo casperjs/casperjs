@@ -18,6 +18,8 @@ Feel free to browse our [sample examples repository](https://github.com/n1k0/cas
 In the following example, we'll query google for two terms consecutively, `capserjs` and `phantomjs`, and aggregate the result links in a standard Array. Then we'll output the result to the console:
 
 ``` javascript
+phantom.injectJs('casper.js');
+
 function getLinks() {
     var links = document.querySelectorAll('h3.r a');
     return Array.prototype.map.call(links, function(e) {
@@ -66,7 +68,7 @@ var casper = new phantom.Casper({
 
 Run it:
 
-    $ phantomjs example.js
+    $ phantomjs samples/googlelinks.js
     [info] [phantom] Starting…
     [info] [phantom] Running suite: 3 steps
     [info] [phantom] Step 1/3: http://www.google.fr/ (HTTP 301)
