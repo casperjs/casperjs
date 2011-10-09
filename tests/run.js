@@ -3,10 +3,7 @@ phantom.injectJs('tests/assert.js');
 
 var casper = new phantom.Casper({
     verbose: true,
-}), testResults = {
-    passed: 0,
-    failed: 0
-};
+});
 
 casper.start('tests/site/index.html', function(self) {
     self.assertEvalEquals(function() {

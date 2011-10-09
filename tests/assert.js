@@ -1,3 +1,8 @@
+var testResults = {
+    passed: 0,
+    failed: 0
+};
+
 phantom.Casper.extend({
     assert: function(condition, message) {
         var status = '[PASS]';
