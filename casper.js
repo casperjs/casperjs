@@ -625,6 +625,8 @@
                 this.setField(field, value);
             }
             if (submit) {
+                console.log('submitting form to ' + (form.getAttribute('action') || "unknown")
+                            + ', HTTP ' + (form.getAttribute('method').toUpperCase() || "GET"));
                 form.submit();
             }
         };
