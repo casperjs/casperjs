@@ -311,7 +311,7 @@
             }, {
                 selector: selector.replace("'", "\'"),
                 values:   JSON.stringify(values).replace("'", "\'"),
-                submit:   JSON.stringify(submit)
+                submit:   JSON.stringify(submit||false)
             });
         },
 
