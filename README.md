@@ -11,6 +11,8 @@ Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It
 - download base64 encoded resources, even binary ones
 - catch errors and react accordingly
 
+Feel free to browse our [sample examples repository](https://github.com/n1k0/casperjs/tree/master/samples). Don't hesitate to pull request for any cool example of yours as well!
+
 ## Quickstart
 
 In the following example, we'll query google for two terms consecutively, `capserjs` and `phantomjs`, and aggregate the result links in a standard Array. Then we'll output the result to the console:
