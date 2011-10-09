@@ -604,7 +604,7 @@
          * @param  Object              vals  Field values
          */
         this.fill = function(form, vals, submit) {
-            submit = typeof(submit) !== "undefined" || false;
+            submit = submit || false;
             if (!(form instanceof HTMLElement) || typeof(form) === "string") {
                 form = document.querySelector(form);
             }
@@ -670,13 +670,13 @@
                 console.log('set "' + field.getAttribute('name') + '" value to ' + value);
             }
             value = value || "";
-            switch (field.nodeName.toLowerCase()) {
+            var nodeName = field.nodeName.toLowerCase();
+            switch (nodeName) {
                 case "input":
                     var type = field.getAttribute('type') || "text";
                     switch (type.toLowerCase()) {
                         case "password":
                         case "text":
-                        case "textarea":
                             field.value = value;
                             break;
                         case "checkbox":
@@ -696,8 +696,11 @@
                 case "select":
                     console.log('select tag fillin not implemented');
                     break;
+                case "textarea":
+                    field.value = value;
+                    break;
                 default:
-                    console.log('unsupported field type: ' + type);
+                    console.log('unsupported field type: ' + nodeName);
                     break;
             }
         }
