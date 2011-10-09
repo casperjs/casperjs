@@ -15,12 +15,16 @@ casper.start('tests/site/index.html', function(self) {
     self.click('a:first-child');
 });
 
+casper.assert(casper.steps.length === 1, 'start() can add a new navigation step');
+
 casper.then(function(self) {
     self.assertEvalEquals(function() {
         return document.title;
     }, 'CasperJS test target', 'click() casper can click on a text link and react when it is loaded');
     self.click('a:first-child');
 });
+
+casper.assert(casper.steps.length === 2, 'then() adds a new navigation step');
 
 casper.then(function(self) {
     self.fill('form[action="form.html"]', {
