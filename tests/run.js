@@ -45,8 +45,5 @@ casper.then(function(self) {
 });
 
 casper.run(function(self) {
-    self.echo("==========================================");
-    var total = testResults.passed + testResults.failed;
-    self.echo(total + ' tests executed, ' + testResults.passed + ' passed, ' + testResults.failed + ' failed.');
-    self.exit();
+    self.renderResults();
 });
