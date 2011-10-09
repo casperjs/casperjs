@@ -607,6 +607,12 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
 });
 ```
 
+## Testing
+
+CasperJS has some unit and functional tests, located in the `tests` subfolder. More tests will be added in the future. To run the test suite, from the root of a checkout of the casperjs repository:
+
+    $ phantomjs tests/run.js
+
 ## Licensing
 
 `Casper.js` is released under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
