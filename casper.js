@@ -130,7 +130,7 @@
          * @return Casper
          */
         captureSelector: function(targetFile, selector) {
-            return this.capture(targetFile, self.evaluate(function() {
+            return this.capture(targetFile, this.evaluate(function() {
                 try {
                     return document.querySelector(selector).getBoundingClientRect();
                 } catch (e) {
@@ -332,7 +332,7 @@
             }
             // Form submission?
             if (submit === true) {
-                self.evaluate(function() {
+                this.evaluate(function() {
                     var form = document.querySelector('%selector%');
                     console.log('submitting form to ' + (form.getAttribute('action') || "unknown")
                               + ', HTTP ' + (form.getAttribute('method').toUpperCase() || "GET"));

@@ -12,7 +12,8 @@ function getLinks() {
 
 var links = [];
 var casper = new phantom.Casper({
-    logLevel:   "info", // we only want "info" or higher level log messages
+    faultTolerant: false,
+    logLevel:   "debug", // we only want "info" or higher level log messages
     loadImages: false,  // do not download images to save bandwidth
     loadPlugins: false, // do not load plugins to save kitten
     verbose: true       // write log messages to the console
