@@ -21,8 +21,8 @@ phantom.Casper.extend({
             testResults.passed++;
         } else {
             this.echo('[FAIL] ' + message);
-            this.echo('  got:      ' + testValue);
-            this.echo('  expected: ' + expected);
+            this.echo('       got:      ' + testValue);
+            this.echo('       expected: ' + expected);
             testResults.failed++;
         }
     },

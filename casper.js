@@ -27,8 +27,9 @@
      * Main Casper class. Available options are:
      *
      * Name              | Type     | Default | Description
-     * ——————————————————+——————————+—————————+————————————————————————————————————————————————————————————————————
+     * ——————————————————+——————————+—————————+————————————————————————————————————————————————————————————————————————
      * clientScripts     | Array    | []      | A collection of script filepaths to include to every page loaded
+     * faultTolerant     | Boolean  | true    | Catch and log exceptions when executing steps in a non-blocking fashion
      * logLevel          | String   | "error" | Logging level (see logLevels for available values)
      * onDie             | function | null    | A function to be called when Casper#die() is called
      * onError           | function | null    | A function to be called when an "error" level event occurs
@@ -51,6 +52,7 @@
         // default options
         this.defaults = {
             clientScripts:     [],
+            faultTolerant:     true,
             logLevel:          "error",
             onDie:             null,
             onError:           null,
@@ -151,10 +153,14 @@
                 self.log(stepInfo + self.page.evaluate(function() {
                     return document.location.href;
                 }) + ' (HTTP ' + self.currentHTTPStatus + ')', "info");
-                try {
+                if (self.options.faultTolerant) {
+                    try {
+                        step(self);
+                    } catch (e) {
+                        self.log("Step error: " + e, "error");
+                    }
+                } else {
                     step(self);
-                } catch (e) {
-                    self.log("Fatal: " + e, "error");
                 }
                 var time = new Date().getTime() - self.startTime;
                 self.log(stepInfo + "done in " + time + "ms.", "info");
@@ -195,7 +201,7 @@
          * @return Casper
          */
         debugHTML: function() {
-            this.echo(this.page.evaluate(function() {
+            this.echo(this.evaluate(function() {
                 return document.body.innerHTML;
             }));
             return this;
@@ -207,7 +213,7 @@
          * @return Casper
          */
         debugPage: function() {
-            this.echo(this.page.evaluate(function() {
+            this.echo(this.evaluate(function() {
                 return document.body.innerText;
             }));
             return this;
@@ -299,20 +305,42 @@
          * Fills a form with provided field values.
          *
          * @param  String  selector  A CSS3 selector to the target form to fill
-         * @param  Object  values    Field values
+         * @param  Object  vals      Field values
          * @param  Boolean submit    Submit the form?
          */
-        fill: function(selector, values, submit) {
-            if (!typeof(values) === "object") {
+        fill: function(selector, vals, submit) {
+            if (!typeof(vals) === "object") {
                 throw "form values must be an object";
             }
-            return this.evaluate(function() {
-                __utils__.fill('%selector%', JSON.parse('%values%'), JSON.parse('%submit%'));
+            var fillResults = this.evaluate(function() {
+               return __utils__.fill('%selector%', JSON.parse('%values%'));
             }, {
                 selector: selector.replace("'", "\'"),
-                values:   JSON.stringify(values).replace("'", "\'"),
-                submit:   JSON.stringify(submit||false)
+                values:   JSON.stringify(vals).replace("'", "\'"),
             });
+            if (!fillResults) {
+                throw "unable to fill form";
+            }
+            // File uploads
+            if (fillResults.files && fillResults.files.length > 0) {
+                (function(self) {
+                    fillResults.files.forEach(function(file) {
+                        var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
+                        self.page.uploadFile(fileFieldSelector, file.path);
+                    });
+                })(this);
+            }
+            // Form submission?
+            if (submit === true) {
+                self.evaluate(function() {
+                    var form = document.querySelector('%selector%');
+                    console.log('submitting form to ' + (form.getAttribute('action') || "unknown")
+                              + ', HTTP ' + (form.getAttribute('method').toUpperCase() || "GET"));
+                    form.submit();
+                }, {
+                    selector: selector.replace("'", "\'"),
+                });
+            }
         },
 
         /**
@@ -600,17 +628,21 @@
         /**
          * Fills a form with provided field values, and optionnaly submits it.
          *
-         * @param  HTMLElement|String  form  A form element, or a CSS3 selector to a form element
-         * @param  Object              vals  Field values
+         * @param  HTMLElement|String  form    A form element, or a CSS3 selector to a form element
+         * @param  Object              vals    Field values
+         * @return Object                      An object containing setting result for each field, including file uploads
          */
-        this.fill = function(form, vals, submit) {
-            submit = submit || false;
+        this.fill = function(form, vals) {
+            var out = {
+                fields: [],
+                files:  [],
+            };
             if (!(form instanceof HTMLElement) || typeof(form) === "string") {
                 form = document.querySelector(form);
             }
             if (!form) {
                 console.log('form not found or invalid selector provided:');
-                return;
+                return out;
             }
             for (var name in vals) {
                 if (!vals.hasOwnProperty(name)) {
@@ -622,13 +654,20 @@
                     console.log('no field named "' + name + '" in form');
                     continue;
                 }
-                this.setField(field, value);
+                try {
+                    out.fields[name] = this.setField(field, value);
+                } catch (e) {
+                    if (e.name === "FileUploadError") {
+                        out.files.push({
+                            name: name,
+                            path: e.path,
+                        });
+                    } else {
+                        throw e;
+                    }
+                }
             }
-            if (submit) {
-                console.log('submitting form to ' + (form.getAttribute('action') || "unknown")
-                            + ', HTTP ' + (form.getAttribute('method').toUpperCase() || "GET"));
-                form.submit();
-            }
+            return out;
         };
 
         /**
@@ -664,7 +703,7 @@
          * @param  mixed                 value  The field value to set
          */
         this.setField = function(field, value) {
-            var fields;
+            var fields, out;
             value = value || "";
             if (field instanceof NodeList) {
                 fields = field;
@@ -673,7 +712,7 @@
             if (!field instanceof HTMLElement) {
                 console.log('invalid field type; only HTMLElement and NodeList are supported');
             }
-            console.log('set "' + field.getAttribute('name') + '" value to ' + value);
+            console.log('set "' + field.getAttribute('name') + '" field value to ' + value);
             var nodeName = field.nodeName.toLowerCase();
             switch (nodeName) {
                 case "input":
@@ -701,7 +740,11 @@
                             field.setAttribute('checked', value ? "checked" : "");
                             break;
                         case "file":
-                            console.log("file field filling is not supported");
+                            throw {
+                                name:    "FileUploadError",
+                                message: "file field must be filled using page.uploadFile",
+                                path:    value
+                            };
                             break;
                         case "radio":
                             if (fields) {
@@ -709,11 +752,11 @@
                                     e.checked = (e.value === value);
                                 });
                             } else {
-                                console.log('radio elements are empty');
+                                out = 'provided radio elements are empty';
                             }
                             break;
                         default:
-                            console.log("unsupported input field type: " + type);
+                            out = "unsupported input field type: " + type;
                             break;
                     }
                     break;
@@ -722,10 +765,11 @@
                     field.value = value;
                     break;
                 default:
-                    console.log('unsupported field type: ' + nodeName);
+                    out = 'unsupported field type: ' + nodeName;
                     break;
             }
-        }
+            return out;
+        };
     };
 
     /**

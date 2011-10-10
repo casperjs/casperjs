@@ -146,10 +146,12 @@ Casper constructor accepts a single `options` argument which is an object. Avail
 
 ```
 Name              | Type     | Default | Description
-——————————————————+——————————+—————————+————————————————————————————————————————————————————————————————————
+——————————————————+——————————+—————————+————————————————————————————————————————————————————————————————————————
 clientScripts     | Array    | []      | A collection of script filepaths to include to every page loaded
+faultTolerant     | Boolean  | true    | Catch and log exceptions when executing steps in a non-blocking fashion
 logLevel          | String   | "error" | Logging level (see logLevels for available values)
 onDie             | function | null    | A function to be called when Casper#die() is called
+onError           | function | null    | A function to be called when an "error" level event occurs
 onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
 page              | WebPage  | null    | An existing WebPage instance
 pageSettings      | Object   | {}      | PhantomJS's WebPage settings object

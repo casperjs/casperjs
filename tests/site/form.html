@@ -5,7 +5,7 @@
         <title>CasperJS test form</title>
     </head>
     <body>
-        <form action="form.html">
+        <form action="form.html" enctype="multipart/form-data">
             <input type="text" name="email" placeholder="email" />
             <textarea name="content"></textarea>
             <select name="topic">
@@ -15,6 +15,7 @@
             <input type="checkbox" name="check" />
             <input type="radio" name="choice" value="yes"/>
             <input type="radio" name="choice" value="no"/>
+            <input type="file" name="file"/>
             <input type="submit"/>
         </form>
     </body>
