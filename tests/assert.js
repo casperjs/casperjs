@@ -37,8 +37,9 @@ phantom.Casper.extend({
 
     renderResults: function() {
         this.echo("==========================================");
-        var total = testResults.passed + testResults.failed;
-        this.echo(total + ' tests executed, ' + testResults.passed + ' passed, ' + testResults.failed + ' failed.');
+        var total = testResults.passed + testResults.failed,
+            status = testResults.failed > 0 ? 'FAIL' : 'OK';
+        this.echo(status + ': ' + total + ' tests executed, ' + testResults.passed + ' passed, ' + testResults.failed + ' failed.');
         this.exit();
     }
 });
