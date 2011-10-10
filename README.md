@@ -372,15 +372,32 @@ casper.start('http://www.google.fr/', function(self) {
 
 Fills the fields of a form with given values and optionnaly submit it.
 
-Example:
+Example with this sample html form:
+
+``` html
+<form action="/contact" id="contact-form" enctype="multipart/form-data">
+    <input type="text" name="subject"/>
+    <textearea name="content"></textearea>
+    <input type="radio" name="civility" value="Mr"/> Mr
+    <input type="radio" name="civility" value="Mrs"/> Mrs
+    <input type="text" name="name"/>
+    <input type="email" name="email"/>
+    <input type="file" name="attachment"/>
+    <input type="checkbox" name="cc"/> Receive a copy
+    <input type="submit"/>
+</form>
+```
 
 ```javascript
 casper.start('http://some.tld/contact.form', function(self) {
     self.fill('form#contact-form', {
-        'subject': 'I am watching you',
-        'content': 'So be careful.',
-        'name':    'Chuck Norris',
-        'email':   'chuck@norris.com',
+        'subject':    'I am watching you',
+        'content':    'So be careful.',
+        'civility':   'Mr',
+        'name':       'Chuck Norris',
+        'email':      'chuck@norris.com',
+        'cc':         true,
+        'attachment': '/Users/chuck/roundhousekick.doc'
     }, true);
 }).then(function(self) {
     self.evaluateOrDie(function() {
