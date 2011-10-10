@@ -29,6 +29,9 @@ casper.start('tests/site/index.html', function(self) {
     self.assertEvalEquals(function() {
         return document.title;
     }, 'CasperJS test index', 'start() casper can start itself an open an url');
+    self.assertEval(function() {
+        return typeof(__utils__) === "object";
+    }, 'start() injects ClientUtils instance within remote DOM');
     var image = self.base64encode('file://' + phantom.libraryPath + '/site/images/phantom.png');
     self.assertEquals(image.length, 6160, 'base64encode() can retrieve base64 contents');
     self.click('a[href="test.html"]');
