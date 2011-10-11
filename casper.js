@@ -309,11 +309,12 @@
          * @param  Boolean submit    Submit the form?
          */
         fill: function(selector, vals, submit) {
-            if (typeof(selector) !== "string") {
-                throw "selector must be a string: " + selector;
+            submit = submit === true ? submit : false;
+            if (typeof(selector) !== "string" || !selector.length) {
+                throw "form selector must be a non-empty string";
             }
             if (!typeof(vals) === "object") {
-                throw "form values must be an object";
+                throw "form values must be provided as an object";
             }
             var fillResults = this.evaluate(function() {
                return __utils__.fill('%selector%', JSON.parse('%values%'));
@@ -323,6 +324,16 @@
             });
             if (!fillResults) {
                 throw "unable to fill form";
+            } else if (fillResults.errors.length > 0) {
+                (function(self){
+                    fillResults.errors.forEach(function(error) {
+                        self.log("form error: " + error, "error");
+                    });
+                })(this);
+                if (submit) {
+                    this.log("errors encountered while filling form; submission aborted", "warning");
+                    submit = false;
+                }
             }
             // File uploads
             if (fillResults.files && fillResults.files.length > 0) {
@@ -334,7 +345,7 @@
                 })(this);
             }
             // Form submission?
-            if ((submit||false) === true) {
+            if (submit) {
                 this.evaluate(function() {
                     var form = document.querySelector('%selector%');
                     console.log('submitting form to ' + (form.getAttribute('action') || "unknown")
@@ -637,14 +648,23 @@
          */
         this.fill = function(form, vals) {
             var out = {
+                errors: [],
                 fields: [],
                 files:  [],
             };
             if (!(form instanceof HTMLElement) || typeof(form) === "string") {
-                form = document.querySelector(form);
+                console.log("attempting to fetch form element from selector: '" + form + "'");
+                try {
+                    form = document.querySelector(form);
+                } catch (e) {
+                    if (e.name === "SYNTAX_ERR") {
+                        out.errors.push("invalid form selector provided: '" + form + "'");
+                        return out;
+                    }
+                }
             }
             if (!form) {
-                console.log('form not found or invalid selector provided:');
+                out.errors.push("form not found");
                 return out;
             }
             for (var name in vals) {
@@ -654,7 +674,7 @@
                 var field = form.querySelectorAll('[name="' + name + '"]')
                 ,   value = vals[name];
                 if (!field) {
-                    console.log('no field named "' + name + '" in form');
+                    out.errors.push('no field named "' + name + '" in form');
                     continue;
                 }
                 try {
