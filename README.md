@@ -152,6 +152,7 @@ faultTolerant     | Boolean  | true    | Catch and log exceptions when executing
 logLevel          | String   | "error" | Logging level (see logLevels for available values)
 onDie             | function | null    | A function to be called when Casper#die() is called
 onError           | function | null    | A function to be called when an "error" level event occurs
+onLoadError       | function | null    | A function to be called when a requested resource cannot be loaded
 onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
 page              | WebPage  | null    | An existing WebPage instance
 pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
@@ -409,6 +410,20 @@ casper.start('http://some.tld/contact.form', function(self) {
 ```
 
 **WARNING:** Please don't use CasperJS nor PhantomJS to send spam, or I'll be calling the Chuck. More seriously, please don't.
+
+### Casper#getCurrentUrl()
+
+Retrieves current URL of current document. Note: the url will be url-decoded.
+
+Example:
+
+``` javascript
+casper.start('http://www.google.fr/', function(self) {
+    self.log(self.getCurrentUrl()); // "http://www.google.fr/"
+}).run(function(self) {
+    self.exit();
+});
+```
 
 ### Casper#repeat(int times, function then)
 
