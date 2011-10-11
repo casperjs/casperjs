@@ -309,6 +309,9 @@
          * @param  Boolean submit    Submit the form?
          */
         fill: function(selector, vals, submit) {
+            if (typeof(selector) !== "string") {
+                throw "selector must be a string: " + selector;
+            }
             if (!typeof(vals) === "object") {
                 throw "form values must be an object";
             }
@@ -331,7 +334,7 @@
                 })(this);
             }
             // Form submission?
-            if (submit === true) {
+            if ((submit||false) === true) {
                 this.evaluate(function() {
                     var form = document.querySelector('%selector%');
                     console.log('submitting form to ' + (form.getAttribute('action') || "unknown")
