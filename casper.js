@@ -66,6 +66,7 @@
         };
         // local properties
         this.checker = null;
+        this.colorizer = new phantom.Casper.Colorizer();
         this.currentUrl = 'about:blank';
         this.currentHTTPStatus = 200;
         this.loadInProgress = false;
@@ -828,6 +829,54 @@
                     break;
             }
             return out;
+        };
+    };
+
+    /**
+     * This is a port of lime colorizer.
+     * http://trac.symfony-project.org/browser/tools/lime/trunk/lib/lime.php)
+     *
+     * (c) Fabien Potencier, Symfony project, MIT license
+     */
+    phantom.Casper.Colorizer = function() {
+        var options    = { bold: 1, underscore: 4, blink: 5, reverse: 7, conceal: 8 }
+        ,   foreground = { black: 30, red: 31, green: 32, yellow: 33, blue: 34, magenta: 35, cyan: 36, white: 37 }
+        ,   background = { black: 40, red: 41, green: 42, yellow: 43, blue: 44, magenta: 45, cyan: 46, white: 47 }
+        ,   styles     = {
+            'ERROR':     { bg: 'red', fg: 'white', bold: true },
+            'INFO':      { fg: 'green', bold: true },
+            'TRACE':     { fg: 'green', bold: true },
+            'PARAMETER': { fg: 'cyan' },
+            'COMMENT':   { fg: 'yellow' },
+            'GREEN_BAR': { fg: 'white', bg: 'green', bold: true },
+            'RED_BAR':   { fg: 'white', bg: 'red', bold: true },
+            'INFO_BAR':  { fg: 'cyan', bold: true }
+        };
+
+        this.colorize = function(text, styleName) {
+            if (styleName in styles) {
+                return this.format(text, styles[styleName]);
+            }
+            return text;
+        };
+
+        this.format = function(text, style) {
+            if (typeof style !== "object") {
+                return text;
+            }
+            var codes = [];
+            if (style.fg && foreground[style.fg]) {
+                codes.push(foreground[style.fg]);
+            }
+            if (style.bg && foreground[style.bg]) {
+                codes.push(foreground[style.bg]);
+            }
+            for (var option in options) {
+                if (style[option] === true) {
+                    codes.push(options[option]);
+                }
+            }
+            return "\033[" + codes.join(';') + 'm' + text + "\033[0m";
         };
     };
 
