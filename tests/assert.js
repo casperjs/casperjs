@@ -35,6 +35,20 @@ phantom.Casper.extend({
         return this.assertEquals(this.evaluate(fn), expected, message);
     },
 
+    assertMatch: function(subject, pattern, message) {
+        return this.assert(pattern.test(subject), message);
+    },
+
+    assertTitle: function(expected, message) {
+        return this.assertEvalEquals(function() {
+            return document.title;
+        }, expected, message);
+    },
+
+    assertUrlMatch: function(pattern, message) {
+        return this.assertMatch(this.getCurrentUrl(), pattern, message);
+    },
+
     renderResults: function() {
         this.echo("==========================================");
         var total = testResults.passed + testResults.failed,

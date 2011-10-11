@@ -33,6 +33,7 @@
      * logLevel          | String   | "error" | Logging level (see logLevels for available values)
      * onDie             | function | null    | A function to be called when Casper#die() is called
      * onError           | function | null    | A function to be called when an "error" level event occurs
+     * onLoadError       | function | null    | A function to be called when a requested resource cannot be loaded
      * onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
      * page              | WebPage  | null    | An existing WebPage instance
      * pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
@@ -56,6 +57,7 @@
             logLevel:          "error",
             onDie:             null,
             onError:           null,
+            onLoadError:       null,
             onPageInitialized: null,
             page:              null,
             pageSettings:      { userAgent: DEFAULT_USER_AGENT },
@@ -64,6 +66,7 @@
         };
         // local properties
         this.checker = null;
+        this.currentUrl = 'about:blank';
         this.currentHTTPStatus = 200;
         this.loadInProgress = false;
         this.logLevels = ["debug", "info", "warning", "error"];
@@ -358,6 +361,17 @@
         },
 
         /**
+         * Retrieve current document url.
+         *
+         * @return String
+         */
+        getCurrentUrl: function() {
+            return decodeURIComponent(this.evaluate(function() {
+                return document.location.href;
+            }));
+        },
+
+        /**
          * Logs a message.
          *
          * @param  String  message  The message to log
@@ -568,14 +582,8 @@
          * @return Boolean
          */
         this.click = function(selector) {
-            try {
-                var elem = document.querySelector(selector);
-            } catch (e) {
-                console.log('invalid selector: ' + selector);
-                return false;
-            }
+            var elem = document.querySelector(selector);
             if (!elem) {
-                console.log('selector "' + selector + '" did not find any matching element');
                 return false;
             }
             var evt = document.createEvent("MouseEvents");
@@ -691,6 +699,34 @@
                 }
             }
             return out;
+        };
+
+        /**
+         * Finds all DOM elements matching by the provided selector.
+         *
+         * @param  String  selector  CSS3 selector
+         * @return NodeList|undefined
+         */
+        this.findAll = function(selector) {
+            try {
+                return document.querySelectorAll(selector);
+            } catch (e) {
+                console.log('findAll(): invalid selector provided "' + selector + '":' + e);
+            }
+        };
+
+        /**
+         * Finds a DOM element by the provided selector.
+         *
+         * @param  String  selector  CSS3 selector
+         * @return HTMLElement|undefined
+         */
+        this.findOne = function(selector) {
+            try {
+                return document.querySelector(selector);
+            } catch (e) {
+                console.log('findOne(): invalid selector provided "' + selector + '":' + e);
+            }
         };
 
         /**
@@ -822,6 +858,9 @@
                 }
                 message += ': ' + casper.requestUrl;
                 casper.log(message, "warning");
+                if (typeof(casper.options.onLoadError) === "function") {
+                    casper.options.onLoadError(casper, casper.requestUrl, status);
+                }
             }
             if (casper.options.clientScripts) {
                 for (var i = 0; i < casper.options.clientScripts.length; i++) {
@@ -842,15 +881,16 @@
                 utils: encodeURIComponent(phantom.Casper.ClientUtils.toString())
             }));
             if (!injected) {
-                casper.log('Failed to inject Casper client-side utilities!', "warning");
+                casper.log("Failed to inject Casper client-side utilities!", "warning");
             } else {
-                casper.log('Successfully injected Casper client-side utilities', "debug");
+                casper.log("Successfully injected Casper client-side utilities", "debug");
             }
             casper.loadInProgress = false;
         };
         page.onResourceReceived = function(resource) {
             if (resource.url === casper.requestUrl) {
                 casper.currentHTTPStatus = resource.status;
+                casper.currentUrl = resource.url;
             }
         };
         return page;

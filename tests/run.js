@@ -26,9 +26,7 @@ casper.options.verbose = true;
 
 // Casper#start()
 casper.start('tests/site/index.html', function(self) {
-    self.assertEvalEquals(function() {
-        return document.title;
-    }, 'CasperJS test index', 'start() casper can start itself an open an url');
+    self.assertTitle('CasperJS test index', 'start() casper can start itself an open an url');
     self.assertEval(function() {
         return typeof(__utils__) === "object";
     }, 'start() injects ClientUtils instance within remote DOM');
@@ -41,9 +39,7 @@ casper.assert(casper.steps.length === 1, 'start() can add a new navigation step'
 
 // Casper#then()
 casper.then(function(self) {
-    self.assertEvalEquals(function() {
-        return document.title;
-    }, 'CasperJS test target', 'click() casper can click on a text link and react when it is loaded 1/2');
+    self.assertTitle('CasperJS test target', 'click() casper can click on a text link and react when it is loaded 1/2');
     self.click('a[href="form.html"]');
 });
 
@@ -51,14 +47,13 @@ casper.assert(casper.steps.length === 2, 'then() adds a new navigation step');
 
 // Casper#fill()
 casper.then(function(self) {
-    self.assertEvalEquals(function() {
-        return document.title;
-    }, 'CasperJS test form', 'click() casper can click on a text link and react when it is loaded 2/2');
-    self.fill('form[action="form.html"]', {
+    self.assertTitle('CasperJS test form', 'click() casper can click on a text link and react when it is loaded 2/2');
+    self.fill('form[action="result.html"]', {
         email:   'chuck@norris.com',
         content: 'Am watching thou',
         check:   true,
         choice:  'no',
+        topic:   'bar',
         file:    phantom.libraryPath + '/README.md'
     });
     self.assertEvalEquals(function() {
@@ -67,6 +62,9 @@ casper.then(function(self) {
     self.assertEvalEquals(function() {
         return document.querySelector('textarea[name="content"]').value;
     }, 'Am watching thou', 'fill() can fill a textarea form field');
+    self.assertEvalEquals(function() {
+        return document.querySelector('select[name="topic"]').value;
+    }, 'bar', 'fill() can pick a value from a select form field');
     self.assertEvalEquals(function() {
         return document.querySelector('input[name="check"]').checked;
     }, true, 'fill() can check a form checkbox');
@@ -79,9 +77,17 @@ casper.then(function(self) {
     self.assertEvalEquals(function() {
         return document.querySelector('input[name="file"]').files.length === 1;
     }, true, 'fill() can select a file to upload');
-    self.evaluate(function() {
-        document.querySelector('form[action="form.html"]').submit();
-    })
+    self.click('input[type="submit"]');
+});
+
+// Casper#click()
+casper.then(function(self) {
+    self.assertTitle('CasperJS test form result', 'click() casper can click on a submit button');
+    self.assertUrlMatch(/email=chuck@norris.com/, 'fill() input[type=email] field was submitted');
+    self.assertUrlMatch(/content=Am\+watching\+thou/, 'fill() textarea field was submitted');
+    self.assertUrlMatch(/check=on/, 'fill() input[type=checkbox] field was submitted');
+    self.assertUrlMatch(/choice=no/, 'fill() input[type=radio] field was submitted');
+    self.assertUrlMatch(/topic=bar/, 'fill() select field was submitted');
 });
 
 casper.run(function(self) {
