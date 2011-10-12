@@ -804,6 +804,71 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     instance  of the <code>phantom.Casper.ClientUtils</code> class.
 </p>
 
+<h3 id="phantom_Casper_ClientUtils_encode"><code>ClientUtils#encode(String contents)</code></h3>
+<p>
+    Encodes a strnig using the base64 algorithm. For the records, CasperJS doesn't
+    use builtin <code>window.btoa()</code> function because it can't deal efficiently
+    with strings encoded using >8b characters.
+</p>
+<pre class="prettyprint"><code>
+var base64;
+casper.start('http://foo.bar/', function(self) {
+    base64 = self.evaluate(function() {
+        return __utils__.encode("I've been a bit cryptic recently");
+    };
+}).run(function(self) {
+    self.echo(base64).exit();
+});
+</code></pre>
+
+<h3 id="phantom_Casper_ClientUtils_exists"><code>ClientUtils#exists(String selector)</code></h3>
+<p>
+    Checks if a DOM element matching a given CSS3 selector exists.
+</p>
+<pre class="prettyprint"><code>
+var exists;
+casper.start('http://foo.bar/', function(self) {
+    exists = self.evaluate(function() {
+        return __utils__.exists('#some_id');
+    };
+}).run(function(self) {
+    self.echo(exists).exit();
+});
+</code></pre>
+
+<h3 id="phantom_Casper_ClientUtils_findAll"><code>ClientUtils#findAll(String selector)</code></h3>
+<p>
+    Retrieves all DOM elements matching a given CSS3 selector.
+</p>
+<pre class="prettyprint"><code>
+var links;
+casper.start('http://foo.bar/', function(self) {
+    links = self.evaluate(function() {
+        var elements = __utils__.findAll('a.menu');
+        return Array.prototype.forEach.call(elements, function(e) {
+            return e.getAttribute('href');
+        });
+    };
+}).run(function(self) {
+    self.echo(JSON.stringify(links)).exit();
+});
+</code></pre>
+
+<h3 id="phantom_Casper_ClientUtils_findOne"><code>ClientUtils#findOne(String selector)</code></h3>
+<p>
+    Retrieves a single DOM element by a CSS3 selector.
+</p>
+<pre class="prettyprint"><code>
+var href;
+casper.start('http://foo.bar/', function(self) {
+    href = self.evaluate(function() {
+        return __utils__.findOne('#my_id').getAttribute('href');
+    };
+}).run(function(self) {
+    self.echo(href).exit();
+});
+</code></pre>
+
 <h3 id="phantom_Casper_ClientUtils_getBase64"><code>ClientUtils#getBase64(String url)</code></h3>
 <p>
     This method will retrieved a base64 encoded version of any resource behind an url.
