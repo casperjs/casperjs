@@ -1,5 +1,8 @@
 
-<h2 id="colorizer">Colorizer</h2>
+<section id="colorizer">
+<div class="page-header">
+    <h1>Colorizer</h1>
+</div>
 
 <p>
     Casper ships with a <code>Colorizer</code> object which can print stuff to the console
@@ -27,8 +30,12 @@ casper.echo('an error message', 'ERROR');      // printed in red
 <p>Here's a sample output of what it can look like:</p>
 
 <p><img src="images/colorizer.png" alt="capture" title="" /></p>
+</section>
 
-<h2 id="extending">Extending Casper</h2>
+<section id="extending">
+<div class="page-header">
+    <h1>Extending Casper</h1>
+</div>
 
 <p>
     Sometimes it can be convenient to add your own methods to the <code>Casper</code>
@@ -65,8 +72,12 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
     self.renderJSON(articles);
 });
 </code></pre>
+</section>
 
-<h2 id="testing">Testing</h2>
+<section id="testing">
+<div class="page-header">
+    <h1>Testing</h1>
+</div>
 
 <p>
     CasperJS has some unit and functional tests, located in the <code>tests</code>
@@ -75,29 +86,37 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
 </p>
 
 <pre class="prettyprint"><code>$ phantomjs tests/run.js</code></pre>
+</section>
 
-<h2 id="download">Download</h2>
+<section id="download">
+<div class="page-header">
+    <h1>Download</h1>
+</div>
 
 <p> You can download this project in either
     <a href="http://github.com/n1k0/casperjs/zipball/master">zip</a> or
     <a href="http://github.com/n1k0/casperjs/tarball/master">tar</a> formats.
 </p>
 
-<p>You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
+<p>
+    You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
     <pre class="prettyprint"><code>$ git clone git://github.com/n1k0/casperjs</code></pre>
 </p>
-
-<h2 id="license">Licensing</h2>
-
-<p>
-    <code>Casper.js</code> is released under the terms of the
-    <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
-</p>
-
-<h2 id="now-what">Now what</h2>
 
 <p>
     Feel free to play with the code and
     <a href="https://github.com/n1k0/casperjs/issues">report any issue on github</a>.
     I'm also reachable <a href="https://twitter.com/n1k0">on twitter</a>.
 </p>
+</section>
+
+<section id="license">
+<div class="page-header">
+    <h1>License</h1>
+</div>
+
+<p>
+    <code>Casper.js</code> is released under the terms of the
+    <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
+</p>
+</section>
