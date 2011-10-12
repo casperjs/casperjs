@@ -302,9 +302,9 @@ casper.start('http://www.google.fr/', function(self) {
 });
 ```
 
-### Casper#echo(String message)
+### Casper#echo(String message[, String style])
 
-Prints something to stdout.
+Prints something to stdout, optionnaly with some fancy color (see the `Colorizer` section of this document for more information).
 
 Example:
 
@@ -312,7 +312,7 @@ Example:
 casper.start('http://www.google.fr/', function(self) {
     self.echo('Page title is: ' + self.evaluate(function() {
         return document.title;
-    }));
+    }), 'INFO'); // Will be printed in green on the console
 }).run(function(self) {
     self.exit();
 });
@@ -605,6 +605,27 @@ casper.start('http://foo.bar/', function(self) {
     self.echo(logo).exit();
 });
 ```
+
+## Colorizer
+
+Casper ships with a `Colorizer` object which can print stuff to the console output in color:
+
+``` javascript
+casper.echo('this is an informative message', 'INFO'); // printed in green
+casper.echo('this is an error message', 'ERROR');      // printed in red
+```
+
+Available predefined styles are:
+
+- 'ERROR':     white text on red background
+- 'INFO':      green text
+- 'TRACE':     green text
+- 'PARAMETER': cyan text
+- 'COMMENT':   yellow text
+- 'WARNING':   red text
+- 'GREEN_BAR': green text on white background
+- 'RED_BAR':   white text on red background
+- 'INFO_BAR':  cyan text
 
 ## Extending Casper
 
