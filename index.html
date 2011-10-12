@@ -19,22 +19,25 @@
            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
                 box-shadow: 0 1px 2px rgba(0,0,0,.15);
     }
-    .contribute img { position: absolute; top: 22; right: 0; border: 0; }
+    .contribute img { position: fixed; top: 40px; right: 0; border: 0; }
     .download { text-align: center; }
     .page-header { background-color: #f5f5f5; padding: 20px 20px 10px; margin: -20px -20px 20px; border-top: 1px solid #DDD; }
     pre code { line-height: 1.4em; }
     #about { font-weight: bold;}
-    section { padding-top: 60px; min-height: 500px; }
+    section { padding-top: 60px; }
     h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Monaco, monospace;}
 </style>
 </head>
 <body>
+<a href="http://github.com/n1k0/casperjs" class="contribute">
+    <img src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
+</a>
 <div class="topbar">
     <div class="fill">
         <div class="container">
             <a class="brand" href="/casperjs">CasperJS</a>
             <ul class="nav">
-                <li><a href="#overview">Overview</a></li>
+                <li><a href="#about">About</a></li>
                 <li><a href="#quickstart">Quickstart</a></li>
                 <li><a href="#apidoc">API documentation</a></li>
                 <li><a href="#extending">Extending</a></li>
@@ -968,6 +971,7 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
 </p>
 </section>
     </div>
+
     <footer>
         <p>
             &copy; 2011 Nicolas Perriault, <a href="http://akei.com/">Akei</a>
@@ -975,9 +979,6 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
         </p>
     </footer>
 </div><!-- /container -->
-<a href="http://github.com/n1k0/casperjs" class="contribute">
-    <img src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
-</a>
 <script type="text/javascript" src="js/highlight.pack.js"></script>
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 </body>
