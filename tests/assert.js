@@ -11,7 +11,7 @@ phantom.Casper.extend({
             testResults.passed++;
         } else {
             status = FAIL;
-            style = 'ERROR';
+            style = 'RED_BAR';
             testResults.failed++;
         }
         this.echo([this.colorizer.colorize(status, style), this.formatMessage(message)].join(' '));
@@ -22,9 +22,9 @@ phantom.Casper.extend({
             this.echo(this.colorizer.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
             testResults.passed++;
         } else {
-            this.echo(this.colorizer.colorize(FAIL, 'ERROR') + ' ' + this.formatMessage(message));
-            this.echo('   got:      ' + testValue);
-            this.echo('   expected: ' + expected);
+            this.echo(this.colorizer.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
+            this.comment('     got:      ' + testValue);
+            this.comment('     expected: ' + expected);
             testResults.failed++;
         }
     },
@@ -51,12 +51,24 @@ phantom.Casper.extend({
         return this.assertMatch(this.getCurrentUrl(), pattern, message);
     },
 
-    formatMessage: function(message) {
+    comment: function(message) {
+        this.echo('# ' + message, 'COMMENT');
+    },
+
+    error: function(message) {
+        this.echo(message, 'ERROR');
+    },
+
+    formatMessage: function(message, style) {
         var parts = /(\w+\(\))(.*)/.exec(message);
         if (!parts) {
             return message;
         }
-        return this.colorizer.colorize(parts[1], 'PARAMETER') + parts[2];
+        return this.colorizer.colorize(parts[1], 'PARAMETER') + this.colorizer.colorize(parts[2], style);
+    },
+
+    info: function(message) {
+        this.echo(message, 'PARAMETER');
     },
 
     renderResults: function() {
@@ -69,6 +81,9 @@ phantom.Casper.extend({
             style = 'GREEN_BAR';
         }
         result = status + ' ' + total + ' tests executed, ' + testResults.passed + ' passed, ' + testResults.failed + ' failed.';
+        if (result.length < 80) {
+            result += new Array(80 - result.length + 1).join(' ');
+        }
         this.echo(this.colorizer.colorize(result, style));
         this.exit();
     }

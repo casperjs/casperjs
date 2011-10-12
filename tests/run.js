@@ -2,8 +2,7 @@ phantom.injectJs('casper.js');
 phantom.injectJs('tests/assert.js');
 
 var casper = new phantom.Casper({
-    faultTolerant: false,
-    verbose: true,
+    faultTolerant: false
 });
 
 phantom.args.forEach(function(arg) {
@@ -14,6 +13,7 @@ phantom.args.forEach(function(arg) {
 });
 
 // Casper#log()
+casper.comment('logging');
 var oldLevel = casper.options.logLevel;
 casper.options.logLevel = 'info';
 casper.options.verbose = false;
@@ -25,13 +25,16 @@ casper.options.logLevel = oldLevel;
 casper.options.verbose = true;
 
 // Casper#start()
+casper.comment('navigating');
 casper.start('tests/site/index.html', function(self) {
     self.assertTitle('CasperJS test index', 'start() casper can start itself an open an url');
     self.assertEval(function() {
         return typeof(__utils__) === "object";
     }, 'start() injects ClientUtils instance within remote DOM');
+    casper.comment('encoding');
     var image = self.base64encode('file://' + phantom.libraryPath + '/site/images/phantom.png');
     self.assertEquals(image.length, 6160, 'base64encode() can retrieve base64 contents');
+    casper.comment('clicking');
     self.click('a[href="test.html"]');
 });
 
@@ -48,6 +51,7 @@ casper.assert(casper.steps.length === 2, 'then() adds a new navigation step');
 // Casper#fill()
 casper.then(function(self) {
     self.assertTitle('CasperJS test form', 'click() casper can click on a text link and react when it is loaded 2/2');
+    self.comment('filling a form');
     self.fill('form[action="result.html"]', {
         email:   'chuck@norris.com',
         content: 'Am watching thou',

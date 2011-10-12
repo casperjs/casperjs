@@ -247,8 +247,8 @@
          * @param  String  text  A string to echo to stdout
          * @return Casper
          */
-        echo: function(text) {
-            console.log(text);
+        echo: function(text, style) {
+            console.log(style ? this.colorizer.colorize(text, style) : text);
             return this;
         },
 
@@ -848,6 +848,7 @@
             'TRACE':     { fg: 'green', bold: true },
             'PARAMETER': { fg: 'cyan' },
             'COMMENT':   { fg: 'yellow' },
+            'WARNING':   { fg: 'red', bold: true },
             'GREEN_BAR': { fg: 'white', bg: 'green', bold: true },
             'RED_BAR':   { fg: 'white', bg: 'red', bold: true },
             'INFO_BAR':  { fg: 'cyan', bold: true }
@@ -868,8 +869,8 @@
             if (style.fg && foreground[style.fg]) {
                 codes.push(foreground[style.fg]);
             }
-            if (style.bg && foreground[style.bg]) {
-                codes.push(foreground[style.bg]);
+            if (style.bg && background[style.bg]) {
+                codes.push(background[style.bg]);
             }
             for (var option in options) {
                 if (style[option] === true) {
