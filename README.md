@@ -617,15 +617,19 @@ casper.echo('this is an error message', 'ERROR');      // printed in red
 
 Available predefined styles are:
 
-- 'ERROR':     white text on red background
-- 'INFO':      green text
-- 'TRACE':     green text
-- 'PARAMETER': cyan text
-- 'COMMENT':   yellow text
-- 'WARNING':   red text
-- 'GREEN_BAR': green text on white background
-- 'RED_BAR':   white text on red background
-- 'INFO_BAR':  cyan text
+- `ERROR`:     white text on red background
+- `INFO`:      green text
+- `TRACE`:     green text
+- `PARAMETER`: cyan text
+- `COMMENT`:   yellow text
+- `WARNING`:   red text
+- `GREEN_BAR`: green text on white background
+- `RED_BAR`:   white text on red background
+- `INFO_BAR`:  cyan text
+
+Here's a sample output of what it can look like:
+
+![capture](http://cl.ly/2j0m1A3E2N2z3Q2o2N1q/Capture_d%E2%80%99e%CC%81cran_2011-10-11_a%CC%80_23.48.41.png)
 
 ## Extending Casper
 
