@@ -25,7 +25,9 @@
     pre code { line-height: 1.4em; }
     #about { font-weight: bold;}
     section { padding-top: 60px; }
-    h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Monaco, monospace;}
+    h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Monaco, monospace; }
+    .dl-links { margin-top: 20px; }
+    .download p { margin-top: 20px; }
 </style>
 </head>
 <body>
@@ -80,10 +82,14 @@
                     </p>
                 </div>
                 <div class="span5 download">
-                    <a href="http://github.com/n1k0/casperjs/zipball/master">
-                        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-                    <a href="http://github.com/n1k0/casperjs/tarball/master">
-                        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+                    <h2>Download</h2>
+                    <p>CasperJS is still in a so alpha state that it even hasn't any version number.</p>
+                    <div class="dl-links">
+                        <a href="http://github.com/n1k0/casperjs/zipball/master">
+                            <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+                        <a href="http://github.com/n1k0/casperjs/tarball/master">
+                            <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -980,6 +986,9 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
     </footer>
 </div><!-- /container -->
 <script type="text/javascript" src="js/highlight.pack.js"></script>
-<script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+</script>
 </body>
 </html>
