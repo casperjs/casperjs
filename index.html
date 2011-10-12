@@ -19,6 +19,8 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#quickstart">Quickstart</a></li>
                 <li><a href="#apidoc">API documentation</a></li>
+                <li><a href="#client-side-utils">Client-side utils</a></li>
+                <li><a href="#colorizer">Colorizer</a></li>
                 <li><a href="#extending">Extending</a></li>
                 <li><a href="#testing">Testing</a></li>
                 <li><a href="#download">Download</a></li>
@@ -128,8 +130,9 @@ var casper = new phantom.Casper({
 ;
 </code></pre>
             <p>
-                <strong>Hint:</strong> Method chaining is not mandatory but provided as an
-                alternative way to structure your code.
+                <span class="label notice">Hint</span>
+                Method chaining is not mandatory but provided as an alternative way
+                to structure your code.
             </p>
             <p>Run it:</p>
 <pre class="prettyprint"><code>$ phantomjs samples/googlelinks.js
@@ -567,8 +570,9 @@ casper.start('http://www.google.fr/', function(self) {
 </code></pre>
 
 <p>
-    <strong>WARNING:</strong> Please don't use CasperJS nor PhantomJS to send spam,
-    or I'll be calling the Chuck. More seriously, please just don't.
+    <span class="label notice">Please</span>
+    Don't use CasperJS nor PhantomJS to send spam, or I'll be calling the Chuck.
+    More seriously, please just don't.
 </p>
 
 <h3 id="phantom_Casper_getCurrentUrl"><code>Casper#getCurrentUrl()</code></h3>
@@ -784,19 +788,6 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_thenOpen"><code>Casper.thenOpen()</code></a></li>
         <li><a href="#phantom_Casper_thenOpenAndEvaluate"><code>Casper.thenOpenAndEvaluate()</code></a></li>
     </ul>
-    <h4><code>phantom.Casper.ClientUtils</code></h4>
-    <ul>
-        <li><a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a></li>
-        <li><a href="#phantom_Casper_ClientUtils_exists"><code>ClientUtils.exists()</code></a></li>
-        <li><a href="#phantom_Casper_ClientUtils_findAll"><code>ClientUtils.findAll()</code></a></li>
-        <li><a href="#phantom_Casper_ClientUtils_findOne"><code>ClientUtils.findOne()</code></a></li>
-        <li><a href="#phantom_Casper_ClientUtils_getBase64"><code>ClientUtils.getBase64()</code></a></li>
-    </ul>
-    <h4><code>phantom.Casper.Colorizer</code></h4>
-    <ul>
-        <li><a href="#phantom_Casper_Colorizer_colorize"><code>Colorizer.colorize()</code></a></li>
-        <li><a href="#phantom_Casper_Colorizer_format"><code>Colorizer.format()</code></a></li>
-    </ul>
 </div>
 </div>
 </section>
@@ -805,7 +796,8 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 <div class="page-header">
     <h2>Client-side utils</h2>
 </div>
-
+<div class="row">
+    <div class="span12">
 <p>
     Casper ships with a few client-side utilitites which are injected in the remote DOM
     environement, and accessible from there through the <code>__utils__</code> object
@@ -813,23 +805,54 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 </p>
 
 <h3 id="phantom_Casper_ClientUtils_getBase64"><code>ClientUtils#getBase64(String url)</code></h3>
-
 <p>
     This method will retrieved a base64 encoded version of any resource behind an url.
     For example, let's imagine we want to retrieve the base64 representation of
     some website's logo:
 </p>
-
 <pre class="prettyprint"><code>var logo = null;
 casper.start('http://foo.bar/', function(self) {
     logo = self.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
-        return__utils__.getBase64(imgUrl);
+        return __utils__.getBase64(imgUrl);
     };
 }).run(function(self) {
     self.echo(logo).exit();
 });
 </code></pre>
+
+<h3 id="phantom_Casper_ClientUtils_getBinary"><code>ClientUtils#getBinary(String url)</code></h3>
+<p>
+    This method will retrieved the raw contents of a given binary resource; unfortunately
+    though, PhantomJS cannot process these data directly so you'll have to process them
+    within the remote DOM environment. If you intend to download the resource, use
+    <a href="#phantom_Casper_ClientUtils_getBase64">ClientUtils.getBase64()</a>
+    or <a href="#phantom_Casper_base64encode">Casper.base64encode()</a> instead.
+</p>
+<pre class="prettyprint"><code>var logo = null;
+casper.start('http://foo.bar/', function(self) {
+    logo = self.evaluate(function() {
+        var imgUrl = document.querySelector('img.logo').getAttribute('src');
+        console.log(__utils__.getBinary(imgUrl));
+    };
+}).run(function(self) {
+    self.echo(logo).exit();
+});
+</code></pre>
+
+</div>
+<div class="span4">
+    <h4><code>phantom.Casper.ClientUtils</code></h4>
+    <ul>
+        <li><a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a></li>
+        <li><a href="#phantom_Casper_ClientUtils_exists"><code>ClientUtils.exists()</code></a></li>
+        <li><a href="#phantom_Casper_ClientUtils_findAll"><code>ClientUtils.findAll()</code></a></li>
+        <li><a href="#phantom_Casper_ClientUtils_findOne"><code>ClientUtils.findOne()</code></a></li>
+        <li><a href="#phantom_Casper_ClientUtils_getBase64"><code>ClientUtils.getBase64()</code></a></li>
+        <li><a href="#phantom_Casper_ClientUtils_getBinary"><code>ClientUtils.getBinary()</code></a></li>
+    </ul>
+</div>
+</div>
 </section>
 
 
@@ -837,7 +860,8 @@ casper.start('http://foo.bar/', function(self) {
 <div class="page-header">
     <h1>Colorizer</h1>
 </div>
-
+<div class="row">
+<div class="span12">
 <p>
     Casper ships with a <code>Colorizer</code> object which can print stuff to the console
     output in color:
@@ -864,6 +888,15 @@ casper.echo('an error message', 'ERROR');      // printed in red
 <p>Here's a sample output of what it can look like:</p>
 
 <p><img src="images/colorizer.png" alt="capture" title="" /></p>
+</div>
+<div class="span4">
+    <h4><code>phantom.Casper.Colorizer</code></h4>
+    <ul>
+        <li><a href="#phantom_Casper_Colorizer_colorize"><code>Colorizer.colorize()</code></a></li>
+        <li><a href="#phantom_Casper_Colorizer_format"><code>Colorizer.format()</code></a></li>
+    </ul>
+</div>
+</div>
 </section>
 
 <section id="extending">
