@@ -1,0 +1,103 @@
+
+<h2 id="colorizer">Colorizer</h2>
+
+<p>
+    Casper ships with a <code>Colorizer</code> object which can print stuff to the console
+    output in color:
+</p>
+
+<pre class="prettyprint"><code>casper.echo('an informative message', 'INFO'); // printed in green
+casper.echo('an error message', 'ERROR');      // printed in red
+</code></pre>
+
+<p>Available predefined styles are:</p>
+
+<ul>
+    <li><code>ERROR</code>:     white text on red background</li>
+    <li><code>INFO</code>:      green text</li>
+    <li><code>TRACE</code>:     green text</li>
+    <li><code>PARAMETER</code>: cyan text</li>
+    <li><code>COMMENT</code>:   yellow text</li>
+    <li><code>WARNING</code>:   red text</li>
+    <li><code>GREEN_BAR</code>: green text on white background</li>
+    <li><code>RED_BAR</code>:   white text on red background</li>
+    <li><code>INFO_BAR</code>:  cyan text</li>
+</ul>
+
+<p>Here's a sample output of what it can look like:</p>
+
+<p><img src="images/colorizer.png" alt="capture" title="" /></p>
+
+<h2 id="extending">Extending Casper</h2>
+
+<p>
+    Sometimes it can be convenient to add your own methods to the <code>Casper</code>
+    class; it's easily doable using the <code>Casper.extend()</code> method as
+    illustrated below:
+</p>
+
+<pre class="prettyprint"><code>phantom.injectJs("path/to/casper.js");
+
+phantom.Casper.extend({
+    fetchTexts: function(selector) {
+        return this.evaluate(function() {
+            var elements = document.querySelectorAll('%selector%');
+            return Array.prototype.map.call(elements, function(e) {
+                return e.innerText;
+            });
+        }, {
+            selector: selector.replace("'", "\'")
+        });
+    },
+
+    renderJSON: function(what) {
+        return this.echo(JSON.stringify(what, null, '  ')).exit();
+    }
+});
+
+var articles = [];
+
+new phantom.Casper().start('http://www.liberation.fr/', function(self) {
+    articles = self.fetchTexts('h3');
+}).thenOpen('http://www.lemonde.fr/', function(self) {
+    articles.concat(self.fetchTexts('h2.article'));
+}).run(function(self) {
+    self.renderJSON(articles);
+});
+</code></pre>
+
+<h2 id="testing">Testing</h2>
+
+<p>
+    CasperJS has some unit and functional tests, located in the <code>tests</code>
+    subfolder. More tests will be added in the future. To run the test suite, from
+    the root of a checkout of the casperjs repository:
+</p>
+
+<pre class="prettyprint"><code>$ phantomjs tests/run.js</code></pre>
+
+<h2 id="download">Download</h2>
+
+<p> You can download this project in either
+    <a href="http://github.com/n1k0/casperjs/zipball/master">zip</a> or
+    <a href="http://github.com/n1k0/casperjs/tarball/master">tar</a> formats.
+</p>
+
+<p>You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
+    <pre class="prettyprint"><code>$ git clone git://github.com/n1k0/casperjs</code></pre>
+</p>
+
+<h2 id="license">Licensing</h2>
+
+<p>
+    <code>Casper.js</code> is released under the terms of the
+    <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
+</p>
+
+<h2 id="now-what">Now what</h2>
+
+<p>
+    Feel free to play with the code and
+    <a href="https://github.com/n1k0/casperjs/issues">report any issue on github</a>.
+    I'm also reachable <a href="https://twitter.com/n1k0">on twitter</a>.
+</p>
