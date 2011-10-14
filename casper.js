@@ -306,6 +306,20 @@
         },
 
         /**
+         * Checks if an element matching the provided CSS3 selector exists in
+         * current page DOM.
+         *
+         * @return Boolean
+         */
+        exists: function(selector) {
+            return self.evaluate(function() {
+                return __utils__.exists('%selector%');
+            }, {
+                selector: selector
+            });
+        };
+
+        /**
          * Fills a form with provided field values.
          *
          * @param  String  selector  A CSS3 selector to the target form to fill

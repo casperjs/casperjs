@@ -41,6 +41,10 @@ phantom.Casper.extend({
         return this.assert(pattern.test(subject), message);
     },
 
+    assertSelectorExists: function(selector, message) {
+        return this.assert(this.exists(selector), message);
+    },
+
     assertTitle: function(expected, message) {
         return this.assertEvalEquals(function() {
             return document.title;
