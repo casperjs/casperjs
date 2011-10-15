@@ -512,7 +512,22 @@ casper.start('http://www.google.fr/', function(self) {
 
 <p>Exits PhantomJS with an optional exit status code.</p>
 
-<h3 id="phantom_Casper_log"><code>Casper#log(String message[, String level, String space)</code></h3>
+<h3 id="phantom_Casper_exists"><code>Casper#exists(String selector)</code></h3>
+
+<p>Checks if any element within remote DOM matches the provided CSS3 selector.</p>
+
+<pre class="prettyprint"><code>casper.start('http://foo.bar/home', function(self) {
+    if (self.exists('#my_super_id')) {
+        self.echo('found #my_super_id');
+    } else {
+        self.echo('#my_super_id not found');
+    }
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
+<h3 id="phantom_Casper_log"><code>Casper#log(String message[, String level, String space])</code></h3>
 
 <p>
     Logs a message with an optional level in an optional space. Available levels are
@@ -531,7 +546,7 @@ casper.start('http://www.google.fr/', function(self) {
 });
 </code></pre>
 
-<h3 id="phantom_Casper_fill"><code>Casper#fill(String selector, Object values, Boolean submit)</code></h3>
+<h3 id="phantom_Casper_fill"><code>Casper#fill(String selector, Object values[, Boolean submit])</code></h3>
 
 <p>Fills the fields of a form with given values and optionnaly submit it.</p>
 
@@ -813,9 +828,9 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 
 <h3 id="phantom_Casper_ClientUtils_encode"><code>ClientUtils#encode(String contents)</code></h3>
 <p>
-    Encodes a strnig using the base64 algorithm. For the records, CasperJS doesn't
-    use builtin <code>window.btoa()</code> function because it can't deal efficiently
-    with strings encoded using >8b characters.
+    Encodes a string using the <a href="http://en.wikipedia.org/wiki/Base64">base64 algorithm</a>.
+    For the records, CasperJS doesn't use builtin <code>window.btoa()</code> function because
+    it can't deal efficiently with strings encoded using >8b characters.
 </p>
 <pre class="prettyprint"><code>
 var base64;
@@ -901,16 +916,22 @@ casper.start('http://foo.bar/', function(self) {
     <a href="#phantom_Casper_ClientUtils_getBase64">ClientUtils.getBase64()</a>
     or <a href="#phantom_Casper_base64encode">Casper.base64encode()</a> instead.
 </p>
-<pre class="prettyprint"><code>var logo = null;
-casper.start('http://foo.bar/', function(self) {
-    logo = self.evaluate(function() {
+<pre class="prettyprint"><code>casper.start('http://foo.bar/', function(self) {
+    self.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
         console.log(__utils__.getBinary(imgUrl));
     };
 }).run(function(self) {
-    self.echo(logo).exit();
+    self.exit();
 });
 </code></pre>
+
+<p>
+    <span class="label warning">Warning</span>
+    You won't be able to pass the <em>binary string</em> from the remote DOM
+    environment to PhantomJS' one. For retrieving binary contents, use
+    <a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a>.
+</p>
 
 </div>
 <div class="span4">
@@ -943,6 +964,8 @@ casper.start('http://foo.bar/', function(self) {
 casper.echo('an error message', 'ERROR');      // printed in red
 </code></pre>
 
+<h3 id="predefined-styles">Available predefined styles</h3>
+
 <p>Available predefined styles are:</p>
 
 <ul>
@@ -960,6 +983,44 @@ casper.echo('an error message', 'ERROR');      // printed in red
 <p>Here's a sample output of what it can look like:</p>
 
 <p><img src="images/colorizer.png" alt="capture" title="" /></p>
+
+<h3 id="phantom_Casper_Colorizer_colorize"><code>Colorizer#colorize(String text, String styleName)</code></h3>
+<p>
+    Computes a colored version of the provided text string using a given predefined style.
+</p>
+<pre class="prettyprint"><code>new phantom.Casper.Colorizer().colorize("I'm a red error", 'ERROR');
+</code></pre>
+<p>
+    See the list of the <a href="#predefined-styles">predefined styles available</a>.
+</p>
+
+<h3 id="phantom_Casper_Colorizer_format"><code>Colorizer#format(String text, Object style)</code></h3>
+<p>
+    Formats a text string using the provided style definition. A style definition is
+    a javascript `Object` instance which can define the following properties:
+</p>
+<ul>
+    <li>String <code>bg</code>: background color name</li>
+    <li>String <code>fg</code>: foreground color name</li>
+    <li>Boolean <code>bold</code>: apply bold formatting</li>
+    <li>Boolean <code>underscore</code>: apply underline formatting</li>
+    <li>Boolean <code>blink</code>: apply blink formatting</li>
+    <li>Boolean <code>reverse</code>: apply reverse formatting</li>
+    <li>Boolean <code>conceal</code>: apply conceal formatting</li>
+</ul>
+<p>
+    <span class="label notice">Note</span>
+    Available color names are <code>black</code>, <code>red</code>, <code>green</code>,
+    <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code>
+    and <code>white</code>.
+</p>
+<pre class="prettyprint"><code>new phantom.Casper.Colorizer().format("We all live in a yellow submarine", {
+    bg:  'yellow',
+    fg:  'blue',
+    bold: true
+});
+</code></pre>
+
 </div>
 <div class="span4">
     <h4><code>phantom.Casper.Colorizer</code></h4>
@@ -1076,6 +1137,11 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
     hljs.initHighlightingOnLoad();
     $(document).ready(function() {
         $('#topbar').scrollSpy();
+        $("a[href^=#]").click(function(e) {
+            var target = $($(this).attr('href'));
+            $('body').scrollTop(target.position().top - 50);
+            return e.preventDefault();
+        });
     });
 </script>
 </body>
