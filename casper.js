@@ -82,6 +82,7 @@
         this.started = false;
         this.step = 0;
         this.steps = [];
+        this.test = new phantom.Casper.Tester(this);
     };
 
     /**
@@ -317,7 +318,7 @@
             }, {
                 selector: selector
             });
-        };
+        },
 
         /**
          * Fills a form with provided field values.
@@ -892,6 +893,206 @@
                 }
             }
             return "\033[" + codes.join(';') + 'm' + text + "\033[0m";
+        };
+    };
+
+    /**
+     * Casper tester: makes assertions, stores test results and display then.
+     *
+     */
+    phantom.Casper.Tester = function(casper, options) {
+        options = typeof options === "object" || {};
+        if (!casper instanceof phantom.Casper) {
+            throw "phantom.Casper.Tester needs a phantom.Casper instance";
+        }
+
+        // locals
+        var PASS = options.PASS || "PASS";
+        var FAIL = options.FAIL || "FAIL";
+
+        // properties
+        this.testResults = {
+            passed: 0,
+            failed: 0
+        };
+
+        // methods
+        /**
+         * Asserts a condition resolves to true.
+         *
+         * @param  Boolean  condition
+         * @param  String   message    Test description
+         */
+        this.assert = function(condition, message) {
+            var status = PASS;
+            if (condition === true) {
+                style = 'INFO';
+                this.testResults.passed++;
+            } else {
+                status = FAIL;
+                style = 'RED_BAR';
+                this.testResults.failed++;
+            }
+            casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
+        };
+
+        /**
+         * Asserts that two values are strictly equals.
+         *
+         * @param  Boolean  testValue  The value to test
+         * @param  Boolean  expected   The expected value
+         * @param  String   message    Test description
+         */
+        this.assertEquals = function(testValue, expected, message) {
+            if (expected === testValue) {
+                casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
+                this.testResults.passed++;
+            } else {
+                casper.echo(this.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
+                this.comment('     got:      ' + testValue);
+                this.comment('     expected: ' + expected);
+                this.testResults.failed++;
+            }
+        };
+
+        /**
+         * Asserts that a code evaluation in remote DOM resolves to true.
+         *
+         * @param  Function  fn         A function to be evaluated in remote DOM
+         * @param  String    message    Test description
+         */
+        this.assertEval = function(fn, message) {
+            return this.assert(casper.evaluate(fn), message);
+        };
+
+        /**
+         * Asserts that the result of a code evaluation in remote DOM equals
+         * an expected value.
+         *
+         * @param  Function fn         The function to be evaluated in remote DOM
+         * @param  Boolean  expected   The expected value
+         * @param  String   message    Test description
+         */
+        this.assertEvalEquals = function(fn, expected, message) {
+            return this.assertEquals(casper.evaluate(fn), expected, message);
+        };
+
+        /**
+         * Asserts that a provided string matches a provided RegExp pattern.
+         *
+         * @param  String   subject    The string to test
+         * @param  RegExp   pattern    A RegExp object instance
+         * @param  String   message    Test description
+         */
+        this.assertMatch = function(subject, pattern, message) {
+            return this.assert(pattern.test(subject), message);
+        };
+
+        /**
+         * Asserts that at least an element matching the provided CSS3 selector
+         * exists in remote DOM.
+         *
+         * @param  String   selector   A CSS3 selector string
+         * @param  String   message    Test description
+         */
+        this.assertSelectorExists = function(selector, message) {
+            return this.assert(this.exists(selector), message);
+        };
+
+        /**
+         * Asserts that title of the remote page equals to the expected one.
+         *
+         * @param  String  expected   The expected title string
+         * @param  String  message    Test description
+         */
+        this.assertTitle = function(expected, message) {
+            return this.assertEvalEquals(function() {
+                return document.title;
+            }, expected, message);
+        };
+
+        /**
+         * Asserts that a the current page url matches the provided RegExp
+         * pattern.
+         *
+         * @param  RegExp   pattern    A RegExp object instance
+         * @param  String   message    Test description
+         */
+        this.assertUrlMatch = function(pattern, message) {
+            return this.assertMatch(casper.getCurrentUrl(), pattern, message);
+        };
+
+        /**
+         * Render a colorized output. Basically a proxy method for
+         * Casper.Colorizer#colorize()
+         */
+        this.colorize = function(message, style) {
+            return casper.colorizer.colorize(message, style);
+        };
+
+        /**
+         * Writes a comment-style formatted message to stdout.
+         *
+         * @param  String  message
+         */
+        this.comment = function(message) {
+            casper.echo('# ' + message, 'COMMENT');
+        };
+
+        /**
+         * Writes an error-style formatted message to stdout.
+         *
+         * @param  String  message
+         */
+        this.error = function(message) {
+            casper.echo(message, 'ERROR');
+        };
+
+        /**
+         * Formats a message to highlight some parts of it.
+         *
+         * @param  String  message
+         * @param  String  style
+         */
+        this.formatMessage = function(message, style) {
+            var parts = /(\w+\(\))(.*)/.exec(message);
+            if (!parts) {
+                return message;
+            }
+            return this.colorize(parts[1], 'PARAMETER') + this.colorize(parts[2], style);
+        };
+
+        /**
+         * Writes an info-style formatted message to stdout.
+         *
+         * @param  String  message
+         */
+        this.info = function(message) {
+            casper.echo(message, 'PARAMETER');
+        };
+
+        /**
+         * Render tests results, an optionnaly exit phantomjs.
+         *
+         * @param  Boolean  exit
+         */
+        this.renderResults = function(exit, status) {
+            var total = this.testResults.passed + this.testResults.failed, status, style, result;
+            if (this.testResults.failed > 0) {
+                status = FAIL;
+                style = 'RED_BAR';
+            } else {
+                status = PASS;
+                style = 'GREEN_BAR';
+            }
+            result = status + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
+            if (result.length < 80) {
+                result += new Array(80 - result.length + 1).join(' ');
+            }
+            casper.echo(this.colorize(result, style));
+            if (exit === true) {
+                casper.exit(status || 0);
+            }
         };
     };
 
