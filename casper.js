@@ -231,6 +231,16 @@
             return this.exit(Number(status) > 0 ? Number(status) : 1);
         },
 
+        each: function(array, fn) {
+            var i = 0;
+            (function(self, i) {
+                array.forEach(function(item) {
+                    fn(self, item, i);
+                });
+            })(this, i);
+            return this;
+        },
+
         /**
          * Prints something to stdout.
          *
@@ -375,6 +385,17 @@
             return decodeURIComponent(this.evaluate(function() {
                 return document.location.href;
             }));
+        },
+
+        /**
+         * Retrieves current page title, if any.
+         *
+         * @return String
+         */
+        getTitle: function() {
+            return this.evaluate(function() {
+                return document.title;
+            })
         },
 
         /**
