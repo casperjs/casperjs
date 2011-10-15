@@ -296,6 +296,21 @@
         },
 
         /**
+         * Checks if an element matching the provided CSS3 selector exists in
+         * current page DOM.
+         *
+         * @param  String  selector  A CSS3 selector
+         * @return Boolean
+         */
+        exists: function(selector) {
+            return this.evaluate(function() {
+                return __utils__.exists('%selector%');
+            }, {
+                selector: selector
+            });
+        },
+
+        /**
          * Exits phantom.
          *
          * @param  Number  status  Status
@@ -304,20 +319,6 @@
         exit: function(status) {
             phantom.exit(status);
             return this;
-        },
-
-        /**
-         * Checks if an element matching the provided CSS3 selector exists in
-         * current page DOM.
-         *
-         * @return Boolean
-         */
-        exists: function(selector) {
-            return self.evaluate(function() {
-                return __utils__.exists('%selector%');
-            }, {
-                selector: selector
-            });
         },
 
         /**
@@ -980,6 +981,19 @@
          */
         this.assertEvalEquals = function(fn, expected, message) {
             return this.assertEquals(casper.evaluate(fn), expected, message);
+        };
+
+        /**
+         * Asserts that an element matching the provided CSS3 selector exists in
+         * remote DOM.
+         *
+         * @param  String   selector   CSS3 selectore
+         * @param  String   message    Test description
+         */
+        this.assertExists = function(selector, message) {
+            var f = casper.exists(selector)
+            console.log('plop')
+            return this.assert(casper.exists(selector), message);
         };
 
         /**
