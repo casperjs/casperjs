@@ -8,8 +8,9 @@ Casper.js is a navigation utility for [PhantomJS](http://www.phantomjs.org/). It
 - capturing screenshots of a page (or an area)
 - making assertions on remote DOM
 - logging events
-- download base64 encoded resources, even binary ones
-- catch errors and react accordingly
+- downloading base64 encoded resources, even binary ones
+- catching errors and react accordingly
+- writing functional test suite, exporting results as JUnit XML (xUnit)
 
 Feel free to browse our [sample examples repository](https://github.com/n1k0/casperjs/tree/master/samples). Don't hesitate to pull request for any cool example of yours as well!
 
