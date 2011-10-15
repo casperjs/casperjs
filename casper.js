@@ -231,13 +231,25 @@
             return this.exit(Number(status) > 0 ? Number(status) : 1);
         },
 
+        /**
+         * Iterates over the values of a provided array and execute a callback
+         * for each item.
+         *
+         * @param  Array     array
+         * @param  Function  fn     Callback: function(self, item, index)
+         * @return Casper
+         */
         each: function(array, fn) {
-            var i = 0;
-            (function(self, i) {
-                array.forEach(function(item) {
+            if (array.constructor !== Array) {
+                self.log("each() only works with arrays", "error");
+                return this;
+            }
+
+            (function(self) {
+                array.forEach(function(item, i) {
                     fn(self, item, i);
                 });
-            })(this, i);
+            })(this);
             return this;
         },
 
@@ -1033,9 +1045,7 @@
          * @param  String  message    Test description
          */
         this.assertTitle = function(expected, message) {
-            return this.assertEvalEquals(function() {
-                return document.title;
-            }, expected, message);
+            return this.assertEquals(casper.getTitle(), expected, message);
         };
 
         /**

@@ -1,7 +1,8 @@
 phantom.injectJs('casper.js');
 
 var casper = new phantom.Casper({
-    faultTolerant: false
+    faultTolerant: false,
+    verbose: true
 });
 
 var save = null;
@@ -97,6 +98,11 @@ casper.then(function(self) {
     self.test.assertUrlMatch(/check=on/, 'fill() input[type=checkbox] field was submitted');
     self.test.assertUrlMatch(/choice=no/, 'fill() input[type=radio] field was submitted');
     self.test.assertUrlMatch(/topic=bar/, 'fill() select field was submitted');
+});
+
+// Casper#each()
+casper.each([1, 2, 3], function(self, item, i) {
+    self.test.assertEquals(i, item - 1, 'each() passes a contextualized index');
 });
 
 // Casper.XUnitExporter
