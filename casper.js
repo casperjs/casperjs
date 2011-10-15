@@ -1,5 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS - http://github.com/n1k0/casperjs
+ * Casper is a navigation utility for PhantomJS.
+ *
+ * Documentation: http://n1k0.github.com/casperjs/
+ * Repository:    http://github.com/n1k0/casperjs
  *
  * Copyright (c) 2011 Nicolas Perriault
  *
@@ -24,21 +27,7 @@
  */
 (function(phantom) {
     /**
-     * Main Casper class. Available options are:
-     *
-     * Name              | Type     | Default | Description
-     * ——————————————————+——————————+—————————+————————————————————————————————————————————————————————————————————————
-     * clientScripts     | Array    | []      | A collection of script filepaths to include to every page loaded
-     * faultTolerant     | Boolean  | true    | Catch and log exceptions when executing steps in a non-blocking fashion
-     * logLevel          | String   | "error" | Logging level (see logLevels for available values)
-     * onDie             | function | null    | A function to be called when Casper#die() is called
-     * onError           | function | null    | A function to be called when an "error" level event occurs
-     * onLoadError       | function | null    | A function to be called when a requested resource cannot be loaded
-     * onPageInitialized | function | null    | A function to be called after WebPage instance has been initialized
-     * page              | WebPage  | null    | An existing WebPage instance
-     * pageSettings      | Object   | {}      | PhantomJS's WebPage settings object
-     * timeout           | Number   | null    | Max timeout in milliseconds
-     * verbose           | Boolean  | false   | Realtime output of log messages
+     * Main Casper object.
      *
      * @param  Object  options  Casper options
      * @return Casper
