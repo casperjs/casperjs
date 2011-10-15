@@ -991,8 +991,6 @@
          * @param  String   message    Test description
          */
         this.assertExists = function(selector, message) {
-            var f = casper.exists(selector)
-            console.log('plop')
             return this.assert(casper.exists(selector), message);
         };
 
