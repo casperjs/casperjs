@@ -1080,14 +1080,13 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
 
 <p>
     CasperJS ships with a handful set of tools to be used as a functional testing
-    framework. For example, let's test write a tests suite for testing google search:
+    framework. For example, let's test write a tests suite for testing google search
+    (yes, you read it well):
 </p>
 
 <pre class="prettyprint"><code>phantom.injectJs("casper.js");
 
-var casper = new phantom.Casper({
-    logLevel: "debug"
-});
+var casper = new phantom.Casper();
 
 casper.start('http://www.google.fr/', function(self) {
     self.test.assertTitle('Google', 'google homepage title is the one expected');
@@ -1110,7 +1109,13 @@ casper.run(function(self) {
 });
 </code></pre>
 
-Run the tests suite:
+<p>
+    As you can see, <code>casper.test</code> is a reference to a
+    <code>phantom.Casper.Tester</code> object instance, which is used to make
+    the assertions and render the results.
+</p>
+
+Now run the tests suite:
 
 <pre class="prettyprint"><code>$ phantomjs samples/googletest.js
 </code></pre>
@@ -1123,10 +1128,24 @@ Run the tests suite:
 
 <p><img src="images/testsuitefail.png" alt="capture" title="" /></p>
 
+<h3>Exporting results in xUnit format</h3>
+
+<p>
+    CasperJS can export the results of the test suite to an xUnit XML file, which is
+    compatible with continous integration tools such as <a href="http://jenkins-ci.org/">Jenkins</a>.
+    To save the xUnit log of your test suite to a <code>log.xml</code> file,
+    you can process this way:
+</p>
+
+<pre class="prettyprint"><code>casper.run(function(self) {
+    self.test.renderResults(true, 0, 'log.xml');
+});
+</code></pre>
+
 <hr/>
 
 <p>
-    CasperJS has its own unit and functional testquite, located in the <code>tests</code>
+    CasperJS has its own unit and functional test suite, located in the <code>tests</code>
     subfolder. More tests will be added in the future. To run the test suite, from
     the root of a checkout of the casperjs repository:
 </p>
