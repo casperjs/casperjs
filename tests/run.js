@@ -4,10 +4,16 @@ var casper = new phantom.Casper({
     faultTolerant: false
 });
 
+var save = null;
+
 phantom.args.forEach(function(arg) {
     var debugMatch = /--loglevel=(\w+)/.exec(arg);
     if (debugMatch) {
         casper.options.logLevel = debugMatch[1];
+    }
+    var saveMatch = /--save=(.*)(\s|)/.exec(arg);
+    if (saveMatch) {
+        save = saveMatch[1];
     }
 });
 
@@ -93,7 +99,15 @@ casper.then(function(self) {
     self.test.assertUrlMatch(/topic=bar/, 'fill() select field was submitted');
 });
 
+// Casper.XUnitExporter
+casper.test.comment('phantom.Casper.XUnitExporter');
+xunit = new phantom.Casper.XUnitExporter();
+xunit.addSuccess('foo', 'bar');
+casper.test.assertMatch(xunit.getXML(), /<testcase classname="foo" name="bar"/, 'addSuccess() adds a successful testcase');
+xunit.addFailure('bar', 'baz', 'wrong', 'chucknorriz');
+casper.test.assertMatch(xunit.getXML(), /<testcase classname="bar" name="baz"><failure type="chucknorriz">wrong/, 'addFailure() adds a failed testcase');
+
 casper.run(function(self) {
     self.test.assert(self.result.log.length > 0, 'log() logged messages');
-    self.test.renderResults(true);
+    self.test.renderResults(true, 0, save);
 });

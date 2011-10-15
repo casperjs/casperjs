@@ -901,14 +901,15 @@
      *
      */
     phantom.Casper.Tester = function(casper, options) {
-        options = typeof options === "object" || {};
+        this.options = typeof options === "object" || {};
         if (!casper instanceof phantom.Casper) {
             throw "phantom.Casper.Tester needs a phantom.Casper instance";
         }
 
         // locals
-        var PASS = options.PASS || "PASS";
-        var FAIL = options.FAIL || "FAIL";
+        var exporter = new phantom.Casper.XUnitExporter();
+        var PASS = this.options.PASS || "PASS";
+        var FAIL = this.options.FAIL || "FAIL";
 
         // properties
         this.testResults = {
@@ -928,10 +929,12 @@
             if (condition === true) {
                 style = 'INFO';
                 this.testResults.passed++;
+                exporter.addSuccess("unknown", message);
             } else {
                 status = FAIL;
                 style = 'RED_BAR';
                 this.testResults.failed++;
+                exporter.addFailure("unknown", message, 'test failed', "assert");
             }
             casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
         };
@@ -947,11 +950,13 @@
             if (expected === testValue) {
                 casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
                 this.testResults.passed++;
+                exporter.addSuccess("unknown", message);
             } else {
                 casper.echo(this.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
                 this.comment('     got:      ' + testValue);
                 this.comment('     expected: ' + expected);
                 this.testResults.failed++;
+                exporter.addFailure("unknown", message, "test failed; expected: " + expected + "; got: " + testValue, "assertEquals");
             }
         };
 
@@ -1076,7 +1081,8 @@
          *
          * @param  Boolean  exit
          */
-        this.renderResults = function(exit, status) {
+        this.renderResults = function(exit, status, save) {
+            save = typeof save === "string" ? save : this.options.save;
             var total = this.testResults.passed + this.testResults.failed, status, style, result;
             if (this.testResults.failed > 0) {
                 status = FAIL;
@@ -1090,10 +1096,60 @@
                 result += new Array(80 - result.length + 1).join(' ');
             }
             casper.echo(this.colorize(result, style));
+            if (save && typeof(require) === "function") {
+                try {
+                    require('fs').write(save, exporter.getXML(), 'w');
+                    casper.echo('result log stored in ' + save, 'INFO');
+                } catch (e) {
+                    casper.echo('unable to write results to ' + save + '; ' + e, 'ERROR');
+                }
+            }
             if (exit === true) {
                 casper.exit(status || 0);
             }
         };
+    };
+
+    phantom.Casper.XUnitExporter = function() {
+        var node = function(name, attributes) {
+            var node = document.createElement(name);
+            for (attrName in attributes) {
+                var value = attributes[attrName];
+                if (attributes.hasOwnProperty(attrName) && typeof attrName === "string") {
+                    node.setAttribute(attrName, value);
+                }
+            }
+            return node;
+        };
+
+        var xml = node('testsuite');
+        xml.toString = function() {
+            return this.outerHTML; // ouch
+        };
+
+        this.addSuccess = function(classname, name) {
+            xml.appendChild(node('testcase', {
+                classname: classname,
+                name:      name
+            }));
+        };
+
+        this.addFailure = function(classname, name, message, type) {
+            var fnode = node('testcase', {
+                classname: classname,
+                name:      name
+            });
+            var failure = node('failure', {
+                type: type || "unknown"
+            });
+            failure.appendChild(document.createTextNode(message || "no message left"));
+            fnode.appendChild(failure);
+            xml.appendChild(fnode);
+        };
+
+        this.getXML = function() {
+            return xml;
+        }
     };
 
     /**
