@@ -428,6 +428,29 @@ casper.start('http://www.google.fr/', function(self) {
 });
 </code></pre>
 
+<h3 id="phantom_Casper_each"><code>Casper#die(String message[, int status])</code></h3>
+
+<p>Iterates over provided array items and execute a callback.</p>
+
+<p>Example:</p>
+
+<pre class="prettyprint"><code>var links = [
+    'http://google.com/',
+    'http://yahoo.com/',
+    'http://bing.com/'
+];
+
+casper.start().each(links, function(self, link) {
+    self.thenOpen(link, function(self) {
+        self.echo(self.getTitle());
+    });
+});
+
+casper.run(function(self) {
+    self.exit();
+});
+</code></pre>
+
 <h3 id="phantom_Casper_echo"><code>Casper#echo(String message[, String style])</code></h3>
 
 <p>
@@ -574,7 +597,7 @@ casper.start('http://www.google.fr/', function(self) {
 <h3 id="phantom_Casper_getCurrentUrl"><code>Casper#getCurrentUrl()</code></h3>
 
 <p>
-    Retrieves current URL of current document.
+    Retrieves current page URL.
     <span class="label notice">Note</span> the url will be url-decoded.
 </p>
 
@@ -582,6 +605,19 @@ casper.start('http://www.google.fr/', function(self) {
 
 <pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
     self.log(self.getCurrentUrl()); // "http://www.google.fr/"
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
+<h3 id="phantom_Casper_getTitle"><code>Casper#getTitle()</code></h3>
+
+<p>Retrieves current page title.</p>
+
+<p>Example:</p>
+
+<pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
+    self.log(self.getTitle()); // "Google"
 }).run(function(self) {
     self.exit();
 });
@@ -774,6 +810,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_debugHTML"><code>Casper.debugHTML()</code></a></li>
         <li><a href="#phantom_Casper_debugPage"><code>Casper.debugPage()</code></a></li>
         <li><a href="#phantom_Casper_die"><code>Casper.die()</code></a></li>
+        <li><a href="#phantom_Casper_each"><code>Casper.each()</code></a></li>
         <li><a href="#phantom_Casper_echo"><code>Casper.echo()</code></a></li>
         <li><a href="#phantom_Casper_evaluate"><code>Casper.evaluate()</code></a></li>
         <li><a href="#phantom_Casper_evaluateOrDie"><code>Casper.evaluateOrDie()</code></a></li>
@@ -781,6 +818,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_log"><code>Casper.log()</code></a></li>
         <li><a href="#phantom_Casper_fill"><code>Casper.fill()</code></a></li>
         <li><a href="#phantom_Casper_getCurrentUrl"><code>Casper.getCurrentUrl()</code></a></li>
+        <li><a href="#phantom_Casper_getTitle"><code>Casper.getTitle()</code></a></li>
         <li><a href="#phantom_Casper_repeat"><code>Casper.repeat()</code></a></li>
         <li><a href="#phantom_Casper_run"><code>Casper.run()</code></a></li>
         <li><a href="#phantom_Casper_start"><code>Casper.start()</code></a></li>
