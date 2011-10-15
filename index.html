@@ -20,9 +20,8 @@
                 <li><a href="#quickstart">Quickstart</a></li>
                 <li><a href="#apidoc">API documentation</a></li>
                 <li><a href="#client-side-utils">Client-side utils</a></li>
-                <li><a href="#colorizer">Colorizer</a></li>
                 <li><a href="#extending">Extending</a></li>
-                <li><a href="#testing">Testing</a></li>
+                <li><a href="#testing">Functional testing</a></li>
                 <li><a href="#download">Download</a></li>
                 <li><a href="#license">License</a></li>
                 <li><a href="http://github.com/n1k0/casperjs">Github</a></li>
@@ -1185,7 +1184,9 @@ Run the tests suite:
     $(document).ready(function() {
         $('#topbar').scrollSpy();
         $("a[href^=#]").click(function(e) {
-            var target = $($(this).attr('href'));
+            var anchor = $(this).attr('href');
+            var target = $(anchor);
+            document.location.href = anchor;
             $('body').scrollTop(target.position().top - 50);
             return e.preventDefault();
         });
