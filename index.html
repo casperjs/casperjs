@@ -1076,11 +1076,33 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
 
 <section id="testing">
 <div class="page-header">
-    <h1>Testing</h1>
+    <h1>Functional testing</h1>
 </div>
 
 <p>
-    CasperJS has some unit and functional tests, located in the <code>tests</code>
+    CasperJS ships with a handful set of tools to be used as a functional testing
+    framework. For example, let's test write a tests suite for testing google search:
+</p>
+
+<pre class="prettyprint"><code>phantom.injectJs("path/to/casper.js");
+
+var casper = new phantom.Casper();
+
+casper.start('http://www.google.fr/', function(self) {
+    self.test.assertTitleMatch();
+})
+
+casper.thenOpen('http://www.lemonde.fr/', function(self) {
+    articles.concat(self.fetchTexts('h2.article'));
+});
+
+casper.run(function(self) {
+    self.renderResults();
+});
+</code></pre>
+
+<p>
+    CasperJS has its own unit and functional testquite, located in the <code>tests</code>
     subfolder. More tests will be added in the future. To run the test suite, from
     the root of a checkout of the casperjs repository:
 </p>
@@ -1116,7 +1138,7 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
 </div>
 
 <p>
-    <code>Casper.js</code> is released under the terms of the
+    Casper.js is released under the terms of the
     <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
 </p>
 </section>
