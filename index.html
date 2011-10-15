@@ -1084,22 +1084,34 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
     framework. For example, let's test write a tests suite for testing google search:
 </p>
 
-<pre class="prettyprint"><code>phantom.injectJs("path/to/casper.js");
+<pre class="prettyprint"><code>phantom.injectJs("casper.js");
 
-var casper = new phantom.Casper();
+var casper = new phantom.Casper({
+    logLevel: "debug"
+});
 
 casper.start('http://www.google.fr/', function(self) {
-    self.test.assertTitleMatch();
-})
+    self.test.assertTitle('Google', 'google homepage title is the one expected');
+    self.test.assertExists('form[name=f]', 'main form is found');
+    self.fill('form[name=f]', {
+        q: 'foo'
+    }, true);
+});
 
-casper.thenOpen('http://www.lemonde.fr/', function(self) {
-    articles.concat(self.fetchTexts('h2.article'));
+casper.then(function(self) {
+    self.test.assertTitle('foo - Recherche Google', 'google title is ok');
+    self.test.assertUrlMatch(/q=foo/, 'search term has been submitted');
+    self.test.assertEval(function() {
+        return __utils__.findAll('h3.r').length >= 10;
+    }, 'google search for "foo" retrieves 10 or more results');
 });
 
 casper.run(function(self) {
-    self.renderResults();
+    self.test.renderResults(true);
 });
 </code></pre>
+
+<hr/>
 
 <p>
     CasperJS has its own unit and functional testquite, located in the <code>tests</code>
