@@ -333,8 +333,9 @@ var casper = new phantom.Casper({
 </p>
 
 <p>
-    NOTE: we cannot use <code>window.btoa()</code> because it fails miserably in the
-    version of WebKit shipping with PhantomJS.
+    <span class="label notice">Note</span> We cannot use
+    <code>window.btoa()</code> because it fails miserably in the version of WebKit
+    shipping with PhantomJS.
 </p>
 
 <p>Example: retrieving google logo image encoded in base64:</p>
@@ -487,8 +488,9 @@ casper.start('http://www.google.fr/', function(self) {
 </code></pre>
 
 <p>
-    <strong>Hint:</strong> for filling and submitting forms, rather use the
-    <a href="#phantom_Casper_fill"><code>Casper#fill()</code></a> method.
+    <span class="label notice">Hint</span> For filling and submitting forms,
+    rather use the <a href="#phantom_Casper_fill"><code>Casper#fill()</code></a>
+    method.
 </p>
 
 <h3 id="phantom_Casper_evaluateOrDie"><code>Casper#evaluateOrDie(function fn[, String message])</code></h3>
@@ -577,7 +579,10 @@ casper.start('http://www.google.fr/', function(self) {
 
 <h3 id="phantom_Casper_getCurrentUrl"><code>Casper#getCurrentUrl()</code></h3>
 
-<p>Retrieves current URL of current document. Note: the url will be url-decoded.</p>
+<p>
+    Retrieves current URL of current document.
+    <span class="label notice">Note</span> the url will be url-decoded.
+</p>
 
 <p>Example:</p>
 
@@ -673,9 +678,10 @@ casper.run(function() {
 <p>Matter of taste!</p>
 
 <p>
-    Please note that <strong>you must call the <code>start()</code> method in order to
-    be able to add navigation steps</strong> and run the suite. If you don't you'll get
-    an error message inviting you to do so anyway.
+    <span class="label notice">Note</span> <strong>You must call the
+    <code>start()</code> method in order to be able to add navigation
+    steps</strong> and run the suite. If you don't you'll get an error message
+    inviting you to do so anyway.
 </p>
 
 <h3 id="phantom_Casper_then"><code>Casper#then(function fn)</code></h3>
@@ -695,8 +701,9 @@ casper.run(function() {
 </code></pre>
 
 <p>
-    Please note that usage of the <code>self</code> argument is not mandatory, it's just
-    pythonic-like syntaxic sugar. You can perfectly use this alternative:
+    <span class="label notice">Note</span> Usage of the <code>self</code> argument
+    is not mandatory, it's just pythonic-like syntaxic sugar. You can perfectly use
+    this alternative:
 </p>
 
 <pre class="prettyprint"><code>casper.start('http://google.fr/').then(function() {
