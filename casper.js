@@ -1111,6 +1111,10 @@
         };
     };
 
+    /**
+     * JUnit XML (xUnit) exporter for test results.
+     *
+     */
     phantom.Casper.XUnitExporter = function() {
         var node = function(name, attributes) {
             var node = document.createElement(name);
@@ -1128,6 +1132,9 @@
             return this.outerHTML; // ouch
         };
 
+        /**
+         * Adds a successful test result
+         */
         this.addSuccess = function(classname, name) {
             xml.appendChild(node('testcase', {
                 classname: classname,
@@ -1135,6 +1142,9 @@
             }));
         };
 
+        /**
+         * Adds a failed test result
+         */
         this.addFailure = function(classname, name, message, type) {
             var fnode = node('testcase', {
                 classname: classname,
@@ -1148,6 +1158,9 @@
             xml.appendChild(fnode);
         };
 
+        /**
+         * Retrieves generated XML object.
+         */
         this.getXML = function() {
             return xml;
         }
@@ -1238,9 +1251,9 @@
     /**
      * Object recursive merging utility.
      *
-     * @param  object  obj1  the destination object
-     * @param  object  obj2  the source object
-     * @return object
+     * @param  Object  obj1  the destination object
+     * @param  Object  obj2  the source object
+     * @return Object
      */
     function mergeObjects(obj1, obj2) {
         for (var p in obj2) {
@@ -1261,9 +1274,9 @@
      * Replaces a function string contents with placeholders provided by an
      * Object.
      *
-     * @param  function  fn            The function
-     * @param  object    replacements  Object containing placeholder replacements
-     * @return string                  A function string representation
+     * @param  Function  fn            The function
+     * @param  Object    replacements  Object containing placeholder replacements
+     * @return String                  A function string representation
      */
     function replaceFunctionPlaceholders(fn, replacements) {
         if (replacements && typeof replacements === "object") {
