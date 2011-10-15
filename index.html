@@ -84,49 +84,38 @@
             </p>
 <pre class="prettyprint"><code>phantom.injectJs('casper.js');
 
+var links = [];
+var casper = new phantom.Casper();
+
 function getLinks() {
     var links = document.querySelectorAll('h3.r a');
     return Array.prototype.map.call(links, function(e) {
-        return {
-            title: e.innerText,
-            href:  e.getAttribute('href')
-        };
+        return e.getAttribute('href')
     });
 }
 
-var links = [];
-var casper = new phantom.Casper({
-    logLevel:   "info", // we only want "info" or higher level log messages
-    loadImages: false,  // do not download images to save bandwidth
-    loadPlugins: false, // do not load plugins to save kitten
-    verbose: true       // write log messages to the console
-})
-    .start('http://google.fr/')
-    .then(function(self) {
-        // search for 'casperjs' from google form
-        self.fill('form[name=f]', {
-            q: 'casperjs'
-        }, true);
-    })
-    .then(function(self) {
-        // aggregate results for the 'casperjs' search
-        links = self.evaluate(getLinks);
-        // now search for 'phantomjs' by fillin the form again
-        self.fill('form[name=f]', {
-            q: 'phantomjs'
-        }, true);
-    })
-    .then(function(self) {
-        // aggregate results for the 'phantomjs' search
-        links = links.concat(self.evaluate(getLinks));
-    })
-    .run(function(self) {
-        // echo results in some pretty fashion
-        self.echo(links.map(function(i) {
-            return i.title + ' (' + i.href + ')';
-        }).join('\n')).exit();
-    })
-;
+casper.start('http://google.fr/', function(self) {
+    /* search for 'casperjs' from google form */
+    self.fill('form[name=f]', { q: 'casperjs' }, true);
+});
+
+casper.then(function(self) {
+    /* aggregate results for the 'casperjs' search */
+    links = self.evaluate(getLinks);
+    /* now search for 'phantomjs' by fillin the form again */
+    self.fill('form[name=f]', { q: 'phantomjs' }, true);
+});
+
+casper.then(function(self) {
+    /* aggregate results for the 'phantomjs' search */
+    links = links.concat(self.evaluate(getLinks));
+});
+
+casper.run(function(self) {
+    /* echo results in some pretty fashion */
+    self.echo(links.length + ' links found:');
+    self.echo(' - ' + links.join('\n - ')).exit();
+});
 </code></pre>
             <p>
                 <span class="label notice">Hint</span>
@@ -135,69 +124,60 @@ var casper = new phantom.Casper({
             </p>
             <p>Run it:</p>
 <pre class="prettyprint"><code>$ phantomjs samples/googlelinks.js
-[info] [phantom] Starting…
-[info] [phantom] Running suite: 3 steps
-[info] [phantom] Step 1/3: http://www.google.fr/ (HTTP 301)
-[info] [remote] set "q" value to casperjs
-[info] [remote] submitting form to /search, HTTP GET
-[info] [phantom] Step 1/3: done in 1592ms.
-[info] [phantom] Step 2/3: http://www.google.fr/search?sclient=psy-ab&amp;hl=fr&amp;site=…
-[info] [remote] set "q" value to phantomjs
-[info] [remote] submitting form to /search, HTTP GET
-[info] [phantom] Step 2/3: done in 3091ms.
-[info] [phantom] Step 3/3: http://www.google.fr/search?sclient=psy-ab&amp;hl=fr&amp;source=…
-[info] [phantom] Step 3/3: done in 3862ms.
-[info] [phantom] Done 3 steps in 4111ms.
-n1k0/casperjs - GitHub (https://github.com/n1k0/casperjs)
-#2: Some functionality has broken due to 1.3 update - Issues - n1k0 ... (https://github.com/n1k0/casperjs/issues/2)
-Commit History for n1k0/casperjs - GitHub (https://github.com/n1k0/casperjs/commits/master)
-#1: Way to step forward and backwards - Issues - n1k0/casperjs ... (https://github.com/n1k0/casperjs/issues/1)
-Casper Js | Facebook (http://www.facebook.com/people/Casper-Js/100000337260665)
-Casper Js Profiles | Facebook (http://www.facebook.com/public/Casper-Js)
-hashtags.org - CasperJS (http://hashtags.org/tag/CasperJS/)
-Zerotohundred.com - View Profile: Casper JS (http://www.zerotohundred.com/newforums/members/casper-js.html)
-J S Enterprises in Casper, WY | Casper J S Enterprises - YP.com (http://www.yellowpages.com/casper-wy/j-s-enterprises)
-Best Guitat Backing Traks Free Download: ICFMeister, Handy Backup ... (http://www.softwaregeek.com/guitat-backing-traks…)
-PhantomJS: Headless WebKit with JavaScript API (http://www.phantomjs.org/)
-phantomjs - headless WebKit with JavaScript API - Google Project ... (http://code.google.com/p/phantomjs/)
-QuickStart - phantomjs - 5-Minute Guide - headless WebKit with ... (http://code.google.com/p/phantomjs/wiki/QuickStart)
-Paris JS #10 : Introduction à PhantomJS, un navigateur webkit ... (http://svay.com/blog/index/post/2011/08/31/Paris-JS…)
-ariya/phantomjs - GitHub (https://github.com/ariya/phantomjs)
-twitter.com/search/%23%23PhantomJS/grid (http://twitter.com/search/%23%23PhantomJS/grid)
-Phantom.js | Pilvee blog (http://pilvee.com/blog/tag/phantom-js/)
-don't code today what you can't debug tomorrow: PhantomJS ... (http://ariya.blogspot.com/2011/01/phantomjs-minimalisti…)
-DailyJS: PhantomJS, load.js, Phantom Limb, OpenOdyssey (http://dailyjs.com/2011/01/28/phantoms/)
-PhantomJS: The Power of WebKit but Without the Broswer (http://www.readwriteweb.com/hack/2011/03/phantomjs-the-power-of…)
+20 links found:
+ - https://github.com/n1k0/casperjs
+ - https://github.com/n1k0/casperjs/issues/2
+ - https://github.com/n1k0/casperjs/tree/master/samples
+ - https://github.com/n1k0/casperjs/commits/master/
+ - http://www.facebook.com/people/Casper-Js/100000337260665
+ - http://www.facebook.com/public/Casper-Js
+ - http://hashtags.org/tag/CasperJS/
+ - http://www.zerotohundred.com/newforums/members/casper-js.html
+ - http://www.yellowpages.com/casper-wy/j-s-enterprises
+ - http://local.trib.com/casper+wy/j+s+chinese+restaurant.zq.html
+ - http://www.phantomjs.org/
+ - http://code.google.com/p/phantomjs/
+ - http://code.google.com/p/phantomjs/wiki/QuickStart
+ - http://svay.com/blog/index/post/2011/08/31/Paris-JS-10-%3A-Introduction-%C3%A0-PhantomJS,-un-navigateur-webkit-headless
+ - https://github.com/ariya/phantomjs
+ - http://dailyjs.com/2011/01/28/phantoms/
+ - http://css.dzone.com/articles/phantom-js-alternative
+ - http://pilvee.com/blog/tag/phantom-js/
+ - http://ariya.blogspot.com/2011/01/phantomjs-minimalistic-headless-webkit.html
+ - http://www.readwriteweb.com/hack/2011/03/phantomjs-the-power-of-webkit.php
 </code></pre>
             <h3 id="coffeescript">CoffeeScript</h3>
             <p>
                 You can also write Casper scripts using the
                 <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript syntax</a>:
             </p>
-<pre class="prettyprint"><code>phantom.injectJs "path/to/casper.js"
+<pre class="prettyprint"><code>phantom.injectJs "casper.js"
 
-q = -&gt;
-    document.querySelector('input[name="q"]').setAttribute "value", "%term%"
-    document.querySelector('form[name="f"]').submit()
-
-getLinks = -&gt;
-    links = document.querySelectorAll("h3.r a")
-    Array::map.call links, (e) -&gt; e.getAttribute "href"
+getLinks = ->
+  links = document.querySelectorAll "h3.r a"
+  Array::map.call links, (e) -> e.getAttribute "href"
 
 links = []
+casper = new phantom.Casper()
 
-casper = new phantom.Casper verbose: true, logLevel: "debug"
-casper.start "http://google.fr/"
-casper.thenEvaluate q, term: "casper"
-casper.then -&gt; links = casper.evaluate getLinks
-casper.thenEvaluate q, term: "homer"
-casper.then -&gt; links = links.concat casper.evaluate getLinks
-casper.run -&gt;
-    out =
-        result: casper.result
-        links:  links
-    casper.echo JSON.stringify out, null, "    "
-    casper.exit()
+casper.start "http://google.fr/", (self) ->
+  "search for 'casperjs' from google form"
+  self.fill "form[name=f]", q: "casperjs", true
+
+casper.then (self) ->
+  "aggregate results for the 'casperjs' search"
+  links = self.evaluate(getLinks)
+  "search for 'phantomjs' from google form"
+  self.fill "form[name=f]", q: "phantomjs", true
+
+casper.then (self) ->
+  "concat results for the 'phantomjs' search"
+  links = links.concat(self.evaluate(getLinks))
+
+casper.run (self) ->
+  "display results"
+  self.echo links.length + " links found:"
+  self.echo(" - " + links.join("\n - ")).exit()
 </code></pre>
             <p>Just remember to suffix your script with the <code>.coffee</code> extension.</p>
         </section>
