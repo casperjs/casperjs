@@ -244,7 +244,6 @@
                 self.log("each() only works with arrays", "error");
                 return this;
             }
-
             (function(self) {
                 array.forEach(function(item, i) {
                     fn(self, item, i);
