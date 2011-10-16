@@ -1280,10 +1280,9 @@ DEALINGS IN THE SOFTWARE.
     $(document).ready(function() {
         function reScroll(target) {
             target = target ? target : $(document.location.hash);
-            if (!target) {
-                return;
+            if (target) {
+                scrollTo(document.querySelector('body'), target.position().top - 50);
             }
-            $('body').scrollTop(target.position().top - 50);
         }
         $('#topbar').scrollSpy({ padding: 50 });
         $("a[href^=#]").click(function(e) {
@@ -1293,7 +1292,7 @@ DEALINGS IN THE SOFTWARE.
             return e.preventDefault();
         });
         if (document.location.hash) {
-            setTimeout(reScroll, 10, $(document.location.hash));
+            setTimeout(reScroll, 100, $(document.location.hash));
         }
         hljs.tabReplace = '    ';
         $('pre code:not(.void)').each(function(i, e) {
