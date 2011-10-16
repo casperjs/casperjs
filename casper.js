@@ -891,6 +891,13 @@
             'INFO_BAR':  { fg: 'cyan', bold: true }
         };
 
+        /**
+         * Adds a style to provided text.
+         *
+         * @params  String  text
+         * @params  String  styleName
+         * @return  String
+         */
         this.colorize = function(text, styleName) {
             if (styleName in styles) {
                 return this.format(text, styles[styleName]);
@@ -898,6 +905,13 @@
             return text;
         };
 
+        /**
+         * Formats a text using a style declaration object.
+         *
+         * @param  String  text
+         * @param  Object  style
+         * @return String
+         */
         this.format = function(text, style) {
             if (typeof style !== "object") {
                 return text;
@@ -1164,6 +1178,9 @@
 
         /**
          * Adds a successful test result
+         *
+         * @param  String  classname
+         * @param  String  name
          */
         this.addSuccess = function(classname, name) {
             xml.appendChild(node('testcase', {
@@ -1174,6 +1191,11 @@
 
         /**
          * Adds a failed test result
+         *
+         * @param  String  classname
+         * @param  String  name
+         * @param  String  message
+         * @param  String  type
          */
         this.addFailure = function(classname, name, message, type) {
             var fnode = node('testcase', {
@@ -1189,7 +1211,9 @@
         };
 
         /**
-         * Retrieves generated XML object.
+         * Retrieves generated XML object - actually an HTMLElement.
+         *
+         * @return HTMLElement
          */
         this.getXML = function() {
             return xml;
