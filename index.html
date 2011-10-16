@@ -44,7 +44,8 @@
             <div class="row">
                 <div class="span11">
                     <p>
-                        Casper.js is a navigation utility for <a href="http://www.phantomjs.org/">PhantomJS</a>.
+                        CasperJS is an open source <strong>navigation scripting &amp; testing utility</strong> for
+                        <a href="http://www.phantomjs.org/">PhantomJS</a> — the scritable headless WebKit engine.
                         It eases the process of defining a full navigation scenario and provides useful high-level
                         functions, methods &amp; syntaxic sugar for doing common tasks such as:
                     </p>
@@ -60,8 +61,8 @@
                     </ul>
                     <p>
                         Feel free to browse the <a href="https://github.com/n1k0/casperjs/tree/master/samples">sample
-                        examples repository</a>. Don't hesitate to pull request for any cool example of yours
-                        as well!
+                        examples repository</a>. Code is <a href="https://github.com/n1k0/casperjs">hosted on Github</a>,
+                        so don't hesitate to fork and send a pull request for any cool example of yours as well!
                     </p>
                 </div>
                 <div class="span5 download">
@@ -132,7 +133,7 @@ casper.run(function(self) {
                 to structure your code.
             </p>
             <p>Run it:</p>
-<pre class="prettyprint"><code>$ phantomjs samples/googlelinks.js
+<pre class="prettyprint"><code class="void">$ phantomjs samples/googlelinks.js
 20 links found:
  - https://github.com/n1k0/casperjs
  - https://github.com/n1k0/casperjs/issues/2
@@ -1191,9 +1192,9 @@ casper.run(function(self) {
 });
 </code></pre>
 
-Then you can run:
+<p>Then you can run:</p>
 
-<pre class="prettyprint"><code>$ phantomjs test.js --save=log.xml
+<pre class="prettyprint"><code class="void">$ phantomjs test.js --save=log.xml
 </code></pre>
 
 <h3>CasperJS tests</h3>
@@ -1204,7 +1205,7 @@ Then you can run:
     the root of a checkout of the casperjs repository:
 </p>
 
-<pre class="prettyprint"><code>$ phantomjs tests/run.js</code></pre>
+<pre class="prettyprint"><code class="void">$ phantomjs tests/run.js</code></pre>
 </section>
 
 <section id="download">
@@ -1215,12 +1216,10 @@ Then you can run:
 <p> You can download this project in either
     <a href="http://github.com/n1k0/casperjs/zipball/master">zip</a> or
     <a href="http://github.com/n1k0/casperjs/tarball/master">tar</a> formats.
+    You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
 </p>
 
-<p>
-    You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
-    <pre class="prettyprint"><code>$ git clone git://github.com/n1k0/casperjs</code></pre>
-</p>
+<pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs</code></pre>
 
 <p>
     Feel free to play with the code and
@@ -1252,8 +1251,6 @@ Then you can run:
 <script type="text/javascript" src="js/bootstrap-scrollspy.js"></script>
 <script type="text/javascript" src="js/highlight.pack.js"></script>
 <script type="text/javascript">
-    hljs.tabReplace = '    ';
-    hljs.initHighlightingOnLoad();
     $(document).ready(function() {
         $('#topbar').scrollSpy();
         $("a[href^=#]").click(function(e) {
@@ -1262,6 +1259,10 @@ Then you can run:
             document.location.href = anchor;
             $('body').scrollTop(target.position().top - 50);
             return e.preventDefault();
+        });
+        hljs.tabReplace = '    ';
+        $('pre code:not(.void)').each(function(i, e) {
+            hljs.highlightBlock(e, '    ');
         });
     });
 </script>
