@@ -33,6 +33,7 @@ casper.options.verbose = true;
 // Casper#start()
 casper.test.comment('navigating');
 casper.start('tests/site/index.html', function(self) {
+    self.test.assert(self.exists('a') && !self.exists('chucknorriz'), 'exists() can check if an element exists');
     self.test.assertTitle('CasperJS test index', 'start() casper can start itself an open an url');
     self.test.assertEval(function() {
         return typeof(__utils__) === "object";
