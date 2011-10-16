@@ -38,7 +38,7 @@
         <section id="about">
             <div class="page-header">
                 <h1>
-                    CasperJS <small>a navigation scripting &amp; testing utility for <a href="http://phantomjs.org/">PhantomJS</a></small>
+                    CasperJS <small>a navigation scripting &amp; testing utility for <a href="http://phantomjs.org/">PhantomJS</a> written in Javascript</small>
                 </h1>
             </div>
             <div class="row">
@@ -81,6 +81,11 @@
             <div class="page-header">
                 <h1>Quickstart</h1>
             </div>
+            <p>
+                <span class="label warning">Prerequisite</span>
+                <a href="http://phantomjs.org/">PhantomJS</a> > 1.2 must be installed.
+                Check out the <a href="http://code.google.com/p/phantomjs/wiki/Installation">installation instructions</a>.
+            </p>
             <p>
                 In the following example, we'll query google for two terms consecutively,
                 <code>capserjs</code> and <code>phantomjs</code>, and aggregate the result links
@@ -1153,6 +1158,11 @@ Now run the tests suite:
 <h3>Exporting results in xUnit format</h3>
 
 <p>
+    <span class="label warning">Warning</span> XUnit log export feature is only available for
+    PhantomJS 1.3 and later.
+</p>
+
+<p>
     CasperJS can export the results of the test suite to an xUnit XML file, which is
     compatible with continous integration tools such as <a href="http://jenkins-ci.org/">Jenkins</a>.
     To save the xUnit log of your test suite to a <code>log.xml</code> file,
@@ -1162,6 +1172,28 @@ Now run the tests suite:
 <pre class="prettyprint"><code>casper.run(function(self) {
     self.test.renderResults(true, 0, 'log.xml');
 });
+</code></pre>
+
+<p>A cooler way is to add an option to your script using CLI argument parsing:</p>
+
+<pre class="prettyprint"><code>var saveXUnitTo = null;
+phantom.args.forEach(function(arg) {
+    var saveMatch = /--save=(.*)(\s|)/.exec(arg);
+    if (saveMatch) {
+        saveXUnitTo = saveMatch[1];
+    }
+});
+
+// your test suite here
+
+casper.run(function(self) {
+    self.test.renderResults(true, 0, saveXUnitTo);
+});
+</code></pre>
+
+Then you can run:
+
+<pre class="prettyprint"><code>$ phantomjs test.js --save=log.xml
 </code></pre>
 
 <h3>CasperJS tests</h3>
