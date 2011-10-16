@@ -2,9 +2,9 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="robots" content="index, follow" />
-<title>CasperJS, a navigation utility for PhantomJS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="robots" content="index, follow">
+<title>CasperJS, a navigation scripting and testing utility for PhantomJS</title>
 <meta name="keywords" content="phantomjs, phantom, casperjs, casper, javascript, test, testing">
 <meta name="description" content="CasperJS is a navigation scripting &amp; testing utility for PhantomJS.">
 <link rel="stylesheet" href="css/bootstrap.css">
@@ -90,7 +90,7 @@
             <p>
                 In the following example, we'll query google for two terms consecutively,
                 <code>capserjs</code> and <code>phantomjs</code>, and aggregate the result links
-                in a standard Array. Then we'll output the result to the console:
+                in a standard <code>Array</code>. Then we'll output the result to the console:
             </p>
 <pre class="prettyprint"><code>phantom.injectJs('casper.js');
 
@@ -235,19 +235,19 @@ casper.run (self) ->
             <td><code>logLevel</code></td>
             <td><code>String</code></td>
             <td><code>"error"</code></td>
-            <td> Logging level (see logLevels for available values)</td>
+            <td> Logging level (see <code>logLevels</code> for available values)</td>
         </tr>
         <tr>
             <td><code>onDie</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
-            <td> A function to be called when Casper#die() is called</td>
+            <td> A function to be called when <code>Casper#die()</code> is called</td>
         </tr>
         <tr>
             <td><code>onError</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
-            <td> A function to be called when an "error" level event occurs</td>
+            <td> A function to be called when an <code>"error"</code> level event occurs</td>
         </tr>
         <tr>
             <td><code>onLoadError</code></td>
@@ -259,19 +259,19 @@ casper.run (self) ->
             <td><code>onPageInitialized</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
-            <td> A function to be called after WebPage instance has been initialized</td>
+            <td> A function to be called after <code>WebPage</code> instance has been initialized</td>
         </tr>
         <tr>
             <td><code>page</code></td>
             <td><code>WebPage</code></td>
             <td><code>null</code></td>
-            <td> An existing WebPage instance</td>
+            <td> An existing <code>WebPage</code> instance</td>
         </tr>
         <tr>
             <td><code>pageSettings</code></td>
             <td><code>Object</code></td>
             <td><code>{}</code></td>
-            <td> PhantomJS's WebPage settings object</td>
+            <td> PhantomJS's <code>WebPage</code> settings object</td>
         </tr>
         <tr>
             <td><code>timeout</code></td>
