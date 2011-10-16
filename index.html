@@ -802,8 +802,11 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 <pre class="prettyprint"><code>casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).thenOpenAndEvaluate('http://yahoo.fr/', function() {
-    document.querySelector['form'].submit();
+    var f = document.querySelector('form');
+    f.querySelector('input[name=q]').value = 'chuck norris';
+    f.submit();
 }).run(function(self) {
+    self.debugPage();
     self.exit();
 });
 </code></pre>
