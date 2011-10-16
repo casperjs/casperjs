@@ -1074,8 +1074,8 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
 
 <p>
     Sometimes it can be convenient to add your own methods to the <code>Casper</code>
-    class; it's easily doable using the <code>Casper.extend()</code> method as
-    illustrated below:
+    class; it's easily doable using the <code>Casper.extend()</code>
+    method as illustrated below:
 </p>
 
 <pre class="prettyprint"><code>phantom.injectJs("path/to/casper.js");
@@ -1245,6 +1245,24 @@ casper.run(function(self) {
     Casper.js is released under the terms of the
     <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
 </p>
+
+<pre class="prettyprint"><code class="void">Copyright (c) 2011 Nicolas Perriault
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+</code></pre>
 </section>
     </div>
 
@@ -1260,14 +1278,23 @@ casper.run(function(self) {
 <script type="text/javascript" src="js/highlight.pack.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#topbar').scrollSpy();
+        function reScroll(target) {
+            target = target ? target : $(document.location.hash);
+            if (!target) {
+                return;
+            }
+            $('body').scrollTop(target.position().top - 50);
+        }
+        $('#topbar').scrollSpy({ padding: 50 });
         $("a[href^=#]").click(function(e) {
             var anchor = $(this).attr('href');
-            var target = $(anchor);
             document.location.href = anchor;
-            $('body').scrollTop(target.position().top - 50);
+            reScroll($(anchor))
             return e.preventDefault();
         });
+        if (document.location.hash) {
+            setTimeout(reScroll, 10, $(document.location.hash));
+        }
         hljs.tabReplace = '    ';
         $('pre code:not(.void)').each(function(i, e) {
             hljs.highlightBlock(e, '    ');

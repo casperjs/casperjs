@@ -22,7 +22,7 @@
 
   var $window = $(window)
 
-  function ScrollSpy( topbar, selector ) {
+  function ScrollSpy( topbar, selector, options ) {
     var processScroll = $.proxy(this.processScroll, this)
     this.$topbar = $(topbar)
     this.selector = selector || 'li > a'
@@ -46,7 +46,8 @@
       }
 
     , processScroll: function () {
-        var scrollTop = $window.scrollTop() + 10
+        var padding = 50;
+        var scrollTop = $window.scrollTop() + padding + 10
           , offsets = this.offsets
           , targets = this.targets
           , activeTarget = this.activeTarget
