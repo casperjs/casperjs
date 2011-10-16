@@ -14,7 +14,7 @@ html, body { background-color: #eee; }
 .contribute img { position: fixed; top: 40px; right: 0; border: 0; }
 .download { text-align: center; }
 .page-header { background-color: #f5f5f5; padding: 20px 20px 10px; margin: -20px -20px 20px; border-top: 1px solid #DDD; }
-pre code { line-height: 1.4em; }
+pre code { line-height: 1.4em; background: none;}
 #about { font-weight: bold; }
 section { margin-bottom: 40px; }
 section:first-child { padding-top: 40px; }

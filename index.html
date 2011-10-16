@@ -8,8 +8,8 @@
 <meta name="keywords" content="phantomjs, phantom, casperjs, casper, javascript, test, testing">
 <meta name="description" content="CasperJS is a navigation scripting &amp; testing utility for PhantomJS.">
 <link rel="stylesheet" href="css/bootstrap.css">
-<link rel="stylesheet" href="css/casper.css">
 <link rel="stylesheet" href="css/highlight.css">
+<link rel="stylesheet" href="css/casper.css">
 </head>
 <body>
 <a href="http://github.com/n1k0/casperjs" class="contribute">
@@ -84,7 +84,7 @@
             </div>
             <p>
                 <span class="label warning">Prerequisite</span>
-                <a href="http://phantomjs.org/">PhantomJS</a> > 1.2 must be installed.
+                <a href="http://phantomjs.org/">PhantomJS</a> >= 1.3 must be installed.
                 Check out the <a href="http://code.google.com/p/phantomjs/wiki/Installation">installation instructions</a>.
             </p>
             <p>
@@ -862,8 +862,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     For the records, CasperJS doesn't use builtin <code>window.btoa()</code> function because
     it can't deal efficiently with strings encoded using >8b characters.
 </p>
-<pre class="prettyprint"><code>
-var base64;
+<pre class="prettyprint"><code>var base64;
 casper.start('http://foo.bar/', function(self) {
     base64 = self.evaluate(function() {
         return __utils__.encode("I've been a bit cryptic recently");
@@ -877,8 +876,7 @@ casper.start('http://foo.bar/', function(self) {
 <p>
     Checks if a DOM element matching a given CSS3 selector exists.
 </p>
-<pre class="prettyprint"><code>
-var exists;
+<pre class="prettyprint"><code>var exists;
 casper.start('http://foo.bar/', function(self) {
     exists = self.evaluate(function() {
         return __utils__.exists('#some_id');
@@ -892,8 +890,7 @@ casper.start('http://foo.bar/', function(self) {
 <p>
     Retrieves all DOM elements matching a given CSS3 selector.
 </p>
-<pre class="prettyprint"><code>
-var links;
+<pre class="prettyprint"><code>var links;
 casper.start('http://foo.bar/', function(self) {
     links = self.evaluate(function() {
         var elements = __utils__.findAll('a.menu');
@@ -910,8 +907,7 @@ casper.start('http://foo.bar/', function(self) {
 <p>
     Retrieves a single DOM element by a CSS3 selector.
 </p>
-<pre class="prettyprint"><code>
-var href;
+<pre class="prettyprint"><code>var href;
 casper.start('http://foo.bar/', function(self) {
     href = self.evaluate(function() {
         return __utils__.findOne('#my_id').getAttribute('href');
@@ -1018,8 +1014,16 @@ casper.echo('an error message', 'ERROR');      // printed in red
 <p>
     Computes a colored version of the provided text string using a given predefined style.
 </p>
-<pre class="prettyprint"><code>new phantom.Casper.Colorizer().colorize("I'm a red error", 'ERROR');
+<pre class="prettyprint"><code>var colorizer = new phantom.Casper.Colorizer();
+casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
 </code></pre>
+
+<p>
+    <span class="label notice">Note</span> Most of the time you won't have to use
+    a <code>Colorizer</code> instance directly as CasperJS provides all the necessary
+    methods.
+</p>
+
 <p>
     See the list of the <a href="#predefined-styles">predefined styles available</a>.
 </p>
