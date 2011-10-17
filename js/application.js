@@ -22,12 +22,14 @@ $(document).ready(function() {
         hljs.highlightBlock(e, '    ');
     });
     // apitoc
-    var containerSelector = 'section';
-    var padding = 50;
-    window.onscroll = function(event) {
-        $('.apitoc').each(function(i, element) {
-            var element = $(element)
-              , container = element.parents(containerSelector)
+    (function(window) {
+        var containerSelector = 'section';
+        var padding = 50;
+        var elements = $('.apitoc');
+        var initials = [];
+        function position(i, initial) {
+            var element = initial.element
+              , container = initial.container
               , sp = window.scrollY + padding
               , ep = element.position().top
               , eh = element.height()
@@ -41,13 +43,26 @@ $(document).ready(function() {
                 element.css('position', 'fixed').css('top', padding).css('left', em);
             } else if (ct === "fixed") {
                 if (sp < cp + padding) {
-                    element.css('position', 'inherit').css('top', 'inherit');
-                } else if (sp > mp) {
-                    element.css('position', 'relative').css('top', mp - cp - padding);
+                    element.css('position', initial.position).css('top', initial.top).css('left', initial.left);
+                } else if (sp >= mp) {
+                    element.css('position', initial.position).css('top', mp - cp);
                 }
-            } else if (ct === "relative") {
-                element.css('position', 'inherit').css('top', 'inherit');
+            } else if (ct === initial.position) {
+                element.css('top', initial.top).css('left', initial.left);
             }
+        }
+        elements.each(function(i, element) {
+            var element = $(element);
+            initials.push({
+                element:   element,
+                container: element.parents(containerSelector),
+                position:  element.css('position'),
+                top:       element.position().top,
+                left:      element.position().left
+            });
         });
-    }
+        window.onscroll = function() {
+            $(initials).each(position);
+        }
+    })(window);
 });
