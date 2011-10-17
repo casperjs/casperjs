@@ -92,7 +92,7 @@
                 <code>capserjs</code> and <code>phantomjs</code>, and aggregate the result links
                 in a standard <code>Array</code>. Then we'll output the result to the console:
             </p>
-<pre class="prettyprint"><code>phantom.injectJs('casper.js');
+<pre class="prettyprint"><code class="javascript">phantom.injectJs('casper.js');
 
 var links = [];
 var casper = new phantom.Casper();
@@ -105,24 +105,24 @@ function getLinks() {
 }
 
 casper.start('http://google.fr/', function(self) {
-    /* search for 'casperjs' from google form */
+    // search for 'casperjs' from google form
     self.fill('form[name=f]', { q: 'casperjs' }, true);
 });
 
 casper.then(function(self) {
-    /* aggregate results for the 'casperjs' search */
+    // aggregate results for the 'casperjs' search
     links = self.evaluate(getLinks);
-    /* now search for 'phantomjs' by fillin the form again */
+    // now search for 'phantomjs' by fillin the form again
     self.fill('form[name=f]', { q: 'phantomjs' }, true);
 });
 
 casper.then(function(self) {
-    /* aggregate results for the 'phantomjs' search */
+    // aggregate results for the 'phantomjs' search
     links = links.concat(self.evaluate(getLinks));
 });
 
 casper.run(function(self) {
-    /* echo results in some pretty fashion */
+    // echo results in some pretty fashion
     self.echo(links.length + ' links found:');
     self.echo(' - ' + links.join('\n - ')).exit();
 });
@@ -161,7 +161,7 @@ casper.run(function(self) {
                 You can also write Casper scripts using the
                 <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript syntax</a>:
             </p>
-<pre class="prettyprint"><code>phantom.injectJs "casper.js"
+<pre class="prettyprint"><code class="javascript">phantom.injectJs "casper.js"
 
 getLinks = ->
   links = document.querySelectorAll "h3.r a"
@@ -472,7 +472,7 @@ casper.run(function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.echo('Page title is: ' + self.evaluate(function() {
         return document.title;
     }), 'INFO'); // Will be printed in green on the console
@@ -490,7 +490,7 @@ casper.run(function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.evaluate(function() {
+<pre class="prettyprint"><code class="javascript">casper.evaluate(function() {
     document.querySelector('#username').value = '%username%';
     document.querySelector('#password').value = '%password%';
     document.querySelector('#submit').click();
@@ -512,7 +512,7 @@ casper.run(function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://foo.bar/home', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
     self.evaluateOrDie(function() {
         return /logged in/.match(document.title);
     }, 'not authenticated');
@@ -529,7 +529,7 @@ casper.run(function(self) {
 
 <p>Checks if any element within remote DOM matches the provided CSS3 selector.</p>
 
-<pre class="prettyprint"><code>casper.start('http://foo.bar/home', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
     if (self.exists('#my_super_id')) {
         self.echo('found #my_super_id');
     } else {
@@ -552,7 +552,7 @@ casper.run(function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.log("I'm logging an error", "error");
 }).run(function(self) {
     self.exit();
@@ -565,7 +565,7 @@ casper.run(function(self) {
 
 <p>Example with this sample html form:</p>
 
-<pre class="prettyprint"><code>&lt;form action="/contact" id="contact-form" enctype="multipart/form-data"&gt;
+<pre class="prettyprint"><code class="html">&lt;form action="/contact" id="contact-form" enctype="multipart/form-data"&gt;
     &lt;input type="text" name="subject"/&gt;
     &lt;textearea name="content"&gt;&lt;/textearea&gt;
     &lt;input type="radio" name="civility" value="Mr"/&gt; Mr
@@ -580,7 +580,7 @@ casper.run(function(self) {
 
 <p>A script to fill and submit this form:</p>
 
-<pre class="prettyprint"><code>casper.start('http://some.tld/contact.form', function(self) {
+<pre class="prettyprint" class="javascript"><code>casper.start('http://some.tld/contact.form', function(self) {
     self.fill('form#contact-form', {
         'subject':    'I am watching you',
         'content':    'So be careful.',
@@ -614,7 +614,7 @@ casper.run(function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.log(self.getCurrentUrl()); // "http://www.google.fr/"
 }).run(function(self) {
     self.exit();
@@ -627,7 +627,7 @@ casper.run(function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.log(self.getTitle()); // "Google"
 }).run(function(self) {
     self.exit();
@@ -640,7 +640,7 @@ casper.run(function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>var i = 0;
+<pre class="prettyprint"><code class="javascript">var i = 0;
 casper.start('http://foo.bar/home', function(self) {
     self.evaluateOrDie(function() {
         return /logged in/.match(document.title);
@@ -662,7 +662,7 @@ casper.start('http://foo.bar/home', function(self) {
 
 <p>Casper suite <strong>won't run</strong>:</p>
 
-<pre class="prettyprint"><code>casper.start('http://foo.bar/home', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
     // ...
 }).then(function(self) {
     // ...
@@ -671,7 +671,7 @@ casper.start('http://foo.bar/home', function(self) {
 
 <p>Casper suite <strong>will run</strong>:</p>
 
-<pre class="prettyprint"><code>casper.start('http://foo.bar/home', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
     // ...
 }).then(function(self) {
     // ...
@@ -687,7 +687,7 @@ casper.start('http://foo.bar/home', function(self) {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://google.fr/', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/', function(self) {
     self.echo("I'm loaded.");
 }).run(function() {
     self.exit();
@@ -696,7 +696,7 @@ casper.start('http://foo.bar/home', function(self) {
 
 <p>Alternatively:</p>
 
-<pre class="prettyprint"><code>casper.start('http://google.fr/');
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/');
 casper.then(function(self) {
     self.echo("I'm loaded.");
 });
@@ -707,7 +707,7 @@ casper.run(function(self) {
 
 <p>Or alternatively:</p>
 
-<pre class="prettyprint"><code>casper.start('http://google.fr/');
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/');
 casper.then(function() {
     casper.echo("I'm loaded.");
 });
@@ -734,7 +734,7 @@ casper.run(function() {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://google.fr/').then(function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).run(function(self) {
     self.exit();
@@ -747,7 +747,7 @@ casper.run(function() {
     this alternative:
 </p>
 
-<pre class="prettyprint"><code>casper.start('http://google.fr/').then(function() {
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function() {
     casper.echo("I'm in your google.");
 }).run(function(self) {
     self.exit();
@@ -765,7 +765,7 @@ casper.run(function() {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>// Querying for "Chuck Norris" on Google
+<pre class="prettyprint"><code class="javascript">// Querying for "Chuck Norris" on Google
 casper.start('http://google.fr/').thenEvaluate(function() {
     document.querySelector('input[name="q"]').setAttribute('value', '%term%');
     document.querySelector('form[name="f"]').submit();
@@ -785,7 +785,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://google.fr/').then(function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).thenOpen('http://yahoo.fr/', function(self) {
     self.echo("Now I'm in your yahoo.")
@@ -800,7 +800,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 
 <p>Example:</p>
 
-<pre class="prettyprint"><code>casper.start('http://google.fr/').then(function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
 }).thenOpenAndEvaluate('http://yahoo.fr/', function() {
     var f = document.querySelector('form');
@@ -863,7 +863,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     For the records, CasperJS doesn't use builtin <code>window.btoa()</code> function because
     it can't deal efficiently with strings encoded using >8b characters.
 </p>
-<pre class="prettyprint"><code>var base64;
+<pre class="prettyprint"><code class="javascript">var base64;
 casper.start('http://foo.bar/', function(self) {
     base64 = self.evaluate(function() {
         return __utils__.encode("I've been a bit cryptic recently");
@@ -877,7 +877,7 @@ casper.start('http://foo.bar/', function(self) {
 <p>
     Checks if a DOM element matching a given CSS3 selector exists.
 </p>
-<pre class="prettyprint"><code>var exists;
+<pre class="prettyprint"><code class="javascript">var exists;
 casper.start('http://foo.bar/', function(self) {
     exists = self.evaluate(function() {
         return __utils__.exists('#some_id');
@@ -891,7 +891,7 @@ casper.start('http://foo.bar/', function(self) {
 <p>
     Retrieves all DOM elements matching a given CSS3 selector.
 </p>
-<pre class="prettyprint"><code>var links;
+<pre class="prettyprint"><code class="javascript">var links;
 casper.start('http://foo.bar/', function(self) {
     links = self.evaluate(function() {
         var elements = __utils__.findAll('a.menu');
@@ -908,7 +908,7 @@ casper.start('http://foo.bar/', function(self) {
 <p>
     Retrieves a single DOM element by a CSS3 selector.
 </p>
-<pre class="prettyprint"><code>var href;
+<pre class="prettyprint"><code class="javascript">var href;
 casper.start('http://foo.bar/', function(self) {
     href = self.evaluate(function() {
         return __utils__.findOne('#my_id').getAttribute('href');
@@ -924,7 +924,7 @@ casper.start('http://foo.bar/', function(self) {
     For example, let's imagine we want to retrieve the base64 representation of
     some website's logo:
 </p>
-<pre class="prettyprint"><code>var logo = null;
+<pre class="prettyprint"><code class="javascript">var logo = null;
 casper.start('http://foo.bar/', function(self) {
     logo = self.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
@@ -943,7 +943,7 @@ casper.start('http://foo.bar/', function(self) {
     <a href="#phantom_Casper_ClientUtils_getBase64">ClientUtils.getBase64()</a>
     or <a href="#phantom_Casper_base64encode">Casper.base64encode()</a> instead.
 </p>
-<pre class="prettyprint"><code>casper.start('http://foo.bar/', function(self) {
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/', function(self) {
     self.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
         console.log(__utils__.getBinary(imgUrl));
@@ -988,7 +988,7 @@ casper.start('http://foo.bar/', function(self) {
     output in color:
 </p>
 
-<pre class="prettyprint"><code>casper.echo('an informative message', 'INFO'); // printed in green
+<pre class="prettyprint"><code class="javascript">casper.echo('an informative message', 'INFO'); // printed in green
 casper.echo('an error message', 'ERROR');      // printed in red
 </code></pre>
 
@@ -1016,7 +1016,7 @@ casper.echo('an error message', 'ERROR');      // printed in red
 <p>
     Computes a colored version of the provided text string using a given predefined style.
 </p>
-<pre class="prettyprint"><code>var colorizer = new phantom.Casper.Colorizer();
+<pre class="prettyprint"><code class="javascript">var colorizer = new phantom.Casper.Colorizer();
 casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
 </code></pre>
 
@@ -1050,7 +1050,7 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
     <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code>
     and <code>white</code>.
 </p>
-<pre class="prettyprint"><code>new phantom.Casper.Colorizer().format("We all live in a yellow submarine", {
+<pre class="prettyprint"><code class="javascript">new phantom.Casper.Colorizer().format("We all live in a yellow submarine", {
     bg:  'yellow',
     fg:  'blue',
     bold: true
@@ -1080,7 +1080,7 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
     method as illustrated below:
 </p>
 
-<pre class="prettyprint"><code>phantom.injectJs("path/to/casper.js");
+<pre class="prettyprint"><code class="javascript">phantom.injectJs("path/to/casper.js");
 
 phantom.Casper.extend({
     fetchTexts: function(selector) {
@@ -1122,7 +1122,7 @@ new phantom.Casper().start('http://www.liberation.fr/', function(self) {
     (yes, you read it well):
 </p>
 
-<pre class="prettyprint"><code>phantom.injectJs("casper.js");
+<pre class="prettyprint"><code class="javascript">phantom.injectJs("casper.js");
 
 var casper = new phantom.Casper();
 
@@ -1187,7 +1187,7 @@ Now run the tests suite:
 
 <p>A cooler way is to add an option to your script using CLI argument parsing:</p>
 
-<pre class="prettyprint"><code>var saveXUnitTo = null;
+<pre class="prettyprint"><code class="javascript">var saveXUnitTo = null;
 phantom.args.forEach(function(arg) {
     var saveMatch = /--save=(.*)(\s|)/.exec(arg);
     if (saveMatch) {
