@@ -141,7 +141,7 @@
          */
         checkStep: function(self, onComplete) {
             var step = self.steps[self.step];
-            if (!self.loadInProgress && typeof(step) === "function") {
+            if (!self.loadInProgress && typeof step === "function") {
                 var curStepNum = self.step + 1
                 ,   stepInfo   = "Step " + curStepNum + "/" + self.steps.length + ": ";
                 self.log(stepInfo + self.page.evaluate(function() {
@@ -160,11 +160,11 @@
                 self.log(stepInfo + "done in " + time + "ms.", "info");
                 self.step++;
             }
-            if (typeof(step) !== "function") {
+            if (typeof step !== "function") {
                 self.result.time = new Date().getTime() - self.startTime;
                 self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
                 clearInterval(self.checker);
-                if (typeof(onComplete) === "function") {
+                if (typeof onComplete === "function") {
                     onComplete(self);
                 } else {
                     // default behavior is to exit phantom
@@ -223,9 +223,9 @@
         die: function(message, status) {
             this.result.status = 'error';
             this.result.time = new Date().getTime() - this.startTime;
-            message = typeof(message) === "string" && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
+            message = typeof message === "string" && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
             this.log(message, "error");
-            if (typeof(this.options.onDie) === "function") {
+            if (typeof this.options.onDie === "function") {
                 this.options.onDie(this, message, status);
             }
             return this.exit(Number(status) > 0 ? Number(status) : 1);
@@ -340,10 +340,10 @@
          */
         fill: function(selector, vals, submit) {
             submit = submit === true ? submit : false;
-            if (typeof(selector) !== "string" || !selector.length) {
+            if (typeof selector !== "string" || !selector.length) {
                 throw "form selector must be a non-empty string";
             }
-            if (!typeof(vals) === "object") {
+            if (!typeof vals === "object") {
                 throw "form values must be provided as an object";
             }
             var fillResults = this.evaluate(function() {
@@ -420,7 +420,7 @@
         log: function(message, level, space) {
             level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
             space = space ? space : "phantom";
-            if (level === "error" && typeof(this.options.onError) === "function") {
+            if (level === "error" && typeof this.options.onError === "function") {
                 this.options.onError(this, message, space);
             }
             if (this.logLevels.indexOf(level) < this.logLevels.indexOf(this.options.logLevel)) {
@@ -514,18 +514,18 @@
             }
             this.page.settings = mergeObjects(this.page.settings, this.options.pageSettings);
             this.started = true;
-            if (typeof(this.options.timeout) === "number" && this.options.timeout > 0) {
+            if (typeof this.options.timeout === "number" && this.options.timeout > 0) {
                 self.log("execution timeout set to " + this.options.timeout + 'ms', "info");
                 setTimeout(function(self) {
                     self.log("timeout of " + self.options.timeout + "ms exceeded", "info").exit();
                 }, this.options.timeout, this);
             }
-            if (typeof(this.options.onPageInitialized) === "function") {
+            if (typeof this.options.onPageInitialized === "function") {
                 this.log("Post-configuring WebPage instance", "debug");
                 this.options.onPageInitialized(this.page);
             }
-            if (typeof(location) === "string" && location.length > 0) {
-                if (typeof(then) === "function") {
+            if (typeof location === "string" && location.length > 0) {
+                if (typeof then === "function") {
                     return this.open(location).then(then);
                 } else {
                     return this.open(location);
@@ -544,7 +544,7 @@
             if (!this.started) {
                 throw "Casper not started; please use Casper#start";
             }
-            if (typeof(step) !== "function") {
+            if (typeof step !== "function") {
                 throw "You can only define a step as a function";
             }
             this.steps.push(step);
@@ -578,7 +578,7 @@
             this.then(function(self) {
                 self.open(location);
             });
-            return typeof(then) === "function" ? this.then(then) : this;
+            return typeof then === "function" ? this.then(then) : this;
         },
 
         /**
@@ -603,7 +603,7 @@
      * @param  Object  proto  Prototype methods to add to Casper
      */
     phantom.Casper.extend = function(proto) {
-        if (typeof(proto) !== "object") {
+        if (typeof proto !== "object") {
             throw "extends() only accept objects";
         }
         mergeObjects(phantom.Casper.prototype, proto);
@@ -698,7 +698,7 @@
                 fields: [],
                 files:  [],
             };
-            if (!(form instanceof HTMLElement) || typeof(form) === "string") {
+            if (!(form instanceof HTMLElement) || typeof form === "string") {
                 console.log("attempting to fetch form element from selector: '" + form + "'");
                 try {
                     form = document.querySelector(form);
@@ -1141,7 +1141,7 @@
                 result += new Array(80 - result.length + 1).join(' ');
             }
             casper.echo(this.colorize(result, style));
-            if (save && typeof(require) === "function") {
+            if (save && typeof require === "function") {
                 try {
                     require('fs').write(save, exporter.getXML(), 'w');
                     casper.echo('result log stored in ' + save, 'INFO');
@@ -1228,7 +1228,7 @@
      */
     function createPage(casper) {
         var page;
-        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof(require) === "function") {
+        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof require === "function") {
             page = new WebPage();
         } else {
             page = require('webpage').create();
@@ -1247,7 +1247,7 @@
                 }
                 message += ': ' + casper.requestUrl;
                 casper.log(message, "warning");
-                if (typeof(casper.options.onLoadError) === "function") {
+                if (typeof casper.options.onLoadError === "function") {
                     casper.options.onLoadError(casper, casper.requestUrl, status);
                 }
             }
@@ -1292,10 +1292,10 @@
      * @return Boolean
      */
     function isWebPage(what) {
-        if (!what || typeof(what) !== "object") {
+        if (!what || typeof what !== "object") {
             return false;
         }
-        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof(require) === "function") {
+        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof require === "function") {
             return what instanceof WebPage;
         } else {
             return what.toString().indexOf('WebPage(') === 0;
