@@ -30,25 +30,17 @@ if (terms.length < 2) {
 
 casper.start("http://google.fr/");
 
-casper.repeat(terms.length, function(self) {
-    self.then((function(casper, i) {
-        return function(self) {
-            self.fill('form[name=f]', {
-                q: terms[i]
-            }, true);
-        };
-    })(self, i));
-    self.then((function(casper, i) {
-        return function(self) {
-            var term = terms[i], score = self.fetchScore();
-            scores.push({
-                term:  term,
-                score: score
-            });
-            self.echo(term + ': ' + score);
-        };
-    })(self, i));
-    i++;
+casper.each(terms, function(self, term, i) {
+    self.then(function(self) {
+        self.fill('form[name=f]', { q: term }, true);
+    }).then(function(self) {
+        var score = self.fetchScore();
+        scores.push({
+            term:  term,
+            score: score
+        });
+        self.echo(term + ': ' + score);
+    });
 });
 
 casper.run(function(self) {
