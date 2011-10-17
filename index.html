@@ -854,7 +854,15 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 <p>
     Casper ships with a few client-side utilitites which are injected in the remote DOM
     environment, and accessible from there through the <code>__utils__</code> object
-    instance  of the <code>phantom.Casper.ClientUtils</code> class.
+    instance of the <code>phantom.Casper.ClientUtils</code> class.
+</p>
+
+<p>
+    <span class="label notice">Note</span>
+    These tools are provided to avoid coupling CasperJS to any third-party library
+    like jQuery, Mootools or something; but you can always include these and have
+    them available client-side using the <code>Casper.options.clientScripts</code>
+    option.
 </p>
 
 <h3 id="phantom_Casper_ClientUtils_encode"><code>ClientUtils#encode(String contents)</code></h3>
@@ -1021,9 +1029,9 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
 </code></pre>
 
 <p>
-    <span class="label notice">Note</span> Most of the time you won't have to use
-    a <code>Colorizer</code> instance directly as CasperJS provides all the necessary
-    methods.
+    <span class="label notice">Note</span>
+    Most of the time you won't have to use a <code>Colorizer</code> instance directly
+    as CasperJS provides all the necessary methods.
 </p>
 
 <p>

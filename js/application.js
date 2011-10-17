@@ -33,21 +33,21 @@ $(document).ready(function() {
               , sp = window.scrollY + padding
               , ep = element.position().top
               , eh = element.height()
-              , cp = container.position().top
+              , ct = container.position().top
               , ch = container.height()
-              , ct = element.css('position')
-              , mp = cp + ch - eh
+              , cp = element.css('position')
+              , mp = ct + ch - eh
               , em = element.position().left
             ;
-            if (sp > ep && sp < mp && ct !== "fixed") {
+            if (sp > ep && sp < mp && cp !== "fixed") {
                 element.css('position', 'fixed').css('top', padding).css('left', em);
-            } else if (ct === "fixed") {
-                if (sp < cp + padding) {
+            } else if (cp === "fixed") {
+                if (sp < ct + padding) {
                     element.css('position', initial.position).css('top', initial.top).css('left', initial.left);
                 } else if (sp >= mp) {
-                    element.css('position', initial.position).css('top', mp - cp);
+                    element.css('position', initial.position).css('top', mp - ct);
                 }
-            } else if (ct === initial.position) {
+            } else if (cp === initial.position) {
                 element.css('top', initial.top).css('left', initial.left);
             }
         }
