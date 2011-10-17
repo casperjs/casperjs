@@ -46,9 +46,11 @@ $(document).ready(function() {
                     element.css('position', initial.position).css('top', initial.top).css('left', initial.left);
                 } else if (sp >= mp) {
                     element.css('position', initial.position).css('top', mp - ct);
+                } else {
+
                 }
-            } else if (cp === initial.position) {
-                element.css('top', initial.top).css('left', initial.left);
+            } else if (sp >= mp && cp === initial.position) {
+                element.css('position', initial.position).css('top', initial.top).css('left', initial.left);
             }
         }
         elements.each(function(i, element) {
