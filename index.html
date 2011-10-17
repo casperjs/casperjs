@@ -1041,7 +1041,8 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
 <h3 id="phantom_Casper_Colorizer_format"><code>Colorizer#format(String text, Object style)</code></h3>
 <p>
     Formats a text string using the provided style definition. A style definition is
-    a javascript `Object` instance which can define the following properties:
+    a standard javascript <code>Object</code> instance which can define the following
+    properties:
 </p>
 <ul>
     <li>String <code>bg</code>: background color name</li>
@@ -1059,8 +1060,8 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
     and <code>white</code>.
 </p>
 <pre class="prettyprint"><code class="javascript">new phantom.Casper.Colorizer().format("We all live in a yellow submarine", {
-    bg:  'yellow',
-    fg:  'blue',
+    bg:   'yellow',
+    fg:   'blue',
     bold: true
 });
 </code></pre>
