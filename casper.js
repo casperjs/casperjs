@@ -67,7 +67,7 @@
             log:    [],
             status: "success",
             time:   0
-        }
+        };
         this.started = false;
         this.step = 0;
         this.steps = [];
@@ -350,7 +350,7 @@
                return __utils__.fill('%selector%', JSON.parse('%values%'));
             }, {
                 selector: selector.replace("'", "\'"),
-                values:   JSON.stringify(vals).replace("'", "\'"),
+                values:   JSON.stringify(vals).replace("'", "\'")
             });
             if (!fillResults) {
                 throw "unable to fill form";
@@ -382,7 +382,7 @@
                               + ', HTTP ' + (form.getAttribute('method').toUpperCase() || "GET"));
                     form.submit();
                 }, {
-                    selector: selector.replace("'", "\'"),
+                    selector: selector.replace("'", "\'")
                 });
             }
         },
@@ -406,7 +406,7 @@
         getTitle: function() {
             return this.evaluate(function() {
                 return document.title;
-            })
+            });
         },
 
         /**
@@ -433,7 +433,7 @@
                 level:   level,
                 space:   space,
                 message: message,
-                date:    new Date().toString(),
+                date:    new Date().toString()
             });
             return this;
         },
@@ -594,7 +594,7 @@
          */
         thenOpenAndEvaluate: function(location, fn, replacements) {
             return this.thenOpen(location).thenEvaluate(fn, replacements);
-        },
+        }
     };
 
     /**
@@ -696,7 +696,7 @@
             var out = {
                 errors: [],
                 fields: [],
-                files:  [],
+                files:  []
             };
             if (!(form instanceof HTMLElement) || typeof form === "string") {
                 console.log("attempting to fetch form element from selector: '" + form + "'");
@@ -729,7 +729,7 @@
                     if (e.name === "FileUploadError") {
                         out.files.push({
                             name: name,
-                            path: e.path,
+                            path: e.path
                         });
                     } else {
                         throw e;
@@ -1128,15 +1128,15 @@
          */
         this.renderResults = function(exit, status, save) {
             save = typeof save === "string" ? save : this.options.save;
-            var total = this.testResults.passed + this.testResults.failed, status, style, result;
+            var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
             if (this.testResults.failed > 0) {
-                status = FAIL;
+                statusText = FAIL;
                 style = 'RED_BAR';
             } else {
-                status = PASS;
+                statusText = PASS;
                 style = 'GREEN_BAR';
             }
-            result = status + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
+            result = statusText + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
             if (result.length < 80) {
                 result += new Array(80 - result.length + 1).join(' ');
             }
@@ -1217,7 +1217,7 @@
          */
         this.getXML = function() {
             return xml;
-        }
+        };
     };
 
     /**
