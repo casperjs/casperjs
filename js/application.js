@@ -1,3 +1,6 @@
+/**
+ * CasperJS website js code. Steal if you care, enjoy if you dare.
+ */
 $(document).ready(function() {
     // topbar
     $('#topbar').scrollSpy({ padding: 50 });
@@ -40,27 +43,24 @@ $(document).ready(function() {
               , em = element.position().left
             ;
             if (sp > ep && sp < mp && cp !== "fixed") {
-                element.css('position', 'fixed').css('top', padding).css('left', em);
+                element.css('position', 'fixed').css('top', padding).css('left', em).css('margin-top', initial.margintop);
             } else if (cp === "fixed") {
                 if (sp < ct + padding) {
-                    element.css('position', initial.position).css('top', initial.top).css('left', initial.left);
+                    element.css('position', initial.position).css('margin-top', initial.margintop);
                 } else if (sp >= mp) {
-                    element.css('position', initial.position).css('top', mp - ct);
-                } else {
-
+                    element.css('position', initial.position).css('margin-top', (ch - eh - padding - 30));
                 }
-            } else if (sp >= mp && cp === initial.position) {
-                element.css('position', initial.position).css('top', initial.top).css('left', initial.left);
             }
         }
         elements.each(function(i, element) {
             var element = $(element);
             initials.push({
-                element:   element,
-                container: element.parents(containerSelector),
-                position:  element.css('position'),
-                top:       element.position().top,
-                left:      element.position().left
+                element:    element,
+                container:  element.parents(containerSelector),
+                position:   element.css('position'),
+                top:        element.position().top,
+                left:       element.position().left,
+                margintop:  element.css('margin-top')
             });
         });
         window.onscroll = function() {
