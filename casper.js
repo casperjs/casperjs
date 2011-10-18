@@ -332,6 +332,21 @@
         },
 
         /**
+         * Fetches innerText within the element(s) matching a given CSS3
+         * selector.
+         *
+         * @param  String  selector  A CSS3 selector
+         * @return String
+         */
+        fetchText: function(selector) {
+            return this.evaluate(function() {
+                return __utils__.fetchText('%selector%');
+            }, {
+                selector: selector.replace("'", "\'")
+            });
+        },
+
+        /**
          * Fills a form with provided field values.
          *
          * @param  String  selector  A CSS3 selector to the target form to fill
@@ -683,6 +698,23 @@
             } catch (e) {
                 return false;
             }
+        };
+
+        /**
+         * Fetches innerText within the element(s) matching a given CSS3
+         * selector.
+         *
+         * @param  String  selector  A CSS3 selector
+         * @return String
+         */
+        this.fetchText = function(selector) {
+            var text = '', elements = this.findAll(selector);
+            if (elements && elements.length) {
+                Array.prototype.forEach.call(elements, function(element) {
+                    text += element.innerText;
+                });
+            }
+            return text;
         };
 
         /**

@@ -38,6 +38,8 @@ casper.start('tests/site/index.html', function(self) {
     self.test.assertEval(function() {
         return typeof(__utils__) === "object";
     }, 'start() injects ClientUtils instance within remote DOM');
+    self.test.comment('fetching')
+    self.test.assertEquals(self.fetchText('ul li'), 'onetwothree', 'fetchText() can retrieves text contents');
     self.test.comment('encoding');
     var image = self.base64encode('file://' + phantom.libraryPath + '/site/images/phantom.png');
     self.test.assertEquals(image.length, 6160, 'base64encode() can retrieve base64 contents');
