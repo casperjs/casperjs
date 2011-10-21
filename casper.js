@@ -60,6 +60,12 @@
         this.currentHTTPStatus = 200;
         this.loadInProgress = false;
         this.logLevels = ["debug", "info", "warning", "error"];
+        this.logStyles = {
+            debug:   'INFO',
+            info:    'PARAMETER',
+            warning: 'COMMENT',
+            error:   'ERROR'
+        };
         this.options = mergeObjects(this.defaults, options);
         this.page = null;
         this.requestUrl = 'about:blank';
@@ -442,7 +448,8 @@
                 return this; // skip logging
             }
             if (this.options.verbose) {
-                this.echo('[' + level + '] [' + space + '] ' + message); // direct output
+                var levelStr = this.colorizer.colorize('[' + level + ']', this.logStyles[level]);
+                this.echo(levelStr + ' [' + space + '] ' + message); // direct output
             }
             this.result.log.push({
                 level:   level,
