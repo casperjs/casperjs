@@ -88,7 +88,7 @@
          * @return string       Base64 encoded result
          */
         base64encode: function(url) {
-            return result = this.evaluate(function() {
+            return this.evaluate(function() {
                 return __utils__.getBase64('%url%');
             }, {
                 url: url
@@ -358,7 +358,7 @@
             if (typeof selector !== "string" || !selector.length) {
                 throw "form selector must be a non-empty string";
             }
-            if (!typeof vals === "object") {
+            if (typeof vals !== "object") {
                 throw "form values must be provided as an object";
             }
             var fillResults = this.evaluate(function() {
@@ -510,7 +510,7 @@
             if (this.started) {
                 this.log("start failed: Casper has already started!", "error");
             }
-            this.log('Starting…', "info");
+            this.log('Starting...', "info");
             this.startTime = new Date().getTime();
             this.steps = [];
             this.step = 0;
@@ -757,11 +757,11 @@
                 }
                 try {
                     out.fields[name] = this.setField(field, value);
-                } catch (e) {
-                    if (e.name === "FileUploadError") {
+                } catch (err) {
+                    if (err.name === "FileUploadError") {
                         out.files.push({
                             name: name,
-                            path: e.path
+                            path: err.path
                         });
                     } else {
                         throw e;
@@ -1194,7 +1194,7 @@
     phantom.Casper.XUnitExporter = function() {
         var node = function(name, attributes) {
             var node = document.createElement(name);
-            for (attrName in attributes) {
+            for (var attrName in attributes) {
                 var value = attributes[attrName];
                 if (attributes.hasOwnProperty(attrName) && typeof attrName === "string") {
                     node.setAttribute(attrName, value);
