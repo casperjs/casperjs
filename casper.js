@@ -818,17 +818,26 @@
         };
 
         /**
-         * Retrieves string contents from a binary file behind an url.
+         * Retrieves string contents from a binary file behind an url. Silently
+         * fails but log errors.
          *
          * @param  String  url
          * @return string
          */
         this.getBinary = function(url) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url, false);
-            xhr.overrideMimeType("text/plain; charset=x-user-defined");
-            xhr.send(null);
-            return xhr.responseText;
+            try {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", url, false);
+                xhr.overrideMimeType("text/plain; charset=x-user-defined");
+                xhr.send(null);
+                return xhr.responseText;
+            } catch (e) {
+                if (e.name === "NETWORK_ERR" && e.code === 101) {
+                    console.log('unfortunately, casperjs cannot make cross domain ajax requests');
+                }
+                console.log('error while fetching ' + url + ': ' + e);
+                return "";
+            }
         };
 
         /**
