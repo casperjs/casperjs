@@ -788,7 +788,7 @@
             try {
                 return document.querySelectorAll(selector);
             } catch (e) {
-                console.log('findAll(): invalid selector provided "' + selector + '":' + e);
+                this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
             }
         };
 
@@ -802,7 +802,7 @@
             try {
                 return document.querySelector(selector);
             } catch (e) {
-                console.log('findOne(): invalid selector provided "' + selector + '":' + e);
+                this.log('findOne(): invalid selector provided "' + selector + '":' + e, "errors");
             }
         };
 
@@ -833,11 +833,21 @@
                 return xhr.responseText;
             } catch (e) {
                 if (e.name === "NETWORK_ERR" && e.code === 101) {
-                    console.log('unfortunately, casperjs cannot make cross domain ajax requests');
+                    this.log("unfortunately, casperjs cannot make cross domain ajax requests", "warning");
                 }
-                console.log('error while fetching ' + url + ': ' + e);
+                this.log("error while fetching " + url + ": " + e, "error");
                 return "";
             }
+        };
+
+        /**
+         * Logs a message.
+         *
+         * @param  String  message
+         * @param  String  level
+         */
+        this.log = function(message, level) {
+            console.log("[casper:" + (level || "debug") + "] " + message);
         };
 
         /**
@@ -855,9 +865,9 @@
                 field = fields[0];
             }
             if (!field instanceof HTMLElement) {
-                console.log('invalid field type; only HTMLElement and NodeList are supported');
+                this.log("invalid field type; only HTMLElement and NodeList are supported", "error");
             }
-            console.log('set "' + field.getAttribute('name') + '" field value to ' + value);
+            this.log('set "' + field.getAttribute('name') + '" field value to ' + value, "debug");
             var nodeName = field.nodeName.toLowerCase();
             switch (nodeName) {
                 case "input":
@@ -1153,7 +1163,7 @@
          * @param  String  style
          */
         this.formatMessage = function(message, style) {
-            var parts = /(\w+\(\))(.*)/.exec(message);
+            var parts = /([a-z0-9_\.]+\(\))(.*)/i.exec(message);
             if (!parts) {
                 return message;
             }
@@ -1282,7 +1292,12 @@
             page = require('webpage').create();
         }
         page.onConsoleMessage = function(msg) {
-            casper.log(msg, "info", "remote");
+            var level = "info", test = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
+            if (test && test.length === 3) {
+                level = test[1];
+                msg = test[2];
+            }
+            casper.log(msg, level, "remote");
         };
         page.onLoadStarted = function() {
             casper.loadInProgress = true;

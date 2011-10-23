@@ -38,7 +38,7 @@ casper.start('tests/site/index.html', function(self) {
     self.test.assertEval(function() {
         return typeof(__utils__) === "object";
     }, 'start() injects ClientUtils instance within remote DOM');
-    self.test.comment('fetching')
+    self.test.comment('fetching');
     self.test.assertEquals(self.fetchText('ul li'), 'onetwothree', 'fetchText() can retrieves text contents');
     self.test.comment('encoding');
     var image = self.base64encode('file://' + phantom.libraryPath + '/site/images/phantom.png');
@@ -116,7 +116,28 @@ casper.test.assertMatch(xunit.getXML(), /<testcase classname="foo" name="bar"/, 
 xunit.addFailure('bar', 'baz', 'wrong', 'chucknorriz');
 casper.test.assertMatch(xunit.getXML(), /<testcase classname="bar" name="baz"><failure type="chucknorriz">wrong/, 'addFailure() adds a failed testcase');
 
+// Casper.ClientUtils.log
+casper.then(function(self) {
+    casper.test.comment('client utils log');
+    var oldLevel = casper.options.logLevel;
+    casper.options.logLevel = 'debug';
+    casper.options.verbose = false;
+    casper.evaluate(function() {
+        __utils__.log('debug message');
+        __utils__.log('info message', 'info');
+    });
+    casper.test.assert(casper.result.log.some(function(e) {
+        return e.message === 'debug message' && e.level === 'debug' && e.space === 'remote';
+    }), 'ClientUtils.log() adds a log entry');
+    casper.test.assert(casper.result.log.some(function(e) {
+        return e.message === 'info message' && e.level === 'info' && e.space === 'remote';
+    }), 'ClientUtils.log() adds a log entry at a given level');
+    casper.options.logLevel = oldLevel;
+    casper.options.verbose = true;
+});
+
+// run suite
 casper.run(function(self) {
-    self.test.assert(self.result.log.length > 0, 'log() logged messages');
+    self.test.assertEquals(self.result.log.length, 3, 'log() logged messages');
     self.test.renderResults(true, 0, save);
 });
