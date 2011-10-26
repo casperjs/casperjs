@@ -33,8 +33,8 @@
      * @return Casper
      */
     phantom.Casper = function(options) {
-        const DEFAULT_DIE_MESSAGE = "Suite explicitely interrupted without any message given.";
-        const DEFAULT_USER_AGENT  = "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
+        var DEFAULT_DIE_MESSAGE = "Suite explicitely interrupted without any message given.";
+        var DEFAULT_USER_AGENT  = "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
         // init & checks
         if (!(this instanceof arguments.callee)) {
             return new Casper(options);
@@ -132,10 +132,18 @@
         captureSelector: function(targetFile, selector) {
             return this.capture(targetFile, this.evaluate(function() {
                 try {
-                    return document.querySelector(selector).getBoundingClientRect();
+                    var clipRect = document.querySelector('%selector%').getBoundingClientRect();
+                    return {
+                        top: clipRect.top,
+                        left: clipRect.left,
+                        width: clipRect.width,
+                        height: clipRect.height
+                    };
                 } catch (e) {
-                    console.log('unable to fetch bounds for element ' + selector);
+                    __utils__.log('unable to fetch bounds for element ' + selector, 'warning');
                 }
+            }, {
+                selector: selector.replace("'", "\'")
             }));
         },
 
@@ -399,8 +407,9 @@
             if (submit) {
                 this.evaluate(function() {
                     var form = document.querySelector('%selector%');
-                    console.log('submitting form to ' + (form.getAttribute('action') || "unknown")
-                              + ', HTTP ' + (form.getAttribute('method').toUpperCase() || "GET"));
+                    var method = form.getAttribute('method').toUpperCase() || "GET";
+                    var action = form.getAttribute('action') || "unknown";
+                    __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
                     form.submit();
                 }, {
                     selector: selector.replace("'", "\'")
@@ -738,7 +747,7 @@
                 files:  []
             };
             if (!(form instanceof HTMLElement) || typeof form === "string") {
-                console.log("attempting to fetch form element from selector: '" + form + "'");
+                __utils__.log("attempting to fetch form element from selector: '" + form + "'", "info");
                 try {
                     form = document.querySelector(form);
                 } catch (e) {
