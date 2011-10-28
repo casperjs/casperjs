@@ -156,8 +156,8 @@
         checkStep: function(self, onComplete) {
             var step = self.steps[self.step];
             if (!self.loadInProgress && typeof step === "function") {
-                var curStepNum = self.step + 1
-                ,   stepInfo   = "Step " + curStepNum + "/" + self.steps.length + ": ";
+                var curStepNum = self.step + 1;
+                var stepInfo   = "Step " + curStepNum + "/" + self.steps.length + ": ";
                 self.log(stepInfo + self.page.evaluate(function() {
                     return document.location.href;
                 }) + ' (HTTP ' + self.currentHTTPStatus + ')', "info");
@@ -179,7 +179,11 @@
                 self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
                 clearInterval(self.checker);
                 if (typeof onComplete === "function") {
-                    onComplete(self);
+                    try {
+                        onComplete(self);
+                    } catch (err) {
+                        self.log("could not complete final step: " + err, "error");
+                    }
                 } else {
                     // default behavior is to exit phantom
                     self.exit();
@@ -765,8 +769,8 @@
                 if (!vals.hasOwnProperty(name)) {
                     continue;
                 }
-                var field = form.querySelectorAll('[name="' + name + '"]')
-                ,   value = vals[name];
+                var field = form.querySelectorAll('[name="' + name + '"]');
+                var value = vals[name];
                 if (!field) {
                     out.errors.push('no field named "' + name + '" in form');
                     continue;
@@ -909,7 +913,6 @@
                                 message: "file field must be filled using page.uploadFile",
                                 path:    value
                             };
-                            break;
                         case "radio":
                             if (fields) {
                                 Array.prototype.forEach.call(fields, function(e) {
@@ -943,10 +946,10 @@
      * (c) Fabien Potencier, Symfony project, MIT license
      */
     phantom.Casper.Colorizer = function() {
-        var options    = { bold: 1, underscore: 4, blink: 5, reverse: 7, conceal: 8 }
-        ,   foreground = { black: 30, red: 31, green: 32, yellow: 33, blue: 34, magenta: 35, cyan: 36, white: 37 }
-        ,   background = { black: 40, red: 41, green: 42, yellow: 43, blue: 44, magenta: 45, cyan: 46, white: 47 }
-        ,   styles     = {
+        var options    = { bold: 1, underscore: 4, blink: 5, reverse: 7, conceal: 8 };
+        var foreground = { black: 30, red: 31, green: 32, yellow: 33, blue: 34, magenta: 35, cyan: 36, white: 37 };
+        var background = { black: 40, red: 41, green: 42, yellow: 43, blue: 44, magenta: 45, cyan: 46, white: 47 };
+        var styles     = {
             'ERROR':     { bg: 'red', fg: 'white', bold: true },
             'INFO':      { fg: 'green', bold: true },
             'TRACE':     { fg: 'green', bold: true },
