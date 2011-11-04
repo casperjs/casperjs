@@ -136,6 +136,19 @@ casper.then(function(self) {
     casper.options.verbose = true;
 });
 
+// Casper.waitFor
+casper.thenOpen('tests/site/waitFor.html', function(self) {
+    self.waitFor(function(self) {
+        return self.evaluate(function() {
+            return document.querySelectorAll('li').length === 4;
+        });
+    }, function(self) {
+        self.test.pass('Casper.waitFor() can wait for something to happen');
+    }, function(self) {
+        self.test.fail('Casper.waitFor() can wait for something to happen');
+    });
+});
+
 // run suite
 casper.run(function(self) {
     self.test.assertEquals(self.result.log.length, 3, 'log() logged messages');

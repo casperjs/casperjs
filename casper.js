@@ -58,6 +58,8 @@
         this.colorizer = new phantom.Casper.Colorizer();
         this.currentUrl = 'about:blank';
         this.currentHTTPStatus = 200;
+        this.defaultWaitTimeout = 5000;
+        this.delayedExecution = false;
         this.loadInProgress = false;
         this.logLevels = ["debug", "info", "warning", "error"];
         this.logStyles = {
@@ -174,7 +176,7 @@
                 self.log(stepInfo + "done in " + time + "ms.", "info");
                 self.step++;
             }
-            if (typeof step !== "function") {
+            if (typeof step !== "function" && !self.delayedExecution) {
                 self.result.time = new Date().getTime() - self.startTime;
                 self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
                 clearInterval(self.checker);
@@ -629,6 +631,64 @@
          */
         thenOpenAndEvaluate: function(location, fn, replacements) {
             return this.thenOpen(location).thenEvaluate(fn, replacements);
+        },
+
+        /**
+         * Waits until a function returns true to process a next step.
+         *
+         * @param  Function  testFx   A function to be evaluated for returning condition satisfecit
+         * @param  Function  then     The next step to perform
+         * @param  Number    timeout  The max amount of time to wait, in milliseconds
+         * @return Casper
+         */
+        waitFor: function(testFx, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            if (typeof testFx !== "function") {
+                this.die("waitUntil() needs a test function");
+            }
+            if (typeof then !== "function") {
+                this.die("waitUntil() needs a next step definition");
+            }
+            this.delayedExecution = true;
+            var start = new Date().getTime();
+            var condition = false;
+            var interval = setInterval(function(self, testFx, onTimeout) {
+                if ((new Date().getTime() - start < timeout) && !condition) {
+                    condition = testFx(self);
+                } else {
+                    self.delayedExecution = false;
+                    if (!condition) {
+                        self.log("Casper.waitFor() timeout", "warning");
+                        if (typeof onTimeout === "function") {
+                            onTimeout(self);
+                        } else {
+                            self.die("Expired timeout, exiting.", "error");
+                        }
+                        clearInterval(interval);
+                    } else {
+                        self.log("waitFor() finished in " + (new Date().getTime() - start) + "ms.", "info");
+                        self.then(then);
+                        clearInterval(interval);
+                    }
+                }
+            }, 100, this, testFx, onTimeout);
+            return this;
+        },
+
+        /**
+         * Waits until an element matching the provided CSS3 selector exists in
+         * remote DOM to process a next step.
+         *
+         * @param  String    selector  A CSS3 selector
+         * @param  Function  then      The next step to perform
+         * @param  Number    timeout   The max amount of time to wait, in milliseconds
+         * @return Casper
+         */
+        waitForSelector: function(selector, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return self.exists(selector);
+            }, then, onTimeout, timeout);
         }
     };
 
@@ -1169,6 +1229,15 @@
         };
 
         /**
+         * Adds a failed test entry to the stack.
+         *
+         * @param  String  message
+         */
+        this.fail = function(message) {
+            this.assert(false, message);
+        };
+
+        /**
          * Formats a message to highlight some parts of it.
          *
          * @param  String  message
@@ -1189,6 +1258,15 @@
          */
         this.info = function(message) {
             casper.echo(message, 'PARAMETER');
+        };
+
+        /**
+         * Adds a successful test entry to the stack.
+         *
+         * @param  String  message
+         */
+        this.pass = function(message) {
+            this.assert(true, message);
         };
 
         /**
