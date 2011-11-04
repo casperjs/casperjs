@@ -818,6 +818,64 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     self.exit();
 });
 </code></pre>
+
+<h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx, Function then[, Function onTimeout, Number timeout])</code></h3>
+
+<p>Waits until a function returns true to process a next step.</p>
+
+<p>
+    You can also set a callback on timeout using the <code>onTimeout</code> argument, and set
+    the timeout using the <code>timeout</code> one, in milliseconds. The default timeout is set
+    to 5000ms.
+</p>
+
+<p>Example:</p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('http://yoursite.tld/', function(self) {
+    self.wait(function(self) {
+        return self.evaluate(function() {
+            return document.querySelectorAll('ul.your-list li').length > 2;
+        });
+    }, function(self) {
+        self.captureSelector('yoursitelist.png', 'ul.your-list');
+    });
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
+<p>Example using the <code>onTimeout</on> calback:</p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('http://yoursite.tld/', function(self) {
+    self.wait(function(self) {
+        return self.evaluate(function() {
+            return document.querySelectorAll('ul.your-list li').length > 2;
+        });
+    }, function(self) {
+        self.captureSelector('yoursitelist.png', 'ul.your-list');
+    }, function(self) {
+        self.log("I can't haz my screenshot.").exit();
+    });
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
+<h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector, Function then[, Function onTimeout, Number timeout])</code></h3>
+
+<p>Waits until an element matching the provided CSS3 selector exists in remote DOM to process a next step.</p>
+
+<p>Example:</p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('https://twitter.com/#!/n1k0', function(self) {
+    self.waitForSelector('.tweet-row', function(self) {
+        self.captureSelector('twitter.png', 'html');
+    });
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
 </div>
 <div class="span4 apitoc">
     <h3>Quick reference</h3>
@@ -847,6 +905,8 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_thenEvaluate"><code>Casper.thenEvaluate()</code></a></li>
         <li><a href="#phantom_Casper_thenOpen"><code>Casper.thenOpen()</code></a></li>
         <li><a href="#phantom_Casper_thenOpenAndEvaluate"><code>Casper.thenOpenAndEvaluate()</code></a></li>
+        <li><a href="#phantom_Casper_waitFor"><code>Casper.waitFor()</code></a></li>
+        <li><a href="#phantom_Casper_waitForSelector"><code>Casper.waitForSelector()</code></a></li>
     </ul>
 </div>
 </div>
