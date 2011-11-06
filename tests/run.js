@@ -136,8 +136,17 @@ casper.then(function(self) {
     casper.options.verbose = true;
 });
 
+// Casper.wait
+var start = new Date().getTime();
+casper.wait(1000);
+casper.then(function(self) {
+    casper.test.comment('wait');
+    self.test.assert(new Date().getTime() - start > 1000, 'Casper.wait() can wait for a given amount of time');
+});
+
 // Casper.waitFor
 casper.thenOpen('tests/site/waitFor.html', function(self) {
+    casper.test.comment('waitFor');
     self.waitFor(function(self) {
         return self.evaluate(function() {
             return document.querySelectorAll('li').length === 4;

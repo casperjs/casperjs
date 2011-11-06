@@ -163,14 +163,14 @@
                 self.log(stepInfo + self.page.evaluate(function() {
                     return document.location.href;
                 }) + ' (HTTP ' + self.currentHTTPStatus + ')', "info");
-                if (self.options.faultTolerant) {
-                    try {
-                        step(self);
-                    } catch (e) {
-                        self.log("Step error: " + e, "error");
-                    }
-                } else {
+                try {
                     step(self);
+                } catch (e) {
+                    if (self.options.faultTolerant) {
+                        self.log("Step error: " + e, "error");
+                    } else {
+                        throw e;
+                    }
                 }
                 var time = new Date().getTime() - self.startTime;
                 self.log(stepInfo + "done in " + time + "ms.", "info");
@@ -634,6 +634,36 @@
         },
 
         /**
+         * Waits a given amount of time (expressed in milliseconds) before
+         * processing next step, which can passed as an optional argument.
+         *
+         * @param  Number    timeout  The max amount of time to wait, in milliseconds
+         * @param  Function  then     Next step to process (optional)
+         * @return Casper
+         */
+        wait: function(timeout, then) {
+            if (typeof(timeout) !== "number" || Number(timeout, 10) < 1) {
+                this.die("wait() only accepts a positive integer > 0 as a timeout value");
+            }
+            if (then && typeof(then) !== "function") {
+                this.die("wait() a step definition must be a function");
+            }
+            this.delayedExecution = true;
+            var start = new Date().getTime();
+            var interval = setInterval(function(self, then) {
+                if (!new Date().getTime() - start < timeout) {
+                    self.delayedExecution = false;
+                    self.log("wait() finished wating for " + timeout + "ms.", "info");
+                    if (then) {
+                        self.then(then);
+                    }
+                    clearInterval(interval);
+                }
+            }, 100, this, then);
+            return this;
+        },
+
+        /**
          * Waits until a function returns true to process a next step.
          *
          * @param  Function  testFx     A function to be evaluated for returning condition satisfecit
@@ -645,10 +675,10 @@
         waitFor: function(testFx, then, onTimeout, timeout) {
             timeout = timeout ? timeout : this.defaultWaitTimeout;
             if (typeof testFx !== "function") {
-                this.die("waitUntil() needs a test function");
+                this.die("waitFor() needs a test function");
             }
             if (then && typeof then !== "function") {
-                this.die("waitUntil() next step definition must be a function");
+                this.die("waitFor() next step definition must be a function");
             }
             this.delayedExecution = true;
             var start = new Date().getTime();
