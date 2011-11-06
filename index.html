@@ -819,6 +819,21 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 });
 </code></pre>
 
+<h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
+
+<p>Pause steps suite execution for a given amount of time, and optionnaly execute a step on done.</p>
+
+<p>Example:</p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('http://yoursite.tld/', function(self) {
+    self.wait(1000, function(self) {
+        self.echo("I've waited for a second.");
+    });
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
 <h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until a function returns true to process any next step.</p>
@@ -832,7 +847,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 <p>Example:</p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://yoursite.tld/', function(self) {
-    self.wait(function(self) {
+    self.waitFor(function(self) {
         return self.evaluate(function() {
             return document.querySelectorAll('ul.your-list li').length > 2;
         });
@@ -847,7 +862,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 <p>Example using the <code>onTimeout</code> callback:</p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://yoursite.tld/', function(self) {
-    self.wait(function(self) {
+    self.waitFor(function(self) {
         return self.evaluate(function() {
             return document.querySelectorAll('ul.your-list li').length > 2;
         });
@@ -908,6 +923,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_thenEvaluate"><code>Casper.thenEvaluate()</code></a></li>
         <li><a href="#phantom_Casper_thenOpen"><code>Casper.thenOpen()</code></a></li>
         <li><a href="#phantom_Casper_thenOpenAndEvaluate"><code>Casper.thenOpenAndEvaluate()</code></a></li>
+        <li><a href="#phantom_Casper_wait"><code>Casper.wait()</code></a></li>
         <li><a href="#phantom_Casper_waitFor"><code>Casper.waitFor()</code></a></li>
         <li><a href="#phantom_Casper_waitForSelector"><code>Casper.waitForSelector()</code></a></li>
     </ul>
