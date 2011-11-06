@@ -819,9 +819,9 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 });
 </code></pre>
 
-<h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx, Function then[, Function onTimeout, Number timeout])</code></h3>
+<h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-<p>Waits until a function returns true to process a next step.</p>
+<p>Waits until a function returns true to process any next step.</p>
 
 <p>
     You can also set a callback on timeout using the <code>onTimeout</code> argument, and set
@@ -861,10 +861,10 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 });
 </code></pre>
 
-<h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector, Function then[, Function onTimeout, Number timeout])</code></h3>
+<h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>
-    Waits until an element matching the provided CSS3 selector exists in remote DOM to process a next step.
+    Waits until an element matching the provided CSS3 selector exists in remote DOM to process any next step.
     Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
 </p>
 
