@@ -636,9 +636,10 @@
         /**
          * Waits until a function returns true to process a next step.
          *
-         * @param  Function  testFx   A function to be evaluated for returning condition satisfecit
-         * @param  Function  then     The next step to perform
-         * @param  Number    timeout  The max amount of time to wait, in milliseconds
+         * @param  Function  testFx     A function to be evaluated for returning condition satisfecit
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
          * @return Casper
          */
         waitFor: function(testFx, then, onTimeout, timeout) {
@@ -646,8 +647,8 @@
             if (typeof testFx !== "function") {
                 this.die("waitUntil() needs a test function");
             }
-            if (typeof then !== "function") {
-                this.die("waitUntil() needs a next step definition");
+            if (then && typeof then !== "function") {
+                this.die("waitUntil() next step definition must be a function");
             }
             this.delayedExecution = true;
             var start = new Date().getTime();
@@ -667,7 +668,9 @@
                         clearInterval(interval);
                     } else {
                         self.log("waitFor() finished in " + (new Date().getTime() - start) + "ms.", "info");
-                        self.then(then);
+                        if (then) {
+                            self.then(then);
+                        }
                         clearInterval(interval);
                     }
                 }
@@ -680,8 +683,9 @@
          * remote DOM to process a next step.
          *
          * @param  String    selector  A CSS3 selector
-         * @param  Function  then      The next step to perform
-         * @param  Number    timeout   The max amount of time to wait, in milliseconds
+         * @param  Function  then      The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
          * @return Casper
          */
         waitForSelector: function(selector, then, onTimeout, timeout) {
@@ -715,7 +719,7 @@
          * @return Boolean
          */
         this.click = function(selector) {
-            var elem = document.querySelector(selector);
+            var elem = this.findOne(selector);
             if (!elem) {
                 return false;
             }
