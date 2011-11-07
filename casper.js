@@ -651,7 +651,7 @@
             this.delayedExecution = true;
             var start = new Date().getTime();
             var interval = setInterval(function(self, then) {
-                if (!new Date().getTime() - start < timeout) {
+                if (new Date().getTime() - start > timeout) {
                     self.delayedExecution = false;
                     self.log("wait() finished wating for " + timeout + "ms.", "info");
                     if (then) {
@@ -712,8 +712,8 @@
          * Waits until an element matching the provided CSS3 selector exists in
          * remote DOM to process a next step.
          *
-         * @param  String    selector  A CSS3 selector
-         * @param  Function  then      The next step to perform (optional)
+         * @param  String    selector   A CSS3 selector
+         * @param  Function  then       The next step to perform (optional)
          * @param  Function  onTimeout  A callback function to call on timeout (optional)
          * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
          * @return Casper
