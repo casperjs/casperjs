@@ -57,6 +57,28 @@ casper.then(function(self) {
 
 casper.test.assert(casper.steps.length === 2, 'then() adds a new navigation step');
 
+// Casper#evaluate()
+
+casper.then(function(self) {
+    var params = {
+        "boolean true":  true,
+        "boolean false": false,
+        "int number":    42,
+        "float number":  1337.42,
+        "string":        "plop! \"Ÿ£$\" 'no'",
+        "array":         [1, 2, 3],
+        "object":        {a: 1, b: 2}
+    };
+    var casperParams = self.evaluate(function() {
+        return __casper_params__;
+    }, params);
+    self.test.assertType(casperParams, "object", 'Casper.evaluate() exposes parameters in a dedicated object');
+    self.test.assertEquals(Object.keys(casperParams).length, 7, 'Casper.evaluate() exposes parameters object has the correct length');
+    for (var param in casperParams) {
+        self.test.assertEquals(JSON.stringify(casperParams[param]), JSON.stringify(params[param]), 'Casper.evaluate() can pass a ' + param);
+    }
+});
+
 // Casper#fill()
 casper.then(function(self) {
     self.test.assertTitle('CasperJS test form', 'click() casper can click on a text link and react when it is loaded 2/2');
@@ -116,7 +138,7 @@ casper.test.assertMatch(xunit.getXML(), /<testcase classname="foo" name="bar"/, 
 xunit.addFailure('bar', 'baz', 'wrong', 'chucknorriz');
 casper.test.assertMatch(xunit.getXML(), /<testcase classname="bar" name="baz"><failure type="chucknorriz">wrong/, 'addFailure() adds a failed testcase');
 
-// Casper.ClientUtils.log
+// Casper.ClientUtils.log()
 casper.then(function(self) {
     casper.test.comment('client utils log');
     var oldLevel = casper.options.logLevel;
@@ -136,30 +158,30 @@ casper.then(function(self) {
     casper.options.verbose = true;
 });
 
-// Casper.wait
+// Casper.wait()
 var start = new Date().getTime();
-casper.wait(1000);
-casper.then(function(self) {
-    casper.test.comment('wait');
+casper.wait(1000, function(self) {
+    self.test.comment('wait');
     self.test.assert(new Date().getTime() - start > 1000, 'Casper.wait() can wait for a given amount of time');
-});
 
-// Casper.waitFor
-casper.thenOpen('tests/site/waitFor.html', function(self) {
-    casper.test.comment('waitFor');
-    self.waitFor(function(self) {
-        return self.evaluate(function() {
-            return document.querySelectorAll('li').length === 4;
+    // Casper.waitFor()
+    casper.thenOpen('tests/site/waitFor.html', function(self) {
+        casper.test.comment('waitFor');
+        self.waitFor(function(self) {
+            return self.evaluate(function() {
+                return document.querySelectorAll('li').length === 4;
+            });
+        }, function(self) {
+            self.test.pass('Casper.waitFor() can wait for something to happen');
+        }, function(self) {
+            self.test.fail('Casper.waitFor() can wait for something to happen');
         });
-    }, function(self) {
-        self.test.pass('Casper.waitFor() can wait for something to happen');
-    }, function(self) {
-        self.test.fail('Casper.waitFor() can wait for something to happen');
     });
 });
 
 // run suite
 casper.run(function(self) {
+    self.test.comment('logging, again');
     self.test.assertEquals(self.result.log.length, 3, 'log() logged messages');
     self.test.renderResults(true, 0, save);
 });

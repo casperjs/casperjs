@@ -97,7 +97,7 @@
          */
         base64encode: function(url) {
             return this.evaluate(function() {
-                return __utils__.getBase64('%url%');
+                return __utils__.getBase64(__casper_params__.url);
             }, {
                 url: url
             });
@@ -134,18 +134,18 @@
         captureSelector: function(targetFile, selector) {
             return this.capture(targetFile, this.evaluate(function() {
                 try {
-                    var clipRect = document.querySelector('%selector%').getBoundingClientRect();
+                    var clipRect = document.querySelector(__casper_params__.selector).getBoundingClientRect();
                     return {
-                        top: clipRect.top,
-                        left: clipRect.left,
-                        width: clipRect.width,
+                        top:    clipRect.top,
+                        left:   clipRect.left,
+                        width:  clipRect.width,
                         height: clipRect.height
                     };
                 } catch (e) {
-                    __utils__.log('unable to fetch bounds for element ' + selector, 'warning');
+                    __utils__.log("Unable to fetch bounds for element " + __casper_params__.selector, "warning");
                 }
             }, {
-                selector: selector.replace("'", "\'")
+                selector: selector
             }));
         },
 
@@ -197,15 +197,18 @@
          * Emulates a click on the element from the provided selector, if
          * possible. In case of success, `true` is returned.
          *
-         * @param  String   selector  A DOM CSS3 compatible selector
+         * @param  String   selector        A DOM CSS3 compatible selector
+         * @param  Boolean  fallbackToHref  Whether to try to relocate to the value of any href attribute (default: true)
          * @return Boolean
          */
-        click: function(selector) {
+        click: function(selector, fallbackToHref) {
+            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : false;
             this.log("click on selector: " + selector, "debug");
             return this.evaluate(function() {
-                return __utils__.click('%selector%');
+                return __utils__.click(__casper_params__.selector, __casper_params__.fallbackToHref);
             }, {
-                selector: selector.replace("'", "\'")
+                selector:       selector,
+                fallbackToHref: fallbackToHref
             });
         },
 
@@ -297,16 +300,40 @@
          *         password: 'baz00nga'
          *     })
          *
+         * As an alternative, CasperJS injects a `__casper_params__` Object
+         * instance containing all the parameters you passed:
+         *
+         *     casper.evaluate(function() {
+         *         document.querySelector('#username').value = __casper_params__.username;
+         *         document.querySelector('#password').value = __casper_params__.password;
+         *         document.querySelector('#submit').click();
+         *     }, {
+         *         username: 'Bazoonga',
+         *         password: 'baz00nga'
+         *     })
+         *
          * FIXME: waiting for a patch of PhantomJS to allow direct passing of
          * arguments to the function.
          * TODO: don't forget to keep this backward compatible.
          *
          * @param  function  fn            The function to be evaluated within current page DOM
-         * @param  object    replacements  Optional replacements to performs, eg. for '%foo%' => {foo: 'bar'}
+         * @param  object    replacements  Parameters to pass to the remote environment
          * @return mixed
          * @see    WebPage#evaluate
          */
         evaluate: function(fn, replacements) {
+            replacements = typeof(replacements) === "object" ? replacements : {};
+            this.page.evaluate(replaceFunctionPlaceholders(function() {
+                window.__casper_params__ = {};
+                try {
+                    var jsonString = unescape(decodeURIComponent('%replacements%'));
+                    window.__casper_params__ = JSON.parse(jsonString);
+                } catch (e) {
+                    __utils__.log("Unable to replace parameters: " + e, "error");
+                }
+            }, {
+                replacements: encodeURIComponent(escape(JSON.stringify(replacements).replace("'", "\'")))
+            }));
             return this.page.evaluate(replaceFunctionPlaceholders(fn, replacements));
         },
 
@@ -314,8 +341,8 @@
          * Evaluates an expression within the current page DOM and die() if it
          * returns false.
          *
-         * @param  function  fn       Expression to evaluate
-         * @param  String    message  Error message to log
+         * @param  function  fn       The expression to evaluate
+         * @param  String    message  The error message to log
          * @return Casper
          */
         evaluateOrDie: function(fn, message) {
@@ -334,7 +361,7 @@
          */
         exists: function(selector) {
             return this.evaluate(function() {
-                return __utils__.exists('%selector%');
+                return __utils__.exists(__casper_params__.selector);
             }, {
                 selector: selector
             });
@@ -360,9 +387,9 @@
          */
         fetchText: function(selector) {
             return this.evaluate(function() {
-                return __utils__.fetchText('%selector%');
+                return __utils__.fetchText(__casper_params__.selector);
             }, {
-                selector: selector.replace("'", "\'")
+                selector: selector
             });
         },
 
@@ -382,10 +409,10 @@
                 throw "form values must be provided as an object";
             }
             var fillResults = this.evaluate(function() {
-               return __utils__.fill('%selector%', JSON.parse('%values%'));
+               return __utils__.fill(__casper_params__.selector, __casper_params__.values);
             }, {
-                selector: selector.replace("'", "\'"),
-                values:   JSON.stringify(vals).replace("'", "\'")
+                selector: selector,
+                values:   vals
             });
             if (!fillResults) {
                 throw "unable to fill form";
@@ -412,13 +439,13 @@
             // Form submission?
             if (submit) {
                 this.evaluate(function() {
-                    var form = document.querySelector('%selector%');
+                    var form = document.querySelector(__casper_params__.selector);
                     var method = form.getAttribute('method').toUpperCase() || "GET";
                     var action = form.getAttribute('action') || "unknown";
                     __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
                     form.submit();
                 }, {
-                    selector: selector.replace("'", "\'")
+                    selector: selector
                 });
             }
         },
@@ -634,8 +661,8 @@
         },
 
         /**
-         * Waits a given amount of time (expressed in milliseconds) before
-         * processing next step, which can passed as an optional argument.
+         * Adds a new step that will wait for a given amount of time (expressed
+         * in milliseconds) before processing an optional next one.
          *
          * @param  Number    timeout  The max amount of time to wait, in milliseconds
          * @param  Function  then     Next step to process (optional)
@@ -648,19 +675,20 @@
             if (then && typeof(then) !== "function") {
                 this.die("wait() a step definition must be a function");
             }
-            this.delayedExecution = true;
-            var start = new Date().getTime();
-            var interval = setInterval(function(self, then) {
-                if (new Date().getTime() - start > timeout) {
-                    self.delayedExecution = false;
-                    self.log("wait() finished wating for " + timeout + "ms.", "info");
-                    if (then) {
-                        self.then(then);
+            return this.then(function(self) {
+                self.delayedExecution = true;
+                var start = new Date().getTime();
+                var interval = setInterval(function(self, then) {
+                    if (new Date().getTime() - start > timeout) {
+                        self.delayedExecution = false;
+                        self.log("wait() finished wating for " + timeout + "ms.", "info");
+                        if (then) {
+                            self.then(then);
+                        }
+                        clearInterval(interval);
                     }
-                    clearInterval(interval);
-                }
-            }, 100, this, then);
-            return this;
+                }, 100, self, then);
+            });
         },
 
         /**
@@ -745,10 +773,12 @@
         /**
          * Clicks on the DOM element behind the provided selector.
          *
-         * @param  String  selector  A CSS3 selector to the element to click
+         * @param  String  selector        A CSS3 selector to the element to click
+         * @param  Boolean fallbackToHref  Whether to try to relocate to the value of any href attribute (default: true)
          * @return Boolean
          */
-        this.click = function(selector) {
+        this.click = function(selector, fallbackToHref) {
+            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : false;
             var elem = this.findOne(selector);
             if (!elem) {
                 return false;
@@ -758,7 +788,7 @@
             if (elem.dispatchEvent(evt)) {
                 return true;
             }
-            if (elem.hasAttribute('href')) {
+            if (fallbackToHref && elem.hasAttribute('href')) {
                 document.location = elem.getAttribute('href');
                 return true;
             }
@@ -1226,6 +1256,17 @@
         };
 
         /**
+         * Asserts that the provided input is of the given type.
+         *
+         * @param  mixed   input    The value to test
+         * @param  String  type     The javascript type name
+         * @param  String  message  Test description
+         */
+        this.assertType = function(input, type, message) {
+            return this.assertEquals(betterTypeOf(input), type, message);
+        };
+
+        /**
          * Asserts that a the current page url matches the provided RegExp
          * pattern.
          *
@@ -1403,6 +1444,21 @@
     };
 
     /**
+     * Provides a better typeof operator equivalent
+     *
+     * @param  mixed  input
+     * @return String
+     * @see    http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
+     */
+    function betterTypeOf(input) {
+        try {
+            return Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+        } catch (e) {
+            return typeof input;
+        }
+    }
+
+    /**
      * Creates a new WebPage instance for Casper use.
      *
      * @param  Casper  casper  A Casper instance
@@ -1522,10 +1578,10 @@
     function replaceFunctionPlaceholders(fn, replacements) {
         if (replacements && typeof replacements === "object") {
             fn = fn.toString();
-            for (var p in replacements) {
-                var match = '%' + p + '%';
+            for (var placeholder in replacements) {
+                var match = '%' + placeholder + '%';
                 do {
-                    fn = fn.replace(match, replacements[p]);
+                    fn = fn.replace(match, replacements[placeholder]);
                 } while(fn.indexOf(match) !== -1);
             }
         }
