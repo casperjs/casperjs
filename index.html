@@ -290,7 +290,7 @@ casper.run (self) ->
     </tbody>
 </table>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>phantom.injectJs('path/to/casper.js');
 
@@ -339,14 +339,23 @@ casper.start('http://www.google.fr/', function(self) {
 });
 </code></pre>
 
-<h3 id="phantom_Casper_click"><code>Casper#click(String selector)</code></h3>
+<h3 id="phantom_Casper_click"><code>Casper#click(String selector[, Boolean fallbackToHref=true])</code></h3>
 
 <p>
     Emulates a click on the element from the provided selector, if possible.
-    In case of success, <code>true</code> is returned.
+    In case of success, <code>true</code> is returned, <code>false</code> otherwise.
 </p>
 
-<p>Example:</p>
+<p>
+    <span class="label notice">Note</span>
+    By default, <code>.click()</code> will try to relocate the browser location
+    to the value of the <code>href</code> attribute of the clicked element (if any)
+    as a last resort.
+    If you don't want this behavior, set the <code>fallbackToHref</code> argument
+    to <code>false</code>.
+</p>
+
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>casper.start('http://google.fr/')
     .thenEvaluate(function() {
@@ -374,7 +383,7 @@ casper.start('http://www.google.fr/', function(self) {
     for automatically setting page clipRect setting values and sets it back once done.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
     self.capture('google.png', {
@@ -392,7 +401,7 @@ casper.start('http://www.google.fr/', function(self) {
 
 <p>Captures the page area containing the provided selector.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>casper.start('http://www.weather.com/', function(self) {
     self.captureSelector('weather.png', '.twc-story-block');
@@ -405,7 +414,7 @@ casper.start('http://www.google.fr/', function(self) {
 
 <p>Logs the HTML code of the current page directly to the standard output, for debugging purpose.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
     self.debugHTML();
@@ -418,7 +427,7 @@ casper.start('http://www.google.fr/', function(self) {
 
 <p>Logs the textual contents of the current page directly to the standard output, for debugging purpose.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
     self.debugPage();
@@ -431,7 +440,7 @@ casper.start('http://www.google.fr/', function(self) {
 
 <p>Exits phantom with a logged error message and an optional exit status code.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
     self.die("Fail.", 1);
@@ -444,7 +453,7 @@ casper.start('http://www.google.fr/', function(self) {
 
 <p>Iterates over provided array items and execute a callback.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>var links = [
     'http://google.com/',
@@ -477,7 +486,7 @@ casper.run(function(self) {
     more information).
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.echo('Page title is: ' + self.evaluate(function() {
@@ -495,7 +504,7 @@ casper.run(function(self) {
     does, but can also replace values by their placeholer names.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.evaluate(function() {
     document.querySelector('#username').value = '%username%';
@@ -530,7 +539,7 @@ instance containing all the parameters you passed:
 
 <p>Evaluates an expression within the current page DOM and <code>die()</code> if it returns anything but <code>true</code>.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
     self.evaluateOrDie(function() {
@@ -570,7 +579,7 @@ instance containing all the parameters you passed:
     to distinguish what happens in the PhantomJS environment from the remote one.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.log("I'm logging an error", "error");
@@ -632,7 +641,7 @@ instance containing all the parameters you passed:
     <span class="label notice">Note</span> the url will be url-decoded.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.log(self.getCurrentUrl()); // "http://www.google.fr/"
@@ -645,7 +654,7 @@ instance containing all the parameters you passed:
 
 <p>Retrieves current page title.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
     self.log(self.getTitle()); // "Google"
@@ -658,7 +667,7 @@ instance containing all the parameters you passed:
 
 <p>Repeats a navigation step a given number of times.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">var i = 0;
 casper.start('http://foo.bar/home', function(self) {
@@ -705,7 +714,7 @@ casper.start('http://foo.bar/home', function(self) {
     adds the step provided by the <code>then</code> argument.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/', function(self) {
     self.echo("I'm loaded.");
@@ -752,7 +761,7 @@ casper.run(function() {
     callback function which will be executed when the requested page is loaded.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
@@ -783,7 +792,7 @@ casper.run(function() {
 
 <p>Adds a new navigation step to perform code evaluation within the current retrieved page DOM.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">// Querying for "Chuck Norris" on Google
 casper.start('http://google.fr/').thenEvaluate(function() {
@@ -803,7 +812,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     step when its loaded.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
@@ -818,7 +827,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 
 <p>Basically a shortcut for opening an url and evaluate code against remote DOM environment.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
@@ -836,7 +845,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 
 <p>Pause steps suite execution for a given amount of time, and optionnaly execute a step on done.</p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://yoursite.tld/', function(self) {
     self.wait(1000, function(self) {
@@ -857,7 +866,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     to 5000ms.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('http://yoursite.tld/', function(self) {
     self.waitFor(function(self) {
@@ -896,7 +905,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
 </p>
 
-<p>Example:</p>
+<p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">casper.start('https://twitter.com/#!/n1k0', function(self) {
     self.waitForSelector('.tweet-row', function(self) {
