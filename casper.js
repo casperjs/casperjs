@@ -577,6 +577,12 @@
                 }
             }
             this.page.settings = mergeObjects(this.page.settings, this.options.pageSettings);
+            if (typeof this.options.clipRect === "object") {
+                this.page.clipRect = this.options.clipRect;
+            }
+            if (typeof this.options.viewportSize === "object") {
+                this.page.viewportSize = this.options.viewportSize;
+            }
             this.started = true;
             if (typeof this.options.timeout === "number" && this.options.timeout > 0) {
                 self.log("execution timeout set to " + this.options.timeout + 'ms', "info");
@@ -658,6 +664,17 @@
          */
         thenOpenAndEvaluate: function(location, fn, replacements) {
             return this.thenOpen(location).thenEvaluate(fn, replacements);
+        },
+
+        /**
+         * Changes the current viewport size.
+         *
+         * @param  Object  viewportSize  An objet with two props: width and height
+         * @return Casper
+         */
+        viewport: function(viewportSize) {
+            this.page.viewportSize = viewportSize;
+            return this;
         },
 
         /**
