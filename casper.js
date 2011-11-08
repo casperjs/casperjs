@@ -116,6 +116,11 @@
             var previousClipRect = this.page.clipRect;
             if (clipRect) {
                 this.page.clipRect = clipRect;
+                this.log('Capturing page to ' + targetFile + ' with clipRect' + JSON.stringify(clipRect), "debug");
+            }
+            else
+            {
+                this.log('Capturing page to ' + targetFile, "debug");
             }
             if (!this.page.render(targetFile)) {
                 this.log('Failed to capture screenshot as ' + targetFile, "error");
@@ -576,6 +581,13 @@
                     this.page = createPage(this);
                 }
             }
+
+            // View port size
+            if (this.options.viewportSize)
+            {
+            	this.page.viewportSize = this.options.viewportSize;
+            }
+
             this.page.settings = mergeObjects(this.page.settings, this.options.pageSettings);
             this.started = true;
             if (typeof this.options.timeout === "number" && this.options.timeout > 0) {
