@@ -1005,6 +1005,11 @@
                 this.log("invalid field type; only HTMLElement and NodeList are supported", "error");
             }
             this.log('set "' + field.getAttribute('name') + '" field value to ' + value, "debug");
+            try {
+                field.focus();
+            } catch (e) {
+                __utils__.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
+            }
             var nodeName = field.nodeName.toLowerCase();
             switch (nodeName) {
                 case "input":
@@ -1058,6 +1063,11 @@
                 default:
                     out = 'unsupported field type: ' + nodeName;
                     break;
+            }
+            try {
+                field.blur();
+            } catch (err) {
+                __utils__.log("Unable to blur() input field " + field.getAttribute('name') + ": " + err, "warning");
             }
             return out;
         };
