@@ -202,7 +202,7 @@
          * @return Boolean
          */
         click: function(selector, fallbackToHref) {
-            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : false;
+            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : !!fallbackToHref;
             this.log("click on selector: " + selector, "debug");
             return this.evaluate(function() {
                 return __utils__.click(__casper_params__.selector, __casper_params__.fallbackToHref);
@@ -778,7 +778,7 @@
          * @return Boolean
          */
         this.click = function(selector, fallbackToHref) {
-            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : false;
+            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : !!fallbackToHref;
             var elem = this.findOne(selector);
             if (!elem) {
                 return false;
