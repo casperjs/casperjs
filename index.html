@@ -507,6 +507,19 @@ casper.run(function(self) {
 });
 </code></pre>
 
+As an alternative, CasperJS also injects a <code>__casper_params__</code> Object
+instance containing all the parameters you passed:
+
+<pre class="prettyprint"><code class="javascript">casper.evaluate(function() {
+    document.querySelector('#username').value = __casper_params__.username;
+    document.querySelector('#password').value = __casper_params__.password;
+    document.querySelector('#submit').click();
+}, {
+    username: 'sheldon.cooper',
+    password: 'b4z1ng4'
+})
+</code></pre>
+
 <p>
     <span class="label notice">Hint</span> For filling and submitting forms,
     rather use the <a href="#phantom_Casper_fill"><code>Casper#fill()</code></a>
