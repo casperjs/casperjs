@@ -49,7 +49,15 @@ casper.start('tests/site/index.html', function(self) {
 
 casper.test.assert(casper.steps.length === 1, 'start() can add a new navigation step');
 
+// Casper.viewport()
+casper.test.comment('viewport');
+casper.viewport({width: 1337, height: 999});
+casper.test.assertEquals(casper.page.viewportSize.width, 1337, 'Casper.viewport() can change the width of the viewport');
+casper.test.assertEquals(casper.page.viewportSize.height, 999, 'Casper.viewport() can change the height of the viewport');
+casper.test.assertRaises(casper.viewport, 'booh', 'Casper.viewport() validates viewport size data');
+
 // Casper#then()
+casper.test.comment('then');
 casper.then(function(self) {
     self.test.assertTitle('CasperJS test target', 'click() casper can click on a text link and react when it is loaded 1/2');
     self.click('a[href="form.html"]');
@@ -126,6 +134,7 @@ casper.then(function(self) {
 });
 
 // Casper#each()
+casper.test.comment('each');
 casper.each([1, 2, 3], function(self, item, i) {
     self.test.assertEquals(i, item - 1, 'each() passes a contextualized index');
 });
