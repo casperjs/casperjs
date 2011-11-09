@@ -925,7 +925,7 @@
                             path: err.path
                         });
                     } else {
-                        throw e;
+                        throw err;
                     }
                 }
             }
