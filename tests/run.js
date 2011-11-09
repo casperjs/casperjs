@@ -51,10 +51,10 @@ casper.test.assert(casper.steps.length === 1, 'start() can add a new navigation 
 
 // Casper.viewport()
 casper.test.comment('viewport');
-casper.viewport({width: 1337, height: 999});
-casper.test.assertEquals(casper.page.viewportSize.width, 1337, 'Casper.viewport() can change the width of the viewport');
-casper.test.assertEquals(casper.page.viewportSize.height, 999, 'Casper.viewport() can change the height of the viewport');
-casper.test.assertRaises(casper.viewport, 'booh', 'Casper.viewport() validates viewport size data');
+casper.viewport(1337, 999);
+casper.test.assertEquals(casper.page.viewportSize.width, 1337, 'Casper.viewport() can change the width of page viewport');
+casper.test.assertEquals(casper.page.viewportSize.height, 999, 'Casper.viewport() can change the height of page viewport');
+casper.test.assertRaises(casper.viewport, ['a', 'b'], 'Casper.viewport() validates viewport size data');
 
 // Casper#then()
 casper.test.comment('then');

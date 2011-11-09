@@ -675,11 +675,18 @@
         /**
          * Changes the current viewport size.
          *
-         * @param  Object  viewportSize  An objet with two props: width and height
+         * @param  Number  width   The viewport width, in pixels
+         * @param  Number  height  The viewport height, in pixels
          * @return Casper
          */
-        viewport: function(viewportSize) {
-            this.page.viewportSize = viewportSize;
+        viewport: function(width, height) {
+            if (typeof width !== "number" || typeof height !== "number" || width <= 0 || height <= 0) {
+                throw new Error("Invalid viewport width/height set: " + width + 'x' + height);
+            }
+            this.page.viewportSize = {
+                width: width,
+                height: height
+            };
             return this;
         },
 
