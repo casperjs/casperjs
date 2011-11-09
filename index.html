@@ -874,6 +874,14 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 });
 </code></pre>
 
+<p>
+    <span class="label warning">Warning</span>
+    Casper won't <em>halt</em> the script execution but will rather be waiting
+    a given amount of time to process further. This is a slight difference, but
+    plenty understanding it can save you some hair pulling. See the
+    <a href="#faq_wait">dedicated FAQ entry</a>.
+</p>
+
 <h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until a function returns true to process any next step.</p>
@@ -916,6 +924,14 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 });
 </code></pre>
 
+<p>
+    <span class="label warning">Warning</span>
+    Casper won't <em>halt</em> the script execution but will rather be waiting
+    a given amount of time to process further. This is a slight difference, but
+    plenty understanding it can save you some hair pulling. See the
+    <a href="#faq_wait">dedicated FAQ entry</a>.
+</p>
+
 <h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>
@@ -933,6 +949,14 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     self.exit();
 });
 </code></pre>
+
+<p>
+    <span class="label warning">Warning</span>
+    Casper won't <em>halt</em> the script execution but will rather be waiting
+    a given amount of time to process further. This is a slight difference, but
+    plenty understanding it can save you some hair pulling. See the
+    <a href="#faq_wait">dedicated FAQ entry</a>.
+</p>
 
 </div>
 <div class="span4 apitoc">
@@ -1380,11 +1404,11 @@ $ phantomjs tests/run.js</code></pre>
 
 <hr/>
 
-<h4>The <code>wait()</code> method and co. don't really halt the script execution!</h4>
+<h4 id="faq_wait">The <code>wait()</code> method and co don't really halt the script execution!</h4>
 
 <p>
     Yes, that's because you cannot halt a javascript script without using really
-    dirty hacks. You must use your brain and find elegant solution such as this
+    dirty hacks. You must use your brain and find elegant solutions such as this
     one for example:
 </p>
 <pre class="prettyprint"><code class="javascript">casper.waitForSelector('.tweet-row', function(self) {
@@ -1398,6 +1422,10 @@ function continueMyTests(self) {
     self.click('somewhere');
 }
 </code></pre>
+<p>
+    Of course if you know of a better way of implementing script halting,
+    <a href="https://github.com/n1k0/casperjs">feel free to contribute</a>!
+</p>
 
 <hr/>
 
