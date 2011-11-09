@@ -113,9 +113,15 @@
          * @return Casper
          */
         capture: function(targetFile, clipRect) {
+            if (typeof clipRect !== "object") {
+                throw new Error("ClipRect must be an object instance.");
+            }
             var previousClipRect = this.page.clipRect;
             if (clipRect) {
                 this.page.clipRect = clipRect;
+                this.log('Capturing page to ' + targetFile + ' with clipRect' + JSON.stringify(clipRect), "debug");
+            } else {
+                this.log('Capturing page to ' + targetFile, "debug");
             }
             if (!this.page.render(targetFile)) {
                 this.log('Failed to capture screenshot as ' + targetFile, "error");
@@ -1262,6 +1268,23 @@
         };
 
         /**
+         * Asserts that the provided function called with the given parameters
+         * will raise an exception.
+         *
+         * @param  Function  fn       The function to test
+         * @param  Array     args     The arguments to pass to the function
+         * @param  String    message  Test description
+         */
+        this.assertRaises = function(fn, args, message) {
+            try {
+                fn.apply(null, args);
+                this.fail(message);
+            } catch (e) {
+                this.pass(message);
+            }
+        };
+
+        /**
          * Asserts that at least an element matching the provided CSS3 selector
          * exists in remote DOM.
          *
@@ -1471,7 +1494,8 @@
     };
 
     /**
-     * Provides a better typeof operator equivalent
+     * Provides a better typeof operator equivalent, able to retrieve the array
+     * type.
      *
      * @param  mixed  input
      * @return String
