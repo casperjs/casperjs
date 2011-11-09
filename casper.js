@@ -106,27 +106,33 @@
         /**
          * Proxy method for WebPage#render. Adds a clipRect parameter for
          * automatically set page clipRect setting values and sets it back once
-         * done.
+         * done. If the cliprect parameter is omitted, the full page viewport
+         * area will be rendered.
          *
          * @param  String  targetFile  A target filename
-         * @param  mixed   clipRect    An optional clipRect object
+         * @param  mixed   clipRect    An optional clipRect object (optional)
          * @return Casper
          */
         capture: function(targetFile, clipRect) {
-            if (typeof clipRect !== "object") {
-                throw new Error("ClipRect must be an object instance.");
-            }
-            var previousClipRect = this.page.clipRect;
+            var previousClipRect;
             if (clipRect) {
+                if (typeof clipRect !== "object") {
+                    throw new Error("clipRect must be an Object instance.");
+                }
+                previousClipRect = this.page.clipRect;
                 this.page.clipRect = clipRect;
                 this.log('Capturing page to ' + targetFile + ' with clipRect' + JSON.stringify(clipRect), "debug");
             } else {
                 this.log('Capturing page to ' + targetFile, "debug");
             }
-            if (!this.page.render(targetFile)) {
-                this.log('Failed to capture screenshot as ' + targetFile, "error");
+            try {
+                this.page.render(targetFile);
+            } catch (e) {
+                this.log('Failed to capture screenshot as ' + targetFile + ': ' + e, "error");
             }
-            this.page.clipRect = previousClipRect;
+            if (previousClipRect) {
+                this.page.clipRect = previousClipRect;
+            }
             return this;
         },
 
