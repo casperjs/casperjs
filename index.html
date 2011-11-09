@@ -287,6 +287,12 @@ casper.run (self) ->
             <td><code>false</code></td>
             <td> Realtime output of log messages</td>
         </tr>
+        <tr>
+            <td><code>viewportSize</code></td>
+            <td><code>Object</code></td>
+            <td><code>null</code></td>
+            <td>Viewport size, eg. <code>{width: 800, height: 600}</code></td>
+        </tr>
     </tbody>
 </table>
 
@@ -841,6 +847,18 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 });
 </code></pre>
 
+<h3 id="phantom_Casper_viewport"><code>Casper#viewport(Object viewportSize)</code></h3>
+
+<p>Changes current viewport size.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre class="prettyprint"><code class="javascript">casper.viewport({
+    width: 800,
+    height: 600
+});
+</code></pre>
+
 <h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
 <p>Pause steps suite execution for a given amount of time, and optionnaly execute a step on done.</p>
@@ -945,6 +963,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_thenEvaluate"><code>Casper.thenEvaluate()</code></a></li>
         <li><a href="#phantom_Casper_thenOpen"><code>Casper.thenOpen()</code></a></li>
         <li><a href="#phantom_Casper_thenOpenAndEvaluate"><code>Casper.thenOpenAndEvaluate()</code></a></li>
+        <li><a href="#phantom_Casper_viewport"><code>Casper.viewport()</code></a></li>
         <li><a href="#phantom_Casper_wait"><code>Casper.wait()</code></a></li>
         <li><a href="#phantom_Casper_waitFor"><code>Casper.waitFor()</code></a></li>
         <li><a href="#phantom_Casper_waitForSelector"><code>Casper.waitForSelector()</code></a></li>
