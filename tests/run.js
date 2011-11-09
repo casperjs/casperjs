@@ -4,7 +4,7 @@ var casper = new phantom.Casper({
     faultTolerant: false,
     verbose: true
 });
-
+var fs = require('fs');
 var save = null;
 
 phantom.args.forEach(function(arg) {
@@ -65,9 +65,20 @@ casper.then(function(self) {
 
 casper.test.assert(casper.steps.length === 2, 'then() adds a new navigation step');
 
-// Casper#evaluate()
+// Casper#capture()
+casper.test.comment('capturing');
+casper.viewport(300, 200);
+var testFile = '/tmp/__casper_test_capture.png';
+if (fs.isFile(testFile)) {
+    fs.remove(testFile);
+}
+casper.capture(testFile);
+casper.test.assert(fs.isFile(testFile), 'Casper.capture() captured a screenshot');
+fs.remove(testFile);
 
+// Casper#evaluate()
 casper.then(function(self) {
+    self.test.comment('evaluating');
     var params = {
         "boolean true":  true,
         "boolean false": false,
@@ -84,6 +95,7 @@ casper.then(function(self) {
     self.test.assertEquals(Object.keys(casperParams).length, 7, 'Casper.evaluate() exposes parameters object has the correct length');
     for (var param in casperParams) {
         self.test.assertEquals(JSON.stringify(casperParams[param]), JSON.stringify(params[param]), 'Casper.evaluate() can pass a ' + param);
+        self.test.assertEquals(typeof casperParams[param], typeof params[param], 'Casper.evaluate() preserves the ' + param + ' type');
     }
 });
 
