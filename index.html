@@ -848,17 +848,20 @@ casper.start('http://google.fr/').thenEvaluate(function() {
 });
 </code></pre>
 
-<h3 id="phantom_Casper_viewport"><code>Casper#viewport(Object viewportSize)</code></h3>
+<h3 id="phantom_Casper_viewport"><code>Casper#viewport(Number width, Number height)</code></h3>
 
 <p>Changes current viewport size.</p>
 
 <p><strong>Example:</strong></p>
 
-<pre class="prettyprint"><code class="javascript">casper.viewport({
-    width: 800,
-    height: 600
-});
+<pre class="prettyprint"><code class="javascript">casper.viewport(1024, 768);
 </code></pre>
+
+<p>
+    <span class="label notice">Note</span>
+    PhantomJS comes with a default viewport size of 400x300, and CasperJS doesn't override it
+    by default.
+</p>
 
 <h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
