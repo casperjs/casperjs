@@ -1,5 +1,5 @@
-html, body { background-color: #eee; }
-.container > footer p { text-align: center; }
+html, body { background-color: #eee }
+.container > footer p { text-align: center }
 .content {
     background-color: #fff;
     padding: 20px;
@@ -11,19 +11,19 @@ html, body { background-color: #eee; }
        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
             box-shadow: 0 1px 2px rgba(0,0,0,.15);
 }
-.contribute img { position: fixed; top: 40px; right: 0; border: 0; }
-.download { text-align: center; }
-.page-header { background-color: #f5f5f5; padding: 20px 20px 10px; margin: -20px -20px 20px; border-top: 1px solid #DDD; }
+.contribute img { position: fixed; top: 40px; right: 0; border: 0 }
+.download { text-align: center }
+.page-header { background-color: #f5f5f5; padding: 20px 20px 10px; margin: -20px -20px 20px; border-top: 1px solid #DDD }
 pre code { line-height: 1.4em; background: none;}
-#about { font-weight: bold; }
-section { margin-bottom: 40px; }
-section:first-child { padding-top: 40px; }
-section:not(:first-child) { padding-top: 10px; }
-h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Monaco, monospace; }
-.dl-links { margin-top: 20px; }
-.download p { margin-top: 20px; }
-h3 code { margin-left: -4px; }
-#apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 0px; border-bottom: 1px solid #ddd; margin-bottom: 10px; }
-.row h2 { margin-bottom: 10px; }
-.apitoc code { background: none; }
-a code { text-decoration: underline; }
+#about { font-weight: bold }
+section { margin-bottom: 40px }
+section:first-child { padding-top: 40px }
+section:not(:first-child) { padding-top: 10px }
+h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Consolas, Monaco, monospace }
+.dl-links { margin-top: 20px }
+.download p { margin-top: 20px }
+h3 code { margin-left: -4px }
+#apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 0px; border-bottom: 1px solid #ddd; margin-bottom: 10px }
+.row h2 { margin-bottom: 10px }
+.apitoc code { background: none }
+a code { text-decoration: underline }
