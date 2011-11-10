@@ -225,21 +225,6 @@
         },
 
         /**
-         * Adds a new navigation step for clicking on a provided link.
-         *
-         * @param  String   selector  A DOM CSS3 compatible selector
-         * @param  function then      Next step function to execute on page loaded (optional)
-         * @return Casper
-         * @see    Casper#open
-         */
-        thenClick: function(selector, fallbackToHref, then) {
-            this.then(function(self) {
-                self.click(selector, fallbackToHref);
-            });
-            return typeof then === "function" ? this.then(then) : this;
-        },
-
-        /**
          * Logs the HTML code of the current page.
          *
          * @return Casper
@@ -646,6 +631,24 @@
             }
             this.steps.push(step);
             return this;
+        },
+
+        /**
+         * Adds a new navigation step for clicking on a provided link selector
+         * and execute an optional next step.
+         *
+         * @param  String   selector        A DOM CSS3 compatible selector
+         * @param  Function then            Next step function to execute on page loaded (optional)
+         * @param  Boolean  fallbackToHref  Whether to try to relocate to the value of any href attribute (default: true)
+         * @return Casper
+         * @see    Casper#click
+         * @see    Casper#then
+         */
+        thenClick: function(selector, then, fallbackToHref) {
+            this.then(function(self) {
+                self.click(selector, fallbackToHref);
+            });
+            return typeof then === "function" ? this.then(then) : this;
         },
 
         /**

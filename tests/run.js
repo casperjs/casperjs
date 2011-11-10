@@ -145,6 +145,12 @@ casper.then(function(self) {
     self.test.assertUrlMatch(/topic=bar/, 'fill() select field was submitted');
 });
 
+// Casper#thenClick()
+casper.thenClick('body a', function(self) {
+    self.test.comment('Casper.thenClick()');
+    self.test.assertTitle('CasperJS test index', 'thenClick() casper can add a step for clicking a link');
+});
+
 // Casper#each()
 casper.test.comment('each');
 casper.each([1, 2, 3], function(self, item, i) {
