@@ -225,6 +225,21 @@
         },
 
         /**
+         * Adds a new navigation step for clicking on a provided link.
+         *
+         * @param  String   selector  A DOM CSS3 compatible selector
+         * @param  function then      Next step function to execute on page loaded (optional)
+         * @return Casper
+         * @see    Casper#open
+         */
+        thenClick: function(selector, fallbackToHref, then) {
+            this.then(function(self) {
+                self.click(selector, fallbackToHref);
+            });
+            return typeof then === "function" ? this.then(then) : this;
+        },
+
+        /**
          * Logs the HTML code of the current page.
          *
          * @return Casper
