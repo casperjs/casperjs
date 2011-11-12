@@ -210,5 +210,8 @@ casper.wait(1000, function(self) {
 casper.run(function(self) {
     self.test.comment('logging, again');
     self.test.assertEquals(self.result.log.length, 3, 'log() logged messages');
+    self.test.comment('history');
+    self.test.assert(self.history.length > 0, 'Casper.history contains urls');
+    self.test.assertMatch(self.history[0], /tests\/site\/index\.html$/, 'Casper.history has the correct first url');
     self.test.renderResults(true, 0, save);
 });

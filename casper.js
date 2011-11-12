@@ -53,6 +53,7 @@
             timeout:           null,
             verbose:           false
         };
+        // privates
         // local properties
         this.checker = null;
         this.colorizer = new phantom.Casper.Colorizer();
@@ -1605,6 +1606,8 @@
             } else {
                 casper.log("Successfully injected Casper client-side utilities", "debug");
             }
+            // history
+            casper.history.push(casper.getCurrentUrl());
             casper.loadInProgress = false;
         };
         page.onResourceReceived = function(resource) {
