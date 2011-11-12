@@ -117,7 +117,7 @@
         capture: function(targetFile, clipRect) {
             var previousClipRect;
             if (clipRect) {
-                if (typeof clipRect !== "object") {
+                if (!isType(clipRect, "object")) {
                     throw new Error("clipRect must be an Object instance.");
                 }
                 previousClipRect = this.page.clipRect;
@@ -170,7 +170,7 @@
          */
         checkStep: function(self, onComplete) {
             var step = self.steps[self.step];
-            if (!self.loadInProgress && typeof step === "function") {
+            if (!self.loadInProgress && isType(step, "function")) {
                 var curStepNum = self.step + 1;
                 var stepInfo   = "Step " + curStepNum + "/" + self.steps.length + ": ";
                 self.log(stepInfo + self.page.evaluate(function() {
@@ -189,11 +189,11 @@
                 self.log(stepInfo + "done in " + time + "ms.", "info");
                 self.step++;
             }
-            if (typeof step !== "function" && !self.delayedExecution) {
+            if (!isType(step, "function") && !self.delayedExecution) {
                 self.result.time = new Date().getTime() - self.startTime;
                 self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
                 clearInterval(self.checker);
-                if (typeof onComplete === "function") {
+                if (isType(onComplete, "function")) {
                     try {
                         onComplete(self);
                     } catch (err) {
@@ -215,7 +215,7 @@
          * @return Boolean
          */
         click: function(selector, fallbackToHref) {
-            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : !!fallbackToHref;
+            fallbackToHref = isType(fallbackToHref, "undefined") ? true : !!fallbackToHref;
             this.log("click on selector: " + selector, "debug");
             return this.evaluate(function() {
                 return __utils__.click(__casper_params__.selector, __casper_params__.fallbackToHref);
@@ -259,9 +259,9 @@
         die: function(message, status) {
             this.result.status = 'error';
             this.result.time = new Date().getTime() - this.startTime;
-            message = typeof message === "string" && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
+            message = isType(message, "string") && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
             this.log(message, "error");
-            if (typeof this.options.onDie === "function") {
+            if (isType(this.options.onDie, "function")) {
                 this.options.onDie(this, message, status);
             }
             return this.exit(Number(status) > 0 ? Number(status) : 1);
@@ -335,7 +335,7 @@
          * @see    WebPage#evaluate
          */
         evaluate: function(fn, replacements) {
-            replacements = typeof(replacements) === "object" ? replacements : {};
+            replacements = isType(replacements, "object") ? replacements : {};
             this.page.evaluate(replaceFunctionPlaceholders(function() {
                 window.__casper_params__ = {};
                 try {
@@ -415,10 +415,10 @@
          */
         fill: function(selector, vals, submit) {
             submit = submit === true ? submit : false;
-            if (typeof selector !== "string" || !selector.length) {
+            if (!isType(selector, "string") || !selector.length) {
                 throw "form selector must be a non-empty string";
             }
-            if (typeof vals !== "object") {
+            if (!isType(vals, "object")) {
                 throw "form values must be provided as an object";
             }
             var fillResults = this.evaluate(function() {
@@ -496,7 +496,7 @@
         log: function(message, level, space) {
             level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
             space = space ? space : "phantom";
-            if (level === "error" && typeof this.options.onError === "function") {
+            if (level === "error" && isType(this.options.onError, "function")) {
                 this.options.onError(this, message, space);
             }
             if (this.logLevels.indexOf(level) < this.logLevels.indexOf(this.options.logLevel)) {
@@ -590,25 +590,25 @@
                 }
             }
             this.page.settings = mergeObjects(this.page.settings, this.options.pageSettings);
-            if (typeof this.options.clipRect === "object") {
+            if (isType(this.options.clipRect, "object")) {
                 this.page.clipRect = this.options.clipRect;
             }
-            if (typeof this.options.viewportSize === "object") {
+            if (isType(this.options.viewportSize, "object")) {
                 this.page.viewportSize = this.options.viewportSize;
             }
             this.started = true;
-            if (typeof this.options.timeout === "number" && this.options.timeout > 0) {
+            if (isType(this.options.timeout, "number") && this.options.timeout > 0) {
                 self.log("execution timeout set to " + this.options.timeout + 'ms', "info");
                 setTimeout(function(self) {
                     self.log("timeout of " + self.options.timeout + "ms exceeded", "info").exit();
                 }, this.options.timeout, this);
             }
-            if (typeof this.options.onPageInitialized === "function") {
+            if (isType(this.options.onPageInitialized, "function")) {
                 this.log("Post-configuring WebPage instance", "debug");
                 this.options.onPageInitialized(this.page);
             }
-            if (typeof location === "string" && location.length > 0) {
-                if (typeof then === "function") {
+            if (isType(location, "string") && location.length > 0) {
+                if (isType(then, "function")) {
                     return this.open(location).then(then);
                 } else {
                     return this.open(location);
@@ -627,7 +627,7 @@
             if (!this.started) {
                 throw "Casper not started; please use Casper#start";
             }
-            if (typeof step !== "function") {
+            if (!isType(step, "function")) {
                 throw "You can only define a step as a function";
             }
             this.steps.push(step);
@@ -649,7 +649,7 @@
             this.then(function(self) {
                 self.click(selector, fallbackToHref);
             });
-            return typeof then === "function" ? this.then(then) : this;
+            return isType(then, "function") ? this.then(then) : this;
         },
 
         /**
@@ -679,7 +679,7 @@
             this.then(function(self) {
                 self.open(location);
             });
-            return typeof then === "function" ? this.then(then) : this;
+            return isType(then, "function") ? this.then(then) : this;
         },
 
         /**
@@ -705,7 +705,7 @@
          * @return Casper
          */
         viewport: function(width, height) {
-            if (typeof width !== "number" || typeof height !== "number" || width <= 0 || height <= 0) {
+            if (!isType(width, "number") || !isType(height, "number") || width <= 0 || height <= 0) {
                 throw new Error("Invalid viewport width/height set: " + width + 'x' + height);
             }
             this.page.viewportSize = {
@@ -724,10 +724,11 @@
          * @return Casper
          */
         wait: function(timeout, then) {
-            if (typeof(timeout) !== "number" || Number(timeout, 10) < 1) {
+            timeout = Number(timeout, 10);
+            if (!isType(timeout, "number") || timeout < 1) {
                 this.die("wait() only accepts a positive integer > 0 as a timeout value");
             }
-            if (then && typeof(then) !== "function") {
+            if (then && !isType(then, "function")) {
                 this.die("wait() a step definition must be a function");
             }
             return this.then(function(self) {
@@ -757,10 +758,10 @@
          */
         waitFor: function(testFx, then, onTimeout, timeout) {
             timeout = timeout ? timeout : this.defaultWaitTimeout;
-            if (typeof testFx !== "function") {
+            if (!isType(testFx, "function")) {
                 this.die("waitFor() needs a test function");
             }
-            if (then && typeof then !== "function") {
+            if (then && !isType(then, "function")) {
                 this.die("waitFor() next step definition must be a function");
             }
             this.delayedExecution = true;
@@ -773,7 +774,7 @@
                     self.delayedExecution = false;
                     if (!condition) {
                         self.log("Casper.waitFor() timeout", "warning");
-                        if (typeof onTimeout === "function") {
+                        if (isType(onTimeout, "function")) {
                             onTimeout(self);
                         } else {
                             self.die("Expired timeout, exiting.", "error");
@@ -815,8 +816,8 @@
      * @param  Object  proto  Prototype methods to add to Casper
      */
     phantom.Casper.extend = function(proto) {
-        if (typeof proto !== "object") {
-            throw "extends() only accept objects";
+        if (!isType(proto, "object")) {
+            throw "extends() only accept objects as prototypes";
         }
         mergeObjects(phantom.Casper.prototype, proto);
     };
@@ -833,7 +834,7 @@
          * @return Boolean
          */
         this.click = function(selector, fallbackToHref) {
-            fallbackToHref = typeof(fallbackToHref) == "undefined" ? true : !!fallbackToHref;
+            fallbackToHref = typeof fallbackToHref === "undefined" ? true : !!fallbackToHref;
             var elem = this.findOne(selector);
             if (!elem) {
                 return false;
@@ -1196,7 +1197,7 @@
      *
      */
     phantom.Casper.Tester = function(casper, options) {
-        this.options = typeof options === "object" || {};
+        this.options = isType(options, "object") ? options : {};
         if (!casper instanceof phantom.Casper) {
             throw "phantom.Casper.Tester needs a phantom.Casper instance";
         }
@@ -1432,7 +1433,7 @@
          * @param  Boolean  exit
          */
         this.renderResults = function(exit, status, save) {
-            save = typeof save === "string" ? save : this.options.save;
+            save = isType(save, "string") ? save : this.options.save;
             var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
             if (this.testResults.failed > 0) {
                 statusText = FAIL;
@@ -1446,7 +1447,7 @@
                 result += new Array(80 - result.length + 1).join(' ');
             }
             casper.echo(this.colorize(result, style));
-            if (save && typeof require === "function") {
+            if (save && isType(require, "function")) {
                 try {
                     require('fs').write(save, exporter.getXML(), 'w');
                     casper.echo('result log stored in ' + save, 'INFO');
@@ -1469,7 +1470,7 @@
             var node = document.createElement(name);
             for (var attrName in attributes) {
                 var value = attributes[attrName];
-                if (attributes.hasOwnProperty(attrName) && typeof attrName === "string") {
+                if (attributes.hasOwnProperty(attrName) && isType(attrName, "string")) {
                     node.setAttribute(attrName, value);
                 }
             }
@@ -1549,7 +1550,7 @@
      */
     function createPage(casper) {
         var page;
-        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof require === "function") {
+        if (phantom.version.major <= 1 && phantom.version.minor < 3 && isType(require, "function")) {
             page = new WebPage();
         } else {
             page = require('webpage').create();
@@ -1573,7 +1574,7 @@
                 }
                 message += ': ' + casper.requestUrl;
                 casper.log(message, "warning");
-                if (typeof casper.options.onLoadError === "function") {
+                if (isType(casper.options.onLoadError, "function")) {
                     casper.options.onLoadError(casper, casper.requestUrl, status);
                 }
             }
@@ -1616,16 +1617,28 @@
     }
 
     /**
+     * Shorthands for checking if a value is of the given type. Can check for
+     * arrays.
+     *
+     * @param  mixed   what      The value to check
+     * @param  String  typeName  The type name ("string", "number", "function", etc.)
+     * @return Boolean
+     */
+    function isType(what, typeName) {
+        return betterTypeOf(what) === typeName;
+    }
+
+    /**
      * Checks if the provided var is a WebPage instance
      *
      * @param  mixed  what
      * @return Boolean
      */
     function isWebPage(what) {
-        if (!what || typeof what !== "object") {
+        if (!what || !isType(what, "object")) {
             return false;
         }
-        if (phantom.version.major <= 1 && phantom.version.minor < 3 && typeof require === "function") {
+        if (phantom.version.major <= 1 && phantom.version.minor < 3 && isType(require, "function")) {
             return what instanceof WebPage;
         } else {
             return what.toString().indexOf('WebPage(') === 0;
@@ -1663,7 +1676,7 @@
      * @return String                  A function string representation
      */
     function replaceFunctionPlaceholders(fn, replacements) {
-        if (replacements && typeof replacements === "object") {
+        if (replacements && isType(replacements, "object")) {
             fn = fn.toString();
             for (var placeholder in replacements) {
                 var match = '%' + placeholder + '%';
