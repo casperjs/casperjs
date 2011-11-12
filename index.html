@@ -319,6 +319,21 @@ var casper = new phantom.Casper({
     <code>new phantom.Casper()</code>.
 </p>
 
+<h3 id="phantom_Casper_back"><code>ClientUtils#back()</code></h3>
+<p>
+    Moves back a step in browser's history.
+</p>
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/1')
+casper.thenOpen('http://foo.bar/2');
+casper.thenOpen('http://foo.bar/3');
+casper.back();
+casper.run(function(self) {
+    console.log(self.getCurrentUrl()); // 'http://foo.bar/2'
+});
+</code></pre>
+
+<p>Also have a look at <a href="#phantom_Casper_forward">Casper.forward()</a>.</p>
+
 <h3 id="phantom_Casper_base64encode"><code>Casper#base64encode(String url)</code></h3>
 
 <p>
@@ -571,6 +586,21 @@ instance containing all the parameters you passed:
     self.exit();
 });
 </code></pre>
+
+<h3 id="phantom_Casper_forward"><code>ClientUtils#forward()</code></h3>
+<p>
+    Moves a step forward in browser's history.
+</p>
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/1')
+casper.thenOpen('http://foo.bar/2');
+casper.thenOpen('http://foo.bar/3');
+casper.back();    // http://foo.bar/2
+casper.back();    // http://foo.bar/1
+casper.forward(); // http://foo.bar/2
+casper.run();
+</code></pre>
+
+<p>Also have a look at <a href="#phantom_Casper_back">Casper.back()</a>.</p>
 
 <h3 id="phantom_Casper_log"><code>Casper#log(String message[, String level, String space])</code></h3>
 
@@ -964,6 +994,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     <h4><code>phantom.Casper</code></h4>
     <ul>
         <li><a href="#phantom_Casper_options"><code>Casper.options</code></a></li>
+        <li><a href="#phantom_Casper_back"><code>Casper.back()</code></a></li>
         <li><a href="#phantom_Casper_base64encode"><code>Casper.base64encode()</code></a></li>
         <li><a href="#phantom_Casper_click"><code>Casper.click()</code></a></li>
         <li><a href="#phantom_Casper_capture"><code>Casper.capture()</code></a></li>
@@ -976,6 +1007,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_evaluate"><code>Casper.evaluate()</code></a></li>
         <li><a href="#phantom_Casper_evaluateOrDie"><code>Casper.evaluateOrDie()</code></a></li>
         <li><a href="#phantom_Casper_exit"><code>Casper.exit()</code></a></li>
+        <li><a href="#phantom_Casper_forward"><code>Casper.forward()</code></a></li>
         <li><a href="#phantom_Casper_log"><code>Casper.log()</code></a></li>
         <li><a href="#phantom_Casper_fill"><code>Casper.fill()</code></a></li>
         <li><a href="#phantom_Casper_getCurrentUrl"><code>Casper.getCurrentUrl()</code></a></li>
