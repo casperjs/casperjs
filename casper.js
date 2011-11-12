@@ -60,6 +60,7 @@
         this.currentHTTPStatus = 200;
         this.defaultWaitTimeout = 5000;
         this.delayedExecution = false;
+        this.history = [];
         this.loadInProgress = false;
         this.logLevels = ["debug", "info", "warning", "error"];
         this.logStyles = {
@@ -1577,12 +1578,16 @@
                 }
             }
             if (casper.options.clientScripts) {
-                for (var i = 0; i < casper.options.clientScripts.length; i++) {
-                    var script = casper.options.clientScripts[i];
-                    if (casper.page.injectJs(script)) {
-                        casper.log('Automatically injected ' + script + ' client side', "debug");
-                    } else {
-                        casper.log('Failed injecting ' + script + ' client side', "debug");
+                if (betterTypeOf(casper.options.clientScripts) !== "array") {
+                    casper.log("The clientScripts option must be an array", "error");
+                } else {
+                    for (var i = 0; i < casper.options.clientScripts.length; i++) {
+                        var script = casper.options.clientScripts[i];
+                        if (casper.page.injectJs(script)) {
+                            casper.log('Automatically injected ' + script + ' client side', "debug");
+                        } else {
+                            casper.log('Failed injecting ' + script + ' client side', "warning");
+                        }
                     }
                 }
             }
