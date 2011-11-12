@@ -89,6 +89,19 @@
      */
     phantom.Casper.prototype = {
         /**
+         * Go a step back in browser's history
+         *
+         * @return Casper
+         */
+        back: function() {
+            return this.then(function(self) {
+                self.evaluate(function() {
+                    history.back();
+                });
+            });
+        },
+
+        /**
          * Encodes a resource using the base64 algorithm synchroneously using
          * client-side XMLHttpRequest.
          *
@@ -462,6 +475,19 @@
                     selector: selector
                 });
             }
+        },
+
+        /**
+         * Go a step forward in browser's history
+         *
+         * @return Casper
+         */
+        forward: function(then) {
+            return this.then(function(self) {
+                self.evaluate(function() {
+                    history.forward();
+                });
+            });
         },
 
         /**
@@ -1250,8 +1276,8 @@
                 exporter.addSuccess("unknown", message);
             } else {
                 casper.echo(this.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-                this.comment('     got:      ' + testValue);
-                this.comment('     expected: ' + expected);
+                this.comment('   got:      ' + testValue);
+                this.comment('   expected: ' + expected);
                 this.testResults.failed++;
                 exporter.addFailure("unknown", message, "test failed; expected: " + expected + "; got: " + testValue, "assertEquals");
             }
@@ -1298,7 +1324,17 @@
          * @param  String   message    Test description
          */
         this.assertMatch = function(subject, pattern, message) {
-            return this.assert(pattern.test(subject), message);
+            if (pattern.test(subject)) {
+                casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
+                this.testResults.passed++;
+                exporter.addSuccess("unknown", message);
+            } else {
+                casper.echo(this.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
+                this.comment('   subject: ' + subject);
+                this.comment('   pattern: ' + pattern.toString());
+                this.testResults.failed++;
+                exporter.addFailure("unknown", message, "test failed; subject: " + subject + "; pattern: " + pattern.toString(), "assertMatch");
+            }
         };
 
         /**

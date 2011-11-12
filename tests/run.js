@@ -186,11 +186,12 @@ casper.then(function(self) {
 });
 
 // Casper.wait()
-var start = new Date().getTime();
-casper.wait(1000, function(self) {
+var waitStart;
+casper.then(function() {
+    waitStart = new Date().getTime();
+}).wait(1000, function(self) {
     self.test.comment('wait');
-    self.test.assert(new Date().getTime() - start > 1000, 'Casper.wait() can wait for a given amount of time');
-
+    self.test.assert(new Date().getTime() - waitStart > 1000, 'Casper.wait() can wait for a given amount of time');
     // Casper.waitFor()
     casper.thenOpen('tests/site/waitFor.html', function(self) {
         casper.test.comment('waitFor');
@@ -206,12 +207,29 @@ casper.wait(1000, function(self) {
     });
 });
 
+// History
+casper
+    .thenOpen('tests/site/page1.html')
+    .thenOpen('tests/site/page2.html')
+    .thenOpen('tests/site/page3.html')
+    .back()
+    .then(function(self) {
+        self.test.comment('navigating history backward');
+        self.test.assertMatch(self.getCurrentUrl(), /tests\/site\/page2\.html$/, 'Casper.back() can go back an history step');
+    })
+    .forward()
+    .then(function(self) {
+        self.test.comment('navigating history forward');
+        self.test.assertMatch(self.getCurrentUrl(), /tests\/site\/page3\.html$/, 'Casper.forward() can go forward an history step');
+    })
+;
+
 // run suite
 casper.run(function(self) {
+    casper.test.comment('history');
+    casper.test.assert(self.history.length > 0, 'Casper.history contains urls');
+    casper.test.assertMatch(self.history[0], /tests\/site\/index\.html$/, 'Casper.history has the correct first url');
     self.test.comment('logging, again');
     self.test.assertEquals(self.result.log.length, 3, 'log() logged messages');
-    self.test.comment('history');
-    self.test.assert(self.history.length > 0, 'Casper.history contains urls');
-    self.test.assertMatch(self.history[0], /tests\/site\/index\.html$/, 'Casper.history has the correct first url');
     self.test.renderResults(true, 0, save);
 });
