@@ -207,6 +207,12 @@ casper.then(function() {
     });
 });
 
+// Casper.getGlobal()
+casper.thenOpen('tests/site/global.html', function(self) {
+    self.test.comment('Casper.getGlobal()');
+    self.test.assertEquals(self.getGlobal('myGlobal'), 'awesome string', 'global retrieved')
+});
+
 // History
 casper
     .thenOpen('tests/site/page1.html')
