@@ -683,6 +683,19 @@ casper.run();
 });
 </code></pre>
 
+<h3 id="phantom_Casper_getGlobal"><code>Casper#getGlobal(String name)</code></h3>
+
+<p>Retrieves a global variable value within the remote DOM environment by its name.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function(self) {
+    self.log(self.getGlobal('innerWidth')); // 1024
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
 <h3 id="phantom_Casper_getTitle"><code>Casper#getTitle()</code></h3>
 
 <p>Retrieves current page title.</p>
@@ -1011,6 +1024,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_log"><code>Casper.log()</code></a></li>
         <li><a href="#phantom_Casper_fill"><code>Casper.fill()</code></a></li>
         <li><a href="#phantom_Casper_getCurrentUrl"><code>Casper.getCurrentUrl()</code></a></li>
+        <li><a href="#phantom_Casper_getGlobal"><code>Casper.getGlobal()</code></a></li>
         <li><a href="#phantom_Casper_getTitle"><code>Casper.getTitle()</code></a></li>
         <li><a href="#phantom_Casper_repeat"><code>Casper.repeat()</code></a></li>
         <li><a href="#phantom_Casper_run"><code>Casper.run()</code></a></li>
