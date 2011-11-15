@@ -491,7 +491,7 @@
         },
 
         /**
-         * Retrieve current document url.
+         * Retrieves current document url.
          *
          * @return String
          */
@@ -499,6 +499,18 @@
             return decodeURIComponent(this.evaluate(function() {
                 return document.location.href;
             }));
+        },
+
+        /**
+         * Retrieves global variable.
+         *
+         * @param  String  name  The name of the global variable to retrieve
+         * @return mixed
+         */
+        getGlobal: function(name) {
+            return this.evaluate(function() {
+                return window[window.__casper_params__.name];
+            }, {'name': name});
         },
 
         /**
