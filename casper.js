@@ -41,18 +41,19 @@
         }
         // default options
         this.defaults = {
-            clientScripts:     [],
-            faultTolerant:     true,
-            logLevel:          "error",
-            onDie:             null,
-            onError:           null,
-            onLoadError:       null,
-            onPageInitialized: null,
-            onTimeout:         null,
-            page:              null,
-            pageSettings:      { userAgent: DEFAULT_USER_AGENT },
-            timeout:           null,
-            verbose:           false
+            clientScripts:      [],
+            faultTolerant:      true,
+            logLevel:           "error",
+            httpStatusHandlers: {},
+            onDie:              null,
+            onError:            null,
+            onLoadError:        null,
+            onPageInitialized:  null,
+            onTimeout:          null,
+            page:               null,
+            pageSettings:       { userAgent: DEFAULT_USER_AGENT },
+            timeout:            null,
+            verbose:            false
         };
         // privates
         // local properties
@@ -1664,8 +1665,11 @@
             casper.loadInProgress = false;
         };
         page.onResourceReceived = function(resource) {
-            if (resource.url === casper.requestUrl) {
+            if (resource.url === casper.requestUrl && resource.stage === "start") {
                 casper.currentHTTPStatus = resource.status;
+                if (isType(casper.options.httpStatusHandlers, "object") && resource.status in casper.options.httpStatusHandlers) {
+                    casper.options.httpStatusHandlers[resource.status](casper, resource);
+                }
                 casper.currentUrl = resource.url;
             }
         };
