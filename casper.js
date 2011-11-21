@@ -48,6 +48,7 @@
             onError:           null,
             onLoadError:       null,
             onPageInitialized: null,
+            onTimeout:         null,
             page:              null,
             pageSettings:      { userAgent: DEFAULT_USER_AGENT },
             timeout:           null,
@@ -637,9 +638,13 @@
             }
             this.started = true;
             if (isType(this.options.timeout, "number") && this.options.timeout > 0) {
-                this.log("execution timeout set to " + this.options.timeout + 'ms', "info");
+                this.log("Execution timeout set to " + this.options.timeout + 'ms', "info");
                 setTimeout(function(self) {
-                    self.log("timeout of " + self.options.timeout + "ms exceeded", "info").exit();
+                    if (isType(self.options.onTimeout, "function")) {
+                        self.options.onTimeout(self);
+                    } else {
+                        self.die("Timeout of " + self.options.timeout + "ms exceeded, exiting.");
+                    }
                 }, this.options.timeout, this);
             }
             if (isType(this.options.onPageInitialized, "function")) {
