@@ -637,7 +637,7 @@
             }
             this.started = true;
             if (isType(this.options.timeout, "number") && this.options.timeout > 0) {
-                self.log("execution timeout set to " + this.options.timeout + 'ms', "info");
+                this.log("execution timeout set to " + this.options.timeout + 'ms', "info");
                 setTimeout(function(self) {
                     self.log("timeout of " + self.options.timeout + "ms exceeded", "info").exit();
                 }, this.options.timeout, this);
