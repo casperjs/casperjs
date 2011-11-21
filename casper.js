@@ -639,7 +639,9 @@
             if (isType(this.options.timeout, "number") && this.options.timeout > 0) {
                 this.log("execution timeout set to " + this.options.timeout + 'ms', "info");
                 setTimeout(function(self) {
-                    self.log("timeout of " + self.options.timeout + "ms exceeded", "info").exit();
+                    self.log("timeout of " + self.options.timeout + "ms exceeded", "info").die(
+                        'The server takes to much time to respond.'
+                    );
                 }, this.options.timeout, this);
             }
             if (isType(this.options.onPageInitialized, "function")) {
