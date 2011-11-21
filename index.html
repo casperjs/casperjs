@@ -222,43 +222,53 @@ casper.run (self) ->
             <td><code>clientScripts</code></td>
             <td><code>Array</code></td>
             <td><code>[]</code></td>
-            <td> A collection of script filepaths to include to every page loaded</td>
+            <td>A collection of script filepaths to include to every page loaded</td>
         </tr>
         <tr>
             <td><code>faultTolerant</code></td>
             <td><code>Boolean</code></td>
             <td><code>true</code></td>
-            <td> Catch and log exceptions when executing steps in a non-blocking fashion</td>
+            <td>Catch and log exceptions when executing steps in a non-blocking fashion</td>
+        </tr>
+        <tr>
+            <td><code>httpStatusHandlers</code></td>
+            <td><code>Object</code></td>
+            <td><code>{}</code></td>
+            <td>A javascript Object containing functions to call when a requested resource has
+                a given HTTP status code.
+                A <a href="https://github.com/n1k0/casperjs/blob/master/samples/statushandlers.js">dedicated sample</a>
+                is provided as an example.
+            </td>
         </tr>
         <tr>
             <td><code>logLevel</code></td>
             <td><code>String</code></td>
             <td><code>"error"</code></td>
-            <td> Logging level (see <code>logLevels</code> for available values)</td>
+            <td>Logging level (see <code>logLevels</code> for available values)</td>
         </tr>
         <tr>
             <td><code>onDie</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
-            <td> A function to be called when <code>Casper#die()</code> is called</td>
+            <td>A function to be called when <code>Casper#die()</code> is called</td>
         </tr>
         <tr>
             <td><code>onError</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
-            <td> A function to be called when an <code>"error"</code> level event occurs</td>
+            <td>A function to be called when an <code>"error"</code> level event occurs</td>
         </tr>
         <tr>
             <td><code>onLoadError</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
-            <td> A function to be called when a requested resource cannot be loaded</td>
+            <td>A function to be called when a requested resource cannot be loaded</td>
         </tr>
         <tr>
             <td><code>onPageInitialized</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
-            <td> A function to be called after <code>WebPage</code> instance has been initialized</td>
+            <td>A function to be called after <code>WebPage</code> instance has been initialized</td>
         </tr>
         <tr>
             <td><code>onTimeout</code></td>
@@ -273,25 +283,25 @@ casper.run (self) ->
             <td><code>page</code></td>
             <td><code>WebPage</code></td>
             <td><code>null</code></td>
-            <td> An existing <code>WebPage</code> instance</td>
+            <td>An existing <code>WebPage</code> instance</td>
         </tr>
         <tr>
             <td><code>pageSettings</code></td>
             <td><code>Object</code></td>
             <td><code>{}</code></td>
-            <td> PhantomJS's <code>WebPage</code> settings object</td>
+            <td>PhantomJS's <code>WebPage</code> settings object</td>
         </tr>
         <tr>
             <td><code>timeout</code></td>
             <td><code>Number</code></td>
             <td><code>null</code></td>
-            <td> Max timeout in milliseconds</td>
+            <td>Max timeout in milliseconds</td>
         </tr>
         <tr>
             <td><code>verbose</code></td>
             <td><code>Boolean</code></td>
             <td><code>false</code></td>
-            <td> Realtime output of log messages</td>
+            <td>Realtime output of log messages</td>
         </tr>
         <tr>
             <td><code>viewportSize</code></td>
@@ -1710,6 +1720,35 @@ function continueMyTests(self) {
 </p>
 
 <hr/>
+
+<h4 id="faq_http_statuses">How can I catch 404 errors?</h4>
+
+<p>
+    You can define your own HTTP status code handlers by using the <code>httpStatusHandlers</code> option
+    of the Casper object. You can also catch other HTTP status codes as well, as demonstrated below:
+</p>
+<pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
+    httpStatusHandlers: {
+        404: function(self, resource) {
+            self.echo('Resource at ' + resource.url + ' not found (404)');
+        },
+        500: function(self, resource) {
+            self.echo('Resource at ' + resource.url + ' gave a server error (500)');
+        }
+    },
+    verbose: true
+});
+
+casper.start('http://mywebsite/404', function(self) {
+    self.echo('We suppose this url return an HTTP 404');
+}).thenOpen('http://mywebsite/500', function(self) {
+    self.echo('We suppose this url return an HTTP 500');
+}).run(function(self) {
+    self.echo('Done.').exit();
+});
+</code></pre>
+
+<hr />
 
 <p>
     <span class="label notice">Contribute</span>
