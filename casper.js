@@ -292,7 +292,7 @@
          * @return Casper
          */
         each: function(array, fn) {
-            if (array.constructor !== Array) {
+            if (!isType(array, "array")) {
                 self.log("each() only works with arrays", "error");
                 return this;
             }
