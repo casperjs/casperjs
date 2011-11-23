@@ -228,6 +228,18 @@
         },
 
         /**
+         * Creates a step definition.
+         *
+         * @param  Function  fn       The step function to call
+         * @param  Object    options  Step options
+         * @return Function  The final step function
+         */
+        createStep: function(fn, options) {
+            fn.options = isType(options, "object") ? options : {};
+            return fn;
+        },
+
+        /**
          * Logs the HTML code of the current page.
          *
          * @return Casper
@@ -748,13 +760,11 @@
          * @see    Casper#open
          */
         thenOpen: function(location, then) {
-            var step = function(self) {
+            this.then(this.createStep(function(self) {
                 self.open(location);
-            };
-            step.options = {
+            }, {
                 skipLog: true
-            };
-            this.then(step);
+            }));
             return isType(then, "function") ? this.then(then) : this;
         },
 
