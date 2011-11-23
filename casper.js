@@ -235,6 +235,9 @@
          * @return Function  The final step function
          */
         createStep: function(fn, options) {
+            if (!isType(fn, "function")) {
+                throw "createStep(): a step definition must be a function";
+            }
             fn.options = isType(options, "object") ? options : {};
             return fn;
         },
