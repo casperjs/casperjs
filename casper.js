@@ -49,9 +49,11 @@
             onError:            null,
             onLoadError:        null,
             onPageInitialized:  null,
+            onStepTimeout:      null,
             onTimeout:          null,
             page:               null,
             pageSettings:       { userAgent: DEFAULT_USER_AGENT },
+            stepTimeout:        null,
             timeout:            null,
             verbose:            false
         };
@@ -187,23 +189,7 @@
         checkStep: function(self, onComplete) {
             var step = self.steps[self.step];
             if (!self.loadInProgress && isType(step, "function")) {
-                var curStepNum = self.step + 1;
-                var stepInfo   = "Step " + curStepNum + "/" + self.steps.length + ": ";
-                self.log(stepInfo + self.page.evaluate(function() {
-                    return document.location.href;
-                }) + ' (HTTP ' + self.currentHTTPStatus + ')', "info");
-                try {
-                    step(self);
-                } catch (e) {
-                    if (self.options.faultTolerant) {
-                        self.log("Step error: " + e, "error");
-                    } else {
-                        throw e;
-                    }
-                }
-                var time = new Date().getTime() - self.startTime;
-                self.log(stepInfo + "done in " + time + "ms.", "info");
-                self.step++;
+                self.runStep(step);
             }
             if (!isType(step, "function") && !self.delayedExecution) {
                 self.result.time = new Date().getTime() - self.startTime;
@@ -564,7 +550,8 @@
          * @param  String  location  The url to open
          * @return Casper
          */
-        open: function(location) {
+        open: function(location, options) {
+            options = isType(options, "object") ? options : {};
             this.requestUrl = location;
             this.page.open(location);
             return this;
@@ -600,6 +587,46 @@
             this.log("Running suite: " + this.steps.length + " step" + (this.steps.length > 1 ? "s" : ""), "info");
             this.checker = setInterval(this.checkStep, (time ? time: 250), this, onComplete);
             return this;
+        },
+
+        /**
+         * Runs a step.
+         *
+         * @param  Function  step
+         */
+        runStep: function(step) {
+            var skipLog = isType(step.options, "object") && step.options.skipLog === true;
+            var stepInfo = "Step " + (this.step + 1) + "/" + this.steps.length;
+            if (!skipLog) {
+                this.log(stepInfo + ' ' + this.getCurrentUrl() + ' (HTTP ' + this.currentHTTPStatus + ')', "info");
+            }
+            if (isType(this.options.stepTimeout, "number") && this.options.stepTimeout > 0) {
+                var stepTimeoutCheckInterval = setInterval(function(self, start, stepNum) {
+                    if (new Date().getTime() - start > self.options.stepTimeout) {
+                        if (self.step == stepNum + 1) {
+                            if (isType(self.options.onStepTimeout, "function")) {
+                                self.options.onStepTimeout(self);
+                            } else {
+                                self.die("Maximum step execution timeout exceeded for step " + stepNum, "error");
+                            }
+                        }
+                        clearInterval(stepTimeoutCheckInterval);
+                    }
+                }, this.options.stepTimeout, this, new Date().getTime(), this.step);
+            }
+            try {
+                step(this);
+            } catch (e) {
+                if (this.options.faultTolerant) {
+                    this.log("Step error: " + e, "error");
+                } else {
+                    throw e;
+                }
+            }
+            if (!skipLog) {
+                this.log(stepInfo + ": done in " + (new Date().getTime() - this.startTime) + "ms.", "info");
+            }
+            this.step++;
         },
 
         /**
@@ -721,9 +748,13 @@
          * @see    Casper#open
          */
         thenOpen: function(location, then) {
-            this.then(function(self) {
+            var step = function(self) {
                 self.open(location);
-            });
+            };
+            step.options = {
+                skipLog: true
+            };
+            this.then(step);
             return isType(then, "function") ? this.then(then) : this;
         },
 
