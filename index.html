@@ -271,6 +271,15 @@ casper.run (self) ->
             <td>A function to be called after <code>WebPage</code> instance has been initialized</td>
         </tr>
         <tr>
+            <td><code>onStepTimeout</code></td>
+            <td><code>function</code></td>
+            <td><code>null</code></td>
+            <td>
+                A function to be executed when a step function execution time exceeds
+                the value of the <code>stepTimeout</code> option, if any has been set.
+            </td>
+        </tr>
+        <tr>
             <td><code>onTimeout</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
@@ -290,6 +299,17 @@ casper.run (self) ->
             <td><code>Object</code></td>
             <td><code>{}</code></td>
             <td>PhantomJS's <code>WebPage</code> settings object</td>
+        </tr>
+        <tr>
+            <td><code>stepTimeout</code></td>
+            <td><code>Number</code></td>
+            <td><code>null</code></td>
+            <td>
+                Max step timeout in milliseconds; when set, every defined step function will
+                have to execute before this timeout value has been reached. You can define
+                the <code>onStepTimeout()</code> callback to catch such a case. By default,
+                the script will <code>die()</code> with an error message.
+            </td>
         </tr>
         <tr>
             <td><code>timeout</code></td>
