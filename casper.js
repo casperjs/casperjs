@@ -200,7 +200,7 @@
                 clearInterval(self.checker);
                 if (isType(onComplete, "function")) {
                     try {
-                        onComplete(self);
+                        onComplete.call(self, self);
                     } catch (err) {
                         self.log("could not complete final step: " + err, "error");
                     }
@@ -634,7 +634,7 @@
                 }, this.options.stepTimeout, this, new Date().getTime(), this.step);
             }
             try {
-                stepResult = step(this);
+                stepResult = step.call(this, this);
             } catch (e) {
                 if (this.options.faultTolerant) {
                     this.log("Step error: " + e, "error");
