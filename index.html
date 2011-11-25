@@ -168,24 +168,24 @@ getLinks = ->
 links = []
 casper = new phantom.Casper()
 
-casper.start "http://google.fr/", (self) ->
+casper.start "http://google.fr/", ->
   "search for 'casperjs' from google form"
-  self.fill "form[name=f]", q: "casperjs", true
+  @fill "form[name=f]", q: "casperjs", true
 
-casper.then (self) ->
+casper.then ->
   "aggregate results for the 'casperjs' search"
-  links = self.evaluate(getLinks)
+  links = @evaluate getLinks
   "search for 'phantomjs' from google form"
-  self.fill "form[name=f]", q: "phantomjs", true
+  @fill "form[name=f]", q: "phantomjs", true
 
-casper.then (self) ->
+casper.then ->
   "concat results for the 'phantomjs' search"
-  links = links.concat(self.evaluate(getLinks))
+  links = links.concat @evaluate(getLinks)
 
-casper.run (self) ->
+casper.run ->
   "display results"
-  self.echo links.length + " links found:"
-  self.echo(" - " + links.join("\n - ")).exit()
+  @echo links.length + " links found:"
+  @echo(" - " + links.join("\n - ")).exit()
 </code></pre>
             <p>Just remember to suffix your script with the <code>.coffee</code> extension.</p>
         </section>
