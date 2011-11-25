@@ -41,22 +41,24 @@
         }
         // default options
         this.defaults = {
-            clientScripts:      [],
-            faultTolerant:      true,
-            logLevel:           "error",
-            httpStatusHandlers: {},
-            onDie:              null,
-            onError:            null,
-            onLoadError:        null,
-            onPageInitialized:  null,
-            onStepComplete:     null,
-            onStepTimeout:      null,
-            onTimeout:          null,
-            page:               null,
-            pageSettings:       { userAgent: DEFAULT_USER_AGENT },
-            stepTimeout:        null,
-            timeout:            null,
-            verbose:            false
+            clientScripts:       [],
+            faultTolerant:       true,
+            logLevel:            "error",
+            httpStatusHandlers:  {},
+            onDie:               null,
+            onError:             null,
+            onLoadError:         null,
+            onPageInitialized:   null,
+            onResourceReceived:  null,
+            onResourceRequested: null,
+            onStepComplete:      null,
+            onStepTimeout:       null,
+            onTimeout:           null,
+            page:                null,
+            pageSettings:        { userAgent: DEFAULT_USER_AGENT },
+            stepTimeout:         null,
+            timeout:             null,
+            verbose:             false
         };
         // privates
         // local properties
@@ -1714,12 +1716,20 @@
             casper.loadInProgress = false;
         };
         page.onResourceReceived = function(resource) {
+            if (isType(casper.options.onResourceReceived, "function")) {
+                casper.options.onResourceReceived(casper, resource);
+            }
             if (resource.url === casper.requestUrl && resource.stage === "start") {
                 casper.currentHTTPStatus = resource.status;
                 if (isType(casper.options.httpStatusHandlers, "object") && resource.status in casper.options.httpStatusHandlers) {
                     casper.options.httpStatusHandlers[resource.status](casper, resource);
                 }
                 casper.currentUrl = resource.url;
+            }
+        };
+        page.onResourceRequested = function(request) {
+            if (isType(casper.options.onResourceRequested, "function")) {
+                casper.options.onResourceRequested(casper, request);
             }
         };
         return page;

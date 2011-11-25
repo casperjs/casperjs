@@ -216,12 +216,31 @@ casper.thenOpen('tests/site/global.html', function(self) {
 // Casper.options.onStepComplete
 casper.then(function(self) {
     self.options.onStepComplete = function(self, stepResult) {
-        self.test.comment('Casper.options.onStepComplete()')
+        self.test.comment('Casper.options.onStepComplete()');
         self.test.assertEquals(stepResult, 'ok', 'Casper.options.onStepComplete() is called on step complete');
         self.options.onStepComplete = null;
     };
     return 'ok';
 });
+
+// Casper.options.onResourceRequested & Casper.options.onResourceReceived
+casper.then(function(self) {
+    self.options.onResourceReceived = function(self, resource) {
+        self.test.comment('Casper.options.onResourceReceived()');
+        self.test.assertType(resource, 'object', 'Casper.options.onResourceReceived() retrieve a resource object');
+        self.test.assert('status' in resource, 'Casper.options.onResourceReceived() retrieve a valid resource object')
+        self.options.onResourceReceived = null;
+    };
+    self.options.onResourceRequested = function(self, request) {
+        self.test.comment('Casper.options.onResourceRequested()');
+        self.test.assertType(request, 'object', 'Casper.options.onResourceRequested() retrieve a request object');
+        self.test.assert('method' in request, 'Casper.options.onResourceRequested() retrieve a valid request object')
+        self.options.onResourceRequested = null;
+    };
+    self.thenOpen('tests/site/page1.html');
+});
+
+
 
 // History
 casper
