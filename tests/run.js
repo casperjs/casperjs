@@ -213,6 +213,15 @@ casper.thenOpen('tests/site/global.html', function(self) {
     self.test.assertEquals(self.getGlobal('myGlobal'), 'awesome string', 'global retrieved')
 });
 
+// Casper.options.onStepComplete
+casper.then(function(self) {
+    self.options.onStepComplete = function(self, stepResult) {
+        self.test.assertEquals(stepResult, 'ok', 'Casper.options.onStepComplete() is called on step complete');
+        self.options.onStepComplete = null;
+    };
+    return 'ok';
+});
+
 // History
 casper
     .thenOpen('tests/site/page1.html')

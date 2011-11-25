@@ -49,6 +49,7 @@
             onError:            null,
             onLoadError:        null,
             onPageInitialized:  null,
+            onStepComplete:     null,
             onStepTimeout:      null,
             onTimeout:          null,
             page:               null,
@@ -612,6 +613,7 @@
         runStep: function(step) {
             var skipLog = isType(step.options, "object") && step.options.skipLog === true;
             var stepInfo = "Step " + (this.step + 1) + "/" + this.steps.length;
+            var stepResult;
             if (!skipLog) {
                 this.log(stepInfo + ' ' + this.getCurrentUrl() + ' (HTTP ' + this.currentHTTPStatus + ')', "info");
             }
@@ -630,13 +632,16 @@
                 }, this.options.stepTimeout, this, new Date().getTime(), this.step);
             }
             try {
-                step(this);
+                stepResult = step(this);
             } catch (e) {
                 if (this.options.faultTolerant) {
                     this.log("Step error: " + e, "error");
                 } else {
                     throw e;
                 }
+            }
+            if (isType(this.options.onStepComplete, "function")) {
+                this.options.onStepComplete(this, stepResult);
             }
             if (!skipLog) {
                 this.log(stepInfo + ": done in " + (new Date().getTime() - this.startTime) + "ms.", "info");
