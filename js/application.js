@@ -73,6 +73,12 @@ $(document).ready(function() {
         repo: 'casperjs',
         branch: 'master',
         avatarSize: 40,
-        last: 15
+        last: 15,
+        template: '<tr class="github-commit">' +
+            '<td><img class="avatar" /></td>' +
+            '<td><a class="user"/></td>' +
+            '<td><a class="message" /></td>' +
+            '<td><span class="date" /></td>' +
+        '</tr>'
     });
 });
