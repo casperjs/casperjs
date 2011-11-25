@@ -26,28 +26,28 @@ casper.options.verbose = false;
 casper.log('foo', 'info');
 casper.test.assert(casper.result.log.some(function(e) {
     return e.message === 'foo' && e.level === 'info';
-}), 'log() adds a log entry');
+}), 'Casper.log() adds a log entry');
 casper.options.logLevel = oldLevel;
 casper.options.verbose = true;
 
 // Casper#start()
 casper.test.comment('navigating');
 casper.start('tests/site/index.html', function(self) {
-    self.test.assert(self.exists('a') && !self.exists('chucknorriz'), 'exists() can check if an element exists');
-    self.test.assertTitle('CasperJS test index', 'start() casper can start itself an open an url');
+    self.test.assert(self.exists('a') && !self.exists('chucknorriz'), 'Casper.exists() can check if an element exists');
+    self.test.assertTitle('CasperJS test index', 'Casper.start() casper can start itself an open an url');
     self.test.assertEval(function() {
         return typeof(__utils__) === "object";
-    }, 'start() injects ClientUtils instance within remote DOM');
+    }, 'Casper.start() injects ClientUtils instance within remote DOM');
     self.test.comment('fetching');
-    self.test.assertEquals(self.fetchText('ul li'), 'onetwothree', 'fetchText() can retrieves text contents');
+    self.test.assertEquals(self.fetchText('ul li'), 'onetwothree', 'Casper.fetchText() can retrieves text contents');
     self.test.comment('encoding');
     var image = self.base64encode('file://' + phantom.libraryPath + '/site/images/phantom.png');
-    self.test.assertEquals(image.length, 6160, 'base64encode() can retrieve base64 contents');
+    self.test.assertEquals(image.length, 6160, 'Casper.base64encode() can retrieve base64 contents');
     self.test.comment('clicking');
     self.click('a[href="test.html"]');
 });
 
-casper.test.assert(casper.steps.length === 1, 'start() can add a new navigation step');
+casper.test.assert(casper.steps.length === 1, 'Casper.start() can add a new navigation step');
 
 // Casper.viewport()
 casper.test.comment('viewport');
@@ -59,11 +59,11 @@ casper.test.assertRaises(casper.viewport, ['a', 'b'], 'Casper.viewport() validat
 // Casper#then()
 casper.test.comment('then');
 casper.then(function(self) {
-    self.test.assertTitle('CasperJS test target', 'click() casper can click on a text link and react when it is loaded 1/2');
+    self.test.assertTitle('CasperJS test target', 'Casper.click() casper can click on a text link and react when it is loaded 1/2');
     self.click('a[href="form.html"]');
 });
 
-casper.test.assert(casper.steps.length === 2, 'then() adds a new navigation step');
+casper.test.assert(casper.steps.length === 2, 'Casper.then() adds a new navigation step');
 
 // Casper#capture()
 casper.test.comment('capturing');
@@ -101,7 +101,7 @@ casper.then(function(self) {
 
 // Casper#fill()
 casper.then(function(self) {
-    self.test.assertTitle('CasperJS test form', 'click() casper can click on a text link and react when it is loaded 2/2');
+    self.test.assertTitle('CasperJS test form', 'Casper.click() casper can click on a text link and react when it is loaded 2/2');
     self.test.comment('filling a form');
     self.fill('form[action="result.html"]', {
         email:   'chuck@norris.com',
@@ -113,57 +113,57 @@ casper.then(function(self) {
     });
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="email"]').value;
-    }, 'chuck@norris.com', 'fill() can fill an input[type=text] form field');
+    }, 'chuck@norris.com', 'Casper.fill() can fill an input[type=text] form field');
     self.test.assertEvalEquals(function() {
         return document.querySelector('textarea[name="content"]').value;
-    }, 'Am watching thou', 'fill() can fill a textarea form field');
+    }, 'Am watching thou', 'Casper.fill() can fill a textarea form field');
     self.test.assertEvalEquals(function() {
         return document.querySelector('select[name="topic"]').value;
-    }, 'bar', 'fill() can pick a value from a select form field');
+    }, 'bar', 'Casper.fill() can pick a value from a select form field');
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="check"]').checked;
-    }, true, 'fill() can check a form checkbox');
+    }, true, 'Casper.fill() can check a form checkbox');
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="choice"][value="no"]').checked;
-    }, true, 'fill() can check a form radio button 1/2');
+    }, true, 'Casper.fill() can check a form radio button 1/2');
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="choice"][value="yes"]').checked;
-    }, false, 'fill() can check a form radio button 2/2');
+    }, false, 'Casper.fill() can check a form radio button 2/2');
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="file"]').files.length === 1;
-    }, true, 'fill() can select a file to upload');
+    }, true, 'Casper.fill() can select a file to upload');
     self.click('input[type="submit"]');
 });
 
 // Casper#click()
 casper.then(function(self) {
-    self.test.assertTitle('CasperJS test form result', 'click() casper can click on a submit button');
-    self.test.assertUrlMatch(/email=chuck@norris.com/, 'fill() input[type=email] field was submitted');
-    self.test.assertUrlMatch(/content=Am\+watching\+thou/, 'fill() textarea field was submitted');
-    self.test.assertUrlMatch(/check=on/, 'fill() input[type=checkbox] field was submitted');
-    self.test.assertUrlMatch(/choice=no/, 'fill() input[type=radio] field was submitted');
-    self.test.assertUrlMatch(/topic=bar/, 'fill() select field was submitted');
+    self.test.assertTitle('CasperJS test form result', 'Casper.click() casper can click on a submit button');
+    self.test.assertUrlMatch(/email=chuck@norris.com/, 'Casper.fill() input[type=email] field was submitted');
+    self.test.assertUrlMatch(/content=Am\+watching\+thou/, 'Casper.fill() textarea field was submitted');
+    self.test.assertUrlMatch(/check=on/, 'Casper.fill() input[type=checkbox] field was submitted');
+    self.test.assertUrlMatch(/choice=no/, 'Casper.fill() input[type=radio] field was submitted');
+    self.test.assertUrlMatch(/topic=bar/, 'Casper.fill() select field was submitted');
 });
 
 // Casper#thenClick()
 casper.thenClick('body a', function(self) {
     self.test.comment('Casper.thenClick()');
-    self.test.assertTitle('CasperJS test index', 'thenClick() casper can add a step for clicking a link');
+    self.test.assertTitle('CasperJS test index', 'Casper.thenClick() casper can add a step for clicking a link');
 });
 
 // Casper#each()
 casper.test.comment('each');
 casper.each([1, 2, 3], function(self, item, i) {
-    self.test.assertEquals(i, item - 1, 'each() passes a contextualized index');
+    self.test.assertEquals(i, item - 1, 'Casper.each() passes a contextualized index');
 });
 
 // Casper.XUnitExporter
 casper.test.comment('phantom.Casper.XUnitExporter');
 xunit = new phantom.Casper.XUnitExporter();
 xunit.addSuccess('foo', 'bar');
-casper.test.assertMatch(xunit.getXML(), /<testcase classname="foo" name="bar"/, 'addSuccess() adds a successful testcase');
+casper.test.assertMatch(xunit.getXML(), /<testcase classname="foo" name="bar"/, 'XUnitExporter.addSuccess() adds a successful testcase');
 xunit.addFailure('bar', 'baz', 'wrong', 'chucknorriz');
-casper.test.assertMatch(xunit.getXML(), /<testcase classname="bar" name="baz"><failure type="chucknorriz">wrong/, 'addFailure() adds a failed testcase');
+casper.test.assertMatch(xunit.getXML(), /<testcase classname="bar" name="baz"><failure type="chucknorriz">wrong/, 'XUnitExporter.addFailure() adds a failed testcase');
 
 // Casper.ClientUtils.log()
 casper.then(function(self) {
@@ -210,12 +210,13 @@ casper.then(function() {
 // Casper.getGlobal()
 casper.thenOpen('tests/site/global.html', function(self) {
     self.test.comment('Casper.getGlobal()');
-    self.test.assertEquals(self.getGlobal('myGlobal'), 'awesome string', 'global retrieved')
+    self.test.assertEquals(self.getGlobal('myGlobal'), 'awesome string', 'Casper.getGlobal() can retrieve a remote global variable')
 });
 
 // Casper.options.onStepComplete
 casper.then(function(self) {
     self.options.onStepComplete = function(self, stepResult) {
+        self.test.comment('Casper.options.onStepComplete()')
         self.test.assertEquals(stepResult, 'ok', 'Casper.options.onStepComplete() is called on step complete');
         self.options.onStepComplete = null;
     };
@@ -245,6 +246,6 @@ casper.run(function(self) {
     casper.test.assert(self.history.length > 0, 'Casper.history contains urls');
     casper.test.assertMatch(self.history[0], /tests\/site\/index\.html$/, 'Casper.history has the correct first url');
     self.test.comment('logging, again');
-    self.test.assertEquals(self.result.log.length, 3, 'log() logged messages');
+    self.test.assertEquals(self.result.log.length, 3, 'Casper.log() logged messages');
     self.test.renderResults(true, 0, save);
 });
