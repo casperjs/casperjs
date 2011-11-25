@@ -67,4 +67,12 @@ $(document).ready(function() {
             $(initials).each(position);
         }
     })(window);
+    // github news
+    $('#commits-master').githubInfoWidget({
+        user: 'n1k0',
+        repo: 'casperjs',
+        branch: 'master',
+        avatarSize: 40,
+        last: 15
+    });
 });
