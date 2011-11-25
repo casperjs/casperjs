@@ -271,6 +271,24 @@ casper.run (self) ->
             <td>A function to be called after <code>WebPage</code> instance has been initialized</td>
         </tr>
         <tr>
+            <td><code>onResourceReceived</code></td>
+            <td><code>function</code></td>
+            <td><code>null</code></td>
+            <td>
+                Proxy method for PhantomJS' <code>WebPage#onResourceReceived()</code> callback,
+                but the current Casper instance is passed as first argument.
+            </td>
+        </tr>
+        <tr>
+            <td><code>onResourceRequested</code></td>
+            <td><code>function</code></td>
+            <td><code>null</code></td>
+            <td>
+                Proxy method for PhantomJS' <code>WebPage#onResourceRequested()</code> callback,
+                but the current Casper instance is passed as first argument.
+            </td>
+        </tr>
+        <tr>
             <td><code>onStepComplete</code></td>
             <td><code>function</code></td>
             <td><code>null</code></td>
