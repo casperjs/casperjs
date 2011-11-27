@@ -1,10 +1,11 @@
-# a small subset of the run.js written in coffeescript
+# A small subset of the run.js written in coffeescript
 
 phantom.injectJs "casper.js"
-casper = new phantom.Casper(
-  faultTolerant: false
-  verbose: true
-)
+
+casper = new phantom.Casper
+    faultTolerant: false
+    verbose: true
+    onStepComplete: -> @test.comment "step completed"
 
 casper.start "tests/site/index.html", ->
   @test.assertTitle "CasperJS test index", "Casper.start() casper can start itself an open an url"
@@ -17,5 +18,5 @@ casper.test.comment "then"
 casper.then ->
   @test.assertTitle "CasperJS test target", "Casper.click() casper can click on a text link"
   @click "a[href=\"form.html\"]"
-  
+
 casper.run()

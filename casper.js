@@ -282,7 +282,7 @@
             message = isType(message, "string") && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
             this.log(message, "error");
             if (isType(this.options.onDie, "function")) {
-                this.options.onDie(this, message, status);
+                this.options.onDie.call(this, this, message, status);
             }
             return this.exit(Number(status) > 0 ? Number(status) : 1);
         },
@@ -542,7 +542,7 @@
             level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
             space = space ? space : "phantom";
             if (level === "error" && isType(this.options.onError, "function")) {
-                this.options.onError(this, message, space);
+                this.options.onError.call(this, this, message, space);
             }
             if (this.logLevels.indexOf(level) < this.logLevels.indexOf(this.options.logLevel)) {
                 return this; // skip logging
@@ -624,7 +624,7 @@
                     if (new Date().getTime() - start > self.options.stepTimeout) {
                         if (self.step == stepNum + 1) {
                             if (isType(self.options.onStepTimeout, "function")) {
-                                self.options.onStepTimeout(self);
+                                self.options.onStepTimeout.call(self, self);
                             } else {
                                 self.die("Maximum step execution timeout exceeded for step " + stepNum, "error");
                             }
@@ -643,7 +643,7 @@
                 }
             }
             if (isType(this.options.onStepComplete, "function")) {
-                this.options.onStepComplete(this, stepResult);
+                this.options.onStepComplete.call(this, this, stepResult);
             }
             if (!skipLog) {
                 this.log(stepInfo + ": done in " + (new Date().getTime() - this.startTime) + "ms.", "info");
@@ -691,7 +691,7 @@
                 this.log("Execution timeout set to " + this.options.timeout + 'ms', "info");
                 setTimeout(function(self) {
                     if (isType(self.options.onTimeout, "function")) {
-                        self.options.onTimeout(self);
+                        self.options.onTimeout.call(self, self);
                     } else {
                         self.die("Timeout of " + self.options.timeout + "ms exceeded, exiting.");
                     }
@@ -699,7 +699,7 @@
             }
             if (isType(this.options.onPageInitialized, "function")) {
                 this.log("Post-configuring WebPage instance", "debug");
-                this.options.onPageInitialized(this.page);
+                this.options.onPageInitialized.call(this, this.page);
             }
             if (isType(location, "string") && location.length > 0) {
                 if (isType(then, "function")) {
@@ -871,7 +871,7 @@
                     if (!condition) {
                         self.log("Casper.waitFor() timeout", "warning");
                         if (isType(onTimeout, "function")) {
-                            onTimeout(self);
+                            onTimeout.call(self, self);
                         } else {
                             self.die("Expired timeout, exiting.", "error");
                         }
@@ -1681,7 +1681,7 @@
                 message += ': ' + casper.requestUrl;
                 casper.log(message, "warning");
                 if (isType(casper.options.onLoadError, "function")) {
-                    casper.options.onLoadError(casper, casper.requestUrl, status);
+                    casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
                 }
             }
             if (casper.options.clientScripts) {
@@ -1717,7 +1717,7 @@
         };
         page.onResourceReceived = function(resource) {
             if (isType(casper.options.onResourceReceived, "function")) {
-                casper.options.onResourceReceived(casper, resource);
+                casper.options.onResourceReceived.call(casper, casper, resource);
             }
             if (resource.url === casper.requestUrl && resource.stage === "start") {
                 casper.currentHTTPStatus = resource.status;
@@ -1729,7 +1729,7 @@
         };
         page.onResourceRequested = function(request) {
             if (isType(casper.options.onResourceRequested, "function")) {
-                casper.options.onResourceRequested(casper, request);
+                casper.options.onResourceRequested.call(casper, casper, request);
             }
         };
         return page;
