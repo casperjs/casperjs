@@ -65,6 +65,7 @@
         this.checker = null;
         this.colorizer = new phantom.Casper.Colorizer();
         this.currentUrl = 'about:blank';
+        this.resources = [];
         this.currentHTTPStatus = 200;
         this.defaultWaitTimeout = 5000;
         this.delayedExecution = false;
@@ -1465,6 +1466,16 @@
         this.assertUrlMatch = function(pattern, message) {
             return this.assertMatch(casper.getCurrentUrl(), pattern, message);
         };
+        
+        /**
+         * Asserts that the current page has a resource that matches the provided test
+         * 
+         * @param Function  test      A test function that is called with every response
+         * @param  String   message    Test description
+         */
+        this.assertResourceExists = function(test, message) {
+            return this.assert(casper.resources.some(test), message);
+        }
 
         /**
          * Render a colorized output. Basically a proxy method for
@@ -1670,6 +1681,7 @@
             casper.log(msg, level, "remote");
         };
         page.onLoadStarted = function() {
+            casper.resources = [];
             casper.loadInProgress = true;
         };
         page.onLoadFinished = function(status) {
@@ -1718,6 +1730,9 @@
         page.onResourceReceived = function(resource) {
             if (isType(casper.options.onResourceReceived, "function")) {
                 casper.options.onResourceReceived(casper, resource);
+            }
+            if (resource.stage === "start") {
+              casper.resources.push(resource);
             }
             if (resource.url === casper.requestUrl && resource.stage === "start") {
                 casper.currentHTTPStatus = resource.status;
