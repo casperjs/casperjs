@@ -1186,7 +1186,21 @@
                             field.value = value;
                             break;
                         case "checkbox":
-                            field.setAttribute('checked', value ? "checked" : "");
+                            if (fields) {
+                                var values = value;
+                                if (!Array.isArray(values)) {
+                                    values = [values];
+                                }
+                                Array.prototype.forEach.call(fields, function(e) {
+                                    if (values.indexOf(e.value) !== -1) {
+                                        e.setAttribute('checked', 'checked');
+                                    } else {
+                                        e.removeAttribute('checked');
+                                    }
+                                });
+                            } else {
+                                field.setAttribute('checked', value ? "checked" : "");
+                            }
                             break;
                         case "file":
                             throw {
