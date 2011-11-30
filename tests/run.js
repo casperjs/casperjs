@@ -259,6 +259,16 @@ casper
     })
 ;
 
+// Casper.options.onAlert()
+casper.then(function(self) {
+    self.options.onAlert = function(self, message) {
+        self.test.assertEquals(message, 'plop', 'Casper.options.onAlert() can intercept an alert message');
+    };
+});
+casper.thenOpen('tests/site/alert.html').click('button', function(self) {
+    self.options.onAlert = null;
+});
+
 // run suite
 casper.run(function(self) {
     casper.test.comment('history');

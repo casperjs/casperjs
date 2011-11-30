@@ -45,6 +45,7 @@
             faultTolerant:       true,
             logLevel:            "error",
             httpStatusHandlers:  {},
+            onAlert:             null,
             onDie:               null,
             onError:             null,
             onLoadError:         null,
@@ -1661,6 +1662,12 @@
         } else {
             page = require('webpage').create();
         }
+        page.onAlert = function(message) {
+            casper.log('[alert] ' + message, "info", "remote");
+            if (isType(casper.options.onAlert, "function")) {
+                casper.options.onAlert.call(casper, casper, message);
+            }
+        };
         page.onConsoleMessage = function(msg) {
             var level = "info", test = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
             if (test && test.length === 3) {
