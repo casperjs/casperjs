@@ -104,12 +104,13 @@ casper.then(function(self) {
     self.test.assertTitle('CasperJS test form', 'Casper.click() casper can click on a text link and react when it is loaded 2/2');
     self.test.comment('filling a form');
     self.fill('form[action="result.html"]', {
-        email:   'chuck@norris.com',
-        content: 'Am watching thou',
-        check:   true,
-        choice:  'no',
-        topic:   'bar',
-        file:    phantom.libraryPath + '/README.md'
+        email:         'chuck@norris.com',
+        content:       'Am watching thou',
+        check:         true,
+        choice:        'no',
+        topic:         'bar',
+        file:          phantom.libraryPath + '/README.md',
+        'checklist[]': ['1', '3']
     });
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="email"]').value;
@@ -132,6 +133,11 @@ casper.then(function(self) {
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="file"]').files.length === 1;
     }, true, 'Casper.fill() can select a file to upload');
+    self.test.assertEvalEquals(function() {
+        return document.querySelector('input[name="checklist[]"][value="1"]').checked
+            && !document.querySelector('input[name="checklist[]"][value="2"]').checked
+            && document.querySelector('input[name="checklist[]"][value="3"]').checked
+    }, true, 'Casper.fill() can fill a list of checkboxes');
     self.click('input[type="submit"]');
 });
 

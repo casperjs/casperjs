@@ -1061,6 +1061,7 @@
                             path: err.path
                         });
                     } else {
+                        this.log(err, "error");
                         throw err;
                     }
                 }
@@ -1187,20 +1188,16 @@
                             field.value = value;
                             break;
                         case "checkbox":
-                            if (fields) {
+                            if (fields.length > 1) {
                                 var values = value;
                                 if (!Array.isArray(values)) {
                                     values = [values];
                                 }
-                                Array.prototype.forEach.call(fields, function(e) {
-                                    if (values.indexOf(e.value) !== -1) {
-                                        e.setAttribute('checked', 'checked');
-                                    } else {
-                                        e.removeAttribute('checked');
-                                    }
+                                Array.prototype.forEach.call(fields, function(f) {
+                                    f.checked = values.indexOf(f.value) !== -1 ? true : false;
                                 });
                             } else {
-                                field.setAttribute('checked', value ? "checked" : "");
+                                field.checked = value ? true : false;
                             }
                             break;
                         case "file":
