@@ -1070,6 +1070,32 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     <a href="#faq_wait">dedicated FAQ entry</a>.
 </p>
 
+<h3 id="phantom_Casper_waitWhileSelector"><code>Casper#waitWhileSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
+
+<p>
+    Waits until an element matching the provided CSS3 selector does not exist in remote DOM to process a next step.
+    Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
+</p>
+
+<p><strong>Example:</strong></p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/', function(self) {
+    self.waitWhileSelector('.selector', function(self) {
+        self.echo('.selector is no more!');
+    });
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
+<p>
+    <span class="label warning">Warning</span>
+    Casper won't <em>halt</em> the script execution but will rather be waiting
+    a given amount of time to process further. This is a slight difference, but
+    plenty understanding it can save you some hair pulling. See the
+    <a href="#faq_wait">dedicated FAQ entry</a>.
+</p>
+
 </div>
 <div class="span4 apitoc">
     <h3>Quick reference</h3>
@@ -1106,6 +1132,7 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_wait"><code>Casper.wait()</code></a></li>
         <li><a href="#phantom_Casper_waitFor"><code>Casper.waitFor()</code></a></li>
         <li><a href="#phantom_Casper_waitForSelector"><code>Casper.waitForSelector()</code></a></li>
+        <li><a href="#phantom_Casper_waitWhileSelector"><code>Casper.waitWhileSelector()</code></a></li>
     </ul>
 </div>
 </div>
