@@ -104,12 +104,13 @@ casper.then(function(self) {
     self.test.assertTitle('CasperJS test form', 'Casper.click() casper can click on a text link and react when it is loaded 2/2');
     self.test.comment('filling a form');
     self.fill('form[action="result.html"]', {
-        email:   'chuck@norris.com',
-        content: 'Am watching thou',
-        check:   true,
-        choice:  'no',
-        topic:   'bar',
-        file:    phantom.libraryPath + '/README.md'
+        email:         'chuck@norris.com',
+        content:       'Am watching thou',
+        check:         true,
+        choice:        'no',
+        topic:         'bar',
+        file:          phantom.libraryPath + '/README.md',
+        'checklist[]': ['1', '3']
     });
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="email"]').value;
@@ -132,6 +133,11 @@ casper.then(function(self) {
     self.test.assertEvalEquals(function() {
         return document.querySelector('input[name="file"]').files.length === 1;
     }, true, 'Casper.fill() can select a file to upload');
+    self.test.assertEvalEquals(function() {
+        return (document.querySelector('input[name="checklist[]"][value="1"]').checked &&
+               !document.querySelector('input[name="checklist[]"][value="2"]').checked &&
+                document.querySelector('input[name="checklist[]"][value="3"]').checked);
+    }, true, 'Casper.fill() can fill a list of checkboxes');
     self.click('input[type="submit"]');
 });
 
@@ -210,7 +216,8 @@ casper.then(function() {
 // Casper.getGlobal()
 casper.thenOpen('tests/site/global.html', function(self) {
     self.test.comment('Casper.getGlobal()');
-    self.test.assertEquals(self.getGlobal('myGlobal'), 'awesome string', 'Casper.getGlobal() can retrieve a remote global variable')
+    self.test.assertEquals(self.getGlobal('myGlobal'), 'awesome string', 'Casper.getGlobal() can retrieve a remote global variable');
+    self.test.assertRaises(self.getGlobal, ['myUnencodableGlobal'], 'Casper.getGlobal() does not fail trying to encode an unencodable global');
 });
 
 // Casper.options.onStepComplete
@@ -228,13 +235,13 @@ casper.then(function(self) {
     self.options.onResourceReceived = function(self, resource) {
         self.test.comment('Casper.options.onResourceReceived()');
         self.test.assertType(resource, 'object', 'Casper.options.onResourceReceived() retrieve a resource object');
-        self.test.assert('status' in resource, 'Casper.options.onResourceReceived() retrieve a valid resource object')
+        self.test.assert('status' in resource, 'Casper.options.onResourceReceived() retrieve a valid resource object');
         self.options.onResourceReceived = null;
     };
     self.options.onResourceRequested = function(self, request) {
         self.test.comment('Casper.options.onResourceRequested()');
         self.test.assertType(request, 'object', 'Casper.options.onResourceRequested() retrieve a request object');
-        self.test.assert('method' in request, 'Casper.options.onResourceRequested() retrieve a valid request object')
+        self.test.assert('method' in request, 'Casper.options.onResourceRequested() retrieve a valid request object');
         self.options.onResourceRequested = null;
     };
     self.thenOpen('tests/site/page1.html');
@@ -258,6 +265,16 @@ casper
         self.test.assertMatch(self.getCurrentUrl(), /tests\/site\/page3\.html$/, 'Casper.forward() can go forward an history step');
     })
 ;
+
+// Casper.options.onAlert()
+casper.then(function(self) {
+    self.options.onAlert = function(self, message) {
+        self.test.assertEquals(message, 'plop', 'Casper.options.onAlert() can intercept an alert message');
+    };
+});
+casper.thenOpen('tests/site/alert.html').click('button', function(self) {
+    self.options.onAlert = null;
+});
 
 // run suite
 casper.run(function(self) {

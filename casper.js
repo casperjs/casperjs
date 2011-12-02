@@ -45,6 +45,7 @@
             faultTolerant:       true,
             logLevel:            "error",
             httpStatusHandlers:  {},
+            onAlert:             null,
             onDie:               null,
             onError:             null,
             onLoadError:         null,
@@ -515,9 +516,21 @@
          * @return mixed
          */
         getGlobal: function(name) {
-            return this.evaluate(function() {
-                return window[window.__casper_params__.name];
+            var result = this.evaluate(function() {
+                var name = window.__casper_params__.name;
+                var result = {};
+                try {
+                    result.value = JSON.stringify(window[name]);
+                } catch (e) {
+                    result.error = 'Unable to JSON encode window.' + name + ': ' + e;
+                }
+                return result;
             }, {'name': name});
+            if (result.error) {
+                throw result.error;
+            } else {
+                return JSON.parse(result.value);
+            }
         },
 
         /**
@@ -904,6 +917,23 @@
             return this.waitFor(function(self) {
                 return self.exists(selector);
             }, then, onTimeout, timeout);
+        },
+
+        /**
+         * Waits until an element matching the provided CSS3 selector does not exist in
+         * remote DOM to process a next step.
+         *
+         * @param  String    selector   A CSS3 selector
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+         * @return Casper
+         */
+        waitWhileSelector: function(selector, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return ! self.exists(selector);
+            }, then, onTimeout, timeout);
         }
     };
 
@@ -1061,6 +1091,7 @@
                             path: err.path
                         });
                     } else {
+                        this.log(err, "error");
                         throw err;
                     }
                 }
@@ -1187,7 +1218,17 @@
                             field.value = value;
                             break;
                         case "checkbox":
-                            field.setAttribute('checked', value ? "checked" : "");
+                            if (fields.length > 1) {
+                                var values = value;
+                                if (!Array.isArray(values)) {
+                                    values = [values];
+                                }
+                                Array.prototype.forEach.call(fields, function(f) {
+                                    f.checked = values.indexOf(f.value) !== -1 ? true : false;
+                                });
+                            } else {
+                                field.checked = value ? true : false;
+                            }
                             break;
                         case "file":
                             throw {
@@ -1672,6 +1713,12 @@
         } else {
             page = require('webpage').create();
         }
+        page.onAlert = function(message) {
+            casper.log('[alert] ' + message, "info", "remote");
+            if (isType(casper.options.onAlert, "function")) {
+                casper.options.onAlert.call(casper, casper, message);
+            }
+        };
         page.onConsoleMessage = function(msg) {
             var level = "info", test = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
             if (test && test.length === 3) {
