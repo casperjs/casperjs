@@ -19,4 +19,5 @@ casper.then ->
   @test.assertTitle "CasperJS test target", "Casper.click() casper can click on a text link"
   @click "a[href=\"form.html\"]"
 
+
 casper.run()

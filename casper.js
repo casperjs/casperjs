@@ -401,6 +401,24 @@
                 selector: selector
             });
         },
+        
+        
+        /**
+         * Checks if a given resource was loaded by the remote page.
+         *
+         * @param  Function/String  test  A test function or string
+         * @return Boolean
+         */
+        resourceExists: function (test) {
+          if (isType(test, "string")) {
+              testFn = function (res) {
+                return res.url.match(test);
+              }
+          } else {
+            testFn = test;
+          }
+          return this.resources.some(testFn);
+        },
 
         /**
          * Exits phantom.
@@ -934,7 +952,24 @@
             return this.waitFor(function(self) {
                 return ! self.exists(selector);
             }, then, onTimeout, timeout);
+        },
+        
+        /**
+         * Waits until a given resource is loaded
+         *
+         * @param  String/Function    test   A function to test if the resource exists. A string will be matched against the resources url.
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+         * @return Casper
+         */
+        waitForResource: function(test, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return self.resourceExists(test);
+            }, then, onTimeout, timeout);
         }
+        
     };
 
     /**
@@ -1511,11 +1546,11 @@
         /**
          * Asserts that the current page has a resource that matches the provided test
          * 
-         * @param Function  test      A test function that is called with every response
+         * @param Function/String  test      A test function that is called with every response
          * @param  String   message    Test description
          */
         this.assertResourceExists = function(test, message) {
-            return this.assert(casper.resources.some(test), message);
+            return this.assert(casper.resourceExists(test), message);
         }
 
         /**
