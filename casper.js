@@ -515,9 +515,21 @@
          * @return mixed
          */
         getGlobal: function(name) {
-            return this.evaluate(function() {
-                return window[window.__casper_params__.name];
+            var result = this.evaluate(function() {
+                var name = window.__casper_params__.name;
+                var result = {};
+                try {
+                    result.value = JSON.stringify(window[name]);
+                } catch (e) {
+                    result.error = 'Unable to JSON encode window.' + name + ': ' + e;
+                }
+                return result;
             }, {'name': name});
+            if (result.error) {
+                throw result.error;
+            } else {
+                return JSON.parse(result.value);
+            }
         },
 
         /**
