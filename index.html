@@ -25,12 +25,12 @@
                 <li><a href="#quickstart">Quickstart</a></li>
                 <li><a href="#apidoc">API documentation</a></li>
                 <li><a href="#client-side-utils">Client-side utils</a></li>
+                <li><a href="#logging">Logging</a></li>
                 <li><a href="#extending">Extending</a></li>
                 <li><a href="#testing">Functional testing</a></li>
                 <li><a href="#faq"><acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
                 <li><a href="#activity">Activity</a></li>
                 <li><a href="#download">Download</a></li>
-                <li><a href="#license">License</a></li>
             </ul>
         </div>
     </div>
@@ -244,7 +244,7 @@ casper.run ->
             <td><code>logLevel</code></td>
             <td><code>String</code></td>
             <td><code>"error"</code></td>
-            <td>Logging level (see <code>logLevels</code> for available values)</td>
+            <td>Logging level (see the <a href="#logging">logging section</a> for more informations)</td>
         </tr>
         <tr>
             <td><code>onAlert</code></td>
@@ -1590,6 +1590,44 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
     </ul>
 </div>
 </div>
+</section>
+
+<section id="logging">
+<div class="page-header">
+    <h1>Logging</h1>
+</div>
+
+<p>
+    CasperJS allows logging using its <a href="#phantom_Casper_log"><code>log()</code></a>
+    method and these standard event levels:
+</p>
+
+<ul>
+    <li><code>debug</code>
+    <li><code>info</code>
+    <li><code>warning</code>
+    <li><code>error</code>
+</ul>
+
+<p>Note that you're free to use these levels at your own discretion; the only difference
+if you print the log will be the way they're rendered, using fancy colors:</p>
+
+<pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
+    verbose: true,
+    logLevel: 'debug'
+})
+casper.log('this is a debug message', 'debug');
+casper.log('and an informative one', 'warning');
+casper.log('and a warning', 'warning');
+casper.log('and an error', 'error');
+casper.exit();
+<p></p>
+
+
+<p>This will give the following output on your shell:</p>
+
+![log output](images/log.png)
+
 </section>
 
 <section id="extending">
