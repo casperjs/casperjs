@@ -1609,8 +1609,43 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
     <li><code>error</code>
 </ul>
 
-<p>Note that you're free to use these levels at your own discretion; the only difference
-if you print the log will be the way they're rendered, using fancy colors:</p>
+<p>Sample use:</p>
+
+<pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper();
+casper.log('plop', 'debug');
+casper.log('plip', 'warning');
+</code></pre>
+
+<p>Now, there are two things to distinguish: log <em>storage</em> and log <em>display</em>;
+by default CasperJS won't print the logs to the standard output. In order to do so, you must
+enable the <code>verbose</code> Casper option:</p>
+
+<pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
+    verbose: true
+});
+</code></pre>
+
+<p>Also, by default Casper is configured to filter logging which is under the <code>error</code>
+level; you can override this setting by configuring the <code>logLevel</code> option:</p>
+
+<pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
+    verbose: true,
+    logLevel: 'debug'
+});
+</code></pre>
+
+<p>You can also dump a JSON log of your Casper suite just by rendering the contents of the
+<code>Casper.logs</code> property:</p>
+
+<pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
+// ...
+casper.run(function(self) {
+    self.echo(JSON.stringify(self.logs, null, 4)).exit();
+});
+</code></pre>
+
+<p>Last, if you print log messages to the standard output using the <code>verbose</code> option,
+you'll get some fancy colors:</p>
 
 <pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
     verbose: true,
@@ -1623,8 +1658,7 @@ casper.log('and an error', 'error');
 casper.exit();
 </code></pre>
 
-
-<p>This will give the following output on your shell:</p>
+<p>This will give the following output:</p>
 
 <p><img src="images/logoutput.png"></p>
 
