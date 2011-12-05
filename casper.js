@@ -69,7 +69,7 @@
         this.resources = [];
         this.currentHTTPStatus = 200;
         this.defaultWaitTimeout = 5000;
-        this.delayedExecution = false;
+        this.pendingWait = false;
         this.history = [];
         this.loadInProgress = false;
         this.logLevels = ["debug", "info", "warning", "error"];
@@ -193,10 +193,12 @@
          */
         checkStep: function(self, onComplete) {
             var step = self.steps[self.step];
-            if (!self.loadInProgress && isType(step, "function")) {
-                self.runStep(step);
+            if (self.pendingWait || self.loadInProgress) {
+              return;
             }
-            if (!isType(step, "function") && !self.delayedExecution) {
+            if (isType(step, "function")) {
+                self.runStep(step);
+            } else {
                 self.result.time = new Date().getTime() - self.startTime;
                 self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
                 clearInterval(self.checker);
@@ -759,6 +761,14 @@
             this.steps.push(step);
             return this;
         },
+        
+        waitStart: function() {
+          this.pendingWait = true;
+        },
+        
+        waitDone: function() {
+          this.pendingWait = false;
+        },
 
         /**
          * Adds a new navigation step for clicking on a provided link selector
@@ -860,18 +870,14 @@
                 this.die("wait() a step definition must be a function");
             }
             return this.then(function(self) {
-                self.delayedExecution = true;
-                var start = new Date().getTime();
-                var interval = setInterval(function(self, then) {
-                    if (new Date().getTime() - start > timeout) {
-                        self.delayedExecution = false;
-                        self.log("wait() finished wating for " + timeout + "ms.", "info");
-                        if (then) {
-                            self.then(then);
-                        }
-                        clearInterval(interval);
-                    }
-                }, 100, self, then);
+                self.waitStart();
+                setTimeout(function() {
+                  self.log("wait() finished wating for " + timeout + "ms.", "info");
+                  if (then) {
+                    then.call(self, self);
+                  }
+                  self.waitDone();
+                }, timeout);
             });
         },
 
@@ -892,32 +898,33 @@
             if (then && !isType(then, "function")) {
                 this.die("waitFor() next step definition must be a function");
             }
-            this.delayedExecution = true;
-            var start = new Date().getTime();
-            var condition = false;
-            var interval = setInterval(function(self, testFx, onTimeout) {
-                if ((new Date().getTime() - start < timeout) && !condition) {
-                    condition = testFx(self);
-                } else {
-                    self.delayedExecution = false;
-                    if (!condition) {
-                        self.log("Casper.waitFor() timeout", "warning");
-                        if (isType(onTimeout, "function")) {
-                            onTimeout.call(self, self);
-                        } else {
-                            self.die("Expired timeout, exiting.", "error");
-                        }
-                        clearInterval(interval);
-                    } else {
-                        self.log("waitFor() finished in " + (new Date().getTime() - start) + "ms.", "info");
-                        if (then) {
-                            self.then(then);
-                        }
-                        clearInterval(interval);
-                    }
-                }
-            }, 100, this, testFx, onTimeout);
-            return this;
+            return this.then(function(self) {
+              self.waitStart();
+              var start = new Date().getTime();
+              var condition = false;
+              var interval = setInterval(function(self, testFx, onTimeout) {
+                  if ((new Date().getTime() - start < timeout) && !condition) {
+                      condition = testFx(self);
+                  } else {
+                      self.waitDone();
+                      if (!condition) {
+                          self.log("Casper.waitFor() timeout", "warning");
+                          if (isType(onTimeout, "function")) {
+                              onTimeout.call(self, self);
+                          } else {
+                              self.die("Expired timeout, exiting.", "error");
+                          }
+                          clearInterval(interval);
+                      } else {
+                          self.log("waitFor() finished in " + (new Date().getTime() - start) + "ms.", "info");
+                          if (then) {
+                              self.then(then);
+                          }
+                          clearInterval(interval);
+                      }
+                  }
+              }, 100, self, testFx, onTimeout);
+            });
         },
 
         /**
