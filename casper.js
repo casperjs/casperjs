@@ -71,8 +71,9 @@
         this.delayedExecution = false;
         this.history = [];
         this.loadInProgress = false;
-        this.logLevels = ["debug", "info", "warning", "error"];
+        this.logLevels = ["verbose", "debug", "info", "warning", "error"];
         this.logStyles = {
+            verbose: 'INFO',
             debug:   'INFO',
             info:    'PARAMETER',
             warning: 'COMMENT',
@@ -1766,6 +1767,13 @@
             if (isType(casper.options.onResourceReceived, "function")) {
                 casper.options.onResourceReceived.call(casper, casper, resource);
             }
+            var message = 'received : '+resource.url+', '+resource.status+', '+resource.statusText+', '+resource.redirectURL+', '+resource.bodySize+', ';
+            var idx = null;
+            for (idx in resource.headers)
+            {
+                message += '['+resource.headers[idx].name+','+resource.headers[idx].value+'] ';
+            }
+            casper.log(message, "verbose");
             if (resource.url === casper.requestUrl && resource.stage === "start") {
                 casper.currentHTTPStatus = resource.status;
                 if (isType(casper.options.httpStatusHandlers, "object") && resource.status in casper.options.httpStatusHandlers) {
