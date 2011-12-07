@@ -402,6 +402,22 @@
         },
 
         /**
+         * Checks if an element matching the provided CSS3 selector is visible
+         * current page DOM by checking that offsetWidth and offsetHeight are
+         * both non-zero.
+         *
+         * @param  String  selector  A CSS3 selector
+         * @return Boolean
+         */
+        visible: function(selector) {
+            return this.evaluate(function() {
+                return __utils__.visible(__casper_params__.selector);
+            }, {
+                selector: selector
+            });
+        },
+
+        /**
          * Exits phantom.
          *
          * @param  Number  status  Status
@@ -919,8 +935,8 @@
         },
 
         /**
-         * Waits until an element matching the provided CSS3 selector does not exist in
-         * remote DOM to process a next step.
+         * Waits until an element matching the provided CSS3 selector does not
+         * exist in the remote DOM to process a next step.
          *
          * @param  String    selector   A CSS3 selector
          * @param  Function  then       The next step to perform (optional)
@@ -932,6 +948,40 @@
             timeout = timeout ? timeout : this.defaultWaitTimeout;
             return this.waitFor(function(self) {
                 return ! self.exists(selector);
+            }, then, onTimeout, timeout);
+        },
+
+        /**
+         * Waits until an element matching the provided CSS3 selector is
+         * visible in the remote DOM to process a next step.
+         *
+         * @param  String    selector   A CSS3 selector
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+         * @return Casper
+         */
+        waitUntilVisible: function(selector, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return self.visible(selector);
+            }, then, onTimeout, timeout);
+        },
+
+        /**
+         * Waits until an element matching the provided CSS3 selector is no
+         * longer visible in remote DOM to process a next step.
+         *
+         * @param  String    selector   A CSS3 selector
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+         * @return Casper
+         */
+        waitWhileVisible: function(selector, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return ! self.visible(selector);
             }, then, onTimeout, timeout);
         }
     };
@@ -1021,6 +1071,21 @@
         this.exists = function(selector) {
             try {
                 return document.querySelectorAll(selector).length > 0;
+            } catch (e) {
+                return false;
+            }
+        };
+
+        /**
+         * Checks if a given DOM element is visible in remote page.
+         *
+         * @param  String  selector  CSS3 selector
+         * @return Boolean
+         */
+        this.visible = function(selector) {
+            try {
+                var el = document.querySelector(selector);
+                return el && el.offsetHeight > 0 && el.offsetWidth > 0;
             } catch (e) {
                 return false;
             }
