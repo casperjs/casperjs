@@ -947,7 +947,7 @@
         waitWhileSelector: function(selector, then, onTimeout, timeout) {
             timeout = timeout ? timeout : this.defaultWaitTimeout;
             return this.waitFor(function(self) {
-                return ! self.exists(selector);
+                return !self.exists(selector);
             }, then, onTimeout, timeout);
         },
 
@@ -981,7 +981,7 @@
         waitWhileVisible: function(selector, then, onTimeout, timeout) {
             timeout = timeout ? timeout : this.defaultWaitTimeout;
             return this.waitFor(function(self) {
-                return ! self.visible(selector);
+                return !self.visible(selector);
             }, then, onTimeout, timeout);
         }
     };
@@ -1085,7 +1085,7 @@
         this.visible = function(selector) {
             try {
                 var el = document.querySelector(selector);
-                return el && el.offsetHeight > 0 && el.offsetWidth > 0;
+                return el && el.style.visibility !== 'hidden' && el.offsetHeight > 0 && el.offsetWidth > 0;
             } catch (e) {
                 return false;
             }
