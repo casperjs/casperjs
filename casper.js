@@ -71,6 +71,7 @@
         this.delayedExecution = false;
         this.history = [];
         this.loadInProgress = false;
+        this.logFormats = {};
         this.logLevels = ["debug", "info", "warning", "error"];
         this.logStyles = {
             debug:   'INFO',
@@ -576,16 +577,22 @@
             if (this.logLevels.indexOf(level) < this.logLevels.indexOf(this.options.logLevel)) {
                 return this; // skip logging
             }
-            if (this.options.verbose) {
-                var levelStr = this.colorizer.colorize('[' + level + ']', this.logStyles[level]);
-                this.echo(levelStr + ' [' + space + '] ' + message); // direct output
-            }
-            this.result.log.push({
+            var entry = {
                 level:   level,
                 space:   space,
                 message: message,
                 date:    new Date().toString()
-            });
+            };
+            if (level in this.logFormats && isType(this.logFormats[level], "function")) {
+                message = this.logFormats[level](message, level, space);
+            } else {
+                var levelStr = this.colorizer.colorize('[' + level + ']', this.logStyles[level]);
+                message = levelStr + ' [' + space + '] ' + message;
+            }
+            if (this.options.verbose) {
+                this.echo(message); // direct output
+            }
+            this.result.log.push(entry);
             return this;
         },
 
