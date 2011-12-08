@@ -78,7 +78,7 @@ fs.remove(testFile);
 
 // Casper#evaluate()
 casper.then(function(self) {
-    self.test.comment('evaluating');
+    self.test.comment('Casper.evaluate()');
     var params = {
         "boolean true":  true,
         "boolean false": false,
@@ -92,7 +92,7 @@ casper.then(function(self) {
         return __casper_params__;
     }, params);
     self.test.assertType(casperParams, "object", 'Casper.evaluate() exposes parameters in a dedicated object');
-    self.test.assertEquals(Object.keys(casperParams).length, 7, 'Casper.evaluate() exposes parameters object has the correct length');
+    self.test.assertEquals(Object.keys(casperParams).length, 7, 'Casper.evaluate() object containing parameters has the correct length');
     for (var param in casperParams) {
         self.test.assertEquals(JSON.stringify(casperParams[param]), JSON.stringify(params[param]), 'Casper.evaluate() can pass a ' + param);
         self.test.assertEquals(typeof casperParams[param], typeof params[param], 'Casper.evaluate() preserves the ' + param + ' type');
