@@ -445,8 +445,8 @@ casper.start('http://www.google.fr/', function(self) {
 <p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code>casper.start('http://google.fr/')
-    .thenEvaluate(function() {
-        document.querySelector('input[name="q"]').setAttribute('value', '%term%');
+    .thenEvaluate(function(term) {
+        document.querySelector('input[name="q"]').setAttribute('value', term);
         document.querySelector('form[name="f"]').submit();
     }, {
         term: 'CasperJS'
@@ -588,32 +588,19 @@ casper.run(function(self) {
 
 <p>
     Evaluates an expression in the page context, a bit like what PhantomJS' <code>WebPage#evaluate</code>
-    does, but can also replace values by their placeholer names.
+    does, but can also handle passed arguments if you define their context:
 </p>
 
 <p><strong>Example:</strong></p>
 
-<pre class="prettyprint"><code class="javascript">casper.evaluate(function() {
-    document.querySelector('#username').value = '%username%';
-    document.querySelector('#password').value = '%password%';
+<pre class="prettyprint"><code class="javascript">casper.evaluate(function(username, password) {
+    document.querySelector('#username').value = username;
+    document.querySelector('#password').value = password;
     document.querySelector('#submit').click();
 }, {
     username: 'sheldon.cooper',
     password: 'b4z1ng4'
 });
-</code></pre>
-
-As an alternative, CasperJS also injects a <code>__casper_params__</code> Object
-instance containing all the parameters you passed:
-
-<pre class="prettyprint"><code class="javascript">casper.evaluate(function() {
-    document.querySelector('#username').value = __casper_params__.username;
-    document.querySelector('#password').value = __casper_params__.password;
-    document.querySelector('#submit').click();
-}, {
-    username: 'sheldon.cooper',
-    password: 'b4z1ng4'
-})
 </code></pre>
 
 <p>
@@ -910,8 +897,8 @@ casper.run(function() {
 <p><strong>Example:</strong></p>
 
 <pre class="prettyprint"><code class="javascript">// Querying for "Chuck Norris" on Google
-casper.start('http://google.fr/').thenEvaluate(function() {
-    document.querySelector('input[name="q"]').setAttribute('value', '%term%');
+casper.start('http://google.fr/').thenEvaluate(function(term) {
+    document.querySelector('input[name="q"]').setAttribute('value', term);
     document.querySelector('form[name="f"]').submit();
 }, {
     term: 'Chuck Norris'
@@ -1718,13 +1705,13 @@ casper.exit();
 
 phantom.Casper.extend({
     fetchTexts: function(selector) {
-        return this.evaluate(function() {
-            var elements = document.querySelectorAll('%selector%');
+        return this.evaluate(function(selector) {
+            var elements = document.querySelectorAll(selector);
             return Array.prototype.map.call(elements, function(e) {
                 return e.innerText;
             });
         }, {
-            selector: selector.replace("'", "\'")
+            selector: selector
         });
     },
 
