@@ -47,7 +47,7 @@ casper.start('tests/site/index.html', function(self) {
     self.click('a[href="test.html"]');
 });
 
-casper.test.assert(casper.steps.length === 1, 'Casper.start() can add a new navigation step');
+casper.test.assertEquals(casper.steps.length, 2, 'Casper.start() can add a new navigation step');
 
 // Casper.viewport()
 casper.test.comment('viewport');
@@ -63,7 +63,7 @@ casper.then(function(self) {
     self.click('a[href="form.html"]');
 });
 
-casper.test.assert(casper.steps.length === 2, 'Casper.then() adds a new navigation step');
+casper.test.assert(casper.steps.length === 3, 'Casper.then() adds a new navigation step');
 
 // Casper#capture()
 casper.test.comment('capturing');
