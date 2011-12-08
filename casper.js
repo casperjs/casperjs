@@ -703,11 +703,9 @@
                 this.options.onPageInitialized.call(this, this.page);
             }
             if (isType(location, "string") && location.length > 0) {
-                if (isType(then, "function")) {
-                    return this.open(location).then(then);
-                } else {
-                    return this.open(location);
-                }
+                return this.thenOpen(location, isType(then, "function") ? then : this.createStep(function(self) {
+                    self.log("start page is loaded", "debug");
+                }));
             }
             return this;
         },
