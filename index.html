@@ -971,6 +971,23 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     by default.
 </p>
 
+<h3 id="phantom_Casper_visible"><code>Casper#visible(String selector)</code></h3>
+
+<p>
+    Checks if the DOM element matching the provided CSS3 selector is visible in remote page.
+</p>
+
+<p><strong>Example:</strong></p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('http://google.com/', function(self) {
+    if (self.visible('#hplogo')) {
+        self.echo("I can see the logo");
+    } else {
+        self.echo("I can't see the logo");
+    }
+});
+</code></pre>
+
 <h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
 <p>Pause steps suite execution for a given amount of time, and optionnaly execute a step on done.</p>
@@ -1096,6 +1113,20 @@ casper.start('http://google.fr/').thenEvaluate(function() {
     <a href="#faq_wait">dedicated FAQ entry</a>.
 </p>
 
+<h3 id="phantom_Casper_waitUntilVisible"><code>Casper#waitUntilVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
+
+<p>
+    Waits until an element matching the provided CSS3 selector is visible
+    in the remote DOM to process a next step. Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
+</p>
+
+<h3 id="phantom_Casper_waitWhileVisible"><code>Casper#waitWhileVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
+
+<p>
+    Waits until an element matching the provided CSS3 selector is no longer visible
+    in remote DOM to process a next step. Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
+</p>
+
 </div>
 <div class="span4 apitoc">
     <h3>Quick reference</h3>
@@ -1129,10 +1160,12 @@ casper.start('http://google.fr/').thenEvaluate(function() {
         <li><a href="#phantom_Casper_thenOpen"><code>Casper.thenOpen()</code></a></li>
         <li><a href="#phantom_Casper_thenOpenAndEvaluate"><code>Casper.thenOpenAndEvaluate()</code></a></li>
         <li><a href="#phantom_Casper_viewport"><code>Casper.viewport()</code></a></li>
+        <li><a href="#phantom_Casper_visible"><code>Casper.visible()</code></a></li>
         <li><a href="#phantom_Casper_wait"><code>Casper.wait()</code></a></li>
         <li><a href="#phantom_Casper_waitFor"><code>Casper.waitFor()</code></a></li>
         <li><a href="#phantom_Casper_waitForSelector"><code>Casper.waitForSelector()</code></a></li>
-        <li><a href="#phantom_Casper_waitWhileSelector"><code>Casper.waitWhileSelector()</code></a></li>
+        <li><a href="#phantom_Casper_waitUntilVisible"><code>Casper.waitUntilVisible()</code></a></li>
+        <li><a href="#phantom_Casper_waitWhileVisible"><code>Casper.waitWhileVisible()</code></a></li>
     </ul>
 </div>
 </div>
