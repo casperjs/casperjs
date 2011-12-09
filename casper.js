@@ -1379,6 +1379,21 @@
         var PASS = this.options.PASS || "PASS";
         var FAIL = this.options.FAIL || "FAIL";
 
+        function compareArrays(a, b) {
+            if (a.length !== b.length) {
+                return false;
+            }
+            a.forEach(function(item, i) {
+                if (isType(item, "array") && !compareArrays(item, b[i])) {
+                    return false;
+                }
+                if (item !== b[i]) {
+                    return false;
+                }
+            });
+            return true;
+        }
+
         // properties
         this.testResults = {
             passed: 0,
@@ -1410,12 +1425,23 @@
         /**
          * Asserts that two values are strictly equals.
          *
-         * @param  Boolean  testValue  The value to test
-         * @param  Boolean  expected   The expected value
-         * @param  String   message    Test description
+         * @param  Mixed   testValue  The value to test
+         * @param  Mixed   expected   The expected value
+         * @param  String  message    Test description
          */
         this.assertEquals = function(testValue, expected, message) {
-            if (expected === testValue) {
+            var result;
+            if (typeof testValue !== typeof expected) {
+                result = false;
+            } else if (isType(testValue, "array")) {
+                result = compareArrays(testValue, expected);
+            } else if (isType(testValue, "object") && isType(expected, "object")) {
+                // comparing objects equality in Javascript is UTOPIA
+                throw "Tester.assertEquals() cannot compare objects, sorry";
+            } else {
+                result = expected === testValue;
+            }
+            if (result === true) {
                 casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
                 this.testResults.passed++;
                 exporter.addSuccess("unknown", message);
