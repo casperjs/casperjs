@@ -18,6 +18,22 @@ phantom.args.forEach(function(arg) {
     }
 });
 
+// phantom.Casper.FunctionArgsInjector
+casper.test.comment('FunctionArgsInjector');
+function createInjector(fn, values) {
+    return new phantom.Casper.FunctionArgsInjector(fn, values);
+}
+var testFn = function(a, b) { return a + b; };
+var injector = createInjector(testFn);
+var extract = injector.extract(testFn);
+casper.test.assertType(extract, "object", 'FunctionArgsInjector.extract() returns an object');
+casper.test.assertEquals(extract.name, null, 'FunctionArgsInjector.extract() process function name as expected');
+casper.test.assertEquals(extract.body, 'return a + b;', 'FunctionArgsInjector.extract() process function body as expected');
+casper.test.assertEquals(extract.args, ['a', 'b'], 'FunctionArgsInjector.extract() process function args as expected');
+var processed;
+eval('processed = ' + injector.process({ a: 1, b: 2 }));
+casper.test.assertEquals(processed(), 3, 'FunctionArgsInjector.process() proccessed the function correctly');
+
 // Casper#log()
 casper.test.comment('logging');
 var oldLevel = casper.options.logLevel;
