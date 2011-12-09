@@ -342,7 +342,7 @@
          */
         evaluate: function(fn, context) {
             context = isType(context, "object") ? context : {};
-            var newFn = new phantom.Casper.FunctionArgsInjector(fn, context).process();
+            var newFn = new phantom.Casper.FunctionArgsInjector(fn).process(context);
             return this.page.evaluate(newFn);
         },
 
@@ -1647,9 +1647,11 @@
      * Function argument injector.
      *
      */
-    phantom.Casper.FunctionArgsInjector = function(fn, values) {
+    phantom.Casper.FunctionArgsInjector = function(fn) {
+        if (!isType(fn, "function")) {
+            throw "FunctionArgsInjector() can only process functions";
+        }
         this.fn = fn;
-        this.values = typeof values === "object" ? values : {};
 
         this.extract = function(fn) {
             var match = /^function\s?(\w+)?\s?\((.*)\)\s?\{([\s\S]*)\}/i.exec(fn.toString().trim());
@@ -1667,9 +1669,12 @@
             }
         };
 
-        this.process = function() {
+        this.process = function(values) {
             var fnObj = this.extract(this.fn);
-            var inject = this.getArgsInjectionString(fnObj.args, this.values);
+            if (!isType(fnObj, "object")) {
+                throw "Unable to process function " + this.fn.toString();
+            }
+            var inject = this.getArgsInjectionString(fnObj.args, values);
             return 'function ' + (fnObj.name || '') + '(){' + inject + fnObj.body + '}';
         };
 
