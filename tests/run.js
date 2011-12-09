@@ -47,7 +47,7 @@ casper.start('tests/site/index.html', function(self) {
     self.click('a[href="test.html"]');
 });
 
-casper.test.assert(casper.steps.length === 1, 'Casper.start() can add a new navigation step');
+casper.test.assertEquals(casper.steps.length, 2, 'Casper.start() can add a new navigation step');
 
 // Casper.viewport()
 casper.test.comment('viewport');
@@ -63,7 +63,7 @@ casper.then(function(self) {
     self.click('a[href="form.html"]');
 });
 
-casper.test.assert(casper.steps.length === 2, 'Casper.then() adds a new navigation step');
+casper.test.assert(casper.steps.length === 3, 'Casper.then() adds a new navigation step');
 
 // Casper#capture()
 casper.test.comment('capturing');
@@ -78,7 +78,7 @@ fs.remove(testFile);
 
 // Casper#evaluate()
 casper.then(function(self) {
-    self.test.comment('evaluating');
+    self.test.comment('Casper.evaluate()');
     var params = {
         "boolean true":  true,
         "boolean false": false,
@@ -92,7 +92,7 @@ casper.then(function(self) {
         return __casper_params__;
     }, params);
     self.test.assertType(casperParams, "object", 'Casper.evaluate() exposes parameters in a dedicated object');
-    self.test.assertEquals(Object.keys(casperParams).length, 7, 'Casper.evaluate() exposes parameters object has the correct length');
+    self.test.assertEquals(Object.keys(casperParams).length, 7, 'Casper.evaluate() object containing parameters has the correct length');
     for (var param in casperParams) {
         self.test.assertEquals(JSON.stringify(casperParams[param]), JSON.stringify(params[param]), 'Casper.evaluate() can pass a ' + param);
         self.test.assertEquals(typeof casperParams[param], typeof params[param], 'Casper.evaluate() preserves the ' + param + ' type');
@@ -247,7 +247,20 @@ casper.then(function(self) {
     self.thenOpen('tests/site/page1.html');
 });
 
-
+// Casper.visible()
+casper.thenOpen('tests/site/visible.html', function(self) {
+    self.test.comment('Casper.visible()');
+    self.test.assert(self.visible('#img1'), 'Casper.visible() can detect if an element is visible');
+    self.test.assert(!self.visible('#img2'), 'Casper.visible() can detect if an element is invisible');
+    self.test.assert(!self.visible('#img3'), 'Casper.visible() can detect if an element is invisible');
+    self.waitWhileVisible('#img1', function(self) {
+        self.test.comment('Casper.waitWhileVisible()');
+        self.test.pass('Casper.waitWhileVisible() can wait while an element is visible');
+    }, function(self) {
+        self.test.comment('Casper.waitWhileVisible()');
+        self.test.fail('Casper.waitWhileVisible() can wait while an element is visible');
+    }, 2000);
+});
 
 // History
 casper

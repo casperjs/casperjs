@@ -72,6 +72,7 @@
         this.pendingWait = false;
         this.history = [];
         this.loadInProgress = false;
+        this.logFormats = {};
         this.logLevels = ["debug", "info", "warning", "error"];
         this.logStyles = {
             debug:   'INFO',
@@ -120,11 +121,9 @@
          * @return string       Base64 encoded result
          */
         base64encode: function(url) {
-            return this.evaluate(function() {
-                return __utils__.getBase64(__casper_params__.url);
-            }, {
-                url: url
-            });
+            return this.evaluate(function(url) {
+                return __utils__.getBase64(url);
+            }, { url: url });
         },
 
         /**
@@ -168,9 +167,9 @@
          * @return Casper
          */
         captureSelector: function(targetFile, selector) {
-            return this.capture(targetFile, this.evaluate(function() {
+            return this.capture(targetFile, this.evaluate(function(selector) {
                 try {
-                    var clipRect = document.querySelector(__casper_params__.selector).getBoundingClientRect();
+                    var clipRect = document.querySelector(selector).getBoundingClientRect();
                     return {
                         top:    clipRect.top,
                         left:   clipRect.left,
@@ -178,11 +177,9 @@
                         height: clipRect.height
                     };
                 } catch (e) {
-                    __utils__.log("Unable to fetch bounds for element " + __casper_params__.selector, "warning");
+                    __utils__.log("Unable to fetch bounds for element " + selector, "warning");
                 }
-            }, {
-                selector: selector
-            }));
+            }, { selector: selector }));
         },
 
         /**
@@ -226,8 +223,8 @@
         click: function(selector, fallbackToHref) {
             fallbackToHref = isType(fallbackToHref, "undefined") ? true : !!fallbackToHref;
             this.log("click on selector: " + selector, "debug");
-            return this.evaluate(function() {
-                return __utils__.click(__casper_params__.selector, __casper_params__.fallbackToHref);
+            return this.evaluate(function(selector, fallbackToHref) {
+                return __utils__.click(selector, fallbackToHref);
             }, {
                 selector:       selector,
                 fallbackToHref: fallbackToHref
@@ -325,24 +322,12 @@
 
         /**
          * Evaluates an expression in the page context, a bit like what
-         * WebPage#evaluate does, but can also replace values by their
-         * placeholer names:
+         * WebPage#evaluate does, but the passed function can also accept
+         * parameters if a context Object is also passed:
          *
-         *     casper.evaluate(function() {
-         *         document.querySelector('#username').value = '%username%';
-         *         document.querySelector('#password').value = '%password%';
-         *         document.querySelector('#submit').click();
-         *     }, {
-         *         username: 'Bazoonga',
-         *         password: 'baz00nga'
-         *     })
-         *
-         * As an alternative, CasperJS injects a `__casper_params__` Object
-         * instance containing all the parameters you passed:
-         *
-         *     casper.evaluate(function() {
-         *         document.querySelector('#username').value = __casper_params__.username;
-         *         document.querySelector('#password').value = __casper_params__.password;
+         *     casper.evaluate(function(username, password) {
+         *         document.querySelector('#username').value = username;
+         *         document.querySelector('#password').value = password;
          *         document.querySelector('#submit').click();
          *     }, {
          *         username: 'Bazoonga',
@@ -353,25 +338,15 @@
          * arguments to the function.
          * TODO: don't forget to keep this backward compatible.
          *
-         * @param  function  fn            The function to be evaluated within current page DOM
-         * @param  object    replacements  Parameters to pass to the remote environment
+         * @param  Function  fn       The function to be evaluated within current page DOM
+         * @param  Object    context  Object containing the parameters to inject into the function
          * @return mixed
          * @see    WebPage#evaluate
          */
-        evaluate: function(fn, replacements) {
-            replacements = isType(replacements, "object") ? replacements : {};
-            this.page.evaluate(replaceFunctionPlaceholders(function() {
-                window.__casper_params__ = {};
-                try {
-                    var jsonString = unescape(decodeURIComponent('%replacements%'));
-                    window.__casper_params__ = JSON.parse(jsonString);
-                } catch (e) {
-                    __utils__.log("Unable to replace parameters: " + e, "error");
-                }
-            }, {
-                replacements: encodeURIComponent(escape(JSON.stringify(replacements).replace("'", "\'")))
-            }));
-            return this.page.evaluate(replaceFunctionPlaceholders(fn, replacements));
+        evaluate: function(fn, context) {
+            context = isType(context, "object") ? context : {};
+            var newFn = new phantom.Casper.FunctionArgsInjector(fn, context).process();
+            return this.page.evaluate(newFn);
         },
 
         /**
@@ -397,11 +372,23 @@
          * @return Boolean
          */
         exists: function(selector) {
-            return this.evaluate(function() {
-                return __utils__.exists(__casper_params__.selector);
-            }, {
-                selector: selector
-            });
+            return this.evaluate(function(selector) {
+                return __utils__.exists(selector);
+            }, { selector: selector });
+        },
+
+        /**
+         * Checks if an element matching the provided CSS3 selector is visible
+         * current page DOM by checking that offsetWidth and offsetHeight are
+         * both non-zero.
+         *
+         * @param  String  selector  A CSS3 selector
+         * @return Boolean
+         */
+        visible: function(selector) {
+            return this.evaluate(function(selector) {
+                return __utils__.visible(selector);
+            }, { selector: selector });
         },
         
         
@@ -441,11 +428,9 @@
          * @return String
          */
         fetchText: function(selector) {
-            return this.evaluate(function() {
-                return __utils__.fetchText(__casper_params__.selector);
-            }, {
-                selector: selector
-            });
+            return this.evaluate(function(selector) {
+                return __utils__.fetchText(selector);
+            }, { selector: selector });
         },
 
         /**
@@ -463,8 +448,8 @@
             if (!isType(vals, "object")) {
                 throw "form values must be provided as an object";
             }
-            var fillResults = this.evaluate(function() {
-               return __utils__.fill(__casper_params__.selector, __casper_params__.values);
+            var fillResults = this.evaluate(function(selector, values) {
+               return __utils__.fill(selector, values);
             }, {
                 selector: selector,
                 values:   vals
@@ -493,15 +478,13 @@
             }
             // Form submission?
             if (submit) {
-                this.evaluate(function() {
-                    var form = document.querySelector(__casper_params__.selector);
+                this.evaluate(function(selector) {
+                    var form = document.querySelector(selector);
                     var method = form.getAttribute('method').toUpperCase() || "GET";
                     var action = form.getAttribute('action') || "unknown";
                     __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
                     form.submit();
-                }, {
-                    selector: selector
-                });
+                }, { selector: selector });
             }
         },
 
@@ -536,8 +519,7 @@
          * @return mixed
          */
         getGlobal: function(name) {
-            var result = this.evaluate(function() {
-                var name = window.__casper_params__.name;
+            var result = this.evaluate(function(name) {
                 var result = {};
                 try {
                     result.value = JSON.stringify(window[name]);
@@ -581,16 +563,22 @@
             if (this.logLevels.indexOf(level) < this.logLevels.indexOf(this.options.logLevel)) {
                 return this; // skip logging
             }
-            if (this.options.verbose) {
-                var levelStr = this.colorizer.colorize('[' + level + ']', this.logStyles[level]);
-                this.echo(levelStr + ' [' + space + '] ' + message); // direct output
-            }
-            this.result.log.push({
+            var entry = {
                 level:   level,
                 space:   space,
                 message: message,
                 date:    new Date().toString()
-            });
+            };
+            if (level in this.logFormats && isType(this.logFormats[level], "function")) {
+                message = this.logFormats[level](message, level, space);
+            } else {
+                var levelStr = this.colorizer.colorize('[' + level + ']', this.logStyles[level]);
+                message = levelStr + ' [' + space + '] ' + message;
+            }
+            if (this.options.verbose) {
+                this.echo(message); // direct output
+            }
+            this.result.log.push(entry);
             return this;
         },
 
@@ -736,11 +724,9 @@
                 this.options.onPageInitialized.call(this, this.page);
             }
             if (isType(location, "string") && location.length > 0) {
-                if (isType(then, "function")) {
-                    return this.open(location).then(then);
-                } else {
-                    return this.open(location);
-                }
+                return this.thenOpen(location, isType(then, "function") ? then : this.createStep(function(self) {
+                    self.log("start page is loaded", "debug");
+                }));
             }
             return this;
         },
@@ -799,14 +785,14 @@
          * Adds a new navigation step to perform code evaluation within the
          * current retrieved page DOM.
          *
-         * @param  function  fn            The function to be evaluated within current page DOM
-         * @param  object    replacements  Optional replacements to performs, eg. for '%foo%' => {foo: 'bar'}
+         * @param  function  fn       The function to be evaluated within current page DOM
+         * @param  object    context  Optional function parameters context
          * @return Casper
          * @see    Casper#evaluate
          */
-        thenEvaluate: function(fn, replacements) {
+        thenEvaluate: function(fn, context) {
             return this.then(function(self) {
-                self.evaluate(fn, replacements);
+                self.evaluate(fn, context);
             });
         },
 
@@ -831,15 +817,15 @@
          * Adds a new navigation step for opening and evaluate an expression
          * against the DOM retrieved from the provided location.
          *
-         * @param  String    location      The url to open
-         * @param  function  fn            The function to be evaluated within current page DOM
-         * @param  object    replacements  Optional replacements to performs, eg. for '%foo%' => {foo: 'bar'}
+         * @param  String    location  The url to open
+         * @param  function  fn        The function to be evaluated within current page DOM
+         * @param  object    context   Optional function parameters context
          * @return Casper
          * @see    Casper#evaluate
          * @see    Casper#open
          */
-        thenOpenAndEvaluate: function(location, fn, replacements) {
-            return this.thenOpen(location).thenEvaluate(fn, replacements);
+        thenOpenAndEvaluate: function(location, fn, context) {
+            return this.thenOpen(location).thenEvaluate(fn, context);
         },
 
         /**
@@ -952,8 +938,8 @@
         },
 
         /**
-         * Waits until an element matching the provided CSS3 selector does not exist in
-         * remote DOM to process a next step.
+         * Waits until an element matching the provided CSS3 selector does not
+         * exist in the remote DOM to process a next step.
          *
          * @param  String    selector   A CSS3 selector
          * @param  Function  then       The next step to perform (optional)
@@ -964,7 +950,41 @@
         waitWhileSelector: function(selector, then, onTimeout, timeout) {
             timeout = timeout ? timeout : this.defaultWaitTimeout;
             return this.waitFor(function(self) {
-                return ! self.exists(selector);
+                return !self.exists(selector);
+            }, then, onTimeout, timeout);
+        },
+
+        /**
+         * Waits until an element matching the provided CSS3 selector is
+         * visible in the remote DOM to process a next step.
+         *
+         * @param  String    selector   A CSS3 selector
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+         * @return Casper
+         */
+        waitUntilVisible: function(selector, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return self.visible(selector);
+            }, then, onTimeout, timeout);
+        },
+
+        /**
+         * Waits until an element matching the provided CSS3 selector is no
+         * longer visible in remote DOM to process a next step.
+         *
+         * @param  String    selector   A CSS3 selector
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+         * @return Casper
+         */
+        waitWhileVisible: function(selector, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return !self.visible(selector);
             }, then, onTimeout, timeout);
         },
         
@@ -1071,6 +1091,21 @@
         this.exists = function(selector) {
             try {
                 return document.querySelectorAll(selector).length > 0;
+            } catch (e) {
+                return false;
+            }
+        };
+
+        /**
+         * Checks if a given DOM element is visible in remote page.
+         *
+         * @param  String  selector  CSS3 selector
+         * @return Boolean
+         */
+        this.visible = function(selector) {
+            try {
+                var el = document.querySelector(selector);
+                return el && el.style.visibility !== 'hidden' && el.offsetHeight > 0 && el.offsetWidth > 0;
             } catch (e) {
                 return false;
             }
@@ -1669,6 +1704,51 @@
     };
 
     /**
+     * Function argument injector.
+     *
+     */
+    phantom.Casper.FunctionArgsInjector = function(fn, values) {
+        this.fn = fn;
+        this.values = typeof values === "object" ? values : {};
+
+        this.extract = function(fn) {
+            var match = /^function\s?(\w+)?\s?\((.*)\)\s?\{([\s\S]*)\}/i.exec(fn.toString().trim());
+            if (match && match.length > 1) {
+                var args = match[2].split(',').map(function(arg) {
+                    return arg.replace(new RegExp(/\/\*+.*\*\//ig), "").trim();
+                }).filter(function(arg) {
+                    return arg;
+                }) || [];
+                return {
+                    name: match[1] ? match[1].trim() : null,
+                    args: args,
+                    body: match[3] ? match[3].trim() : ''
+                };
+            }
+        };
+
+        this.process = function() {
+            var fnObj = this.extract(this.fn);
+            var inject = this.getArgsInjectionString(fnObj.args, this.values);
+            return 'function ' + (fnObj.name || '') + '(){' + inject + fnObj.body + '}';
+        };
+
+        this.getArgsInjectionString = function(args, values) {
+            values = typeof values === "object" ? values : {};
+            var jsonValues = escape(encodeURIComponent(JSON.stringify(values)));
+            var inject = [
+                'var __casper_params__ = JSON.parse(decodeURIComponent(unescape(\'' + jsonValues + '\')));'
+            ];
+            args.forEach(function(arg) {
+                if (arg in values) {
+                    inject.push('var ' + arg + '=__casper_params__["' + arg + '"];');
+                }
+            });
+            return inject.join('\n') + '\n';
+        };
+    };
+
+    /**
      * JUnit XML (xUnit) exporter for test results.
      *
      */
@@ -1806,7 +1886,7 @@
                     }
                 }
             }
-            // Client utils injection
+            // Client-side utils injection
             var injected = page.evaluate(replaceFunctionPlaceholders(function() {
                 eval("var ClientUtils = " + decodeURIComponent("%utils%"));
                 __utils__ = new ClientUtils();
