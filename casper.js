@@ -758,7 +758,14 @@
             if (!isType(step, "function")) {
                 throw "You can only define a step as a function";
             }
-            this.steps.push(step);
+            // check if casper is running
+            if (this.checker === null) {
+              // append step to the end of the queue
+              this.steps.push(step);
+            } else {
+              // add step next to the current one
+              this.steps.splice(this.step + 1, 0, step);
+            }
             return this;
         },
         

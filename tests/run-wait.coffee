@@ -6,28 +6,32 @@ casper = new phantom.Casper
     faultTolerant: false
     verbose: true
 
+step = 0
+
 # testing resources
 casper.start "tests/site/resources.html", ->
-  @test.comment "step 1"
-
-casper.wait 1000, ->
-  @test.comment "step 2"
+  @test.assertEquals ++step, 1, "step 1"
+  @wait 1000, ->
+    @test.assertEquals ++step, 2, "step 2"
 
 casper.wait 500, ->
-  @test.comment "step 3"
+  @test.assertEquals ++step, 3, "step 3"
 
 casper.waitForSelector(
   '#noneExistingSelector'
-  -> @test.comment "step 4 - wait passed"
-  -> @test.comment "step 4 - wait timed out"
+  -> @test.fail "should run into timeout"
+  -> @test.assertEquals ++step, 4, "step 4 sucessfully timed out"
 )
 casper.then ->
-  @test.comment "step 5"
-  @test.comment "wait for it ..."
+  @test.assertEquals ++step, 5, "step 5"
   @wait 1000, ->
-    @test.comment "... wait for it ..."
+    @test.assertEquals ++step, 6, "step 6"
   @wait 500, ->
-    @test.comment "... done!"
+    @test.assertEquals ++step, 7, "step 7"
+
+casper.then ->
+  @test.assertEquals ++step, 8, "last step"
+
 
 casper.run()
 
