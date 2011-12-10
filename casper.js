@@ -66,9 +66,10 @@
         this.checker = null;
         this.colorizer = new phantom.Casper.Colorizer();
         this.currentUrl = 'about:blank';
+        this.resources = [];
         this.currentHTTPStatus = 200;
         this.defaultWaitTimeout = 5000;
-        this.delayedExecution = false;
+        this.pendingWait = false;
         this.history = [];
         this.loadInProgress = false;
         this.logFormats = {};
@@ -88,7 +89,7 @@
             time:   0
         };
         this.started = false;
-        this.step = 0;
+        this.step = -1;
         this.steps = [];
         this.test = new phantom.Casper.Tester(this);
     };
@@ -188,11 +189,13 @@
          * @param  function  onComplete  An options callback to apply on completion
          */
         checkStep: function(self, onComplete) {
-            var step = self.steps[self.step];
-            if (!self.loadInProgress && isType(step, "function")) {
-                self.runStep(step);
+            if (self.pendingWait || self.loadInProgress) {
+              return;
             }
-            if (!isType(step, "function") && !self.delayedExecution) {
+            var step = self.steps[self.step++];
+            if (isType(step, "function")) {
+                self.runStep(step);
+            } else {
                 self.result.time = new Date().getTime() - self.startTime;
                 self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
                 clearInterval(self.checker);
@@ -386,6 +389,24 @@
             return this.evaluate(function(selector) {
                 return __utils__.visible(selector);
             }, { selector: selector });
+        },
+        
+        
+        /**
+         * Checks if a given resource was loaded by the remote page.
+         *
+         * @param  Function/String  test  A test function or string
+         * @return Boolean
+         */
+        resourceExists: function (test) {
+          if (isType(test, "string")) {
+              testFn = function (res) {
+                return res.url.match(test);
+              }
+          } else {
+            testFn = test;
+          }
+          return this.resources.some(testFn);
         },
 
         /**
@@ -615,7 +636,7 @@
          */
         runStep: function(step) {
             var skipLog = isType(step.options, "object") && step.options.skipLog === true;
-            var stepInfo = "Step " + (this.step + 1) + "/" + this.steps.length;
+            var stepInfo = "Step " + (this.step) + "/" + this.steps.length;
             var stepResult;
             if (!skipLog) {
                 this.log(stepInfo + ' ' + this.getCurrentUrl() + ' (HTTP ' + this.currentHTTPStatus + ')', "info");
@@ -649,7 +670,6 @@
             if (!skipLog) {
                 this.log(stepInfo + ": done in " + (new Date().getTime() - this.startTime) + "ms.", "info");
             }
-            this.step++;
         },
 
         /**
@@ -723,8 +743,29 @@
             if (!isType(step, "function")) {
                 throw "You can only define a step as a function";
             }
-            this.steps.push(step);
+            // check if casper is running
+            if (this.checker === null) {
+              // append step to the end of the queue
+              step.level = 0;
+              this.steps.push(step);
+            } else {
+              // insert substep a level deeper
+              step.level = this.steps[this.step - 1].level + 1;
+              var insertIndex = this.step;
+              while (this.steps[insertIndex] && step.level === this.steps[insertIndex].level) {
+                  insertIndex++;
+              }
+              this.steps.splice(insertIndex, 0, step);
+            }
             return this;
+        },
+        
+        waitStart: function() {
+          this.pendingWait = true;
+        },
+        
+        waitDone: function() {
+          this.pendingWait = false;
         },
 
         /**
@@ -827,18 +868,14 @@
                 this.die("wait() a step definition must be a function");
             }
             return this.then(function(self) {
-                self.delayedExecution = true;
-                var start = new Date().getTime();
-                var interval = setInterval(function(self, then) {
-                    if (new Date().getTime() - start > timeout) {
-                        self.delayedExecution = false;
-                        self.log("wait() finished wating for " + timeout + "ms.", "info");
-                        if (then) {
-                            self.then(then);
-                        }
-                        clearInterval(interval);
-                    }
-                }, 100, self, then);
+                self.waitStart();
+                setTimeout(function() {
+                  self.log("wait() finished wating for " + timeout + "ms.", "info");
+                  if (then) {
+                    then.call(self, self);
+                  }
+                  self.waitDone();
+                }, timeout);
             });
         },
 
@@ -859,32 +896,33 @@
             if (then && !isType(then, "function")) {
                 this.die("waitFor() next step definition must be a function");
             }
-            this.delayedExecution = true;
-            var start = new Date().getTime();
-            var condition = false;
-            var interval = setInterval(function(self, testFx, onTimeout) {
-                if ((new Date().getTime() - start < timeout) && !condition) {
-                    condition = testFx(self);
-                } else {
-                    self.delayedExecution = false;
-                    if (!condition) {
-                        self.log("Casper.waitFor() timeout", "warning");
-                        if (isType(onTimeout, "function")) {
-                            onTimeout.call(self, self);
-                        } else {
-                            self.die("Expired timeout, exiting.", "error");
-                        }
-                        clearInterval(interval);
-                    } else {
-                        self.log("waitFor() finished in " + (new Date().getTime() - start) + "ms.", "info");
-                        if (then) {
-                            self.then(then);
-                        }
-                        clearInterval(interval);
-                    }
-                }
-            }, 100, this, testFx, onTimeout);
-            return this;
+            return this.then(function(self) {
+              self.waitStart();
+              var start = new Date().getTime();
+              var condition = false;
+              var interval = setInterval(function(self, testFx, onTimeout) {
+                  if ((new Date().getTime() - start < timeout) && !condition) {
+                      condition = testFx(self);
+                  } else {
+                      self.waitDone();
+                      if (!condition) {
+                          self.log("Casper.waitFor() timeout", "warning");
+                          if (isType(onTimeout, "function")) {
+                              onTimeout.call(self, self);
+                          } else {
+                              self.die("Expired timeout, exiting.", "error");
+                          }
+                          clearInterval(interval);
+                      } else {
+                          self.log("waitFor() finished in " + (new Date().getTime() - start) + "ms.", "info");
+                          if (then) {
+                              self.then(then);
+                          }
+                          clearInterval(interval);
+                      }
+                  }
+              }, 100, self, testFx, onTimeout);
+            });
         },
 
         /**
@@ -953,7 +991,24 @@
             return this.waitFor(function(self) {
                 return !self.visible(selector);
             }, then, onTimeout, timeout);
+        },
+        
+        /**
+         * Waits until a given resource is loaded
+         *
+         * @param  String/Function    test   A function to test if the resource exists. A string will be matched against the resources url.
+         * @param  Function  then       The next step to perform (optional)
+         * @param  Function  onTimeout  A callback function to call on timeout (optional)
+         * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+         * @return Casper
+         */
+        waitForResource: function(test, then, onTimeout, timeout) {
+            timeout = timeout ? timeout : this.defaultWaitTimeout;
+            return this.waitFor(function(self) {
+                return self.resourceExists(test);
+            }, then, onTimeout, timeout);
         }
+        
     };
 
     /**
@@ -1566,6 +1621,16 @@
         this.assertUrlMatch = function(pattern, message) {
             return this.assertMatch(casper.getCurrentUrl(), pattern, message);
         };
+        
+        /**
+         * Asserts that the current page has a resource that matches the provided test
+         * 
+         * @param Function/String  test      A test function that is called with every response
+         * @param  String   message    Test description
+         */
+        this.assertResourceExists = function(test, message) {
+            return this.assert(casper.resourceExists(test), message);
+        }
 
         /**
          * Render a colorized output. Basically a proxy method for
@@ -1855,6 +1920,7 @@
             casper.log(msg, level, "remote");
         };
         page.onLoadStarted = function() {
+            casper.resources = [];
             casper.loadInProgress = true;
         };
         page.onLoadFinished = function(status) {
@@ -1903,6 +1969,9 @@
         page.onResourceReceived = function(resource) {
             if (isType(casper.options.onResourceReceived, "function")) {
                 casper.options.onResourceReceived.call(casper, casper, resource);
+            }
+            if (resource.stage === "end") {
+              casper.resources.push(resource);
             }
             if (resource.url === casper.requestUrl && resource.stage === "start") {
                 casper.currentHTTPStatus = resource.status;
