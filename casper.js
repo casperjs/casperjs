@@ -1970,7 +1970,7 @@
             if (isType(casper.options.onResourceReceived, "function")) {
                 casper.options.onResourceReceived.call(casper, casper, resource);
             }
-            if (resource.stage === "start") {
+            if (resource.stage === "end") {
               casper.resources.push(resource);
             }
             if (resource.url === casper.requestUrl && resource.stage === "start") {
