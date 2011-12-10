@@ -1430,18 +1430,7 @@
          * @param  String  message    Test description
          */
         this.assertEquals = function(testValue, expected, message) {
-            var result;
-            if (typeof testValue !== typeof expected) {
-                result = false;
-            } else if (isType(testValue, "array")) {
-                result = compareArrays(testValue, expected);
-            } else if (isType(testValue, "object") && isType(expected, "object")) {
-                // comparing objects equality in Javascript is UTOPIA
-                throw "Tester.assertEquals() cannot compare objects, sorry";
-            } else {
-                result = expected === testValue;
-            }
-            if (result === true) {
+            if (this.testEquals(testValue, expected)) {
                 casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
                 this.testResults.passed++;
                 exporter.addSuccess("unknown", message);
@@ -1506,6 +1495,16 @@
                 this.testResults.failed++;
                 exporter.addFailure("unknown", message, "test failed; subject: " + subject + "; pattern: " + pattern.toString(), "assertMatch");
             }
+        };
+
+        /**
+         * Asserts a condition resolves to false.
+         *
+         * @param  Boolean  condition
+         * @param  String   message    Test description
+         */
+        this.assertNot = function(condition, message) {
+            return this.assert(!condition, message);
         };
 
         /**
@@ -1583,6 +1582,34 @@
          */
         this.comment = function(message) {
             casper.echo('# ' + message, 'COMMENT');
+        };
+
+        /**
+         * Tests equality between the two passed arguments.
+         *
+         * @param  Mixed  v1
+         * @param  Mixed  v2
+         * @param  Boolean
+         */
+        this.testEquals = function(v1, v2) {
+            if (betterTypeOf(v1) !== betterTypeOf(v2)) {
+                return false;
+            }
+            if (isType(v1, "function")) {
+                return v1.toString() === v2.toString();
+            }
+            if (v1 instanceof Object && v2 instanceof Object) {
+                if (Object.keys(v1).length !== Object.keys(v2).length) {
+                    return false;
+                }
+                for (var k in v1) {
+                    if (!this.testEquals(v1[k], v2[k])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return v1 === v2;
         };
 
         /**
