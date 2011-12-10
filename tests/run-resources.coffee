@@ -25,8 +25,7 @@ casper.start "tests/site/resources.html", ->
       "phantom image found via test string"
     )
 
-# currently opening another page would lead to an error because the resource list gets cleared
-# casper.thenOpen "tests/site/test.html", ->
+#casper.thenOpen "tests/site/test.html", ->
   
 casper.run()
 

@@ -752,7 +752,7 @@
               // insert substep a level deeper
               step.level = this.steps[this.step - 1].level + 1;
               var insertIndex = this.step;
-              while (step.level === this.steps[insertIndex].level) {
+              while (this.steps[insertIndex] && step.level === this.steps[insertIndex].level) {
                   insertIndex++;
               }
               this.steps.splice(insertIndex, 0, step);
