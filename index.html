@@ -990,14 +990,6 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
 });
 </code></pre>
 
-<p>
-    <span class="label warning">Warning</span>
-    Casper won't <em>halt</em> the script execution but will rather be waiting
-    a given amount of time to process further. This is a slight difference, but
-    plenty understanding it can save you some hair pulling. See the
-    <a href="#faq_wait">dedicated FAQ entry</a>.
-</p>
-
 <h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until a function returns true to process any next step.</p>
@@ -1040,14 +1032,6 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
 });
 </code></pre>
 
-<p>
-    <span class="label warning">Warning</span>
-    Casper won't <em>halt</em> the script execution but will rather be waiting
-    a given amount of time to process further. This is a slight difference, but
-    plenty understanding it can save you some hair pulling. See the
-    <a href="#faq_wait">dedicated FAQ entry</a>.
-</p>
-
 <h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>
@@ -1065,14 +1049,6 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
     self.exit();
 });
 </code></pre>
-
-<p>
-    <span class="label warning">Warning</span>
-    Casper won't <em>halt</em> the script execution but will rather be waiting
-    a given amount of time to process further. This is a slight difference, but
-    plenty understanding it can save you some hair pulling. See the
-    <a href="#faq_wait">dedicated FAQ entry</a>.
-</p>
 
 <h3 id="phantom_Casper_waitWhileSelector"><code>Casper#waitWhileSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
@@ -1092,13 +1068,25 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
 });
 </code></pre>
 
+<h3 id="phantom_Casper_waitForResource"><code>Casper#waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
+
 <p>
-    <span class="label warning">Warning</span>
-    Casper won't <em>halt</em> the script execution but will rather be waiting
-    a given amount of time to process further. This is a slight difference, but
-    plenty understanding it can save you some hair pulling. See the
-    <a href="#faq_wait">dedicated FAQ entry</a>.
+    Wait until a resource that matches the given <code>testFx</code> is loaded to process a next step.
+    Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
 </p>
+
+<p><strong>Example:</strong></p>
+
+<pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/', function(self) {
+    self.waitForResource(function (resource) {
+        return resource.url.match("foobar.png");
+    }, function(self) {
+        self.echo('foobar.png is loaded');
+    });
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
 
 <h3 id="phantom_Casper_waitUntilVisible"><code>Casper#waitUntilVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
@@ -1151,6 +1139,8 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
         <li><a href="#phantom_Casper_wait"><code>Casper.wait()</code></a></li>
         <li><a href="#phantom_Casper_waitFor"><code>Casper.waitFor()</code></a></li>
         <li><a href="#phantom_Casper_waitForSelector"><code>Casper.waitForSelector()</code></a></li>
+        <li><a href="#phantom_Casper_waitWhileSelector"><code>Casper.waitWhileSelector()</code></a></li>
+        <li><a href="#phantom_Casper_waitForResource"><code>Casper.waitForResource()</code></a></li>
         <li><a href="#phantom_Casper_waitUntilVisible"><code>Casper.waitUntilVisible()</code></a></li>
         <li><a href="#phantom_Casper_waitWhileVisible"><code>Casper.waitWhileVisible()</code></a></li>
     </ul>
@@ -1406,6 +1396,20 @@ casper.start('http://www.google.fr/', function(self) {
 });
 </code></pre>
 
+<h3 id="phantom_Casper_Tester_assertResourceExists"><code>Tester#assertResourceExists(Function testFx[, String message])</code></h3>
+<p>
+    The <code>testFx</code> is executed against all loaded asserts and the test passes when at least one resource matches.
+</p>
+<pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper();
+casper.start('http://www.google.fr/', function(self) {
+    self.test.assertResourceExists(function (resource) {
+      return resource.url.match('logo3w.png');
+    }, 'google.fr logo was loaded');
+    // or shorter
+    self.test.assertResourceExists('logo3w.png', 'google.fr logo was loaded');
+});
+</code></pre>
+
 <h3 id="phantom_Casper_Tester_assertTitle"><code>Tester#assertTitle(String expected[, String message])</code></h3>
 <p>
     Asserts that title of the remote page equals to the expected one.
@@ -1509,6 +1513,7 @@ casper.run(function(self) {
         <li><a href="#phantom_Casper_Tester_assertMatch"><code>Tester.assertMatch()</code></a></li>
         <li><a href="#phantom_Casper_Tester_assertRaises"><code>Tester.assertRaises()</code></a></li>
         <li><a href="#phantom_Casper_Tester_assertSelectorExists"><code>Tester.assertSelectorExists()</code></a></li>
+        <li><a href="#phantom_Casper_Tester_assertResourceExists"><code>Tester.assertResourceExists()</code></a></li>
         <li><a href="#phantom_Casper_Tester_assertTitle"><code>Tester.assertTitle()</code></a></li>
         <li><a href="#phantom_Casper_Tester_assertType"><code>Tester.assertType()</code></a></li>
         <li><a href="#phantom_Casper_Tester_assertUrlMatch"><code>Tester.assertUrlMatch()</code></a></li>
@@ -1868,31 +1873,6 @@ $ phantomjs tests/run.js</code></pre>
     clientScripts: ["includes/jquery.min.js"]
 });
 </code></pre>
-
-<hr/>
-
-<h4 id="faq_wait">The <code>wait()</code> method and co don't really halt the script execution!</h4>
-
-<p>
-    Yes, that's because you cannot halt a javascript script without using really
-    dirty hacks. You must use your brain and find elegant solutions such as this
-    one for example:
-</p>
-<pre class="prettyprint"><code class="javascript">casper.waitForSelector('.tweet-row', function(self) {
-    self.test.pass('.tweet-row has appeared');
-    continueMytests(self);
-}, function(self) {
-    self.test.fail('.tweet-row has not appeared on time');
-});
-
-function continueMyTests(self) {
-    self.click('somewhere');
-}
-</code></pre>
-<p>
-    Of course if you know of a better way of implementing script halting,
-    <a href="https://github.com/n1k0/casperjs">feel free to contribute</a>!
-</p>
 
 <hr/>
 
