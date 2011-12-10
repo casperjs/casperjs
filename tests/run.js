@@ -18,6 +18,46 @@ phantom.args.forEach(function(arg) {
     }
 });
 
+// phantom.Casper.Tester
+casper.test.comment('Tester');
+casper.test.assert(casper.test.testEquals(null, null), 'Tester.testEquals() null equality');
+casper.test.assertNot(casper.test.testEquals(null, undefined), 'Tester.testEquals() null vs. undefined inequality');
+casper.test.assert(casper.test.testEquals("hi", "hi"), 'Tester.testEquals() string equality');
+casper.test.assertNot(casper.test.testEquals("hi", "ih"), 'Tester.testEquals() string inequality');
+casper.test.assert(casper.test.testEquals(5, 5), 'Tester.testEquals() number equality');
+casper.test.assert(casper.test.testEquals(5, 5.0), 'Tester.testEquals() cast number equality');
+casper.test.assertNot(casper.test.testEquals(5, 10), 'Tester.testEquals() number inequality');
+casper.test.assert(casper.test.testEquals([], []), 'Tester.testEquals() empty array equality');
+casper.test.assert(casper.test.testEquals([1,2], [1,2]), 'Tester.testEquals() array equality');
+casper.test.assert(casper.test.testEquals([1,2,[1,2,function(){}]], [1,2,[1,2,function(){}]]), 'Tester.testEquals() complex array equality');
+casper.test.assertNot(casper.test.testEquals([1,2,[1,2,function(a){}]], [1,2,[1,2,function(b){}]]), 'Tester.testEquals() complex array inequality');
+casper.test.assertNot(casper.test.testEquals([1,2], [2,1]), 'Tester.testEquals() shuffled array inequality');
+casper.test.assertNot(casper.test.testEquals([1,2], [1,2,3]), 'Tester.testEquals() array length inequality');
+casper.test.assert(casper.test.testEquals({}, {}), 'Tester.testEquals() empty object equality');
+casper.test.assert(casper.test.testEquals({a:1,b:2}, {a:1,b:2}), 'Tester.testEquals() object length equality');
+casper.test.assert(casper.test.testEquals({a:1,b:2}, {b:2,a:1}), 'Tester.testEquals() shuffled object keys equality');
+casper.test.assertNot(casper.test.testEquals({a:1,b:2}, {a:1,b:3}), 'Tester.testEquals() object inequality');
+casper.test.assert(casper.test.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:26}}), 'Tester.testEquals() complex object equality');
+casper.test.assertNot(casper.test.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:27}}), 'Tester.testEquals() complex object inequality');
+casper.test.assert(casper.test.testEquals(function(x){return x;}, function(x){return x;}), 'Tester.testEquals() function equality');
+casper.test.assertNot(casper.test.testEquals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
+
+// phantom.Casper.FunctionArgsInjector
+casper.test.comment('FunctionArgsInjector');
+function createInjector(fn, values) {
+    return new phantom.Casper.FunctionArgsInjector(fn, values);
+}
+var testFn = function(a, b) { return a + b; };
+var injector = createInjector(testFn);
+var extract = injector.extract(testFn);
+casper.test.assertType(extract, "object", 'FunctionArgsInjector.extract() returns an object');
+casper.test.assertEquals(extract.name, null, 'FunctionArgsInjector.extract() process function name as expected');
+casper.test.assertEquals(extract.body, 'return a + b;', 'FunctionArgsInjector.extract() process function body as expected');
+casper.test.assertEquals(extract.args, ['a', 'b'], 'FunctionArgsInjector.extract() process function args as expected');
+var processed;
+eval('processed = ' + injector.process({ a: 1, b: 2 }));
+casper.test.assertEquals(processed(), 3, 'FunctionArgsInjector.process() proccessed the function correctly');
+
 // Casper#log()
 casper.test.comment('logging');
 var oldLevel = casper.options.logLevel;
@@ -33,7 +73,9 @@ casper.options.verbose = true;
 // Casper#start()
 casper.test.comment('navigating');
 casper.start('tests/site/index.html', function(self) {
+    casper.test.comment('Casper.exists()');
     self.test.assert(self.exists('a') && !self.exists('chucknorriz'), 'Casper.exists() can check if an element exists');
+    casper.test.comment('Casper.start()');
     self.test.assertTitle('CasperJS test index', 'Casper.start() casper can start itself an open an url');
     self.test.assertEval(function() {
         return typeof(__utils__) === "object";

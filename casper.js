@@ -345,7 +345,7 @@
          */
         evaluate: function(fn, context) {
             context = isType(context, "object") ? context : {};
-            var newFn = new phantom.Casper.FunctionArgsInjector(fn, context).process();
+            var newFn = new phantom.Casper.FunctionArgsInjector(fn).process(context);
             return this.page.evaluate(newFn);
         },
 
@@ -1434,6 +1434,21 @@
         var PASS = this.options.PASS || "PASS";
         var FAIL = this.options.FAIL || "FAIL";
 
+        function compareArrays(a, b) {
+            if (a.length !== b.length) {
+                return false;
+            }
+            a.forEach(function(item, i) {
+                if (isType(item, "array") && !compareArrays(item, b[i])) {
+                    return false;
+                }
+                if (item !== b[i]) {
+                    return false;
+                }
+            });
+            return true;
+        }
+
         // properties
         this.testResults = {
             passed: 0,
@@ -1465,12 +1480,12 @@
         /**
          * Asserts that two values are strictly equals.
          *
-         * @param  Boolean  testValue  The value to test
-         * @param  Boolean  expected   The expected value
-         * @param  String   message    Test description
+         * @param  Mixed   testValue  The value to test
+         * @param  Mixed   expected   The expected value
+         * @param  String  message    Test description
          */
         this.assertEquals = function(testValue, expected, message) {
-            if (expected === testValue) {
+            if (this.testEquals(testValue, expected)) {
                 casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
                 this.testResults.passed++;
                 exporter.addSuccess("unknown", message);
@@ -1535,6 +1550,16 @@
                 this.testResults.failed++;
                 exporter.addFailure("unknown", message, "test failed; subject: " + subject + "; pattern: " + pattern.toString(), "assertMatch");
             }
+        };
+
+        /**
+         * Asserts a condition resolves to false.
+         *
+         * @param  Boolean  condition
+         * @param  String   message    Test description
+         */
+        this.assertNot = function(condition, message) {
+            return this.assert(!condition, message);
         };
 
         /**
@@ -1625,6 +1650,34 @@
         };
 
         /**
+         * Tests equality between the two passed arguments.
+         *
+         * @param  Mixed  v1
+         * @param  Mixed  v2
+         * @param  Boolean
+         */
+        this.testEquals = function(v1, v2) {
+            if (betterTypeOf(v1) !== betterTypeOf(v2)) {
+                return false;
+            }
+            if (isType(v1, "function")) {
+                return v1.toString() === v2.toString();
+            }
+            if (v1 instanceof Object && v2 instanceof Object) {
+                if (Object.keys(v1).length !== Object.keys(v2).length) {
+                    return false;
+                }
+                for (var k in v1) {
+                    if (!this.testEquals(v1[k], v2[k])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return v1 === v2;
+        };
+
+        /**
          * Writes an error-style formatted message to stdout.
          *
          * @param  String  message
@@ -1712,9 +1765,11 @@
      * Function argument injector.
      *
      */
-    phantom.Casper.FunctionArgsInjector = function(fn, values) {
+    phantom.Casper.FunctionArgsInjector = function(fn) {
+        if (!isType(fn, "function")) {
+            throw "FunctionArgsInjector() can only process functions";
+        }
         this.fn = fn;
-        this.values = typeof values === "object" ? values : {};
 
         this.extract = function(fn) {
             var match = /^function\s?(\w+)?\s?\((.*)\)\s?\{([\s\S]*)\}/i.exec(fn.toString().trim());
@@ -1732,9 +1787,12 @@
             }
         };
 
-        this.process = function() {
+        this.process = function(values) {
             var fnObj = this.extract(this.fn);
-            var inject = this.getArgsInjectionString(fnObj.args, this.values);
+            if (!isType(fnObj, "object")) {
+                throw "Unable to process function " + this.fn.toString();
+            }
+            var inject = this.getArgsInjectionString(fnObj.args, values);
             return 'function ' + (fnObj.name || '') + '(){' + inject + fnObj.body + '}';
         };
 
