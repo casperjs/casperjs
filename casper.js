@@ -89,7 +89,7 @@
             time:   0
         };
         this.started = false;
-        this.step = 0;
+        this.step = -1;
         this.steps = [];
         this.test = new phantom.Casper.Tester(this);
     };
@@ -189,10 +189,10 @@
          * @param  function  onComplete  An options callback to apply on completion
          */
         checkStep: function(self, onComplete) {
-            var step = self.steps[self.step];
             if (self.pendingWait || self.loadInProgress) {
               return;
             }
+            var step = self.steps[self.step++];
             if (isType(step, "function")) {
                 self.runStep(step);
             } else {
@@ -636,7 +636,7 @@
          */
         runStep: function(step) {
             var skipLog = isType(step.options, "object") && step.options.skipLog === true;
-            var stepInfo = "Step " + (this.step + 1) + "/" + this.steps.length;
+            var stepInfo = "Step " + (this.step) + "/" + this.steps.length;
             var stepResult;
             if (!skipLog) {
                 this.log(stepInfo + ' ' + this.getCurrentUrl() + ' (HTTP ' + this.currentHTTPStatus + ')', "info");
@@ -670,7 +670,6 @@
             if (!skipLog) {
                 this.log(stepInfo + ": done in " + (new Date().getTime() - this.startTime) + "ms.", "info");
             }
-            this.step++;
         },
 
         /**
@@ -747,10 +746,16 @@
             // check if casper is running
             if (this.checker === null) {
               // append step to the end of the queue
+              step.level = 0;
               this.steps.push(step);
             } else {
-              // add step next to the current one
-              this.steps.splice(this.step + 1, 0, step);
+              // insert substep a level deeper
+              step.level = this.steps[this.step - 1].level + 1;
+              var insertIndex = this.step;
+              while (step.level === this.steps[insertIndex].level) {
+                  insertIndex++;
+              }
+              this.steps.splice(insertIndex, 0, step);
             }
             return this;
         },
