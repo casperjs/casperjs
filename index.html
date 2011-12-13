@@ -783,6 +783,27 @@ casper.start('http://foo.bar/home', function(self) {
 });
 </code></pre>
 
+<h3 id="phantom_Casper_resourceExists"><code>Casper#resourceExists(Mixed test)</code></h3>
+
+<p>
+    Checks if a resource has been loaded. You can pass either a function or a string
+    to perform the test.
+</p>
+
+<p><strong>Example:</strong></p>
+
+<pre class="prettyprint"><code class="javascript">var i = 0;
+casper.start('http://www.google.com/', function(self) {
+    if (self.resourceExists('logo3w.png')) {
+        self.echo('Google logo loaded');
+    } else {
+        self.echo('Google logo not loaded', 'ERROR');
+    }
+}).run(function(self) {
+    self.exit();
+});
+</code></pre>
+
 <h3 id="phantom_Casper_run"><code>Casper#run(fn onComplete[, int time])</code></h3>
 
 <p>
@@ -1128,6 +1149,7 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
         <li><a href="#phantom_Casper_getGlobal"><code>Casper.getGlobal()</code></a></li>
         <li><a href="#phantom_Casper_getTitle"><code>Casper.getTitle()</code></a></li>
         <li><a href="#phantom_Casper_repeat"><code>Casper.repeat()</code></a></li>
+        <li><a href="#phantom_Casper_resourceExists"><code>Casper.resourceExists()</code></a></li>
         <li><a href="#phantom_Casper_run"><code>Casper.run()</code></a></li>
         <li><a href="#phantom_Casper_start"><code>Casper.start()</code></a></li>
         <li><a href="#phantom_Casper_then"><code>Casper.then()</code></a></li>
