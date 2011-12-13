@@ -1,10 +1,7 @@
 do(casper) ->
-  casper.onError = ->
-    console.log 'err'
   casper.start "tests/site/resources.html", ->
-    console.log 'loaded'
     @test.assertEquals @resources.length, 1, "only one resource found"
-    @waitForResource "phantom.png", ->
+    onTime = ->
       @test.assertEquals(
         @resources.length
         2
@@ -18,5 +15,7 @@ do(casper) ->
         "phantom.png"
         "phantom image found via test string"
       )
+    onTimeout = -> @test.fail "waitForResource timeout occured"
+    @waitForResource "phantom.png", onTime, onTimeout
 
   casper.run(-> @test.done())
