@@ -1,4 +1,5 @@
 phantom.injectJs('casper.js');
+phantom.injectJs('lib/vendors/esprima.js');
 
 var fs = require('fs');
 var casper = new phantom.Casper({
