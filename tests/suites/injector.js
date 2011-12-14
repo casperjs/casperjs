@@ -13,6 +13,40 @@
     t.assertEquals(extract.body, 'return a + b;', 'FunctionArgsInjector.extract() process function body as expected');
     t.assertEquals(extract.args, ['a', 'b'], 'FunctionArgsInjector.extract() process function args as expected');
 
+    function Plop(foo, bar) {
+        return 'foo: ' + foo +', bar: ' + bar;
+    }
+    function Plip() { return 'plop'; }
+    function foo_bar(boz) {}
+    var gni = function ($bubu_bibi, __popo__) {};
+    var gno = function    (  arg1,    /*plop*/ arg2  ) {    };
+    t.assertEquals(injector.extract(Plop), {
+        name: 'Plop',
+        args: ['foo', 'bar'],
+        body: "return 'foo: ' + foo +', bar: ' + bar;"
+    }, 'FunctionArgsInjector.extract() handles named functions with arguments and body');
+    t.assertEquals(injector.extract(Plip), {
+        name: 'Plip',
+        args: [],
+        body: "return 'plop';"
+    }, 'FunctionArgsInjector.extract() handles functions with no arguments');
+    t.assertEquals(injector.extract(foo_bar), {
+        name: 'foo_bar',
+        args: ['boz'],
+        body: ""
+    }, 'FunctionArgsInjector.extract() handles functions with no body');
+    t.assertEquals(injector.extract(gni), {
+        name: null,
+        args: ['$bubu_bibi', '__popo__'],
+        body: ""
+    }, 'FunctionArgsInjector.extract() handles anonymous functions with complex args passed');
+    t.assertEquals(injector.extract(gno), {
+        name: null,
+        args: ['arg1', 'arg2'],
+        body: ""
+    }, 'FunctionArgsInjector.extract() handles can filter comments in function args');
+
+    t.comment('FunctionArgsInjector.process()');
     var processed;
     eval('processed = ' + injector.process({ a: 1, b: 2 }));
 
