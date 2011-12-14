@@ -5,7 +5,8 @@
     t.assert(casper.test.testEquals("hi", "hi"), 'Tester.testEquals() string equality');
     t.assertNot(casper.test.testEquals("hi", "ih"), 'Tester.testEquals() string inequality');
     t.assert(casper.test.testEquals(5, 5), 'Tester.testEquals() number equality');
-    t.assert(casper.test.testEquals(5, 5.0), 'Tester.testEquals() cast number equality');
+    t.assertNot(casper.test.testEquals("5", 5), 'Tester.testEquals() number equality without implicit cast');
+    t.assert(casper.test.testEquals(5, 5.0), 'Tester.testEquals() number equality with cast');
     t.assertNot(casper.test.testEquals(5, 10), 'Tester.testEquals() number inequality');
     t.assert(casper.test.testEquals([], []), 'Tester.testEquals() empty array equality');
     t.assert(casper.test.testEquals([1,2], [1,2]), 'Tester.testEquals() array equality');
