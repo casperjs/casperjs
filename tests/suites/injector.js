@@ -16,7 +16,8 @@
     var processed;
     eval('processed = ' + injector.process({ a: 1, b: 2 }));
 
-    t.assertEquals(processed(), 3, 'FunctionArgsInjector.process() proccessed the function correctly');
+    t.assertType(processed, "function", 'FunctionArgsInjector.process() processed a function');
+    t.assertEquals(processed(), 3, 'FunctionArgsInjector.process() processed the function correctly');
 
     t.done();
 })(casper.test);
