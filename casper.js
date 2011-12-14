@@ -27,15 +27,41 @@
  */
 var fs = require('fs');
 
+var casperScript = phantom.args[1];
+
+if (phantom.args.length < 2) {
+    if (!fs.isDirectory(phantom.args[0])) {
+        console.log('First argument must be the path to casper root path');
+    }
+    if (!fs.isFile(casperScript)) {
+        console.log('Usage: $ casperjs script.js');
+    }
+    phantom.exit(1);
+}
+
+var casperPath = phantom.args[0];
+
 function pathJoin() {
     return Array.prototype.join.call(arguments, fs.separator);
 }
 
-var casperLibPath = pathJoin(fs.absolute('.'), 'lib');
-phantom.injectJs(pathJoin(casperLibPath, 'casper.js'));
-phantom.injectJs(pathJoin(casperLibPath, 'clientutils.js'));
-phantom.injectJs(pathJoin(casperLibPath, 'colorizer.js'));
-phantom.injectJs(pathJoin(casperLibPath, 'injector.js'));
-phantom.injectJs(pathJoin(casperLibPath, 'tester.js'));
-phantom.injectJs(pathJoin(casperLibPath, 'utils.js'));
-phantom.injectJs(pathJoin(casperLibPath, 'xunit.js'));
+var casperLibPath = pathJoin(casperPath, 'lib');
+
+if (!fs.isDirectory(casperLibPath)) {
+    console.log("Couldn't find CasperJS lib directory: " + casperLibPath);
+    phantom.exit(1);
+}
+
+[
+    'casper.js',
+    'clientutils.js',
+    'colorizer.js',
+    'injector.js',
+    'tester.js',
+    'utils.js',
+    'xunit.js'
+].forEach(function(lib) {
+    phantom.injectJs(pathJoin(casperLibPath, lib));
+});
+
+phantom.injectJs(phantom.args[1]);

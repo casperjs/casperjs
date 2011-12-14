@@ -1,4 +1,4 @@
-phantom.injectJs('casper.js');
+//phantom.injectJs('casper.js');
 phantom.injectJs('lib/vendors/esprima.js');
 
 var fs = require('fs');
@@ -8,13 +8,10 @@ var casper = new phantom.Casper({
 });
 
 var tests = [];
-if (phantom.args.length > 0) {
-    // FIXME: leave room for other arguments than tests to be passed
-    tests = phantom.args.map(function(path) {
-        return pathJoin(fs.workingDirectory, path);
-    });
+if (phantom.args.length > 2 && fs.isFile(phantom.args[2])) {
+    tests = [phantom.args[2]];
 } else {
-    tests = [pathJoin(casperLibPath, '..', 'tests', 'suites')];
+    tests = [fs.absolute(pathJoin(casperLibPath, '..', 'tests', 'suites'))];
 }
 
 casper.test.runSuites.apply(casper.test, tests);
