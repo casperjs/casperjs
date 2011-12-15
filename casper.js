@@ -34,14 +34,14 @@
 
     // seeking for casperPath passed as an argument
     phantom.args.forEach(function(arg) {
-        var pathMatch = arg.match(/--casper-dir=(.+)/);
+        var pathMatch = arg.match(/--casper-path=(.+)/);
         if (pathMatch) {
             phantom.casperPath = pathMatch[1];
         }
     });
 
     if (!phantom.casperPath || !fs.isDirectory(phantom.casperPath)) {
-        console.log('Cannot find CasperJS home path. Did you set phantom.casperPath or pass the --casper-dir option?');
+        console.log('Cannot find CasperJS home path. Did you set phantom.casperPath or pass the --casper-path option?');
     }
 
     [
