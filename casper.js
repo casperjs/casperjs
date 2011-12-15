@@ -32,19 +32,17 @@
         return Array.prototype.join.call(arguments, this.separator);
     };
 
-    if (!fs.isDirectory(phantom.args[0]) || !fs.isFile(fs.pathJoin(phantom.args[0], 'casper.js'))) {
-        console.log('First argument must be the absolute path to casper root path.');
-        phantom.exit(1);
-    }
+    // seeking for casperPath passed as an argument
+    phantom.args.forEach(function(arg) {
+        var pathMatch = arg.match(/--casper-dir=(.+)/);
+        if (pathMatch) {
+            phantom.casperPath = pathMatch[1];
+        }
+    });
 
-    if (!fs.isFile(phantom.args[1])) {
-        console.log('Usage: $ casperjs script.[js|coffee]');
-        phantom.exit(1);
+    if (!phantom.casperPath || !fs.isDirectory(phantom.casperPath)) {
+        console.log('Cannot find CasperJS home path. Did you set phantom.casperPath or pass the --casper-dir option?');
     }
-
-    phantom.casperPath = phantom.args[0];
-    phantom.casperScript = phantom.args[1];
-    phantom.casperLibPath = fs.pathJoin(phantom.casperPath, 'lib');
 
     [
         'casper.js',
@@ -55,7 +53,7 @@
         'utils.js',
         'xunit.js'
     ].forEach(function(lib) {
-        phantom.injectJs(fs.pathJoin(phantom.casperLibPath, lib));
+        phantom.injectJs(fs.pathJoin(phantom.casperPath, 'lib', lib));
     });
 
     phantom.injectJs(phantom.args[1]);

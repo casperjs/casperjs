@@ -2,4 +2,4 @@
 
 CASPERJS_HOME="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
-phantomjs $CASPERJS_HOME/casper.js $CASPERJS_HOME $*
+phantomjs $CASPERJS_HOME/casper.js --casper-dir=$CASPERJS_HOME $*
