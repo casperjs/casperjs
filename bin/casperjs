@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
-CASPERJS_HOME="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+CASPER_EXECUTABLE=${BASH_SOURCE[0]} 
+
+if [ -e "$CASPER_EXECUTABLE" ]; then
+    CASPER_EXECUTABLE="$( readlink $CASPER_EXECUTABLE )"
+fi
+
+CASPERJS_HOME="$( cd -PL "$( dirname "$CASPER_EXECUTABLE" )" && cd .. && pwd )"
 
 phantomjs $CASPERJS_HOME/casper.js --casper-path=$CASPERJS_HOME $*
