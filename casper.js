@@ -26,6 +26,10 @@
  *
  */
 (function(phantom) {
+    if (true === phantom.casperLoaded) {
+        return;
+    }
+
     var fs = require('fs');
 
     fs.pathJoin = function() {
@@ -80,18 +84,22 @@
         phantom.injectJs(fs.pathJoin(phantom.casperPath, 'lib', lib));
     });
 
-    if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
-        console.log('Usage: casperjs script.(js|coffee) [options...]');
-        console.log('Read the docs http://n1k0.github.com/casperjs/');
-        phantom.exit(0);
+    phantom.casperLoaded = true;
+
+    if (true === phantom.casperArgs.options.cli) {
+        if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+            console.log('Usage: casperjs script.(js|coffee) [options...]');
+            console.log('Read the docs http://n1k0.github.com/casperjs/');
+            phantom.exit(0);
+        }
+
+        phantom.casperScript = phantom.casperArgs.args[0];
+
+        if (!fs.isFile(phantom.casperScript)) {
+            console.log('Unable to open file: ' + phantom.casperScript);
+            phantom.exit(1);
+        }
+
+        phantom.injectJs(phantom.casperScript);
     }
-
-    phantom.casperScript = phantom.casperArgs.args[0];
-
-    if (!fs.isFile(phantom.casperScript)) {
-        console.log('Unable to open file: ' + phantom.casperScript);
-        phantom.exit(1);
-    }
-
-    phantom.injectJs(phantom.casperScript);
 })(phantom);

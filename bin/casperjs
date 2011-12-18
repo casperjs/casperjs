@@ -7,4 +7,4 @@ while [ -h "$CASPER_EXECUTABLE" ]; do
 done
 
 CASPERJS_HOME="$( cd -PL "$( dirname "$CASPER_EXECUTABLE" )" && cd .. && pwd )"
-phantomjs $CASPERJS_HOME/casper.js --casper-path=$CASPERJS_HOME $*
+phantomjs $CASPERJS_HOME/casper.js --casper-path=$CASPERJS_HOME --cli $*
