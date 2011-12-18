@@ -100,6 +100,10 @@
             phantom.exit(1);
         }
 
+        // filter out the called script name from casper args
+        phantom.casperArgs.args = phantom.casperArgs.args.filter(function(arg) {
+            return arg !== phantom.casperScript;
+        });
         phantom.injectJs(phantom.casperScript);
     }
 })(phantom);
