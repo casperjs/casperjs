@@ -12,7 +12,7 @@ links = []
 casper = new phantom.Casper
 
 casper.start 'http://google.com', ->
-  @fill 'form[name=f]',  q: phantom.args.join(' '), true
+  @fill 'form[name=f]',  q: casper.cli.args.join(' '), true
   @click 'input[value="Google Search"]'
 
 casper.then ->

@@ -29,7 +29,7 @@ var links = [
     'http://cdiscount.fr/'
 ];
 
-casper.echo('Testing with timeout=' + timeout);
+casper.echo('Testing with timeout=' + timeout + 'ms.');
 
 casper.start();
 

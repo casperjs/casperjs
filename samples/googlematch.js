@@ -26,7 +26,7 @@ phantom.Casper.extend({
 
 var casper = new phantom.Casper({
     verbose: true
-}), terms = phantom.casperArgs.args, scores = [], i = 0;
+}), terms = casper.cli.args, scores = [], i = 0;
 
 if (terms.length < 2) {
     casper.echo('Usage: casperjs googlematch.js term1, term2 [, term3]...').exit();
@@ -54,7 +54,7 @@ casper.run(function(self) {
         return a.score - b.score;
     });
     var winner = scores[scores.length - 1];
-    self.echo('winner is "' + winner.term + '" with ' + winner.score + ' results')
+    self.echo('winner is "' + winner.term + '" with ' + winner.score + ' results');
     self.exit();
 });
 

@@ -42,7 +42,7 @@ var casper = new phantom.Casper({
     loadImages:  false,
     loadPlugins: false,
     logLevel:    "debug",
-    verbose:     true,
+    verbose:     true
 });
 
 casper.start()
