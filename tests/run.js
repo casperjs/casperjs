@@ -1,3 +1,8 @@
+if (!phantom.casperPath || !phantom.Casper) {
+    console.log('This script must be invoked using the casperjs executable');
+    phantom.exit(1);
+}
+
 var fs = require('fs');
 
 phantom.injectJs(fs.pathJoin(phantom.casperPath, 'lib', 'vendors', 'esprima.js'));
@@ -6,13 +11,6 @@ var casper = new phantom.Casper({
     faultTolerant: false,
     verbose:       true
 });
-
-var tests = [];
-if (phantom.args.length > 2 && fs.isFile(phantom.args[2])) {
-    tests = [phantom.args[2]];
-} else {
-    tests = [fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'suites'))];
-}
 
 // Overriding Casper.open to prefix all test urls
 phantom.Casper.extend({
@@ -25,4 +23,12 @@ phantom.Casper.extend({
     }
 });
 
-casper.test.runSuites.apply(casper.test, tests);
+(function(casper) {
+    var tests = [];
+    if (phantom.args.length > 2 && fs.isFile(phantom.args[2])) {
+        tests = [phantom.args[2]];
+    } else {
+        tests = [fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'suites'))];
+    }
+    casper.test.runSuites.apply(casper.test, tests);
+})(casper);

@@ -32,16 +32,39 @@
         return Array.prototype.join.call(arguments, this.separator);
     };
 
-    // seeking for casperPath passed as an argument
-    phantom.args.forEach(function(arg) {
-        var pathMatch = arg.match(/--casper-path=(.+)/);
-        if (pathMatch) {
-            phantom.casperPath = pathMatch[1];
-        }
-    });
+    phantom.extractCasperArgs = function(cliArgs) {
+        var extract = { args: [], options: {} };
+        cliArgs.forEach(function(arg) {
+            if (arg.indexOf('--') === 0) {
+                // named option
+                var optionMatch = arg.match(/^--(.*)=(.*)/i);
+                if (optionMatch) {
+                    extract.options[optionMatch[1]] = optionMatch[2];
+                } else {
+                    // flag
+                    var flagMatch = arg.match(/^--(.*)/);
+                    if (flagMatch) {
+                        extract.options[flagMatch[1]] = true;
+                    }
+                }
+            } else {
+                // positional arg
+                extract.args.push(arg);
+            }
+        });
+        return extract;
+    };
 
-    if (!phantom.casperPath || !fs.isDirectory(phantom.casperPath)) {
+    phantom.casperArgs = phantom.extractCasperArgs(phantom.args);
+    phantom.casperPath = phantom.casperArgs.options['casper-path'];
+    //console.log(JSON.stringify(phantom.casperArgs, null, 4))
+
+    if (!phantom.casperPath) {
         console.log('Cannot find CasperJS home path. Did you set phantom.casperPath or pass the --casper-path option?');
+        phantom.exit(1);
+    } else if (!fs.isDirectory(phantom.casperPath)) {
+        console.log('Invalid CasperJS path: ' + phantom.casperPath);
+        phantom.exit(1);
     }
 
     [
@@ -56,6 +79,18 @@
         phantom.injectJs(fs.pathJoin(phantom.casperPath, 'lib', lib));
     });
 
-    phantom.injectJs(phantom.args[1]);
+    if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+        console.log('Usage: casperjs script.(js|coffee) [options...]');
+        console.log('Read the docs http://n1k0.github.com/casperjs/');
+        phantom.exit(0);
+    }
 
+    phantom.casperScript = phantom.casperArgs.args[0];
+
+    if (!fs.isFile(phantom.casperScript)) {
+        console.log('Unable to open file: ' + phantom.casperScript);
+        phantom.exit(1);
+    }
+
+    phantom.injectJs(phantom.casperScript);
 })(phantom);
