@@ -1,4 +1,4 @@
-if (!phantom.casperPath || !phantom.Casper) {
+if (!phantom.casperLoaded) {
     console.log('This script must be invoked using the casperjs executable');
     phantom.exit(1);
 }
@@ -25,8 +25,8 @@ phantom.Casper.extend({
 
 (function(casper) {
     var tests = [];
-    if (phantom.args.length > 2 && fs.isFile(phantom.args[2])) {
-        tests = [phantom.args[2]];
+    if (phantom.casperArgs.args.length > 2 && fs.isFile(phantom.casperArgs.args[2])) {
+        tests = [phantom.casperArgs.args[2]];
     } else {
         tests = [fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'suites'))];
     }
