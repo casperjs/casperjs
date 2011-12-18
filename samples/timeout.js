@@ -14,15 +14,18 @@
  * Will google.com load in less than 2000ms?
  * YES!
  */
-phantom.injectJs('casper.js');
+if (!phantom.casperLoaded) {
+    console.log('This script is intended to work with CasperJS, using its executable.');
+    phantom.exit(1);
+}
 
-if (phantom.args.length === 0) {
-    console.log('You must provide a timeout value')
+if (phantom.casperArgs.args.length === 0) {
+    console.log('You must provide a timeout value');
     phantom.exit(1);
 } else {
-    var timeout = Number(phantom.args[0], 10);
+    var timeout = Number(phantom.casperArgs.args[0], 10);
     if (timeout < 1) {
-        console.log('A timeout value must be a positive integer')
+        console.log('A timeout value must be a positive integer');
         phantom.exit(1);
     }
 }

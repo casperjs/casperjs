@@ -3,7 +3,11 @@
  * log every received resource.
  *
  */
-phantom.injectJs('casper.js');
+
+if (!phantom.casperLoaded) {
+    console.log('This script is intended to work with CasperJS, using its executable.');
+    phantom.exit(1);
+}
 
 var casper = new phantom.Casper({
     /**

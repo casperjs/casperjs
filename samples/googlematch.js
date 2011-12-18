@@ -9,6 +9,12 @@
  *   borris:  2370000
  *   winner is "nicolas" with 69600000 results
  */
+
+if (!phantom.casperLoaded) {
+    console.log('This script is intended to work with CasperJS, using its executable.');
+    phantom.exit(1);
+}
+
 phantom.Casper.extend({
     fetchScore: function() {
         return this.evaluate(function() {

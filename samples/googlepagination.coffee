@@ -4,7 +4,9 @@
 #
 #   (all arguments will be used as the query)
 #
-phantom.injectJs('casper.js')
+if not phantom.casperLoaded
+    console.log "This script is intended to work with CasperJS, using its executable."
+    phantom.exit 1
 
 links = []
 casper = new phantom.Casper
