@@ -3,14 +3,12 @@
  * estimated results each have.
  *
  * Usage:
- *   $ phantomjs samples/googlematch.js nicolas chuck borris
+ *   $ casperjs samples/googlematch.js nicolas chuck borris
  *   nicolas: 69600000
  *   chuck:   49500000
  *   borris:  2370000
  *   winner is "nicolas" with 69600000 results
  */
-phantom.injectJs('casper.js');
-
 phantom.Casper.extend({
     fetchScore: function() {
         return this.evaluate(function() {
@@ -22,11 +20,13 @@ phantom.Casper.extend({
 
 var casper = new phantom.Casper({
     verbose: true
-}), terms = phantom.args, scores = [], i = 0;
+}), terms = phantom.casperArgs.args, scores = [], i = 0;
 
 if (terms.length < 2) {
-    casper.log('usage: phantomjs googlematch.js term1, term2 [, term3]...').exit();
+    casper.echo('Usage: casperjs googlematch.js term1, term2 [, term3]...').exit();
 }
+
+casper.echo('Let the match begin!');
 
 casper.start("http://google.fr/");
 
