@@ -56,8 +56,9 @@
     };
 
     phantom.casperArgs = phantom.extractCasperArgs(phantom.args);
-    phantom.casperPath = phantom.casperArgs.options['casper-path'];
-    //console.log(JSON.stringify(phantom.casperArgs, null, 4))
+    if (!phantom.casperPath) {
+        phantom.casperPath = phantom.casperArgs.options['casper-path'];
+    }
 
     if (!phantom.casperPath) {
         console.log('Cannot find CasperJS home path. Did you set phantom.casperPath or pass the --casper-path option?');
