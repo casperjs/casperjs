@@ -30,6 +30,15 @@
         return;
     }
 
+    phantom.casperVersion = {
+        major: 0,
+        minor: 4,
+        revision: 0,
+        toString: function() {
+            return [this.major, this.minor, this.revision].join('.');
+        }
+    };
+
     var fs = require('fs');
 
     fs.pathJoin = function() {
@@ -87,7 +96,11 @@
     phantom.casperLoaded = true;
 
     if (true === phantom.casperArgs.options.cli) {
-        if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+        if (!!phantom.casperArgs.options.version) {
+            console.log(phantom.casperVersion.toString());
+            phantom.exit(0);
+        } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+            console.log('CasperJS version ' + phantom.casperVersion.toString());
             console.log('Usage: casperjs script.(js|coffee) [options...]');
             console.log('Read the docs http://n1k0.github.com/casperjs/');
             phantom.exit(0);
