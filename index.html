@@ -68,10 +68,9 @@
             </div>
             <div class="span5 download">
               <h2>Download</h2>
-              <p>CasperJS is still in a so alpha state that it even hasn't any
-                version number.</p>
-              <div class="dl-links"> <a href="http://github.com/n1k0/casperjs/zipball/master">
-                  <img src="images/zip.png" border="0" width="90"></a> <a href="http://github.com/n1k0/casperjs/tarball/master">
+              <p>CasperJS latest stable version is 0.4.</p>
+              <div class="dl-links"> <a href="https://github.com/n1k0/casperjs/zipball/0.4.0">
+                  <img src="images/zip.png" border="0" width="90"></a> <a href="https://github.com/n1k0/casperjs/tarball/0.4.0">
                   <img src="images/tar.png" border="0" width="90"></a> </div>
             </div>
           </div>
@@ -89,10 +88,12 @@
 </code></pre>
           <p>Now just follow these instructions:</p>
           <pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs.git
+$ git checkout tags/0.4.0
 $ ln -sf `pwd`/casperjs/bin/casperjs /usr/local/bin/casperjs
 </code></pre>
           <p>You should get something like this:</p>
           <pre class="prettyprint"><code class="void">$ casperjs
+CasperJS version 0.4.0
 Usage: casperjs script.(js|coffee) [options...]
 Read the docs http://n1k0.github.com/casperjs/
 </code></pre>
@@ -1614,11 +1615,14 @@ casper.start('http://mywebsite/404', function(self) {
           <div class="page-header">
             <h1>Download</h1>
           </div>
-          <p> You can download this project in either <a href="http://github.com/n1k0/casperjs/zipball/master">zip</a>
-            or <a href="http://github.com/n1k0/casperjs/tarball/master">tar</a>
+          <p> You can download this project in either <a href="https://github.com/n1k0/casperjs/zipball/0.4.0">zip</a>
+            or <a href="https://github.com/n1k0/casperjs/tarball/0.4.0">tar</a>
             formats. You can also clone the project with <a href="http://git-scm.com">Git</a>
             by running: </p>
-          <pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs</code></pre>
+          <pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs casperjs</code></pre>
+          <p>Always try to use a tagged version on production:</p>
+          <pre class="prettyprint"><code class="void">$ cd casperjs
+$ git checkout tags/0.4.0</code></pre>
           <p> Feel free to play with the code and <a href="https://github.com/n1k0/casperjs/issues">report
               any issue on github</a>. I'm also reachable <a href="https://twitter.com/n1k0">on
               twitter</a>. </p>
