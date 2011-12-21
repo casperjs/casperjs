@@ -6,7 +6,7 @@ import sys
 
 
 def resolve(path):
-    while os.path.islink(path):
+    if os.path.islink(path):
         return resolve(os.readlink(path))
     return path
 
