@@ -14,4 +14,8 @@ CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '
 CASPER_ARGS = ['phantomjs', os.path.join(CASPER_PATH, 'casper.js'), '--casper-path=%s' % CASPER_PATH, '--cli']
 CASPER_ARGS.extend(sys.argv[1:])
 
-subprocess.call(CASPER_ARGS)
+try:
+    subprocess.call(CASPER_ARGS)
+except KeyboardInterrupt:
+    print '\nCasperJS interrupted, exiting.'
+    sys.exit()
