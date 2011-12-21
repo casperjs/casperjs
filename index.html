@@ -396,7 +396,7 @@ casper.run(function(self) {
 </code></pre>
               <p>Also have a look at <a href="#phantom_Casper_forward">Casper.forward()</a>.</p>
               <h3 id="phantom_Casper_base64encode"><code>Casper#base64encode(String
-                  url)</code></h3>
+                  url [, String method, Object data])</code></h3>
               <p> Encodes a resource using the base64 algorithm synchroneously
                 using client-side XMLHttpRequest. </p>
               <p> <span class="label notice">Note</span> We cannot use <code>window.btoa()</code>
@@ -408,6 +408,18 @@ casper.start('http://www.google.fr/', function(self) {
     base64logo = self.base64encode('http://www.google.fr/images/srpr/logo3w.png');
 }).run(function(self) {
     self.echo(base64logo).exit();
+});
+</code></pre>
+              <p>You can also perform an HTTP POST request for retrieve the contents
+              to encode:</p>
+              <pre class="prettyprint"><code>var base46contents = null;
+casper.start('http://domain.tld/download.html', function(self) {
+    base46contents = self.base64encode('http://domain.tld/', 'POST', {
+        param1: 'foo',
+        param2: 'bar'
+    });
+}).run(function(self) {
+    self.echo(base46contents).exit();
 });
 </code></pre>
               <h3 id="phantom_Casper_click"><code>Casper#click(String selector[,
@@ -1053,7 +1065,7 @@ casper.start('http://foo.bar/', function(self) {
 });
 </code></pre>
               <h3 id="phantom_Casper_ClientUtils_getBase64"><code>ClientUtils#getBase64(String
-                  url)</code></h3>
+                  url[, String method, Object data])</code></h3>
               <p> This method will retrieved a base64 encoded version of any
                 resource behind an url. For example, let's imagine we want to
                 retrieve the base64 representation of some website's logo: </p>
@@ -1068,7 +1080,7 @@ casper.start('http://foo.bar/', function(self) {
 });
 </code></pre>
               <h3 id="phantom_Casper_ClientUtils_getBinary"><code>ClientUtils#getBinary(String
-                  url)</code></h3>
+                  url[, String method, Object data])</code></h3>
               <p> This method will retrieved the raw contents of a given binary
                 resource; unfortunately though, PhantomJS cannot process these
                 data directly so you'll have to process them within the remote
