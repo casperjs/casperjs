@@ -1,1 +1,14 @@
-2011-12-20, v0.4.0 - first numbered version
+CasperJS Changelog
+==================
+
+2011-12-21, v0.4.1
+------------------
+
+- fixed #31 - replaced bash executable script by a Python one
+
+---
+
+2011-12-20, v0.4.0
+------------------
+
+- first numbered version

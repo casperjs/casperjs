@@ -1,10 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
-CASPER_EXECUTABLE=${BASH_SOURCE[0]}
+import os
+import subprocess
+import sys
 
-while [ -h "$CASPER_EXECUTABLE" ]; do
-    CASPER_EXECUTABLE="$( readlink $CASPER_EXECUTABLE )"
-done
 
-CASPERJS_HOME="$( cd -PL "$( dirname "$CASPER_EXECUTABLE" )" && cd .. && pwd )"
-phantomjs $CASPERJS_HOME/casper.js --casper-path=$CASPERJS_HOME --cli $*
+def resolve(path):
+    while os.path.islink(path):
+        return resolve(os.readlink(path))
+    return path
+
+CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
+CASPER_ARGS = ['phantomjs', os.path.join(CASPER_PATH, 'casper.js'), '--casper-path=%s' % CASPER_PATH, '--cli']
+CASPER_ARGS.extend(sys.argv[1:])
+
+subprocess.call(CASPER_ARGS)
