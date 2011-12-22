@@ -1530,6 +1530,7 @@ casper.run(function(self) {
           <p>In case any assertion fails, you'd rather get something like the
             following:</p>
           <p><img src="images/testsuitefail.png" alt="capture" title=""></p>
+          <hr/>
           <h3>Exporting results in xUnit format</h3>
           <p> <span class="label warning">Warning</span> XUnit log export
             feature is only available for PhantomJS 1.3 and later. </p>
@@ -1551,6 +1552,7 @@ casper.run(function(self) {
           <p>Then you can run:</p>
           <pre class="prettyprint"><code class="void">$ casperjs test.js --save=log.xml
 </code></pre>
+          <hr/>
           <h3>CasperJS tests</h3>
           <p> CasperJS has its own unit and functional test suite, located in
             the <code>tests</code> subfolder. More tests will be added in the
@@ -1558,6 +1560,36 @@ casper.run(function(self) {
             casperjs repository: </p>
           <pre class="prettyprint"><code class="void">$ cd /path/to/casperjs
 $ casperjs tests/run.js</code></pre>
+          <hr/>
+          <h3>Organizing your tests</h3>
+          <p>You can split your tests in several files and directory,
+          <a href="https://github.com/n1k0/casperjs/tree/master/tests/suites">like CasperJS
+          does for itself</a>; if you intend to do so, a single test must be of the
+          following form:</p>
+          <pre class="prettyprint"><code class="javascript">(function(t) {
+    t.comment('my test');
+
+    casper.start('tests/site/index.html', function(self) {
+        t.assert(self.exists('a') &amp;&amp; !self.exists('chucknorriz'), 'Casper.exists() can check if an element exists');
+    });
+
+    casper.run(function(step) {
+        t.done();
+    });
+})(casper.test);
+</code></pre>
+        <p><span class="label notice">Contribute</span>
+        It's very important not to forgot to call the <code>Casper.test.done()</code>
+        method <strong>when the tests have finished</strong>. If you do not, all the
+        tests won't be executed.</p>
+        <p>You can use the provided <code>tests/run.js</code> script to launch your
+        test suite:</p>
+        <pre class="prettyprint"><code class="void">$ ls -l mytestdirectory/
+test1.js
+test2.js
+test3.js
+$ casperjs /path/to/test/run.js mytestdirectory/
+</code></pre>
         </section>
         <section id="faq">
           <div class="page-header">
