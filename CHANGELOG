@@ -1,6 +1,12 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.4.2
+------------------
+
+- merged PR #30 - Add request method and request data to the base64encode method (@jasonlfunk)
+- casperjs executable now gracefully exists on KeyboardInterrupt
+
 2011-12-21, v0.4.1
 ------------------
 
