@@ -6,7 +6,8 @@
     var testCases = {
         'an empty string': '',
         'a word':          'plop',
-        'an utf8 string':  '<chè!cs!<egfhèqzgrqgzf',
+        'a null char':     'a\u0000',
+        'an utf8 string':  'ÀÁÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',
         'song lyrics':     ("Voilà l'été, j'aperçois le soleil\n" +
                             "Les nuages filent et le ciel s'éclaircit\n" +
                             "Et dans ma tête qui bourdonnent?\n" +
