@@ -1544,18 +1544,8 @@ casper.run(function(self) {
 </code></pre>
           <p>A cooler way is to add an option to your script using CLI argument
             parsing:</p>
-          <pre class="prettyprint"><code class="javascript">var saveXUnitTo = null;
-phantom.args.forEach(function(arg) {
-    var saveMatch = /--save=(.*)(\s|)/.exec(arg);
-    if (saveMatch) {
-        saveXUnitTo = saveMatch[1];
-    }
-});
-
-// your test suite here
-
-casper.run(function(self) {
-    self.test.renderResults(true, 0, saveXUnitTo);
+          <pre class="prettyprint"><code class="javascript">casper.run(function(self) {
+    self.test.renderResults(true, 0, casper.cli.options.save || false);
 });
 </code></pre>
           <p>Then you can run:</p>
