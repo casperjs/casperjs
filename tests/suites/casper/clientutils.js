@@ -11,7 +11,7 @@
                             "Les nuages filent et le ciel s'éclaircit\n" +
                             "Et dans ma tête qui bourdonnent?\n" +
                             "Les abeilles!"),
-        'a file contents': fs.read(phantom.casperPath + '/tests/site/images/phantom.png')
+        'a file contents': fs.read(phantom.casperPath + '/tests/site/alert.html')
     };
 
     for (var what in testCases) {
