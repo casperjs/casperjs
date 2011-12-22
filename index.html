@@ -1615,7 +1615,7 @@ $ casperjs /path/to/test/run.js mytestdirectory/
             executable, but if you do so, you must set the <code>phantom.casperPath</code>
             property to the path where the library root is located on your system:</p>
           <pre class="prettyprint"><code class="javascript">// casperscript.js
-phantom.casperPath('/path/to/casperjs');
+phantom.casperPath = '/path/to/casperjs';
 phantom.injectJs(phantom.casperPath + '/' + 'casper.js');
 
 var casper = new phantom.Casper();
