@@ -13,7 +13,7 @@ $(document).ready(function() {
     $("a[href^=#]").click(function(e) {
         var anchor = $(this).attr('href');
         document.location.href = anchor;
-        reScroll($(anchor))
+        reScroll($(anchor));
         return e.preventDefault();
     });
     if (document.location.hash) {
@@ -53,7 +53,7 @@ $(document).ready(function() {
             }
         }
         elements.each(function(i, element) {
-            var element = $(element);
+            element = $(element);
             initials.push({
                 element:    element,
                 container:  element.parents(containerSelector),
@@ -65,7 +65,7 @@ $(document).ready(function() {
         });
         window.onscroll = function() {
             $(initials).each(position);
-        }
+        };
     })(window);
     // github news
     $('#commits-master').githubInfoWidget({

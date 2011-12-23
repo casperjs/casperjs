@@ -1604,65 +1604,99 @@ $ casperjs /path/to/test/run.js mytestdirectory/
           <div class="page-header">
             <h1>Frequently Asked Questions</h1>
           </div>
-          <h4>Can I use <a href="http://jquery.com/">jQuery</a> with CasperJS?</h4>
-          <p>Sure, as every single other javascript library on Earth.</p>
-          <p> A first solution is to inject it into the remote DOM environement
-            by hand using the standard <code>WebPage.injectJs()</code> method:
-          </p>
-          <pre class="prettyprint"><code class="javascript">casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');
-</code></pre>
-          <p>If you need jQuery being available everytime, you can also make it
-            being injected in every received response by setting the <code>clientScripts</code>
-            option of CasperJS: </p>
-          <pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
-    clientScripts: ["includes/jquery.min.js"]
-});
-</code></pre>
-          <hr>
-          <h4>Can I use CasperJS without using the <code>casperjs</code> executable? (a.k.a <em>I live on Windows</em>)</h4>
-          <p>Yes, you can call a CasperJS script directly with the <code>phantomjs</code>
-            executable, but if you do so, you must set the <code>phantom.casperPath</code>
-            property to the path where the library root is located on your system:</p>
-          <pre class="prettyprint"><code class="javascript">// casperscript.js
-phantom.casperPath = '/path/to/casperjs';
-phantom.injectJs(phantom.casperPath + '/' + 'casper.js');
+          <div class="row">
+            <div class="span9">
+              <h4 id="faq-versioning">What is the versioning policy of CasperJS?</h4>
+              <p>
+                Releases will follow the <a href="http://semver.org/">SemVer standard</a>;
+                they will be numbered with the follow format:</p>
+              <pre><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;[-&lt;identifier&gt;]
+    </code></pre>
+              <p>
+                And constructed with the following guidelines:
+              </p>
+              <ul>
+                <li>Breaking backwards compatibility bumps the major
+                <li>New additions without breaking backwards compatibility bumps the minor
+                <li>Bug fixes and misc changes bump the patch
+                <li>Unstable, special and trunk versions will have a proper identifier
+              </ul>
+              <hr/>
+              <h4 id="faq-jquery">Can I use <a href="http://jquery.com/">jQuery</a> with CasperJS?</h4>
+              <p>Sure, as every single other javascript library on Earth.</p>
+              <p> A first solution is to inject it into the remote DOM environement
+                by hand using the standard <code>WebPage.injectJs()</code> method:
+              </p>
+              <pre class="prettyprint"><code class="javascript">casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');
+    </code></pre>
+              <p>If you need jQuery being available everytime, you can also make it
+                being injected in every received response by setting the <code>clientScripts</code>
+                option of CasperJS: </p>
+              <pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
+        clientScripts: ["includes/jquery.min.js"]
+    });
+    </code></pre>
+              <hr>
+              <h4 id="faq-executable">Can I use CasperJS without using the <code>casperjs</code> executable? (a.k.a <em>I live on Windows</em>)</h4>
+              <p>Yes, you can call a CasperJS script directly with the <code>phantomjs</code>
+                executable, but if you do so, you must set the <code>phantom.casperPath</code>
+                property to the path where the library root is located on your system:</p>
+              <pre class="prettyprint"><code class="javascript">// casperscript.js
+    phantom.casperPath = '/path/to/casperjs';
+    phantom.injectJs(phantom.casperPath + '/' + 'casper.js');
 
-var casper = new phantom.Casper();
-// ...
-</code></pre>
-          <p>You can run such a script like any other standard PhantomJS script:</p>
-          <pre class="prettyprint"><code class="void">$ phantomjs casperscript.js
-</code></pre>
-          <hr>
-          <h4 id="faq_http_statuses">How can I catch 404 errors?</h4>
-          <p> You can define your own HTTP status code handlers by using the <code>httpStatusHandlers</code>
-            option of the Casper object. You can also catch other HTTP status
-            codes as well, as demonstrated below: </p>
-          <pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
-    httpStatusHandlers: {
-        404: function(self, resource) {
-            self.echo('Resource at ' + resource.url + ' not found (404)');
+    var casper = new phantom.Casper();
+    // ...
+    </code></pre>
+              <p>You can run such a script like any other standard PhantomJS script:</p>
+              <pre class="prettyprint"><code class="void">$ phantomjs casperscript.js
+    </code></pre>
+              <p><span class="label notice">Tip</span>
+              This is especially useful if you work on Windows and don't have a way to
+              use the Python-based <code>casperjs</code> executable easily.</p>
+              <hr>
+              <h4 id="faq-httpstatuses">How can I catch 404 errors?</h4>
+              <p> You can define your own HTTP status code handlers by using the <code>httpStatusHandlers</code>
+                option of the Casper object. You can also catch other HTTP status
+                codes as well, as demonstrated below: </p>
+              <pre class="prettyprint"><code class="javascript">var casper = new phantom.Casper({
+        httpStatusHandlers: {
+            404: function(self, resource) {
+                self.echo(resource.url + ' not found (404)');
+            },
+            500: function(self, resource) {
+                self.echo(resource.url + ' gave an error (500)');
+            }
         },
-        500: function(self, resource) {
-            self.echo('Resource at ' + resource.url + ' gave a server error (500)');
-        }
-    },
-    verbose: true
-});
+        verbose: true
+    });
 
-casper.start('http://mywebsite/404', function(self) {
-    self.echo('We suppose this url return an HTTP 404');
-}).thenOpen('http://mywebsite/500', function(self) {
-    self.echo('We suppose this url return an HTTP 500');
-}).run(function(self) {
-    self.echo('Done.').exit();
-});
-</code></pre>
-          <hr>
-          <p> <span class="label notice">Contribute</span> If you want to
-            contribute FAQs to this section, feel free to fork the <a href="https://github.com/n1k0/casperjs/tree/gh-pages">documentation
-              pages branch on github</a>, and send me a pull request with your
-            tips and tricks! </p>
+    casper.start('http://mywebsite/404', function(self) {
+        self.echo('We suppose this url return an HTTP 404');
+    }).thenOpen('http://mywebsite/500', function(self) {
+        self.echo('We suppose this url return an HTTP 500');
+    }).run(function(self) {
+        self.echo('Done.').exit();
+    });
+    </code></pre>
+            </div>
+            <div class="span7 apitoc">
+              <h4>Problem?</h4>
+              <ul>
+                <li><a href="#faq-versioning">What is the versioning policy of CasperJS?</a>
+                <li><a href="#faq-jquery">Can I use jQuery with CasperJS?</a>
+                <li><a href="#faq-executable">Can I use CasperJS without using the casperjs executable?</a>
+                <li><a href="#faq-httpstatuses">How can I catch 404 errors?</a>
+              </ul>
+              <p>
+                <span class="label notice">Contribute</span> If you want to
+                contribute FAQs to this section, feel free to fork the
+                <a href="https://github.com/n1k0/casperjs/tree/gh-pages">documentation
+                pages branch on github</a>, and send me a pull request with your
+                tips and tricks!
+              </p>
+            </div>
+          </div>
         </section>
         <section id="activity">
           <div class="page-header">
@@ -1675,6 +1709,7 @@ casper.start('http://mywebsite/404', function(self) {
           <div class="page-header">
             <h1>Download</h1>
           </div>
+
           <p> You can download this project in either <a href="https://github.com/n1k0/casperjs/zipball/0.4.1">zip</a>
             or <a href="https://github.com/n1k0/casperjs/tarball/0.4.1">tar</a>
             formats. You can also clone the project with <a href="http://git-scm.com">Git</a>
