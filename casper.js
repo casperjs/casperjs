@@ -33,9 +33,9 @@
     phantom.casperVersion = {
         major: 0,
         minor: 4,
-        revision: 1,
+        patch: 1,
         toString: function() {
-            return [this.major, this.minor, this.revision].join('.');
+            return [this.major, this.minor, this.patch].join('.');
         }
     };
 
