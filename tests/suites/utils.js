@@ -30,6 +30,22 @@
         }
     })();
 
+    t.comment('isJsFile()');
+
+    (function() {
+        testCases = {
+            '':             false,
+            'toto.png':     false,
+            'plop':         false,
+            'gniii.coffee': true,
+            'script.js':    true
+        };
+
+        for (var testCase in testCases) {
+            t.assertEquals(isJsFile(testCase), testCases[testCase], 'isJsFile() checks for js file');
+        }
+    })();
+
     t.comment('mergeObjects()');
 
     (function() {
