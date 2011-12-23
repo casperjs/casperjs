@@ -30,12 +30,18 @@
         return;
     }
 
+    // see http://semver.org/
     phantom.casperVersion = {
         major: 0,
         minor: 4,
-        patch: 1,
+        patch: 2,
+        ident: 'trunk',
         toString: function() {
-            return [this.major, this.minor, this.patch].join('.');
+            var version = [this.major, this.minor, this.patch].join('.');
+            if (this.ident) {
+                version = [version, this.ident].join('-');
+            }
+            return version;
         }
     };
 
