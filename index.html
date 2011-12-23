@@ -1655,7 +1655,7 @@ var casper = new phantom.Casper();
               This is especially useful if you work on Windows and don't have a way to
               use the Python-based <code>casperjs</code> executable easily.</p>
               <hr>
-              <h4 id="faq-httpstatuses">How can I catch 404 errors?</h4>
+              <h4 id="faq-httpstatuses">How can I catch HTTP 404 and other status codes?</h4>
               <p> You can define your own HTTP status code handlers by using the <code>httpStatusHandlers</code>
                 option of the Casper object. You can also catch other HTTP status
                 codes as well, as demonstrated below: </p>
@@ -1686,7 +1686,7 @@ casper.start('http://mywebsite/404', function(self) {
                 <li><a href="#faq-versioning">What is the versioning policy of CasperJS?</a>
                 <li><a href="#faq-jquery">Can I use jQuery with CasperJS?</a>
                 <li><a href="#faq-executable">Can I use CasperJS without using the casperjs executable?</a>
-                <li><a href="#faq-httpstatuses">How can I catch 404 errors?</a>
+                <li><a href="#faq-httpstatuses">How can I catch HTTP 404 and other status codes?</a>
               </ul>
               <p>
                 <span class="label notice">Contribute</span> If you want to
