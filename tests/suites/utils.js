@@ -1,7 +1,22 @@
 (function(t) {
+    t.comment('fileExt()');
+
+    var testCases = {
+        'foo.ext':    'ext',
+        'FOO.EXT':    'ext',
+        'a.ext':      'ext',
+        '.ext':       'ext',
+        'toto.':      '',
+        ' plop.ext ': 'ext'
+    };
+
+    for (var testCase in testCases) {
+        t.assertEquals(fileExt(testCase), testCases[testCase], 'fileExt() extract file extension');
+    }
+
     t.comment('mergeObjects()');
 
-    var testCases = [
+    testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
         },
