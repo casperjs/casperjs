@@ -106,6 +106,28 @@ phantom.casperArgs = (function(cliArgs) {
     return extract;
 })(phantom.args);
 
+var sourceIds = {};
+
+// Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
+// TODO: remoive when phantomjs has js engine upgrade
+if (!new Error().hasOwnProperty('stack')) {
+    Object.defineProperty(Error.prototype, 'stack', {
+        set: function(string) {
+            this._stack = string;
+        },
+        get: function() {
+            if (this._stack) {
+                return this._stack;
+            } else if (this.fileName || this.sourceId) {
+                return this.toString() + '\nat ' + getErrorMessage(this);
+            }
+            return this.toString() + '\nat unknown';
+        },
+        configurable: true,
+        enumerable: true
+    });
+}
+
 // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
 // TODO: remove when PhantomJS has full module support
 require = (function(require, requireDir) {
@@ -159,7 +181,14 @@ require = (function(require, requireDir) {
                 return requireCache[file].exports;
             }
             code = fs.read(file);
-            if (file.match(/\.coffee$/)) {
+            if (file.match(/\.js$/i)) {
+                try {
+                    // TODO: esprima syntax check
+                } catch (e) {
+                    e.fileName = file;
+                    throw e;
+                }
+            } else if (file.match(/\.coffee$/i)) {
                 try {
                     code = CoffeeScript.compile(code);
                 } catch (e) {
@@ -168,12 +197,12 @@ require = (function(require, requireDir) {
                 }
             }
             // a trick to associate Error's sourceId with file
-            //code += ";throw new Error('__sourceId__');";
+            code += ";throw new Error('__sourceId__');";
             try {
                 fn = new Function('module', 'exports', code);
                 fn(module, module.exports);
             } catch (e) {
-                if (typeof sourceIds === "object" && !sourceIds.hasOwnProperty(e.sourceId)) {
+                if (!sourceIds.hasOwnProperty(e.sourceId)) {
                     sourceIds[e.sourceId] = file;
                 }
                 if (e.message !== '__sourceId__') {
