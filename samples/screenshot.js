@@ -5,7 +5,11 @@ if (!phantom.casperLoaded) {
 
 var casper = new phantom.Casper({
     logLevel: "debug",
-    verbose: true
+    verbose: true,
+    viewportSize: {
+        width: 800,
+        height: 600
+    }
 });
 
 casper.start('https://twitter.com/#!/twilio', function(self) {
