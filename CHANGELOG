@@ -1,7 +1,7 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.4.2
+2011-12-25, v0.4.2
 ------------------
 
 - fixed erroneous error handling in Casper.capture()
