@@ -1137,10 +1137,23 @@ function createPage(casper) {
             }
         }
         // Client-side utils injection
-        if (!casper.page.injectJs(fs.pathJoin(phantom.casperPath, 'lib', 'clientutils.js'))) {
+        if (!casper.page.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'clientutils.js'))) {
             casper.log("Failed to inject Casper client-side utilities!", "warning");
         } else {
-            casper.log("Successfully injected Casper client-side utilities", "debug");
+            var injected = casper.evaluate(function() {
+                var __utils__;
+                try {
+                    __utils__ = new CasperUtils();
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            });
+            if (true === injected) {
+                casper.log("Successfully injected Casper client-side utilities", "debug");
+            } else {
+                casper.log("Failed to instantiate Casper client-side utilities!", "warning");
+            }
         }
         // history
         casper.history.push(casper.getCurrentUrl());

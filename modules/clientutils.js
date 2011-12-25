@@ -338,10 +338,11 @@
         };
 
         /**
-         * Logs a message.
+         * Logs a message. Will format the message a way CasperJS will be able
+         * to log phantomjs side.
          *
-         * @param  String  message
-         * @param  String  level
+         * @param  String  message  The message to log
+         * @param  String  level    The log level
          */
         this.log = function(message, level) {
             console.log("[casper:" + (level || "debug") + "] " + message);
@@ -362,9 +363,9 @@
                 field = fields[0];
             }
             if (!field instanceof HTMLElement) {
-                this.log("invalid field type; only HTMLElement and NodeList are supported", "error");
+                this.log("Invalid field type; only HTMLElement and NodeList are supported", "error");
             }
-            this.log('set "' + field.getAttribute('name') + '" field value to ' + value, "debug");
+            this.log('Set "' + field.getAttribute('name') + '" field value to ' + value, "debug");
             try {
                 field.focus();
             } catch (e) {
@@ -409,7 +410,7 @@
                         case "file":
                             throw {
                                 name:    "FileUploadError",
-                                message: "file field must be filled using page.uploadFile",
+                                message: "File field must be filled using page.uploadFile",
                                 path:    value
                             };
                         case "radio":
@@ -418,11 +419,11 @@
                                     e.checked = (e.value === value);
                                 });
                             } else {
-                                out = 'provided radio elements are empty';
+                                out = 'Urovided radio elements are empty';
                             }
                             break;
                         default:
-                            out = "unsupported input field type: " + type;
+                            out = "Unsupported input field type: " + type;
                             break;
                     }
                     break;
@@ -431,7 +432,7 @@
                     field.value = value;
                     break;
                 default:
-                    out = 'unsupported field type: ' + nodeName;
+                    out = 'Unsupported field type: ' + nodeName;
                     break;
             }
             try {
@@ -442,4 +443,4 @@
             return out;
         };
     };
-})(exports || window || {});
+})(typeof exports === "object" ? exports : window);

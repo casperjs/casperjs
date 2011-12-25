@@ -26,7 +26,7 @@
  *
  */
 
-exports.create = create;
+var utils = require('utils');
 
 exports.create = function(fn) {
     return new FunctionArgsInjector(fn);
@@ -38,7 +38,7 @@ exports.create = function(fn) {
  * FIXME: use new Function() instead of eval()
  */
 var FunctionArgsInjector = function(fn) {
-    if (!isType(fn, "function")) {
+    if (!utils.isType(fn, "function")) {
         throw new Error("FunctionArgsInjector() can only process functions");
     }
     this.fn = fn;
@@ -61,7 +61,7 @@ var FunctionArgsInjector = function(fn) {
 
     this.process = function(values) {
         var fnObj = this.extract(this.fn);
-        if (!isType(fnObj, "object")) {
+        if (!utils.isType(fnObj, "object")) {
             throw new Error("Unable to process function " + this.fn.toString());
         }
         var inject = this.getArgsInjectionString(fnObj.args, values);

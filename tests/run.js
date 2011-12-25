@@ -4,6 +4,7 @@ if (!phantom.casperLoaded) {
 }
 
 var fs = require('fs');
+var utils = require('utils');
 
 phantom.injectJs(fs.pathJoin(phantom.casperPath, 'lib', 'vendors', 'esprima.js'));
 
@@ -15,7 +16,7 @@ var casper = new phantom.Casper({
 // Overriding Casper.open to prefix all test urls
 phantom.Casper.extend({
     open: function(location, options) {
-        options = isType(options, "object") ? options : {};
+        options = utils.isType(options, "object") ? options : {};
         this.requestUrl = location;
         var url = 'file://' + phantom.casperPath + '/' + location;
         this.page.open(url);

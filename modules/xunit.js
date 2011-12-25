@@ -26,6 +26,8 @@
  *
  */
 
+var utils = require('utils');
+
 exports.create = function() {
     return new XUnitExporter();
 };
@@ -39,7 +41,7 @@ XUnitExporter = function() {
         var node = document.createElement(name);
         for (var attrName in attributes) {
             var value = attributes[attrName];
-            if (attributes.hasOwnProperty(attrName) && isType(attrName, "string")) {
+            if (attributes.hasOwnProperty(attrName) && utils.isType(attrName, "string")) {
                 node.setAttribute(attrName, value);
             }
         }
