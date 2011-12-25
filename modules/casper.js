@@ -149,7 +149,7 @@ Casper.prototype = {
      */
     capture: function(targetFile, clipRect) {
         var previousClipRect;
-        targetFile = require('fs').absolute(targetFile);
+        targetFile = fs.absolute(targetFile);
         if (clipRect) {
             if (!utils.isType(clipRect, "object")) {
                 throw new Error("clipRect must be an Object instance.");
