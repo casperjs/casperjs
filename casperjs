@@ -1,4 +1,4 @@
-#!/usr/bin/env phantomjs
+#!/usr/bin/env phantomjs14
 
 /*!
  * Casper is a navigation utility for PhantomJS.
@@ -27,188 +27,185 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
-
-if (true === phantom.casperLoaded) {
-    return;
-}
-
-// see http://semver.org/
-phantom.casperVersion = {
-    major: 0,
-    minor: 4,
-    patch: 2,
-    ident: 'experimental-require',
-    toString: function() {
-        var version = [this.major, this.minor, this.patch].join('.');
-        if (this.ident) {
-            version = [version, this.ident].join('-');
-        }
-        return version;
-    }
-};
-
-// Patching fs
-// TODO: watch for these methods being implemented in official fs module
-var fs = (function(fs) {
-    if (!fs.hasOwnProperty('basename')) {
-        fs.basename = function(path) {
-            return path.replace(/.*\//, '');
-        };
-    }
-    if (!fs.hasOwnProperty('dirname')) {
-        fs.dirname = function(path) {
-            return path.replace(/\/[^\/]*\/?$/, '');
-        };
-    }
-    if (!fs.hasOwnProperty('pathJoin')) {
-        fs.pathJoin = function() {
-            return Array.prototype.join.call(arguments, this.separator);
-        };
-    }
-    return fs;
-})(require('fs'));
-
-// casper root path
-phantom.casperPath = fs.absolute(phantom.libraryScript);
-
-var sourceIds = {};
-
-// Patching require()
-// Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-// TODO: remove when PhantomJS has full module support
-require = (function(require, requireDir) {
-    var phantomBuiltins = ['fs', 'webpage', 'webserver'];
-    var phantomRequire = phantom.__orig__require = require;
-    var requireCache = {};
-    return function(path) {
-        var i, dir, paths = [],
-            fileGuesses = [],
-            file, code, fn,
-            module = {
-                exports: {}
-            };
-        if (phantomBuiltins.indexOf(path) !== -1) {
-            return phantomRequire(path);
-        } else {
-            if (path[0] === '.') {
-                paths.push(fs.absolute(fs.pathJoin(requireDir, path)));
-            } else if (path[0] === '/') {
-                paths.push(path);
-            } else {
-                dir = fs.absolute(requireDir);
-                while (dir !== '') {
-                    // nodejs compatibility
-                    paths.push(fs.pathJoin(dir, 'node_modules', path));
-                    dir = fs.dirname(dir);
-                }
-                paths.push(fs.pathJoin(requireDir, 'modules', path));
+if (!phantom.casperLoaded) {
+    // see http://semver.org/
+    phantom.casperVersion = {
+        major: 0,
+        minor: 4,
+        patch: 2,
+        ident: 'experimental-require',
+        toString: function() {
+            var version = [this.major, this.minor, this.patch].join('.');
+            if (this.ident) {
+                version = [version, this.ident].join('-');
             }
-            paths.forEach(function(testPath) {
-                fileGuesses.push.apply(fileGuesses, [
-                    testPath,
-                    testPath + '.js',
-                    testPath + '.coffee',
-                    fs.pathJoin(testPath, 'index.js'),
-                    fs.pathJoin(testPath, 'index.coffee'),
-                    fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
-                    fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
-                ]);
-            });
-            file = null;
-            for (i = 0; i < fileGuesses.length && !file; ++i) {
-                if (fs.isFile(fileGuesses[i])) {
-                    file = fileGuesses[i];
-                }
-            }
-            if (!file) {
-                throw new Error("CasperJS couldn't find module " + path);
-            }
-            if (file in requireCache) {
-                return requireCache[file].exports;
-            }
-            code = fs.read(file);
-            if (file.match(/\.js$/i)) {
-                try {
-                    // TODO: esprima syntax check
-                } catch (e) {
-                    e.fileName = file;
-                    throw e;
-                }
-            } else if (file.match(/\.coffee$/i)) {
-                try {
-                    code = CoffeeScript.compile(code);
-                } catch (e) {
-                    e.fileName = file;
-                    throw e;
-                }
-            }
-            // a trick to associate Error's sourceId with file
-            code += ";throw new Error('__sourceId__');";
-            try {
-                fn = new Function('module', 'exports', code);
-                fn(module, module.exports);
-            } catch (e) {
-                if (!sourceIds.hasOwnProperty(e.sourceId)) {
-                    sourceIds[e.sourceId] = file;
-                }
-                if (e.message !== '__sourceId__') {
-                    throw e;
-                }
-            }
-            requireCache[file] = module;
-            return module.exports;
+            return version;
         }
     };
-})(require, phantom.casperPath);
 
-// Adding stack traces to Error
-// Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-// TODO: remove when phantomjs has js engine upgrade
-if (!new Error().hasOwnProperty('stack')) {
-    Object.defineProperty(Error.prototype, 'stack', {
-        set: function(string) {
-            this._stack = string;
-        },
-        get: function() {
-            if (this._stack) {
-                return this._stack;
-            } else if (this.fileName || this.sourceId) {
-                return this.toString() + '\nat ' + getErrorMessage(this);
+    // Patching fs
+    // TODO: watch for these methods being implemented in official fs module
+    var fs = (function(fs) {
+        if (!fs.hasOwnProperty('basename')) {
+            fs.basename = function(path) {
+                return path.replace(/.*\//, '');
+            };
+        }
+        if (!fs.hasOwnProperty('dirname')) {
+            fs.dirname = function(path) {
+                return path.replace(/\/[^\/]*\/?$/, '');
+            };
+        }
+        if (!fs.hasOwnProperty('pathJoin')) {
+            fs.pathJoin = function() {
+                return Array.prototype.join.call(arguments, this.separator);
+            };
+        }
+        return fs;
+    })(require('fs'));
+
+    // casper root path
+    phantom.casperPath = fs.absolute(phantom.libraryScript);
+
+    var sourceIds = {};
+
+    // Patching require()
+    // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
+    // TODO: remove when PhantomJS has full module support
+    require = (function(require, requireDir) {
+        var phantomBuiltins = ['fs', 'webpage', 'webserver'];
+        var phantomRequire = phantom.__orig__require = require;
+        var requireCache = {};
+        return function(path) {
+            var i, dir, paths = [],
+                fileGuesses = [],
+                file, code, fn,
+                module = {
+                    exports: {}
+                };
+            if (phantomBuiltins.indexOf(path) !== -1) {
+                return phantomRequire(path);
+            } else {
+                if (path[0] === '.') {
+                    paths.push(fs.absolute(fs.pathJoin(requireDir, path)));
+                } else if (path[0] === '/') {
+                    paths.push(path);
+                } else {
+                    dir = fs.absolute(requireDir);
+                    while (dir !== '') {
+                        // nodejs compatibility
+                        paths.push(fs.pathJoin(dir, 'node_modules', path));
+                        dir = fs.dirname(dir);
+                    }
+                    paths.push(fs.pathJoin(requireDir, 'modules', path));
+                }
+                paths.forEach(function(testPath) {
+                    fileGuesses.push.apply(fileGuesses, [
+                        testPath,
+                        testPath + '.js',
+                        testPath + '.coffee',
+                        fs.pathJoin(testPath, 'index.js'),
+                        fs.pathJoin(testPath, 'index.coffee'),
+                        fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
+                        fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
+                    ]);
+                });
+                file = null;
+                for (i = 0; i < fileGuesses.length && !file; ++i) {
+                    if (fs.isFile(fileGuesses[i])) {
+                        file = fileGuesses[i];
+                    }
+                }
+                if (!file) {
+                    throw new Error("CasperJS couldn't find module " + path);
+                }
+                if (file in requireCache) {
+                    return requireCache[file].exports;
+                }
+                code = fs.read(file);
+                if (file.match(/\.js$/i)) {
+                    try {
+                        // TODO: esprima syntax check
+                    } catch (e) {
+                        e.fileName = file;
+                        throw e;
+                    }
+                } else if (file.match(/\.coffee$/i)) {
+                    try {
+                        code = CoffeeScript.compile(code);
+                    } catch (e) {
+                        e.fileName = file;
+                        throw e;
+                    }
+                }
+                // a trick to associate Error's sourceId with file
+                code += ";throw new Error('__sourceId__');";
+                try {
+                    fn = new Function('module', 'exports', code);
+                    fn(module, module.exports);
+                } catch (e) {
+                    if (!sourceIds.hasOwnProperty(e.sourceId)) {
+                        sourceIds[e.sourceId] = file;
+                    }
+                    if (e.message !== '__sourceId__') {
+                        throw e;
+                    }
+                }
+                requireCache[file] = module;
+                return module.exports;
             }
-            return this.toString() + '\nat unknown';
-        },
-        configurable: true,
-        enumerable: true
+        };
+    })(require, phantom.casperPath);
+
+    // Adding stack traces to Error
+    // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
+    // TODO: remove when phantomjs has js engine upgrade
+    if (!new Error().hasOwnProperty('stack')) {
+        Object.defineProperty(Error.prototype, 'stack', {
+            set: function(string) {
+                this._stack = string;
+            },
+            get: function() {
+                if (this._stack) {
+                    return this._stack;
+                } else if (this.fileName || this.sourceId) {
+                    return this.toString() + '\nat ' + getErrorMessage(this);
+                }
+                return this.toString() + '\nat unknown';
+            },
+            configurable: true,
+            enumerable: true
+        });
+    }
+
+    // casper cli args
+    phantom.casperArgs = require('cli').parse(phantom.args);
+
+    // loaded status
+    phantom.casperLoaded = true;
+
+    if (!!phantom.casperArgs.options.version) {
+        console.log(phantom.casperVersion.toString());
+        phantom.exit(0);
+    } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+        console.log('CasperJS version ' + phantom.casperVersion.toString());
+        console.log('Usage: casperjs script.(js|coffee) [options...]');
+        console.log('Read the docs http://n1k0.github.com/casperjs/');
+        phantom.exit(0);
+    }
+
+    phantom.casperScript = phantom.casperArgs.get(0);
+
+    if (!fs.isFile(phantom.casperScript)) {
+        console.log('Unable to open file: ' + phantom.casperScript);
+        phantom.exit(1);
+    }
+
+    // filter out the called script name from casper args
+    phantom.casperArgs.args = phantom.casperArgs.args.filter(function(arg) {
+        return arg !== phantom.casperScript;
     });
 }
-
-// casper cli args
-phantom.casperArgs = require('cli').parse(phantom.args);
-
-// loaded status
-phantom.casperLoaded = true;
-
-if (!!phantom.casperArgs.options.version) {
-    console.log(phantom.casperVersion.toString());
-    phantom.exit(0);
-} else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
-    console.log('CasperJS version ' + phantom.casperVersion.toString());
-    console.log('Usage: casperjs script.(js|coffee) [options...]');
-    console.log('Read the docs http://n1k0.github.com/casperjs/');
-    phantom.exit(0);
-}
-
-phantom.casperScript = phantom.casperArgs.get(0);
-
-if (!fs.isFile(phantom.casperScript)) {
-    console.log('Unable to open file: ' + phantom.casperScript);
-    phantom.exit(1);
-}
-
-// filter out the called script name from casper args
-phantom.casperArgs.args = phantom.casperArgs.args.filter(function(arg) {
-    return arg !== phantom.casperScript;
-});
 
 // passed script execution
 // TODO: proper syntax validation?
