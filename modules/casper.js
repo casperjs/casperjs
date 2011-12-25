@@ -1074,7 +1074,7 @@ Casper.extend = function(proto) {
     if (!utils.isType(proto, "object")) {
         throw new Error("extends() only accept objects as prototypes");
     }
-    mergeObjects(Casper.prototype, proto);
+    utils.mergeObjects(Casper.prototype, proto);
 };
 
 exports.Casper = Casper;

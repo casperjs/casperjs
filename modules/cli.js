@@ -36,9 +36,6 @@ var utils = require('utils');
  * @return Object
  */
 exports.parse = function(phantomArgs) {
-    if (!utils.isType(phantomArgs, "runtimearray")) {
-        throw new Error('parse() can only process a phantomjs arguments array');
-    }
     var extract = {
         args: [],
         options: {},
@@ -57,7 +54,7 @@ exports.parse = function(phantomArgs) {
             // named option
             var optionMatch = arg.match(/^--(.*)=(.*)/i);
             if (optionMatch) {
-                extract.options[optionMatch[1]] = optionMatch[2];
+                extract.options[optionMatch[1]] = castArgument(optionMatch[2]);
             } else {
                 // flag
                 var flagMatch = arg.match(/^--(.*)/);
@@ -72,3 +69,15 @@ exports.parse = function(phantomArgs) {
     });
     return extract;
 };
+
+function castArgument(arg) {
+    if (arg.match(/^-?\d+$/)) {
+        return parseInt(arg, 10);
+    } else if (arg.match(/^-?\d+\.\d+$/)) {
+        return parseFloat(arg);
+    } else if (arg.match(/^(true|false)$/i)) {
+        return arg.trim().toLowerCase() === "true" ? true : false;
+    } else {
+        return arg;
+    }
+}

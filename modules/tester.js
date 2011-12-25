@@ -94,8 +94,8 @@ var Tester = function(casper, options) {
             exporter.addSuccess("unknown", message);
         } else {
             casper.echo(this.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-            this.comment('   got:      ' + serialize(testValue));
-            this.comment('   expected: ' + serialize(expected));
+            this.comment('   got:      ' + utils.serialize(testValue));
+            this.comment('   expected: ' + utils.serialize(expected));
             this.testResults.failed++;
             exporter.addFailure("unknown", message, "test failed; expected: " + expected + "; got: " + testValue, "assertEquals");
         }
@@ -236,7 +236,7 @@ var Tester = function(casper, options) {
     };
 
     this.bar = function(text, style) {
-        casper.echo(fillBlanks(text), style);
+        casper.echo(utils.fillBlanks(text), style);
     };
 
     /**
@@ -281,10 +281,10 @@ var Tester = function(casper, options) {
      * @param  String  file  Absolute path to some js/coffee file
      */
     this.exec = function(file) {
-        if (!fs.isFile(file) || !isJsFile(file)) {
+        if (!fs.isFile(file) || !utils.isJsFile(file)) {
             throw new Error("Can only exec() files with .js or .coffee extensions");
         }
-        if (fileExt(file) === "coffee") {
+        if (utils.fileExt(file) === "coffee") {
             phantom.injectJs(file); // FIXME: syntax validation?
         } else {
             var testContents = fs.read(file);
@@ -328,7 +328,7 @@ var Tester = function(casper, options) {
             }
         });
         return entries.filter(function(entry) {
-            return isJsFile(fs.absolute(fs.pathJoin(dir, entry)));
+            return utils.isJsFile(fs.absolute(fs.pathJoin(dir, entry)));
         });
     };
 
@@ -380,7 +380,7 @@ var Tester = function(casper, options) {
             style = 'GREEN_BAR';
         }
         result = statusText + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
-        casper.echo(this.colorize(fillBlanks(result), style));
+        casper.echo(this.colorize(utils.fillBlanks(result), style));
         if (save && utils.isType(require, "function")) {
             try {
                 fs.write(save, exporter.getXML(), 'w');

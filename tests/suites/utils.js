@@ -1,4 +1,6 @@
 (function(t) {
+    var utils = require('utils');
+
     t.comment('fileExt()');
 
     (function() {
@@ -12,7 +14,7 @@
         };
 
         for (var testCase in testCases) {
-            t.assertEquals(fileExt(testCase), testCases[testCase], 'fileExt() extract file extension');
+            t.assertEquals(utils.fileExt(testCase), testCases[testCase], 'fileExt() extract file extension');
         }
     })();
 
@@ -26,7 +28,7 @@
         };
 
         for (var testCase in testCases) {
-            t.assertEquals(fillBlanks(testCase, 10), testCases[testCase], 'fillBlanks() fills blanks');
+            t.assertEquals(utils.fillBlanks(testCase, 10), testCases[testCase], 'fillBlanks() fills blanks');
         }
     })();
 
@@ -42,7 +44,7 @@
         };
 
         for (var testCase in testCases) {
-            t.assertEquals(isJsFile(testCase), testCases[testCase], 'isJsFile() checks for js file');
+            t.assertEquals(utils.isJsFile(testCase), testCases[testCase], 'isJsFile() checks for js file');
         }
     })();
 
@@ -74,7 +76,7 @@
         ];
 
         testCases.forEach(function(testCase) {
-            t.assertEquals(mergeObjects(testCase.obj1, testCase.obj2), testCase.merged, 'mergeObjects() can merge objects');
+            t.assertEquals(utils.mergeObjects(testCase.obj1, testCase.obj2), testCase.merged, 'mergeObjects() can merge objects');
         });
     })();
 
