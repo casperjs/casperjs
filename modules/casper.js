@@ -149,6 +149,7 @@ Casper.prototype = {
      */
     capture: function(targetFile, clipRect) {
         var previousClipRect;
+        targetFile = require('fs').absolute(targetFile);
         if (clipRect) {
             if (!utils.isType(clipRect, "object")) {
                 throw new Error("clipRect must be an Object instance.");
@@ -159,10 +160,8 @@ Casper.prototype = {
         } else {
             this.log('Capturing page to ' + targetFile, "debug");
         }
-        try {
-            this.page.render(targetFile);
-        } catch (e) {
-            this.log('Failed to capture screenshot as ' + targetFile + ': ' + e, "error");
+        if (!this.page.render(targetFile)) {
+            this.log('Failed to save screenshot to ' + targetFile + '; please check permissions', "error");
         }
         if (previousClipRect) {
             this.page.clipRect = previousClipRect;
@@ -888,6 +887,9 @@ Casper.prototype = {
      * @return Casper
      */
     viewport: function(width, height) {
+        if (!this.started) {
+            throw new Error("Casper must be started in order to set viewport at runtime");
+        }
         if (!utils.isType(width, "number") || !utils.isType(height, "number") || width <= 0 || height <= 0) {
             throw new Error("Invalid viewport width/height set: " + width + 'x' + height);
         }
