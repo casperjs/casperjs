@@ -35,7 +35,7 @@
         major: 0,
         minor: 4,
         patch: 2,
-        ident: 'trunk',
+        ident: undefined,
         toString: function() {
             var version = [this.major, this.minor, this.patch].join('.');
             if (this.ident) {
