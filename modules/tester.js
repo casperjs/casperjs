@@ -28,6 +28,7 @@
 
 var fs = require('fs');
 var utils = require('utils');
+var esprima = require('./modules/vendors/esprima');
 
 exports.create = function(casper, options) {
     return new Tester(casper, options);
