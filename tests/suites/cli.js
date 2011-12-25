@@ -1,4 +1,4 @@
-(function(t, phantom) {
+(function(t) {
     var cli = require('cli');
 
     t.comment('parse()');
@@ -40,4 +40,4 @@
     })(cli.parse(['foo & bar', 'baz & boz', '--universe=42', '--lap=13.37', '--chucknorris', '--oops=false']));
 
     t.done();
-})(casper.test, phantom);
+})(casper.test);
