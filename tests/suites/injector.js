@@ -1,6 +1,6 @@
 (function(t) {
     function createInjector(fn, values) {
-        return new phantom.Casper.FunctionArgsInjector(fn, values);
+        return require('injector').create(fn, values);
     }
 
     var testFn = function(a, b) { return a + b; };

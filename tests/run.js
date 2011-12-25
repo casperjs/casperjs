@@ -18,8 +18,7 @@ require('casper').Casper.extend({
 });
 
 var casper = require('casper').create({
-    faultTolerant: false,
-    verbose:       true
+    faultTolerant: false
 });
 
 var tests = [];
@@ -29,7 +28,11 @@ if (casper.cli.args.length) {
     });
 }
 if (!tests.length) {
+    if (casper.cli.args.length > 0) {
+        casper.echo('No valid test path passed, exiting.', 'ERROR').exit(1);
+    }
     // default test suite is casperjs' one
+    casper.echo('Running complete CasperJS test suite', 'INFO');
     tests = [fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'suites'))];
 }
 casper.test.runSuites.apply(casper.test, tests);

@@ -2,7 +2,7 @@
     t.comment('ClientUtils.encode()');
 
     var fs = require('fs');
-    var utils = new phantom.Casper.ClientUtils();
+    var clientutils = require('clientutils').create();
     var testCases = {
         'an empty string': '',
         'a word':          'plop',
@@ -17,8 +17,8 @@
 
     for (var what in testCases) {
         var source = testCases[what];
-        var encoded = utils.encode(source);
-        t.assertEquals(utils.decode(encoded), source, 'ClientUtils can encode and decode ' + what);
+        var encoded = clientutils.encode(source);
+        t.assertEquals(clientutils.decode(encoded), source, 'Clientclientutils can encode and decode ' + what);
     }
 
     t.done();

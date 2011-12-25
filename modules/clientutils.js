@@ -25,7 +25,6 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
-
 (function(exports) {
     exports.create = function() {
         return new ClientUtils();
@@ -34,7 +33,7 @@
     /**
      * Casper client-side helpers.
      */
-    exports.ClientUtils = function() {
+    ClientUtils = function() {
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -443,4 +442,8 @@
             return out;
         };
     };
+    exports.ClientUtils = ClientUtils;
+
+    // silly "hack" to force having an instance available
+    exports.__utils__ = new exports.ClientUtils();
 })(typeof exports === "object" ? exports : window);
