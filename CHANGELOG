@@ -4,6 +4,8 @@ CasperJS Changelog
 XXXX-XX-XX, v0.4.2
 ------------------
 
+- fixed erroneous error handling in Casper.capture()
+- updated the way exceptions are thrown; now using `throw new Error()` everywhere
 - merged PR #30 - Add request method and request data to the base64encode method (@jasonlfunk)
 - casperjs executable now gracefully exists on KeyboardInterrupt
 - added Casper.download() method, for downloading any resource and save it onto the filesystem
