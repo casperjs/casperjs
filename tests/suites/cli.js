@@ -35,8 +35,10 @@
         t.assertEquals(parsed.options, { universe: 42, lap: 13.37, chucknorris: true, oops: false }, 'parse() returns expected options object');
         t.assertEquals(parsed.get('universe'), 42, 'parse() can cast a numeric option value');
         t.assertEquals(parsed.get('lap'), 13.37, 'parse() can cast a float option value');
+        t.assertType(parsed.get('lap'), "number", 'parse() can cast a boolean value');
         t.assert(parsed.get('chucknorris'), 'parse() can get a flag value by its option name');
-        t.assert(!parsed.get('oops'), 'parse() can cast a boolean value');
+        t.assertType(parsed.get('oops'), "boolean", 'parse() can cast a boolean value');
+        t.assertEquals(parsed.get('oops'), false, 'parse() can cast a boolean value');
     })(cli.parse(['foo & bar', 'baz & boz', '--universe=42', '--lap=13.37', '--chucknorris', '--oops=false']));
 
     t.done();

@@ -70,6 +70,12 @@ exports.parse = function(phantomArgs) {
     return extract;
 };
 
+/**
+ * Cast a string argument to its typed equivalent.
+ *
+ * @param  String  arg
+ * @return Mixed
+ */
 function castArgument(arg) {
     if (arg.match(/^-?\d+$/)) {
         return parseInt(arg, 10);
