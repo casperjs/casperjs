@@ -22,16 +22,14 @@ var casper = require('casper').create({
     verbose:       true
 });
 
-(function(casper) {
-    var tests = [];
-    if (casper.cli.args.length) {
-        tests = casper.cli.args.filter(function(path) {
-            return fs.isFile(path) || fs.isDirectory(path);
-        });
-    }
-    if (!tests.length) {
-        // default test suite is casperjs' one
-        tests = [fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'suites'))];
-    }
-    casper.test.runSuites.apply(casper.test, tests);
-})(casper);
+var tests = [];
+if (casper.cli.args.length) {
+    tests = casper.cli.args.filter(function(path) {
+        return fs.isFile(path) || fs.isDirectory(path);
+    });
+}
+if (!tests.length) {
+    // default test suite is casperjs' one
+    tests = [fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'suites'))];
+}
+casper.test.runSuites.apply(casper.test, tests);

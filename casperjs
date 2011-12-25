@@ -47,7 +47,8 @@ phantom.casperVersion = {
     }
 };
 
-// patching fs
+// Patching fs
+// TODO: watch for these methods being implemented in official fs module
 var fs = (function(fs) {
     if (!fs.hasOwnProperty('basename')) {
         fs.basename = function(path) {
@@ -70,64 +71,9 @@ var fs = (function(fs) {
 // casper root path
 phantom.casperPath = fs.absolute(phantom.libraryScript);
 
-// casper cli args
-phantom.casperArgs = (function(cliArgs) {
-    var extract = {
-        args: [],
-        options: {},
-        get: function(what) {
-            if (typeof what === "number") {
-                return this.args[what];
-            } else if (typeof what === "string") {
-                return this.options[what];
-            } else {
-                throw new Error("Unsupported cli arg getter " + typeof what);
-            }
-        }
-    };
-    cliArgs.forEach(function(arg) {
-        if (arg.indexOf('--') === 0) {
-            // named option
-            var optionMatch = arg.match(/^--(.*)=(.*)/i);
-            if (optionMatch) {
-                extract.options[optionMatch[1]] = optionMatch[2];
-            } else {
-                // flag
-                var flagMatch = arg.match(/^--(.*)/);
-                if (flagMatch) {
-                    extract.options[flagMatch[1]] = true;
-                }
-            }
-        } else {
-            // positional arg
-            extract.args.push(arg);
-        }
-    });
-    return extract;
-})(phantom.args);
-
 var sourceIds = {};
 
-// Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-// TODO: remoive when phantomjs has js engine upgrade
-if (!new Error().hasOwnProperty('stack')) {
-    Object.defineProperty(Error.prototype, 'stack', {
-        set: function(string) {
-            this._stack = string;
-        },
-        get: function() {
-            if (this._stack) {
-                return this._stack;
-            } else if (this.fileName || this.sourceId) {
-                return this.toString() + '\nat ' + getErrorMessage(this);
-            }
-            return this.toString() + '\nat unknown';
-        },
-        configurable: true,
-        enumerable: true
-    });
-}
-
+// Patching require()
 // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
 // TODO: remove when PhantomJS has full module support
 require = (function(require, requireDir) {
@@ -175,7 +121,7 @@ require = (function(require, requireDir) {
                 }
             }
             if (!file) {
-                throw new Error("Can't find module " + path);
+                throw new Error("CasperJS couldn't find module " + path);
             }
             if (file in requireCache) {
                 return requireCache[file].exports;
@@ -215,6 +161,31 @@ require = (function(require, requireDir) {
     };
 })(require, phantom.casperPath);
 
+// Adding stack traces to Error
+// Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
+// TODO: remove when phantomjs has js engine upgrade
+if (!new Error().hasOwnProperty('stack')) {
+    Object.defineProperty(Error.prototype, 'stack', {
+        set: function(string) {
+            this._stack = string;
+        },
+        get: function() {
+            if (this._stack) {
+                return this._stack;
+            } else if (this.fileName || this.sourceId) {
+                return this.toString() + '\nat ' + getErrorMessage(this);
+            }
+            return this.toString() + '\nat unknown';
+        },
+        configurable: true,
+        enumerable: true
+    });
+}
+
+// casper cli args
+phantom.casperArgs = require('cli').parse(phantom.args);
+
+// loaded status
 phantom.casperLoaded = true;
 
 if (!!phantom.casperArgs.options.version) {
@@ -227,7 +198,7 @@ if (!!phantom.casperArgs.options.version) {
     phantom.exit(0);
 }
 
-phantom.casperScript = phantom.casperArgs.args[0];
+phantom.casperScript = phantom.casperArgs.get(0);
 
 if (!fs.isFile(phantom.casperScript)) {
     console.log('Unable to open file: ' + phantom.casperScript);
@@ -238,4 +209,7 @@ if (!fs.isFile(phantom.casperScript)) {
 phantom.casperArgs.args = phantom.casperArgs.args.filter(function(arg) {
     return arg !== phantom.casperScript;
 });
+
+// passed script execution
+// TODO: proper syntax validation?
 phantom.injectJs(phantom.casperScript);

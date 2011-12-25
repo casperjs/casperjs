@@ -1,4 +1,4 @@
-# A small subset of the run.js written in coffeescript
+"A small subset of the run.js written in coffeescript"
 
 do (casper) ->
   steps = 0
