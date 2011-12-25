@@ -70,9 +70,9 @@
             </div>
             <div class="span5 download">
               <h2>Download</h2>
-              <p>CasperJS latest stable version is 0.4.1.</p>
-              <div class="dl-links"> <a href="https://github.com/n1k0/casperjs/zipball/0.4.1">
-                  <img src="images/zip.png" border="0" width="90"></a> <a href="https://github.com/n1k0/casperjs/tarball/0.4.1">
+              <p>CasperJS latest stable version is 0.4.2.</p>
+              <div class="dl-links"> <a href="https://github.com/n1k0/casperjs/zipball/0.4.2">
+                  <img src="images/zip.png" border="0" width="90"></a> <a href="https://github.com/n1k0/casperjs/tarball/0.4.2">
                   <img src="images/tar.png" border="0" width="90"></a> </div>
             </div>
           </div>
@@ -91,12 +91,12 @@
           <p>Now just follow these instructions:</p>
           <pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs.git
 $ cd casperjs
-$ git checkout tags/0.4.1
+$ git checkout tags/0.4.2
 $ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
 </code></pre>
           <p>You should get something like this:</p>
           <pre class="prettyprint"><code class="void">$ casperjs
-CasperJS version 0.4.1
+CasperJS version 0.4.2
 Usage: casperjs script.(js|coffee) [options...]
 Read the docs http://n1k0.github.com/casperjs/
 </code></pre>
@@ -105,7 +105,7 @@ Read the docs http://n1k0.github.com/casperjs/
           executable is written in <a href="http://python.org/">Python</a>, so
           you can also run it using the python command:</p>
           <pre class="prettyprint"><code class="void">$ python /path/to/casperjs/bin/casperjs
-CasperJS version 0.4.1
+CasperJS version 0.4.2
 Usage: casperjs script.(js|coffee) [options...]
 Read the docs http://n1k0.github.com/casperjs/
 </code></pre>
@@ -509,6 +509,15 @@ casper.start('http://domain.tld/download.html', function(self) {
               <pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
     self.die("Fail.", 1);
 }).run();
+</code></pre>
+              <h3 id="phantom_Casper_download"><code>Casper#download(String
+                  url)</code></h3>
+              <p>Saves a remote resource onto the filesystem.</p>
+              <pre class="prettyprint"><code>casper.start('http://www.google.fr/', function(self) {
+    self.download('http://www.google.fr/intl/fr/about/corporate/company/', 'google_company.html');
+}).run(function(self) {
+    self.echo('Done.').exit();
+});
 </code></pre>
               <h3 id="phantom_Casper_each"><code>Casper#each(Array array,
                   Function fn)</code></h3>
@@ -972,6 +981,7 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
                 <li><a href="#phantom_Casper_debugHTML"><code>Casper.debugHTML()</code></a></li>
                 <li><a href="#phantom_Casper_debugPage"><code>Casper.debugPage()</code></a></li>
                 <li><a href="#phantom_Casper_die"><code>Casper.die()</code></a></li>
+                <li><a href="#phantom_Casper_download"><code>Casper.download()</code></a></li>
                 <li><a href="#phantom_Casper_each"><code>Casper.each()</code></a></li>
                 <li><a href="#phantom_Casper_echo"><code>Casper.echo()</code></a></li>
                 <li><a href="#phantom_Casper_evaluate"><code>Casper.evaluate()</code></a></li>
@@ -1710,14 +1720,14 @@ casper.start('http://mywebsite/404', function(self) {
             <h1>Download</h1>
           </div>
 
-          <p> You can download this project in either <a href="https://github.com/n1k0/casperjs/zipball/0.4.1">zip</a>
-            or <a href="https://github.com/n1k0/casperjs/tarball/0.4.1">tar</a>
+          <p> You can download this project in either <a href="https://github.com/n1k0/casperjs/zipball/0.4.2">zip</a>
+            or <a href="https://github.com/n1k0/casperjs/tarball/0.4.2">tar</a>
             formats. You can also clone the project with <a href="http://git-scm.com">Git</a>
             by running: </p>
           <pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs casperjs</code></pre>
           <p>Always try to use a tagged version on production:</p>
           <pre class="prettyprint"><code class="void">$ cd casperjs
-$ git checkout tags/0.4.1</code></pre>
+$ git checkout tags/0.4.2</code></pre>
           <p> Feel free to play with the code and <a href="https://github.com/n1k0/casperjs/issues">report
               any issue on github</a>. I'm also reachable <a href="https://twitter.com/n1k0">on
               twitter</a>. </p>
