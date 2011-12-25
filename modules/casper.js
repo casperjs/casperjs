@@ -26,7 +26,8 @@
  *
  */
 
-var utils = require('./lib/utils');
+var fs = require('fs');
+var utils = require('utils');
 
 exports.create = function(options) {
     return new Casper(options);
@@ -72,7 +73,7 @@ var Casper = function(options) {
     // properties
     this.checker = null;
     this.cli = phantom.casperArgs;
-    this.colorizer = require('./lib/colorizer').create();
+    this.colorizer = require('colorizer').create();
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = 200;
     this.defaultWaitTimeout = 5000;
@@ -99,7 +100,7 @@ var Casper = function(options) {
     this.started = false;
     this.step = -1;
     this.steps = [];
-    this.test = require('./lib/tester').create(this);
+    this.test = require('tester').create(this);
 };
 
 /**
@@ -306,9 +307,9 @@ Casper.prototype = {
      * @return Casper
      */
     download: function(url, targetPath) {
-        var cu = require('./lib/clientutils').create();
+        var cu = require('clientutils').create();
         try {
-            require('fs').write(targetPath, cu.decode(this.base64encode(url)), 'w');
+            fs.write(targetPath, cu.decode(this.base64encode(url)), 'w');
         } catch (e) {
             this.log("Error while downloading " + url + " to " + targetPath + ": " + e, "error");
         }
@@ -372,7 +373,7 @@ Casper.prototype = {
      */
     evaluate: function(fn, context) {
         context = utils.isType(context, "object") ? context : {};
-        var newFn = require('./lib/injector').create(fn).process(context);
+        var newFn = require('injector').create(fn).process(context);
         return this.page.evaluate(newFn);
     },
 
@@ -1122,7 +1123,7 @@ function createPage(casper) {
             }
         }
         if (casper.options.clientScripts) {
-            if (betterTypeOf(casper.options.clientScripts) !== "array") {
+            if (!utils.isType(casper.options.clientScripts, "array")) {
                 casper.log("The clientScripts option must be an array", "error");
             } else {
                 for (var i = 0; i < casper.options.clientScripts.length; i++) {
@@ -1136,14 +1137,7 @@ function createPage(casper) {
             }
         }
         // Client-side utils injection
-        var injected = page.evaluate(replaceFunctionPlaceholders(function() {
-            eval("var ClientUtils = " + decodeURIComponent("%utils%"));
-            __utils__ = new ClientUtils();
-            return __utils__ instanceof ClientUtils;
-        }, {
-            utils: encodeURIComponent(require('./lib/clientutils').ClientUtils.toString())
-        }));
-        if (!injected) {
+        if (!casper.page.injectJs(fs.pathJoin(phantom.casperPath, 'lib', 'clientutils.js'))) {
             casper.log("Failed to inject Casper client-side utilities!", "warning");
         } else {
             casper.log("Successfully injected Casper client-side utilities", "debug");

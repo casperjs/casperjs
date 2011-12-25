@@ -34,7 +34,7 @@
     /**
      * Casper client-side helpers.
      */
-    var ClientUtils = function() {
+    exports.ClientUtils = function() {
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -442,4 +442,4 @@
             return out;
         };
     };
-})(exports || {});
+})(exports || window || {});

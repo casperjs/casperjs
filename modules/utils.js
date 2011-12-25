@@ -92,7 +92,7 @@ exports.fillBlanks = fillBlanks;
  * @return Boolean
  */
 function isCasperObject(value) {
-    return value instanceof require('./lib/casper').Casper;
+    return value instanceof require('casper').Casper;
 }
 exports.isCasperObject = isCasperObject;
 

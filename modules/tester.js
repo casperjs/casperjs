@@ -27,7 +27,7 @@
  */
 
 var fs = require('fs');
-var utils = require('./lib/utils');
+var utils = require('utils');
 
 exports.create = function(casper, options) {
     return new Tester(casper, options);
@@ -47,7 +47,7 @@ var Tester = function(casper, options) {
     }
 
     // locals
-    var exporter = require('./lib/xunit').create();
+    var exporter = require('xunit').create();
     var PASS = this.options.PASS || "PASS";
     var FAIL = this.options.FAIL || "FAIL";
 
