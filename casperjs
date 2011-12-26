@@ -1,4 +1,4 @@
-#!/usr/bin/env phantomjs14
+#!/usr/bin/env phantomjs
 
 /*!
  * Casper is a navigation utility for PhantomJS.
