@@ -372,14 +372,20 @@ var Tester = function(casper, options) {
     this.renderResults = function(exit, status, save) {
         save = utils.isType(save, "string") ? save : this.options.save;
         var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
-        if (this.testResults.failed > 0) {
+        if (total === 0) {
             statusText = FAIL;
             style = 'RED_BAR';
+            result = statusText + " Looks like you didn't run any test.";
         } else {
-            statusText = PASS;
-            style = 'GREEN_BAR';
+            if (this.testResults.failed > 0) {
+                statusText = FAIL;
+                style = 'RED_BAR';
+            } else {
+                statusText = PASS;
+                style = 'GREEN_BAR';
+            }
+            result = statusText + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
         }
-        result = statusText + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
         casper.echo(this.colorize(utils.fillBlanks(result), style));
         if (save && utils.isType(require, "function")) {
             try {
