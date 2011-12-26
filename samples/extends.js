@@ -1,14 +1,10 @@
-if (!phantom.casperLoaded) {
-    console.log('This script is intended to work with CasperJS, using its executable.');
-    phantom.exit(1);
-}
-
 var articles = [];
+var CasperClass = require('casper').Casper;
 
 /**
  * Adds two new methods to the Casper prototype: fetchTexts and renderJSON.
  */
-phantom.Casper.extend({
+CasperClass.extend({
     /**
      * Adds a new navigation step for casper; basically it will:
      *
@@ -18,14 +14,12 @@ phantom.Casper.extend({
      */
     fetchTexts: function(location, selector) {
         return this.thenOpen(location, function(self) {
-            var texts = self.evaluate(function() {
-                var elements = document.querySelectorAll('%selector%');
+            var texts = self.evaluate(function(selector) {
+                var elements = document.querySelectorAll(selector);
                 return Array.prototype.map.call(elements, function(e) {
                     return e.innerText;
                 });
-            }, {
-                selector: selector.replace("'", "\'")
-            });
+            }, { selector: selector });
             articles = articles.concat(texts);
         });
     },
@@ -38,17 +32,21 @@ phantom.Casper.extend({
     }
 });
 
-var casper = new phantom.Casper({
+var casper = new CasperClass({
     loadImages:  false,
     loadPlugins: false,
     logLevel:    "debug",
     verbose:     true
 });
 
-casper.start()
-    .fetchTexts('http://www.liberation.fr/', 'h3')      // all article titles are stored in <h3>
-    .fetchTexts('http://www.lemonde.fr/', 'h2.article') // all article titles are stored in <h2 class="article">
-    .run(function(self) {
-        self.renderJSON(articles);
-    })
-;
+casper.start();
+
+// all article titles are stored in <h3>
+casper.fetchTexts('http://www.liberation.fr/', 'h3');
+
+// all article titles are stored in <h2 class="article">
+casper.fetchTexts('http://www.lemonde.fr/', 'h2.article');
+
+casper.run(function(self) {
+    self.renderJSON(articles);
+});

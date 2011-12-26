@@ -1,9 +1,4 @@
-if (!phantom.casperLoaded) {
-    console.log('This script is intended to work with CasperJS, using its executable.');
-    phantom.exit(1);
-}
-
-var casper = new phantom.Casper({
+var casper = require('casper').create({
     logLevel: "debug"
 });
 

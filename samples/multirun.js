@@ -1,4 +1,4 @@
-var casper = new phantom.Casper({
+var casper = require('casper').create({
     verbose: true
 });
 

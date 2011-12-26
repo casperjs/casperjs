@@ -1,45 +1,33 @@
 /**
  * Just a silly game.
  *
- * $ phantomjs samples/timeout.js 500
+ * $ casperjs samples/timeout.js 500
  * Will google.com load in less than 500ms?
  * NOPE.
- * $ phantomjs samples/timeout.js 1000
+ * $ casperjs samples/timeout.js 1000
  * Will google.com load in less than 1000ms?
  * NOPE.
- * $ phantomjs samples/timeout.js 1500
+ * $ casperjs samples/timeout.js 1500
  * Will google.com load in less than 1500ms?
  * NOPE.
- * $ phantomjs samples/timeout.js 2000
+ * $ casperjs samples/timeout.js 2000
  * Will google.com load in less than 2000ms?
  * YES!
  */
-if (!phantom.casperLoaded) {
-    console.log('This script is intended to work with CasperJS, using its executable.');
-    phantom.exit(1);
-}
-
-if (phantom.casperArgs.args.length === 0) {
-    console.log('You must provide a timeout value');
-    phantom.exit(1);
-} else {
-    var timeout = Number(phantom.casperArgs.args[0], 10);
-    if (timeout < 1) {
-        console.log('A timeout value must be a positive integer');
-        phantom.exit(1);
-    }
-}
-
-var casper = new phantom.Casper({
-    timeout: timeout,
+var casper = require('casper').create({
     onTimeout: function(self) {
         self.echo('NOPE.', 'RED_BAR').exit();
     }
 });
 
+var timeout = ~~casper.cli.get(0);
+if (timeout < 1) {
+    casper.echo('You must pass a valid timeout value').exit();
+}
 casper.echo('Will google.com load in less than ' + timeout + 'ms?');
+casper.options.timeout = timeout;
 
-casper.start('http://google.com/', function(self) {
+casper.start('http://www.google.com/', function(self) {
     self.echo('YES!', 'GREEN_BAR').exit();
 });
 

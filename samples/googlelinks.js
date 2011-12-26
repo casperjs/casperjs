@@ -1,10 +1,5 @@
-if (!phantom.casperLoaded) {
-    console.log('This script is intended to work with CasperJS, using its executable.');
-    phantom.exit(1);
-}
-
 var links = [];
-var casper = new phantom.Casper();
+var casper = require('casper').create();
 
 function getLinks() {
     var links = document.querySelectorAll('h3.r a');

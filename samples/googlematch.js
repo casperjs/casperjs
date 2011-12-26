@@ -9,13 +9,9 @@
  *   borris:  2370000
  *   winner is "nicolas" with 69600000 results
  */
+var CasperClass = require('casper').Casper;
 
-if (!phantom.casperLoaded) {
-    console.log('This script is intended to work with CasperJS, using its executable.');
-    phantom.exit(1);
-}
-
-phantom.Casper.extend({
+CasperClass.extend({
     fetchScore: function() {
         return this.evaluate(function() {
             var result = document.querySelector('#resultStats').innerText;
@@ -24,7 +20,7 @@ phantom.Casper.extend({
     }
 });
 
-var casper = new phantom.Casper({
+var casper = new CasperClass({
     verbose: true
 }), terms = casper.cli.args, scores = [], i = 0;
 
@@ -57,4 +53,3 @@ casper.run(function(self) {
     self.echo('winner is "' + winner.term + '" with ' + winner.score + ' results');
     self.exit();
 });
-

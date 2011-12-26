@@ -3,13 +3,7 @@
  * log every received resource.
  *
  */
-
-if (!phantom.casperLoaded) {
-    console.log('This script is intended to work with CasperJS, using its executable.');
-    phantom.exit(1);
-}
-
-var casper = new phantom.Casper({
+var casper = require('casper').create({
     /**
      * Every time a resource is received, a new log entry is added to the stack
      * at the 'verbose' level.

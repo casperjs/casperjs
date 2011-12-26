@@ -1,3 +1,7 @@
+/**
+ * This script will capture a screenshot of a twitter account page
+ *
+ */
 var casper = require('casper').create({
     logLevel: "debug",
     verbose: true,
@@ -13,6 +17,4 @@ casper.start('https://twitter.com/#!/twilio', function(self) {
     }, null, 12000);
 });
 
-casper.run(function(self) {
-    self.exit();
-});
+casper.run();
