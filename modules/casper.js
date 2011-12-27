@@ -232,7 +232,7 @@ Casper.prototype = {
      */
     click: function(selector, fallbackToHref) {
         fallbackToHref = utils.isType(fallbackToHref, "undefined") ? true : !!fallbackToHref;
-        this.log("click on selector: " + selector, "debug");
+        this.log("Click on selector: " + selector, "debug");
         return this.evaluate(function(selector, fallbackToHref) {
             return __utils__.click(selector, fallbackToHref);
         }, {
@@ -533,14 +533,18 @@ Casper.prototype = {
             try {
                 result.value = JSON.stringify(window[name]);
             } catch (e) {
-                result.error = 'Unable to JSON encode window.' + name + ': ' + e;
+                var message = 'Unable to JSON encode window.' + name + ': ' + e;
+                __utils__.log(message, "error");
+                result.error = message;
             }
             return result;
         }, {'name': name});
-        if (result.error) {
-            throw result.error;
-        } else {
+        if ('error' in result) {
+            throw new Error(result.error);
+        } else if (isType(result.value, "string")) {
             return JSON.parse(result.value);
+        } else {
+            return undefined;
         }
     },
 
