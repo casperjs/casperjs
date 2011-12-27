@@ -274,9 +274,8 @@ var Tester = function(casper, options) {
     };
 
     /**
-     * Executes a file. We can't use phantom.injectJs(testFile) because we
-     * wouldn't be able to catch any thrown exception. So eval is evil, but
-     * evil actually works^W helps sometimes.
+     * Executes a file, wraping and evaluating its code in an isolated
+     * environment where only the current `casper` instance is passed.
      *
      * @param  String  file  Absolute path to some js/coffee file
      */
@@ -284,17 +283,16 @@ var Tester = function(casper, options) {
         if (!fs.isFile(file) || !utils.isJsFile(file)) {
             throw new Error("Can only exec() files with .js or .coffee extensions");
         }
-        if (utils.fileExt(file) === "coffee") {
-            phantom.injectJs(file); // FIXME: syntax validation?
-        } else {
-            var testContents = fs.read(file);
-            var parsed;
-            try {
-                parsed = esprima.parse(testContents);
-            } catch(e) {
-                throw new Error("Unable to parse test file " + file + ": " + e.toString());
-            }
-            eval(testContents);
+        try {
+            new Function('casper', phantom.getScriptCode(file))(casper);
+        } catch (e) {
+            var self = this;
+            phantom.processScriptError(e, file, function(error) {
+                // do not abort the whole suite, just fail fast displaying the
+                // caught error and process next suite
+                self.fail(phantom.getErrorMessage(e));
+                self.done();
+            });
         }
     };
 

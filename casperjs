@@ -27,6 +27,8 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+var sourceIds = {};
+
 if (!phantom.casperLoaded) {
     // see http://semver.org/
     phantom.casperVersion = {
@@ -67,7 +69,44 @@ if (!phantom.casperLoaded) {
     // casper root path
     phantom.casperPath = fs.absolute(phantom.libraryScript);
 
-    var sourceIds = {};
+    // Embedded, up-to-date, validatable & controlable CoffeeScript
+    phantom.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'vendors', 'coffee-script.js'));
+
+    // Adding built-in capabilities to phantom object
+    phantom.getErrorMessage = function(e) {
+        return (e.fileName || sourceIds[e.sourceId]) + ':' + e.line + ' ' + e;
+    };
+
+    phantom.getScriptCode = function(file, onError) {
+        var scriptCode = fs.read(file);
+        if (/\.coffee$/i.test(file)) {
+            try {
+                scriptCode = CoffeeScript.compile(scriptCode);
+            } catch (e) {
+                phantom.processScriptError(e, file, onError);
+            }
+        }
+        // trick to locate source file location on error
+        scriptCode += ";var __fe__ = new Error('__sourceId__')";
+        scriptCode += ";__fe__.fileName = '" + file + "'";
+        scriptCode += ";throw __fe__;";
+        return scriptCode;
+    };
+
+    phantom.processScriptError = function(error, file, callback) {
+        if (!sourceIds.hasOwnProperty(error.sourceId)) {
+            sourceIds[error.sourceId] = file;
+        }
+        if (error.message === "__sourceId__") {
+            return;
+        }
+        if (typeof callback === "function") {
+            callback(error);
+        } else {
+            console.error(phantom.getErrorMessage(error));
+            phantom.exit(1);
+        }
+    };
 
     // Patching require()
     // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
@@ -122,34 +161,10 @@ if (!phantom.casperLoaded) {
                 if (file in requireCache) {
                     return requireCache[file].exports;
                 }
-                code = fs.read(file);
-                if (file.match(/\.js$/i)) {
-                    try {
-                        // TODO: esprima syntax check
-                    } catch (e) {
-                        e.fileName = file;
-                        throw e;
-                    }
-                } else if (file.match(/\.coffee$/i)) {
-                    try {
-                        code = CoffeeScript.compile(code);
-                    } catch (e) {
-                        e.fileName = file;
-                        throw e;
-                    }
-                }
-                // a trick to associate Error's sourceId with file
-                code += ";throw new Error('__sourceId__');";
                 try {
-                    fn = new Function('module', 'exports', code);
-                    fn(module, module.exports);
+                    new Function('module', 'exports', phantom.getScriptCode(file))(module, module.exports);
                 } catch (e) {
-                    if (!sourceIds.hasOwnProperty(e.sourceId)) {
-                        sourceIds[e.sourceId] = file;
-                    }
-                    if (e.message !== '__sourceId__') {
-                        throw e;
-                    }
+                    phantom.processScriptError(e);
                 }
                 requireCache[file] = module;
                 return module.exports;
@@ -169,7 +184,7 @@ if (!phantom.casperLoaded) {
                 if (this._stack) {
                     return this._stack;
                 } else if (this.fileName || this.sourceId) {
-                    return this.toString() + '\nat ' + getErrorMessage(this);
+                    return this.toString() + '\nat ' + phantom.getErrorMessage(this);
                 }
                 return this.toString() + '\nat unknown';
             },
@@ -183,30 +198,33 @@ if (!phantom.casperLoaded) {
 
     // loaded status
     phantom.casperLoaded = true;
-
-    if (!!phantom.casperArgs.options.version) {
-        console.log(phantom.casperVersion.toString());
-        phantom.exit(0);
-    } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
-        console.log('CasperJS version ' + phantom.casperVersion.toString());
-        console.log('Usage: casperjs script.(js|coffee) [options...]');
-        console.log('Read the docs http://n1k0.github.com/casperjs/');
-        phantom.exit(0);
-    }
-
-    phantom.casperScript = phantom.casperArgs.get(0);
-
-    if (!fs.isFile(phantom.casperScript)) {
-        console.log('Unable to open file: ' + phantom.casperScript);
-        phantom.exit(1);
-    }
-
-    // filter out the called script name from casper args
-    phantom.casperArgs.args = phantom.casperArgs.args.filter(function(arg) {
-        return arg !== phantom.casperScript;
-    });
 }
 
-// passed script execution
-// TODO: proper syntax validation?
-phantom.injectJs(phantom.casperScript);
+if (!!phantom.casperArgs.options.version) {
+    console.log(phantom.casperVersion.toString());
+    phantom.exit(0);
+} else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+    console.log('CasperJS version ' + phantom.casperVersion.toString());
+    console.log('Usage: casperjs script.(js|coffee) [options...]');
+    console.log('Read the docs http://n1k0.github.com/casperjs/');
+    phantom.exit(0);
+}
+
+phantom.casperScript = phantom.casperArgs.get(0);
+
+if (!fs.isFile(phantom.casperScript)) {
+    console.error('Unable to open file: ' + phantom.casperScript);
+    phantom.exit(1);
+}
+
+// filter out the called script name from casper args
+phantom.casperArgs.args = phantom.casperArgs.args.filter(function(arg) {
+    return arg !== phantom.casperScript;
+});
+
+// passed casperjs script execution
+try {
+    new Function(phantom.getScriptCode(phantom.casperScript))();
+} catch (e) {
+    phantom.processScriptError(e, phantom.casperScript);
+}

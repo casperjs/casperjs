@@ -18,7 +18,7 @@
     for (var what in testCases) {
         var source = testCases[what];
         var encoded = clientutils.encode(source);
-        t.assertEquals(clientutils.decode(encoded), source, 'Clientclientutils can encode and decode ' + what);
+        t.assertEquals(clientutils.decode(encoded), source, 'ClientUtils can encode and decode ' + what);
     }
 
     t.done();
