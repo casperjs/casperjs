@@ -1,6 +1,11 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.4.3
+------------------
+
+- fixed #32 - `ClientUtils.click()` handles `<a href='javascript:'>` links
+
 2011-12-25, v0.4.2
 ------------------
 
