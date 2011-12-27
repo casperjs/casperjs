@@ -1,6 +1,11 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.6.0-alpha
+------------------------
+
+- commonjs/nodejs-like module implementation
+
 XXXX-XX-XX, v0.4.2
 ------------------
 

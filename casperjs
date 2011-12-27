@@ -31,9 +31,9 @@ if (!phantom.casperLoaded) {
     // see http://semver.org/
     phantom.casperVersion = {
         major: 0,
-        minor: 4,
-        patch: 2,
-        ident: 'experimental-require',
+        minor: 6,
+        patch: 0,
+        ident: 'alpha',
         toString: function() {
             var version = [this.major, this.minor, this.patch].join('.');
             if (this.ident) {
