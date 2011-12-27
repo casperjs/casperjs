@@ -27,8 +27,6 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
-var sourceIds = {};
-
 if (!phantom.casperLoaded) {
     // see http://semver.org/
     phantom.casperVersion = {
@@ -73,8 +71,10 @@ if (!phantom.casperLoaded) {
     phantom.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'vendors', 'coffee-script.js'));
 
     // Adding built-in capabilities to phantom object
+    phantom.sourceIds = {};
+
     phantom.getErrorMessage = function(e) {
-        return (e.fileName || sourceIds[e.sourceId]) + ':' + e.line + ' ' + e;
+        return (e.fileName || phantom.sourceIds[e.sourceId]) + ':' + e.line + ' ' + e;
     };
 
     phantom.getScriptCode = function(file, onError) {
@@ -94,14 +94,14 @@ if (!phantom.casperLoaded) {
     };
 
     phantom.processScriptError = function(error, file, callback) {
-        if (!sourceIds.hasOwnProperty(error.sourceId)) {
-            sourceIds[error.sourceId] = file;
+        if (!phantom.sourceIds.hasOwnProperty(error.sourceId)) {
+            phantom.sourceIds[error.sourceId] = file;
         }
         if (error.message === "__sourceId__") {
             return;
         }
         if (typeof callback === "function") {
-            callback(error);
+            callback(error, file);
         } else {
             console.error(phantom.getErrorMessage(error));
             phantom.exit(1);
