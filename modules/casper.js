@@ -541,7 +541,7 @@ Casper.prototype = {
         }, {'name': name});
         if ('error' in result) {
             throw new Error(result.error);
-        } else if (isType(result.value, "string")) {
+        } else if (utils.isType(result.value, "string")) {
             return JSON.parse(result.value);
         } else {
             return undefined;
