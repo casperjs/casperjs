@@ -9,20 +9,20 @@ if (phantom.casperArgs.args.length !== 1) {
 }
 
 // If we don't set a limit, it could go on forever
-var upTo = Number(phantom.casperArgs.args[0], 10);
+var upTo = ~~phantom.casperArgs.args[0];
 
 var casper = new phantom.Casper({
     verbose: true
 });
 
-// Fetch all <a> elements from the page and return 
+// Fetch all <a> elements from the page and return
 // the ones which contains a href starting with 'http://'
 function searchLinks() {
     var filter = Array.prototype.filter,
         map = Array.prototype.map;
-    return map.call(filter.call(document.querySelectorAll('a'), function (a) {
-        return /^http:\/\/.*/i.test(a.getAttribute('href'));
-    }), function (a) {
+    return map.call(filter.call(document.querySelectorAll('a'), function(a) {
+        return (/^http:\/\/.*/i).test(a.getAttribute('href'));
+    }), function(a) {
         return a.getAttribute('href');
     });
 }
@@ -35,16 +35,16 @@ var links = [
 ];
 
 // Just opens the page and prints the title
-var start = function (self, link) {
-    self.start(link, function (self) {
+var start = function(self, link) {
+    self.start(link, function(self) {
         self.echo('Page title: ' + self.getTitle());
-    })
+    });
 };
 
 // Get the links, and add them to the links array
 // (It could be done all in one step, but it is intentionally splitted)
-var addLinks = function (self, link) {
-    self.then(function(self) {
+var addLinks = function(link) {
+    this.then(function(self) {
         var found = self.evaluate(searchLinks);
         self.echo(found.length + " links found on " + link);
         links = links.concat(found);
@@ -62,7 +62,7 @@ function check(self) {
     if (links[currentLink] && currentLink < upTo) {
         self.echo('--- Link ' + currentLink + ' ---');
         start(self, links[currentLink]);
-        addLinks(self, links[currentLink]);
+        addLinks.call(self, links[currentLink]);
         currentLink++;
         self.run(check);
     } else {
