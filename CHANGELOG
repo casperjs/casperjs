@@ -1,12 +1,13 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.6.0-alpha
-------------------------
+XXXX-XX-XX, v0.6.0
+------------------
 
+- BC BREAK: removed obsolete `replaceFunctionPlaceholders()`
 - commonjs/nodejs-like module implementation
 
-XXXX-XX-XX, v0.4.2
+2011-12-25, v0.4.2
 ------------------
 
 - merged PR #30 - Add request method and request data to the base64encode method (@jasonlfunk)

@@ -163,28 +163,6 @@ function mergeObjects(obj1, obj2) {
 exports.mergeObjects = mergeObjects;
 
 /**
- * Replaces a function string contents with placeholders provided by an
- * Object.
- *
- * @param  Function  fn            The function
- * @param  Object    replacements  Object containing placeholder replacements
- * @return String                  A function string representation
- */
-function replaceFunctionPlaceholders(fn, replacements) {
-    if (replacements && isType(replacements, "object")) {
-        fn = fn.toString();
-        for (var placeholder in replacements) {
-            var match = '%' + placeholder + '%';
-            do {
-                fn = fn.replace(match, replacements[placeholder]);
-            } while(fn.indexOf(match) !== -1);
-        }
-    }
-    return fn;
-}
-exports.replaceFunctionPlaceholders = replaceFunctionPlaceholders;
-
-/**
  * Serializes a value using JSON.
  *
  * @param  Mixed  value
