@@ -118,7 +118,7 @@ if (!phantom.casperLoaded) {
         return function(path) {
             var i, dir, paths = [],
                 fileGuesses = [],
-                file, code, fn,
+                file,
                 module = {
                     exports: {}
                 };
