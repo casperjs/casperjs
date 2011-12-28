@@ -193,6 +193,9 @@ if (!phantom.casperLoaded) {
         });
     }
 
+    // BC
+    phantom.Casper = require('casper').Casper;
+
     // casper cli args
     phantom.casperArgs = require('cli').parse(phantom.args);
 
