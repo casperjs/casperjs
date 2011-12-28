@@ -791,6 +791,16 @@ casper.then(function() {
 
 casper.run();
 </code></pre>
+
+              <p>Or even:</p>
+              <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/');
+
+casper.then(function() {
+    this.echo("I'm loaded.");
+});
+
+casper.run();
+</code></pre>
               <p>Matter of taste!</p>
               <p> <span class="label notice">Note</span> <strong>You must call
                   the <code>start()</code> method in order to be able to add
