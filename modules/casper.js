@@ -208,6 +208,7 @@ Casper.prototype = {
         } else {
             self.result.time = new Date().getTime() - self.startTime;
             self.log("Done " + self.steps.length + " steps in " + self.result.time + 'ms.', "info");
+            self.page.content = ''; // avoid having previously loaded DOM contents being still active (refs #34)
             clearInterval(self.checker);
             if (utils.isType(onComplete, "function")) {
                 try {
