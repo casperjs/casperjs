@@ -5,6 +5,7 @@ XXXX-XX-XX, v0.4.3
 ------------------
 
 - fixed #32 - `ClientUtils.click()` handles `<a href='javascript:'>` links
+- fixed #34 - avoid having previously loaded DOM contents being still active on run complete
 
 2011-12-25, v0.4.2
 ------------------
