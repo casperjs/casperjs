@@ -2,7 +2,6 @@
     var utils = require('utils');
 
     t.comment('fileExt()');
-
     (function() {
         var testCases = {
             'foo.ext':    'ext',
@@ -19,7 +18,6 @@
     })();
 
     t.comment('fillBlanks()');
-
     (function() {
         testCases = {
             'foo':         'foo       ',
@@ -32,8 +30,22 @@
         }
     })();
 
-    t.comment('isJsFile()');
+    t.comment('isClipRect()');
+    (function() {
+        testCases = [
+            [{},                                              false],
+            [{top: 2},                                        false],
+            [{top: 2, left: 2, width: 2, height: 2},          true],
+            [{top: 2, left: 2, height: 2, width: 2},          true],
+            [{top: 2, left: 2, width: 2, height: new Date()}, false]
+        ];
 
+        testCases.forEach(function(testCase) {
+            t.assertEquals(utils.isClipRect(testCase[0]), testCase[1], 'isClipRect() checks for a ClipRect');
+        });
+    })();
+
+    t.comment('isJsFile()');
     (function() {
         testCases = {
             '':             false,
@@ -49,7 +61,6 @@
     })();
 
     t.comment('mergeObjects()');
-
     (function() {
         testCases = [
             {

@@ -351,6 +351,27 @@
         };
 
         /**
+         * Retrieves bounding rect coordinates of the HTML element matching the
+         * provided CSS3 selector
+         *
+         * @param  String  selector
+         * @return Object or null
+         */
+        this.getElementBounds = function(selector) {
+            try {
+                var clipRect = document.querySelector(selector).getBoundingClientRect();
+                return {
+                    top:    clipRect.top,
+                    left:   clipRect.left,
+                    width:  clipRect.width,
+                    height: clipRect.height
+                };
+            } catch (e) {
+                this.log("Unable to fetch bounds for element " + selector, "warning");
+            }
+        };
+
+        /**
          * Logs a message. Will format the message a way CasperJS will be able
          * to log phantomjs side.
          *

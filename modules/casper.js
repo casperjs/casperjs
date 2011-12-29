@@ -178,17 +178,7 @@ Casper.prototype = {
      */
     captureSelector: function(targetFile, selector) {
         return this.capture(targetFile, this.evaluate(function(selector) {
-            try {
-                var clipRect = document.querySelector(selector).getBoundingClientRect();
-                return {
-                    top:    clipRect.top,
-                    left:   clipRect.left,
-                    width:  clipRect.width,
-                    height: clipRect.height
-                };
-            } catch (e) {
-                __utils__.log("Unable to fetch bounds for element " + selector, "warning");
-            }
+            return __utils__.getElementBounds();
         }, { selector: selector }));
     },
 
@@ -593,6 +583,25 @@ Casper.prototype = {
             this.echo(message); // direct output
         }
         this.result.log.push(entry);
+        return this;
+    },
+
+    /**
+     * Emulates a click on an HTML element matching a given CSS3 selector,
+     * using the mouse pointer.
+     *
+     * @param  String   selector        A DOM CSS3 compatible selector
+     * @return Casper
+     */
+    mouseClick: function(selector) {
+        var bounds = this.evaluate(function(selector) {
+            return __utils__.getElementBounds(selector);
+        }, { selector: selector });
+        if (utils.isClipRect(bounds)) {
+            var x = bounds.left + Math.floor(bounds.width / 2);
+            var y = bounds.top  + Math.floor(bounds.height / 2);
+            this.page.sendEvent('click', x, y);
+        }
         return this;
     },
 

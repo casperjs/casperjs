@@ -85,6 +85,11 @@ function fillBlanks(text, pad) {
 }
 exports.fillBlanks = fillBlanks;
 
+function isArray(value) {
+    return isType(value, "array");
+}
+exports.isArray = isArray;
+
 /**
  * Checks if passed argument is an instance of Capser object.
  *
@@ -95,6 +100,22 @@ function isCasperObject(value) {
     return value instanceof require('casper').Casper;
 }
 exports.isCasperObject = isCasperObject;
+
+function isClipRect(value) {
+    return isType(value, "cliprect") || (
+        isType(value, "object") &&
+        isType(value.top, "number") &&
+        isType(value.left, "number") &&
+        isType(value.width, "number") &&
+        isType(value.height, "number")
+    );
+}
+exports.isClipRect = isClipRect;
+
+function isFunction(value) {
+    return isType(value, "function");
+}
+exports.isFunction = isFunction;
 
 /**
  * Checks if a file is apparently javascript compatible (.js or .coffee).
@@ -107,6 +128,11 @@ function isJsFile(file) {
     return isType(ext, "string") && ['js', 'coffee'].indexOf(ext) !== -1;
 }
 exports.isJsFile = isJsFile;
+
+function isObject(value) {
+    return isType(value, "object");
+}
+exports.isObject = isObject;
 
 /**
  * Shorthands for checking if a value is of the given type. Can check for
