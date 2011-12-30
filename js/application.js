@@ -36,12 +36,18 @@ $(document).ready(function() {
               , sp = window.scrollY + padding
               , ep = element.position().top
               , eh = element.height()
+              , cl = container.position().left
               , ct = container.position().top
+              , cw = container.width()
               , ch = container.height()
               , cp = element.css('position')
               , mp = ct + ch - eh
               , em = element.position().left
+              , ew = element.width()
             ;
+            if (window.innerHeight < eh) {
+                return;
+            }
             if (sp > ep && sp < mp && cp !== "fixed") {
                 element.css('position', 'fixed').css('top', padding).css('left', em).css('margin-top', initial.margintop);
             } else if (cp === "fixed") {
@@ -50,6 +56,7 @@ $(document).ready(function() {
                 } else if (sp >= mp) {
                     element.css('position', initial.position).css('margin-top', (ch - eh - padding - 30));
                 }
+                element.css('left', cl + cw - ew - 20);
             }
         }
         elements.each(function(i, element) {
@@ -64,6 +71,9 @@ $(document).ready(function() {
             });
         });
         window.onscroll = function() {
+            $(initials).each(position);
+        };
+        window.onresize = function() {
             $(initials).each(position);
         };
     })(window);
