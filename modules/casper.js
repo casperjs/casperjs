@@ -151,8 +151,8 @@ Casper.prototype = {
         var previousClipRect;
         targetFile = fs.absolute(targetFile);
         if (clipRect) {
-            if (!utils.isType(clipRect, "object")) {
-                throw new Error("clipRect must be an Object instance.");
+            if (!utils.isClipRect(clipRect)) {
+                throw new Error("clipRect must be a valid ClipRect object.");
             }
             previousClipRect = this.page.clipRect;
             this.page.clipRect = clipRect;
@@ -177,9 +177,7 @@ Casper.prototype = {
      * @return Casper
      */
     captureSelector: function(targetFile, selector) {
-        return this.capture(targetFile, this.evaluate(function(selector) {
-            return __utils__.getElementBounds();
-        }, { selector: selector }));
+        return this.capture(targetFile, this.getElementBounds(selector));
     },
 
     /**
@@ -513,6 +511,25 @@ Casper.prototype = {
     },
 
     /**
+     * Retrieves boundaries for a DOM element matching the provided CSS3 selector.
+     *
+     * @param  String  selector  A CSS3 selector
+     * @return Object
+     */
+    getElementBounds: function(selector) {
+        if (!this.exists(selector)) {
+            throw new Error("No element matching selector found: " + selector);
+        }
+        var clipRect = this.evaluate(function(selector) {
+            return __utils__.getElementBounds();
+        }, { selector: selector });
+        if (!utils.isClipRect(clipRect)) {
+            this.log('Could not fetch boundaries for element matching selector: ' + selector, "error");
+        }
+        return clipRect;
+    },
+
+    /**
      * Retrieves global variable.
      *
      * @param  String  name  The name of the global variable to retrieve
@@ -594,9 +611,7 @@ Casper.prototype = {
      * @return Casper
      */
     mouseClick: function(selector) {
-        var bounds = this.evaluate(function(selector) {
-            return __utils__.getElementBounds(selector);
-        }, { selector: selector });
+        var bounds = this.getElementBounds(selector);
         if (utils.isClipRect(bounds)) {
             var x = bounds.left + Math.floor(bounds.width / 2);
             var y = bounds.top  + Math.floor(bounds.height / 2);
