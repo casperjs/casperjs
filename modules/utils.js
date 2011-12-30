@@ -137,7 +137,7 @@ exports.isObject = isObject;
 function isString(value) {
     return isType(value, "string");
 }
-exports.isFunction = isFunction;
+exports.isString = isString;
 
 /**
  * Shorthands for checking if a value is of the given type. Can check for

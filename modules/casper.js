@@ -87,6 +87,7 @@ var Casper = function(options) {
         warning: 'COMMENT',
         error:   'ERROR'
     };
+    this.mouse = require('mouse').create(this);
     this.options = utils.mergeObjects(this.defaults, options);
     this.page = null;
     this.pendingWait = false;
@@ -521,10 +522,10 @@ Casper.prototype = {
             throw new Error("No element matching selector found: " + selector);
         }
         var clipRect = this.evaluate(function(selector) {
-            return __utils__.getElementBounds();
+            return __utils__.getElementBounds(selector);
         }, { selector: selector });
         if (!utils.isClipRect(clipRect)) {
-            this.log('Could not fetch boundaries for element matching selector: ' + selector, "error");
+            throw new Error('Could not fetch boundaries for element matching selector: ' + selector);
         }
         return clipRect;
     },
@@ -611,12 +612,7 @@ Casper.prototype = {
      * @return Casper
      */
     mouseClick: function(selector) {
-        var bounds = this.getElementBounds(selector);
-        if (utils.isClipRect(bounds)) {
-            var x = bounds.left + Math.floor(bounds.width / 2);
-            var y = bounds.top  + Math.floor(bounds.height / 2);
-            this.page.sendEvent('click', x, y);
-        }
+        this.mouse.click(selector);
         return this;
     },
 
