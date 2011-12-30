@@ -134,6 +134,11 @@ function isObject(value) {
 }
 exports.isObject = isObject;
 
+function isString(value) {
+    return isType(value, "string");
+}
+exports.isFunction = isFunction;
+
 /**
  * Shorthands for checking if a value is of the given type. Can check for
  * arrays.
