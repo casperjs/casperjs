@@ -45,35 +45,48 @@
           </div>
           <div class="row">
             <div class="span11">
-              <p> CasperJS is an open source <strong>navigation scripting &amp;
-                  testing utility</strong> based on <a href="http://www.phantomjs.org/">PhantomJS</a>,
-                the scriptable headless <a href="http://www.webkit.org/">WebKit</a>
-                engine. It eases the process of defining a full navigation
-                scenario and provides useful high-level functions, methods &amp;
-                syntactic sugar for doing common tasks such as: </p>
-              <ul>
-                <li>defining &amp; ordering navigation steps</li>
-                <li>filling &amp; submitting forms</li>
-                <li>clicking links</li>
-                <li>capturing screenshots of a page (or an area)</li>
-                <li>making assertions on remote DOM</li>
-                <li>logging events</li>
-                <li>downloading base64 encoded resources, even binary ones</li>
-                <li>writing functional test suites, saving results as JUnit XML</li>
-              </ul>
+              <div class="alert-message block-message">
+                <p>
+                  CasperJS is an open source <strong>navigation scripting &amp;
+                  testing utility</strong> written in Javascript and based on
+                  <a href="http://www.phantomjs.org/">PhantomJS</a> — the scriptable
+                  headless <a href="http://www.webkit.org/">WebKit</a>
+                  engine. It eases the process of defining a full navigation
+                  scenario and provides useful high-level functions, methods &amp;
+                  syntactic sugar for doing common tasks such as:
+                </p>
+                <ul>
+                  <li>defining &amp; ordering browsing &amp; navigation steps</li>
+                  <li>filling &amp; submitting forms</li>
+                  <li>clicking &amp; following links</li>
+                  <li>capturing screenshots of a page (or part of it)</li>
+                  <li>making assertions on remote DOM</li>
+                  <li>logging events</li>
+                  <li>downloading resources, including binary ones</li>
+                  <li>writing functional test suites, saving results as JUnit XML</li>
+                </ul>
+              </div>
+            </div>
+            <div class="span5 download">
+              <h2>Download</h2>
+              <p>CasperJS latest released version is 0.6.0.</p>
+              <div class="dl-links">
+                <a href="https://github.com/n1k0/casperjs/zipball/0.6.0">
+                  <img src="images/zip.png" border="0" width="90"></a>
+                <a href="https://github.com/n1k0/casperjs/tarball/0.6.0">
+                  <img src="images/tar.png" border="0" width="90"></a>
+              </div>
+              <p>
+                Or download CasperJS at <a href="http://jspkg.com/packages/casperjs">jspkg.com</a>
+              </p>
+            </div>
+            <div class="span16">
               <p> Feel free to browse the <a href="https://github.com/n1k0/casperjs/tree/master/samples">sample
                   examples repository</a>. Code is <a href="https://github.com/n1k0/casperjs">hosted
                   on Github</a>, so don't hesitate to fork and send a pull
                 request for any cool example of yours as well! </p>
               <p>Troubleshooting? Read the <a href="#faq">FAQ</a> or
               <a href="https://github.com/n1k0/casperjs/issues">open an issue</a>.</p>
-            </div>
-            <div class="span5 download">
-              <h2>Download</h2>
-              <p>CasperJS latest stable version is 0.6.0.</p>
-              <div class="dl-links"> <a href="https://github.com/n1k0/casperjs/zipball/0.6.0">
-                  <img src="images/zip.png" border="0" width="90"></a> <a href="https://github.com/n1k0/casperjs/tarball/0.6.0">
-                  <img src="images/tar.png" border="0" width="90"></a> </div>
             </div>
           </div>
         </section>
@@ -92,7 +105,7 @@
           <pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs.git
 $ cd casperjs
 $ git checkout tags/0.6.0
-$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
+$ ln -sf `pwd`/casperjs /usr/local/bin/casperjs
 </code></pre>
           <p>You should get something like this:</p>
           <pre class="prettyprint"><code class="void">$ casperjs
@@ -207,7 +220,7 @@ casper.run -&gt;
           </div>
           <div class="row">
             <div class="span12">
-              <h2>phantom.Casper</h2>
+              <h2>Casper</h2>
               <p> Casper source code is quite heavily documented using <code>jsdoc</code>,
                 but below you'll find the whole API documentation with sample code. </p>
               <h3 id="phantom_Casper_options"><code>Casper([Object options])</code></h3>
@@ -1045,7 +1058,7 @@ casper.run();
             </div>
             <div class="span4 apitoc">
               <h3>Quick reference</h3>
-              <h4><code>phantom.Casper</code></h4>
+              <h4>The <code>Casper</code> class</h4>
               <ul>
                 <li><a href="#phantom_Casper_options"><code>Casper.options</code></a></li>
                 <li><a href="#phantom_Casper_back"><code>Casper.back()</code></a></li>
@@ -1100,7 +1113,7 @@ casper.run();
               <p> Casper ships with a few client-side utilitites which are
                 injected in the remote DOM environment, and accessible from
                 there through the <code>__utils__</code> object instance of the
-                <code>phantom.Casper.ClientUtils</code> class. </p>
+                <code>ClientUtils</code> class of the <code>clientutils</code> module. </p>
               <p> <span class="label notice">Note</span> These tools are
                 provided to avoid coupling CasperJS to any third-party library
                 like jQuery, Mootools or something; but you can always include
@@ -1215,7 +1228,7 @@ casper.run();
             </div>
             <div class="span4 apitoc">
               <h3>Quick reference</h3>
-              <h4><code>phantom.Casper.ClientUtils</code></h4>
+              <h4>The <code>ClientUtils</code> class</h4>
               <ul>
                 <li><a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a></li>
                 <li><a href="#phantom_Casper_ClientUtils_exists"><code>ClientUtils.exists()</code></a></li>
@@ -1407,7 +1420,7 @@ casper.run(function(self) {
 </code></pre> </div>
             <div class="span4 apitoc">
               <h3>Quick reference</h3>
-              <h4><code>phantom.Casper.Tester</code></h4>
+              <h4>The <code>Tester</code> class</h4>
               <ul>
                 <li><a href="#phantom_Casper_Tester_assert"><code>Tester.assert()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertEval"><code>Tester.assertEval()</code></a></li>
@@ -1496,7 +1509,7 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
 </code></pre> </div>
             <div class="span4 apitoc">
               <h3>Quick reference</h3>
-              <h4><code>phantom.Casper.Colorizer</code></h4>
+              <h4>The <code>Colorizer</code> class</h4>
               <ul>
                 <li><a href="#phantom_Casper_Colorizer_colorize"><code>Colorizer.colorize()</code></a></li>
                 <li><a href="#phantom_Casper_Colorizer_format"><code>Colorizer.format()</code></a></li>
@@ -1708,7 +1721,7 @@ $ casperjs /path/to/test/run.js mytestdirectory/
             <div class="span9">
               <h4 id="faq-self">What the hell is that <code>self</code> thingy everywhere in your examples?</h4>
               <p>
-                It's basically a convention for callbacks in CasperJS: every callback will
+                Basically it's a convention for callbacks in CasperJS: every callback will
                 have the current casper instance passed as a first argument:</p>
               <pre class="prettyprint"><code class="javascript">casper.then(function(self) {
     self.echo('plop');
