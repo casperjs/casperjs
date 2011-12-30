@@ -162,9 +162,10 @@ if (!phantom.casperLoaded) {
                     return requireCache[file].exports;
                 }
                 try {
-                    new Function('module', 'exports', phantom.getScriptCode(file))(module, module.exports);
+                    var scriptCode = phantom.getScriptCode(file);
+                    new Function('module', 'exports', scriptCode)(module, module.exports);
                 } catch (e) {
-                    phantom.processScriptError(e);
+                    phantom.processScriptError(e, file);
                 }
                 requireCache[file] = module;
                 return module.exports;
