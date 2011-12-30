@@ -74,7 +74,7 @@ if (!phantom.casperLoaded) {
     phantom.sourceIds = {};
 
     phantom.getErrorMessage = function(e) {
-        return (e.fileName || phantom.sourceIds[e.sourceId]) + ':' + e.line + ' ' + e;
+        return (e.fileName || this.sourceIds[e.sourceId]) + ':' + e.line + ' ' + e;
     };
 
     phantom.getScriptCode = function(file, onError) {
@@ -83,7 +83,7 @@ if (!phantom.casperLoaded) {
             try {
                 scriptCode = CoffeeScript.compile(scriptCode);
             } catch (e) {
-                phantom.processScriptError(e, file, onError);
+                this.processScriptError(e, file, onError);
             }
         }
         // trick to locate source file location on error
@@ -94,8 +94,8 @@ if (!phantom.casperLoaded) {
     };
 
     phantom.processScriptError = function(error, file, callback) {
-        if (!phantom.sourceIds.hasOwnProperty(error.sourceId)) {
-            phantom.sourceIds[error.sourceId] = file;
+        if (!this.sourceIds.hasOwnProperty(error.sourceId)) {
+            this.sourceIds[error.sourceId] = file;
         }
         if (error.message === "__sourceId__") {
             return;
@@ -103,8 +103,8 @@ if (!phantom.casperLoaded) {
         if (typeof callback === "function") {
             callback(error, file);
         } else {
-            console.error(phantom.getErrorMessage(error));
-            phantom.exit(1);
+            console.error(this.getErrorMessage(error));
+            this.exit(1);
         }
     };
 
@@ -194,7 +194,7 @@ if (!phantom.casperLoaded) {
         });
     }
 
-    // BC
+    // BC < 0.6
     phantom.Casper = require('casper').Casper;
 
     // casper cli args

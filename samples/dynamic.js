@@ -14,7 +14,7 @@ var upTo = ~~casper.cli.get(0) || 10; // max 10 links
 // the ones which contains a href starting with 'http://'
 function searchLinks() {
     var filter = Array.prototype.filter,
-        map = Array.prototype.map;
+        map    = Array.prototype.map;
     return map.call(filter.call(document.querySelectorAll('a'), function(a) {
         return (/^http:\/\/.*/i).test(a.getAttribute('href'));
     }), function(a) {
