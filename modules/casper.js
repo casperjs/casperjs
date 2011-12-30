@@ -478,7 +478,7 @@ Casper.prototype = {
         // Form submission?
         if (submit) {
             this.evaluate(function(selector) {
-                var form = document.querySelector(selector);
+                var form = __utils__.findOne(selector);
                 var method = form.getAttribute('method').toUpperCase() || "GET";
                 var action = form.getAttribute('action') || "unknown";
                 __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
