@@ -320,7 +320,7 @@ Casper.prototype = {
         }
         (function(self) {
             array.forEach(function(item, i) {
-                fn(self, item, i);
+                fn.call(self, self, item, i);
             });
         })(this);
         return this;
