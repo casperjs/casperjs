@@ -1,5 +1,3 @@
-#!/usr/bin/env phantomjs
-
 /*!
  * Casper is a navigation utility for PhantomJS.
  *
@@ -65,7 +63,15 @@ if (!phantom.casperLoaded) {
     })(require('fs'));
 
     // casper root path
-    phantom.casperPath = fs.absolute(phantom.libraryScript);
+    // TODO: take --casper-path=.* from python executable
+    if (!phantom.casperPath) {
+        phantom.casperPath = fs.absolute(phantom.args.map(function(arg) {
+            var match = arg.match(/--casper-path=(.*)/i);
+            if (match) {
+                return match[1];
+            }
+        }).pop());
+    }
 
     // Embedded, up-to-date, validatable & controlable CoffeeScript
     phantom.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'vendors', 'coffee-script.js'));
@@ -208,7 +214,7 @@ if (!!phantom.casperArgs.options.version) {
     console.log(phantom.casperVersion.toString());
     phantom.exit(0);
 } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
-    console.log('CasperJS version ' + phantom.casperVersion.toString());
+    console.log('CasperJS version ' + phantom.casperVersion.toString() + ' at ' + phantom.casperPath);
     console.log('Usage: casperjs script.(js|coffee) [options...]');
     console.log('Read the docs http://n1k0.github.com/casperjs/');
     phantom.exit(0);

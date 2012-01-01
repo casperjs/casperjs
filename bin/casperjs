@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+import os
+import subprocess
+import sys
+
+
+def resolve(path):
+    if os.path.islink(path):
+        return resolve(os.readlink(path))
+    return path
+
+CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
+CASPER_ARGS = ['phantomjs', os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casper-path=%s' % CASPER_PATH, '--cli']
+CASPER_ARGS.extend(sys.argv[1:])
+
+try:
+    subprocess.call(CASPER_ARGS)
+except KeyboardInterrupt:
+    print '\nCasperJS interrupted, exiting.'
+    sys.exit()
