@@ -10,8 +10,9 @@ def resolve(path):
         return resolve(os.readlink(path))
     return path
 
+PHANTOMJS_EXEC = os.environ.get('PHANTOMJS_EXECUTABLE', 'phantomjs')
 CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
-CASPER_ARGS = ['phantomjs14', os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casper-path=%s' % CASPER_PATH, '--cli']
+CASPER_ARGS = [PHANTOMJS_EXEC, os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casper-path=%s' % CASPER_PATH, '--cli']
 CASPER_ARGS.extend(sys.argv[1:])
 
 try:
