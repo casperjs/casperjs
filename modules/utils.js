@@ -236,6 +236,25 @@ function mergeObjects(obj1, obj2) {
 exports.mergeObjects = mergeObjects;
 
 /**
+ * Creates an (SG|X)ML node element.
+ *
+ * @param  String  name        The node name
+ * @param  Object  attributes  Optional attributes
+ * @return HTMLElement
+ */
+function node(name, attributes) {
+    var node = document.createElement(name);
+    for (var attrName in attributes) {
+        var value = attributes[attrName];
+        if (attributes.hasOwnProperty(attrName) && isString(attrName)) {
+            node.setAttribute(attrName, value);
+        }
+    }
+    return node;
+}
+exports.node = node;
+
+/**
  * Serializes a value using JSON.
  *
  * @param  Mixed  value
@@ -265,13 +284,13 @@ exports.serialize = serialize;
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
 exports.inherits = function(ctor, superCtor) {
-  ctor.super_ = superCtor;
-  ctor.prototype = Object.create(superCtor.prototype, {
-    constructor: {
-      value: ctor,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
+    ctor.super_ = superCtor;
+    ctor.prototype = Object.create(superCtor.prototype, {
+        constructor: {
+            value: ctor,
+            enumerable: false,
+            writable: true,
+            configurable: true
+        }
+    });
 };

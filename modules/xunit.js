@@ -37,64 +37,52 @@ exports.create = function() {
  *
  */
 XUnitExporter = function() {
-    var node = function(name, attributes) {
-        var node = document.createElement(name);
-        for (var attrName in attributes) {
-            var value = attributes[attrName];
-            if (attributes.hasOwnProperty(attrName) && utils.isType(attrName, "string")) {
-                node.setAttribute(attrName, value);
-            }
-        }
-        return node;
-    };
-
-    var xml = node('testsuite');
-    xml.toString = function() {
+    this._xml = utils.node('testsuite');
+    this._xml.toString = function() {
         return this.outerHTML; // ouch
     };
+};
+exports.XUnitExporter = XUnitExporter;
 
-    /**
-     * Adds a successful test result
-     *
-     * @param  String  classname
-     * @param  String  name
-     */
-    this.addSuccess = function(classname, name) {
-        xml.appendChild(node('testcase', {
-            classname: classname,
-            name:      name
-        }));
-    };
-
-    /**
-     * Adds a failed test result
-     *
-     * @param  String  classname
-     * @param  String  name
-     * @param  String  message
-     * @param  String  type
-     */
-    this.addFailure = function(classname, name, message, type) {
-        var fnode = node('testcase', {
-            classname: classname,
-            name:      name
-        });
-        var failure = node('failure', {
-            type: type || "unknown"
-        });
-        failure.appendChild(document.createTextNode(message || "no message left"));
-        fnode.appendChild(failure);
-        xml.appendChild(fnode);
-    };
-
-    /**
-     * Retrieves generated XML object - actually an HTMLElement.
-     *
-     * @return HTMLElement
-     */
-    this.getXML = function() {
-        return xml;
-    };
+/**
+ * Adds a successful test result
+ *
+ * @param  String  classname
+ * @param  String  name
+ */
+XUnitExporter.prototype.addSuccess = function(classname, name) {
+    this._xml.appendChild(utils.node('testcase', {
+        classname: classname,
+        name:      name
+    }));
 };
 
-exports.XUnitExporter = XUnitExporter;
+/**
+ * Adds a failed test result
+ *
+ * @param  String  classname
+ * @param  String  name
+ * @param  String  message
+ * @param  String  type
+ */
+XUnitExporter.prototype.addFailure = function(classname, name, message, type) {
+    var fnode = utils.node('testcase', {
+        classname: classname,
+        name:      name
+    });
+    var failure = utils.node('failure', {
+        type: type || "unknown"
+    });
+    failure.appendChild(document.createTextNode(message || "no message left"));
+    fnode.appendChild(failure);
+    this._xml.appendChild(fnode);
+};
+
+/**
+ * Retrieves generated XML object - actually an HTMLElement.
+ *
+ * @return HTMLElement
+ */
+XUnitExporter.prototype.getXML = function() {
+    return this._xml;
+};
