@@ -63,14 +63,21 @@ if (!phantom.casperLoaded) {
     })(require('fs'));
 
     // casper root path
-    // TODO: take --casper-path=.* from python executable
     if (!phantom.casperPath) {
-        phantom.casperPath = fs.absolute(phantom.args.map(function(arg) {
-            var match = arg.match(/--casper-path=(.*)/i);
-            if (match) {
-                return match[1];
-            }
-        }).pop());
+        try {
+            phantom.casperPath = phantom.args.map(function(i) {
+                var match = i.match(/^--casper-path=(.*)/);
+                if (match) {
+                    return fs.absolute(match[1]);
+                }
+            }).filter(function(path) {
+                return fs.isDirectory(path);
+            }).pop();
+        } catch (e) {}
+    }
+    if (!phantom.casperPath) {
+        console.error("Couldn't find not compute phantom.casperPath, exiting.");
+        phantom.exit(1);
     }
 
     // Embedded, up-to-date, validatable & controlable CoffeeScript
