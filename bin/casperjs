@@ -11,7 +11,7 @@ def resolve(path):
     return path
 
 CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
-CASPER_ARGS = ['phantomjs', os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casper-path=%s' % CASPER_PATH, '--cli']
+CASPER_ARGS = ['phantomjs14', os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casper-path=%s' % CASPER_PATH, '--cli']
 CASPER_ARGS.extend(sys.argv[1:])
 
 try:

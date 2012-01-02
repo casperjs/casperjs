@@ -70,7 +70,7 @@ function fileExt(file) {
 exports.fileExt = fileExt;
 
 /**
- * Takes a string and append blank until the pad value is reached.
+ * Takes a string and append blanks until the pad value is reached.
  *
  * @param  String  text
  * @param  Number  pad   Pad value (optional; default: 80)
@@ -85,8 +85,14 @@ function fillBlanks(text, pad) {
 }
 exports.fillBlanks = fillBlanks;
 
+/**
+ * Checks if value is a javascript Array
+ *
+ * @param  mixed  value
+ * @return Boolean
+ */
 function isArray(value) {
-    return isType(value, "array");
+    return Array.isArray(value) || isType(value, "array");
 }
 exports.isArray = isArray;
 
@@ -101,17 +107,27 @@ function isCasperObject(value) {
 }
 exports.isCasperObject = isCasperObject;
 
+/**
+ * Checks if value is a phantomjs clipRect-compatible object
+ *
+ * @param  mixed  value
+ * @return Boolean
+ */
 function isClipRect(value) {
     return isType(value, "cliprect") || (
-        isType(value, "object") &&
-        isType(value.top, "number") &&
-        isType(value.left, "number") &&
-        isType(value.width, "number") &&
-        isType(value.height, "number")
+        isObject(value) &&
+        isNumber(value.top) && isNumber(value.left) &&
+        isNumber(value.width) && isNumber(value.height)
     );
 }
 exports.isClipRect = isClipRect;
 
+/**
+ * Checks if value is a javascript Function
+ *
+ * @param  mixed  value
+ * @return Boolean
+ */
 function isFunction(value) {
     return isType(value, "function");
 }
@@ -125,15 +141,38 @@ exports.isFunction = isFunction;
  */
 function isJsFile(file) {
     var ext = fileExt(file);
-    return isType(ext, "string") && ['js', 'coffee'].indexOf(ext) !== -1;
+    return isString(ext, "string") && ['js', 'coffee'].indexOf(ext) !== -1;
 }
 exports.isJsFile = isJsFile;
 
+/**
+ * Checks if value is a javascript Number
+ *
+ * @param  mixed  value
+ * @return Boolean
+ */
+function isNumber(value) {
+    return isType(value, "number");
+}
+exports.isNumber = isNumber;
+
+/**
+ * Checks if value is a javascript Object
+ *
+ * @param  mixed  value
+ * @return Boolean
+ */
 function isObject(value) {
     return isType(value, "object");
 }
 exports.isObject = isObject;
 
+/**
+ * Checks if value is a javascript String
+ *
+ * @param  mixed  value
+ * @return Boolean
+ */
 function isString(value) {
     return isType(value, "string");
 }
@@ -148,7 +187,10 @@ exports.isString = isString;
  * @return Boolean
  */
 function isType(what, typeName) {
-    return betterTypeOf(what) === typeName;
+    if (typeof typeName !== "string" || !typeName) {
+        throw new Error("You must pass isType() a typeName string");
+    }
+    return betterTypeOf(what).toLowerCase() === typeName.toLowerCase();
 }
 exports.isType = isType;
 
@@ -159,10 +201,10 @@ exports.isType = isType;
  * @return Boolean
  */
 function isWebPage(what) {
-    if (!what || !isType(what, "object")) {
+    if (!what || !isObject(what)) {
         return false;
     }
-    if (phantom.version.major <= 1 && phantom.version.minor < 3 && isType(require, "function")) {
+    if (phantom.version.major <= 1 && phantom.version.minor < 3 && isFunction(require)) {
         return what instanceof WebPage;
     } else {
         return what.toString().indexOf('WebPage(') === 0;
@@ -202,9 +244,34 @@ exports.mergeObjects = mergeObjects;
 function serialize(value) {
     if (isType(value, "array")) {
         value = value.map(function(prop) {
-            return isType(prop, "function") ? prop.toString().replace(/\s{2,}/, '') : prop;
+            return isFunction(prop) ? prop.toString().replace(/\s{2,}/, '') : prop;
         });
     }
     return JSON.stringify(value, null, 4);
 }
 exports.serialize = serialize;
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be revritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+exports.inherits = function(ctor, superCtor) {
+  ctor.super_ = superCtor;
+  ctor.prototype = Object.create(superCtor.prototype, {
+    constructor: {
+      value: ctor,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+};
