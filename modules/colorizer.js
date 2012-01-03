@@ -4,7 +4,9 @@
  * Documentation: http://n1k0.github.com/casperjs/
  * Repository:    http://github.com/n1k0/casperjs
  *
- * Copyright (c) 2011 Nicolas Perriault
+ * Copyright (c) 2011-2012 Nicolas Perriault
+ *
+ * Part of source code is Copyright Joyent, Inc. and other Node contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

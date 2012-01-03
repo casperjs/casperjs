@@ -4,7 +4,9 @@
  * Documentation: http://n1k0.github.com/casperjs/
  * Repository:    http://github.com/n1k0/casperjs
  *
- * Copyright (c) 2011 Nicolas Perriault
+ * Copyright (c) 2011-2012 Nicolas Perriault
+ *
+ * Part of source code is Copyright Joyent, Inc. and other Node contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,6 +27,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 if (!phantom.casperLoaded) {
     // see http://semver.org/
     phantom.casperVersion = {
@@ -149,6 +152,7 @@ if (!phantom.casperLoaded) {
                         paths.push(fs.pathJoin(dir, 'node_modules', path));
                         dir = fs.dirname(dir);
                     }
+                    paths.push(fs.pathJoin(requireDir, 'lib', path));
                     paths.push(fs.pathJoin(requireDir, 'modules', path));
                 }
                 paths.forEach(function(testPath) {
@@ -221,7 +225,9 @@ if (!!phantom.casperArgs.options.version) {
     console.log(phantom.casperVersion.toString());
     phantom.exit(0);
 } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+    var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
     console.log('CasperJS version ' + phantom.casperVersion.toString() + ' at ' + phantom.casperPath);
+    console.log('Using PhantomJS version ' + phantomVersion);
     console.log('Usage: casperjs script.(js|coffee) [options...]');
     console.log('Read the docs http://n1k0.github.com/casperjs/');
     phantom.exit(0);

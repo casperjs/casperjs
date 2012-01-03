@@ -4,7 +4,9 @@
  * Documentation: http://n1k0.github.com/casperjs/
  * Repository:    http://github.com/n1k0/casperjs
  *
- * Copyright (c) 2011 Nicolas Perriault
+ * Copyright (c) 2011-2012 Nicolas Perriault
+ *
+ * Part of source code is Copyright Joyent, Inc. and other Node contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -84,6 +86,75 @@ function fillBlanks(text, pad) {
     return text;
 }
 exports.fillBlanks = fillBlanks;
+
+/**
+ * Formats a string with passed parameters. Ported from nodejs `util.format()`.
+ *
+ * @return String
+ */
+function format(f) {
+    var i;
+    if (typeof f !== 'string') {
+        var objects = [];
+        for (i = 0; i < arguments.length; i++) {
+            objects.push(inspect(arguments[i]));
+        }
+        return objects.join(' ');
+    }
+    i = 1;
+    var args = arguments;
+    var len = args.length;
+    var str = String(f).replace(/%[sdj%]/g, function(x) {
+        if (i >= len) return x;
+        switch (x) {
+        case '%s':
+            return String(args[i++]);
+        case '%d':
+            return Number(args[i++]);
+        case '%j':
+            return JSON.stringify(args[i++]);
+        case '%%':
+            return '%';
+        default:
+            return x;
+        }
+    });
+    for (var x = args[i]; i < len; x = args[++i]) {
+        if (x === null || typeof x !== 'object') {
+            str += ' ' + x;
+        } else {
+            str += ' ' + inspect(x);
+        }
+    }
+    return str;
+}
+exports.format = format;
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be revritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor;
+    ctor.prototype = Object.create(superCtor.prototype, {
+        constructor: {
+            value: ctor,
+            enumerable: false,
+            writable: true,
+            configurable: true
+        }
+    });
+}
+exports.inherits = inherits;
 
 /**
  * Checks if value is a javascript Array
@@ -243,14 +314,14 @@ exports.mergeObjects = mergeObjects;
  * @return HTMLElement
  */
 function node(name, attributes) {
-    var node = document.createElement(name);
+    var _node = document.createElement(name);
     for (var attrName in attributes) {
         var value = attributes[attrName];
         if (attributes.hasOwnProperty(attrName) && isString(attrName)) {
-            node.setAttribute(attrName, value);
+            _node.setAttribute(attrName, value);
         }
     }
-    return node;
+    return _node;
 }
 exports.node = node;
 
@@ -269,28 +340,3 @@ function serialize(value) {
     return JSON.stringify(value, null, 4);
 }
 exports.serialize = serialize;
-
-/**
- * Inherit the prototype methods from one constructor into another.
- *
- * The Function.prototype.inherits from lang.js rewritten as a standalone
- * function (not on Function.prototype). NOTE: If this file is to be loaded
- * during bootstrapping this function needs to be revritten using some native
- * functions as prototype setup using normal JavaScript does not work as
- * expected during bootstrapping (see mirror.js in r114903).
- *
- * @param {function} ctor Constructor function which needs to inherit the
- *     prototype.
- * @param {function} superCtor Constructor function to inherit prototype from.
- */
-exports.inherits = function(ctor, superCtor) {
-    ctor.super_ = superCtor;
-    ctor.prototype = Object.create(superCtor.prototype, {
-        constructor: {
-            value: ctor,
-            enumerable: false,
-            writable: true,
-            configurable: true
-        }
-    });
-};
