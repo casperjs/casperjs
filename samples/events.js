@@ -4,23 +4,23 @@
  */
 var casper = require('casper').create();
 
-casper.on('casper.http.status.200', function(resource) {
+casper.on('http.status.200', function(resource) {
     casper.echo(resource.url + ' is OK', 'INFO');
 });
 
-casper.on('casper.http.status.301', function(resource) {
+casper.on('http.status.301', function(resource) {
     casper.echo(resource.url + ' is permanently redirected', 'PARAMETER');
 });
 
-casper.on('casper.http.status.302', function(resource) {
+casper.on('http.status.302', function(resource) {
     casper.echo(resource.url + ' is temporarily redirected', 'PARAMETER');
 });
 
-casper.on('casper.http.status.404', function(resource) {
+casper.on('http.status.404', function(resource) {
     casper.echo(resource.url + ' is not found', 'COMMENT');
 });
 
-casper.on('casper.http.status.500', function(resource) {
+casper.on('http.status.500', function(resource) {
     casper.echo(resource.url + ' is in error', 'ERROR');
 });
 
