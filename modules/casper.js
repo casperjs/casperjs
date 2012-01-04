@@ -653,7 +653,7 @@ Casper.prototype.open = function(location, options) {
         this.setHttpAuth(httpAuth.username, httpAuth.password);
     }
     this.emit('open', location);
-    this.page.open(location);
+    this.page.open(this.filter('open.location', location) || location);
     return this;
 };
 

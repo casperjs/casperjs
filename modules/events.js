@@ -213,3 +213,29 @@ EventEmitter.prototype.listeners = function(type) {
   }
   return this._events[type];
 };
+
+// Added for CasperJS: filters a value attached to an event
+EventEmitter.prototype.filter = function() {
+  var type = arguments[0];
+  if (!this._filters) {
+    return;
+  }
+  var filter = this._filters[type];
+  if (!filter || typeof filter !== 'function') {
+    return;
+  }
+  return filter.apply(null, Array.prototype.splice.call(arguments, 1));
+};
+
+EventEmitter.prototype.setFilter = function(type, filterFn) {
+  if (!this._filters) this._filters = {};
+  if ('function' !== typeof filterFn) {
+    throw new Error('setFilter only takes instances of Function');
+  }
+  if (!this._filters[type]) {
+    this._filters[type] = filterFn;
+    return true;
+  }
+  // TODO: process multiple filters? in which order? disallow?
+  return false;
+};
