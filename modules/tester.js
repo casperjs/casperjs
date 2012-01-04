@@ -43,7 +43,7 @@ exports.create = function(casper, options) {
 var Tester = function(casper, options) {
     this.running = false;
     this.suites = [];
-    this.options = utils.isType(options, "object") ? options : {};
+    this.options = utils.isObject(options) ? options : {};
 
     if (!utils.isCasperObject(casper)) {
         throw new Error("Tester needs a Casper instance");
@@ -370,7 +370,7 @@ var Tester = function(casper, options) {
      * @param  Boolean  exit
      */
     this.renderResults = function(exit, status, save) {
-        save = utils.isType(save, "string") ? save : this.options.save;
+        save = utils.isString(save) ? save : this.options.save;
         var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
         if (total === 0) {
             statusText = FAIL;
@@ -387,7 +387,7 @@ var Tester = function(casper, options) {
             result = statusText + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
         }
         casper.echo(this.colorize(utils.fillBlanks(result), style));
-        if (save && utils.isType(require, "function")) {
+        if (save && utils.isFunction(require)) {
             try {
                 fs.write(save, exporter.getXML(), 'w');
                 casper.echo('result log stored in ' + save, 'INFO');
@@ -466,7 +466,7 @@ var Tester = function(casper, options) {
         if (utils.betterTypeOf(v1) !== utils.betterTypeOf(v2)) {
             return false;
         }
-        if (utils.isType(v1, "function")) {
+        if (utils.isFunction(v1)) {
             return v1.toString() === v2.toString();
         }
         if (v1 instanceof Object && v2 instanceof Object) {

@@ -40,7 +40,7 @@ exports.create = function(fn) {
  * FIXME: use new Function() instead of eval()
  */
 var FunctionArgsInjector = function(fn) {
-    if (!utils.isType(fn, "function")) {
+    if (!utils.isFunction(fn)) {
         throw new Error("FunctionArgsInjector() can only process functions");
     }
     this.fn = fn;
@@ -63,7 +63,7 @@ var FunctionArgsInjector = function(fn) {
 
     this.process = function(values) {
         var fnObj = this.extract(this.fn);
-        if (!utils.isType(fnObj, "object")) {
+        if (!utils.isObject(fnObj)) {
             throw new Error("Unable to process function " + this.fn.toString());
         }
         var inject = this.getArgsInjectionString(fnObj.args, values);

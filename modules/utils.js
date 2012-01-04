@@ -332,7 +332,7 @@ exports.node = node;
  * @return String
  */
 function serialize(value) {
-    if (isType(value, "array")) {
+    if (isArray(value)) {
         value = value.map(function(prop) {
             return isFunction(prop) ? prop.toString().replace(/\s{2,}/, '') : prop;
         });
