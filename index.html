@@ -228,11 +228,18 @@ casper.run -&gt;
           <div class="page-header">
             <h1>API Documentation</h1>
           </div>
+          <p> Casper source code is quite heavily documented using <code>jsdoc</code>,
+                but below you'll find the whole API documentation with sample code. </p>
           <div class="row">
             <div class="span12">
-              <h2>Casper</h2>
-              <p> Casper source code is quite heavily documented using <code>jsdoc</code>,
-                but below you'll find the whole API documentation with sample code. </p>
+              <h2>The casper module</h2>
+              <p>The most easiest way to instantiate a casper instance is to use the
+              module <code>create()</code> method:</p>
+              <pre class="prettyprint"><code>var casper = require('casper').create();
+</code></pre>
+              <p>But you can retrieve the main Function and instantiate it by yourself:</p>
+              <pre class="prettyprint"><code>var casper = new require('casper').Casper();
+</code></pre>
               <h3 id="phantom_Casper_options"><code>Casper([Object options])</code></h3>
               <p> Casper constructor accepts a single <code>options</code>
                 argument which is an object. Available options are: </p>
@@ -420,7 +427,7 @@ casper.run(function(self) {
     console.log(self.getCurrentUrl()); // 'http://foo.bar/2'
 });
 </code></pre>
-              <p>Also have a look at <a href="#phantom_Casper_forward">Casper.forward()</a>.</p>
+              <p>Also have a look at <a href="#phantom_Casper_forward"><code>Casper.forward()</code></a>.</p>
               <h3 id="phantom_Casper_base64encode"><code>Casper#base64encode(String
                   url [, String method, Object data])</code></h3>
               <p> Encodes a resource using the base64 algorithm synchroneously
@@ -457,11 +464,14 @@ casper.run(function(self) {
               <p> Emulates a click on the element from the provided selector, if
                 possible. In case of success, <code>true</code> is returned, <code>false</code>
                 otherwise. </p>
-              <p> <span class="label notice">Note</span> By default, <code>.click()</code>
+              <p>
+                <span class="label notice">Note</span>
+                By default, <code>.click()</code>
                 will try to relocate the browser location to the value of the <code>href</code>
                 attribute of the clicked element (if any) as a last resort. If
                 you don't want this behavior, set the <code>fallbackToHref</code>
-                argument to <code>false</code>. </p>
+                argument to <code>false</code>.
+              </p>
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/');
 
@@ -647,7 +657,7 @@ casper.back();    // http://foo.bar/1
 casper.forward(); // http://foo.bar/2
 casper.run();
 </code></pre>
-              <p>Also have a look at <a href="#phantom_Casper_back">Casper.back()</a>.</p>
+              <p>Also have a look at <a href="#phantom_Casper_back"><code>Casper.back()</code></a>.</p>
               <h3 id="phantom_Casper_log"><code>Casper#log(String message[,
                   String level, String space])</code></h3>
               <p> Logs a message with an optional level in an optional space.
@@ -692,7 +702,9 @@ casper.run();
         'cc':         true,
         'attachment': '/Users/chuck/roundhousekick.doc'
     }, true);
-}).then(function(self) {
+});
+
+casper.then(function(self) {
     self.evaluateOrDie(function() {
         return /message sent/.test(document.body.innerText);
     }, 'sending message failed');
@@ -741,6 +753,14 @@ casper.run();
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.mouseClick('#header img.logo');
 </code></pre>
+              <p>
+                <span class="label notice">Hint</span>
+                The difference between <code>mouseClick()</code> and
+                <a href="#click"><code>Casper.click()</code></a> is that the former
+                emulates a true mouse event within the browser (like if a real user
+                would perform a click using the mouse), while the latter use
+                javascript to do so.
+              </p>
 
               <h3 id="phantom_Casper_repeat"><code>Casper#repeat(int times,
                   function then)</code></h3>
@@ -751,7 +771,9 @@ casper.start('http://foo.bar/home', function(self) {
     self.evaluateOrDie(function() {
         return /logged in/.match(document.title);
     }, 'not authenticated');
-}).repeat(5, function(self) {
+});
+
+casper.repeat(5, function(self) {
     self.echo("I am step #" + ++i);
 });
 
@@ -784,14 +806,12 @@ casper.run();
               <p>Casper suite <strong>won't run</strong>:</p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
     // ...
-}).then(function(self) {
-    // ...
 });
+
+// hey, it's missing .run() here!
 </code></pre>
               <p>Casper suite <strong>will run</strong>:</p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
-    // ...
-}).then(function(self) {
     // ...
 });
 
@@ -803,7 +823,9 @@ casper.run();
               executed. Just don't forget to <code>exit()</code> Casper if you define one!</p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://foo.bar/home', function(self) {
     // ...
-}).then(function(self) {
+});
+
+casper.then(function(self) {
     // ...
 });
 
@@ -887,13 +909,13 @@ casper.run();
                 argument is not mandatory, it's just pythonic-like syntaxic
                 sugar. You can perfectly use this alternative: </p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function() {
-    casper.echo("I'm in your google.");
+    this.echo("I'm in your google.");
 });
 
 casper.run();
 </code></pre>
               <p> If you want to open a page as a next step in your navigation
-                scenario, please refer to the <code>Casper#thenOpen()</code>
+                scenario, please refer to the <a href="#phantom_Casper_thenOpen"><code>Casper#thenOpen()</code></a>
                 method documentation. </p>
               <h3 id="phantom_Casper_thenEvaluate"><code>Casper#thenEvaluate(function
                   fn[, Object replacements])</code></h3>
@@ -917,7 +939,9 @@ casper.run();
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
-}).thenOpen('http://yahoo.fr/', function(self) {
+});
+
+casper.thenOpen('http://yahoo.fr/', function(self) {
     self.echo("Now I'm in your yahoo.")
 });
 
@@ -930,7 +954,9 @@ casper.run();
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/').then(function(self) {
     self.echo("I'm in your google.");
-}).thenOpenAndEvaluate('http://yahoo.fr/', function() {
+});
+
+casper.thenOpenAndEvaluate('http://yahoo.fr/', function() {
     var f = document.querySelector('form');
     f.querySelector('input[name=q]').value = 'chuck norris';
     f.submit();
@@ -1611,7 +1637,9 @@ var articles = [];
 
 require('casper').create().start('http://www.liberation.fr/', function(self) {
     articles = self.fetchTexts('h3');
-}).thenOpen('http://www.lemonde.fr/', function(self) {
+});
+
+casper.thenOpen('http://www.lemonde.fr/', function(self) {
     articles.concat(self.fetchTexts('h2.article'));
 });
 
@@ -1815,7 +1843,9 @@ var casper = require('casper').create();
 
 casper.start('http://mywebsite/404', function(self) {
     self.echo('We suppose this url return an HTTP 404');
-}).thenOpen('http://mywebsite/500', function(self) {
+});
+
+casper.thenOpen('http://mywebsite/500', function(self) {
     self.echo('We suppose this url return an HTTP 500');
 });
 
