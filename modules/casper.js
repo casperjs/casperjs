@@ -166,10 +166,12 @@ Casper.prototype.capture = function(targetFile, clipRect) {
         this.page.clipRect = clipRect;
         this.log(f("Capturing page to %s with clipRect %s", targetFile, JSON.stringify(clipRect)), "debug");
     } else {
-        this.log(f('Capturing page to %s', targetFile), "debug");
+        this.log(f("Capturing page to %s", targetFile), "debug");
     }
-    if (!this.page.render(targetFile)) {
+    if (!this.page.render(this.filter('capture.target_filename', targetFile) || targetFile)) {
         this.log(f("Failed to save screenshot to %s; please check permissions", targetFile), "error");
+    } else {
+        this.emit('capture.saved', targetFile);
     }
     if (previousClipRect) {
         this.page.clipRect = previousClipRect;
@@ -310,6 +312,7 @@ Casper.prototype.download = function(url, targetPath) {
     var cu = require('clientutils').create();
     try {
         fs.write(targetPath, cu.decode(this.base64encode(url)), 'w');
+        this.emit('downloaded.file', targetPath);
     } catch (e) {
         this.log(f("Error while downloading %s to %s: %s", url, targetPath, e), "error");
     }
@@ -344,7 +347,8 @@ Casper.prototype.each = function(array, fn) {
  * @return Casper
  */
 Casper.prototype.echo = function(text, style) {
-    console.log(style ? this.colorizer.colorize(text, style) : text);
+    var message = style ? this.colorizer.colorize(text, style) : text;
+    console.log(this.filter('echo.message', message) || message);
     return this;
 };
 
@@ -781,6 +785,7 @@ Casper.prototype.setHttpAuth = function(username, password) {
     }
     this.page.settings.userName = username;
     this.page.settings.password = password;
+    this.emit('http.auth', username, password);
     this.log("Setting HTTP authentication for user " + username, "info");
     return this;
 };
@@ -976,8 +981,8 @@ Casper.prototype.viewport = function(width, height) {
  * @return Casper
  */
 Casper.prototype.wait = function(timeout, then) {
-    timeout = Number(timeout, 10);
-    if (!utils.isNumber(timeout) || timeout < 1) {
+    timeout = ~~timeout;
+    if (timeout < 1) {
         this.die("wait() only accepts a positive integer > 0 as a timeout value");
     }
     if (then && !utils.isFunction(then)) {
