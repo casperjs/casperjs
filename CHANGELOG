@@ -4,10 +4,11 @@ CasperJS Changelog
 XXXX-XX-XX, v0.6.0
 ------------------
 
-- ported nodejs' "events" module to casperjs; lots of events added
-- introduced the "mouse" module to handle mouse events
 - BC BREAK: removed obsolete `replaceFunctionPlaceholders()`
 - commonjs/nodejs-like module implementation
+- ported nodejs' "events" module to casperjs; lots of events added, plus some value filtering capabilities
+- introduced the "mouse" module to handle "real" mouse events
+- added support for RegExp in `Casper.resourceExists()`
 
 2011-12-25, v0.4.2
 ------------------
