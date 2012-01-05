@@ -612,7 +612,7 @@ Casper.prototype.log = function(message, level, space) {
         message = f('%s [%s] %s', levelStr, space, message);
     }
     if (this.options.verbose) {
-        this.echo(message); // direct output
+        this.echo(this.filter('log.message', message) || message); // direct output
     }
     this.result.log.push(entry);
     this.emit('log', entry);
@@ -675,17 +675,28 @@ Casper.prototype.repeat = function(times, then) {
 /**
  * Checks if a given resource was loaded by the remote page.
  *
- * @param  Function/String  test  A test function or string. In case a string is passed, url matching will be tested.
+ * @param  Function/String/RegExp  test  A test function, string or regular expression.
+ *                                       In case a string is passed, url matching will be tested.
  * @return Boolean
  */
 Casper.prototype.resourceExists = function(test) {
     var testFn;
-    if (utils.isString(test)) {
-        testFn = function (res) {
-            return res.url.search(test) !== -1;
-        };
-    } else {
-      testFn = test;
+    switch (utils.betterTypeOf(test)) {
+        case "string":
+            testFn = function(res) {
+                return res.url.search(test) !== -1;
+            };
+            break;
+        case "regexp":
+            testFn = function(res) {
+                return test.test(res.url);
+            };
+            break;
+        case "function":
+            testFn = test;
+            break;
+        default:
+            throw new Error("Invalid type");
     }
     return this.resources.some(testFn);
 };

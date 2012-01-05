@@ -8,12 +8,16 @@ do(casper) ->
         "two resources found"
       )
       @test.assertResourceExists(
+        /phantom\.png/i
+        "phantom image found via test RegExp"
+      )
+      @test.assertResourceExists(
         (res) -> res.url.match "phantom.png"
-        "phantom image found via test function"
+        "phantom image found via test Function"
       )
       @test.assertResourceExists(
         "phantom.png"
-        "phantom image found via test string"
+        "phantom image found via test String"
       )
     onTimeout = -> @test.fail "waitForResource timeout occured"
     @waitForResource "phantom.png", onTime, onTimeout
