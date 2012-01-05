@@ -222,7 +222,7 @@ EventEmitter.prototype.filter = function() {
     return;
   }
   var filter = this._filters[type];
-  if (!filter || typeof filter !== 'function') {
+  if (typeof filter !== 'function') {
     return;
   }
   return filter.apply(null, Array.prototype.splice.call(arguments, 1));
