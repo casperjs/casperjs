@@ -218,6 +218,7 @@ EventEmitter.prototype.listeners = function(type) {
 EventEmitter.prototype.filter = function() {
   var type = arguments[0];
   if (!this._filters) {
+    this._filters = {};
     return;
   }
   var filter = this._filters[type];
