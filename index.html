@@ -1155,15 +1155,15 @@ casper.run();
           <div class="row">
             <div class="span16">
               <p>
-                CasperJS provides an event handler very similar to the
+                CasperJS provides an <a href="#events">event handler</a> very similar to the
                 <a href="https://github.com/joyent/node/blob/master/lib/events.js">one</a>
                 shipping with <a href="http://nodejs.org">nodejs</a>; actually it borrows
                 most of its codebase.
-                CasperJS also adds <em>filters</em>, which are basically ways to alter values
-                asynchroneously.
+                CasperJS also adds <a href="#filters"><em>filters</em></a>, which
+                are basically ways to alter values asynchroneously.
               </p>
               <hr>
-              <h2>Events</h2>
+              <h2 id="events">Events</h2>
               <p>
                 Using events is pretty much straightforward if you're a node developer,
                 or if you worked with any evented system before:
@@ -1193,7 +1193,7 @@ casper.on('resource.received', function(resource) {
                 </tbody>
               </table>
               <hr>
-              <h2>Filters</h2>
+              <h2 id="filters">Filters</h2>
               <p>
                 Filters allow to alter some value asynchroneously. Sounds obscure?
                 Let's take a simple example and let's imagine you would like to alter
@@ -1208,7 +1208,7 @@ casper.setFilter('open.location', function(location) {
 </code></pre>
               <p>
                 There you have it, every single requested url will have these appended.
-                Let me bet you'll find far more interesting use cases though ;)
+                Let me bet you'll find far more interesting use cases than my silly one ;)
               </p>
               <p>Here'a the list of all available filters with their expected return value:</p>
               <table class="zebra-striped" caption="Casper options">
