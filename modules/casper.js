@@ -208,7 +208,7 @@ Casper.prototype.checkStep = function(self, onComplete) {
         self.log(f("Done %s steps in %dms", self.steps.length, self.result.time), "info");
         self.page.content = ''; // avoid having previously loaded DOM contents being still active (refs #34)
         clearInterval(self.checker);
-        self.emit('step.complete');
+        self.emit('run.complete');
         if (utils.isFunction(onComplete)) {
             try {
                 onComplete.call(self, self);
@@ -653,7 +653,6 @@ Casper.prototype.open = function(location, options) {
             username: httpAuthMatch[1],
             password: httpAuthMatch[2]
         };
-        this.emit('http.auth', httpAuth);
         this.setHttpAuth(httpAuth.username, httpAuth.password);
     }
     this.emit('open', location);
@@ -718,7 +717,7 @@ Casper.prototype.run = function(onComplete, time) {
         return this;
     }
     this.log(f("Running suite: %d step%s", this.steps.length, this.steps.length > 1 ? "s" : ""), "info");
-    this.emit('run');
+    this.emit('run.start');
     this.checker = setInterval(this.checkStep, (time ? time: 250), this, onComplete);
     return this;
 };
