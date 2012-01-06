@@ -55,7 +55,7 @@ var Mouse = function(casper) {
             throw new Error('Unsupported mouse event type: ' + type);
         }
         args = Array.prototype.slice.call(args); // cast Arguments -> Array
-        casper.emit('mouse.' + type, args);
+        casper.emit('mouse.' + type.replace('mouse', ''), args);
         switch (args.length) {
             case 0:
                 throw new Error('Too few arguments');
