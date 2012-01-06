@@ -1174,8 +1174,8 @@ casper.on('resource.received', function(resource) {
     casper.echo(resource.url);
 });
 </code></pre>
-              <p>Here's a table containing all the available events with all their
-              callback parameters:</p>
+              <p>Here's a table containing all the available events with all the
+              parameters passed to their callback:</p>
               <table class="zebra-striped" caption="Casper options">
                 <thead>
                   <tr>
@@ -1188,195 +1188,231 @@ casper.on('resource.received', function(resource) {
                   <tr>
                     <td><code>back</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when the embedded browser is asked to go back a step in its history.</td>
                   </tr>
                   <tr>
                     <td><code>capture.saved</code></td>
                     <td><code>targetFile</code></td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>casper.mouse.click</code></td>
-                    <td><code>args</code></td>
-                    <td>Description</td>
+                    <td>Emitted when a screenshot image has been captured.</td>
                   </tr>
                   <tr>
                     <td><code>click</code></td>
                     <td><code>selector, fallbackToHref</code></td>
-                    <td>Description</td>
+                    <td>Emitted when the <code>Casper.click()</code> method has been called.</td>
                   </tr>
                   <tr>
                     <td><code>die</code></td>
                     <td><code>message, status</code></td>
-                    <td>Description</td>
+                    <td>Emitted when the <code>Casper.die()</code> method has been called.</td>
                   </tr>
                   <tr>
                     <td><code>downloaded.file</code></td>
                     <td><code>targetPath</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>exit</code></td>
                     <td><code>status</code></td>
-                    <td>Description</td>
+                    <td>Emitted when the <code>Casper.exit()</code> method has been called.</td>
                   </tr>
                   <tr>
                     <td><code>fill</code></td>
                     <td><code>selector, vals, submit</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>forward</code></td>
                     <td>None</td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>http.auth</code></td>
-                    <td><code>httpAuth</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>http.auth</code></td>
                     <td><code>username, password</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>http.status.[code]</code></td>
                     <td><code>resource</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </td>
                   <tr>
                     <td><code>load.started</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>load.failed</code></td>
                     <td><code>Object</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>load.finished</code></td>
                     <td><code>status</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>log</code></td>
                     <td><code>entry</code></td>
-                    <td>Description</td>
+                    <td>
+                      <p>Emitted when the <code>Casper.log()</code> method has been called. The
+                      <code>entry</code> parameter is an Object like this:</p>
+                      <pre class="prettyprint"><code class="javascript">{
+     level:   "debug",
+     space:   "phantom",
+     message: "A message",
+     time:    "a javascript Date instance"
+}</code></pre>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>mouse.click</code></td>
+                    <td><code>args</code></td>
+                    <td>Emitted when the mouse has been asked to click something or somewhere.</td>
+                  </tr>
+                  <tr>
+                    <td><code>mouse.down</code></td>
+                    <td><code>args</code></td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>mouse.move</code></td>
+                    <td><code>args</code></td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>mouse.up</code></td>
+                    <td><code>args</code></td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>newListener</code></td>
                     <td><code>type, listener</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>open</code></td>
                     <td><code>location</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>page.created</code></td>
                     <td><code>page</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>page.initialized</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>remote.alert</code></td>
                     <td><code>message</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>remote.message</code></td>
                     <td><code>msg</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>resource.received</code></td>
                     <td><code>resource</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>resource.requested</code></td>
                     <td><code>request</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
-                    <td><code>run</code></td>
+                    <td><code>run.complete</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>run.start</code></td>
+                    <td>None</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>starting</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>started</code></td>
                     <td>None</td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>step.complete</code></td>
-                    <td><code>stepResult</code></td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>step.complete</code></td>
-                    <td>None</td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>step.created</code></td>
-                    <td><code>fn</code></td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>step.start</code></td>
-                    <td><code>step</code></td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>step.timeout</code></td>
-                    <td>None</td>
-                    <td>Description</td>
-                  </tr>
-                  <tr>
-                    <td><code>timeout</code></td>
-                    <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>step.added</code></td>
                     <td><code>step</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>step.complete</code></td>
+                    <td><code>stepResult</code></td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>step.created</code></td>
+                    <td><code>fn</code></td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>step.start</code></td>
+                    <td><code>step</code></td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>step.timeout</code></td>
+                    <td>None</td>
+                    <td>Emitted when </td>
+                  </tr>
+                  <tr>
+                    <td><code>timeout</code></td>
+                    <td>None</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>viewport.changed</code></td>
                     <td><code>[width, height]</code></td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>wait.done</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>wait.start</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                   <tr>
                     <td><code>waitFor.timeout</code></td>
                     <td>None</td>
-                    <td>Description</td>
+                    <td>Emitted when </td>
                   </tr>
                 </tbody>
               </table>
+              <h3>Emitting you own events</h3>
+              <p>Of course you can emit your own events, using the <code>Casper.emit()</code>
+              method:</p>
+              <pre class="prettyprint"><code class="javascript">var casper = require('casper').create();
+
+// listening to a custom event
+casper.on('google.loaded', function(title) {
+    casper.echo('Google page title is ' + title);
+});
+
+casper.start('http://google.com/', function(self) {
+    // emitting a custom event
+    self.emit('google.loaded', self.getTitle());
+});
+
+casper.run();
+</code></pre>
               <hr>
               <h2 id="filters">Filters</h2>
               <p>
@@ -1410,7 +1446,7 @@ casper.setFilter('open.location', function(location) {
                     <td><code>name</code></td>
                     <td><code>args</code></td>
                     <td><code>return</code></td>
-                    <td>description</td>
+                    <td>Emitted when </td>
                   </tr>
                 </tbody>
               </table>
