@@ -217,6 +217,16 @@ function isJsFile(file) {
 exports.isJsFile = isJsFile;
 
 /**
+ * Checks if the provided value is null
+ *
+ * @return Boolean
+ */
+function isNull(value) {
+    return isType(value, "null");
+}
+exports.isNull = isNull;
+
+/**
  * Checks if value is a javascript Number
  *
  * @param  mixed  value
@@ -264,6 +274,16 @@ function isType(what, typeName) {
     return betterTypeOf(what).toLowerCase() === typeName.toLowerCase();
 }
 exports.isType = isType;
+
+/**
+ * Checks if the provided value is undefined
+ *
+ * @return Boolean
+ */
+function isUndefined(value) {
+    return isType(value, "undefined");
+}
+exports.isUndefined = isUndefined;
 
 /**
  * Checks if the provided var is a WebPage instance

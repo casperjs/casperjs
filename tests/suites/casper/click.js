@@ -16,8 +16,8 @@
         t.comment('CasperUtils.click()');
         self.test.assert(self.click('#test1'), 'CasperUtils.click() can click an `href="javascript:` link');
         self.test.assert(self.click('#test2'), 'CasperUtils.click() can click an `href="#"` link');
-        self.test.assert(!self.click('#test3'), 'CasperUtils.click() can click an `onclick=".*; return false"` link');
-        self.test.assert(!self.click('#test4'), 'CasperUtils.click() can click an unobstrusive js handled link');
+        self.test.assert(self.click('#test3'), 'CasperUtils.click() can click an `onclick=".*; return false"` link');
+        self.test.assert(self.click('#test4'), 'CasperUtils.click() can click an unobstrusive js handled link');
         var results = self.getGlobal('results');
         self.test.assert(results.test1, 'CasperUtils.click() has clicked an `href="javascript:` link');
         self.test.assert(results.test2, 'CasperUtils.click() has clicked an `href="#"` link');

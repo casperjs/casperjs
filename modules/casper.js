@@ -109,6 +109,11 @@ var Casper = function(options) {
     this.step = -1;
     this.steps = [];
     this.test = tester.create(this);
+
+    // basic event handlers
+    this.on('deprecated', function(message) {
+        this.echo('[deprecated] ' + message, 'COMMENT');
+    });
 };
 
 // Casper class is an EventEmitter
@@ -223,23 +228,25 @@ Casper.prototype.checkStep = function(self, onComplete) {
 };
 
 /**
- * Emulates a click on the element from the provided selector, if
- * possible. In case of success, `true` is returned.
+ * Emulates a click on the element from the provided selector using the mouse
+ * pointer, if possible.
+ *
+ * In case of success, `true` is returned, `false` otherwise.
  *
  * @param  String   selector        A DOM CSS3 compatible selector
- * @param  Boolean  fallbackToHref  Whether to try to relocate to the value of any href attribute (default: true)
  * @return Boolean
  */
 Casper.prototype.click = function(selector, fallbackToHref) {
-    fallbackToHref = utils.isType(fallbackToHref, "undefined") ? true : !!fallbackToHref;
     this.log("Click on selector: " + selector, "debug");
-    this.emit('click', selector, fallbackToHref);
-    return this.evaluate(function(selector, fallbackToHref) {
-        return __utils__.click(selector, fallbackToHref);
-    }, {
-        selector:       selector,
-        fallbackToHref: fallbackToHref
-    });
+    if (arguments.length > 1) {
+        this.emit("deprecated", "The click() method does not process the fallbackToHref argument since 0.6");
+    }
+    try {
+        this.mouse.click(selector);
+    } catch (e) {
+        return false;
+    }
+    return true;
 };
 
 /**
@@ -629,10 +636,12 @@ Casper.prototype.log = function(message, level, space) {
  *
  * @param  String   selector        A DOM CSS3 compatible selector
  * @return Casper
+ * @deprecated
+ * @since 0.6
  */
 Casper.prototype.mouseClick = function(selector) {
-    this.mouse.click(selector);
-    return this;
+    this.emit("deprecated", "The mouseClick() method has been deprecated since 0.6; use click() instead");
+    return this.click(selector);
 };
 
 /**
@@ -890,14 +899,16 @@ Casper.prototype.then = function(step) {
  *
  * @param  String   selector        A DOM CSS3 compatible selector
  * @param  Function then            Next step function to execute on page loaded (optional)
- * @param  Boolean  fallbackToHref  Whether to try to relocate to the value of any href attribute (default: true)
  * @return Casper
  * @see    Casper#click
  * @see    Casper#then
  */
 Casper.prototype.thenClick = function(selector, then, fallbackToHref) {
+    if (arguments.length > 2) {
+        this.emit("deprecated", "The thenClick() method does not process the fallbackToHref argument since 0.6");
+    }
     this.then(function(self) {
-        self.click(selector, fallbackToHref);
+        self.click(selector);
     });
     return utils.isFunction(then) ? this.then(then) : this;
 };
