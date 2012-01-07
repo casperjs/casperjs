@@ -877,7 +877,7 @@ Casper.prototype.start = function(location, then) {
             }
         }, this.options.timeout, this);
     }
-    this.emit('page.initialized');
+    this.emit('page.initialized', this);
     if (utils.isFunction(this.options.onPageInitialized)) {
         this.log("Post-configuring WebPage instance", "debug");
         this.options.onPageInitialized.call(this, this.page);
