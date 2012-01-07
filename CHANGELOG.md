@@ -4,6 +4,7 @@ CasperJS Changelog
 XXXX-XX-XX, v0.6.0
 ------------------
 
+- BC BREAK: `Casper.click()` now use native phantomjs events instead of crazy utopic javascript emulation
 - BC BREAK: removed obsolete `replaceFunctionPlaceholders()`
 - commonjs/nodejs-like module implementation
 - ported nodejs' "events" module to casperjs; lots of events added, plus some value filtering capabilities
