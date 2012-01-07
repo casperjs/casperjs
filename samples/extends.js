@@ -1,10 +1,9 @@
-var articles = [];
-var CasperClass = require('casper').Casper;
+var Casper = require("casper").Casper;
 
 /**
  * Adds two new methods to the Casper prototype: fetchTexts and renderJSON.
  */
-CasperClass.extend({
+Casper.extend({
     /**
      * Adds a new navigation step for casper; basically it will:
      *
@@ -12,16 +11,13 @@ CasperClass.extend({
      * 2. on loaded, will fetch all contents retrieved through the provided
      *    CSS3 selector and return them in a formatted object.
      */
-    fetchTexts: function(location, selector) {
-        return this.thenOpen(location, function(self) {
-            var texts = self.evaluate(function(selector) {
-                var elements = document.querySelectorAll(selector);
-                return Array.prototype.map.call(elements, function(e) {
-                    return e.innerText;
-                });
-            }, { selector: selector });
-            articles = articles.concat(texts);
-        });
+    fetchTexts: function(selector) {
+        return this.evaluate(function(selector) {
+            var elements = document.querySelectorAll(selector);
+            return Array.prototype.map.call(elements, function(e) {
+                return e.innerText;
+            });
+        }, { selector: selector });
     },
 
     /**
@@ -32,20 +28,22 @@ CasperClass.extend({
     }
 });
 
-var casper = new CasperClass({
+var casper = new Casper({
     loadImages:  false,
     loadPlugins: false,
     logLevel:    "debug",
     verbose:     true
 });
 
-casper.start();
+var articles = [];
 
-// all article titles are stored in <h3>
-casper.fetchTexts('http://www.liberation.fr/', 'h3');
+casper.start('http://www.liberation.fr/', function() {
+    articles = this.fetchTexts('h3');
+});
 
-// all article titles are stored in <h2 class="article">
-casper.fetchTexts('http://www.lemonde.fr/', 'h2.article');
+casper.thenOpen('http://www.lemonde.fr/', function() {
+    articles.concat(this.fetchTexts('h2.article'));
+});
 
 casper.run(function(self) {
     self.renderJSON(articles);

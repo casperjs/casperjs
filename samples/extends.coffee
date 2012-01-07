@@ -1,10 +1,11 @@
+Casper = require('casper').Casper
+
 articles = []
-CasperClass = require('casper').Casper
 
 ###
 Adds two new methods to the Casper prototype: fetchTexts and renderJSON.
 ###
-CasperClass.extend
+Casper.extend
     # Adds a new navigation step for casper; basically it will:
     #
     # 1. open an url,
@@ -23,7 +24,7 @@ CasperClass.extend
         @echo JSON.stringify what, null, '  '
         @exit()
 
-casper = new CasperClass
+casper = new Casper
     loadImages:  false
     loadPlugins: false
     logLevel:    "debug"
