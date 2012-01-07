@@ -32,6 +32,7 @@ var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');
 var mouse = require('mouse');
+var qs = require('querystring');
 var tester = require('tester');
 var utils = require('utils');
 var f = utils.format;
@@ -645,27 +646,58 @@ Casper.prototype.mouseClick = function(selector) {
 };
 
 /**
- * Opens a page. Takes only one argument, the url to open (using the
- * callback argument would defeat the whole purpose of Casper
- * actually).
+ * Performs an HTTP request.
  *
  * @param  String  location  The url to open
+ * @param  Object  settings  The request settings
  * @return Casper
  */
-Casper.prototype.open = function(location, options) {
-    options = utils.isObject(options) ? options : {};
-    this.requestUrl = location;
-    // http auth
-    var httpAuthMatch = location.match(/^https?:\/\/(.+):(.+)@/i);
-    if (httpAuthMatch) {
-        var httpAuth = {
-            username: httpAuthMatch[1],
-            password: httpAuthMatch[2]
+Casper.prototype.open = function(location, settings) {
+    var self = this;
+    // settings validation
+    if (!settings) {
+        settings = {
+            method: "get"
         };
-        this.setHttpAuth(httpAuth.username, httpAuth.password);
     }
-    this.emit('open', location);
-    this.page.open(this.filter('open.location', location) || location);
+    if (!utils.isObject(settings)) {
+        throw new Error("open(): request settings must be an Object");
+    }
+    // http method
+    // taken from https://github.com/ariya/phantomjs/blob/master/src/webpage.cpp#L302
+    var methods = ["get", "head", "put", "post", "delete"];
+    if (settings.method && (!utils.isString(settings.method) || methods.indexOf(settings.method) === -1)) {
+        throw new Error("open(): settings.method must be part of " + methods.join(', '));
+    }
+    // http data
+    if (settings.data) {
+        if (utils.isObject(settings.data)) { // query object
+            settings.data = qs.encode(settings.data);
+        } else if (!utils.isString(settings.data)) {
+            throw new Error("open(): invalid request settings data value: " + settings.data);
+        }
+    }
+    // current request url
+    this.requestUrl = this.filter('open.location', location) || location;
+    // http auth
+    if (settings.username && settings.password) {
+        this.setHttpAuth(settings.username, settings.password);
+    } else {
+        var httpAuthMatch = location.match(/^https?:\/\/(.+):(.+)@/i);
+        if (httpAuthMatch) {
+            var httpAuth = {
+                username: httpAuthMatch[1],
+                password: httpAuthMatch[2]
+            };
+            this.setHttpAuth(httpAuth.username, httpAuth.password);
+        }
+    }
+    this.emit('open', this.requestUrl, settings);
+    //this.page.open(this.requestUrl, settings.method, settings.data);
+    this.page.openUrl(this.requestUrl, {
+        operation: settings.method,
+        data:      settings.data
+    }, this.page.settings);
     return this;
 };
 
@@ -741,7 +773,7 @@ Casper.prototype.runStep = function(step) {
     var stepInfo = f("Step %d/%d", this.step, this.steps.length);
     var stepResult;
     if (!skipLog) {
-        this.log(stepInfo + f('%s (HTTP %d)', this.getCurrentUrl(), this.currentHTTPStatus), "info");
+        this.log(stepInfo + f(' %s (HTTP %d)', this.getCurrentUrl(), this.currentHTTPStatus), "info");
     }
     if (utils.isNumber(this.options.stepTimeout) && this.options.stepTimeout > 0) {
         var stepTimeoutCheckInterval = setInterval(function(self, start, stepNum) {
@@ -1218,16 +1250,15 @@ function createPage(casper) {
         }
         if (casper.options.clientScripts) {
             if (!utils.isArray(casper.options.clientScripts)) {
-                casper.log("The clientScripts option must be an array", "error");
+                throw new Error("The clientScripts option must be an array");
             } else {
-                for (var i = 0; i < casper.options.clientScripts.length; i++) {
-                    var script = casper.options.clientScripts[i];
+                casper.options.clientScripts.forEach(function(script) {
                     if (casper.page.injectJs(script)) {
                         casper.log(f('Automatically injected %s client side', script), "debug");
                     } else {
                         casper.log(f('Failed injecting %s client side', script), "warning");
                     }
-                }
+                });
             }
         }
         // Client-side utils injection

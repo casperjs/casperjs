@@ -28,7 +28,7 @@
         self.test.assertEquals(i, item - 1, 'Casper.each() passes a contextualized index');
     });
 
-    casper.run(function(self) {
+    casper.run(function() {
         t.done();
     });
 })(casper.test);

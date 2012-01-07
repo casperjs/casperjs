@@ -31,7 +31,7 @@
         self.options.onAlert = function(self, message) {
             t.assertEquals(message, 'plop', 'Casper.options.onAlert() can intercept an alert message');
         };
-    }).thenOpen('tests/site/alert.html').click('button', function(self) {
+    }).thenOpen('tests/site/alert.html').thenClick('button', function(self) {
         self.options.onAlert = null;
     });
 

@@ -5,7 +5,7 @@
         t.assertEquals(self.fetchText('ul li'), 'onetwothree', 'Casper.fetchText() can retrieve text contents');
     });
 
-    casper.run(function(self) {
+    casper.run(function() {
         t.done();
     });
 })(casper.test);
