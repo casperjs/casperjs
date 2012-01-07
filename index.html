@@ -232,7 +232,7 @@ casper.run -&gt;
                 but below you'll find the whole API documentation with sample code. </p>
           <div class="row">
             <div class="span12">
-              <h2>The casper module</h2>
+              <h2>The Casper class</h2>
               <p>The most easiest way to instantiate a casper instance is to use the
               module <code>create()</code> method:</p>
               <pre class="prettyprint"><code>var casper = require('casper').create();
@@ -1648,18 +1648,24 @@ casper.run();
           </div>
           <div class="row">
             <div class="span12">
-              <p> Casper ships with a <code>phantom.Casper.Tester</code> class
+              <p>
+                Casper ships with a <code>tester</code> module and a <code>Tester</code> class
                 providing an API for unit &amp; functional testing purpose. By
                 default you can access an instance of this class through <code>test</code>
-                property of any `phantom.Casper` instance. </p>
-              <p> <span class="label notice">Note</span> The best way to learn
+                property of any <code>Casper</code> class instance.
+              </p>
+              <p>
+                <span class="label notice">Note</span> The best way to learn
                 how to use the Tester API and see it in action is probably to
                 have a look at the <a href="https://github.com/n1k0/casperjs/blob/master/tests/run.js">CasperJS
-                  test suite code</a>. </p>
+                  test suite code</a>.
+              </p>
               <h3 id="phantom_Casper_Tester_assert"><code>Tester#assert(Boolean
                   condition[, String message])</code></h3>
-              <p> Asserts that the provided condition strictly resolves to a
-                boolean <code>true</code>. </p>
+              <p>
+                Asserts that the provided condition strictly resolves to a
+                boolean <code>true</code>.
+              </p>
               <pre class="prettyprint"><code class="javascript">var url = 'http://www.google.fr/';
 var casper = require('casper').create();
 casper.start(url, function(self) {
@@ -1978,19 +1984,21 @@ casper.exit();
           <div class="page-header">
             <h1>Extending Casper</h1>
           </div>
-          <p> Sometimes it can be convenient to add your own methods to the <code>Casper</code>
+          <p>
+            Sometimes it can be convenient to add your own methods to the <code>Casper</code>
             class; it's easily doable using the <code>Casper.extend()</code>
-            method as illustrated below: </p>
-          <pre class="prettyprint"><code class="javascript">phantom.Casper.extend({
+            method as illustrated below:
+          </p>
+          <pre class="prettyprint"><code class="javascript">var Casper = require(casper).Casper;
+
+Casper.extend({
     fetchTexts: function(selector) {
         return this.evaluate(function(selector) {
             var elements = document.querySelectorAll(selector);
             return Array.prototype.map.call(elements, function(e) {
                 return e.innerText;
             });
-        }, {
-            selector: selector
-        });
+        }, { selector: selector });
     },
 
     renderJSON: function(what) {
@@ -1998,9 +2006,11 @@ casper.exit();
     }
 });
 
+var casper = new Casper();
+
 var articles = [];
 
-require('casper').create().start('http://www.liberation.fr/', function(self) {
+casper.start('http://www.liberation.fr/', function(self) {
     articles = self.fetchTexts('h3');
 });
 
@@ -2041,10 +2051,10 @@ casper.run(function(self) {
     self.test.renderResults(true);
 });
 </code></pre>
-          <p> As you can see, <code>casper.test</code> is a reference to a <code>phantom.Casper.Tester</code>
+          <p> As you can see, <code>casper.test</code> is a reference to a <code>tester.Tester</code>
             object instance, which is used to make the assertions and render the
             results. </p>
-          <p> <span class="label notice">Note</span> You can find the whole <code>phantom.Casper.Tester</code>
+          <p> <span class="label notice">Note</span> You can find the whole <code>tester.Tester</code>
             API documentation in the <a href="#phantom_Casper_Tester">dedicated
               section</a>. </p>
           <p>Now run the tests suite:</p>
