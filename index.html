@@ -1293,22 +1293,22 @@ casper.on('resource.received', function(resource) {
                   <tr>
                     <td><code>mouse.click</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when the mouse has been asked to click something or somewhere.</td>
+                    <td>Emitted when the mouse left-click something or somewhere.</td>
                   </tr>
                   <tr>
                     <td><code>mouse.down</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when the mouse has been asked to press something or somewhere.</td>
+                    <td>Emitted when the mouse presses something or somewhere with the left button.</td>
                   </tr>
                   <tr>
                     <td><code>mouse.move</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when the mouse has been asked to move over something or somewhere.</td>
+                    <td>Emitted when the mouse moves over something or somewhere.</td>
                   </tr>
                   <tr>
                     <td><code>mouse.up</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when the mouse has been asked to release something or somewhere.</td>
+                    <td>Emitted when the mouse releases the left button over something or somewhere.</td>
                   </tr>
                   <tr>
                     <td><code>open</code></td>
@@ -1477,10 +1477,28 @@ casper.setFilter('open.location', function(location) {
                 </thead>
                 <tbody>
                   <tr>
-                    <td><code>name</code></td>
+                    <td><code>capture.target_filename</code></td>
                     <td><code>args</code></td>
-                    <td><code>return</code></td>
-                    <td>Emitted when </td>
+                    <td><code>String</code></td>
+                    <td>Allows to alter the value of the filename where a screen capture should be stored.</td>
+                  </tr>
+                  <tr>
+                    <td><code>echo.message</code></td>
+                    <td><code>message</code></td>
+                    <td><code>String</code></td>
+                    <td>Allows to alter every message written onto stdout.</td>
+                  </tr>
+                  <tr>
+                    <td><code>log.message</code></td>
+                    <td><code>message</code></td>
+                    <td><code>String</code></td>
+                    <td>Allows to alter every log message.</td>
+                  </tr>
+                  <tr>
+                    <td><code>open.location</code></td>
+                    <td><code>args</code></td>
+                    <td><code>String</code></td>
+                    <td>Allows to alter every url before it being opened.</td>
                   </tr>
                 </tbody>
               </table>
