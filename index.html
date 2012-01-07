@@ -467,18 +467,10 @@ casper.run(function(self) {
     self.echo(base46contents).exit();
 });
 </code></pre>
-              <h3 id="phantom_Casper_click"><code>Casper#click(String selector[,
-                  Boolean fallbackToHref=true])</code></h3>
-              <p> Emulates a click on the element from the provided selector, if
-                possible. In case of success, <code>true</code> is returned, <code>false</code>
-                otherwise. </p>
+              <h3 id="phantom_Casper_click"><code>Casper#click(String selector)</code></h3>
               <p>
-                <span class="label notice">Note</span>
-                By default, <code>.click()</code>
-                will try to relocate the browser location to the value of the <code>href</code>
-                attribute of the clicked element (if any) as a last resort. If
-                you don't want this behavior, set the <code>fallbackToHref</code>
-                argument to <code>false</code>.
+                Emulates a click on the element from the provided selector using
+                the mouse pointer, if possible.
               </p>
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://google.fr/');
@@ -490,20 +482,15 @@ casper.thenEvaluate(function(term) {
 
 casper.then(function(self) {
     // Click on 1st result link
-    if (self.click('h3.r a')) {
-        console.log('clicked ok')
-    }
+    self.click('h3.r a');
 });
 
-casper.run(function(self) {
-    self.debugPage();
+casper.then(function(self) {
+    console.log('clicked ok, new location is ' + self.getCurrentUrl());
 });
+
+casper.run();
 </code></pre>
-              <p>
-                <span class="label notice">Hint</span>
-                If you want to trigger a real click from a simulated mouse click, rather
-                use the <a href="#phantom_Casper_mouseClick"><code>Casper.mouseClick()</code></a> method.
-              </p>
               <h3 id="phantom_Casper_capture"><code>Casper#capture(String
                   targetFilepath, Object clipRect)</code></h3>
               <p> Proxy method for PhantomJS' <code>WebPage#render</code>. Adds
@@ -757,18 +744,45 @@ casper.run();
 </code></pre>
 
               <h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String selector)</code></h3>
-              <p>Emulates a click on an HTML element matching a given CSS3 selector, using the mouse pointer.</p>
-              <p><strong>Example:</strong></p>
-              <pre class="prettyprint"><code class="javascript">casper.mouseClick('#header img.logo');
-</code></pre>
               <p>
-                <span class="label notice">Hint</span>
-                The difference between <code>mouseClick()</code> and
-                <a href="#click"><code>Casper.click()</code></a> is that the former
-                emulates a true mouse event within the browser (like if a real user
-                would perform a click using the mouse), while the latter use
-                javascript to do so.
+                <span class="label warning">Warning</span>
+                This method has been deprecated since 0.6. Use
+                <a href="#phantom_Casper_click"><code>Casper.click()</code></a>
+                instead.
               </p>
+
+              <h3 id="phantom_Casper_open"><code>Casper#open(String location, Object Settings)</code></h3>
+              <p>
+                Performs an HTTP request for opening a given location. You can forge
+                <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>
+                and <code>HEAD</code> requests.
+              </p>
+              <p><strong>Example for a standard <code>GET</code> request:</strong></p>
+              <pre class="prettyprint"><code class="javascript">casper.start();
+
+casper.open('http://www.google.com/').then(function() {
+    this.echo('GOT it.');
+});
+
+casper.run();
+</code></pre>
+              <p><strong>Example for a <code>POST</code> request:</strong></p>
+              <pre class="prettyprint"><code class="javascript">casper.start();
+
+casper.open('http://some.testserver.com/post.php', {
+    method: 'post',
+    data:   {
+        'title': 'Plop',
+        'body':  'Wow.'
+    }
+});
+
+casper.then(function() {
+    this.echo('POSTED it.');
+});
+
+casper.run();
+</code></pre>
 
               <h3 id="phantom_Casper_repeat"><code>Casper#repeat(int times,
                   function then)</code></h3>
@@ -1126,6 +1140,7 @@ casper.run();
                 <li><a href="#phantom_Casper_getGlobal"><code>Casper.getGlobal()</code></a></li>
                 <li><a href="#phantom_Casper_getTitle"><code>Casper.getTitle()</code></a></li>
                 <li><a href="#phantom_Casper_mouseClick"><code>Casper.mouseClick()</code></a></li>
+                <li><a href="#phantom_Casper_open"><code>Casper.open()</code></a></li>
                 <li><a href="#phantom_Casper_repeat"><code>Casper.repeat()</code></a></li>
                 <li><a href="#phantom_Casper_resourceExists"><code>Casper.resourceExists()</code></a></li>
                 <li><a href="#phantom_Casper_run"><code>Casper.run()</code></a></li>
@@ -1218,37 +1233,48 @@ casper.on('resource.received', function(resource) {
                   <tr>
                     <td><code>fill</code></td>
                     <td><code>selector, vals, submit</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a form is filled using the <code>Casper.fill()</code> method.</td>
                   </tr>
                   <tr>
                     <td><code>forward</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when the embedded browser is asked to go forward a step in its history.</td>
                   </tr>
                   <tr>
                     <td><code>http.auth</code></td>
                     <td><code>username, password</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when http autthentification parameters are set.</td>
                   </tr>
                   <tr>
                     <td><code>http.status.[code]</code></td>
                     <td><code>resource</code></td>
-                    <td>Emitted when </td>
+                    <td>
+                      <p>
+                        Emitted when ny given HTTP reponse is received with the status code
+                        specified by <code>[code]</code>, eg.:
+                      </p>
+                      <pre class="prettyprint"><code class="javascript">casper.on('http.status.404', function(resource) {
+    casper.echo(resource.url + ' is 404');
+})</code></pre>
+                      </td>
                   </td>
                   <tr>
                     <td><code>load.started</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when PhantomJS' <code>WebPage.onLoadStarted</code> event callback is called.</td>
                   </tr>
                   <tr>
                     <td><code>load.failed</code></td>
                     <td><code>Object</code></td>
-                    <td>Emitted when </td>
+                    <td>
+                      Emitted when PhantomJS' <code>WebPage.onLoadFinished</code> event callback has been called and
+                      failed.
+                    </td>
                   </tr>
                   <tr>
                     <td><code>load.finished</code></td>
                     <td><code>status</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when PhantomJS' <code>WebPage.onLoadFinished</code> event callback is called.</td>
                   </tr>
                   <tr>
                     <td><code>log</code></td>
@@ -1272,22 +1298,17 @@ casper.on('resource.received', function(resource) {
                   <tr>
                     <td><code>mouse.down</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when the mouse has been asked to press something or somewhere.</td>
                   </tr>
                   <tr>
                     <td><code>mouse.move</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when the mouse has been asked to move over something or somewhere.</td>
                   </tr>
                   <tr>
                     <td><code>mouse.up</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when </td>
-                  </tr>
-                  <tr>
-                    <td><code>newListener</code></td>
-                    <td><code>type, listener</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when the mouse has been asked to release something or somewhere.</td>
                   </tr>
                   <tr>
                     <td><code>open</code></td>
@@ -1304,102 +1325,108 @@ casper.on('resource.received', function(resource) {
                   <tr>
                     <td><code>page.created</code></td>
                     <td><code>page</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been created.</td>
                   </tr>
                   <tr>
                     <td><code>page.initialized</code></td>
-                    <td>None</td>
-                    <td>Emitted when </td>
+                    <td>page</td>
+                    <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been initialized.</td>
                   </tr>
                   <tr>
                     <td><code>remote.alert</code></td>
                     <td><code>message</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a remote <code>alert()</code> call has been performed.</td>
                   </tr>
                   <tr>
                     <td><code>remote.message</code></td>
                     <td><code>msg</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when any remote console logging call has been performed.</td>
                   </tr>
                   <tr>
                     <td><code>resource.received</code></td>
                     <td><code>resource</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when any resource has been received.</td>
                   </tr>
                   <tr>
                     <td><code>resource.requested</code></td>
                     <td><code>request</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when any resource has been requested.</td>
                   </tr>
                   <tr>
                     <td><code>run.complete</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when the whole serie of steps in the stack have been executed.</td>
                   </tr>
                   <tr>
                     <td><code>run.start</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when <code>Casper.run()</code> is called.</td>
                   </tr>
                   <tr>
                     <td><code>starting</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when <code>Casper.start()</code> is called.</td>
                   </tr>
                   <tr>
                     <td><code>started</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when Casper has been started using <code>Casper.start()</code>.</td>
                   </tr>
                   <tr>
                     <td><code>step.added</code></td>
                     <td><code>step</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a new navigation step has been added to the stack.</td>
                   </tr>
                   <tr>
                     <td><code>step.complete</code></td>
                     <td><code>stepResult</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a navigation step has been executed.</td>
                   </tr>
                   <tr>
                     <td><code>step.created</code></td>
                     <td><code>fn</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a new navigation step has been created.</td>
                   </tr>
                   <tr>
                     <td><code>step.start</code></td>
                     <td><code>step</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a navigation step has been started.</td>
                   </tr>
                   <tr>
                     <td><code>step.timeout</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a navigation step has been executed.</td>
                   </tr>
                   <tr>
                     <td><code>timeout</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>
+                      Emitted when the execution time of the script has reached
+                      the <code>Casper.options.timeout</code> value.
+                    </td>
                   </tr>
                   <tr>
                     <td><code>viewport.changed</code></td>
                     <td><code>[width, height]</code></td>
-                    <td>Emitted when </td>
+                    <td>Emitted when the viewport has been changed.</td>
                   </tr>
                   <tr>
                     <td><code>wait.done</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a <code>Casper.wait*()</code> operation ends.</td>
                   </tr>
                   <tr>
                     <td><code>wait.start</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>Emitted when a <code>Casper.wait*()</code> operation starts.</td>
                   </tr>
                   <tr>
                     <td><code>waitFor.timeout</code></td>
                     <td>None</td>
-                    <td>Emitted when </td>
+                    <td>
+                      Emitted when the execution time of a <code>Casper.wait*()</code>
+                      operation has exceeded the value of <code>Casper.options.stepTimeout</code>.
+                    </td>
                   </tr>
                 </tbody>
               </table>
