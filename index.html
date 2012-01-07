@@ -1291,8 +1291,15 @@ casper.on('resource.received', function(resource) {
                   </tr>
                   <tr>
                     <td><code>open</code></td>
-                    <td><code>location</code></td>
-                    <td>Emitted when </td>
+                    <td><code>location, settings</code></td>
+                    <td>
+                      <p>Emitted when an HTTP request is sent. First callback arg is
+                      the location, second one is a request settings Object of the form:</p>
+                      <pre class="prettyprint"><code class="javascript">{
+     method: "post",
+     data:   "foo=42&amp;chuck=norris"
+}</code></pre>
+                    </td>
                   </tr>
                   <tr>
                     <td><code>page.created</code></td>
