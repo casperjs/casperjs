@@ -9,9 +9,10 @@ XXXX-XX-XX, v0.6.0
 - BC BREAK: deprecated `Casper.extend()` method; use natural javascript extension mechanisms instead (see samples)
 - `Casper.open()` can now perform HTTP `GET`, `POST`, `PUT`, `DELETE` and `HEAD` operations
 - commonjs/nodejs-like module exports implementation
-- ported nodejs' "events" module to casperjs; lots of events added, plus some value filtering capabilities
-- introduced the "mouse" module to handle native Webkit mouse events
-- added support for RegExp input in `Casper.resourceExists()`
+- ported nodejs' `events` module to casperjs; lots of events added, plus some value filtering capabilities
+- introduced the `mouse` module to handle native Webkit mouse events
+- added support for `RegExp` input in `Casper.resourceExists()`
+- added source file path localization in any thrown `Error` message
 
 2011-12-25, v0.4.2
 ------------------
