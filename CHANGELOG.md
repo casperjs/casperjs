@@ -4,12 +4,14 @@ CasperJS Changelog
 XXXX-XX-XX, v0.6.0
 ------------------
 
-- BC BREAK: `Casper.click()` now use native phantomjs events instead of crazy utopic javascript emulation
+- BC BREAK: `Casper.click()` now uses native phantomjs events instead of previous crazy utopic javascript emulation
 - BC BREAK: removed obsolete `replaceFunctionPlaceholders()`
-- commonjs/nodejs-like module implementation
+- BC BREAK: deprecated `Casper.extend()` method; use natural javascript extension mechanisms instead (see samples)
+- `Casper.open()` can now perform HTTP `GET`, `POST`, `PUT`, `DELETE` and `HEAD` operations
+- commonjs/nodejs-like module exports implementation
 - ported nodejs' "events" module to casperjs; lots of events added, plus some value filtering capabilities
-- introduced the "mouse" module to handle "real" mouse events
-- added support for RegExp in `Casper.resourceExists()`
+- introduced the "mouse" module to handle native Webkit mouse events
+- added support for RegExp input in `Casper.resourceExists()`
 
 2011-12-25, v0.4.2
 ------------------
