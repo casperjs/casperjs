@@ -491,6 +491,16 @@ casper.then(function() {
 
 casper.run();
 </code></pre>
+              <p>
+                <span class="label notice">Hint</span>
+                If you want the mouse to click a given point within the viewport area,
+                you can use the <code>mouse</code> property of the <code>Casper</code>
+                instance:
+              </p>
+              <pre class="prettyprint"><code class="javascript">casper.then(function() {
+    this.mouse.click(150, 200);
+});
+</code></pre>
               <h3 id="phantom_Casper_capture"><code>Casper#capture(String
                   targetFilepath, Object clipRect)</code></h3>
               <p> Proxy method for PhantomJS' <code>WebPage#render</code>. Adds
@@ -578,9 +588,11 @@ casper.start().each(links, function(self, link) {
 
 casper.run();
 </code></pre>
-              <p> <span class="label notice">Hint</span> Have a look at the <a
-                  href="https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js">googlematch.js</a>
-                sample script for concrete usecase. </p>
+              <p>
+                <span class="label notice">Hint</span>
+                Have a look at the <a href="https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js">googlematch.js</a>
+                sample script for concrete usecase.
+              </p>
               <h3 id="phantom_Casper_echo"><code>Casper#echo(String message[,
                   String style])</code></h3>
               <p> Prints something to stdout, optionnaly with some fancy color
