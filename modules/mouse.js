@@ -69,7 +69,7 @@ var Mouse = function(casper) {
                 break;
             case 2:
                 // coordinates
-                if (!utils.isNumber(args[1]) || !utils.isNumber(args[2])) {
+                if (!utils.isNumber(args[0]) || !utils.isNumber(args[1])) {
                     throw new Error('No valid coordinates passed');
                 }
                 casper.page.sendEvent(type, args[0], args[1]);

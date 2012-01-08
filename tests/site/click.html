@@ -15,12 +15,16 @@
                     test1: false,
                     test2: false,
                     test3: false,
-                    test4: false
+                    test4: false,
+                    test5: []
                 };
                 document.querySelector('#test4').onclick = function(event) {
                     results.test4 = true;
                     event.preventDefault();
                 };
+                window.onmousedown = function(e) {
+                    results.test5 = [e.x, e.y];
+                }
             })(window);
         </script>
     </body>
