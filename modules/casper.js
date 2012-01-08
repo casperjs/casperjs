@@ -693,7 +693,6 @@ Casper.prototype.open = function(location, settings) {
         }
     }
     this.emit('open', this.requestUrl, settings);
-    //this.page.open(this.requestUrl, settings.method, settings.data);
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
         data:      settings.data
@@ -759,7 +758,7 @@ Casper.prototype.run = function(onComplete, time) {
     }
     this.log(f("Running suite: %d step%s", this.steps.length, this.steps.length > 1 ? "s" : ""), "info");
     this.emit('run.start');
-    this.checker = setInterval(this.checkStep, (time ? time: 250), this, onComplete);
+    this.checker = setInterval(this.checkStep, (time ? time: 100), this, onComplete);
     return this;
 };
 
@@ -939,8 +938,8 @@ Casper.prototype.thenClick = function(selector, then, fallbackToHref) {
     if (arguments.length > 2) {
         this.emit("deprecated", "The thenClick() method does not process the fallbackToHref argument since 0.6");
     }
-    this.then(function(self) {
-        self.click(selector);
+    this.then(function() {
+        this.click(selector);
     });
     return utils.isFunction(then) ? this.then(then) : this;
 };
@@ -955,8 +954,8 @@ Casper.prototype.thenClick = function(selector, then, fallbackToHref) {
  * @see    Casper#evaluate
  */
 Casper.prototype.thenEvaluate = function(fn, context) {
-    return this.then(function(self) {
-        self.evaluate(fn, context);
+    return this.then(function() {
+        this.evaluate(fn, context);
     });
 };
 
@@ -969,8 +968,8 @@ Casper.prototype.thenEvaluate = function(fn, context) {
  * @see    Casper#open
  */
 Casper.prototype.thenOpen = function(location, then) {
-    this.then(this.createStep(function(self) {
-        self.open(location);
+    this.then(this.createStep(function() {
+        this.open(location);
     }, {
         skipLog: true
     }));
@@ -1030,15 +1029,15 @@ Casper.prototype.wait = function(timeout, then) {
     if (then && !utils.isFunction(then)) {
         this.die("wait() a step definition must be a function");
     }
-    return this.then(function(self) {
-        self.waitStart();
-        setTimeout(function() {
+    return this.then(function() {
+        this.waitStart();
+        setTimeout(function(self) {
           self.log(f("wait() finished wating for %dms.", timeout), "info");
           if (then) {
             then.call(self, self);
           }
           self.waitDone();
-        }, timeout);
+        }, timeout, this);
     });
 };
 
@@ -1069,8 +1068,8 @@ Casper.prototype.waitFor = function(testFx, then, onTimeout, timeout) {
     if (then && !utils.isFunction(then)) {
         this.die("waitFor() next step definition must be a function");
     }
-    return this.then(function(self) {
-        self.waitStart();
+    return this.then(function() {
+        this.waitStart();
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function(self, testFx, timeout, onTimeout) {
@@ -1095,7 +1094,7 @@ Casper.prototype.waitFor = function(testFx, then, onTimeout, timeout) {
                     clearInterval(interval);
                 }
             }
-      }, 100, self, testFx, timeout, onTimeout);
+        }, 100, this, testFx, timeout, onTimeout);
     });
 };
 
@@ -1187,8 +1186,11 @@ Casper.prototype.waitWhileVisible = function(selector, then, onTimeout, timeout)
  * Extends Casper's prototype with provided one.
  *
  * @param  Object  proto  Prototype methods to add to Casper
+ * @deprecated
+ * @since 0.6
  */
 Casper.extend = function(proto) {
+    console.warn('Casper.extend() has been deprecated since 0.6; check the docs');
     if (!utils.isObject(proto)) {
         throw new Error("extends() only accept objects as prototypes");
     }

@@ -131,28 +131,27 @@ function format(f) {
 exports.format = format;
 
 /**
- * Inherit the prototype methods from one constructor into another.
+ * Inherit the prototype methods from one constructor into another, also
+ * exposes the `__super__` property to child class.
  *
- * The Function.prototype.inherits from lang.js rewritten as a standalone
- * function (not on Function.prototype). NOTE: If this file is to be loaded
- * during bootstrapping this function needs to be revritten using some native
- * functions as prototype setup using normal JavaScript does not work as
- * expected during bootstrapping (see mirror.js in r114903).
- *
- * @param {function} ctor Constructor function which needs to inherit the
- *     prototype.
- * @param {function} superCtor Constructor function to inherit prototype from.
+ * @param  Function  child   Constructor function which needs to inherit the
+ *                           prototype.
+ * @param  Function  parent  Constructor function to inherit prototype from.
+ * @return Function          The child class
  */
-function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor;
-    ctor.prototype = Object.create(superCtor.prototype, {
-        constructor: {
-            value: ctor,
-            enumerable: false,
-            writable: true,
-            configurable: true
+function inherits(child, parent) {
+    for (var key in parent) {
+        if (Object.prototype.hasOwnProperty.call(parent, key)) {
+            child[key] = parent[key];
         }
-    });
+    }
+    function ctor() {
+        this.constructor = child;
+    }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor();
+    child.__super__ = parent.prototype;
+    return child;
 }
 exports.inherits = inherits;
 

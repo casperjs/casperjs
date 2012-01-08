@@ -1,41 +1,29 @@
-Casper = require('casper').Casper
+links =
+    'http://edition.cnn.com/': 0
+    'http://www.nytimes.com/': 0
+    'http://www.bbc.co.uk/': 0
+    'http://www.guardian.co.uk/': 0
 
-articles = []
+class Fantomas extends require('casper').Casper
+    countLinks: ->
+        @evaluate ->
+            __utils__.findAll('a').length
 
-###
-Adds two new methods to the Casper prototype: fetchTexts and renderJSON.
-###
-Casper.extend
-    # Adds a new navigation step for casper; basically it will:
-    #
-    # 1. open an url,
-    # 2. on loaded, will fetch all contents retrieved through the provided
-    #    CSS3 selector and return them in a formatted object.
-    fetchTexts: (location, selector) ->
-        @thenOpen location, ->
-            fetch = (selector) ->
-                elements = document.querySelectorAll(selector)
-                Array::map.call elements, (e) -> e.innerText
-            texts = @evaluate fetch, selector: selector
-            articles = articles.concat texts
-
-    # Echoes a JSON output of the fetched results and exits phantomjs.
     renderJSON: (what) ->
         @echo JSON.stringify what, null, '  '
-        @exit()
 
-casper = new Casper
+fantomas = new Fantomas
     loadImages:  false
-    loadPlugins: false
     logLevel:    "debug"
     verbose:     true
 
-casper.start()
+fantomas.start()
 
-# all article titles are stored in <h3>
-casper.fetchTexts 'http://www.liberation.fr/', 'h3'
+for url of links
+    do (url) ->
+        fantomas.thenOpen url, ->
+            links[url] = @countLinks()
 
-# all article titles are stored in <h2 class="article">
-casper.fetchTexts 'http://www.lemonde.fr/', 'h2.article'
-
-casper.run -> @renderJSON articles
+fantomas.run ->
+    @renderJSON links
+    @exit()
