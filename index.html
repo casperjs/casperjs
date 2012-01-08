@@ -1985,43 +1985,88 @@ casper.exit();
             <h1>Extending Casper</h1>
           </div>
           <p>
-            Sometimes it can be convenient to add your own methods to the <code>Casper</code>
-            class; it's easily doable using the <code>Casper.extend()</code>
-            method as illustrated below:
+            Sometimes it can be convenient to add your own methods to a
+            <code>Casper</code> object instance; you can easily do so as illustrated
+            in the example below:
           </p>
-          <pre class="prettyprint"><code class="javascript">var Casper = require(casper).Casper;
-
-Casper.extend({
-    fetchTexts: function(selector) {
-        return this.evaluate(function(selector) {
-            var elements = document.querySelectorAll(selector);
-            return Array.prototype.map.call(elements, function(e) {
-                return e.innerText;
-            });
-        }, { selector: selector });
-    },
-
-    renderJSON: function(what) {
-        return this.echo(JSON.stringify(what, null, '  ')).exit();
-    }
+          <pre class="prettyprint"><code class="javascript">var casper = require('casper').create({
+    loadImages:  false,
+    logLevel:   "debug",
+    verbose:    true
 });
 
-var casper = new Casper();
+var links = {
+    'http://edition.cnn.com/': 0,
+    'http://www.nytimes.com/': 0,
+    'http://www.bbc.co.uk/': 0,
+    'http://www.guardian.co.uk/': 0
+};
 
-var articles = [];
+var fantomas = Object.create(casper);
 
-casper.start('http://www.liberation.fr/', function(self) {
-    articles = self.fetchTexts('h3');
+fantomas.countLinks = function(selector) {
+    return this.evaluate(function() {
+        return __utils__.findAll('a[href]').length;
+    });
+};
+
+fantomas.renderJSON = function(what) {
+    return this.echo(JSON.stringify(what, null, '  '));
+};
+
+fantomas.start();
+
+Object.keys(links).forEach(function(url) {
+    fantomas.thenOpen(url, function() {
+        links[url] = this.countLinks();
+    });
 });
 
-casper.thenOpen('http://www.lemonde.fr/', function(self) {
-    articles.concat(self.fetchTexts('h2.article'));
+fantomas.run(function() {
+    this.renderJSON(links).exit();
 });
+</code></pre>
+        <p>
+          <span class="label warning">Warning</span>
+          As of version 0.6, the <code>Casper.extend()</code> method has been
+          deprecated; please now use the method illustrated above.
+        </p>
+        <h3>Using CoffeeScript</h3>
+        <p>
+          If you're writing your casper scripts using CoffeeScript, this is getting
+          a bit easier:
+        </p>
+        <pre class="prettyprint"><code class="coffeescript">links =
+    'http://edition.cnn.com/': 0
+    'http://www.nytimes.com/': 0
+    'http://www.bbc.co.uk/': 0
+    'http://www.guardian.co.uk/': 0
 
-casper.run(function(self) {
-    self.renderJSON(articles);
-});
-</code></pre> </section>
+class Fantomas extends require('casper').Casper
+    countLinks: ->
+        @evaluate ->
+            __utils__.findAll('a').length
+
+    renderJSON: (what) ->
+        @echo JSON.stringify what, null, '  '
+
+fantomas = new Fantomas
+    loadImages:  false
+    logLevel:    "debug"
+    verbose:     true
+
+fantomas.start()
+
+for url of links
+    do (url) ->
+        fantomas.thenOpen url, ->
+            links[url] = @countLinks()
+
+fantomas.run ->
+    @renderJSON links
+    @exit()
+</code></pre>
+        </section>
         <section id="testing">
           <div class="page-header">
             <h1>Functional testing</h1>
@@ -2067,13 +2112,17 @@ casper.run(function(self) {
           <p><img src="images/testsuitefail.png" alt="capture" title=""></p>
           <hr/>
           <h3>Exporting results in xUnit format</h3>
-          <p> <span class="label warning">Warning</span> XUnit log export
-            feature is only available for PhantomJS 1.3 and later. </p>
-          <p> CasperJS can export the results of the test suite to an xUnit XML
+          <p>
+            <span class="label warning">Warning</span> XUnit log export
+            feature is only available for PhantomJS 1.3 and later.
+          </p>
+          <p>
+            CasperJS can export the results of the test suite to an xUnit XML
             file, which is compatible with continous integration tools such as <a
               href="http://jenkins-ci.org/">Jenkins</a>.
             To save the xUnit log of your test suite to a <code>log.xml</code>
-            file, you can process this way: </p>
+            file, you can process this way:
+          </p>
           <pre class="prettyprint"><code class="javascript">casper.run(function(self) {
     self.test.renderResults(true, 0, 'log.xml');
 });
