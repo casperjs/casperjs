@@ -795,6 +795,15 @@ casper.then(function() {
 
 casper.run();
 </code></pre>
+              <p>
+                <span class="label warning">Warning</span>
+                PhantomJS 1.4.0 and 1.4.1 have introduced a
+                <a href="http://code.google.com/p/phantomjs/issues/detail?id=337">regression</a>
+                with POST requests preventing data to be actually submitted; so
+                please check you're using a more recent or patched version of PhantomJS
+                before reporting any issue regarding this bug. PhantomJS 1.3 is not affected
+                by the bug.
+              </p>
 
               <h3 id="phantom_Casper_repeat"><code>Casper#repeat(int times,
                   function then)</code></h3>
@@ -1621,8 +1630,9 @@ casper.run(function() {
 
 casper.run();
 </code></pre>
-              <p> <span class="label warning">Warning</span> You won't be able
-                to pass the <em>binary string</em> from the remote DOM
+              <p>
+                <span class="label warning">Warning</span>
+                You won't be able to pass the <em>binary string</em> from the remote DOM
                 environment to PhantomJS' one. For retrieving binary contents,
                 use <a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a>.
               </p>
