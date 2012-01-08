@@ -12,16 +12,16 @@ XXXX-XX-XX, v0.6.0
 - ported nodejs' `events` module to casperjs; lots of events added, plus some value filtering capabilities
 - introduced the `mouse` module to handle native Webkit mouse events
 - added support for `RegExp` input in `Casper.resourceExists()`
-- added source file path localization in any thrown `Error` message
+- added printing of source file path for any uncaught exception printed onto the console
 
 ---
 
 2011-12-25, v0.4.2
 ------------------
 
-- merged PR #30 - Add request method and request data to the base64encode method (@jasonlfunk)
-- casperjs executable now gracefully exists on KeyboardInterrupt
-- added Casper.download() method, for downloading any resource and save it onto the filesystem
+- merged PR #30 - Add request method and request data to the `base64encode()` method (@jasonlfunk)
+- `casperjs` executable now gracefully exists on KeyboardInterrupt
+- added `Casper.download()` method, for downloading any resource and save it onto the filesystem
 
 ---
 
