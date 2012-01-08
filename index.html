@@ -6,13 +6,14 @@
     <meta name="robots" content="index, follow">
     <title>CasperJS, a navigation scripting and testing utility for PhantomJS</title>
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, javascript, test, testing">
-    <meta name="description" content="CasperJS is a navigation scripting &amp; testing utility for PhantomJS.">
+    <meta name="description" content="CasperJS is a navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/highlight.css">
     <link rel="stylesheet" href="css/casper.css">
     <link rel="shortcut icon" href="/casperjs/favicon.ico">
   </head>
-  <body> <a href="http://github.com/n1k0/casperjs" class="contribute"> <img src="images/forkme.png"
+  <body>
+    <a href="http://github.com/n1k0/casperjs" class="contribute"> <img src="images/forkme.png"
         alt="Fork me on GitHub">
     </a>
     <div class="topbar" data-scrollspy="scrollspy">
@@ -129,12 +130,16 @@ Read the docs http://n1k0.github.com/casperjs/
           <div class="page-header">
             <h1>Quickstart</h1>
           </div>
-          <p>In the following example, we'll query google for two terms
+          <p>
+            In the following example, we'll query google for two terms
             consecutively, <em>"capserjs"</em> and <em>"phantomjs"</em>,
             aggregate the result links in a standard <code>Array</code> and
-            output the result to the console.</p>
-          <p>Fire up your favorite editor and save the javascript code below in
-          a <code>googlelinks.js</code> file:</p>
+            output the result to the console.
+          </p>
+          <p>
+            Fire up your favorite editor and save the javascript code below in
+            a <code>googlelinks.js</code> file:
+          </p>
           <pre class="prettyprint"><code class="javascript">var links = [];
 var casper = require('casper').create();
 
@@ -228,20 +233,25 @@ casper.run -&gt;
           <div class="page-header">
             <h1>API Documentation</h1>
           </div>
-          <p> Casper source code is quite heavily documented using <code>jsdoc</code>,
-                but below you'll find the whole API documentation with sample code. </p>
+          <p>
+            Casper source code is quite heavily documented using <code>jsdoc</code>,
+            but below you'll find the whole API documentation with sample code.
+          </p>
           <div class="row">
             <div class="span12">
               <h2>The Casper class</h2>
-              <p>The most easiest way to instantiate a casper instance is to use the
-              module <code>create()</code> method:</p>
+              <p>
+                The most easiest way to instantiate a casper instance is to use the
+                module <code>create()</code> method:
+              </p>
               <pre class="prettyprint"><code>var casper = require('casper').create();
 </code></pre>
               <p>But you can also retrieve the main Function and instantiate it by yourself:</p>
               <pre class="prettyprint"><code>var casper = new require('casper').Casper();
 </code></pre>
               <h3 id="phantom_Casper_options"><code>Casper([Object options])</code></h3>
-              <p> Casper constructor and the <code>create()</code> function
+              <p>
+                Casper constructor and the <code>create()</code> function
                 both accept a single <code>options</code>
                 argument which is a standard javascript object:
               </p>
@@ -250,7 +260,7 @@ casper.run -&gt;
     loadPlugins: false
 });
 </code></pre>
-              <p>All the available options are detailled below: </p>
+              <p>All the available options are detailled below:</p>
               <table class="zebra-striped" caption="Casper options">
                 <thead>
                   <tr>
@@ -265,58 +275,75 @@ casper.run -&gt;
                     <td><code>clientScripts</code></td>
                     <td><code>Array</code></td>
                     <td><code>[]</code></td>
-                    <td>A collection of script filepaths to include to every
-                      page loaded</td>
+                    <td>
+                      A collection of script filepaths to include to every
+                      page loaded
+                    </td>
                   </tr>
                   <tr>
                     <td><code>faultTolerant</code></td>
                     <td><code>Boolean</code></td>
                     <td><code>true</code></td>
-                    <td>Catch and log exceptions when executing steps in a
-                      non-blocking fashion</td>
+                    <td>
+                      Catch and log exceptions when executing steps in a
+                      non-blocking fashion
+                    </td>
                   </tr>
                   <tr>
                     <td><code>httpStatusHandlers</code></td>
                     <td><code>Object</code></td>
                     <td><code>{}</code></td>
-                    <td>A javascript Object containing functions to call when a
-                      requested resource has a given HTTP status code. A <a href="https://github.com/n1k0/casperjs/blob/master/samples/statushandlers.js">dedicated
-                        sample</a> is provided as an example. </td>
+                    <td>
+                      A javascript Object containing functions to call when a
+                      requested resource has a given HTTP status code. A
+                      <a href="https://github.com/n1k0/casperjs/blob/master/samples/statushandlers.js">dedicated
+                      sample</a> is provided as an example.
+                    </td>
                   </tr>
                   <tr>
                     <td><code>logLevel</code></td>
                     <td><code>String</code></td>
                     <td><code>"error"</code></td>
-                    <td>Logging level (see the <a href="#logging">logging
-                        section</a> for more informations)</td>
+                    <td>
+                      Logging level (see the <a href="#logging">logging
+                      section</a> for more informations)
+                    </td>
                   </tr>
                   <tr>
                     <td><code>onAlert</code></td>
                     <td><code>function</code></td>
                     <td><code>null</code></td>
-                    <td>A function to be called when a javascript <code>alert()</code>
-                      is triggered</td>
+                    <td>
+                      A function to be called when a javascript <code>alert()</code>
+                      is triggered
+                    </td>
                   </tr>
                   <tr>
                     <td><code>onDie</code></td>
                     <td><code>function</code></td>
                     <td><code>null</code></td>
-                    <td>A function to be called when <code>Casper#die()</code>
-                      is called</td>
+                    <td>
+                      A function to be called when <code>Casper#die()</code>
+                      is called
+                    </td>
                   </tr>
                   <tr>
                     <td><code>onError</code></td>
                     <td><code>function</code></td>
                     <td><code>null</code></td>
-                    <td>A function to be called when an <code>"error"</code>
-                      level event occurs</td>
+                    <td>
+                      A function to be called when an <code>"error"</code>
+                      level event occurs
+                    </td>
                   </tr>
                   <tr>
                     <td><code>onLoadError</code></td>
                     <td><code>function</code></td>
                     <td><code>null</code></td>
-                    <td>A function to be called when a requested resource cannot
-                      be loaded</td>
+                    <td>
+                      A function to be called when a requested resource cannot
+                      be loaded
+                    </td>
                   </tr>
                   <tr>
                     <td><code>onPageInitialized</code></td>
@@ -329,17 +356,21 @@ casper.run -&gt;
                     <td><code>onResourceReceived</code></td>
                     <td><code>function</code></td>
                     <td><code>null</code></td>
-                    <td> Proxy method for PhantomJS' <code>WebPage#onResourceReceived()</code>
+                    <td>
+                      Proxy method for PhantomJS' <code>WebPage#onResourceReceived()</code>
                       callback, but the current Casper instance is passed as
-                      first argument. </td>
+                      first argument.
+                    </td>
                   </tr>
                   <tr>
                     <td><code>onResourceRequested</code></td>
                     <td><code>function</code></td>
                     <td><code>null</code></td>
-                    <td> Proxy method for PhantomJS' <code>WebPage#onResourceRequested()</code>
+                    <td>
+                      Proxy method for PhantomJS' <code>WebPage#onResourceRequested()</code>
                       callback, but the current Casper instance is passed as
-                      first argument. </td>
+                      first argument.
+                    </td>
                   </tr>
                   <tr>
                     <td><code>onStepComplete</code></td>
@@ -2109,12 +2140,17 @@ casper.run(function() {
     this.test.renderResults(true);
 });
 </code></pre>
-          <p> As you can see, <code>casper.test</code> is a reference to a <code>tester.Tester</code>
+          <p>
+            As you can see, <code>casper.test</code> is a reference to a <code>tester.Tester</code>
             object instance, which is used to make the assertions and render the
-            results. </p>
-          <p> <span class="label notice">Note</span> You can find the whole <code>tester.Tester</code>
+            results.
+          </p>
+          <p>
+            <span class="label notice">Note</span>
+            You can find the whole <code>tester.Tester</code>
             API documentation in the <a href="#phantom_Casper_Tester">dedicated
-              section</a>. </p>
+            section</a>.
+          </p>
           <p>Now run the tests suite:</p>
           <pre class="prettyprint"><code>$ casperjs samples/googletest.js
 </code></pre>
@@ -2337,15 +2373,16 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-</code></pre> </section>
+</code></pre>
+        </section>
       </div>
       <footer>
-        <p> © 2011 Nicolas Perriault, <a href="http://akei.com/">Akei</a> — get
+        <p>
+          © 2011 Nicolas Perriault, <a href="http://akei.com/">Akei</a> — get
           the source code on GitHub: <a href="http://github.com/n1k0/casperjs">n1k0/casperjs</a>
         </p>
       </footer>
     </div>
-    /container
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap-scrollspy.js"></script>
     <script type="text/javascript" src="js/highlight.pack.js"></script>
