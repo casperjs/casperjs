@@ -52,30 +52,30 @@ var Mouse = function(casper) {
 
     var processEvent = function(type, args) {
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
-            throw new Error('Unsupported mouse event type: ' + type);
+            throw new Error('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }
         args = Array.prototype.slice.call(args); // cast Arguments -> Array
         casper.emit('mouse.' + type.replace('mouse', ''), args);
         switch (args.length) {
             case 0:
-                throw new Error('Too few arguments');
+                throw new Error('Mouse.processEvent(): Too few arguments');
             case 1:
                 // selector
                 var selector = args[0];
                 if (!utils.isString(selector)) {
-                    throw new Error('No valid CSS selector passed: ' + selector);
+                    throw new Error('Mouse.processEvent(): No valid CSS selector passed: ' + selector);
                 }
                 casper.page.sendEvent.apply(casper.page, [type].concat(computeCenter(selector)));
                 break;
             case 2:
                 // coordinates
                 if (!utils.isNumber(args[0]) || !utils.isNumber(args[1])) {
-                    throw new Error('No valid coordinates passed');
+                    throw new Error('Mouse.processEvent(): No valid coordinates passed: ' + args);
                 }
                 casper.page.sendEvent(type, args[0], args[1]);
                 break;
             default:
-                throw new Error('Too many arguments');
+                throw new Error('Mouse.processEvent(): Too many arguments');
         }
     };
 

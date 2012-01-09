@@ -16,15 +16,24 @@
                     test2: false,
                     test3: false,
                     test4: false,
-                    test5: []
+                    testdown:  [],
+                    testup:    [],
+                    testmove:  [],
+                    testclick: []
                 };
                 document.querySelector('#test4').onclick = function(event) {
                     results.test4 = true;
                     event.preventDefault();
                 };
-                window.onmousedown = function(e) {
-                    results.test5 = [e.x, e.y];
-                }
+                window.onmousedown = function(event) {
+                    results.testdown = [event.x, event.y];
+                };
+                window.onmouseup = function(event) {
+                    results.testup = [event.x, event.y];
+                };
+                window.onmousemove = function(event) {
+                    results.testmove = [event.x, event.y];
+                };
             })(window);
         </script>
     </body>
