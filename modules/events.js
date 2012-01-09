@@ -47,7 +47,7 @@ EventEmitter.prototype.emit = function() {
       if (arguments[1] instanceof Error) {
         throw arguments[1]; // Unhandled 'error' event
       } else {
-        throw new Error("Uncaught, unspecified 'error' event.");
+        throw new CasperError("Uncaught, unspecified 'error' event.");
       }
       return false;
     }
@@ -98,7 +98,7 @@ EventEmitter.prototype.emit = function() {
 // EventEmitter.prototype.emit() is also defined there.
 EventEmitter.prototype.addListener = function(type, listener) {
   if ('function' !== typeof listener) {
-    throw new Error('addListener only takes instances of Function');
+    throw new CasperError('addListener only takes instances of Function');
   }
 
   if (!this._events) this._events = {};
@@ -145,7 +145,7 @@ EventEmitter.prototype.on = EventEmitter.prototype.addListener;
 
 EventEmitter.prototype.once = function(type, listener) {
   if ('function' !== typeof listener) {
-    throw new Error('.once only takes instances of Function');
+    throw new CasperError('.once only takes instances of Function');
   }
 
   var self = this;
@@ -162,7 +162,7 @@ EventEmitter.prototype.once = function(type, listener) {
 
 EventEmitter.prototype.removeListener = function(type, listener) {
   if ('function' !== typeof listener) {
-    throw new Error('removeListener only takes instances of Function');
+    throw new CasperError('removeListener only takes instances of Function');
   }
 
   // does not use listeners(), so no side effect of creating _events[type]
@@ -231,7 +231,7 @@ EventEmitter.prototype.filter = function() {
 EventEmitter.prototype.setFilter = function(type, filterFn) {
   if (!this._filters) this._filters = {};
   if ('function' !== typeof filterFn) {
-    throw new Error('setFilter only takes instances of Function');
+    throw new CasperError('setFilter only takes instances of Function');
   }
   if (!this._filters[type]) {
     this._filters[type] = filterFn;

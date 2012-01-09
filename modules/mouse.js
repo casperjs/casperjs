@@ -36,62 +36,62 @@ exports.create = function(casper) {
 
 var Mouse = function(casper) {
     if (!utils.isCasperObject(casper)) {
-        throw new Error('Mouse() needs a Casper instance');
+        throw new CasperError('Mouse() needs a Casper instance');
     }
 
     var supportedEvents = ['mouseup', 'mousedown', 'click', 'mousemove'];
 
-    var computeCenter = function(selector) {
+    function computeCenter(selector) {
         var bounds = casper.getElementBounds(selector);
         if (utils.isClipRect(bounds)) {
             var x = Math.round(bounds.left + bounds.width / 2);
             var y = Math.round(bounds.top  + bounds.height / 2);
             return [x, y];
         }
-    };
+    }
 
-    var processEvent = function(type, args) {
+    function processEvent(type, args) {
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
-            throw new Error('Mouse.processEvent(): Unsupported mouse event type: ' + type);
+            throw new CasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }
         args = Array.prototype.slice.call(args); // cast Arguments -> Array
         casper.emit('mouse.' + type.replace('mouse', ''), args);
         switch (args.length) {
             case 0:
-                throw new Error('Mouse.processEvent(): Too few arguments');
+                throw new CasperError('Mouse.processEvent(): Too few arguments');
             case 1:
                 // selector
                 var selector = args[0];
                 if (!utils.isString(selector)) {
-                    throw new Error('Mouse.processEvent(): No valid CSS selector passed: ' + selector);
+                    throw new CasperError('Mouse.processEvent(): No valid CSS selector passed: ' + selector);
                 }
                 casper.page.sendEvent.apply(casper.page, [type].concat(computeCenter(selector)));
                 break;
             case 2:
                 // coordinates
                 if (!utils.isNumber(args[0]) || !utils.isNumber(args[1])) {
-                    throw new Error('Mouse.processEvent(): No valid coordinates passed: ' + args);
+                    throw new CasperError('Mouse.processEvent(): No valid coordinates passed: ' + args);
                 }
                 casper.page.sendEvent(type, args[0], args[1]);
                 break;
             default:
-                throw new Error('Mouse.processEvent(): Too many arguments');
+                throw new CasperError('Mouse.processEvent(): Too many arguments');
         }
-    };
+    }
 
-    this.click = function() {
+    this.click = function click() {
         processEvent('click', arguments);
     };
 
-    this.down = function() {
+    this.down = function down() {
         processEvent('mousedown', arguments);
     };
 
-    this.move = function() {
+    this.move = function move() {
         processEvent('mousemove', arguments);
     };
 
-    this.up = function() {
+    this.up = function up() {
         processEvent('mouseup', arguments);
     };
 };

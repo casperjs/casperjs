@@ -47,7 +47,7 @@ exports.parse = function(phantomArgs) {
             } else if (typeof what === "string") {
                 return this.options[what];
             } else {
-                throw new Error("Unsupported cli arg getter " + typeof what);
+                throw new CasperError("Unsupported cli arg getter " + typeof what);
             }
         }
     };

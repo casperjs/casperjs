@@ -166,7 +166,7 @@ Casper.prototype.capture = function(targetFile, clipRect) {
     targetFile = fs.absolute(targetFile);
     if (clipRect) {
         if (!utils.isClipRect(clipRect)) {
-            throw new Error("clipRect must be a valid ClipRect object.");
+            throw new CasperError("clipRect must be a valid ClipRect object.");
         }
         previousClipRect = this.page.clipRect;
         this.page.clipRect = clipRect;
@@ -260,7 +260,7 @@ Casper.prototype.click = function(selector, fallbackToHref) {
  */
 Casper.prototype.createStep = function(fn, options) {
     if (!utils.isFunction(fn)) {
-        throw new Error("createStep(): a step definition must be a function");
+        throw new CasperError("createStep(): a step definition must be a function");
     }
     fn.options = utils.isObject(options) ? options : {};
     this.emit('step.created', fn);
@@ -467,10 +467,10 @@ Casper.prototype.fetchText = function(selector) {
 Casper.prototype.fill = function(selector, vals, submit) {
     submit = submit === true ? submit : false;
     if (!utils.isString(selector) || !selector.length) {
-        throw new Error("Form selector must be a non-empty string");
+        throw new CasperError("Form selector must be a non-empty string");
     }
     if (!utils.isObject(vals)) {
-        throw new Error("Form values must be provided as an object");
+        throw new CasperError("Form values must be provided as an object");
     }
     this.emit('fill', selector, vals, submit);
     var fillResults = this.evaluate(function(selector, values) {
@@ -480,7 +480,7 @@ Casper.prototype.fill = function(selector, vals, submit) {
         values:   vals
     });
     if (!fillResults) {
-        throw new Error("Unable to fill form");
+        throw new CasperError("Unable to fill form");
     } else if (fillResults.errors.length > 0) {
         (function(self){
             fillResults.errors.forEach(function(error) {
@@ -546,13 +546,13 @@ Casper.prototype.getCurrentUrl = function() {
  */
 Casper.prototype.getElementBounds = function(selector) {
     if (!this.exists(selector)) {
-        throw new Error("No element matching selector found: " + selector);
+        throw new CasperError("No element matching selector found: " + selector);
     }
     var clipRect = this.evaluate(function(selector) {
         return __utils__.getElementBounds(selector);
     }, { selector: selector });
     if (!utils.isClipRect(clipRect)) {
-        throw new Error('Could not fetch boundaries for element matching selector: ' + selector);
+        throw new CasperError('Could not fetch boundaries for element matching selector: ' + selector);
     }
     return clipRect;
 };
@@ -576,7 +576,7 @@ Casper.prototype.getGlobal = function(name) {
         return result;
     }, {'name': name});
     if ('error' in result) {
-        throw new Error(result.error);
+        throw new CasperError(result.error);
     } else if (utils.isString(result.value)) {
         return JSON.parse(result.value);
     } else {
@@ -662,20 +662,20 @@ Casper.prototype.open = function(location, settings) {
         };
     }
     if (!utils.isObject(settings)) {
-        throw new Error("open(): request settings must be an Object");
+        throw new CasperError("open(): request settings must be an Object");
     }
     // http method
     // taken from https://github.com/ariya/phantomjs/blob/master/src/webpage.cpp#L302
     var methods = ["get", "head", "put", "post", "delete"];
     if (settings.method && (!utils.isString(settings.method) || methods.indexOf(settings.method) === -1)) {
-        throw new Error("open(): settings.method must be part of " + methods.join(', '));
+        throw new CasperError("open(): settings.method must be part of " + methods.join(', '));
     }
     // http data
     if (settings.data) {
         if (utils.isObject(settings.data)) { // query object
             settings.data = qs.encode(settings.data);
         } else if (!utils.isString(settings.data)) {
-            throw new Error("open(): invalid request settings data value: " + settings.data);
+            throw new CasperError("open(): invalid request settings data value: " + settings.data);
         }
     }
     // current request url
@@ -740,7 +740,7 @@ Casper.prototype.resourceExists = function(test) {
             testFn = test;
             break;
         default:
-            throw new Error("Invalid type");
+            throw new CasperError("Invalid type");
     }
     return this.resources.some(testFn);
 };
@@ -819,10 +819,10 @@ Casper.prototype.runStep = function(step) {
  */
 Casper.prototype.setHttpAuth = function(username, password) {
     if (!this.started) {
-        throw new Error("Casper must be started in order to use the setHttpAuth() method");
+        throw new CasperError("Casper must be started in order to use the setHttpAuth() method");
     }
     if (!utils.isString(username) || !utils.isString(password)) {
-        throw new Error("Both username and password must be strings");
+        throw new CasperError("Both username and password must be strings");
     }
     this.page.settings.userName = username;
     this.page.settings.password = password;
@@ -899,10 +899,10 @@ Casper.prototype.start = function(location, then) {
  */
 Casper.prototype.then = function(step) {
     if (!this.started) {
-        throw new Error("Casper not started; please use Casper#start");
+        throw new CasperError("Casper not started; please use Casper#start");
     }
     if (!utils.isFunction(step)) {
-        throw new Error("You can only define a step as a function");
+        throw new CasperError("You can only define a step as a function");
     }
     // check if casper is running
     if (this.checker === null) {
@@ -1002,10 +1002,10 @@ Casper.prototype.thenOpenAndEvaluate = function(location, fn, context) {
  */
 Casper.prototype.viewport = function(width, height) {
     if (!this.started) {
-        throw new Error("Casper must be started in order to set viewport at runtime");
+        throw new CasperError("Casper must be started in order to set viewport at runtime");
     }
     if (!utils.isNumber(width) || !utils.isNumber(height) || width <= 0 || height <= 0) {
-        throw new Error(f("Invalid viewport: %dx%d", width, height));
+        throw new CasperError(f("Invalid viewport: %dx%d", width, height));
     }
     this.page.viewportSize = {
         width: width,
@@ -1194,7 +1194,7 @@ Casper.prototype.waitWhileVisible = function(selector, then, onTimeout, timeout)
 Casper.extend = function(proto) {
     console.warn('Casper.extend() has been deprecated since 0.6; check the docs');
     if (!utils.isObject(proto)) {
-        throw new Error("extends() only accept objects as prototypes");
+        throw new CasperError("extends() only accept objects as prototypes");
     }
     utils.mergeObjects(Casper.prototype, proto);
 };
@@ -1254,7 +1254,7 @@ function createPage(casper) {
         }
         if (casper.options.clientScripts) {
             if (!utils.isArray(casper.options.clientScripts)) {
-                throw new Error("The clientScripts option must be an array");
+                throw new CasperError("The clientScripts option must be an array");
             } else {
                 casper.options.clientScripts.forEach(function(script) {
                     if (casper.page.injectJs(script)) {

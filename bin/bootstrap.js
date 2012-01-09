@@ -89,6 +89,53 @@ if (!phantom.casperLoaded) {
     // Adding built-in capabilities to phantom object
     phantom.sourceIds = {};
 
+    // custom global CasperError
+    window.CasperError = function(msg) {
+        Error.call(this);
+        try {
+            // let's get where this error has been thrown from, if we can
+            this._from = arguments.callee.caller.name;
+        } catch (e) {
+            this._from = "anonymous";
+        }
+        this.message = msg;
+        this.name = 'CasperError';
+    };
+
+    // standard Error prototype inheritance
+    window.CasperError.prototype = Object.getPrototypeOf(new Error());
+
+    // Stack formatting
+    window.CasperError.prototype.formatStack = function() {
+        var location;
+        if (this.fileName || this.sourceId) {
+            location = (this.fileName || phantom.sourceIds[this.sourceId]);
+        } else {
+            location = "unknown";
+        }
+        location += this.line ?  ':' + this.line : 0;
+        return this.toString() + '\n    ' + (this._from || "anonymous") + '() at ' + location;
+    };
+
+    // Adding stack traces to CasperError
+    // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
+    // TODO: remove when phantomjs has js engine upgrade
+    if (!new CasperError().hasOwnProperty('stack')) {
+        Object.defineProperty(CasperError.prototype, 'stack', {
+            set: function(string) {
+                this._stack = string;
+            },
+            get: function() {
+                if (this._stack) {
+                    return this._stack;
+                }
+                return this.formatStack();
+            },
+            configurable: true,
+            enumerable: true
+        });
+    }
+
     phantom.getErrorMessage = function(e) {
         return (e.fileName || this.sourceIds[e.sourceId]) + ':' + e.line + ' ' + e;
     };
@@ -189,30 +236,6 @@ if (!phantom.casperLoaded) {
             }
         };
     })(require, phantom.casperPath);
-
-    // Adding stack traces to Error
-    // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-    // TODO: remove when phantomjs has js engine upgrade
-    if (!new Error().hasOwnProperty('stack')) {
-        Object.defineProperty(Error.prototype, 'stack', {
-            set: function(string) {
-                this._stack = string;
-            },
-            get: function() {
-                var location;
-                if (this._stack) {
-                    return this._stack;
-                } else if (this.fileName || this.sourceId) {
-                    location = phantom.getErrorMessage(this);
-                } else {
-                    location  = "unknown";
-                }
-                return this.toString() + '\n    at ' + location;
-            },
-            configurable: true,
-            enumerable: true
-        });
-    }
 
     // BC < 0.6
     phantom.Casper = require('casper').Casper;

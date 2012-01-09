@@ -41,7 +41,7 @@ exports.create = function(fn) {
  */
 var FunctionArgsInjector = function(fn) {
     if (!utils.isFunction(fn)) {
-        throw new Error("FunctionArgsInjector() can only process functions");
+        throw new CasperError("FunctionArgsInjector() can only process functions");
     }
     this.fn = fn;
 
@@ -64,7 +64,7 @@ var FunctionArgsInjector = function(fn) {
     this.process = function(values) {
         var fnObj = this.extract(this.fn);
         if (!utils.isObject(fnObj)) {
-            throw new Error("Unable to process function " + this.fn.toString());
+            throw new CasperError("Unable to process function " + this.fn.toString());
         }
         var inject = this.getArgsInjectionString(fnObj.args, values);
         return 'function ' + (fnObj.name || '') + '(){' + inject + fnObj.body + '}';

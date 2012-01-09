@@ -31,6 +31,7 @@
 var fs = require('fs');
 var events = require('events');
 var utils = require('utils');
+var f = utils.format;
 
 exports.create = function(casper, options) {
     return new Tester(casper, options);
@@ -47,7 +48,7 @@ var Tester = function(casper, options) {
     this.options = utils.isObject(options) ? options : {};
 
     if (!utils.isCasperObject(casper)) {
-        throw new Error("Tester needs a Casper instance");
+        throw new CasperError("Tester needs a Casper instance");
     }
 
     // locals
@@ -309,7 +310,7 @@ var Tester = function(casper, options) {
     this.exec = function(file) {
         file = this.filter('exec.file', file) || file;
         if (!fs.isFile(file) || !utils.isJsFile(file)) {
-            throw new Error("Can only exec() files with .js or .coffee extensions");
+            throw new CasperError("Can only exec() files with .js or .coffee extensions");
         }
         this.currentTestFile = file;
         try {
@@ -391,15 +392,20 @@ var Tester = function(casper, options) {
         this.assert(true, message);
     };
 
-    this.renderFailureDetails = function() {
-        if (this.testResults.failures.length === 0) {
+    /**
+     * Renders a detailed report for each failed test.
+     *
+     * @param  Array  failures
+     */
+    this.renderFailureDetails = function(failures) {
+        if (failures.length === 0) {
             return;
         }
-        casper.echo("\nFailed test details\n");
-        this.testResults.failures.forEach(function(failure) {
+        casper.echo(f("\nDetails for the %d failed tests:\n", failures.length), "PARAMETER");
+        failures.forEach(function(failure) {
             casper.echo('In ' + failure.file + ':');
             var message;
-            if (utils.isType(failure.message, "error")) {
+            if (utils.isType(failure.message, "object") && failure.message.stack) {
                 message = failure.message.stack;
             } else {
                 message = failure.message;
@@ -432,7 +438,7 @@ var Tester = function(casper, options) {
         }
         casper.echo(this.colorize(utils.fillBlanks(result), style));
         if (this.testResults.failed > 0) {
-            this.renderFailureDetails();
+            this.renderFailureDetails(this.testResults.failures);
         }
         if (save && utils.isFunction(require)) {
             try {
@@ -454,7 +460,7 @@ var Tester = function(casper, options) {
     this.runSuites = function() {
         var testFiles = [], self = this;
         if (arguments.length === 0) {
-            throw new Error("No test suite to run");
+            throw new CasperError("No test suite to run");
         }
         Array.prototype.forEach.call(arguments, function(path) {
             if (!fs.exists(path)) {

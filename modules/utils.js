@@ -268,7 +268,7 @@ exports.isString = isString;
  */
 function isType(what, typeName) {
     if (typeof typeName !== "string" || !typeName) {
-        throw new Error("You must pass isType() a typeName string");
+        throw new CasperError("You must pass isType() a typeName string");
     }
     return betterTypeOf(what).toLowerCase() === typeName.toLowerCase();
 }

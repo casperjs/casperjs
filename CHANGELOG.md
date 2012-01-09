@@ -5,6 +5,7 @@ XXXX-XX-XX, v0.6.0
 ------------------
 
 - **BC BREAK:** `Casper.click()` now uses native Webkit mouse events instead of previous crazy utopic javascript emulation
+- **BC BREAK:** All errors thrown by CasperJS core are of the new `CasperError` type
 - **BC BREAK:** removed obsolete `replaceFunctionPlaceholders()`
 - *Deprecated*: `Casper.extend()` method has been deprecated; use natural javascript extension mechanisms instead (see samples)
 - `Casper.open()` can now perform HTTP `GET`, `POST`, `PUT`, `DELETE` and `HEAD` operations
@@ -13,6 +14,7 @@ XXXX-XX-XX, v0.6.0
 - introduced the `mouse` module to handle native Webkit mouse events
 - added support for `RegExp` input in `Casper.resourceExists()`
 - added printing of source file path for any uncaught exception printed onto the console
+- added an emulation of stack trace printing (but PhantomJS will have to upgrade its javascript engine for it to be fully working though)
 
 ---
 
