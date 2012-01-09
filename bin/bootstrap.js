@@ -207,8 +207,7 @@ if (!phantom.casperLoaded) {
                 } else {
                     location  = "unknown";
                 }
-                var from = this.caller || "anonymous";
-                return this.toString() + '\n    ' + from + ' at ' + location;
+                return this.toString() + '\n    at ' + location;
             },
             configurable: true,
             enumerable: true
