@@ -199,12 +199,16 @@ if (!phantom.casperLoaded) {
                 this._stack = string;
             },
             get: function() {
+                var location;
                 if (this._stack) {
                     return this._stack;
                 } else if (this.fileName || this.sourceId) {
-                    return this.toString() + '\nat ' + phantom.getErrorMessage(this);
+                    location = phantom.getErrorMessage(this);
+                } else {
+                    location  = "unknown";
                 }
-                return this.toString() + '\nat unknown';
+                var from = this.caller || "anonymous";
+                return this.toString() + '\n    ' + from + ' at ' + location;
             },
             configurable: true,
             enumerable: true

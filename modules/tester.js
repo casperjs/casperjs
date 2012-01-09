@@ -29,8 +29,8 @@
  */
 
 var fs = require('fs');
+var events = require('events');
 var utils = require('utils');
-var esprima = require('./modules/vendors/esprima');
 
 exports.create = function(casper, options) {
     return new Tester(casper, options);
@@ -41,6 +41,7 @@ exports.create = function(casper, options) {
  *
  */
 var Tester = function(casper, options) {
+    this.currentTestFile = null;
     this.running = false;
     this.suites = [];
     this.options = utils.isObject(options) ? options : {};
@@ -57,8 +58,19 @@ var Tester = function(casper, options) {
     // properties
     this.testResults = {
         passed: 0,
-        failed: 0
+        failed: 0,
+        failures: []
     };
+
+    // events
+    casper.on('step.error', function(e) {
+        casper.test.fail(e);
+        casper.test.done();
+    });
+
+    this.on('fail', function(details) {
+        this.testResults.failures.push(details);
+    });
 
     // methods
     /**
@@ -68,17 +80,23 @@ var Tester = function(casper, options) {
      * @param  String   message    Test description
      */
     this.assert = function(condition, message) {
-        var status = PASS;
+        var status = PASS, eventName;
         if (condition === true) {
+            eventName = 'success';
             style = 'INFO';
             this.testResults.passed++;
             exporter.addSuccess("unknown", message);
         } else {
+            eventName = 'fail';
             status = FAIL;
             style = 'RED_BAR';
             this.testResults.failed++;
             exporter.addFailure("unknown", message, 'test failed', "assert");
         }
+        this.emit(eventName, {
+            message: message,
+            file:    this.currentTestFile
+        });
         casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
     };
 
@@ -90,17 +108,24 @@ var Tester = function(casper, options) {
      * @param  String  message    Test description
      */
     this.assertEquals = function(testValue, expected, message) {
+        var eventName;
         if (this.testEquals(testValue, expected)) {
+            eventName = "success";
             casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
             this.testResults.passed++;
             exporter.addSuccess("unknown", message);
         } else {
+            eventName = "fail";
             casper.echo(this.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
             this.comment('   got:      ' + utils.serialize(testValue));
             this.comment('   expected: ' + utils.serialize(expected));
             this.testResults.failed++;
             exporter.addFailure("unknown", message, "test failed; expected: " + expected + "; got: " + testValue, "assertEquals");
         }
+        this.emit(eventName, {
+            message: message,
+            file:    this.currentTestFile
+        });
     };
 
     /**
@@ -282,9 +307,11 @@ var Tester = function(casper, options) {
      * @param  String  file  Absolute path to some js/coffee file
      */
     this.exec = function(file) {
+        file = this.filter('exec.file', file) || file;
         if (!fs.isFile(file) || !utils.isJsFile(file)) {
             throw new Error("Can only exec() files with .js or .coffee extensions");
         }
+        this.currentTestFile = file;
         try {
             new Function('casper', phantom.getScriptCode(file))(casper);
         } catch (e) {
@@ -364,6 +391,23 @@ var Tester = function(casper, options) {
         this.assert(true, message);
     };
 
+    this.renderFailureDetails = function() {
+        if (this.testResults.failures.length === 0) {
+            return;
+        }
+        casper.echo("\nFailed test details\n");
+        this.testResults.failures.forEach(function(failure) {
+            casper.echo('In ' + failure.file + ':');
+            var message;
+            if (utils.isType(failure.message, "error")) {
+                message = failure.message.stack;
+            } else {
+                message = failure.message;
+            }
+            casper.echo('    ' + message, "COMMENT");
+        });
+    };
+
     /**
      * Render tests results, an optionnaly exit phantomjs.
      *
@@ -387,6 +431,9 @@ var Tester = function(casper, options) {
             result = statusText + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
         }
         casper.echo(this.colorize(utils.fillBlanks(result), style));
+        if (this.testResults.failed > 0) {
+            this.renderFailureDetails();
+        }
         if (save && utils.isFunction(require)) {
             try {
                 fs.write(save, exporter.getXML(), 'w');
@@ -444,7 +491,7 @@ var Tester = function(casper, options) {
      */
     this.runTest = function(testFile) {
         this.bar('Test file: ' + testFile, 'INFO_BAR');
-        this.running = true;
+        this.running = true; // this.running is set back to false with done()
         try {
             this.exec(testFile);
         } catch (e) {
@@ -483,4 +530,8 @@ var Tester = function(casper, options) {
         return v1 === v2;
     };
 };
+
+// Tester class is an EventEmitter
+utils.inherits(Tester, events.EventEmitter);
+
 exports.Tester = Tester;

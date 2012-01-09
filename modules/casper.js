@@ -245,6 +245,7 @@ Casper.prototype.click = function(selector, fallbackToHref) {
     try {
         this.mouse.click(selector);
     } catch (e) {
+        this.log(f("Error while trying to click on selector %s: %s", selector, e));
         return false;
     }
     return true;
@@ -793,6 +794,7 @@ Casper.prototype.runStep = function(step) {
     try {
         stepResult = step.call(this, this);
     } catch (e) {
+        this.emit('step.error', e);
         if (this.options.faultTolerant) {
             this.log("Step error: " + e, "error");
         } else {
