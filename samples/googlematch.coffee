@@ -39,7 +39,7 @@ casper.each terms, (self, term) ->
         self.echo "#{term}: #{score}"
 
 casper.run ->
-    scores.sort -> (a, b) -> b.score > a.score
+    scores.sort -> (a, b) -> b.score - a.score;
     winner = scores[0]
     @echo "Winner is #{winner.term} with #{winner.score} results"
     @exit()

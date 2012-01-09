@@ -47,7 +47,7 @@ casper.each(terms, function(self, term, i) {
 
 casper.run(function(self) {
     scores.sort(function(a, b) {
-        return b.score > a.score;
+        return b.score - a.score;
     });
     var winner = scores[0];
     self.echo('winner is "' + winner.term + '" with ' + winner.score + ' results');
