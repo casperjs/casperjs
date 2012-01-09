@@ -150,7 +150,7 @@ if (!phantom.casperLoaded) {
             }
         }
         // trick to locate source file location on error
-        scriptCode += ";var __fe__ = new Error('__sourceId__')";
+        scriptCode += ";var __fe__ = new CasperError('__sourceId__')";
         scriptCode += ";__fe__.fileName = '" + file + "'";
         scriptCode += ";throw __fe__;";
         return scriptCode;
@@ -166,7 +166,7 @@ if (!phantom.casperLoaded) {
         if (typeof callback === "function") {
             callback(error, file);
         } else {
-            console.error(this.getErrorMessage(error));
+            console.error(error.stack);
             this.exit(1);
         }
     };

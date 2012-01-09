@@ -320,7 +320,7 @@ var Tester = function(casper, options) {
             phantom.processScriptError(e, file, function(error) {
                 // do not abort the whole suite, just fail fast displaying the
                 // caught error and process next suite
-                self.fail(phantom.getErrorMessage(e));
+                self.fail(e);
                 self.done();
             });
         }
