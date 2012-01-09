@@ -9,20 +9,16 @@
  *   borris:  2370000
  *   winner is "nicolas" with 69600000 results
  */
-var CasperClass = require('casper').Casper;
-
-CasperClass.extend({
-    fetchScore: function() {
-        return this.evaluate(function() {
-            var result = document.querySelector('#resultStats').innerText;
-            return ~~(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''));
-        });
-    }
-});
-
-var casper = new CasperClass({
+var casper = new require('casper').create({
     verbose: true
 }), terms = casper.cli.args, scores = [], i = 0;
+
+casper.fetchScore = function() {
+    return this.evaluate(function() {
+        var result = document.querySelector('#resultStats').innerText;
+        return ~~(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''));
+    });
+};
 
 if (terms.length < 2) {
     casper.echo('Usage: casperjs googlematch.js term1, term2 [, term3]...').exit();

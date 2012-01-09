@@ -10,14 +10,12 @@ Usage:
   winner is "nicolas" with 69600000 results
 ###
 
-CasperClass = require('casper').Casper
+casper = require('casper').create verbose: true
 
-CasperClass.extend
-    fetchScore: -> @evaluate ->
+casper.fetchScore = ->
+    @evaluate ->
         result = document.querySelector('#resultStats').innerText
         ~~(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''))
-
-casper = new CasperClass verbose: true
 
 terms = casper.cli.args # terms are passed through command-line arguments
 
