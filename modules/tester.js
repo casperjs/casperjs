@@ -121,7 +121,7 @@ var Tester = function(casper, options) {
             this.comment('   got:      ' + utils.serialize(testValue));
             this.comment('   expected: ' + utils.serialize(expected));
             this.testResults.failed++;
-            exporter.addFailure("unknown", message, "test failed; expected: " + expected + "; got: " + testValue, "assertEquals");
+            exporter.addFailure("unknown", message, f("test failed; expected: %s; got: %s", expected, testValue), "assertEquals");
         }
         this.emit(eventName, {
             message: message,
@@ -170,17 +170,24 @@ var Tester = function(casper, options) {
      * @param  String   message    Test description
      */
     this.assertMatch = function(subject, pattern, message) {
+        var eventName;
         if (pattern.test(subject)) {
+            eventName = "success";
             casper.echo(this.colorize(PASS, 'INFO') + ' ' + this.formatMessage(message));
             this.testResults.passed++;
             exporter.addSuccess("unknown", message);
         } else {
+            eventName = "fail";
             casper.echo(this.colorize(FAIL, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
             this.comment('   subject: ' + subject);
             this.comment('   pattern: ' + pattern.toString());
             this.testResults.failed++;
-            exporter.addFailure("unknown", message, "test failed; subject: " + subject + "; pattern: " + pattern.toString(), "assertMatch");
+            exporter.addFailure("unknown", message, f("test failed; subject: %s; pattern: %s", subject, pattern.toString()), "assertMatch");
         }
+        this.emit(eventName, {
+            message: message,
+            file:    this.currentTestFile
+        });
     };
 
     /**
@@ -403,14 +410,14 @@ var Tester = function(casper, options) {
         }
         casper.echo(f("\nDetails for the %d failed tests:\n", failures.length), "PARAMETER");
         failures.forEach(function(failure) {
-            casper.echo('In ' + failure.file + ':');
+            casper.echo(f('In %s:', failure.file));
             var message;
             if (utils.isType(failure.message, "object") && failure.message.stack) {
                 message = failure.message.stack;
             } else {
                 message = failure.message;
             }
-            casper.echo('    ' + message, "COMMENT");
+            casper.echo(f('    %s', message), "COMMENT");
         });
     };
 
@@ -425,7 +432,7 @@ var Tester = function(casper, options) {
         if (total === 0) {
             statusText = FAIL;
             style = 'RED_BAR';
-            result = statusText + " Looks like you didn't run any test.";
+            result = f("%s Looks like you didn't run any test.", statusText);
         } else {
             if (this.testResults.failed > 0) {
                 statusText = FAIL;
@@ -434,7 +441,8 @@ var Tester = function(casper, options) {
                 statusText = PASS;
                 style = 'GREEN_BAR';
             }
-            result = statusText + ' ' + total + ' tests executed, ' + this.testResults.passed + ' passed, ' + this.testResults.failed + ' failed.';
+            result = f('%s %s tests executed, %d passed, %d failed.',
+                       statusText, total, this.testResults.passed, this.testResults.failed);
         }
         casper.echo(this.colorize(utils.fillBlanks(result), style));
         if (this.testResults.failed > 0) {
@@ -443,9 +451,9 @@ var Tester = function(casper, options) {
         if (save && utils.isFunction(require)) {
             try {
                 fs.write(save, exporter.getXML(), 'w');
-                casper.echo('result log stored in ' + save, 'INFO');
+                casper.echo(f('Result log stored in %s', save), 'INFO');
             } catch (e) {
-                casper.echo('unable to write results to ' + save + '; ' + e, 'ERROR');
+                casper.echo(f('Unable to write results to %s: %s', save, e), 'ERROR');
             }
         }
         if (exit === true) {
@@ -464,7 +472,7 @@ var Tester = function(casper, options) {
         }
         Array.prototype.forEach.call(arguments, function(path) {
             if (!fs.exists(path)) {
-                self.bar("Path " + path + " doesn't exist", "RED_BAR");
+                self.bar(f("Path %s doesn't exist", path), "RED_BAR");
             }
             if (fs.isDirectory(path)) {
                 testFiles = testFiles.concat(self.findTestFiles(path));
@@ -496,7 +504,7 @@ var Tester = function(casper, options) {
      *
      */
     this.runTest = function(testFile) {
-        this.bar('Test file: ' + testFile, 'INFO_BAR');
+        this.bar(f('Test file: %s', testFile), 'INFO_BAR');
         this.running = true; // this.running is set back to false with done()
         try {
             this.exec(testFile);
