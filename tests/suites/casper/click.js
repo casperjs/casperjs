@@ -33,12 +33,12 @@
         this.test.assertEquals(results.testdown, [200, 100], 'Mouse.down() has pressed button to the specified position');
 
         t.comment('Mouse.up()');
-        this.mouse.up(200, 200);
+        this.mouse.up(200, 100);
         results = this.getGlobal('results');
         this.test.assertEquals(results.testup, [200, 100], 'Mouse.up() has released button to the specified position');
 
         t.comment('Mouse.move()');
-        this.mouse.move(200);
+        this.mouse.move(200, 100);
         results = this.getGlobal('results');
         this.test.assertEquals(results.testmove, [200, 100], 'Mouse.move() has moved to the specified position');
     });
