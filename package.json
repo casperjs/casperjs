@@ -1,7 +1,7 @@
 {
   "name": "casperjs",
   "description": "Navigation scripting & testing utility for PhantomJS",
-  "version": "0.4.3-trunk",
+  "version": "0.4.3",
   "keywords": [
     "phantomjs",
     "javascript"

@@ -1,8 +1,10 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.4.3
+2012-01-10, v0.4.3
 ------------------
+
+**Note:** This will is the latest release of the 0.4.* serie.
 
 - fixed #32 - `ClientUtils.click()` handles `<a href='javascript:'>` links
 - fixed #34 - avoid having previously loaded DOM contents being still active on run complete
