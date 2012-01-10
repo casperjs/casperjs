@@ -86,7 +86,7 @@ if (!phantom.casperLoaded) {
     // Embedded, up-to-date, validatable & controlable CoffeeScript
     phantom.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'vendors', 'coffee-script.js'));
 
-    // Adding built-in capabilities to phantom object
+    // Index of file sources, for error localization
     phantom.sourceIds = {};
 
     // custom global CasperError
@@ -107,19 +107,16 @@ if (!phantom.casperLoaded) {
 
     // Stack formatting
     window.CasperError.prototype.formatStack = function() {
-        var location;
-        if (this.fileName || this.sourceId) {
-            location = (this.fileName || phantom.sourceIds[this.sourceId]);
-        } else {
-            location = "unknown";
-        }
+        var location = this.fileName || phantom.sourceIds[this.sourceId] || "unknown";
         location += this.line ?  ':' + this.line : 0;
         return this.toString() + '\n    ' + (this._from || "anonymous") + '() at ' + location;
     };
 
-    // Adding stack traces to CasperError
-    // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-    // TODO: remove when phantomjs has js engine upgrade
+    /**
+     * Adding pseudo stack traces to CasperError
+     * Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
+     * TODO: remove when phantomjs has js engine upgrade
+     */
     if (!new CasperError().hasOwnProperty('stack')) {
         Object.defineProperty(CasperError.prototype, 'stack', {
             set: function(string) {
@@ -136,6 +133,12 @@ if (!phantom.casperLoaded) {
         });
     }
 
+    /**
+     * Retrieves the javascript source code from a given .js or .coffee file.
+     *
+     * @param  String         file     The path to the file
+     * @param  Function|null  onError  An error callback (optional)
+     */
     phantom.getScriptCode = function(file, onError) {
         var scriptCode = fs.read(file);
         if (/\.coffee$/i.test(file)) {
@@ -152,6 +155,17 @@ if (!phantom.casperLoaded) {
         return scriptCode;
     };
 
+    /**
+     * Processes a given thrown Error; handles special cases and provides an
+     * optional callback argument.
+     *
+     * By default, the standard behavior on uncaught error is to print the
+     * error stack trace to the console and exit PhantomJS.
+     *
+     * @param  Error     error     The Error instance
+     * @param  String    file      A file path to associate to this error
+     * @param  Function  callback  An optional callback
+     */
     phantom.processScriptError = function(error, file, callback) {
         if (!this.sourceIds.hasOwnProperty(error.sourceId)) {
             this.sourceIds[error.sourceId] = file;
@@ -167,9 +181,12 @@ if (!phantom.casperLoaded) {
         }
     };
 
-    // Patching require()
-    // Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-    // TODO: remove when PhantomJS has full module support
+    /**
+     * Patching require() to allow loading of other modules than PhantomJS'
+     * builtin ones.
+     * Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
+     * TODO: remove when PhantomJS has full module support
+     */
     require = (function(require, requireDir) {
         var phantomBuiltins = ['fs', 'webpage', 'webserver'];
         var phantomRequire = phantom.__orig__require = require;
