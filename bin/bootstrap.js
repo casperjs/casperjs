@@ -136,10 +136,6 @@ if (!phantom.casperLoaded) {
         });
     }
 
-    phantom.getErrorMessage = function(e) {
-        return (e.fileName || this.sourceIds[e.sourceId]) + ':' + e.line + ' ' + e;
-    };
-
     phantom.getScriptCode = function(file, onError) {
         var scriptCode = fs.read(file);
         if (/\.coffee$/i.test(file)) {
