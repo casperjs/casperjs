@@ -263,16 +263,19 @@ if (!phantom.casperLoaded) {
 if (!!phantom.casperArgs.options.version) {
     console.log(phantom.casperVersion.toString());
     phantom.exit(0);
+} else if (!!phantom.casperArgs.get('run-tests')) {
+    phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
 } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
     var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
     console.log('CasperJS version ' + phantom.casperVersion.toString() + ' at ' + phantom.casperPath);
     console.log('Using PhantomJS version ' + phantomVersion);
-    console.log('Usage: casperjs script.(js|coffee) [options...]');
-    console.log('Read the docs http://n1k0.github.com/casperjs/');
+    console.log(fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt')));
     phantom.exit(0);
 }
 
-phantom.casperScript = phantom.casperArgs.get(0);
+if (!phantom.casperScript) {
+    phantom.casperScript = phantom.casperArgs.get(0);
+}
 
 if (!fs.isFile(phantom.casperScript)) {
     console.error('Unable to open file: ' + phantom.casperScript);

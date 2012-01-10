@@ -1,0 +1,5 @@
+
+Usage:
+    $ casperjs [options] script.[js|coffee] [script argument [script argument ...]]
+
+Read the docs http://n1k0.github.com/casperjs/

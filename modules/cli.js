@@ -41,10 +41,19 @@ exports.parse = function(phantomArgs) {
     var extract = {
         args: [],
         options: {},
+        has: function(what) {
+            if (utils.isNumber(what)) {
+                return what in this.args;
+            } else if (utils.isString(what)) {
+                return what in this.options;
+            } else {
+                throw new CasperError("Unsupported cli arg tester " + typeof what);
+            }
+        },
         get: function(what) {
-            if (typeof what === "number") {
+            if (utils.isNumber(what)) {
                 return this.args[what];
-            } else if (typeof what === "string") {
+            } else if (utils.isString(what)) {
                 return this.options[what];
             } else {
                 throw new CasperError("Unsupported cli arg getter " + typeof what);
