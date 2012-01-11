@@ -61,9 +61,9 @@ var Colorizer = function() {
      * @params  String  styleName
      * @return  String
      */
-    this.colorize = function colorize(text, styleName) {
+    this.colorize = function colorize(text, styleName, pad) {
         if (styleName in styles) {
-            return this.format(text, styles[styleName]);
+            return this.format(text, styles[styleName], pad);
         }
         return text;
     };
@@ -75,7 +75,7 @@ var Colorizer = function() {
      * @param  Object  style
      * @return String
      */
-    this.format = function format(text, style) {
+    this.format = function format(text, style, pad) {
         if (typeof style !== "object") {
             return text;
         }
@@ -90,6 +90,10 @@ var Colorizer = function() {
             if (style[option] === true) {
                 codes.push(options[option]);
             }
+        }
+        // pad
+        if (typeof pad === "number" && text.length < pad) {
+            text += new Array(pad - text.length + 1).join(' ');
         }
         return "\033[" + codes.join(';') + 'm' + text + "\033[0m";
     };

@@ -352,11 +352,13 @@ Casper.prototype.each = function each(array, fn) {
 /**
  * Prints something to stdout.
  *
- * @param  String  text  A string to echo to stdout
+ * @param  String  text   A string to echo to stdout
+ * @param  String  style  An optional style name
+ * @param  Number  pad    An optional pad value
  * @return Casper
  */
-Casper.prototype.echo = function echo(text, style) {
-    var message = style ? this.colorizer.colorize(text, style) : text;
+Casper.prototype.echo = function echo(text, style, pad) {
+    var message = style ? this.colorizer.colorize(text, style, pad) : text;
     console.log(this.filter('echo.message', message) || message);
     return this;
 };
