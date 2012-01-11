@@ -408,7 +408,7 @@ var Tester = function(casper, options) {
         if (failures.length === 0) {
             return;
         }
-        casper.echo(f("\nDetails for the %d failed tests:\n", failures.length), "PARAMETER");
+        casper.echo(f("\nDetails for the %d failed test%s:\n", failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
         failures.forEach(function(failure) {
             casper.echo(f('In %s:', failure.file));
             var message;
