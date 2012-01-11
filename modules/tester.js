@@ -412,13 +412,15 @@ var Tester = function(casper, options) {
         }
         casper.echo(f("\nDetails for the %d failed test%s:\n", failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
         failures.forEach(function(failure) {
-            casper.echo(f('In %s:', failure.file));
-            var message;
+            var message, line;
             if (utils.isType(failure.message, "object") && failure.message.stack) {
+                line = failure.message.line ? failure.message.line : 0;
                 message = failure.message.stack;
             } else {
+                line = 0;
                 message = failure.message;
             }
+            casper.echo(f('In %s:%d', failure.file, line));
             casper.echo(f('    %s', message), "COMMENT");
         });
     };
@@ -511,8 +513,6 @@ var Tester = function(casper, options) {
         try {
             this.exec(testFile);
         } catch (e) {
-            // TODO: better formatting of aborted failing suite
-            // TODO: add exception trace (?)
             this.fail(e);
             this.done();
         }
