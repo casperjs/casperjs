@@ -276,6 +276,7 @@ if (!!phantom.casperArgs.options.version) {
     phantom.exit(0);
 } else if (phantom.casperArgs.get(0) === "test") {
     phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
+    phantom.casperArgs.drop("test");
 } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
     var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
     var f = require("utils").format;
