@@ -41,6 +41,28 @@ exports.parse = function(phantomArgs) {
     var extract = {
         args: [],
         options: {},
+        drop: function(what) {
+            if (utils.isNumber(what)) {
+                // deleting an arg by its position
+                this.args = this.args.filter(function(arg, index) {
+                    return index !== what;
+                });
+            } else if (utils.isString(what)) {
+                // deleting an arg by its value
+                this.args = this.args.filter(function(arg) {
+                    return arg !== what;
+                });
+                // deleting an option by its name (key)
+                var self = this;
+                Object.keys(this.options).forEach(function(option) {
+                    if (option === what) {
+                        delete self.options[what];
+                    }
+                });
+            } else {
+                throw new CasperError("cannot drop argument of type " + typeof what);
+            }
+        },
         has: function(what) {
             if (utils.isNumber(what)) {
                 return what in this.args;
