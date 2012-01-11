@@ -201,53 +201,55 @@ phantom.loadCasper = function() {
                 };
             if (phantomBuiltins.indexOf(path) !== -1) {
                 return phantomRequire(path);
-            } else {
-                if (path[0] === '.') {
-                    paths.push(fs.absolute(fs.pathJoin(requireDir, path)));
-                } else if (path[0] === '/') {
-                    paths.push(path);
-                } else {
-                    dir = fs.absolute(requireDir);
-                    while (dir !== '') {
-                        // nodejs compatibility
-                        paths.push(fs.pathJoin(dir, 'node_modules', path));
-                        dir = fs.dirname(dir);
-                    }
-                    paths.push(fs.pathJoin(requireDir, 'lib', path));
-                    paths.push(fs.pathJoin(requireDir, 'modules', path));
-                }
-                paths.forEach(function(testPath) {
-                    fileGuesses.push.apply(fileGuesses, [
-                        testPath,
-                        testPath + '.js',
-                        testPath + '.coffee',
-                        fs.pathJoin(testPath, 'index.js'),
-                        fs.pathJoin(testPath, 'index.coffee'),
-                        fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
-                        fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
-                    ]);
-                });
-                file = null;
-                for (i = 0; i < fileGuesses.length && !file; ++i) {
-                    if (fs.isFile(fileGuesses[i])) {
-                        file = fileGuesses[i];
-                    }
-                }
-                if (!file) {
-                    throw new Error("CasperJS couldn't find module " + path);
-                }
-                if (file in requireCache) {
-                    return requireCache[file].exports;
-                }
-                try {
-                    var scriptCode = phantom.getScriptCode(file);
-                    new Function('module', 'exports', scriptCode)(module, module.exports);
-                } catch (e) {
-                    phantom.processScriptError(e, file);
-                }
-                requireCache[file] = module;
-                return module.exports;
             }
+            if (path[0] === '.') {
+                paths.push.apply(paths, [
+                    fs.absolute(path),
+                    fs.absolute(fs.pathJoin(requireDir, path))
+                ]);
+            } else if (path[0] === '/') {
+                paths.push(path);
+            } else {
+                dir = fs.absolute(requireDir);
+                while (dir !== '') {
+                    // nodejs compatibility
+                    paths.push(fs.pathJoin(dir, 'node_modules', path));
+                    dir = fs.dirname(dir);
+                }
+                paths.push(fs.pathJoin(requireDir, 'lib', path));
+                paths.push(fs.pathJoin(requireDir, 'modules', path));
+            }
+            paths.forEach(function(testPath) {
+                fileGuesses.push.apply(fileGuesses, [
+                    testPath,
+                    testPath + '.js',
+                    testPath + '.coffee',
+                    fs.pathJoin(testPath, 'index.js'),
+                    fs.pathJoin(testPath, 'index.coffee'),
+                    fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
+                    fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
+                ]);
+            });
+            file = null;
+            for (i = 0; i < fileGuesses.length && !file; ++i) {
+                if (fs.isFile(fileGuesses[i])) {
+                    file = fileGuesses[i];
+                }
+            }
+            if (!file) {
+                throw new Error("CasperJS couldn't find module " + path);
+            }
+            if (file in requireCache) {
+                return requireCache[file].exports;
+            }
+            try {
+                var scriptCode = phantom.getScriptCode(file);
+                new Function('module', 'exports', scriptCode)(module, module.exports);
+            } catch (e) {
+                phantom.processScriptError(e, file);
+            }
+            requireCache[file] = module;
+            return module.exports;
         };
     })(require, phantom.casperPath);
 
