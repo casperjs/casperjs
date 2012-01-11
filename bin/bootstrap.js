@@ -28,7 +28,7 @@
  *
  */
 
-if (!phantom.casperLoaded) {
+phantom.loadCasper = function() {
     // see http://semver.org/
     phantom.casperVersion = {
         major: 0,
@@ -108,7 +108,7 @@ if (!phantom.casperLoaded) {
     // Stack formatting
     window.CasperError.prototype.formatStack = function() {
         var location = this.fileName || phantom.sourceIds[this.sourceId] || "unknown";
-        location += this.line ?  ':' + this.line : 0;
+        location += ':' + (this.line ?  this.line : 0);
         return this.toString() + '\n    ' + (this._from || "anonymous") + '() at ' + location;
     };
 
@@ -258,17 +258,30 @@ if (!phantom.casperLoaded) {
 
     // loaded status
     phantom.casperLoaded = true;
+};
+
+if (!phantom.casperLoaded) {
+    try {
+        phantom.loadCasper();
+    } catch (e) {
+        console.error("Unable to load casper environment: " + e);
+        phantom.exit();
+    }
 }
+
+var fs = require("fs");
 
 if (!!phantom.casperArgs.options.version) {
     console.log(phantom.casperVersion.toString());
     phantom.exit(0);
-} else if (!!phantom.casperArgs.get('run-tests')) {
+} else if (phantom.casperArgs.get(0) === "test") {
     phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
 } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
     var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
-    console.log('CasperJS version ' + phantom.casperVersion.toString() + ' at ' + phantom.casperPath);
-    console.log('Using PhantomJS version ' + phantomVersion);
+    var f = require("utils").format;
+    console.log(f('CasperJS version %s at %s, using PhantomJS version %s',
+                phantom.casperVersion.toString(),
+                phantom.casperPath, phantomVersion));
     console.log(fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt')));
     phantom.exit(0);
 }
@@ -283,9 +296,7 @@ if (!fs.isFile(phantom.casperScript)) {
 }
 
 // filter out the called script name from casper args
-phantom.casperArgs.args = phantom.casperArgs.args.filter(function(arg) {
-    return arg !== phantom.casperScript;
-});
+phantom.casperArgs.drop(phantom.casperScript);
 
 // passed casperjs script execution
 try {
