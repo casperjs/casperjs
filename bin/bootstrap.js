@@ -78,6 +78,7 @@ phantom.loadCasper = function() {
             }).pop();
         } catch (e) {}
     }
+
     if (!phantom.casperPath) {
         console.error("Couldn't find not compute phantom.casperPath, exiting.");
         phantom.exit(1);
