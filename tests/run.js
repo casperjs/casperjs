@@ -5,6 +5,7 @@ if (!phantom.casperLoaded) {
 
 var fs = require('fs');
 var utils = require('utils');
+var f = utils.format;
 var casper = require('casper').create({
     faultTolerant: false
 });
@@ -20,15 +21,9 @@ if (casper.cli.args.length) {
     tests = casper.cli.args.filter(function(path) {
         return fs.isFile(path) || fs.isDirectory(path);
     });
-}
-
-if (!tests.length) {
-    if (casper.cli.args.length > 0) {
-        casper.echo('No valid test path passed, exiting.', 'ERROR').exit(1);
-    }
-    // default test suite is casperjs' one
-    casper.echo('Running complete CasperJS test suite', 'INFO');
-    tests = [fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'suites'))];
+} else {
+    casper.echo('No test path passed, exiting.', 'RED_BAR', 80);
+    casper.exit(1);
 }
 
 casper.test.runSuites.apply(casper.test, tests);
