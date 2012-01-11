@@ -1078,7 +1078,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
         var condition = false;
         var interval = setInterval(function(self, testFx, timeout, onTimeout) {
             if ((new Date().getTime() - start < timeout) && !condition) {
-                condition = testFx(self);
+                condition = testFx.call(self, self);
             } else {
                 self.waitDone();
                 if (!condition) {
