@@ -446,16 +446,16 @@ var Tester = function(casper, options) {
             result = f('%s %s tests executed, %d passed, %d failed.',
                        statusText, total, this.testResults.passed, this.testResults.failed);
         }
-        casper.echo(this.colorize(result, style, this.options.pad));
+        casper.echo(result, style, this.options.pad);
         if (this.testResults.failed > 0) {
             this.renderFailureDetails(this.testResults.failures);
         }
         if (save && utils.isFunction(require)) {
             try {
                 fs.write(save, this.exporter.getXML(), 'w');
-                casper.echo(f('Result log stored in %s', save), 'INFO');
+                casper.echo(f('Result log stored in %s', save), 'INFO', 80);
             } catch (e) {
-                casper.echo(f('Unable to write results to %s: %s', save, e), 'ERROR');
+                casper.echo(f('Unable to write results to %s: %s', save, e), 'ERROR', 80);
             }
         }
         if (exit === true) {
