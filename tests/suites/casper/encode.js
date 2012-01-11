@@ -1,21 +1,20 @@
-(function(t) {
-    casper.start('tests/site/index.html', function(self) {
-        var imageUrl = 'file://' + phantom.casperPath + '/tests/site/images/phantom.png';
-        var image = self.base64encode(imageUrl);
-        var fs = require('fs');
+var fs = require('fs');
 
-        t.comment('Casper.base64encode()');
-        t.assertEquals(image.length, 6160, 'Casper.base64encode() can retrieve base64 contents');
+casper.start('tests/site/index.html', function() {
+    var imageUrl = 'file://' + phantom.casperPath + '/tests/site/images/phantom.png';
+    var image = this.base64encode(imageUrl);
 
-        t.comment('Casper.download()');
-        self.download(imageUrl, 'logo.png');
-        t.assert(fs.exists('logo.png'), 'Casper.download() downloads a file');
-        if (fs.exists('logo.png')) {
-            fs.remove('logo.png');
-        }
-    });
+    this.test.comment('Casper.base64encode()');
+    this.test.assertEquals(image.length, 6160, 'Casper.base64encode() can retrieve base64 contents');
 
-    casper.run(function(self) {
-        t.done();
-    });
-})(casper.test);
+    this.test.comment('Casper.download()');
+    this.download(imageUrl, 'logo.png');
+    this.test.assert(fs.exists('logo.png'), 'Casper.download() downloads a file');
+    if (fs.exists('logo.png')) {
+        fs.remove('logo.png');
+    }
+});
+
+casper.run(function() {
+    this.test.done();
+});

@@ -1,41 +1,42 @@
-(function(t) {
-    // Casper.options.onStepComplete
-    casper.start('tests/site/index.html', function(self) {
-        self.options.onStepComplete = function(self, stepResult) {
-            t.comment('Casper.options.onStepComplete()');
-            t.assertEquals(stepResult, 'ok', 'Casper.options.onStepComplete() is called on step complete');
-            self.options.onStepComplete = null;
-        };
-        return 'ok';
-    });
+// Dear curious test reader,
+// The on* family of methods is considered deprecated since 0.6.0; please use events instead
 
-    // Casper.options.onResourceRequested & Casper.options.onResourceReceived
-    casper.then(function(self) {
-        self.options.onResourceReceived = function(self, resource) {
-            t.comment('Casper.options.onResourceReceived()');
-            t.assertType(resource, 'object', 'Casper.options.onResourceReceived() retrieve a resource object');
-            t.assert('status' in resource, 'Casper.options.onResourceReceived() retrieve a valid resource object');
-            self.options.onResourceReceived = null;
-        };
-        self.options.onResourceRequested = function(self, request) {
-            t.comment('Casper.options.onResourceRequested()');
-            t.assertType(request, 'object', 'Casper.options.onResourceRequested() retrieve a request object');
-            t.assert('method' in request, 'Casper.options.onResourceRequested() retrieve a valid request object');
-            self.options.onResourceRequested = null;
-        };
-        self.thenOpen('tests/site/page1.html');
-    });
+// Casper.options.onStepComplete
+casper.start('tests/site/index.html', function() {
+    this.options.onStepComplete = function(self, stepResult) {
+        this.test.comment('Casper.options.onStepComplete()');
+        this.test.assertEquals(stepResult, 'ok', 'Casper.options.onStepComplete() is called on step complete');
+        self.options.onStepComplete = null;
+    };
+    return 'ok';
+});
 
-    // Casper.options.onAlert()
-    casper.then(function(self) {
-        self.options.onAlert = function(self, message) {
-            t.assertEquals(message, 'plop', 'Casper.options.onAlert() can intercept an alert message');
-        };
-    }).thenOpen('tests/site/alert.html').thenClick('button', function(self) {
-        self.options.onAlert = null;
-    });
+// Casper.options.onResourceRequested & Casper.options.onResourceReceived
+casper.then(function() {
+    this.options.onResourceReceived = function(self, resource) {
+        this.test.comment('Casper.options.onResourceReceived()');
+        this.test.assertType(resource, 'object', 'Casper.options.onResourceReceived() retrieve a resource object');
+        this.test.assert('status' in resource, 'Casper.options.onResourceReceived() retrieve a valid resource object');
+        self.options.onResourceReceived = null;
+    };
+    this.options.onResourceRequested = function(self, request) {
+        this.test.comment('Casper.options.onResourceRequested()');
+        this.test.assertType(request, 'object', 'Casper.options.onResourceRequested() retrieve a request object');
+        this.test.assert('method' in request, 'Casper.options.onResourceRequested() retrieve a valid request object');
+        self.options.onResourceRequested = null;
+    };
+    this.thenOpen('tests/site/page1.html');
+});
 
-    casper.run(function(self) {
-        t.done();
-    });
-})(casper.test);
+// Casper.options.onAlert()
+casper.then(function() {
+    this.options.onAlert = function(self, message) {
+        self.test.assertEquals(message, 'plop', 'Casper.options.onAlert() can intercept an alert message');
+    };
+}).thenOpen('tests/site/alert.html').thenClick('button', function() {
+    this.options.onAlert = null;
+});
+
+casper.run(function() {
+    this.test.done();
+});

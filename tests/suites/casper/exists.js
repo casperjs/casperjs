@@ -1,11 +1,9 @@
-(function(t) {
-    t.comment('Casper.exists()');
+casper.test.comment('Casper.exists()');
 
-    casper.start('tests/site/index.html', function(self) {
-        t.assert(self.exists('a') && !self.exists('chucknorriz'), 'Casper.exists() can check if an element exists');
-    });
+casper.start('tests/site/index.html', function() {
+    this.test.assert(this.exists('a') && !this.exists('chucknorriz'), 'Casper.exists() can check if an element exists');
+});
 
-    casper.run(function(step) {
-        t.done();
-    });
-})(casper.test);
+casper.run(function() {
+    this.test.done();
+});
