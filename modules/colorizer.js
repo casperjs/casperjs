@@ -28,7 +28,7 @@
  *
  */
 
-exports.create = function() {
+exports.create = function create() {
     return new Colorizer();
 };
 
@@ -61,7 +61,7 @@ var Colorizer = function() {
      * @params  String  styleName
      * @return  String
      */
-    this.colorize = function(text, styleName) {
+    this.colorize = function colorize(text, styleName) {
         if (styleName in styles) {
             return this.format(text, styles[styleName]);
         }
@@ -75,7 +75,7 @@ var Colorizer = function() {
      * @param  Object  style
      * @return String
      */
-    this.format = function(text, style) {
+    this.format = function format(text, style) {
         if (typeof style !== "object") {
             return text;
         }

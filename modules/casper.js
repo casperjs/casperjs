@@ -125,7 +125,7 @@ utils.inherits(Casper, events.EventEmitter);
  *
  * @return Casper
  */
-Casper.prototype.back = function() {
+Casper.prototype.back = function back() {
     return this.then(function() {
         this.emit('back');
         this.evaluate(function() {
@@ -145,7 +145,7 @@ Casper.prototype.back = function() {
  * @param  String  data    The data to send, optional
  * @return string          Base64 encoded result
  */
-Casper.prototype.base64encode = function(url, method, data) {
+Casper.prototype.base64encode = function base64encode(url, method, data) {
     return this.evaluate(function(url, method, data) {
         return __utils__.getBase64(url, method, data);
     }, { url: url, method: method, data: data });
@@ -161,7 +161,7 @@ Casper.prototype.base64encode = function(url, method, data) {
  * @param  mixed   clipRect    An optional clipRect object (optional)
  * @return Casper
  */
-Casper.prototype.capture = function(targetFile, clipRect) {
+Casper.prototype.capture = function capture(targetFile, clipRect) {
     var previousClipRect;
     targetFile = fs.absolute(targetFile);
     if (clipRect) {
@@ -192,7 +192,7 @@ Casper.prototype.capture = function(targetFile, clipRect) {
  * @param  String  selector    CSS3 selector
  * @return Casper
  */
-Casper.prototype.captureSelector = function(targetFile, selector) {
+Casper.prototype.captureSelector = function captureSelector(targetFile, selector) {
     return this.capture(targetFile, this.getElementBounds(selector));
 };
 
@@ -202,7 +202,7 @@ Casper.prototype.captureSelector = function(targetFile, selector) {
  * @param  Casper    self        A self reference
  * @param  function  onComplete  An options callback to apply on completion
  */
-Casper.prototype.checkStep = function(self, onComplete) {
+Casper.prototype.checkStep = function checkStep(self, onComplete) {
     if (self.pendingWait || self.loadInProgress) {
         return;
     }
@@ -237,7 +237,7 @@ Casper.prototype.checkStep = function(self, onComplete) {
  * @param  String   selector        A DOM CSS3 compatible selector
  * @return Boolean
  */
-Casper.prototype.click = function(selector, fallbackToHref) {
+Casper.prototype.click = function click(selector, fallbackToHref) {
     this.log("Click on selector: " + selector, "debug");
     if (arguments.length > 1) {
         this.emit("deprecated", "The click() method does not process the fallbackToHref argument since 0.6");
@@ -258,7 +258,7 @@ Casper.prototype.click = function(selector, fallbackToHref) {
  * @param  Object    options  Step options
  * @return Function  The final step function
  */
-Casper.prototype.createStep = function(fn, options) {
+Casper.prototype.createStep = function createStep(fn, options) {
     if (!utils.isFunction(fn)) {
         throw new CasperError("createStep(): a step definition must be a function");
     }
@@ -272,7 +272,7 @@ Casper.prototype.createStep = function(fn, options) {
  *
  * @return Casper
  */
-Casper.prototype.debugHTML = function() {
+Casper.prototype.debugHTML = function debugHTML() {
     this.echo(this.evaluate(function() {
         return document.body.innerHTML;
     }));
@@ -284,7 +284,7 @@ Casper.prototype.debugHTML = function() {
  *
  * @return Casper
  */
-Casper.prototype.debugPage = function() {
+Casper.prototype.debugPage = function debugPage() {
     this.echo(this.evaluate(function() {
         return document.body.innerText;
     }));
@@ -298,7 +298,7 @@ Casper.prototype.debugPage = function() {
  * @param  Number  status   An optional exit status code (must be > 0)
  * @return Casper
  */
-Casper.prototype.die = function(message, status) {
+Casper.prototype.die = function die(message, status) {
     this.result.status = "error";
     this.result.time = new Date().getTime() - this.startTime;
     message = utils.isString(message) && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
@@ -317,7 +317,7 @@ Casper.prototype.die = function(message, status) {
  * @param  String  targetPath  The destination file path
  * @return Casper
  */
-Casper.prototype.download = function(url, targetPath) {
+Casper.prototype.download = function download(url, targetPath) {
     var cu = require('clientutils').create();
     try {
         fs.write(targetPath, cu.decode(this.base64encode(url)), 'w');
@@ -336,7 +336,7 @@ Casper.prototype.download = function(url, targetPath) {
  * @param  Function  fn     Callback: function(self, item, index)
  * @return Casper
  */
-Casper.prototype.each = function(array, fn) {
+Casper.prototype.each = function each(array, fn) {
     if (!utils.isArray(array)) {
         this.log("each() only works with arrays", "error");
         return this;
@@ -355,7 +355,7 @@ Casper.prototype.each = function(array, fn) {
  * @param  String  text  A string to echo to stdout
  * @return Casper
  */
-Casper.prototype.echo = function(text, style) {
+Casper.prototype.echo = function echo(text, style) {
     var message = style ? this.colorizer.colorize(text, style) : text;
     console.log(this.filter('echo.message', message) || message);
     return this;
@@ -384,7 +384,7 @@ Casper.prototype.echo = function(text, style) {
  * @return mixed
  * @see    WebPage#evaluate
  */
-Casper.prototype.evaluate = function(fn, context) {
+Casper.prototype.evaluate = function evaluate(fn, context) {
     context = utils.isObject(context) ? context : {};
     var newFn = require('injector').create(fn).process(context);
     return this.page.evaluate(newFn);
@@ -398,7 +398,7 @@ Casper.prototype.evaluate = function(fn, context) {
  * @param  String    message  The error message to log
  * @return Casper
  */
-Casper.prototype.evaluateOrDie = function(fn, message) {
+Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message) {
     if (!this.evaluate(fn)) {
         return this.die(message);
     }
@@ -412,7 +412,7 @@ Casper.prototype.evaluateOrDie = function(fn, message) {
  * @param  String  selector  A CSS3 selector
  * @return Boolean
  */
-Casper.prototype.exists = function(selector) {
+Casper.prototype.exists = function exists(selector) {
     return this.evaluate(function(selector) {
         return __utils__.exists(selector);
     }, { selector: selector });
@@ -426,7 +426,7 @@ Casper.prototype.exists = function(selector) {
  * @param  String  selector  A CSS3 selector
  * @return Boolean
  */
-Casper.prototype.visible = function(selector) {
+Casper.prototype.visible = function visible(selector) {
     return this.evaluate(function(selector) {
         return __utils__.visible(selector);
     }, { selector: selector });
@@ -438,7 +438,7 @@ Casper.prototype.visible = function(selector) {
  * @param  Number  status  Status
  * @return Casper
  */
-Casper.prototype.exit = function(status) {
+Casper.prototype.exit = function exit(status) {
     this.emit('exit', status);
     phantom.exit(status);
     return this;
@@ -451,7 +451,7 @@ Casper.prototype.exit = function(status) {
  * @param  String  selector  A CSS3 selector
  * @return String
  */
-Casper.prototype.fetchText = function(selector) {
+Casper.prototype.fetchText = function fetchText(selector) {
     return this.evaluate(function(selector) {
         return __utils__.fetchText(selector);
     }, { selector: selector });
@@ -464,7 +464,7 @@ Casper.prototype.fetchText = function(selector) {
  * @param  Object  vals      Field values
  * @param  Boolean submit    Submit the form?
  */
-Casper.prototype.fill = function(selector, vals, submit) {
+Casper.prototype.fill = function fill(selector, vals, submit) {
     submit = submit === true ? submit : false;
     if (!utils.isString(selector) || !selector.length) {
         throw new CasperError("Form selector must be a non-empty string");
@@ -518,7 +518,7 @@ Casper.prototype.fill = function(selector, vals, submit) {
  *
  * @return Casper
  */
-Casper.prototype.forward = function(then) {
+Casper.prototype.forward = function forward(then) {
     return this.then(function() {
         this.emit('forward');
         this.evaluate(function() {
@@ -532,7 +532,7 @@ Casper.prototype.forward = function(then) {
  *
  * @return String
  */
-Casper.prototype.getCurrentUrl = function() {
+Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     return decodeURIComponent(this.evaluate(function() {
         return document.location.href;
     }));
@@ -544,7 +544,7 @@ Casper.prototype.getCurrentUrl = function() {
  * @param  String  selector  A CSS3 selector
  * @return Object
  */
-Casper.prototype.getElementBounds = function(selector) {
+Casper.prototype.getElementBounds = function getElementBounds(selector) {
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
@@ -563,7 +563,7 @@ Casper.prototype.getElementBounds = function(selector) {
  * @param  String  name  The name of the global variable to retrieve
  * @return mixed
  */
-Casper.prototype.getGlobal = function(name) {
+Casper.prototype.getGlobal = function getGlobal(name) {
     var result = this.evaluate(function(name) {
         var result = {};
         try {
@@ -589,7 +589,7 @@ Casper.prototype.getGlobal = function(name) {
  *
  * @return String
  */
-Casper.prototype.getTitle = function() {
+Casper.prototype.getTitle = function getTitle() {
     return this.evaluate(function() {
         return document.title;
     });
@@ -603,7 +603,7 @@ Casper.prototype.getTitle = function() {
  * @param  String  space    Space from where the logged event occured (default: "phantom")
  * @return Casper
  */
-Casper.prototype.log = function(message, level, space) {
+Casper.prototype.log = function log(message, level, space) {
     level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
     space = space ? space : "phantom";
     if (level === "error" && utils.isFunction(this.options.onError)) {
@@ -641,7 +641,7 @@ Casper.prototype.log = function(message, level, space) {
  * @deprecated
  * @since 0.6
  */
-Casper.prototype.mouseClick = function(selector) {
+Casper.prototype.mouseClick = function mouseClick(selector) {
     this.emit("deprecated", "The mouseClick() method has been deprecated since 0.6; use click() instead");
     return this.click(selector);
 };
@@ -653,7 +653,7 @@ Casper.prototype.mouseClick = function(selector) {
  * @param  Object  settings  The request settings
  * @return Casper
  */
-Casper.prototype.open = function(location, settings) {
+Casper.prototype.open = function open(location, settings) {
     var self = this;
     // settings validation
     if (!settings) {
@@ -709,7 +709,7 @@ Casper.prototype.open = function(location, settings) {
  * @return Casper
  * @see    Casper#then
  */
-Casper.prototype.repeat = function(times, then) {
+Casper.prototype.repeat = function repeat(times, then) {
     for (var i = 0; i < times; i++) {
         this.then(then);
     }
@@ -723,7 +723,7 @@ Casper.prototype.repeat = function(times, then) {
  *                                       In case a string is passed, url matching will be tested.
  * @return Boolean
  */
-Casper.prototype.resourceExists = function(test) {
+Casper.prototype.resourceExists = function resourceExists(test) {
     var testFn;
     switch (utils.betterTypeOf(test)) {
         case "string":
@@ -752,7 +752,7 @@ Casper.prototype.resourceExists = function(test) {
  * @param  Number    time        an optional amount of milliseconds for interval checking
  * @return Casper
  */
-Casper.prototype.run = function(onComplete, time) {
+Casper.prototype.run = function run(onComplete, time) {
     if (!this.steps || this.steps.length < 1) {
         this.log("No steps defined, aborting", "error");
         return this;
@@ -768,7 +768,7 @@ Casper.prototype.run = function(onComplete, time) {
  *
  * @param  Function  step
  */
-Casper.prototype.runStep = function(step) {
+Casper.prototype.runStep = function runStep(step) {
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true;
     var stepInfo = f("Step %d/%d", this.step, this.steps.length);
     var stepResult;
@@ -817,7 +817,7 @@ Casper.prototype.runStep = function(step) {
  * @param  String   password  The HTTP_AUTH_PW value
  * @return Casper
  */
-Casper.prototype.setHttpAuth = function(username, password) {
+Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
     if (!this.started) {
         throw new CasperError("Casper must be started in order to use the setHttpAuth() method");
     }
@@ -838,7 +838,7 @@ Casper.prototype.setHttpAuth = function(username, password) {
  * @param  function then      Next step function to execute on page loaded (optional)
  * @return Casper
  */
-Casper.prototype.start = function(location, then) {
+Casper.prototype.start = function start(location, then) {
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
@@ -897,7 +897,7 @@ Casper.prototype.start = function(location, then) {
  * @param  function  step  A function to be called as a step
  * @return Casper
  */
-Casper.prototype.then = function(step) {
+Casper.prototype.then = function then(step) {
     if (!this.started) {
         throw new CasperError("Casper not started; please use Casper#start");
     }
@@ -936,7 +936,7 @@ Casper.prototype.then = function(step) {
  * @see    Casper#click
  * @see    Casper#then
  */
-Casper.prototype.thenClick = function(selector, then, fallbackToHref) {
+Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) {
     if (arguments.length > 2) {
         this.emit("deprecated", "The thenClick() method does not process the fallbackToHref argument since 0.6");
     }
@@ -955,7 +955,7 @@ Casper.prototype.thenClick = function(selector, then, fallbackToHref) {
  * @return Casper
  * @see    Casper#evaluate
  */
-Casper.prototype.thenEvaluate = function(fn, context) {
+Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
     return this.then(function() {
         this.evaluate(fn, context);
     });
@@ -969,7 +969,7 @@ Casper.prototype.thenEvaluate = function(fn, context) {
  * @return Casper
  * @see    Casper#open
  */
-Casper.prototype.thenOpen = function(location, then) {
+Casper.prototype.thenOpen = function thenOpen(location, then) {
     this.then(this.createStep(function() {
         this.open(location);
     }, {
@@ -989,7 +989,7 @@ Casper.prototype.thenOpen = function(location, then) {
  * @see    Casper#evaluate
  * @see    Casper#open
  */
-Casper.prototype.thenOpenAndEvaluate = function(location, fn, context) {
+Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn, context) {
     return this.thenOpen(location).thenEvaluate(fn, context);
 };
 
@@ -1000,7 +1000,7 @@ Casper.prototype.thenOpenAndEvaluate = function(location, fn, context) {
  * @param  Number  height  The viewport height, in pixels
  * @return Casper
  */
-Casper.prototype.viewport = function(width, height) {
+Casper.prototype.viewport = function viewport(width, height) {
     if (!this.started) {
         throw new CasperError("Casper must be started in order to set viewport at runtime");
     }
@@ -1023,7 +1023,7 @@ Casper.prototype.viewport = function(width, height) {
  * @param  Function  then     Next step to process (optional)
  * @return Casper
  */
-Casper.prototype.wait = function(timeout, then) {
+Casper.prototype.wait = function wait(timeout, then) {
     timeout = ~~timeout;
     if (timeout < 1) {
         this.die("wait() only accepts a positive integer > 0 as a timeout value");
@@ -1043,12 +1043,12 @@ Casper.prototype.wait = function(timeout, then) {
     });
 };
 
-Casper.prototype.waitStart = function() {
+Casper.prototype.waitStart = function waitStart() {
     this.emit('wait.start');
     this.pendingWait = true;
 };
 
-Casper.prototype.waitDone = function() {
+Casper.prototype.waitDone = function waitDone() {
     this.emit('wait.done');
     this.pendingWait = false;
 };
@@ -1062,7 +1062,7 @@ Casper.prototype.waitDone = function() {
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitFor = function(testFx, then, onTimeout, timeout) {
+Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
     if (!utils.isFunction(testFx)) {
         this.die("waitFor() needs a test function");
@@ -1109,7 +1109,7 @@ Casper.prototype.waitFor = function(testFx, then, onTimeout, timeout) {
  * @param  Number           timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitForResource = function(test, then, onTimeout, timeout) {
+Casper.prototype.waitForResource = function waitForResource(test, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
     return this.waitFor(function(self) {
         return self.resourceExists(test);
@@ -1126,7 +1126,7 @@ Casper.prototype.waitForResource = function(test, then, onTimeout, timeout) {
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitForSelector = function(selector, then, onTimeout, timeout) {
+Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
     return this.waitFor(function(self) {
         return self.exists(selector);
@@ -1143,7 +1143,7 @@ Casper.prototype.waitForSelector = function(selector, then, onTimeout, timeout) 
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitWhileSelector = function(selector, then, onTimeout, timeout) {
+Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
     return this.waitFor(function(self) {
         return !self.exists(selector);
@@ -1160,7 +1160,7 @@ Casper.prototype.waitWhileSelector = function(selector, then, onTimeout, timeout
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitUntilVisible = function(selector, then, onTimeout, timeout) {
+Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
     return this.waitFor(function(self) {
         return self.visible(selector);
@@ -1177,7 +1177,7 @@ Casper.prototype.waitUntilVisible = function(selector, then, onTimeout, timeout)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitWhileVisible = function(selector, then, onTimeout, timeout) {
+Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
     return this.waitFor(function(self) {
         return !self.visible(selector);
