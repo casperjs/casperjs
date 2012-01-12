@@ -1105,7 +1105,8 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
 /**
  * Waits until a given resource is loaded
  *
- * @param  String/Function  test       A function to test if the resource exists. A string will be matched against the resources url.
+ * @param  String/Function  test       A function to test if the resource exists.
+ *                                     A string will be matched against the resources url.
  * @param  Function         then       The next step to perform (optional)
  * @param  Function         onTimeout  A callback function to call on timeout (optional)
  * @param  Number           timeout    The max amount of time to wait, in milliseconds (optional)
