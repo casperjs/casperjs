@@ -21,7 +21,9 @@
 
 var isArray = Array.isArray;
 
-function EventEmitter() { }
+function EventEmitter() {
+  this._filters = {};
+}
 exports.EventEmitter = EventEmitter;
 
 // By default EventEmitters will print a warning if more than
@@ -221,15 +223,18 @@ EventEmitter.prototype.filter = function() {
     this._filters = {};
     return;
   }
+
   var filter = this._filters[type];
   if (typeof filter !== 'function') {
     return;
   }
-  return filter.apply(null, Array.prototype.splice.call(arguments, 1));
+  return filter.apply(this, Array.prototype.splice.call(arguments, 1));
 };
 
 EventEmitter.prototype.setFilter = function(type, filterFn) {
-  if (!this._filters) this._filters = {};
+  if (!this._filters) {
+    this._filters = {};
+  }
   if ('function' !== typeof filterFn) {
     throw new CasperError('setFilter only takes instances of Function');
   }
