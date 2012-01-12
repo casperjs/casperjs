@@ -13,9 +13,8 @@
     <link rel="shortcut icon" href="/casperjs/favicon.ico">
   </head>
   <body>
-    <a href="http://github.com/n1k0/casperjs" class="contribute"> <img src="images/forkme.png"
-        alt="Fork me on GitHub">
-    </a>
+    <a href="http://github.com/n1k0/casperjs" class="contribute">
+      <img src="images/forkme.png" alt="Fork me on GitHub"></a>
     <div class="topbar" data-scrollspy="scrollspy">
       <div class="fill">
         <div class="container"> <a class="brand" href="index.html">CasperJS</a>
@@ -57,7 +56,7 @@
                   syntactic sugar for doing common tasks such as:
                 </p>
                 <ul>
-                  <li>defining &amp; ordering browsing &amp; navigation steps</li>
+                  <li>defining &amp; ordering browsing navigation steps</li>
                   <li>filling &amp; submitting forms</li>
                   <li>clicking &amp; following links</li>
                   <li>capturing screenshots of a page (or part of it)</li>
@@ -65,29 +64,47 @@
                   <li>logging events</li>
                   <li>downloading resources, including binary ones</li>
                   <li>writing functional test suites, saving results as JUnit XML</li>
+                  <li>scraping Web contents</li>
                 </ul>
               </div>
             </div>
             <div class="span5 download">
               <h2>Download</h2>
-              <p>CasperJS latest released version is 0.6.0.</p>
+              <p>
+                CasperJS latest released version is <strong>0.6.0</strong>,<br>
+                see the <a href="https://github.com/n1k0/casperjs/blob/0.6/CHANGELOG.md#files">CHANGELOG</a>.
+              </p>
               <div class="dl-links">
-                <a href="https://github.com/n1k0/casperjs/zipball/0.6.0">
-                  <img src="images/zip.png" border="0" width="90"></a>
-                <a href="https://github.com/n1k0/casperjs/tarball/0.6.0">
-                  <img src="images/tar.png" border="0" width="90"></a>
+                <p>
+                  <a href="https://github.com/n1k0/casperjs/zipball/0.6.0" class="btn success">Download as .zip archive</a>
+                </p>
+                <p>
+                  <a href="https://github.com/n1k0/casperjs/tarball/0.6.0" class="btn success">Download as .tar.gz archive</a>
+                </p>
               </div>
               <p>
                 Or download CasperJS at <a href="http://jspkg.com/packages/casperjs">jspkg.com</a>
               </p>
             </div>
-            <div class="span16">
-              <p> Feel free to browse the <a href="https://github.com/n1k0/casperjs/tree/master/samples">sample
-                  examples repository</a>. Code is <a href="https://github.com/n1k0/casperjs">hosted
-                  on Github</a>, so don't hesitate to fork and send a pull
-                request for any cool example of yours as well! </p>
+          </div>
+          <div class="row">
+            <div class="span6">
+              <h4>Get started</h4>
+              <p>
+                <a href="#installation">Install</a> CasperJS.
+                Read the <a href="#quickstart">quickstart guide</a>.
+                Browse the <a href="https://github.com/n1k0/casperjs/tree/master/samples">sample
+                examples repository</a>.
+                Checkout the <a href="https://github.com/n1k0/casperjs">code at Github</a>.
+                Don't hesitate to fork and send a pull request for any cool example
+                of yours as well!
+              </p>
+              <hr>
               <p>Troubleshooting? Read the <a href="#faq">FAQ</a> or
               <a href="https://github.com/n1k0/casperjs/issues">open an issue</a>.</p>
+            </div>
+            <div class="span10 demo">
+              <p class="center"><img alt="" src="images/demo.png"/></p>
             </div>
           </div>
         </section>
@@ -100,19 +117,17 @@
               installation instructions</a>. Once PhantomJS's installed on your
             machine, you should obtain something like this:</p>
           <pre class="prettyprint"><code class="void">$ phantomjs --version
-1.3.0
+1.4.1
 </code></pre>
           <p>Now just follow these instructions:</p>
           <pre class="prettyprint"><code class="void">$ git clone git://github.com/n1k0/casperjs.git
 $ cd casperjs
 $ git checkout tags/0.6.0
-$ ln -sf `pwd`/casperjs /usr/local/bin/casperjs
+$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
 </code></pre>
-          <p>You should get something like this:</p>
-          <pre class="prettyprint"><code class="void">$ casperjs
-CasperJS version 0.6.0 at /Users/niko/casperjs
-Usage: casperjs script.(js|coffee) [options...]
-Read the docs http://n1k0.github.com/casperjs/
+          <p>So now you should get something like this:</p>
+          <pre class="prettyprint"><code class="void">$ casperjs --version
+0.6.0
 </code></pre>
           <p>You are now ready to write your first script!</p>
           <p>
@@ -251,9 +266,9 @@ casper.run -&gt;
 </code></pre>
               <h3 id="phantom_Casper_options"><code>Casper([Object options])</code></h3>
               <p>
-                Casper constructor and the <code>create()</code> function
-                both accept a single <code>options</code>
-                argument which is a standard javascript object:
+                Both the <code>Casper</code> constructor and the <code>create()</code>
+                function accept a single <code>options</code> argument which is a
+                standard javascript object:
               </p>
               <pre class="prettyprint"><code>var casper = require('casper').create({
     loadImages: false,
@@ -1341,12 +1356,12 @@ casper.on('resource.received', function(resource) {
                   <tr>
                     <td><code>mouse.down</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when the mouse presses something or somewhere with the left button.</td>
+                    <td>Emitted when the mouse presses on something or somewhere with the left button.</td>
                   </tr>
                   <tr>
                     <td><code>mouse.move</code></td>
                     <td><code>args</code></td>
-                    <td>Emitted when the mouse moves over something or somewhere.</td>
+                    <td>Emitted when the mouse moves onto something or somewhere.</td>
                   </tr>
                   <tr>
                     <td><code>mouse.up</code></td>
@@ -1762,6 +1777,12 @@ casper.start('http://www.google.fr/', function() {
                 pattern. </p>
               <pre class="prettyprint"><code class="javascript">casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');
 </code></pre>
+              <h3 id="phantom_Casper_Tester_assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
+              <p>
+                Asserts that the passed subject resolves to <code>false</code>.
+              </p>
+              <pre class="prettyprint"><code class="javascript">casper.test.assertNot(false, "Universe is still operational");
+</code></pre>
               <h3 id="phantom_Casper_Tester_assertRaises"><code>Tester#assertRaises(Function
                   fn, Array args[, String message])</code></h3>
               <p> Asserts that the provided function called with the given
@@ -1874,10 +1895,12 @@ casper.run(function() {
               <h4>The <code>Tester</code> class</h4>
               <ul>
                 <li><a href="#phantom_Casper_Tester_assert"><code>Tester.assert()</code></a></li>
+                <li><a href="#phantom_Casper_Tester_assertEquals"><code>Tester.assertEquals()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertEval"><code>Tester.assertEval()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertEvalEquals"><code>Tester.assertEvalEquals()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertExists"><code>Tester.assertExists()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertMatch"><code>Tester.assertMatch()</code></a></li>
+                <li><a href="#phantom_Casper_Tester_assertNot"><code>Tester.assertNot()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertRaises"><code>Tester.assertRaises()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertSelectorExists"><code>Tester.assertSelectorExists()</code></a></li>
                 <li><a href="#phantom_Casper_Tester_assertResourceExists"><code>Tester.assertResourceExists()</code></a></li>
@@ -1902,8 +1925,18 @@ casper.run(function() {
           </div>
           <div class="row">
             <div class="span12">
-              <p> Casper ships with a <code>Colorizer</code> object which can
-                print stuff to the console output in color: </p>
+              <p>
+                Casper ships with a <code>colorizer</code> module which contains
+                a <code>Colorizer</code> class which can print stuff to the console
+                output in color:
+              </p>
+              <pre class="prettyprint"><code class="javascript">var colorizer = require('colorizer').create();
+console.log(colorizer.colorize("Hello World", "INFO"));
+</code></pre>
+              <p>
+                Though most of the times you will use it transparently using the
+                <a href="#phantom_Casper_echo"><code>Casper.echo()</code></a> method:
+              </p>
               <pre class="prettyprint"><code class="javascript">casper.echo('an informative message', 'INFO'); // printed in green
 casper.echo('an error message', 'ERROR');      // printed in red
 </code></pre>
@@ -1926,8 +1959,8 @@ casper.echo('an error message', 'ERROR');      // printed in red
                   text, String styleName)</code></h3>
               <p> Computes a colored version of the provided text string using a
                 given predefined style. </p>
-              <pre class="prettyprint"><code class="javascript">var colorizer = require('casper').create.Colorizer();
-casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
+              <pre class="prettyprint"><code class="javascript">var colorizer = require('colorizer').create();
+console.log(colorizer.colorize("I'm a red error", "ERROR"));
 </code></pre>
               <p> <span class="label notice">Note</span> Most of the time you
                 won't have to use a <code>Colorizer</code> instance directly as
@@ -1952,7 +1985,8 @@ casper.echo(colorizer.colorize("I'm a red error", 'ERROR'));
                 are <code>black</code>, <code>red</code>, <code>green</code>,
                 <code>yellow</code>, <code>blue</code>, <code>magenta</code>,
                 <code>cyan</code> and <code>white</code>. </p>
-              <pre class="prettyprint"><code class="javascript">require('casper').create.Colorizer().format("We all live in a yellow submarine", {
+              <pre class="prettyprint"><code class="javascript">var colorizer = require('colorizer').create();
+colorizer.format("We all live in a yellow submarine", {
     bg:   'yellow',
     fg:   'blue',
     bold: true
@@ -2022,7 +2056,7 @@ casper.log('and an error', 'error');
 casper.exit();
 </code></pre>
           <p>This will give the following output:</p>
-          <p><img src="images/logoutput.png"></p>
+          <p><img alt="" src="images/logoutput.png"></p>
         </section>
         <section id="extending">
           <div class="page-header">
@@ -2160,11 +2194,7 @@ casper.run(function() {
             following:</p>
           <p><img src="images/testsuitefail.png" alt="capture" title=""></p>
           <hr/>
-          <h3>Exporting results in xUnit format</h3>
-          <p>
-            <span class="label warning">Warning</span> XUnit log export
-            feature is only available for PhantomJS 1.3 and later.
-          </p>
+          <h3>Exporting results in <em>xUnit</em> format</h3>
           <p>
             CasperJS can export the results of the test suite to an xUnit XML
             file, which is compatible with continous integration tools such as <a
@@ -2179,7 +2209,7 @@ casper.run(function() {
           <p>A cooler way is to add an option to your script using CLI argument
             parsing:</p>
           <pre class="prettyprint"><code class="javascript">casper.run(function() {
-    this.test.renderResults(true, 0, casper.cli.options.save || false);
+    this.test.renderResults(true, 0, this.cli.options.save || false);
 });
 </code></pre>
           <p>Then you can run:</p>
@@ -2192,36 +2222,79 @@ casper.run(function() {
             future. To run the test suite, from the root of a checkout of the
             casperjs repository: </p>
           <pre class="prettyprint"><code class="void">$ cd /path/to/casperjs
-$ casperjs tests/run.js</code></pre>
+$ casperjs test tests/suites</code></pre>
           <hr/>
           <h3>Organizing your tests</h3>
-          <p>You can split your tests in several files and directory,
-          <a href="https://github.com/n1k0/casperjs/tree/master/tests/suites">like CasperJS
-          does for itself</a>; if you intend to do so, a single test must be of the
-          following form:</p>
-          <pre class="prettyprint"><code class="javascript">(function(t) {
-    t.comment('my test');
+          <p>
+            Of course writing all your tests in a single file may be painful,
+            so you can split them accross files.
+          </p>
+          <div class="alert-message block-message">
+            <p>
+              <span class="label important">Important</span>
+              There are <strong>two important conditions</strong> for splitting
+              your test suite accross several files:
+            </p>
+            <ol class="bottom">
+              <li>
+                <p>
+                  <strong>Not</strong> to create a new <code>Casper</code> instance
+                  in a split test file;
+                </p>
+              </li>
+              <li>
+                <p>
+                  To call the <code>Tester.done()</code> method when all the tests
+                  contained in a single file have been executed.
+                </p>
+              </li>
+            </ol>
+          </div>
+          <p>
+            Here's a first sample test file:
+          </p>
+          <pre class="prettyprint"><code class="javascript">// file: /path/to/test/dir/test1.js
 
-    casper.start('tests/site/index.html', function() {
-        t.assert(this.exists('a') &amp;&amp; !this.exists('chucknorriz'), 'Casper.exists() can check if an element exists');
-    });
-
-    casper.run(function(step) {
-        t.done();
-    });
-})(casper.test);
+casper.test.comment('My first test file');
+casper.test.assert(true, "true is so true");
+casper.test.done(); // I must be called!
 </code></pre>
-        <p><span class="label notice">Contribute</span>
-        It's very important not to forgot to call the <code>Casper.test.done()</code>
-        method <strong>when the tests have finished</strong>. If you do not, all the
-        tests won't be executed.</p>
-        <p>You can use the provided <code>tests/run.js</code> script to launch your
-        test suite:</p>
-        <pre class="prettyprint"><code class="void">$ ls -l mytestdirectory/
-test1.js
-test2.js
-test3.js
-$ casperjs /path/to/test/run.js mytestdirectory/
+          <p>
+            And a second one:
+          </p>
+          <pre class="prettyprint"><code class="javascript">// file: /path/to/test/dir/test2.js
+
+casper.test.comment('This is my second test file, a bit more async');
+
+casper.start('http://my.location.tld/', function() {
+    this.test.assertNot(false, "false is so false");
+});
+
+casper.run(function() {
+    this.test.done(); // I must be called once all the async stuff has been executed
+});
+</code></pre>
+          <p>
+            <span class="label notice">Hint</span>
+            As you can see, a standard <code>Casper</code> class instance, stored in a
+            <code>casper</code> variable, is already available and exposed to
+            each test file; that's because a configured one's already available
+            as stated previously.
+          </p>
+          <p>
+            The <code>casperjs test</code>
+            command comes handy for running all the tests found at a given location:
+          </p>
+          <pre class="prettyprint"><code>$ casperjs test /path/to/test/dir/
+</code></pre>
+          <p>
+            This is thericatelly what you will get:
+          </p>
+          <p class="center"><img alt="" src="images/split-test-results.png"></p>
+          <p>
+            Last, you can of course run a single test file:
+          </p>
+          <pre class="prettyprint"><code>$ casperjs test /path/to/test/dir/test1.js
 </code></pre>
         </section>
         <section id="faq">
