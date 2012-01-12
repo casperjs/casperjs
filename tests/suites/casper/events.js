@@ -1,4 +1,24 @@
+// events
+
+casper.test.comment("events");
+
+casper.plopped = false;
+
+casper.on("plop", function() {
+    this.plopped = true;
+});
+
+casper.test.assert(Object.keys(casper._events).some(function(i) {
+    return i === "plop";
+}), "on() has set an event handler");
+
+casper.emit("plop");
+
+casper.test.assert(casper.plopped, "emit() emits an event");
+
 // filters
+
+casper.test.comment("filters");
 
 casper.foo = 0;
 casper.setFilter("test", function(a) {
