@@ -19,18 +19,17 @@
       <div class="fill">
         <div class="container"> <a class="brand" href="index.html">CasperJS</a>
           <ul class="nav">
-            <li><a href="#installation">Installation</a></li>
-            <li><a href="#quickstart">Quickstart</a></li>
-            <li><a href="#apidoc">API documentation</a></li>
-            <li><a href="#events-filters">Events</a></li>
-            <li><a href="#client-side-utils">Client-side utils</a></li>
-            <li><a href="#logging">Logging</a></li>
-            <li><a href="#extending">Extending</a></li>
-            <li><a href="#testing">Testing</a></li>
-            <li><a href="#faq"><acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
-            <li><br>
-            </li>
-            <li><a href="#download">Download</a></li>
+            <li><a href="#installation">Install</a>
+            <li><a href="#quickstart">Quickstart</a>
+            <li><a href="#apidoc">API</a>
+            <li><a href="#events-filters">Events</a>
+            <li><a href="#client-side-utils">Client-side utils</a>
+            <li><a href="#logging">Logging</a>
+            <li><a href="#extending">Extending</a>
+            <li><a href="#testing">Testing</a>
+            <li><a href="#faq"><acronym title="Frequently Asked Questions">FAQ</acronym></a>
+            <li><a href="#download">Download</a>
+            <li><a href="https://groups.google.com/forum/#!forum/casperjs">Support</a>
           </ul>
         </div>
       </div>
@@ -2193,7 +2192,7 @@ casper.run(function() {
           <p>In case any assertion fails, you'd rather get something like the
             following:</p>
           <p><img src="images/testsuitefail.png" alt="capture" title=""></p>
-          <hr/>
+          <hr>
           <h3>Exporting results in <em>xUnit</em> format</h3>
           <p>
             CasperJS can export the results of the test suite to an xUnit XML
@@ -2215,7 +2214,7 @@ casper.run(function() {
           <p>Then you can run:</p>
           <pre class="prettyprint"><code class="void">$ casperjs test.js --save=log.xml
 </code></pre>
-          <hr/>
+          <hr>
           <h3>CasperJS tests</h3>
           <p> CasperJS has its own unit and functional test suite, located in
             the <code>tests</code> subfolder. More tests will be added in the
@@ -2223,7 +2222,7 @@ casper.run(function() {
             casperjs repository: </p>
           <pre class="prettyprint"><code class="void">$ cd /path/to/casperjs
 $ casperjs test tests/suites</code></pre>
-          <hr/>
+          <hr>
           <h3>Organizing your tests</h3>
           <p>
             Of course writing all your tests in a single file may be painful,
@@ -2303,12 +2302,18 @@ casper.run(function() {
           </div>
           <div class="row">
             <div class="span9">
+              <h4 id="faq-help">I'm stuck! What can I do?</h4>
+              <p>
+                Your best bet is probably to ask for help on the
+                <a href="https://groups.google.com/forum/#!forum/casperjs">CasperJS discussion group</a>
+              </p>
+              <hr>
               <h4 id="faq-versioning">What is the versioning policy of CasperJS?</h4>
               <p>
                 Releases will follow the <a href="http://semver.org/">SemVer standard</a>;
                 they will be numbered with the follow format:</p>
               <pre><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;[-&lt;identifier&gt;]
-    </code></pre>
+</code></pre>
               <p>
                 And constructed with the following guidelines:
               </p>
@@ -2318,14 +2323,25 @@ casper.run(function() {
                 <li>Bug fixes and misc changes bump the patch
                 <li>Unstable, special and trunk versions will have a proper identifier
               </ul>
-              <hr/>
+              <hr>
+              <h4 id="faq-typeerror">I'm getting <em>TypeError: 'undefined' is not a function</em>; WTF?</h4>
+              <p>
+                Unfortunately PhantomJS ships with a QtWebKit JS engine which would
+                <a href="http://code.google.com/p/phantomjs/issues/detail?id=336">need</a> quite
+                a serious upgrade to have more explicit error messages, stack traces,
+                location, etc.
+              </p>
+              <p>
+                I cannot do much to make the situation really better, unfortunately :/
+              </p>
+              <hr>
               <h4 id="faq-jquery">Can I use <a href="http://jquery.com/">jQuery</a> with CasperJS?</h4>
               <p>Sure, as every single other javascript library on Earth.</p>
               <p> A first solution is to inject it into the remote DOM environement
                 by hand using the standard <code>WebPage.injectJs()</code> method:
               </p>
               <pre class="prettyprint"><code class="javascript">casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');
-    </code></pre>
+</code></pre>
               <p>If you need jQuery being available everytime, you can also make it
                 being injected in every received response by setting the <code>clientScripts</code>
                 option of CasperJS: </p>
@@ -2347,7 +2363,7 @@ var casper = require('casper').create();
 </code></pre>
               <p>You can run such a script like any other standard PhantomJS script:</p>
               <pre class="prettyprint"><code class="void">$ phantomjs casperscript.js
-    </code></pre>
+</code></pre>
               <p><span class="label notice">Tip</span>
               This is especially useful if you work on Windows and don't have a way to
               use the Python-based <code>casperjs</code> executable easily.</p>
@@ -2384,7 +2400,9 @@ casper.run(function() {
             <div class="span7 apitoc">
               <h4>FAQ list</h4>
               <ul>
+                <li><a href="#faq-help">I'm stuck! What can I do?</a>
                 <li><a href="#faq-versioning">What is the versioning policy of CasperJS?</a>
+                <li><a href="#faq-typeerror">I'm getting <em>TypeError: 'undefined' is not a function</em>; WTF?</a>
                 <li><a href="#faq-jquery">Can I use jQuery with CasperJS?</a>
                 <li><a href="#faq-executable">Can I use CasperJS without using the casperjs executable?</a>
                 <li><a href="#faq-httpstatuses">How can I catch HTTP 404 and other status codes?</a>
