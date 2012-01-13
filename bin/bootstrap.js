@@ -34,7 +34,7 @@ phantom.loadCasper = function() {
         major: 0,
         minor: 6,
         patch: 0,
-        ident: 'alpha',
+        ident: undefined,
         toString: function() {
             var version = [this.major, this.minor, this.patch].join('.');
             if (this.ident) {
