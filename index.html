@@ -22,6 +22,7 @@
             <li><a href="#installation">Install</a>
             <li><a href="#quickstart">Quickstart</a>
             <li><a href="#apidoc">API</a>
+            <li><a href="#cli"><acronym title="Command Line Interface">CLI</acronym></a>
             <li><a href="#events-filters">Events</a>
             <li><a href="#client-side-utils">Client-side utils</a>
             <li><a href="#logging">Logging</a>
@@ -94,6 +95,7 @@
                 Read the <a href="#quickstart">quickstart guide</a>.
                 Browse the <a href="https://github.com/n1k0/casperjs/tree/master/samples">sample
                 examples repository</a>.
+                Get <a href="https://groups.google.com/forum/#!forum/casperjs">support</a>.
                 Checkout the <a href="https://github.com/n1k0/casperjs">code at Github</a>.
                 Don't hesitate to fork and send a pull request for any cool example
                 of yours as well!
@@ -1220,9 +1222,126 @@ casper.run();
             </div>
           </div>
         </section>
+        <section id="cli">
+          <div class="page-header">
+            <h1>
+              Command Line Interface
+              <small>positional arguments &amp; options exposed</small>
+            </h1>
+          </div>
+          <div class="row">
+            <div class="span16">
+              <p>
+                CasperJS ships with a builting command line parser on top of
+                PhantomJS' one, located in the <code>cli</code> module; it exposes
+                passed arguments as <strong>positional ones</strong> and
+                <strong>named options</strong>
+              </p>
+              <p>
+                But no worries for manipulating the <code>cli</code> module
+                parsing API, a <code>Casper</code> instance always contains a
+                rady to use <code>cli</code> property, allowing easy access of
+                all these parameters.
+              </p>
+              <p>
+                As an illustrative example, consider this simple casper script:
+              </p>
+              <pre class="prettyprint"><code class="javascript">// cliargs.js
+
+var casper = require("casper").create();
+
+casper.echo("Casper CLI passed args:");
+require("utils").dump(casper.cli.args);
+
+casper.echo("Casper CLI passed options:");
+require("utils").dump(casper.cli.options);
+
+casper.exit();</code></pre>
+              <p>
+                Let's play around a bit with it:
+              </p>
+              <pre class="prettyprint"><code class="void">$ casperjs cliargs.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+Casper CLI passed args:
+[
+    "arg1",
+    "arg2",
+    "arg3",
+    "anotherarg"
+]
+Casper CLI passed options:
+{
+    "casper-path": "/Users/niko/Sites/casperjs",
+    "cli": true,
+    "foo": "bar",
+    "plop": true
+}</code></pre>
+              <p>
+                Should be pretty obvious. You can also access an higher level api to
+                get, check or drop parameters:
+              </p>
+              <pre class="prettyprint"><code class="javascript">// cliargs2.js
+
+var casper = require("casper").create();
+
+casper.echo(casper.cli.has(0));
+casper.echo(casper.cli.get(0));
+casper.echo(casper.cli.has(3));
+casper.echo(casper.cli.get(3));
+casper.echo(casper.cli.has("foo"));
+casper.echo(casper.cli.get("foo"));
+casper.cli.drop("foo");
+casper.echo(casper.cli.has("foo"));
+casper.echo(casper.cli.get("foo"));
+
+casper.exit();
+</code></pre>
+              <p>
+                This is what you'll get:
+              </p>
+              <pre class="prettyprint"><code class="void">$ casperjs cliargs2.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+true
+arg1
+true
+anotherarg
+true
+bar
+false
+undefined</code></pre>
+              <p>
+                Last but not least, you can still use all PhantomJS standard CLI options
+                as you would do with any other phantomjs script. To remeber what they
+                are, just run the <code>casperjs --help</code> command:
+              </p>
+              <pre class="prettyprint"><code class="void">$ casperjs --help
+CasperJS version 0.6.0-alpha at /Users/niko/Sites/casperjs, using PhantomJS version 1.3.0
+
+Usage: casperjs [options] script.[js|coffee] [script argument [script argument ...]]
+       casperjs [options] test [test path [test path ...]]
+
+Options:
+
+--cookies-file=/path/to/cookies.txt    Sets the file name to store the persistent cookies
+--config=/path/to/config               Specifies path to a JSON-formatted config file
+--disk-cache=[yes|no]                  Enables disk cache (at desktop services cache storage location, default is 'no')
+--ignore-ssl-errors=[yes|no]           Ignores SSL errors (i.e. expired or self-signed certificate errors)
+--load-images=[yes|no]                 Loads all inlined images (default is 'yes')
+--load-plugins=[yes|no]                Loads all plugins (i.e. 'Flash', 'Silverlight', ...) (default is 'no')
+--local-to-remote-url-access=[yes|no]  Local content can access remote URL (default is 'no')
+--max-disk-cache-size=size             Limits the size of disk cache (in KB)
+--output-encoding                      Sets the encoding used for terminal output (default is 'utf8')
+--proxy=address:port                   Sets the network proxy (e.g. "--proxy=192.168.1.42:8080")
+--script-encoding                      Sets the encoding used for the starting script (default is 'utf8')
+--version                              Prints out CasperJS version
+</code></pre>
+            </div>
+          </div>
+        </section>
         <section id="events-filters">
           <div class="page-header">
-            <h1>Events &amp; filters</h1>
+            <h1>
+              Events &amp; filters
+              <small>hooking &amp; altering CasperJS environement at runtime</small>
+            </h1>
           </div>
           <div class="row">
             <div class="span16">
