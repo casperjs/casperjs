@@ -18,3 +18,5 @@ Feel free to browse our [sample examples repository](https://github.com/n1k0/cas
 Don't hesitate to pull request for any cool example of yours as well!
 
 **Read the [full documentation](http://n1k0.github.com/casperjs/) on casperjs dedicated website.**
+
+Subscribe to the [project mailing-list](https://groups.google.com/forum/#!forum/casperjs)
