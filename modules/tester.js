@@ -461,7 +461,7 @@ var Tester = function(casper, options) {
             }
         }
         if (exit === true) {
-            casper.exit(status || 0);
+            casper.exit(status || (this.testResults.failed > 0 ? 1 : 0));
         }
     };
 
