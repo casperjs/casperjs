@@ -19,13 +19,13 @@ casper = require('casper').create
         @echo 'NOPE.', 'RED_BAR'
         @exit()
 
-timeout = ~~casper.cli.get(0);
+timeout = ~~casper.cli.get 0
 if timeout < 1
     casper.echo "You must pass a valid timeout value"
     casper.exit()
 
 casper.echo "Will google.com load in less than #{timeout}ms?"
-casper.options.timeout = timeout;
+casper.options.timeout = timeout
 
 casper.start 'http://www.google.com/', ->
     @echo 'YES!', 'GREEN_BAR'
