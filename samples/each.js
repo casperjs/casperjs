@@ -12,6 +12,4 @@ casper.start().each(links, function(self, link) {
     });
 });
 
-casper.run(function(self) {
-    self.exit();
-});
+casper.run();

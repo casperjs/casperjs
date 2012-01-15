@@ -1,4 +1,4 @@
-# download the google logo image as base64
+### download the google logo image as base64 ###
 
 casper = require('casper').create verbose: true
 
