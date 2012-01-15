@@ -433,6 +433,7 @@ var Tester = function(casper, options) {
     this.renderResults = function renderResults(exit, status, save) {
         save = utils.isString(save) ? save : this.options.save;
         var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
+        var exitStatus = ~~(status || (this.testResults.failed > 0 ? 1 : 0));
         if (total === 0) {
             statusText = this.options.failText;
             style = 'RED_BAR';
@@ -461,7 +462,8 @@ var Tester = function(casper, options) {
             }
         }
         if (exit === true) {
-            casper.exit(status || (this.testResults.failed > 0 ? 1 : 0));
+            console.log('exiting with status: ' + exitStatus);
+            casper.exit(~~exitStatus);
         }
     };
 
@@ -494,7 +496,7 @@ var Tester = function(casper, options) {
                 return;
             }
             if (current === testFiles.length) {
-                self.renderResults(true);
+                self.emit('tests.complete');
                 clearInterval(interval);
             } else {
                 self.runTest(testFiles[current]);

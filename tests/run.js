@@ -29,4 +29,8 @@ if (casper.cli.args.length) {
     casper.exit(1);
 }
 
+casper.test.on('tests.complete', function() {
+    this.renderResults(true);
+});
+
 casper.test.runSuites.apply(casper.test, tests);
