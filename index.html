@@ -1612,13 +1612,13 @@ casper.on('resource.received', function(resource) {
               <pre class="prettyprint"><code class="javascript">var casper = require('casper').create();
 
 // listening to a custom event
-casper.on('google.loaded', function(title) {
-    casper.echo('Google page title is ' + title);
+casper.on('google.loaded', function() {
+    this.echo('Google page title is ' + this.getTitle());
 });
 
 casper.start('http://google.com/', function() {
     // emitting a custom event
-    this.emit('google.loaded', this.getTitle());
+    this.emit('google.loaded');
 });
 
 casper.run();
