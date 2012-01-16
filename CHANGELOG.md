@@ -1,6 +1,18 @@
 CasperJS Changelog
 ==================
 
+2012-01-16, v0.6.1
+------------------
+
+- restablished js-emulated click simulation first, then native QtWebKit
+  events as a fallback; some real world testing have surprinsingly proven the former being often
+  more efficient than the latter
+- fixed casperjs executable could not handle a `PHANTOMJS_EXECUTABLE` containing spaces
+- fixed casper could not be used without the executable [as documented](http://n1k0.github.com/casperjs/#faq-executable)
+- fixed wrong `debug` log level on `ClientUtils.click()` error; set to `error`
+
+Please check the [updated documentation](http://n1k0.github.com/casperjs).
+
 2012-01-12, v0.6.0
 ------------------
 
