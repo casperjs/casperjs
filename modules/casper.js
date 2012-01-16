@@ -177,6 +177,7 @@ Casper.prototype.capture = function capture(targetFile, clipRect) {
     if (!this.page.render(this.filter('capture.target_filename', targetFile) || targetFile)) {
         this.log(f("Failed to save screenshot to %s; please check permissions", targetFile), "error");
     } else {
+        this.log(f("Capture saved to %s", targetFile), "info");
         this.emit('capture.saved', targetFile);
     }
     if (previousClipRect) {
@@ -242,11 +243,20 @@ Casper.prototype.click = function click(selector, fallbackToHref) {
     if (arguments.length > 1) {
         this.emit("deprecated", "The click() method does not process the fallbackToHref argument since 0.6");
     }
-    try {
-        this.mouse.click(selector);
-    } catch (e) {
-        this.log(f("Error while trying to click on selector %s: %s", selector, e));
-        return false;
+    if (!this.exists(selector)) {
+        throw new CasperError("Cannot click on unexistent selector: " + selector);
+    }
+    var clicked = this.evaluate(function(selector) {
+        __utils__.click(selector);
+    }, { selector: selector });
+    if (!clicked) {
+        // fallback onto native QtWebKit mouse events
+        try {
+            this.mouse.click(selector);
+        } catch (e) {
+            this.log(f("Error while trying to click on selector %s: %s", selector, e));
+            return false;
+        }
     }
     return true;
 };
