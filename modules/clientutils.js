@@ -59,7 +59,7 @@
             fallbackToHref = typeof fallbackToHref === "undefined" ? true : !!fallbackToHref;
             var elem = this.findOne(selector);
             if (!elem) {
-                this.log("click(): Couldn't find any element matching '" + selector + "' selector");
+                this.log("click(): Couldn't find any element matching '" + selector + "' selector", "error");
                 return false;
             }
             var evt = document.createEvent("MouseEvents");
