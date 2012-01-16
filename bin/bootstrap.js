@@ -263,6 +263,47 @@ phantom.loadCasper = function() {
     phantom.casperLoaded = true;
 };
 
+phantom.initCasperCli = function() {
+    var fs = require("fs");
+
+    if (!!phantom.casperArgs.options.version) {
+        console.log(phantom.casperVersion.toString());
+        phantom.exit(0);
+    } else if (phantom.casperArgs.get(0) === "test") {
+        phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
+        phantom.casperArgs.drop("test");
+    } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+        var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
+        var f = require("utils").format;
+        console.log(f('CasperJS version %s at %s, using PhantomJS version %s',
+                    phantom.casperVersion.toString(),
+                    phantom.casperPath, phantomVersion));
+        console.log(fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt')));
+        phantom.exit(0);
+    }
+
+
+    if (!phantom.casperScript) {
+        phantom.casperScript = phantom.casperArgs.get(0);
+    }
+
+    if (!fs.isFile(phantom.casperScript)) {
+        console.error('Unable to open file: ' + phantom.casperScript);
+        phantom.exit(1);
+    }
+
+
+    // filter out the called script name from casper args
+    phantom.casperArgs.drop(phantom.casperScript);
+
+    // passed casperjs script execution
+    try {
+        new Function(phantom.getScriptCode(phantom.casperScript))();
+    } catch (e) {
+        phantom.processScriptError(e, phantom.casperScript);
+    }
+};
+
 if (!phantom.casperLoaded) {
     try {
         phantom.loadCasper();
@@ -272,39 +313,6 @@ if (!phantom.casperLoaded) {
     }
 }
 
-var fs = require("fs");
-
-if (!!phantom.casperArgs.options.version) {
-    console.log(phantom.casperVersion.toString());
-    phantom.exit(0);
-} else if (phantom.casperArgs.get(0) === "test") {
-    phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
-    phantom.casperArgs.drop("test");
-} else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
-    var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
-    var f = require("utils").format;
-    console.log(f('CasperJS version %s at %s, using PhantomJS version %s',
-                phantom.casperVersion.toString(),
-                phantom.casperPath, phantomVersion));
-    console.log(fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt')));
-    phantom.exit(0);
-}
-
-if (!phantom.casperScript) {
-    phantom.casperScript = phantom.casperArgs.get(0);
-}
-
-if (!fs.isFile(phantom.casperScript)) {
-    console.error('Unable to open file: ' + phantom.casperScript);
-    phantom.exit(1);
-}
-
-// filter out the called script name from casper args
-phantom.casperArgs.drop(phantom.casperScript);
-
-// passed casperjs script execution
-try {
-    new Function(phantom.getScriptCode(phantom.casperScript))();
-} catch (e) {
-    phantom.processScriptError(e, phantom.casperScript);
+if (true === phantom.casperArgs.get('cli')) {
+    phantom.initCasperCli();
 }
