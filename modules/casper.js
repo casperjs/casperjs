@@ -1089,14 +1089,13 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
                     } else {
                         self.die(f("Timeout of %dms expired, exiting.", timeout), "error");
                     }
-                    clearInterval(interval);
                 } else {
                     self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
                     if (then) {
                         self.then(then);
                     }
-                    clearInterval(interval);
                 }
+                clearInterval(interval);
             }
         }, 100, this, testFx, timeout, onTimeout);
     });
