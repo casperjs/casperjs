@@ -247,14 +247,14 @@ Casper.prototype.click = function click(selector, fallbackToHref) {
         throw new CasperError("Cannot click on unexistent selector: " + selector);
     }
     var clicked = this.evaluate(function(selector) {
-        __utils__.click(selector);
+        return __utils__.click(selector);
     }, { selector: selector });
     if (!clicked) {
         // fallback onto native QtWebKit mouse events
         try {
             this.mouse.click(selector);
         } catch (e) {
-            this.log(f("Error while trying to click on selector %s: %s", selector, e));
+            this.log(f("Error while trying to click on selector %s: %s", selector, e), "error");
             return false;
         }
     }

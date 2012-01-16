@@ -33,10 +33,9 @@ casper.then(function() {
     this.options.onAlert = function(self, message) {
         self.test.assertEquals(message, 'plop', 'Casper.options.onAlert() can intercept an alert message');
     };
-}).thenOpen('tests/site/alert.html').thenClick('button', function() {
-    this.options.onAlert = null;
 });
 
 casper.run(function() {
+    this.options.onAlert = null;
     this.test.done();
 });
