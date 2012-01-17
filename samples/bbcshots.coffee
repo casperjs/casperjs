@@ -5,14 +5,18 @@ nbLinks = 0
 currentLink = 1
 images = []
 
+casper.hide = (selector) ->
+    @evaluate (selector) ->
+        document.querySelector(selector).style.display = "none"
+    , selector: selector
+
 casper.start 'http://www.bbc.co.uk/', ->
     nbLinks = @evaluate ->
         return __utils__.findAll('#carousel_items_items li').length
     @echo "#{nbLinks} items founds"
     # hide navigation arrows
-    @evaluate ->
-        document.querySelector('.nav_left').style.display = "none"
-        document.querySelector('.nav_right').style.display = "none"
+    @hide '.nav_left'
+    @hide '.nav_right'
     @mouse.move '#promo_carousel'
     @waitUntilVisible '.autoplay.nav_pause', ->
         @echo 'Moving over pause button'
@@ -22,8 +26,7 @@ casper.start 'http://www.bbc.co.uk/', ->
         @waitUntilVisible '.autoplay.nav_play', ->
             @echo 'Carousel has been paused'
             # hide play button
-            @evaluate ->
-                document.querySelector('.autoplay').style.display = "none"
+            @hide '.autoplay'
 
 # Building resulting page and image
 buildPage = ->
