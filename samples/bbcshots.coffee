@@ -33,8 +33,8 @@ buildPage = ->
     @echo 'Build result page'
     fs = require 'fs'
     @viewport 624, 400
-    pageHtml = "<html bgcolor=black><body>"
-    images.forEach (image) ->
+    pageHtml = "<html><body style='background:black;margin:0;padding:0'>"
+    for image in images
         pageHtml += "<img src='file://#{fs.workingDirectory}/#{image}'><br>"
     pageHtml += "</body></html>"
     fs.write 'result.html', pageHtml, 'w'

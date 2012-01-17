@@ -58,7 +58,7 @@ var buildPage = function() {
     this.echo('Build result page');
     var fs = require('fs');
     this.viewport(624, 400);
-    var pageHtml = "<html bgcolor=black><body>";
+    var pageHtml = "<html><body style='background:black;margin:0;padding:0'>";
     images.forEach(function(image) {
         pageHtml += '<img src="file://' + fs.workingDirectory + '/' + image + '"><br>';
     });
