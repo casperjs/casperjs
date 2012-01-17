@@ -27,7 +27,7 @@ casper.start 'http://www.bbc.co.uk/', ->
 
 # Building resulting page and image
 buildPage = ->
-    this.echo 'Build result page'
+    @echo 'Build result page'
     fs = require 'fs'
     @viewport 624, 400
     pageHtml = "<html bgcolor=black><body>"
@@ -36,8 +36,8 @@ buildPage = ->
     pageHtml += "</body></html>"
     fs.write 'result.html', pageHtml, 'w'
     @thenOpen "file://#{fs.workingDirectory}/result.html", ->
-        this.echo 'Resulting image saved to result.png'
-        this.capture 'result.png'
+        @echo 'Resulting image saved to result.png'
+        @capture 'result.png'
 
 # Capture carrousel area
 next = ->
@@ -48,10 +48,10 @@ next = ->
     if currentLink < nbLinks
         @click ".carousel_itemList_li[rel='#{currentLink}']"
         @wait 1000, ->
-            this.then next
+            @then next
             currentLink++
     else
-        this.then buildPage
+        @then buildPage
 
 casper.then next
 
