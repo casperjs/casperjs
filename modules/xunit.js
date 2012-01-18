@@ -31,16 +31,15 @@
 var utils = require('utils');
 var fs = require('fs');
 
-exports.create = function(casper) {
-    return new XUnitExporter(casper);
+exports.create = function() {
+    return new XUnitExporter();
 };
 
 /**
  * JUnit XML (xUnit) exporter for test results.
  *
  */
-XUnitExporter = function(casper) {
-    this._casper = casper
+XUnitExporter = function() {
     this._xml = utils.node('testsuite');
     this._xml.toString = function() {
         return this.outerHTML; // ouch
@@ -49,29 +48,29 @@ XUnitExporter = function(casper) {
 exports.XUnitExporter = XUnitExporter;
 
 /**
- * Adds a successful test result
+ * Adds a successful test result.
  *
  * @param  String  classname
  * @param  String  name
  */
-XUnitExporter.prototype.addSuccess = function(name) {
+XUnitExporter.prototype.addSuccess = function(classname, name) {
     this._xml.appendChild(utils.node('testcase', {
-        classname: generateClassName(this._casper),
+        classname: generateClassName(classname),
         name:      name
     }));
 };
 
 /**
- * Adds a failed test result
+ * Adds a failed test result.
  *
  * @param  String  classname
  * @param  String  name
  * @param  String  message
  * @param  String  type
  */
-XUnitExporter.prototype.addFailure = function(name, message, type) {
+XUnitExporter.prototype.addFailure = function(classname, name, message, type) {
     var fnode = utils.node('testcase', {
-        classname: generateClassName(this._casper),
+        classname: generateClassName(classname),
         name:      name
     });
     var failure = utils.node('failure', {
@@ -83,20 +82,21 @@ XUnitExporter.prototype.addFailure = function(name, message, type) {
 };
 
 /**
- * Generates a value for 'classname' attribute of the JUnit XML report
+ * Generates a value for 'classname' attribute of the JUnit XML report.
  *
  * Uses the (relative) file name of the current casper script without file
  * extension as classname.
  *
- * @params Casper
+ * @param  String  classname
  * @return String
  */
-function generateClassName(casper) {
-  var script = casper.test.currentTestFile || phantom.casperScript || "unknown";
-  if (script.indexOf(fs.workingDirectory) === 0) {
-    script = script.substring(fs.workingDirectory.length + 1);
-  }
-  return script.substring(0, script.lastIndexOf('.'));
+function generateClassName(classname) {
+    var script = classname || phantom.casperScript;
+    if (script.indexOf(fs.workingDirectory) === 0) {
+        script = script.substring(fs.workingDirectory.length + 1);
+        return script.substring(0, script.lastIndexOf('.'));
+    }
+    return classname;
 }
 
 /**
