@@ -47,7 +47,7 @@ var Tester = function(casper, options) {
     }
 
     this.currentTestFile = null;
-    this.exporter = require('xunit').create();
+    this.exporter = require('xunit').create(casper);
     this.running = false;
     this.suites = [];
     this.options = utils.mergeObjects({
@@ -86,13 +86,13 @@ var Tester = function(casper, options) {
             eventName = 'success';
             style = 'INFO';
             this.testResults.passed++;
-            this.exporter.addSuccess("unknown", message);
+            this.exporter.addSuccess(message);
         } else {
             eventName = 'fail';
             status = this.options.failText;
             style = 'RED_BAR';
             this.testResults.failed++;
-            this.exporter.addFailure("unknown", message, 'test failed', "assert");
+            this.exporter.addFailure(message, 'test failed', "assert");
         }
         this.emit(eventName, {
             message: message,
@@ -114,14 +114,14 @@ var Tester = function(casper, options) {
             eventName = "success";
             casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
             this.testResults.passed++;
-            this.exporter.addSuccess("unknown", message);
+            this.exporter.addSuccess(message);
         } else {
             eventName = "fail";
             casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
             this.comment('   got:      ' + utils.serialize(testValue));
             this.comment('   expected: ' + utils.serialize(expected));
             this.testResults.failed++;
-            this.exporter.addFailure("unknown", message, f("test failed; expected: %s; got: %s", expected, testValue), "assertEquals");
+            this.exporter.addFailure(message, f("test failed; expected: %s; got: %s", expected, testValue), "assertEquals");
         }
         this.emit(eventName, {
             message: message,
@@ -175,14 +175,14 @@ var Tester = function(casper, options) {
             eventName = "success";
             casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
             this.testResults.passed++;
-            this.exporter.addSuccess("unknown", message);
+            this.exporter.addSuccess(message);
         } else {
             eventName = "fail";
             casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
             this.comment('   subject: ' + subject);
             this.comment('   pattern: ' + pattern.toString());
             this.testResults.failed++;
-            this.exporter.addFailure("unknown", message, f("test failed; subject: %s; pattern: %s", subject, pattern.toString()), "assertMatch");
+            this.exporter.addFailure(message, f("test failed; subject: %s; pattern: %s", subject, pattern.toString()), "assertMatch");
         }
         this.emit(eventName, {
             message: message,
