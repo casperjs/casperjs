@@ -54,7 +54,7 @@ phantom.loadCasper = function() {
         }
         if (!fs.hasOwnProperty('dirname')) {
             fs.dirname = function(path) {
-                return path.replace(/\/[^\/]*\/?$/, '');
+                return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
             };
         }
         if (!fs.hasOwnProperty('pathJoin')) {
@@ -151,7 +151,7 @@ phantom.loadCasper = function() {
         }
         // trick to locate source file location on error
         scriptCode += ";var __fe__ = new CasperError('__sourceId__')";
-        scriptCode += ";__fe__.fileName = '" + file + "'";
+        scriptCode += ";__fe__.fileName = '" + file.replace(/\\+/g, '/') + "'";
         scriptCode += ";throw __fe__;";
         return scriptCode;
     };
@@ -211,7 +211,7 @@ phantom.loadCasper = function() {
                 paths.push(path);
             } else {
                 dir = fs.absolute(requireDir);
-                while (dir !== '') {
+                while (dir !== '' && dir.lastIndexOf(':') !== dir.length - 1) {
                     // nodejs compatibility
                     paths.push(fs.pathJoin(dir, 'node_modules', path));
                     dir = fs.dirname(dir);
