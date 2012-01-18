@@ -776,7 +776,7 @@ casper.run(function() {
                 the url will be url-decoded. </p>
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function() {
-    this.log(this.getCurrentUrl()); // "http://www.google.fr/"
+    this.echo(this.getCurrentUrl()); // "http://www.google.fr/"
 });
 
 casper.run();
@@ -787,7 +787,7 @@ casper.run();
                 environment by its name.</p>
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function() {
-    this.log(this.getGlobal('innerWidth')); // 1024
+    this.echo(this.getGlobal('innerWidth')); // 1024
 });
 
 casper.run();
@@ -796,7 +796,7 @@ casper.run();
               <p>Retrieves current page title.</p>
               <p><strong>Example:</strong></p>
               <pre class="prettyprint"><code class="javascript">casper.start('http://www.google.fr/', function() {
-    this.log(this.getTitle()); // "Google"
+    this.echo(this.getTitle()); // "Google"
 });
 
 casper.run();
@@ -1111,7 +1111,7 @@ casper.run();
     }, function() {
         this.captureSelector('yoursitelist.png', 'ul.your-list');
     }, function() {
-        this.log("I can't haz my screenshot.").exit();
+        this.echo("I can't haz my screenshot.").exit();
     });
 });
 
@@ -2315,8 +2315,8 @@ casper.run(function() {
           <h3>Exporting results in <em>xUnit</em> format</h3>
           <p>
             CasperJS can export the results of the test suite to an xUnit XML
-            file, which is compatible with continous integration tools such as <a
-              href="http://jenkins-ci.org/">Jenkins</a>.
+            file, which is compatible with continous integration tools such as
+            <a href="http://jenkins-ci.org/">Jenkins</a>.
             To save the xUnit log of your test suite to a <code>log.xml</code>
             file, you can process this way:
           </p>
@@ -2324,8 +2324,10 @@ casper.run(function() {
     this.test.renderResults(true, 0, 'log.xml');
 });
 </code></pre>
-          <p>A cooler way is to add an option to your script using CLI argument
-            parsing:</p>
+          <p>
+            A cooler way is to add an option to your script using CLI argument
+            parsing:
+          </p>
           <pre class="prettyprint"><code class="javascript">casper.run(function() {
     this.test.renderResults(true, 0, this.cli.options.save || false);
 });
@@ -2335,10 +2337,12 @@ casper.run(function() {
 </code></pre>
           <hr>
           <h3>CasperJS tests</h3>
-          <p> CasperJS has its own unit and functional test suite, located in
+          <p>
+            CasperJS has its own unit and functional test suite, located in
             the <code>tests</code> subfolder. More tests will be added in the
             future. To run the test suite, from the root of a checkout of the
-            casperjs repository: </p>
+            casperjs repository:
+          </p>
           <pre class="prettyprint"><code class="void">$ cd /path/to/casperjs
 $ casperjs test tests/suites</code></pre>
           <hr>
