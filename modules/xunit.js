@@ -96,7 +96,7 @@ function generateClassName(classname) {
         script = script.substring(fs.workingDirectory.length + 1);
         return script.substring(0, script.lastIndexOf('.'));
     }
-    return classname;
+    return classname || "unknown";
 }
 
 /**

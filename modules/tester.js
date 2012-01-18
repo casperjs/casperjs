@@ -70,11 +70,11 @@ var Tester = function(casper, options) {
     });
 
     this.on('success', function(success) {
-        this.exporter.addSuccess(success.file, success.message);
+        this.exporter.addSuccess(fs.absolute(success.file), success.message);
     });
 
     this.on('fail', function(failure) {
-        this.exporter.addFailure(failure.file, failure.message, failure.details || "test failed", failure.type || "unknown");
+        this.exporter.addFailure(fs.absolute(failure.file), failure.message, failure.details || "test failed", failure.type || "unknown");
         this.testResults.failures.push(failure);
     });
 
