@@ -17,7 +17,8 @@ CASPER_ARGS.extend([os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casper-
 CASPER_ARGS.extend(sys.argv[1:])
 
 try:
-    subprocess.call(CASPER_ARGS)
+    status = subprocess.call(CASPER_ARGS)
 except KeyboardInterrupt:
     print '\nCasperJS interrupted, exiting.'
-    sys.exit()
+    status = 0
+sys.exit(status)

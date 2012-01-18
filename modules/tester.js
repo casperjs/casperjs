@@ -467,7 +467,6 @@ var Tester = function(casper, options) {
             }
         }
         if (exit === true) {
-            console.log('exiting with status: ' + exitStatus);
             casper.exit(exitStatus);
         }
     };
