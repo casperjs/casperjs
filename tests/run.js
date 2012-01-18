@@ -30,7 +30,7 @@ if (casper.cli.args.length) {
 }
 
 casper.test.on('tests.complete', function() {
-    this.renderResults(true);
+    this.renderResults(true, undefined, casper.cli.get('xunit') || undefined);
 });
 
 casper.test.runSuites.apply(casper.test, tests);
