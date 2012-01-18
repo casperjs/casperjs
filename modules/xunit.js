@@ -29,16 +29,18 @@
  */
 
 var utils = require('utils');
+var fs = require('fs');
 
-exports.create = function() {
-    return new XUnitExporter();
+exports.create = function(casper) {
+    return new XUnitExporter(casper);
 };
 
 /**
  * JUnit XML (xUnit) exporter for test results.
  *
  */
-XUnitExporter = function() {
+XUnitExporter = function(casper) {
+    this._casper = casper
     this._xml = utils.node('testsuite');
     this._xml.toString = function() {
         return this.outerHTML; // ouch
@@ -52,9 +54,9 @@ exports.XUnitExporter = XUnitExporter;
  * @param  String  classname
  * @param  String  name
  */
-XUnitExporter.prototype.addSuccess = function(classname, name) {
+XUnitExporter.prototype.addSuccess = function(name) {
     this._xml.appendChild(utils.node('testcase', {
-        classname: classname,
+        classname: generateClassName(this._casper),
         name:      name
     }));
 };
@@ -67,9 +69,9 @@ XUnitExporter.prototype.addSuccess = function(classname, name) {
  * @param  String  message
  * @param  String  type
  */
-XUnitExporter.prototype.addFailure = function(classname, name, message, type) {
+XUnitExporter.prototype.addFailure = function(name, message, type) {
     var fnode = utils.node('testcase', {
-        classname: classname,
+        classname: generateClassName(this._casper),
         name:      name
     });
     var failure = utils.node('failure', {
@@ -79,6 +81,23 @@ XUnitExporter.prototype.addFailure = function(classname, name, message, type) {
     fnode.appendChild(failure);
     this._xml.appendChild(fnode);
 };
+
+/**
+ * Generates a value for 'classname' attribute of the JUnit XML report
+ *
+ * Uses the (relative) file name of the current casper script without file
+ * extension as classname.
+ *
+ * @params Casper
+ * @return String
+ */
+function generateClassName(casper) {
+  var script = casper.test.currentTestFile || phantom.casperScript || "unknown";
+  if (script.indexOf(fs.workingDirectory) === 0) {
+    script = script.substring(fs.workingDirectory.length + 1);
+  }
+  return script.substring(0, script.lastIndexOf('.'));
+}
 
 /**
  * Retrieves generated XML object - actually an HTMLElement.
