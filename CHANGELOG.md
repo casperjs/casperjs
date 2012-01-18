@@ -1,6 +1,15 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.6.2
+------------------
+
+- fixes #43 - Exit status not reported back to caller
+- closes #42 - Use file name of test script as 'classname' in JUnit XML report (@mpeltonen)
+- added `--xunit=<filename>` cli option to `$ casperjs test` command for saving xunit results, eg.:
+      $ casperjs test tests/suites --xunit=build-result.xml
+
+
 2012-01-16, v0.6.1
 ------------------
 
