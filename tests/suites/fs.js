@@ -18,4 +18,19 @@ var fs = require('fs'), t = casper.test;
     }
 })();
 
+(function() {
+    t.comment('fs.dirname()');
+    var tests = {
+        '/':                       false,
+        '/local/plop/foo.js':      false,
+        'D:\\local\\plop\\':       true,
+        'c:\\':                    true,
+        'c:':                      true,
+        '\\\\Server\\Plop':        true
+    };
+    for (var testCase in tests) {
+        t.assertEquals(fs.isWindows(testCase), tests[testCase], 'fs.isWindows() does its job for ' + testCase);
+    }
+})();
+
 t.done();

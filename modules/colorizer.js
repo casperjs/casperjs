@@ -28,6 +28,9 @@
  *
  */
 
+var fs = require('fs');
+var utils = require('utils');
+
 exports.create = function create() {
     return new Colorizer();
 };
@@ -62,10 +65,10 @@ var Colorizer = function() {
      * @return  String
      */
     this.colorize = function colorize(text, styleName, pad) {
-        if (styleName in styles) {
-            return this.format(text, styles[styleName], pad);
+        if (fs.isWindows() || !(styleName in styles)) {
+            return text;
         }
-        return text;
+        return this.format(text, styles[styleName], pad);
     };
 
     /**
@@ -76,7 +79,7 @@ var Colorizer = function() {
      * @return String
      */
     this.format = function format(text, style, pad) {
-        if (typeof style !== "object") {
+        if (fs.isWindows() || !utils.isObject(style)) {
             return text;
         }
         var codes = [];

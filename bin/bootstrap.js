@@ -57,6 +57,12 @@ phantom.loadCasper = function() {
                 return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
             };
         }
+        if (!fs.hasOwnProperty('isWindows')) {
+            fs.isWindows = function() {
+                var testPath = arguments[0] || this.workingDirectory;
+                return (/^[a-z]{1,2}:/i).test(testPath) || testPath.indexOf("\\\\") === 0;
+            };
+        }
         if (!fs.hasOwnProperty('pathJoin')) {
             fs.pathJoin = function() {
                 return Array.prototype.join.call(arguments, this.separator);
