@@ -1,11 +1,14 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.6.2
+2012-01-19, v0.6.2
 ------------------
 
-- fixes #43 - Exit status not reported back to caller
-- closes #42 - Use file name of test script as 'classname' in JUnit XML report (@mpeltonen)
+- fixed [#41](https://github.com/n1k0/casperjs/issues/41) - injecting casperjs lib crashes `cmd.exe` on Windows 7
+- fixed [#42](https://github.com/n1k0/casperjs/issues/42) - Use file name of test script as 'classname' in JUnit XML report (@mpeltonen)
+- fixed [#43](https://github.com/n1k0/casperjs/issues/43) - Exit status not reported back to caller
+- suppressed colorized output syntax for windows; was making output hard to read
+- added patchy `fs.isWindows()` method
 - added `--xunit=<filename>` cli option to `$ casperjs test` command for saving xunit results, eg.:
 
       $ casperjs test tests/suites --xunit=build-result.xml
