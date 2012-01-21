@@ -2329,7 +2329,7 @@ casper.run(function() {
             parsing:
           </p>
           <pre class="prettyprint"><code class="javascript">casper.run(function() {
-    this.test.renderResults(true, 0, this.cli.options.save || false);
+    this.test.renderResults(true, 0, this.cli.get('save') || false);
 });
 </code></pre>
           <p>Then you can run:</p>
@@ -2418,6 +2418,19 @@ casper.run(function() {
           </p>
           <pre class="prettyprint"><code>$ casperjs test /path/to/test/dir/test1.js
 </code></pre>
+          <hr>
+          <h3>Extending Casper for Testing</h3>
+          <p>
+            The <code>$ casper test [path]</code> command is just a shortcut for
+            <code>$ casper /path/to/casperjs/tests/run.js [path]</code>; so if you
+            want to extend Casper capabilities for your tests, your best bet is to
+            write your own runner and extend the casper object instance from there.
+          </p>
+          <p>
+            <span class="label notice">Hint</span>
+            You can find the default runner code in
+            <a href="https://github.com/n1k0/casperjs/blob/master/tests/run.js"><code>./tests/run.js</code></a>.
+          </p>
         </section>
         <section id="faq">
           <div class="page-header">
