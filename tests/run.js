@@ -13,7 +13,7 @@ var casper = require('casper').create({
 // Overriding Casper.open to prefix all test urls
 casper.setFilter('open.location', function(location) {
     if (!/^http/.test(location)) {
-        return 'file://' + phantom.casperPath + '/' + location;
+        return f('file://%s/%s', phantom.casperPath, location);
     }
     return location;
 });
