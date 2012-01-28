@@ -160,11 +160,21 @@ var Tester = function(casper, options) {
      * Asserts that an element matching the provided CSS3 selector exists in
      * remote DOM.
      *
-     * @param  String   selector   CSS3 selectore
+     * @param  String   selector   CSS3 selector
      * @param  String   message    Test description
      */
     this.assertExists = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message);
+    };
+
+    /**
+     * Asserts that current HTTP status is the one passed as argument.
+     *
+     * @param  Number  status   HTTP status code
+     * @param  String  message  Test description
+     */
+    this.assertHttpStatus = function assertHttpStatus(status, message) {
+        return this.assertEquals(casper.currentHTTPStatus, status, message || f("HTTP status code is %d", status));
     };
 
     /**
