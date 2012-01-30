@@ -1306,6 +1306,7 @@ function createPage(casper) {
                 casper.options.httpStatusHandlers[resource.status].call(casper, casper, resource);
             }
             casper.currentUrl = resource.url;
+            casper.emit('location.changed', resource.url);
         }
     };
     page.onResourceRequested = function(request) {
