@@ -91,12 +91,18 @@ XUnitExporter.prototype.addFailure = function(classname, name, message, type) {
  * @return String
  */
 function generateClassName(classname) {
+    classname = classname.replace(phantom.casperPath, "").trim();
     var script = classname || phantom.casperScript;
     if (script.indexOf(fs.workingDirectory) === 0) {
         script = script.substring(fs.workingDirectory.length + 1);
-        return script.substring(0, script.lastIndexOf('.'));
     }
-    return classname || "unknown";
+    if (script.indexOf('/') === 0) {
+        script = script.substring(1, script.length);
+    }
+    if (~script.indexOf('.')) {
+        script = script.substring(0, script.lastIndexOf('.'));
+    }
+    return script || "unknown";
 }
 
 /**
