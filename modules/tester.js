@@ -80,14 +80,14 @@ var Tester = function(casper, options) {
 
     // methods
     /**
-     * Asserts a condition resolves to true.
+     * Asserts that a condition strictly resolves to true.
      *
-     * @param  Boolean  condition
-     * @param  String   message    Test description
+     * @param  Boolean  subject
+     * @param  String   message  Test description
      */
-    this.assert = function assert(condition, message) {
+    this.assert = function assert(subject, message) {
         var status = this.options.passText, eventName;
-        if (condition === true) {
+        if (subject === true) {
             eventName = 'success';
             style = 'INFO';
             this.testResults.passed++;
@@ -101,7 +101,10 @@ var Tester = function(casper, options) {
             type:    "assert",
             details: "test failed",
             message: message,
-            file:    this.currentTestFile
+            file:    this.currentTestFile,
+            values:  {
+                subject: subject
+            }
         });
         casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
     };
@@ -109,28 +112,32 @@ var Tester = function(casper, options) {
     /**
      * Asserts that two values are strictly equals.
      *
-     * @param  Mixed   testValue  The value to test
+     * @param  Mixed   subject    The value to test
      * @param  Mixed   expected   The expected value
      * @param  String  message    Test description
      */
-    this.assertEquals = function assertEquals(testValue, expected, message) {
+    this.assertEquals = function assertEquals(subject, expected, message) {
         var eventName;
-        if (this.testEquals(testValue, expected)) {
+        if (this.testEquals(subject, expected)) {
             eventName = "success";
             casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
             this.testResults.passed++;
         } else {
             eventName = "fail";
             casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-            this.comment('   got:      ' + utils.serialize(testValue));
+            this.comment('   got:      ' + utils.serialize(subject));
             this.comment('   expected: ' + utils.serialize(expected));
             this.testResults.failed++;
         }
         this.emit(eventName, {
             type:   "assertEquals",
             message: message,
-            details: f("test failed; expected: %s; got: %s", expected, testValue),
-            file:    this.currentTestFile
+            details: f("test failed; expected: %s; got: %s", expected, subject),
+            file:    this.currentTestFile,
+            values:  {
+                subject:  subject,
+                expected: expected
+            }
         });
     };
 
@@ -201,7 +208,11 @@ var Tester = function(casper, options) {
             type:   "assertMatch",
             message: message,
             details: f("test failed; subject: %s; pattern: %s", subject, pattern.toString()),
-            file:    this.currentTestFile
+            file:    this.currentTestFile,
+            values:  {
+                subject: subject,
+                pattern: pattern
+            }
         });
     };
 
