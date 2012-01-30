@@ -60,8 +60,8 @@ var Colorizer = function() {
     /**
      * Adds a style to provided text.
      *
-     * @params  String  text
-     * @params  String  styleName
+     * @param   String  text
+     * @param   String  styleName
      * @return  String
      */
     this.colorize = function colorize(text, styleName, pad) {
