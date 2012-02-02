@@ -1,7 +1,7 @@
 /*!
  * Casper is a navigation utility for PhantomJS.
  *
- * Documentation: http://n1k0.github.com/casperjs/
+ * Documentation: http://casperjs.org/
  * Repository:    http://github.com/n1k0/casperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault

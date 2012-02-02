@@ -21,10 +21,10 @@ CasperJS Changelog
   events as a fallback; some real world testing have surprinsingly proven the former being often
   more efficient than the latter
 - fixed casperjs executable could not handle a `PHANTOMJS_EXECUTABLE` containing spaces
-- fixed casper could not be used without the executable [as documented](http://n1k0.github.com/casperjs/#faq-executable)
+- fixed casper could not be used without the executable [as documented](http://casperjs.org/#faq-executable)
 - fixed wrong `debug` log level on `ClientUtils.click()` error; set to `error`
 
-Please check the [updated documentation](http://n1k0.github.com/casperjs).
+Please check the [updated documentation](http://casperjs.org).
 
 2012-01-12, v0.6.0
 ------------------
@@ -42,7 +42,7 @@ Please check the [updated documentation](http://n1k0.github.com/casperjs).
 - added printing of source file path for any uncaught exception printed onto the console
 - added an emulation of stack trace printing (but PhantomJS will have to upgrade its javascript engine for it to be fully working though)
 
-Please check the [updated documentation](http://n1k0.github.com/casperjs).
+Please check the [updated documentation](http://casperjs.org).
 
 ---
 

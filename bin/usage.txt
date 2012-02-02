@@ -17,4 +17,4 @@ Options:
 --script-encoding                      Sets the encoding used for the starting script (default is 'utf8')
 --version                              Prints out CasperJS version
 
-Read the docs http://n1k0.github.com/casperjs/
+Read the docs http://casperjs.org/
