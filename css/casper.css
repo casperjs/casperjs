@@ -1,33 +1,40 @@
-html, body { background-color: #eee }
+html, body { background: #000 url('../images/bg.png'); }
+
+#about .page-header h1 { margin-top: 20px; }
+#apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 0px; margin-bottom: 10px }
+#commits-master a { color: #eee; }
+.alert { opacity: .7; background: #333; text-shadow: none; }
+.apitoc code { background: none; color: #eee; }
+.apitoc ul { margin: 0; list-style-type: none; }
 .bottom { margin-bottom: 0; padding-bottom: 0 }
 .center { text-align: center }
 .container > footer p { text-align: center }
-.content {
-    background-color: #fff;
-    padding: 20px;
-    margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
-    -webkit-border-radius: 0 0 6px 6px;
-       -moz-border-radius: 0 0 6px 6px;
-            border-radius: 0 0 6px 6px;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-       -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-            box-shadow: 0 1px 2px rgba(0,0,0,.15);
-}
 .contribute img { position: fixed; top: 40px; right: 0; border: 0 }
 .demo img { padding-top: 5px }
-.download { text-align: center }
-.page-header { background-color: #f5f5f5; padding: 20px 20px 10px; margin: -20px -20px 20px; border-top: 1px solid #DDD }
-pre code { line-height: 1.4em; background: none;}
-#about { font-weight: bold }
-section { margin-bottom: 40px }
-section:first-child { padding-top: 40px }
-section:not(:first-child) { padding-top: 10px }
-h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Consolas, Monaco, monospace }
 .dl-links { margin-top: 20px }
-.dl-links a { width: 180px }
+.dl-links a { width: 200px }
+.download { padding-top: 1.8em; text-align: center }
 .download p { margin-top: 20px }
-h3 code { margin-left: -4px }
-#apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 0px; border-bottom: 1px solid #ddd; margin-bottom: 10px }
+.just-informative {color: #fff;}
+.navbar .brand { color: #ccc; }
+.navbar .nav > li > a { text-shadow: none; color: #888; }
+.navbar .nav > li > a:hover { color: #fff; }
+.navbar .nav .active > a, .navbar .nav .active > a:hover { color: #fff; background: none; }
+.page-header { padding: 20px 20px 10px; margin: -20px -20px 20px; border: none; }
+.page-header h1 { color: #fff; font-size: 3em;}
 .row h2 { margin-bottom: 10px }
-.apitoc code { background: none }
+.table th, .table td { border-top: 1px solid #333; }
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th { opacity: .7; background-color: #222; }
+
 a code { text-decoration: underline }
+code { color: #d14; background-color: #222; border: none; }
+h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Consolas, Monaco, monospace; margin-left: -4px; color: #fff; border: none; }
+hr { display: none; }
+pre, pre.prettyprint { opacity: .7; background: #252525; color: #eee; font-size: 14px; font-family: Consolas, Inconsolata, Monaco, monospace; white-space: pre; overflow: auto; border: none; }
+section { padding-top: 60px; margin-bottom: 40px; }
+td code { color: #fff; background: none; }
+
+/* prettify dark theme */
+.pln { color: #eee; }
+.kwd { color: #4169E1; }
+.tag { color: #4169E1; }

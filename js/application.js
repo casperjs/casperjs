@@ -2,28 +2,26 @@
  * CasperJS website js code. Steal if you care, enjoy if you dare.
  */
 $(document).ready(function() {
+    // pretty printing
+    prettyPrint();
     // topbar
-    $('#topbar').scrollSpy({ padding: 50 });
-    function reScroll(target) {
-        target = target ? target : $(document.location.hash);
-        if (target) {
-            scrollTo(document.querySelector('body'), target.position().top - 50);
-        }
-    }
-    $("a[href^=#]").click(function(e) {
-        var anchor = $(this).attr('href');
-        document.location.href = anchor;
-        reScroll($(anchor));
-        return e.preventDefault();
-    });
-    if (document.location.hash) {
-        setTimeout(reScroll, 100, $(document.location.hash));
-    }
-    // hightlighter
-    hljs.tabReplace = '    ';
-    $('pre code:not(.void)').each(function(i, e) {
-        hljs.highlightBlock(e, '    ');
-    });
+    $(".collapse").collapse();
+    $('#topbar').scrollspy({ offset: -100 });
+    // function reScroll(target) {
+    //     target = target ? target : $(document.location.hash);
+    //     if (target) {
+    //         scrollTo(document.querySelector('body'), target.position().top - 50);
+    //     }
+    // }
+    // $("a[href^=#]").click(function(e) {
+    //     var anchor = $(this).attr('href');
+    //     document.location.href = anchor;
+    //     reScroll($(anchor));
+    //     return e.preventDefault();
+    // });
+    // if (document.location.hash) {
+    //     setTimeout(reScroll, 100, $(document.location.hash));
+    // }
     // apitoc
     (function(window) {
         var containerSelector = 'section';
