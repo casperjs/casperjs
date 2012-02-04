@@ -893,8 +893,7 @@ casper.run();
               <p> Checks if a resource has been loaded. You can pass either a
                 function or a string to perform the test. </p>
               <p><strong>Example:</strong></p>
-              <pre class="prettyprint">var i = 0;
-casper.start('http://www.google.com/', function() {
+              <pre class="prettyprint">casper.start('http://www.google.com/', function() {
     if (this.resourceExists('logo3w.png')) {
         this.echo('Google logo loaded');
     } else {
