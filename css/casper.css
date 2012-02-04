@@ -6182,7 +6182,7 @@ td code {
 }
 @media (min-width: 768px) and (max-width: 980px) {
   .contribute img {
-    top: 50px;
+    display: none;
   }
   section:first-child {
     padding-top: 0;
