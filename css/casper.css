@@ -4,7 +4,7 @@ html, body { background: #000 url('../images/bg.png'); }
 #apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 60px; margin-bottom: 10px }
 #commits-master a { color: #eee; }
 .alert { opacity: .9; background: #333; text-shadow: none; }
-.apitoc code { background: none; color: #eee; }
+.apitoc code { background: none; font-size: 14px; color: #eee; }
 .apitoc ul { margin: 0; list-style-type: none; }
 .bottom { margin-bottom: 0; padding-bottom: 0 }
 .center { text-align: center }
@@ -24,10 +24,10 @@ html, body { background: #000 url('../images/bg.png'); }
 .page-header h1 { color: #fff; font-size: 3em;}
 .row h2 { margin-bottom: 10px }
 .table th, .table td { border-top: 1px solid #333; }
-.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th { opacity: .7; background-color: #222; }
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th { opacity: .9; background-color: #222; }
 
 a code { text-decoration: underline }
-code { color: #d14; background-color: #222; border: none; }
+code { font-size: 14px; color: #f66; background-color: #444; border: none; }
 h1 small { color: #ccc; }
 h3 code { font-weight: bold; font-size: 20px; background: none; font-family: Consolas, Monaco, monospace; margin-left: -4px; color: #fff; border: none; }
 hr { display: none; }
