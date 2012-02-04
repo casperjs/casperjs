@@ -1,7 +1,7 @@
 html, body { background: #000 url('../images/bg.png'); }
 
 #about .page-header h1 { margin-top: 20px; }
-#apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 0px; margin-bottom: 10px }
+#apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 60px; margin-bottom: 10px }
 #commits-master a { color: #eee; }
 .alert { opacity: .7; background: #333; text-shadow: none; }
 .apitoc code { background: none; color: #eee; }
@@ -31,7 +31,8 @@ code { color: #d14; background-color: #222; border: none; }
 h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Consolas, Monaco, monospace; margin-left: -4px; color: #fff; border: none; }
 hr { display: none; }
 pre, pre.prettyprint { opacity: .7; background: #252525; color: #eee; font-size: 14px; font-family: Consolas, Inconsolata, Monaco, monospace; white-space: pre; overflow: auto; border: none; }
-section { padding-top: 60px; margin-bottom: 40px; }
+section { padding-top: 60px; }
+section h2[id], section h3[id], section h4[id] { padding-top: 50px; }
 td code { color: #fff; background: none; }
 
 /* prettify dark theme */
