@@ -3,21 +3,21 @@ html, body { background: #000 url('../images/bg.png'); }
 #about .page-header h1 { margin-top: 20px; }
 #apidoc h3, #colorizer h3, #client-side-utils h3 { padding-top: 60px; margin-bottom: 10px }
 #commits-master a { color: #eee; }
-.alert { opacity: .7; background: #333; text-shadow: none; }
+.alert { opacity: .9; background: #333; text-shadow: none; }
 .apitoc code { background: none; color: #eee; }
 .apitoc ul { margin: 0; list-style-type: none; }
 .bottom { margin-bottom: 0; padding-bottom: 0 }
 .center { text-align: center }
 .container > footer p { text-align: center }
 .contribute img { position: fixed; top: 40px; right: 0; border: 0 }
-.demo img { padding-top: 5px }
+.demo img { padding-top: 15px }
 .dl-links { margin-top: 20px }
-.dl-links a { width: 200px }
+.dl-links a { width: 220px; color: #fff; }
 .download { padding-top: 1.8em; text-align: center }
 .download p { margin-top: 20px }
 .just-informative {color: #fff;}
 .navbar .brand { color: #ccc; }
-.navbar .nav > li > a { text-shadow: none; color: #888; }
+.navbar .nav > li > a { text-shadow: none; color: #888; font-size: 14px; }
 .navbar .nav > li > a:hover { color: #fff; }
 .navbar .nav .active > a, .navbar .nav .active > a:hover { color: #fff; background: none; }
 .page-header { padding: 20px 20px 10px; margin: -20px -20px 20px; border: none; }
@@ -28,14 +28,25 @@ html, body { background: #000 url('../images/bg.png'); }
 
 a code { text-decoration: underline }
 code { color: #d14; background-color: #222; border: none; }
-h3 code { font-weight: bold; font-size: 16px; background: none; font-family: Consolas, Monaco, monospace; margin-left: -4px; color: #fff; border: none; }
+h1 small { color: #ccc; }
+h3 code { font-weight: bold; font-size: 20px; background: none; font-family: Consolas, Monaco, monospace; margin-left: -4px; color: #fff; border: none; }
 hr { display: none; }
-pre, pre.prettyprint { opacity: .7; background: #252525; color: #eee; font-size: 14px; font-family: Consolas, Inconsolata, Monaco, monospace; white-space: pre; overflow: auto; border: none; }
+pre, pre.prettyprint { opacity: .9; background: #444; color: #eee; font-size: 15px; font-family: Consolas, Inconsolata, Monaco, monospace; white-space: pre; overflow: auto; border: none; }
 section { padding-top: 60px; }
 section h2[id], section h3[id], section h4[id] { padding-top: 50px; }
 td code { color: #fff; background: none; }
 
 /* prettify dark theme */
-.pln { color: #eee; }
-.kwd { color: #4169E1; }
 .tag { color: #4169E1; }
+
+.str { color: #93c763; }
+.kwd { color: #85adf5; }
+.com { color: #aaa; }
+.typ { color: #678cb1; }
+.lit { color: #facd22; }
+.pun { color: #f1f2f3; }
+.pln { color: #fff; }
+.tag { color: #8ac763; }
+.atn { color: #e0e2e4; }
+.atv { color: #ec7600; }
+.dec { color: purple; }

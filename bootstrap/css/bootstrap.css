@@ -97,17 +97,17 @@ textarea {
 body {
   margin: 0;
   font-family: "Asap", Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
   color: #ffffff;
   background-color: #000000;
 }
 a {
-  color: #0088dd;
+  color: #33ccff;
   text-decoration: none;
 }
 a:hover {
-  color: #005991;
+  color: #80dfff;
   text-decoration: underline;
 }
 .row {
@@ -276,11 +276,11 @@ a:hover {
 p {
   margin: 0 0 12px;
   font-family: "Asap", Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
 }
 p small {
-  font-size: 12px;
+  font-size: 14px;
   color: #555555;
 }
 .lead {
@@ -461,7 +461,7 @@ cite {
 code, pre {
   padding: 0 3px 2px;
   font-family: Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
+  font-size: 15px;
   color: #cccccc;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -509,7 +509,7 @@ legend {
   width: 100%;
   padding: 0;
   margin-bottom: 36px;
-  font-size: 21px;
+  font-size: 24px;
   line-height: 48px;
   color: #cccccc;
   border: 0;
@@ -521,7 +521,7 @@ button,
 select,
 textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: normal;
   line-height: 24px;
 }
@@ -539,7 +539,7 @@ select,
   height: 24px;
   padding: 4px;
   margin-bottom: 9px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
   color: #888888;
   border: 1px solid #ccc;
@@ -1577,7 +1577,7 @@ table .span12 {
 .dropdown-menu li > a:hover, .dropdown-menu .active > a, .dropdown-menu .active > a:hover {
   color: #000000;
   text-decoration: none;
-  background-color: #0088dd;
+  background-color: #33ccff;
 }
 .dropdown.open {
   *z-index: 1000;
@@ -1658,7 +1658,7 @@ table .span12 {
 .btn {
   display: inline-block;
   padding: 4px 10px 4px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
   color: #cccccc;
   text-align: center;
@@ -1724,7 +1724,7 @@ table .span12 {
 }
 .btn-large {
   padding: 9px 14px;
-  font-size: 16px;
+  font-size: 18px;
   line-height: normal;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -1735,7 +1735,7 @@ table .span12 {
 }
 .btn-small {
   padding: 5px 9px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 22px;
 }
 .btn-small .icon {
@@ -1762,16 +1762,16 @@ table .span12 {
   color: rgba(255, 255, 255, 0.75);
 }
 .btn-primary {
-  background-color: #006bdd;
-  background-image: -moz-linear-gradient(top, #0088dd, #003edd);
-  background-image: -ms-linear-gradient(top, #0088dd, #003edd);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088dd), to(#003edd));
-  background-image: -webkit-linear-gradient(top, #0088dd, #003edd);
-  background-image: -o-linear-gradient(top, #0088dd, #003edd);
-  background-image: linear-gradient(top, #0088dd, #003edd);
+  background-color: #33b1ff;
+  background-image: -moz-linear-gradient(top, #33ccff, #3388ff);
+  background-image: -ms-linear-gradient(top, #33ccff, #3388ff);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#33ccff), to(#3388ff));
+  background-image: -webkit-linear-gradient(top, #33ccff, #3388ff);
+  background-image: -o-linear-gradient(top, #33ccff, #3388ff);
+  background-image: linear-gradient(top, #33ccff, #3388ff);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088dd', endColorstr='#003edd', GradientType=0);
-  border-color: #003edd #003edd #002991;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33ccff', endColorstr='#3388ff', GradientType=0);
+  border-color: #3388ff #3388ff #0060e5;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
@@ -1780,10 +1780,10 @@ table .span12 {
 .btn-primary.active,
 .btn-primary.disabled,
 .btn-primary[disabled] {
-  background-color: #003edd;
+  background-color: #3388ff;
 }
 .btn-primary:active, .btn-primary.active {
-  background-color: #0030aa \9;
+  background-color: #006aff \9;
 }
 .btn-warning {
   background-color: #faa732;
@@ -2111,7 +2111,7 @@ button.btn.small, input[type="submit"].btn.small {
 .nav-list .active > a, .nav-list .active > a:hover {
   color: #000000;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-  background-color: #0088dd;
+  background-color: #33ccff;
 }
 .nav-list [class^="icon-"] {
   margin-right: 2px;
@@ -2173,7 +2173,7 @@ button.btn.small, input[type="submit"].btn.small {
 }
 .nav-pills .active > a, .nav-pills .active > a:hover {
   color: #000000;
-  background-color: #0088dd;
+  background-color: #33ccff;
 }
 .nav-stacked > li {
   float: none;
@@ -2220,11 +2220,11 @@ button.btn.small, input[type="submit"].btn.small {
   border-radius: 4px;
 }
 .nav-tabs .dropdown-toggle .caret, .nav-pills .dropdown-toggle .caret {
-  border-top-color: #0088dd;
+  border-top-color: #33ccff;
   margin-top: 6px;
 }
 .nav-tabs .dropdown-toggle:hover .caret, .nav-pills .dropdown-toggle:hover .caret {
-  border-top-color: #005991;
+  border-top-color: #80dfff;
 }
 .nav-tabs .active .dropdown-toggle .caret, .nav-pills .active .dropdown-toggle .caret {
   border-top-color: #cccccc;
@@ -3030,7 +3030,7 @@ button.btn.small, input[type="submit"].btn.small {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 a.thumbnail:hover {
-  border-color: #0088dd;
+  border-color: #33ccff;
   -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
@@ -3046,7 +3046,7 @@ a.thumbnail:hover {
 }
 .label {
   padding: 1px 3px 2px;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: bold;
   color: #000000;
   text-transform: uppercase;
