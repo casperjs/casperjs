@@ -12,7 +12,7 @@ html, body { background: #000 url("../images/bg.png"); }
 .bottom { margin-bottom: 0; padding-bottom: 0 }
 .center { text-align: center }
 .container > footer p { text-align: center }
-.contribute img { position: fixed; top: 40px; right: 0; border: 0 }
+.contribute img { position: fixed; top: 40px; right: 0; border: 0; z-index: 9999; }
 .demo img { padding-top: 15px }
 .dl-links { margin-top: 20px }
 .dl-links a { width: 220px; color: #fff; }
@@ -39,9 +39,28 @@ section { padding-top: 60px; }
 section h2[id], section h3[id], section h4[id] { padding-top: 50px; }
 td code { color: #fff; background: none; }
 
+/* responsive tricks */
+
+@media (max-width: 480px) {
+    .contribute img { display: none; }
+    section:first-child { padding-top: 0; }
+}
+
+@media (max-width: 768px) {
+    .contribute img { display: none; }
+    section:first-child { padding-top: 0; }
+}
+
+@media (min-width: 768px) and (max-width: 980px) {
+    .contribute img { top: 50px; }
+    section:first-child { padding-top: 0; }
+}
+
+@media (min-width: 1200px) {
+}
+
 /* prettify dark theme */
 .tag { color: #4169E1; }
-
 .str { color: #93c763; }
 .kwd { color: #85adf5; }
 .com { color: #aaa; }

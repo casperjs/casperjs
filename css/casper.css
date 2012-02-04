@@ -6063,6 +6063,7 @@ html, body {
   top: 40px;
   right: 0;
   border: 0;
+  z-index: 9999;
 }
 .demo img {
   padding-top: 15px;
@@ -6161,6 +6162,34 @@ section h2[id], section h3[id], section h4[id] {
 td code {
   color: #fff;
   background: none;
+}
+/* responsive tricks */
+@media (max-width: 480px) {
+  .contribute img {
+    display: none;
+  }
+  section:first-child {
+    padding-top: 0;
+  }
+}
+@media (max-width: 768px) {
+  .contribute img {
+    display: none;
+  }
+  section:first-child {
+    padding-top: 0;
+  }
+}
+@media (min-width: 768px) and (max-width: 980px) {
+  .contribute img {
+    top: 50px;
+  }
+  section:first-child {
+    padding-top: 0;
+  }
+}
+@media (min-width: 1200px) {
+  
 }
 /* prettify dark theme */
 .tag {

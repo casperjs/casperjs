@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="index, follow">
     <title>CasperJS, a navigation scripting and testing utility for PhantomJS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
@@ -951,6 +952,15 @@ casper.run(function() {
 casper.setHttpAuth('sheldon.cooper', 'b4z1ng4');
 
 casper.thenOpen('http://password-protected.domain.tld/', function() {
+    this.echo("I'm in. Bazinga.");
+})
+casper.run();
+</pre>
+
+              <p>Of course you can directly pass the auth string in the url to open:</p>
+
+              <pre class="prettyprint">var url = 'http://sheldon.cooper:b4z1ng4@password-protected.domain.tld/';
+casper.start(url, function() {
     this.echo("I'm in. Bazinga.");
 })
 casper.run();
