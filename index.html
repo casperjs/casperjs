@@ -10,6 +10,7 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
     <link rel="stylesheet" href="prettify/prettify.css">
+    <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/casper.css">
     <link rel="shortcut icon" href="/casperjs/favicon.ico">
   </head>
@@ -294,7 +295,7 @@ casper.run -&gt;
 });
 </pre>
               <p>All the available options are detailled below:</p>
-              <table class="table table-striped" caption="Casper options">
+              <table class="table table-striped table-condensed" caption="Casper options">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -730,15 +731,16 @@ casper.forward(); // http://foo.bar/2
 casper.run();
 </pre>
               <p>Also have a look at <a href="#phantom_Casper_back"><code>Casper.back()</code></a>.</p>
-              <h3 id="phantom_Casper_log"><code>Casper#log(String message[,
-                  String level, String space])</code></h3>
-              <p> Logs a message with an optional level in an optional space.
+              <h3 id="phantom_Casper_log"><code>Casper#log(String message[, String level, String space])</code></h3>
+              <p>
+                Logs a message with an optional level in an optional space.
                 Available levels are <code>debug</code>, <code>info</code>, <code>warning</code>
                 and <code>error</code>. A space is a kind of namespace you can
                 set for filtering your logs. By default, Casper logs messages in
                 two distinct spaces: <code>phantom</code> and <code>remote</code>,
                 to distinguish what happens in the PhantomJS environment from
-                the remote one. </p>
+                the remote one.
+              </p>
               <p><strong>Example:</strong></p>
               <pre class="prettyprint">casper.start('http://www.google.fr/', function() {
     this.log("I'm logging an error", "error");
@@ -1270,13 +1272,11 @@ casper.run();
                 all these parameters.
               </p>
               <div class="row">
-                <div class="span6">
+                <div class="span5">
                   <p>
-                    As an illustrative example, consider this simple casper script:
+                    Let's consider this simple casper script:
                   </p>
-                  <pre class="prettyprint">// cliargs.js
-
-var casper = require("casper").create();
+                  <pre class="prettyprint">var casper = require("casper").create();
 
 casper.echo("Casper CLI passed args:");
 require("utils").dump(casper.cli.args);
@@ -1285,21 +1285,25 @@ casper.echo("Casper CLI passed options:");
 require("utils").dump(casper.cli.options);
 
 casper.exit();</pre>
-                </div>
-                <div class="span6">
                   <p>
-                    Let's see what it gives us:
+                    <span class="label label-info">Note</span>
+                    Please note the two <code>casper-path</code> and <code>cli</code>
+                    options; these are passed to the casper script through the
+                    <code>casperjs</code> Python executable.
                   </p>
-                  <pre>$ casperjs cliargs.js arg1 arg2 arg3 --foo=bar --plop anotherarg
-Casper CLI passed args:
-[
+                </div>
+                <div class="span7">
+                  <p>
+                    Execution results:
+                  </p>
+                  <pre>$ casperjs test.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+Casper CLI passed args: [
     "arg1",
     "arg2",
     "arg3",
     "anotherarg"
 ]
-Casper CLI passed options:
-{
+Casper CLI passed options: {
     "casper-path": "/Users/niko/Sites/casperjs",
     "cli": true,
     "foo": "bar",
@@ -1308,10 +1312,9 @@ Casper CLI passed options:
                 </div>
               </div>
               <div class="row">
-                <div class="span6">
+                <div class="span5">
                   <p>
-                    You can also access an higher level api to
-                    get, check or drop parameters:
+                    Getting, checking or dropping parameters:
                   </p>
                   <pre class="prettyprint">var casper = require("casper").create();
 
@@ -1328,11 +1331,11 @@ casper.echo(casper.cli.get("foo"));
 casper.exit();
 </pre>
                 </div>
-                <div class="span6">
+                <div class="span7">
                   <p>
-                    If you run the script above, this is most likely what you will get:
+                    Execution results:
                   </p>
-                  <pre>$ casperjs cliargs2.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+                  <pre>$ casperjs test.js arg1 arg2 arg3 --foo=bar --plop anotherarg
 true
 arg1
 true
@@ -1403,7 +1406,7 @@ casper.on('resource.received', function(resource) {
 </pre>
               <p>Here's a table containing all the available events with all the
               parameters passed to their callback:</p>
-              <table class="table table-striped" caption="Casper options">
+              <table class="table table-striped table-condensed" caption="Casper options">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -1678,7 +1681,7 @@ casper.setFilter('open.location', function(location) {
                 Let me bet you'll find far more interesting use cases than my silly one ;)
               </p>
               <p>Here'a the list of all available filters with their expected return value:</p>
-              <table class="table table-striped" caption="Casper options">
+              <table class="table table-striped table-condensed" caption="Casper options">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -1723,15 +1726,19 @@ casper.setFilter('open.location', function(location) {
           </div>
           <div class="row">
             <div class="span9">
-              <p> Casper ships with a few client-side utilitites which are
+              <p>
+                Casper ships with a few client-side utilitites which are
                 injected in the remote DOM environment, and accessible from
                 there through the <code>__utils__</code> object instance of the
-                <code>ClientUtils</code> class of the <code>clientutils</code> module. </p>
-              <p> <span class="label label-info">Note</span> These tools are
+                <code>ClientUtils</code> class of the <code>clientutils</code> module.
+              </p>
+              <p>
+                <span class="label label-info">Note</span> These tools are
                 provided to avoid coupling CasperJS to any third-party library
                 like jQuery, Mootools or something; but you can always include
                 these and have them available client-side using the <code>Casper.options.clientScripts</code>
-                option. </p>
+                option.
+              </p>
               <h3 id="phantom_Casper_ClientUtils_encode"><code>ClientUtils#encode(String
                   contents)</code></h3>
               <p> Encodes a string using the <a href="http://en.wikipedia.org/wiki/Base64">base64
