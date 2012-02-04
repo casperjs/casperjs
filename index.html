@@ -9,7 +9,6 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="prettify/prettify.css">
     <link rel="stylesheet" href="css/casper.css">
     <link rel="shortcut icon" href="/casperjs/favicon.ico">
@@ -1270,10 +1269,12 @@ casper.run();
                 rady to use <code>cli</code> property, allowing easy access of
                 all these parameters.
               </p>
-              <p>
-                As an illustrative example, consider this simple casper script:
-              </p>
-              <pre class="prettyprint">// cliargs.js
+              <div class="row">
+                <div class="span6">
+                  <p>
+                    As an illustrative example, consider this simple casper script:
+                  </p>
+                  <pre class="prettyprint">// cliargs.js
 
 var casper = require("casper").create();
 
@@ -1284,10 +1285,12 @@ casper.echo("Casper CLI passed options:");
 require("utils").dump(casper.cli.options);
 
 casper.exit();</pre>
-              <p>
-                Let's play around a bit with it:
-              </p>
-              <pre class="prettyprint">$ casperjs cliargs.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+                </div>
+                <div class="span6">
+                  <p>
+                    Let's see what it gives us:
+                  </p>
+                  <pre>$ casperjs cliargs.js arg1 arg2 arg3 --foo=bar --plop anotherarg
 Casper CLI passed args:
 [
     "arg1",
@@ -1302,13 +1305,15 @@ Casper CLI passed options:
     "foo": "bar",
     "plop": true
 }</pre>
-              <p>
-                Should be pretty obvious. You can also access an higher level api to
-                get, check or drop parameters:
-              </p>
-              <pre class="prettyprint">// cliargs2.js
-
-var casper = require("casper").create();
+                </div>
+              </div>
+              <div class="row">
+                <div class="span6">
+                  <p>
+                    You can also access an higher level api to
+                    get, check or drop parameters:
+                  </p>
+                  <pre class="prettyprint">var casper = require("casper").create();
 
 casper.echo(casper.cli.has(0));
 casper.echo(casper.cli.get(0));
@@ -1322,10 +1327,12 @@ casper.echo(casper.cli.get("foo"));
 
 casper.exit();
 </pre>
-              <p>
-                This is what you'll get:
-              </p>
-              <pre>$ casperjs cliargs2.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+                </div>
+                <div class="span6">
+                  <p>
+                    If you run the script above, this is most likely what you will get:
+                  </p>
+                  <pre>$ casperjs cliargs2.js arg1 arg2 arg3 --foo=bar --plop anotherarg
 true
 arg1
 true
@@ -1334,6 +1341,8 @@ true
 bar
 false
 undefined</pre>
+                </div>
+              </div>
               <p>
                 Last but not least, you can still use all PhantomJS standard CLI options
                 as you would do with any other phantomjs script. To remeber what they
