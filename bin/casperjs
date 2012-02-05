@@ -19,6 +19,6 @@ CASPER_ARGS.extend(sys.argv[1:])
 try:
     status = subprocess.call(CASPER_ARGS)
 except KeyboardInterrupt:
-    print '\nCasperJS interrupted, exiting.'
+    print('\nCasperJS interrupted, exiting.')
     status = 0
 sys.exit(status)
