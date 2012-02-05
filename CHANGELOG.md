@@ -1,6 +1,13 @@
 CasperJS Changelog
 ==================
 
+2012-02-05, v0.6.3
+------------------
+
+- fixed [#48](https://github.com/n1k0/casperjs/issues/48) - XML Output file doesn't have classpath populated with file name
+- refs [#46](https://github.com/n1k0/casperjs/issues/46) - added value details to Tester `fail` event
+- new site design, new [domain](http://casperjs.org/), enhanced & updated docs
+
 2012-01-19, v0.6.2
 ------------------
 
