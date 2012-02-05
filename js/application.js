@@ -7,9 +7,9 @@ $(document).ready(function() {
     // topbar
     $(".collapse").collapse();
     $('#topbar').scrollspy({ offset: -100 });
-    // initial positionning
-    $('.apitoc').css('height', window.innerHeight).css('overflow', 'auto');
+    $('.dropdown-toggle').dropdown();
     // apitoc
+    $('.apitoc').css('height', window.innerHeight - 50).css('overflow', 'auto');
     (function(window) {
         var containerSelector = 'section';
         var padding = 50;
@@ -70,7 +70,7 @@ $(document).ready(function() {
         avatarSize: 40,
         last: 15,
         template: '<tr class="github-commit">' +
-            '<td><img class="avatar" /></td>' +
+            //'<td><img class="avatar" /></td>' +
             '<td><a class="user"/></td>' +
             '<td><a class="message" /></td>' +
             '<td><span class="date" /></td>' +
