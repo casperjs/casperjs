@@ -9,16 +9,26 @@ $(document).ready(function() {
     $('#topbar').scrollspy({ offset: -100 });
     $('.dropdown-toggle').dropdown();
     // apitoc
-    $('.apitoc').css('height', window.innerHeight - 50).css('overflow', 'auto');
     (function(window) {
         var containerSelector = 'section';
         var padding = 50;
         var elements = $('.apitoc');
         var initials = [];
+        function wpHeight() {
+            return window.innerHeight - padding;
+        }
+        // sizes
+        function size() {
+            $('.apitoc').each(function() {
+                if ($(this).height() > wpHeight()) {
+                    $(this).css('height', wpHeight() + 'px').css('overflow', 'auto');
+                }
+            });
+        }
         function position(i, initial) {
             var element = initial.element
               , container = initial.container
-              , sp = window.scrollY + padding
+              , sy = window.scrollY
               , ep = element.position().top
               , eh = element.height()
               , cl = container.position().left
@@ -33,12 +43,12 @@ $(document).ready(function() {
             if (window.innerHeight < eh) {
                 return;
             }
-            if (sp > ep && sp < mp && cp !== "fixed") {
+            if (sy > ep && sy < mp && cp !== "fixed") {
                 element.css('position', 'fixed').css('top', padding).css('left', em).css('margin-top', initial.margintop);
             } else if (cp === "fixed") {
-                if (sp < ct + padding) {
+                if (sy < ct + padding) {
                     element.css('position', initial.position).css('margin-top', initial.margintop);
-                } else if (sp >= mp) {
+                } else if (sy >= mp) {
                     element.css('position', initial.position).css('margin-top', (ch - eh - padding - 30));
                 }
                 element.css('left', cl + cw - ew - 30);
@@ -55,10 +65,12 @@ $(document).ready(function() {
                 margintop:  element.css('margin-top')
             });
         });
+        size();
         window.onscroll = function() {
             $(initials).each(position);
         };
         window.onresize = function() {
+            size();
             $(initials).each(position);
         };
     })(window);
