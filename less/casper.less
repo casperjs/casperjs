@@ -15,43 +15,136 @@
 }
 
 // tags
-html, body { background: #000 url("../images/bg.png"); }
-a code { text-decoration: underline }
-code { font-size: 14px; color: #f66; background-color: #444; border: none; }
-h1 small { color: #ccc; }
-h3 code { font-weight: bold; font-size: 20px; background: none; .monospace; margin-left: -4px; color: #fff; border: none; }
-hr { display: none; }
-pre, pre.prettyprint { .alphabg; color: #eee; font-size: 15px; .monospace; line-height: 21px; white-space: pre; overflow: auto; border: none; }
-section { padding-top: 60px; }
-section h2[id], section h3[id], section h4[id] { padding-top: 50px; }
-td code { color: #fff; background: none; }
+html, body {
+    background: #000 url("../images/bg.png");
+}
+a code {
+    text-decoration: underline
+}
+code {
+    font-size: 14px;
+    color: #f66;
+    background-color: #444;
+    border: none;
+}
+h1 small {
+    color: #ccc;
+}
+h3 code {
+    .monospace;
+    font-weight: bold;
+    font-size: 20px;
+    background: none;
+    margin-left: -4px;
+    color: #fff;
+    border: none;
+}
+hr {
+    display: none;
+}
+pre, pre.prettyprint {
+    .monospace;
+    .alphabg;
+    color: #eee;
+    font-size: 15px;
+    line-height: 21px;
+    white-space: pre;
+    overflow: auto;
+    border: none;
+}
+section {
+    padding-top: 60px;
+}
+section h2[id], section h3[id], section h4[id] {
+    padding-top: 50px;
+}
+td code {
+    color: #fff;
+    background: none;
+}
 
 // specifics
-#about .page-header h1 { margin-top: 20px; }
-#apidoc h3, #colorizer h3, #client-side-utils h3 {  margin-bottom: 10px }
-#commits-master a { color: #eee; }
-.alert { .alphabg; text-shadow: none; }
-.apitoc code { background: none; font-size: 14px; color: #eee; }
-.apitoc ul { margin: 0; list-style-type: none; }
-.bottom { margin-bottom: 0; padding-bottom: 0 }
-.center { text-align: center }
-.container > footer p { text-align: center }
-.contribute img { position: fixed; top: 40px; right: 0; border: 0; z-index: 9999; }
-.demo img { padding-top: 15px }
-.dl-links { margin-top: 20px }
-.dl-links a { width: 220px; color: #fff; }
-.download { padding-top: 1.8em; text-align: center }
-.download p { margin-top: 20px }
-.just-informative {color: #fff;}
-.navbar .brand { color: #ccc; }
-.navbar .nav > li > a { text-shadow: none; color: #888; font-size: 14px; }
-.navbar .nav > li > a:hover { color: #fff; }
-.navbar .nav .active > a, .navbar .nav .active > a:hover { color: #fff; background: none; }
-.page-header { padding: 20px 20px 10px; margin: -20px -20px 20px; border: none; }
-.page-header h1 { color: #fff; font-size: 3em;}
-.row h2 { margin-bottom: 10px }
-.table th, .table td { border-top: 1px solid #333; }
-.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th { .alphabg; }
+#about .page-header h1 {
+    margin-top: 20px;
+}
+#apidoc h3, #colorizer h3, #client-side-utils h3 {
+    margin-bottom: 10px;
+}
+#commits-master a {
+    color: #eee;
+}
+.alert {
+    .alphabg;
+    text-shadow: none;
+}
+.apitoc {
+    code {
+        background: none;
+        font-size: 14px;
+        color: #eee;
+    }
+    ul {
+        margin: 0;
+        list-style-type: none;
+    }
+}
+.bottom {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.center {
+    text-align: center;
+}
+.container > footer p {
+    text-align: center;
+}
+.contribute img {
+    position: fixed;
+    top: 40px;
+    right: 0;
+    border: 0;
+    z-index: 9999;
+}
+.demo img {
+    padding-top: 15px;
+}
+.dl-links {
+    margin-top: 20px;
+    a {
+        width: 220px; color: #fff;
+    }
+}
+.download {
+    padding-top: 1.8em;
+    text-align: center;
+    p { margin-top: 20px }
+}
+.just-informative {
+    color: #fff;
+}
+.navbar {
+    .brand { color: #ccc; }
+    .nav > li > a { text-shadow: none; color: #888; font-size: 14px; }
+    .nav > li > a:hover { color: #fff; }
+    .nav .active > a, .nav .active > a:hover { color: #fff; background: none; }
+}
+.page-header {
+    padding: 20px 20px 10px;
+    margin: -20px -20px 20px;
+    border: none;
+    h1 {
+        color: #fff; font-size: 3em;
+    }
+}
+.row h2 {
+    margin-bottom: 10px
+}
+.table {
+    th, td { border-top: 1px solid #333; }
+}
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th {
+    .alphabg;
+}
 
 // responsive tricks
 @media (max-width: 480px) {

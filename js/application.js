@@ -6,7 +6,7 @@ $(document).ready(function() {
     prettyPrint();
     // topbar
     $(".collapse").collapse();
-    $('#topbar').scrollspy({ offset: -100 });
+    $('#topbar').scrollspy({ offset: 50 });
     $('.dropdown-toggle').dropdown();
     // apitoc
     (function(window) {
