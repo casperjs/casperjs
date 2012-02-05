@@ -9,6 +9,12 @@ $(document).ready(function() {
     $('#topbar').scrollspy({ offset: 50 });
     $('.dropdown-toggle').dropdown();
     // apitoc
+    function checkApiTocLinks() {
+      $('.apitoc a[class*="hashactive"]').removeClass('hashactive');
+      $('.apitoc a[href="' + window.location.hash + '"]').addClass('hashactive');
+    }
+    $(window).bind('hashchange', checkApiTocLinks);
+    checkApiTocLinks();
     (function(window) {
         var containerSelector = 'section';
         var padding = 50;
@@ -21,7 +27,9 @@ $(document).ready(function() {
         function size() {
             $('.apitoc').each(function() {
                 if ($(this).height() > wpHeight()) {
-                    $(this).css('height', wpHeight() + 'px').css('overflow', 'auto');
+                    $(this).css('height', (wpHeight() - 15) + 'px')
+                        .css('overflow-y', 'scroll')
+                        .css('overflow-x', 'hidden');
                 }
             });
         }
