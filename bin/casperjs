@@ -27,15 +27,14 @@ PHANTOMJS_NATIVE_ARGS = [
 CASPER_ARGS = []
 PHANTOMJS_ARGS = []
 
-found = False
 for arg in sys.argv[1:]:
+    found = False
     for native in PHANTOMJS_NATIVE_ARGS:
         if arg.startswith('--%s' % native):
             PHANTOMJS_ARGS.append(arg)
             found = True
     if not found:
         CASPER_ARGS.append(arg)
-        found = False
 
 CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
 CASPER_COMMAND = os.environ.get('PHANTOMJS_EXECUTABLE', 'phantomjs').split(' ')
