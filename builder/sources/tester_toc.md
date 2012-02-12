@@ -1,0 +1,25 @@
+### Quick reference
+
+#### The `Tester` class
+
+-   [`Tester.assert()`](#phantom_Casper_Tester_assert)
+-   [`Tester.assertEquals()`](#phantom_Casper_Tester_assertEquals)
+-   [`Tester.assertEval()`](#phantom_Casper_Tester_assertEval)
+-   [`Tester.assertEvalEquals()`](#phantom_Casper_Tester_assertEvalEquals)
+-   [`Tester.assertExists()`](#phantom_Casper_Tester_assertExists)
+-   [`Tester.assertMatch()`](#phantom_Casper_Tester_assertMatch)
+-   [`Tester.assertNot()`](#phantom_Casper_Tester_assertNot)
+-   [`Tester.assertRaises()`](#phantom_Casper_Tester_assertRaises)
+-   [`Tester.assertSelectorExists()`](#phantom_Casper_Tester_assertSelectorExists)
+-   [`Tester.assertResourceExists()`](#phantom_Casper_Tester_assertResourceExists)
+-   [`Tester.assertTitle()`](#phantom_Casper_Tester_assertTitle)
+-   [`Tester.assertType()`](#phantom_Casper_Tester_assertType)
+-   [`Tester.assertUrlMatch()`](#phantom_Casper_Tester_assertUrlMatch)
+-   [`Tester.colorize()`](#phantom_Casper_Tester_colorize)
+-   [`Tester.comment()`](#phantom_Casper_Tester_comment)
+-   [`Tester.error()`](#phantom_Casper_Tester_error)
+-   [`Tester.fail()`](#phantom_Casper_Tester_fail)
+-   [`Tester.formatMessage()`](#phantom_Casper_Tester_formatMessage)
+-   [`Tester.info()`](#phantom_Casper_Tester_info)
+-   [`Tester.pass()`](#phantom_Casper_Tester_pass)
+-   [`Tester.renderResults()`](#phantom_Casper_Tester_renderResults)

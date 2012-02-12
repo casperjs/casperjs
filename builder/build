@@ -1,0 +1,53 @@
+#!/usr/bin/env phantomjs
+
+// casperjs setup
+var fs = require("fs");
+phantom.casperPath = fs.workingDirectory + "/../..";
+phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
+
+var casper = require("casper").create({
+    verbose: true,
+    faultTolerant: false
+});
+var Markdown = require("./lib/markdown");
+var converter = new Markdown.Converter();
+var config = JSON.parse(fs.read("config.json"));
+var templateUrl = 'file://' + fs.workingDirectory + '/' + config.template;
+var sections = {};
+
+Object.keys(config.sources).forEach(function(id) {
+    var src = config.sources[id];
+    casper.echo('Section "'+ id + '": converting source ' + src);
+    try {
+        var content = fs.read(src), action = 'Included';
+        if (/\.md$/.test(src)) {
+            action = 'Converted';
+            content = converter.makeHtml(content);
+        }
+        sections[id] = content;
+        casper.echo(action + ' ' + src);
+    } catch (e) {
+        casper.echo('Skipped ' + src + ': ' + e, 'COMMENT');
+    }
+});
+
+casper.start(templateUrl, function() {
+    this.echo('Opening template: ' + templateUrl);
+    this.evaluate(function(sections) {
+        Object.keys(sections).forEach(function(id) {
+            document.querySelector('#' + id).innerHTML = sections[id];
+        });
+    }, { sections: sections });
+});
+
+casper.then(function() {
+    var pageContent = this.page.content;
+    pageContent = pageContent.replace(/\{\{\s?version\s?\}\}/gim, config.context.version);
+    this.echo('Saving to ' + config.target);
+    fs.write(config.target, pageContent, "w");
+    this.echo('Saved to ' + config.target);
+});
+
+casper.run(function() {
+    this.echo('All done.', 'INFO').exit();
+});

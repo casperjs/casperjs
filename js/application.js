@@ -3,6 +3,11 @@
  */
 $(document).ready(function() {
     // pretty printing
+    $('pre').each(function() {
+        if ($(this).find('code').length === 1) {
+            $(this).addClass('prettyprint');
+        }
+    });
     prettyPrint();
     // topbar
     $(".collapse").collapse();
@@ -10,8 +15,8 @@ $(document).ready(function() {
     $('.dropdown-toggle').dropdown();
     // apitoc
     function checkApiTocLinks() {
-      $('.apitoc a[class*="hashactive"]').removeClass('hashactive');
-      $('.apitoc a[href="' + window.location.hash + '"]').addClass('hashactive');
+        $('.apitoc a[class*="hashactive"]').removeClass('hashactive');
+        $('.apitoc a[href="' + window.location.hash + '"]').addClass('hashactive');
     }
     $(window).bind('hashchange', checkApiTocLinks);
     checkApiTocLinks();
@@ -82,18 +87,4 @@ $(document).ready(function() {
             $(initials).each(position);
         };
     })(window);
-    // github news
-    $('#commits-master').githubInfoWidget({
-        user: 'n1k0',
-        repo: 'casperjs',
-        branch: 'master',
-        avatarSize: 40,
-        last: 15,
-        template: '<tr class="github-commit">' +
-            //'<td><img class="avatar" /></td>' +
-            '<td><a class="user"/></td>' +
-            '<td><a class="message" /></td>' +
-            '<td><span class="date" /></td>' +
-        '</tr>'
-    });
 });

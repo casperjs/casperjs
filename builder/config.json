@@ -1,0 +1,29 @@
+{
+    "template": "template.html",
+    "sources": {
+        "about"                  : "sources/about.html"
+    ,    "installation_contents" : "sources/installation_contents.md"
+    ,    "quickstart_contents"   : "sources/quickstart_contents.md"
+    ,    "apidoc_contents"       : "sources/apidoc_contents.md"
+    ,    "apidoc_toc"            : "sources/apidoc_toc.md"
+    ,    "cli_contents"          : "sources/cli_contents.md"
+    ,    "filters_contents"      : "sources/filters_contents.md"
+    ,    "clientutils_contents"  : "sources/clientutils_contents.md"
+    ,    "clientutils_toc"       : "sources/clientutils_toc.md"
+    ,    "tester_contents"       : "sources/tester_contents.md"
+    ,    "tester_toc"            : "sources/tester_toc.md"
+    ,    "colorizer_contents"    : "sources/colorizer_contents.md"
+    ,    "colorizer_toc"         : "sources/colorizer_toc.md"
+    ,    "logging_contents"      : "sources/logging_contents.md"
+    ,    "extending_contents"    : "sources/extending_contents.md"
+    ,    "testing_contents"      : "sources/testing_contents.md"
+    ,    "faq_contents"          : "sources/faq_contents.md"
+    ,    "faq_toc"               : "sources/faq_toc.md"
+    ,    "download_contents"     : "sources/download_contents.md"
+    ,    "license_contents"      : "sources/license_contents.md"
+    },
+    "context": {
+        "version": "0.6.4"
+    },
+    "target": "../index.html"
+}
