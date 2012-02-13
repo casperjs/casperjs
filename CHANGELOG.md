@@ -1,6 +1,12 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.6.5
+------------------
+
+- fixed 0.6.4 version number in `bootstrap.js`
+- centralized version number to package.json
+
 2012-02-09, v0.6.4
 ------------------
 
