@@ -5073,11 +5073,14 @@ td code {
   color: #fff;
 }
 .download {
-  padding-top: 1.8em;
+  padding-top: 1.5em;
   text-align: center;
 }
 .download p {
   margin-top: 20px;
+}
+.download p.social {
+  text-indent: 42px;
 }
 .just-informative {
   color: #fff;
