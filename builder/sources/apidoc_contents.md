@@ -7,22 +7,28 @@ The Casper class
 The most easiest way to instantiate a casper instance is to use the
 module `create()` method:
 
-    var casper = require('casper').create();
+```javascript
+var casper = require('casper').create();
+```
 
 But you can also retrieve the main Function and instantiate it by
 yourself:
 
-    var casper = new require('casper').Casper();
+```javascript
+var casper = new require('casper').Casper();
+```
 
 <h3 id="phantom_Casper_options"><code>Casper([Object options])</code></h3>
 
 Both the `Casper` constructor and the `create()` function accept a
 single `options` argument which is a standard javascript object:
 
-    var casper = require('casper').create({
-        loadImages: false,
-        loadPlugins: false
-    });
+```javascript
+var casper = require('casper').create({
+    loadImages: false,
+    loadPlugins: false
+});
+```
 
 ## Casper options
 
@@ -247,21 +253,23 @@ All the available options are detailled below:
 
 **Example:**
 
-    var casper = require('casper').create({
-        clientScripts:  [
-            'includes/jquery.js',      // These two scripts will be injected in remote
-            'includes/underscore.js'   // DOM on every request
-        ],
-        logLevel: "info",              // Only "info" level messages will be logged
-        onError: function(self, m) {   // Any "error" level message will be written
-            console.log('FATAL:' + m); // on the console output and PhantomJS will
-            self.exit();               // terminate
-        },
-        pageSettings: {
-            loadImages:  false,        // The WebPage instance used by Casper will
-            loadPlugins: false         // use these settings
-        }
-    });
+```javascript
+var casper = require('casper').create({
+    clientScripts:  [
+        'includes/jquery.js',      // These two scripts will be injected in remote
+        'includes/underscore.js'   // DOM on every request
+    ],
+    logLevel: "info",              // Only "info" level messages will be logged
+    onError: function(self, m) {   // Any "error" level message will be written
+        console.log('FATAL:' + m); // on the console output and PhantomJS will
+        self.exit();               // terminate
+    },
+    pageSettings: {
+        loadImages:  false,        // The WebPage instance used by Casper will
+        loadPlugins: false         // use these settings
+    }
+});
+```
 
 But no worry, usually you'll just need to instantiate Casper using
 `require('casper').create()`.
@@ -270,13 +278,15 @@ But no worry, usually you'll just need to instantiate Casper using
 
 Moves back a step in browser's history.
 
-    casper.start('http://foo.bar/1')
-    casper.thenOpen('http://foo.bar/2');
-    casper.thenOpen('http://foo.bar/3');
-    casper.back();
-    casper.run(function() {
-        console.log(this.getCurrentUrl()); // 'http://foo.bar/2'
-    });
+```javascript
+casper.start('http://foo.bar/1')
+casper.thenOpen('http://foo.bar/2');
+casper.thenOpen('http://foo.bar/3');
+casper.back();
+casper.run(function() {
+    console.log(this.getCurrentUrl()); // 'http://foo.bar/2'
+});
+```
 
 Also have a look at [`Casper.forward()`](#phantom_Casper_forward).
 
@@ -290,29 +300,35 @@ because it fails miserably in the version of WebKit shipping with PhantomJS.
 
 Example: retrieving google logo image encoded in base64:
 
-    var base64logo = null;
-    casper.start('http://www.google.fr/', function() {
-        base64logo = this.base64encode('http://www.google.fr/images/srpr/logo3w.png');
-    });
+```javascript
+var base64logo = null;
+casper.start('http://www.google.fr/', function() {
+    base64logo = this.base64encode('http://www.google.fr/images/srpr/logo3w.png');
+});
 
-    casper.run(function() {
-        this.echo(base64logo).exit();
-    });
+casper.run(function() {
+    this.echo(base64logo).exit();
+});
+```
 
 You can also perform an HTTP POST request to retrieve the contents to
 encode:
 
-    var base46contents = null;
-    casper.start('http://domain.tld/download.html', function() {
-        base46contents = this.base64encode('http://domain.tld/', 'POST', {
-            param1: 'foo',
-            param2: 'bar'
-        });
+```javascript
+var base46contents = null;
+casper.start('http://domain.tld/download.html', function() {
+    base46contents = this.base64encode('http://domain.tld/', 'POST', {
+        param1: 'foo',
+        param2: 'bar'
     });
+});
+```
 
-    casper.run(function() {
-        this.echo(base46contents).exit();
-    });
+```javascript
+casper.run(function() {
+    this.echo(base46contents).exit();
+});
+```
 
 <h3 id="phantom_Casper_click"><code>Casper#click(String selector)</code></h3>
 
@@ -321,31 +337,35 @@ mouse pointer, if possible.
 
 **Example:**
 
-    casper.start('http://google.fr/');
+```javascript
+casper.start('http://google.fr/');
 
-    casper.thenEvaluate(function(term) {
-        document.querySelector('input[name="q"]').setAttribute('value', term);
-        document.querySelector('form[name="f"]').submit();
-    }, { term: 'CasperJS' });
+casper.thenEvaluate(function(term) {
+    document.querySelector('input[name="q"]').setAttribute('value', term);
+    document.querySelector('form[name="f"]').submit();
+}, { term: 'CasperJS' });
 
-    casper.then(function() {
-        // Click on 1st result link
-        this.click('h3.r a');
-    });
+casper.then(function() {
+    // Click on 1st result link
+    this.click('h3.r a');
+});
 
-    casper.then(function() {
-        console.log('clicked ok, new location is ' + this.getCurrentUrl());
-    });
+casper.then(function() {
+    console.log('clicked ok, new location is ' + this.getCurrentUrl());
+});
 
-    casper.run();
+casper.run();
+```
 
 <span class="label label-info">Hint</span> If you want the mouse to click a
 given point within the viewport area, you can use the `mouse` property of the
 `Casper` instance:
 
-    casper.then(function() {
-        this.mouse.click(150, 200);
-    });
+```javascript
+casper.then(function() {
+    this.mouse.click(150, 200);
+});
+```
 
 <h3 id="phantom_Casper_capture"><code>Casper#capture(String targetFilepath, Object clipRect)</code></h3>
 
@@ -355,16 +375,18 @@ once done.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.capture('google.png', {
-            top: 100,
-            left: 100,
-            width: 500,
-            height: 400
-        });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.capture('google.png', {
+        top: 100,
+        left: 100,
+        width: 500,
+        height: 400
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_captureSelector"><code>Casper#captureSelector(String targetFile, String selector)</code></h3>
 
@@ -372,11 +394,13 @@ Captures the page area containing the provided selector.
 
 **Example:**
 
-    casper.start('http://www.weather.com/', function() {
-        this.captureSelector('weather.png', '.twc-story-block');
-    });
+```javascript
+casper.start('http://www.weather.com/', function() {
+    this.captureSelector('weather.png', '.twc-story-block');
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_debugHTML"><code>Casper#debugHTML()</code></h3>
 
@@ -385,11 +409,13 @@ for debugging purpose.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.debugHTML();
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.debugHTML();
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_debugPage"><code>Casper#debugPage()</code></h3>
 
@@ -398,11 +424,13 @@ output, for debugging purpose.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.debugPage();
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.debugPage();
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_die"><code>Casper#die(String message[, int  status])</code></h3>
 
@@ -411,24 +439,28 @@ code.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.die("Fail.", 1);
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.die("Fail.", 1);
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_download"><code>Casper#download(String url)</code></h3>
 
 Saves a remote resource onto the filesystem.
 
-    casper.start('http://www.google.fr/', function() {
-        var logoUrl = 'http://www.google.fr/intl/fr/about/corporate/company/';
-        this.download(logoUrl, 'google_company.html');
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    var logoUrl = 'http://www.google.fr/intl/fr/about/corporate/company/';
+    this.download(logoUrl, 'google_company.html');
+});
 
-    casper.run(function() {
-        this.echo('Done.').exit();
-    });
+casper.run(function() {
+    this.echo('Done.').exit();
+});
+```
 
 <h3 id="phantom_Casper_each"><code>Casper#each(Array array,  Function fn)</code></h3>
 
@@ -436,19 +468,21 @@ Iterates over provided array items and execute a callback.
 
 **Example:**
 
-    var links = [
-        'http://google.com/',
-        'http://yahoo.com/',
-        'http://bing.com/'
-    ];
+```javascript
+var links = [
+    'http://google.com/',
+    'http://yahoo.com/',
+    'http://bing.com/'
+];
 
-    casper.start().each(links, function(self, link) {
-        self.thenOpen(link, function() {
-            this.echo(this.getTitle());
-        });
+casper.start().each(links, function(self, link) {
+    self.thenOpen(link, function() {
+        this.echo(this.getTitle());
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 <span class="label label-info">Hint</span> Have a look at the
 [googlematch.js](https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js)
@@ -462,13 +496,15 @@ information).
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.echo('Page title is: ' + this.evaluate(function() {
-            return document.title;
-        }), 'INFO'); // Will be printed in green on the console
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.echo('Page title is: ' + this.evaluate(function() {
+        return document.title;
+    }), 'INFO'); // Will be printed in green on the console
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_evaluate"><code>Casper#evaluate(function  fn[, Object replacements])</code></h3>
 
@@ -478,14 +514,16 @@ define their context:
 
 **Example:**
 
-    casper.evaluate(function(username, password) {
-        document.querySelector('#username').value = username;
-        document.querySelector('#password').value = password;
-        document.querySelector('#submit').click();
-    }, {
-        username: 'sheldon.cooper',
-        password: 'b4z1ng4'
-    });
+```javascript
+casper.evaluate(function(username, password) {
+    document.querySelector('#username').value = username;
+    document.querySelector('#password').value = password;
+    document.querySelector('#submit').click();
+}, {
+    username: 'sheldon.cooper',
+    password: 'b4z1ng4'
+});
+```
 
 <span class="label label-info">Note</span> For filling and submitting forms, rather use the
 [`Casper#fill()`](#phantom_Casper_fill) method.
@@ -497,13 +535,15 @@ returns anything but `true`.
 
 **Example:**
 
-    casper.start('http://foo.bar/home', function() {
-        this.evaluateOrDie(function() {
-            return /logged in/.match(document.title);
-        }, 'not authenticated');
-    });
+```javascript
+casper.start('http://foo.bar/home', function() {
+    this.evaluateOrDie(function() {
+        return /logged in/.match(document.title);
+    }, 'not authenticated');
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_exit"><code>Casper#exit([int status])</code></h3>
 
@@ -514,27 +554,31 @@ Exits PhantomJS with an optional exit status code.
 Checks if any element within remote DOM matches the provided CSS3
 selector.
 
-    casper.start('http://foo.bar/home', function() {
-        if (this.exists('#my_super_id')) {
-            this.echo('found #my_super_id', 'INFO');
-        } else {
-            this.echo('#my_super_id not found', 'ERROR');
-        }
-    });
+```javascript
+casper.start('http://foo.bar/home', function() {
+    if (this.exists('#my_super_id')) {
+        this.echo('found #my_super_id', 'INFO');
+    } else {
+        this.echo('#my_super_id not found', 'ERROR');
+    }
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_forward"><code>Casper#forward()</code></h3>
 
 Moves a step forward in browser's history.
 
-    casper.start('http://foo.bar/1')
-    casper.thenOpen('http://foo.bar/2');
-    casper.thenOpen('http://foo.bar/3');
-    casper.back();    // http://foo.bar/2
-    casper.back();    // http://foo.bar/1
-    casper.forward(); // http://foo.bar/2
-    casper.run();
+```javascript
+casper.start('http://foo.bar/1')
+casper.thenOpen('http://foo.bar/2');
+casper.thenOpen('http://foo.bar/3');
+casper.back();    // http://foo.bar/2
+casper.back();    // http://foo.bar/1
+casper.forward(); // http://foo.bar/2
+casper.run();
+```
 
 Also have a look at [`Casper.back()`](#phantom_Casper_back).
 
@@ -548,11 +592,13 @@ what happens in the PhantomJS environment from the remote one.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.log("I'm logging an error", "error");
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.log("I'm logging an error", "error");
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_fill"><code>Casper#fill(String selector,  Object values[, Boolean submit])</code></h3>
 
@@ -560,41 +606,45 @@ Fills the fields of a form with given values and optionnaly submit it.
 
 Example with this sample html form:
 
-    <form action="/contact" id="contact-form" enctype="multipart/form-data">
-        <input type="text" name="subject"/>
-        <textearea name="content"></textearea>
-        <input type="radio" name="civility" value="Mr"/> Mr
-        <input type="radio" name="civility" value="Mrs"/> Mrs
-        <input type="text" name="name"/>
-        <input type="email" name="email"/>
-        <input type="file" name="attachment"/>
-        <input type="checkbox" name="cc"/> Receive a copy
-        <input type="submit"/>
-    </form>
+```html
+<form action="/contact" id="contact-form" enctype="multipart/form-data">
+    <input type="text" name="subject"/>
+    <textearea name="content"></textearea>
+    <input type="radio" name="civility" value="Mr"/> Mr
+    <input type="radio" name="civility" value="Mrs"/> Mrs
+    <input type="text" name="name"/>
+    <input type="email" name="email"/>
+    <input type="file" name="attachment"/>
+    <input type="checkbox" name="cc"/> Receive a copy
+    <input type="submit"/>
+</form>
+```
 
 A script to fill and submit this form:
 
-    casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
-            'subject':    'I am watching you',
-            'content':    'So be careful.',
-            'civility':   'Mr',
-            'name':       'Chuck Norris',
-            'email':      'chuck@norris.com',
-            'cc':         true,
-            'attachment': '/Users/chuck/roundhousekick.doc'
-        }, true);
-    });
+```javascript
+casper.start('http://some.tld/contact.form', function() {
+    this.fill('form#contact-form', {
+        'subject':    'I am watching you',
+        'content':    'So be careful.',
+        'civility':   'Mr',
+        'name':       'Chuck Norris',
+        'email':      'chuck@norris.com',
+        'cc':         true,
+        'attachment': '/Users/chuck/roundhousekick.doc'
+    }, true);
+});
 
-    casper.then(function() {
-        this.evaluateOrDie(function() {
-            return /message sent/.test(document.body.innerText);
-        }, 'sending message failed');
-    });
+casper.then(function() {
+    this.evaluateOrDie(function() {
+        return /message sent/.test(document.body.innerText);
+    }, 'sending message failed');
+});
 
-    casper.run(function() {
-        this.echo('message sent').exit();
-    });
+casper.run(function() {
+    this.echo('message sent').exit();
+});
+```
 
 Please Don't use CasperJS nor PhantomJS to send spam, or I'll be calling
 the Chuck. More seriously, please just don't.
@@ -606,11 +656,13 @@ will be url-decoded.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.echo(this.getCurrentUrl()); // "http://www.google.fr/"
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.echo(this.getCurrentUrl()); // "http://www.google.fr/"
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
@@ -619,11 +671,13 @@ its name.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.echo(this.getGlobal('innerWidth')); // 1024
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.echo(this.getGlobal('innerWidth')); // 1024
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_getTitle"><code>Casper#getTitle()</code></h3>
 
@@ -631,11 +685,13 @@ Retrieves current page title.
 
 **Example:**
 
-    casper.start('http://www.google.fr/', function() {
-        this.echo(this.getTitle()); // "Google"
-    });
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.echo(this.getTitle()); // "Google"
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String selector)</code></h3>
 
@@ -649,31 +705,35 @@ Performs an HTTP request for opening a given location. You can forge
 
 **Example for a standard `GET` request:**
 
-    casper.start();
+```javascript
+casper.start();
 
-    casper.open('http://www.google.com/').then(function() {
-        this.echo('GOT it.');
-    });
+casper.open('http://www.google.com/').then(function() {
+    this.echo('GOT it.');
+});
 
-    casper.run();
+casper.run();
+```
 
 **Example for a `POST` request:**
 
-    casper.start();
+```javascript
+casper.start();
 
-    casper.open('http://some.testserver.com/post.php', {
-        method: 'post',
-        data:   {
-            'title': 'Plop',
-            'body':  'Wow.'
-        }
-    });
+casper.open('http://some.testserver.com/post.php', {
+    method: 'post',
+    data:   {
+        'title': 'Plop',
+        'body':  'Wow.'
+    }
+});
 
-    casper.then(function() {
-        this.echo('POSTED it.');
-    });
+casper.then(function() {
+    this.echo('POSTED it.');
+});
 
-    casper.run();
+casper.run();
+```
 
 Warning PhantomJS 1.4.0 and 1.4.1 have introduced a
 [regression](http://code.google.com/p/phantomjs/issues/detail?id=337)
@@ -688,18 +748,20 @@ Repeats a navigation step a given number of times.
 
 **Example:**
 
-    var i = 0;
-    casper.start('http://foo.bar/home', function() {
-        this.evaluateOrDie(function() {
-            return /logged in/.match(document.title);
-        }, 'not authenticated');
-    });
+```javascript
+var i = 0;
+casper.start('http://foo.bar/home', function() {
+    this.evaluateOrDie(function() {
+        return /logged in/.match(document.title);
+    }, 'not authenticated');
+});
 
-    casper.repeat(5, function() {
-        this.echo("I am step #" + ++i);
-    });
+casper.repeat(5, function() {
+    this.echo("I am step #" + ++i);
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_resourceExists"><code>Casper#resourceExists(Mixed  test)</code></h3>
 
@@ -708,15 +770,17 @@ a string to perform the test.
 
 **Example:**
 
-    casper.start('http://www.google.com/', function() {
-        if (this.resourceExists('logo3w.png')) {
-            this.echo('Google logo loaded');
-        } else {
-            this.echo('Google logo not loaded', 'ERROR');
-        }
-    });
+```javascript
+casper.start('http://www.google.com/', function() {
+    if (this.resourceExists('logo3w.png')) {
+        this.echo('Google logo loaded');
+    } else {
+        this.echo('Google logo not loaded', 'ERROR');
+    }
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_run"><code>Casper#run(fn onComplete[, int  time])</code></h3>
 
@@ -726,36 +790,42 @@ in order to run the Casper navigation suite.
 
 Casper suite **won't run**:
 
-    casper.start('http://foo.bar/home', function() {
-        // ...
-    });
+```javascript
+casper.start('http://foo.bar/home', function() {
+    // ...
+});
 
-    // hey, it's missing .run() here!
+// hey, it's missing .run() here!
+```
 
 Casper suite **will run**:
 
-    casper.start('http://foo.bar/home', function() {
-        // ...
-    });
+```javascript
+casper.start('http://foo.bar/home', function() {
+    // ...
+});
 
-    casper.run();
+casper.run();
+```
 
 `Casper.run()` also accepts an `onComplete` callback, which you can
 consider as a custom final step to perform when all te other steps has
 been executed. Just don't forget to `exit()` Casper if you define one!
 
-    casper.start('http://foo.bar/home', function() {
-        // ...
-    });
+```javascript
+casper.start('http://foo.bar/home', function() {
+    // ...
+});
 
-    casper.then(function() {
-        // ...
-    });
+casper.then(function() {
+    // ...
+});
 
-    casper.run(function() {
-      this.echo('So the whole suite ended.');
-      this.exit(); // <--- don't forget me!
-    });
+casper.run(function() {
+    this.echo('So the whole suite ended.');
+    this.exit(); // <--- don't forget me!
+});
+```
 
 <h3 id="phantom_Casper_setHttpauth"><code>Casper#setHttpauth(String username, String password)</code></h3>
 
@@ -764,22 +834,26 @@ systems.
 
 **Example:**
 
-    casper.start();
+```javascript
+casper.start();
 
-    casper.setHttpAuth('sheldon.cooper', 'b4z1ng4');
+casper.setHttpAuth('sheldon.cooper', 'b4z1ng4');
 
-    casper.thenOpen('http://password-protected.domain.tld/', function() {
-        this.echo("I'm in. Bazinga.");
-    })
-    casper.run();
+casper.thenOpen('http://password-protected.domain.tld/', function() {
+    this.echo("I'm in. Bazinga.");
+})
+casper.run();
+```
 
 Of course you can directly pass the auth string in the url to open:
 
-    var url = 'http://sheldon.cooper:b4z1ng4@password-protected.domain.tld/';
-    casper.start(url, function() {
-        this.echo("I'm in. Bazinga.");
-    })
-    casper.run();
+```javascript
+var url = 'http://sheldon.cooper:b4z1ng4@password-protected.domain.tld/';
+casper.start(url, function() {
+    this.echo("I'm in. Bazinga.");
+})
+casper.run();
+```
 
 <h3 id="phantom_Casper_start"><code>Casper#start(String url[, function then])</code></h3>
 
@@ -788,41 +862,49 @@ optionnaly adds the step provided by the `then` argument.
 
 **Example:**
 
-    casper.start('http://google.fr/', function() {
-        this.echo("I'm loaded.");
-    });
+```javascript
+casper.start('http://google.fr/', function() {
+    this.echo("I'm loaded.");
+});
 
-    casper.run();
+casper.run();
+```
 
 Alternatively:
 
-    casper.start('http://google.fr/');
+```javascript
+casper.start('http://google.fr/');
 
-    casper.then(function() {
-        this.echo("I'm loaded.");
-    });
+casper.then(function() {
+    this.echo("I'm loaded.");
+});
 
-    casper.run();
+casper.run();
+```
 
 Or alternatively:
 
-    casper.start('http://google.fr/');
+```javascript
+casper.start('http://google.fr/');
 
-    casper.then(function() {
-        casper.echo("I'm loaded.");
-    });
+casper.then(function() {
+    casper.echo("I'm loaded.");
+});
 
-    casper.run();
+casper.run();
+```
 
 Or even:
 
-    casper.start('http://google.fr/');
+```javascript
+casper.start('http://google.fr/');
 
-    casper.then(function(self) {
-        self.echo("I'm loaded.");
-    });
+casper.then(function(self) {
+    self.echo("I'm loaded.");
+});
 
-    casper.run();
+casper.run();
+```
 
 Matter of taste!
 
@@ -838,11 +920,13 @@ page is loaded.
 
 **Example:**
 
-    casper.start('http://google.fr/').then(function() {
-        this.echo("I'm in your google.");
-    });
+```javascript
+casper.start('http://google.fr/').then(function() {
+    this.echo("I'm in your google.");
+});
 
-    casper.run();
+casper.run();
+```
 
 If you want to open a page as a next step in your navigation scenario,
 please refer to the [`Casper#thenOpen()`](#phantom_Casper_thenOpen)
@@ -855,15 +939,17 @@ retrieved page DOM.
 
 **Example:**
 
-    // Querying for "Chuck Norris" on Google
-    casper.start('http://google.fr/').thenEvaluate(function(term) {
-        document.querySelector('input[name="q"]').setAttribute('value', term);
-        document.querySelector('form[name="f"]').submit();
-    }, {
-        term: 'Chuck Norris'
-    });
+```javascript
+// Querying for "Chuck Norris" on Google
+casper.start('http://google.fr/').thenEvaluate(function(term) {
+    document.querySelector('input[name="q"]').setAttribute('value', term);
+    document.querySelector('form[name="f"]').submit();
+}, {
+    term: 'Chuck Norris'
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
 
@@ -872,15 +958,17 @@ add a next step when its loaded.
 
 **Example:**
 
-    casper.start('http://google.fr/').then(function() {
-        this.echo("I'm in your google.");
-    });
+```javascript
+casper.start('http://google.fr/').then(function() {
+    this.echo("I'm in your google.");
+});
 
-    casper.thenOpen('http://yahoo.fr/', function() {
-        this.echo("Now I'm in your yahoo.")
-    });
+casper.thenOpen('http://yahoo.fr/', function() {
+    this.echo("Now I'm in your yahoo.")
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then, Object replacements])</code></h3>
 
@@ -889,20 +977,22 @@ DOM environment.
 
 **Example:**
 
-    casper.start('http://google.fr/').then(function() {
-        this.echo("I'm in your google.");
-    });
+```javascript
+casper.start('http://google.fr/').then(function() {
+    this.echo("I'm in your google.");
+});
 
-    casper.thenOpenAndEvaluate('http://yahoo.fr/', function() {
-        var f = document.querySelector('form');
-        f.querySelector('input[name=q]').value = 'chuck norris';
-        f.submit();
-    });
+casper.thenOpenAndEvaluate('http://yahoo.fr/', function() {
+    var f = document.querySelector('form');
+    f.querySelector('input[name=q]').value = 'chuck norris';
+    f.submit();
+});
 
-    casper.run(function() {
-        this.debugPage();
-        this.exit();
-    });
+casper.run(function() {
+    this.debugPage();
+    this.exit();
+});
+```
 
 <h3 id="phantom_Casper_viewport"><code>Casper#viewport(Number  width, Number height)</code></h3>
 
@@ -910,7 +1000,9 @@ Changes current viewport size.
 
 **Example:**
 
-    casper.viewport(1024, 768);
+```javascript
+casper.viewport(1024, 768);
+```
 
 <span class="label label-info">Note</span> PhantomJS comes with a default
 viewport size of 400x300, and CasperJS doesn't override it by default.
@@ -922,13 +1014,15 @@ in remote page.
 
 **Example:**
 
-    casper.start('http://google.com/', function() {
-        if (this.visible('#hplogo')) {
-            this.echo("I can see the logo");
-        } else {
-            this.echo("I can't see the logo");
-        }
-    });
+```javascript
+casper.start('http://google.com/', function() {
+    if (this.visible('#hplogo')) {
+        this.echo("I can see the logo");
+    } else {
+        this.echo("I can't see the logo");
+    }
+});
+```
 
 <h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
@@ -937,13 +1031,15 @@ execute a step on done.
 
 **Example:**
 
-    casper.start('http://yoursite.tld/', function() {
-        this.wait(1000, function() {
-            this.echo("I've waited for a second.");
-        });
+```javascript
+casper.start('http://yoursite.tld/', function() {
+    this.wait(1000, function() {
+        this.echo("I've waited for a second.");
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function  testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
@@ -955,33 +1051,37 @@ default timeout is set to 5000ms.
 
 **Example:**
 
-    casper.start('http://yoursite.tld/', function() {
-        this.waitFor(function() {
-            return this.evaluate(function() {
-                return document.querySelectorAll('ul.your-list li').length > 2;
-            });
-        }, function() {
-            this.captureSelector('yoursitelist.png', 'ul.your-list');
+```javascript
+casper.start('http://yoursite.tld/', function() {
+    this.waitFor(function() {
+        return this.evaluate(function() {
+            return document.querySelectorAll('ul.your-list li').length > 2;
         });
+    }, function() {
+        this.captureSelector('yoursitelist.png', 'ul.your-list');
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 Example using the `onTimeout` callback:
 
-    casper.start('http://yoursite.tld/', function() {
-        this.waitFor(function() {
-            return this.evaluate(function() {
-                return document.querySelectorAll('ul.your-list li').length > 2;
-            });
-        }, function() {
-            this.captureSelector('yoursitelist.png', 'ul.your-list');
-        }, function() {
-            this.echo("I can't haz my screenshot.").exit();
+```javascript
+casper.start('http://yoursite.tld/', function() {
+    this.waitFor(function() {
+        return this.evaluate(function() {
+            return document.querySelectorAll('ul.your-list li').length > 2;
         });
+    }, function() {
+        this.captureSelector('yoursitelist.png', 'ul.your-list');
+    }, function() {
+        this.echo("I can't haz my screenshot.").exit();
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
@@ -991,13 +1091,15 @@ remote DOM to process any next step. Uses
 
 **Example:**
 
-    casper.start('https://twitter.com/#!/n1k0', function() {
-        this.waitForSelector('.tweet-row', function() {
-            this.captureSelector('twitter.png', 'html');
-        });
+```javascript
+casper.start('https://twitter.com/#!/n1k0', function() {
+    this.waitForSelector('.tweet-row', function() {
+        this.captureSelector('twitter.png', 'html');
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_waitWhileSelector"><code>Casper#waitWhileSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
@@ -1007,13 +1109,15 @@ exist in remote DOM to process a next step. Uses
 
 **Example:**
 
-    casper.start('http://foo.bar/', function() {
-        this.waitWhileSelector('.selector', function() {
-            this.echo('.selector is no more!');
-        });
+```javascript
+casper.start('http://foo.bar/', function() {
+    this.waitWhileSelector('.selector', function() {
+        this.echo('.selector is no more!');
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_waitForResource"><code>Casper#waitForResource(Function  testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
@@ -1022,15 +1126,17 @@ process a next step. Uses [Casper.waitFor()](#phantom_Casper_waitFor).
 
 **Example:**
 
-    casper.start('http://foo.bar/', function() {
-        this.waitForResource(function (resource) {
-            return resource.url.match("foobar.png");
-        }, function() {
-            this.echo('foobar.png is loaded');
-        });
+```javascript
+casper.start('http://foo.bar/', function() {
+    this.waitForResource(function (resource) {
+        return resource.url.match("foobar.png");
+    }, function() {
+        this.echo('foobar.png is loaded');
     });
+});
 
-    casper.run();
+casper.run();
+```
 
 <h3 id="phantom_Casper_waitUntilVisible"><code>Casper#waitUntilVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 

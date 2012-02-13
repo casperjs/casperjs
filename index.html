@@ -128,39 +128,38 @@
           <div id="installation_contents"><p><a href="http://phantomjs.org/">PhantomJS</a> &gt;= 1.3 must be installed. Check out
 <a href="http://code.google.com/p/phantomjs/wiki/Installation">PhantomJS' installation
 instructions</a>. Once
-PhantomJS's installed on your machine, you should obtain something like this:</p>
+PhantomJS's installed on your machine, you should obtain something like this:
 
+</p>
 <pre><code>$ phantomjs --version
-1.4.1
-</code></pre>
+1.4.1</code></pre>
+<p>Now just follow these instructions:
 
-<p>Now just follow these instructions:</p>
-
+</p>
 <pre><code>$ git clone git://github.com/n1k0/casperjs.git
 $ cd casperjs
 $ git checkout tags/0.6.4
-$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
-</code></pre>
+$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs</code></pre>
+<p>So now you should get something like this:
 
-<p>So now you should get something like this:</p>
-
+</p>
 <pre><code>$ casperjs --version
-0.6.4
-</code></pre>
+0.6.4</code></pre>
+<p>You are now ready to write your first script!
 
-<p>You are now ready to write your first script!</p>
-
+</p>
 <p><span class="label label-info">Note</span> The casperjs executable is written
-in <a href="http://python.org/">Python</a>, so you can also run it using the python command:</p>
+in <a href="http://python.org/">Python</a>, so you can also run it using the python command:
 
+</p>
 <pre><code>$ python /path/to/casperjs/bin/casperjs
 CasperJS version 0.6.4 at /Users/niko/casperjs
 Usage: casperjs script.(js|coffee) [options...]
-Read the docs http://casperjs.org/
-</code></pre>
-
+Read the docs http://casperjs.org/</code></pre>
 <p><span class="label label-info">Note</span> If for some reason you don't have
-access to Python, please check this FAQ entry.</p></div>
+access to Python, please check this FAQ entry.
+</p>
+</div>
         </section>
         <section id="quickstart">
           <div class="page-header">
@@ -168,12 +167,14 @@ access to Python, please check this FAQ entry.</p></div>
           </div>
           <div id="quickstart_contents"><p>In the following example, we'll query google for two terms consecutively,
 <em>"capserjs"</em> and <em>"phantomjs"</em>, aggregate the result links in a standard <code>Array</code>
-and output the result to the console.</p>
+and output the result to the console.
 
+</p>
 <p>Fire up your favorite editor and save the javascript code below in a
-<code>googlelinks.js</code> file:</p>
+<code>googlelinks.js</code> file:
 
-<pre><code>var links = [];
+</p>
+<pre><code class="javascript">var links = [];
 var casper = require('casper').create();
 
 function getLinks() {
@@ -204,11 +205,10 @@ casper.run(function() {
     // echo results in some pretty fashion
     this.echo(links.length + ' links found:');
     this.echo(' - ' + links.join('\n - ')).exit();
-});
-</code></pre>
+});</code></pre>
+<p>Run it:
 
-<p>Run it:</p>
-
+</p>
 <pre><code>$ casperjs googlelinks.js
 20 links found:
  - https://github.com/n1k0/casperjs
@@ -230,15 +230,13 @@ casper.run(function() {
  - http://css.dzone.com/articles/phantom-js-alternative
  - http://pilvee.com/blog/tag/phantom-js/
  - http://ariya.blogspot.com/2011/01/phantomjs-minimalistic-headless-webkit.html
- - http://www.readwriteweb.com/hack/2011/03/phantomjs-the-power-of-webkit.php
-</code></pre>
-
+ - http://www.readwriteweb.com/hack/2011/03/phantomjs-the-power-of-webkit.php</code></pre>
 <h3>CoffeeScript</h3>
-
 <p>You can also write Casper scripts using the <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript
-syntax</a>:</p>
+syntax</a>:
 
-<pre><code>getLinks = -&gt;
+</p>
+<pre><code class="coffeescript">getLinks = -&gt;
   links = document.querySelectorAll "h3.r a"
   Array::map.call links, (e) -&gt; e.getAttribute "href"
 
@@ -262,10 +260,10 @@ casper.then -&gt;
 casper.run -&gt;
   # display results
   @echo links.length + " links found:"
-  @echo(" - " + links.join("\n - ")).exit()
-</code></pre>
-
-<p>Just remember to suffix your script with the <code>.coffee</code>extension.</p></div>
+  @echo(" - " + links.join("\n - ")).exit()</code></pre>
+<p>Just remember to suffix your script with the <code>.coffee</code>extension.
+</p>
+</div>
         </section>
         <section id="apidoc">
           <div class="page-header">
@@ -273,37 +271,34 @@ casper.run -&gt;
           </div>
           <div class="row">
             <div class="span9" id="apidoc_contents"><p>Casper source code is quite heavily documented using <code>jsdoc</code>, but below
-you'll find the whole API documentation with sample code.</p>
+you'll find the whole API documentation with sample code.
 
+</p>
 <h2>The Casper class</h2>
-
 <p>The most easiest way to instantiate a casper instance is to use the
-module <code>create()</code> method:</p>
+module <code>create()</code> method:
 
-<pre><code>var casper = require('casper').create();
-</code></pre>
-
+</p>
+<pre><code class="javascript">var casper = require('casper').create();</code></pre>
 <p>But you can also retrieve the main Function and instantiate it by
-yourself:</p>
+yourself:
 
-<pre><code>var casper = new require('casper').Casper();
-</code></pre>
-
+</p>
+<pre><code class="javascript">var casper = new require('casper').Casper();</code></pre>
 <h3 id="phantom_Casper_options"><code>Casper([Object options])</code></h3>
 
 <p>Both the <code>Casper</code> constructor and the <code>create()</code> function accept a
-single <code>options</code> argument which is a standard javascript object:</p>
+single <code>options</code> argument which is a standard javascript object:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     loadImages: false,
     loadPlugins: false
-});
-</code></pre>
-
+});</code></pre>
 <h2>Casper options</h2>
+<p>All the available options are detailled below:
 
-<p>All the available options are detailled below:</p>
-
+</p>
 <table class="table table-striped table-condensed" caption="Casper options">
   <thead>
     <tr>
@@ -521,9 +516,10 @@ single <code>options</code> argument which is a standard javascript object:</p>
   </tbody>
 </table>
 
-<p><strong>Example:</strong></p>
+<p><strong>Example:</strong>
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     clientScripts:  [
         'includes/jquery.js',      // These two scripts will be injected in remote
         'includes/underscore.js'   // DOM on every request
@@ -537,71 +533,71 @@ single <code>options</code> argument which is a standard javascript object:</p>
         loadImages:  false,        // The WebPage instance used by Casper will
         loadPlugins: false         // use these settings
     }
-});
-</code></pre>
-
+});</code></pre>
 <p>But no worry, usually you'll just need to instantiate Casper using
-<code>require('casper').create()</code>.</p>
+<code>require('casper').create()</code>.
 
+</p>
 <h3 id="phantom_Casper_back"><code>Casper#back()</code></h3>
 
-<p>Moves back a step in browser's history.</p>
+<p>Moves back a step in browser's history.
 
-<pre><code>casper.start('http://foo.bar/1')
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/1')
 casper.thenOpen('http://foo.bar/2');
 casper.thenOpen('http://foo.bar/3');
 casper.back();
 casper.run(function() {
     console.log(this.getCurrentUrl()); // 'http://foo.bar/2'
-});
-</code></pre>
+});</code></pre>
+<p>Also have a look at <a href="#phantom_Casper_forward"><code>Casper.forward()</code></a>.
 
-<p>Also have a look at <a href="#phantom_Casper_forward"><code>Casper.forward()</code></a>.</p>
-
+</p>
 <h3 id="phantom_Casper_base64encode"><code>Casper#base64encode(String url [, String method, Object data])</code></h3>
 
 <p>Encodes a resource using the base64 algorithm synchroneously using
-client-side XMLHttpRequest.</p>
+client-side XMLHttpRequest.
 
+</p>
 <p><span class="label label-info">Note</span> We cannot use <code>window.btoa()</code>
-because it fails miserably in the version of WebKit shipping with PhantomJS.</p>
+because it fails miserably in the version of WebKit shipping with PhantomJS.
 
-<p>Example: retrieving google logo image encoded in base64:</p>
+</p>
+<p>Example: retrieving google logo image encoded in base64:
 
-<pre><code>var base64logo = null;
+</p>
+<pre><code class="javascript">var base64logo = null;
 casper.start('http://www.google.fr/', function() {
     base64logo = this.base64encode('http://www.google.fr/images/srpr/logo3w.png');
 });
 
 casper.run(function() {
     this.echo(base64logo).exit();
-});
-</code></pre>
-
+});</code></pre>
 <p>You can also perform an HTTP POST request to retrieve the contents to
-encode:</p>
+encode:
 
-<pre><code>var base46contents = null;
+</p>
+<pre><code class="javascript">var base46contents = null;
 casper.start('http://domain.tld/download.html', function() {
     base46contents = this.base64encode('http://domain.tld/', 'POST', {
         param1: 'foo',
         param2: 'bar'
     });
-});
-
-casper.run(function() {
+});</code></pre>
+<pre><code class="javascript">casper.run(function() {
     this.echo(base46contents).exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_click"><code>Casper#click(String selector)</code></h3>
 
 <p>Emulates a click on the element from the provided selector using the
-mouse pointer, if possible.</p>
+mouse pointer, if possible.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://google.fr/');
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/');
 
 casper.thenEvaluate(function(term) {
     document.querySelector('input[name="q"]').setAttribute('value', term);
@@ -617,27 +613,26 @@ casper.then(function() {
     console.log('clicked ok, new location is ' + this.getCurrentUrl());
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <p><span class="label label-info">Hint</span> If you want the mouse to click a
 given point within the viewport area, you can use the <code>mouse</code> property of the
-<code>Casper</code> instance:</p>
+<code>Casper</code> instance:
 
-<pre><code>casper.then(function() {
+</p>
+<pre><code class="javascript">casper.then(function() {
     this.mouse.click(150, 200);
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_capture"><code>Casper#capture(String targetFilepath, Object clipRect)</code></h3>
 
 <p>Proxy method for PhantomJS' <code>WebPage#render</code>. Adds a clipRect parameter
 for automatically setting page clipRect setting values and sets it back
-once done.</p>
+once done.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.capture('google.png', {
         top: 100,
         left: 100,
@@ -646,85 +641,84 @@ once done.</p>
     });
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_captureSelector"><code>Casper#captureSelector(String targetFile, String selector)</code></h3>
 
-<p>Captures the page area containing the provided selector.</p>
+<p>Captures the page area containing the provided selector.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.weather.com/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.weather.com/', function() {
     this.captureSelector('weather.png', '.twc-story-block');
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_debugHTML"><code>Casper#debugHTML()</code></h3>
 
 <p>Logs the HTML code of the current page directly to the standard output,
-for debugging purpose.</p>
+for debugging purpose.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.debugHTML();
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_debugPage"><code>Casper#debugPage()</code></h3>
 
 <p>Logs the textual contents of the current page directly to the standard
-output, for debugging purpose.</p>
+output, for debugging purpose.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.debugPage();
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_die"><code>Casper#die(String message[, int  status])</code></h3>
 
 <p>Exits phantom with a logged error message and an optional exit status
-code.</p>
+code.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.die("Fail.", 1);
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_download"><code>Casper#download(String url)</code></h3>
 
-<p>Saves a remote resource onto the filesystem.</p>
+<p>Saves a remote resource onto the filesystem.
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     var logoUrl = 'http://www.google.fr/intl/fr/about/corporate/company/';
     this.download(logoUrl, 'google_company.html');
 });
 
 casper.run(function() {
     this.echo('Done.').exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_each"><code>Casper#each(Array array,  Function fn)</code></h3>
 
-<p>Iterates over provided array items and execute a callback.</p>
+<p>Iterates over provided array items and execute a callback.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>var links = [
+</p>
+<pre><code class="javascript">var links = [
     'http://google.com/',
     'http://yahoo.com/',
     'http://bing.com/'
@@ -736,77 +730,79 @@ casper.start().each(links, function(self, link) {
     });
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <p><span class="label label-info">Hint</span> Have a look at the
 <a href="https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js">googlematch.js</a>
-sample script for concrete usecase.</p>
+sample script for concrete usecase.
 
+</p>
 <h3 id="phantom_Casper_echo"><code>Casper#echo(String message[, String style])</code></h3>
 
 <p>Prints something to stdout, optionnaly with some fancy color (see the
 <a href="#colorizer"><code>Colorizer</code></a> section of this document for more
-information).</p>
+information).
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.echo('Page title is: ' + this.evaluate(function() {
         return document.title;
     }), 'INFO'); // Will be printed in green on the console
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_evaluate"><code>Casper#evaluate(function  fn[, Object replacements])</code></h3>
 
 <p>Evaluates an expression in the page context, a bit like what PhantomJS'
 <code>WebPage#evaluate</code> does, but can also handle passed arguments if you
-define their context:</p>
+define their context:
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.evaluate(function(username, password) {
+</p>
+<pre><code class="javascript">casper.evaluate(function(username, password) {
     document.querySelector('#username').value = username;
     document.querySelector('#password').value = password;
     document.querySelector('#submit').click();
 }, {
     username: 'sheldon.cooper',
     password: 'b4z1ng4'
-});
-</code></pre>
-
+});</code></pre>
 <p><span class="label label-info">Note</span> For filling and submitting forms, rather use the
-<a href="#phantom_Casper_fill"><code>Casper#fill()</code></a> method.</p>
+<a href="#phantom_Casper_fill"><code>Casper#fill()</code></a> method.
 
+</p>
 <h3 id="phantom_Casper_evaluateOrDie"><code>Casper#evaluateOrDie(function  fn[, String message])</code></h3>
 
 <p>Evaluates an expression within the current page DOM and <code>die()</code> if it
-returns anything but <code>true</code>.</p>
+returns anything but <code>true</code>.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://foo.bar/home', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/home', function() {
     this.evaluateOrDie(function() {
         return /logged in/.match(document.title);
     }, 'not authenticated');
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_exit"><code>Casper#exit([int status])</code></h3>
 
-<p>Exits PhantomJS with an optional exit status code.</p>
+<p>Exits PhantomJS with an optional exit status code.
 
+</p>
 <h3 id="phantom_Casper_exists"><code>Casper#exists(String selector)</code></h3>
 
 <p>Checks if any element within remote DOM matches the provided CSS3
-selector.</p>
+selector.
 
-<pre><code>casper.start('http://foo.bar/home', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/home', function() {
     if (this.exists('#my_super_id')) {
         this.echo('found #my_super_id', 'INFO');
     } else {
@@ -814,48 +810,48 @@ selector.</p>
     }
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_forward"><code>Casper#forward()</code></h3>
 
-<p>Moves a step forward in browser's history.</p>
+<p>Moves a step forward in browser's history.
 
-<pre><code>casper.start('http://foo.bar/1')
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/1')
 casper.thenOpen('http://foo.bar/2');
 casper.thenOpen('http://foo.bar/3');
 casper.back();    // http://foo.bar/2
 casper.back();    // http://foo.bar/1
 casper.forward(); // http://foo.bar/2
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p>Also have a look at <a href="#phantom_Casper_back"><code>Casper.back()</code></a>.
 
-<p>Also have a look at <a href="#phantom_Casper_back"><code>Casper.back()</code></a>.</p>
-
+</p>
 <h3 id="phantom_Casper_log"><code>Casper#log(String message[, String level, String space])</code></h3>
 
 <p>Logs a message with an optional level in an optional space. Available
 levels are <code>debug</code>, <code>info</code>, <code>warning</code> and <code>error</code>. A space is a kind of
 namespace you can set for filtering your logs. By default, Casper logs
 messages in two distinct spaces: <code>phantom</code> and <code>remote</code>, to distinguish
-what happens in the PhantomJS environment from the remote one.</p>
+what happens in the PhantomJS environment from the remote one.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.log("I'm logging an error", "error");
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_fill"><code>Casper#fill(String selector,  Object values[, Boolean submit])</code></h3>
 
-<p>Fills the fields of a form with given values and optionnaly submit it.</p>
+<p>Fills the fields of a form with given values and optionnaly submit it.
 
-<p>Example with this sample html form:</p>
+</p>
+<p>Example with this sample html form:
 
-<pre><code>&lt;form action="/contact" id="contact-form" enctype="multipart/form-data"&gt;
+</p>
+<pre><code class="html">&lt;form action="/contact" id="contact-form" enctype="multipart/form-data"&gt;
     &lt;input type="text" name="subject"/&gt;
     &lt;textearea name="content"&gt;&lt;/textearea&gt;
     &lt;input type="radio" name="civility" value="Mr"/&gt; Mr
@@ -865,12 +861,11 @@ casper.run();
     &lt;input type="file" name="attachment"/&gt;
     &lt;input type="checkbox" name="cc"/&gt; Receive a copy
     &lt;input type="submit"/&gt;
-&lt;/form&gt;
-</code></pre>
+&lt;/form&gt;</code></pre>
+<p>A script to fill and submit this form:
 
-<p>A script to fill and submit this form:</p>
-
-<pre><code>casper.start('http://some.tld/contact.form', function() {
+</p>
+<pre><code class="javascript">casper.start('http://some.tld/contact.form', function() {
     this.fill('form#contact-form', {
         'subject':    'I am watching you',
         'content':    'So be careful.',
@@ -890,77 +885,78 @@ casper.then(function() {
 
 casper.run(function() {
     this.echo('message sent').exit();
-});
-</code></pre>
-
+});</code></pre>
 <p>Please Don't use CasperJS nor PhantomJS to send spam, or I'll be calling
-the Chuck. More seriously, please just don't.</p>
+the Chuck. More seriously, please just don't.
 
+</p>
 <h3 id="phantom_Casper_getCurrentUrl"><code>Casper#getCurrentUrl()</code></h3>
 
 <p>Retrieves current page URL. <span class="label label-info">Note</span> the url
-will be url-decoded.</p>
+will be url-decoded.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.echo(this.getCurrentUrl()); // "http://www.google.fr/"
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 <p>Retrieves a global variable value within the remote DOM environment by
-its name.</p>
+its name.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.echo(this.getGlobal('innerWidth')); // 1024
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_getTitle"><code>Casper#getTitle()</code></h3>
 
-<p>Retrieves current page title.</p>
+<p>Retrieves current page title.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.echo(this.getTitle()); // "Google"
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String selector)</code></h3>
 
 <p>Warning This method has been deprecated since 0.6. Use
-<a href="#phantom_Casper_click"><code>Casper.click()</code></a> instead.</p>
+<a href="#phantom_Casper_click"><code>Casper.click()</code></a> instead.
 
+</p>
 <h3 id="phantom_Casper_open"><code>Casper#open(String location, Object Settings)</code></h3>
 
 <p>Performs an HTTP request for opening a given location. You can forge
-<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> and <code>HEAD</code> requests.</p>
+<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> and <code>HEAD</code> requests.
 
-<p><strong>Example for a standard <code>GET</code> request:</strong></p>
+</p>
+<p><strong>Example for a standard <code>GET</code> request:</strong>
 
-<pre><code>casper.start();
+</p>
+<pre><code class="javascript">casper.start();
 
 casper.open('http://www.google.com/').then(function() {
     this.echo('GOT it.');
 });
 
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p><strong>Example for a <code>POST</code> request:</strong>
 
-<p><strong>Example for a <code>POST</code> request:</strong></p>
-
-<pre><code>casper.start();
+</p>
+<pre><code class="javascript">casper.start();
 
 casper.open('http://some.testserver.com/post.php', {
     method: 'post',
@@ -974,23 +970,24 @@ casper.then(function() {
     this.echo('POSTED it.');
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <p>Warning PhantomJS 1.4.0 and 1.4.1 have introduced a
 <a href="http://code.google.com/p/phantomjs/issues/detail?id=337">regression</a>
 with POST requests preventing data to be actually submitted; so please
 check you're using a more recent or patched version of PhantomJS before
 reporting any issue regarding this bug. PhantomJS 1.3 is not affected by
-the bug.</p>
+the bug.
 
+</p>
 <h3 id="phantom_Casper_repeat"><code>Casper#repeat(int times,  function then)</code></h3>
 
-<p>Repeats a navigation step a given number of times.</p>
+<p>Repeats a navigation step a given number of times.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>var i = 0;
+</p>
+<pre><code class="javascript">var i = 0;
 casper.start('http://foo.bar/home', function() {
     this.evaluateOrDie(function() {
         return /logged in/.match(document.title);
@@ -1001,17 +998,17 @@ casper.repeat(5, function() {
     this.echo("I am step #" + ++i);
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_resourceExists"><code>Casper#resourceExists(Mixed  test)</code></h3>
 
 <p>Checks if a resource has been loaded. You can pass either a function or
-a string to perform the test.</p>
+a string to perform the test.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://www.google.com/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://www.google.com/', function() {
     if (this.resourceExists('logo3w.png')) {
         this.echo('Google logo loaded');
     } else {
@@ -1019,38 +1016,36 @@ a string to perform the test.</p>
     }
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_run"><code>Casper#run(fn onComplete[, int  time])</code></h3>
 
 <p>Runs the whole suite of steps and optionally executes a callback when
 they've all been done. Obviously, <strong>calling this method is mandatory</strong>
-in order to run the Casper navigation suite.</p>
+in order to run the Casper navigation suite.
 
-<p>Casper suite <strong>won't run</strong>:</p>
+</p>
+<p>Casper suite <strong>won't run</strong>:
 
-<pre><code>casper.start('http://foo.bar/home', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/home', function() {
     // ...
 });
 
-// hey, it's missing .run() here!
-</code></pre>
+// hey, it's missing .run() here!</code></pre>
+<p>Casper suite <strong>will run</strong>:
 
-<p>Casper suite <strong>will run</strong>:</p>
-
-<pre><code>casper.start('http://foo.bar/home', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/home', function() {
     // ...
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <p><code>Casper.run()</code> also accepts an <code>onComplete</code> callback, which you can
 consider as a custom final step to perform when all te other steps has
-been executed. Just don't forget to <code>exit()</code> Casper if you define one!</p>
+been executed. Just don't forget to <code>exit()</code> Casper if you define one!
 
-<pre><code>casper.start('http://foo.bar/home', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/home', function() {
     // ...
 });
 
@@ -1059,117 +1054,116 @@ casper.then(function() {
 });
 
 casper.run(function() {
-  this.echo('So the whole suite ended.');
-  this.exit(); // &lt;--- don't forget me!
-});
-</code></pre>
-
+    this.echo('So the whole suite ended.');
+    this.exit(); // &lt;--- don't forget me!
+});</code></pre>
 <h3 id="phantom_Casper_setHttpauth"><code>Casper#setHttpauth(String username, String password)</code></h3>
 
 <p>Sets <code>HTTP_AUTH_USER</code> and <code>HTTP_AUTH_PW</code> for HTTP based authentication
-systems.</p>
+systems.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start();
+</p>
+<pre><code class="javascript">casper.start();
 
 casper.setHttpAuth('sheldon.cooper', 'b4z1ng4');
 
 casper.thenOpen('http://password-protected.domain.tld/', function() {
     this.echo("I'm in. Bazinga.");
 })
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p>Of course you can directly pass the auth string in the url to open:
 
-<p>Of course you can directly pass the auth string in the url to open:</p>
-
-<pre><code>var url = 'http://sheldon.cooper:b4z1ng4@password-protected.domain.tld/';
+</p>
+<pre><code class="javascript">var url = 'http://sheldon.cooper:b4z1ng4@password-protected.domain.tld/';
 casper.start(url, function() {
     this.echo("I'm in. Bazinga.");
 })
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_start"><code>Casper#start(String url[, function then])</code></h3>
 
 <p>Configures and starts Casper, then open the provided <code>url</code> and
-optionnaly adds the step provided by the <code>then</code> argument.</p>
+optionnaly adds the step provided by the <code>then</code> argument.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://google.fr/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/', function() {
     this.echo("I'm loaded.");
 });
 
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p>Alternatively:
 
-<p>Alternatively:</p>
-
-<pre><code>casper.start('http://google.fr/');
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/');
 
 casper.then(function() {
     this.echo("I'm loaded.");
 });
 
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p>Or alternatively:
 
-<p>Or alternatively:</p>
-
-<pre><code>casper.start('http://google.fr/');
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/');
 
 casper.then(function() {
     casper.echo("I'm loaded.");
 });
 
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p>Or even:
 
-<p>Or even:</p>
-
-<pre><code>casper.start('http://google.fr/');
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/');
 
 casper.then(function(self) {
     self.echo("I'm loaded.");
 });
 
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p>Matter of taste!
 
-<p>Matter of taste!</p>
-
+</p>
 <p><span class="label label-info">Note</span> <strong>You must call the <code>start()</code> method
 in order to be able to add navigation steps</strong> and run the suite. If you don't
-you'll get an error message inviting you to do so anyway.</p>
+you'll get an error message inviting you to do so anyway.
 
+</p>
 <h3 id="phantom_Casper_then"><code>Casper#then(function fn)</code></h3>
 
 <p>The standard way to add a new navigation step to the Casper suite by
 provide a callback function which will be executed when the requested
-page is loaded.</p>
+page is loaded.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://google.fr/').then(function() {
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/').then(function() {
     this.echo("I'm in your google.");
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <p>If you want to open a page as a next step in your navigation scenario,
 please refer to the <a href="#phantom_Casper_thenOpen"><code>Casper#thenOpen()</code></a>
-method documentation.</p>
+method documentation.
 
+</p>
 <h3 id="phantom_Casper_thenEvaluate"><code>Casper#thenEvaluate(function  fn[, Object replacements])</code></h3>
 
 <p>Adds a new navigation step to perform code evaluation within the current
-retrieved page DOM.</p>
+retrieved page DOM.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>// Querying for "Chuck Norris" on Google
+</p>
+<pre><code class="javascript">// Querying for "Chuck Norris" on Google
 casper.start('http://google.fr/').thenEvaluate(function(term) {
     document.querySelector('input[name="q"]').setAttribute('value', term);
     document.querySelector('form[name="f"]').submit();
@@ -1177,17 +1171,17 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
     term: 'Chuck Norris'
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
 
 <p>Adds a new navigation step for opening a new location, and optionnaly
-add a next step when its loaded.</p>
+add a next step when its loaded.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://google.fr/').then(function() {
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/').then(function() {
     this.echo("I'm in your google.");
 });
 
@@ -1195,17 +1189,17 @@ casper.thenOpen('http://yahoo.fr/', function() {
     this.echo("Now I'm in your yahoo.")
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then, Object replacements])</code></h3>
 
 <p>Basically a shortcut for opening an url and evaluate code against remote
-DOM environment.</p>
+DOM environment.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://google.fr/').then(function() {
+</p>
+<pre><code class="javascript">casper.start('http://google.fr/').then(function() {
     this.echo("I'm in your google.");
 });
 
@@ -1218,64 +1212,66 @@ casper.thenOpenAndEvaluate('http://yahoo.fr/', function() {
 casper.run(function() {
     this.debugPage();
     this.exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_viewport"><code>Casper#viewport(Number  width, Number height)</code></h3>
 
-<p>Changes current viewport size.</p>
+<p>Changes current viewport size.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.viewport(1024, 768);
-</code></pre>
-
+</p>
+<pre><code class="javascript">casper.viewport(1024, 768);</code></pre>
 <p><span class="label label-info">Note</span> PhantomJS comes with a default
-viewport size of 400x300, and CasperJS doesn't override it by default.</p>
+viewport size of 400x300, and CasperJS doesn't override it by default.
 
+</p>
 <h3 id="phantom_Casper_visible"><code>Casper#visible(String selector)</code></h3>
 
 <p>Checks if the DOM element matching the provided CSS3 selector is visible
-in remote page.</p>
+in remote page.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://google.com/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://google.com/', function() {
     if (this.visible('#hplogo')) {
         this.echo("I can see the logo");
     } else {
         this.echo("I can't see the logo");
     }
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
 <p>Pause steps suite execution for a given amount of time, and optionnaly
-execute a step on done.</p>
+execute a step on done.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://yoursite.tld/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://yoursite.tld/', function() {
     this.wait(1000, function() {
         this.echo("I've waited for a second.");
     });
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function  testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-<p>Waits until a function returns true to process any next step.</p>
+<p>Waits until a function returns true to process any next step.
 
+</p>
 <p>You can also set a callback on timeout using the <code>onTimeout</code> argument,
 and set the timeout using the <code>timeout</code> one, in milliseconds. The
-default timeout is set to 5000ms.</p>
+default timeout is set to 5000ms.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://yoursite.tld/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://yoursite.tld/', function() {
     this.waitFor(function() {
         return this.evaluate(function() {
             return document.querySelectorAll('ul.your-list li').length &gt; 2;
@@ -1285,12 +1281,11 @@ default timeout is set to 5000ms.</p>
     });
 });
 
-casper.run();
-</code></pre>
+casper.run();</code></pre>
+<p>Example using the <code>onTimeout</code> callback:
 
-<p>Example using the <code>onTimeout</code> callback:</p>
-
-<pre><code>casper.start('http://yoursite.tld/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://yoursite.tld/', function() {
     this.waitFor(function() {
         return this.evaluate(function() {
             return document.querySelectorAll('ul.your-list li').length &gt; 2;
@@ -1302,51 +1297,51 @@ casper.run();
     });
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided CSS3 selector exists in
 remote DOM to process any next step. Uses
-<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.</p>
+<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('https://twitter.com/#!/n1k0', function() {
+</p>
+<pre><code class="javascript">casper.start('https://twitter.com/#!/n1k0', function() {
     this.waitForSelector('.tweet-row', function() {
         this.captureSelector('twitter.png', 'html');
     });
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_waitWhileSelector"><code>Casper#waitWhileSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided CSS3 selector does not
 exist in remote DOM to process a next step. Uses
-<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.</p>
+<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://foo.bar/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/', function() {
     this.waitWhileSelector('.selector', function() {
         this.echo('.selector is no more!');
     });
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_waitForResource"><code>Casper#waitForResource(Function  testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Wait until a resource that matches the given <code>testFx</code> is loaded to
-process a next step. Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.</p>
+process a next step. Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
 
-<p><strong>Example:</strong></p>
+</p>
+<p><strong>Example:</strong>
 
-<pre><code>casper.start('http://foo.bar/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/', function() {
     this.waitForResource(function (resource) {
         return resource.url.match("foobar.png");
     }, function() {
@@ -1354,25 +1349,24 @@ process a next step. Uses <a href="#phantom_Casper_waitFor">Casper.waitFor()</a>
     });
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <h3 id="phantom_Casper_waitUntilVisible"><code>Casper#waitUntilVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided CSS3 selector is visible in
 the remote DOM to process a next step. Uses
-<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.</p>
+<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
 
+</p>
 <h3 id="phantom_Casper_waitWhileVisible"><code>Casper#waitWhileVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided CSS3 selector is no longer
 visible in remote DOM to process a next step. Uses
-<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.</p></div>
+<a href="#phantom_Casper_waitFor">Casper.waitFor()</a>.
+</p>
+</div>
             <div class="span3 apitoc">
               <div class="wrapper" id="apidoc_toc"><h3>Quick reference</h3>
-
 <h4>The <code>Casper</code> class</h4>
-
 <ul>
 <li><a href="#phantom_Casper_options"><code>Casper.options</code></a></li>
 <li><a href="#phantom_Casper_back"><code>Casper.back()</code></a></li>
@@ -1415,7 +1409,8 @@ visible in remote DOM to process a next step. Uses
 <li><a href="#phantom_Casper_waitForResource"><code>Casper.waitForResource()</code></a></li>
 <li><a href="#phantom_Casper_waitUntilVisible"><code>Casper.waitUntilVisible()</code></a></li>
 <li><a href="#phantom_Casper_waitWhileVisible"><code>Casper.waitWhileVisible()</code></a></li>
-</ul></div>
+</ul>
+</div>
             </div>
           </div>
         </section>
@@ -1428,15 +1423,18 @@ visible in remote DOM to process a next step. Uses
           </div>
           <div id="cli_contents"><p>CasperJS ships with a builting command line parser on top of PhantomJS'
 one, located in the <code>cli</code> module; it exposes passed arguments as
-<strong>positional ones</strong> and <strong>named options</strong></p>
+<strong>positional ones</strong> and <strong>named options</strong>
 
+</p>
 <p>But no worries for manipulating the <code>cli</code> module parsing API, a <code>Casper</code>
 instance always contains a rady to use <code>cli</code> property, allowing easy
-access of all these parameters.</p>
+access of all these parameters.
 
-<p>Let's consider this simple casper script:</p>
+</p>
+<p>Let's consider this simple casper script:
 
-<pre><code>var casper = require("casper").create();
+</p>
+<pre><code class="javascript">var casper = require("casper").create();
 
 casper.echo("Casper CLI passed args:");
 require("utils").dump(casper.cli.args);
@@ -1444,15 +1442,15 @@ require("utils").dump(casper.cli.args);
 casper.echo("Casper CLI passed options:");
 require("utils").dump(casper.cli.options);
 
-casper.exit();
-</code></pre>
-
+casper.exit();</code></pre>
 <p><span class="label label-info">Note</span> Please note the two <code>casper-path</code>
 and <code>cli</code> options; these are passed to the casper script through the <code>casperjs</code>
-Python executable.</p>
+Python executable.
 
-<p>Execution results:</p>
+</p>
+<p>Execution results:
 
+</p>
 <pre><code>$ casperjs test.js arg1 arg2 arg3 --foo=bar --plop anotherarg
 Casper CLI passed args: [
     "arg1",
@@ -1465,12 +1463,11 @@ Casper CLI passed options: {
     "cli": true,
     "foo": "bar",
     "plop": true
-}
-</code></pre>
+}</code></pre>
+<p>Getting, checking or dropping parameters:
 
-<p>Getting, checking or dropping parameters:</p>
-
-<pre><code>var casper = require("casper").create();
+</p>
+<pre><code class="javascript">var casper = require("casper").create();
 casper.echo(casper.cli.has(0));
 casper.echo(casper.cli.get(0));
 casper.echo(casper.cli.has(3));
@@ -1480,11 +1477,10 @@ casper.echo(casper.cli.get("foo"));
 casper.cli.drop("foo");
 casper.echo(casper.cli.has("foo"));
 casper.echo(casper.cli.get("foo"));
-casper.exit();
-</code></pre>
+casper.exit();</code></pre>
+<p>Execution results:
 
-<p>Execution results:</p>
-
+</p>
 <pre><code>$ casperjs test.js arg1 arg2 arg3 --foo=bar --plop anotherarg
 true
 arg1
@@ -1493,13 +1489,12 @@ anotherarg
 true
 bar
 false
-undefined
-</code></pre>
-
+undefined</code></pre>
 <p>Last but not least, you can still use all PhantomJS standard CLI options
 as you would do with any other phantomjs script. To remeber what they
-are, just run the <code>casperjs --help</code> command:</p>
+are, just run the <code>casperjs --help</code> command:
 
+</p>
 <pre><code>$ casperjs --help
 CasperJS version 0.6.4 at /Users/niko/Sites/casperjs, using PhantomJS version 1.3.0
 
@@ -1519,8 +1514,8 @@ Options:
 --output-encoding                      Sets the encoding used for terminal output (default is 'utf8')
 --proxy=address:port                   Sets the network proxy (e.g. "--proxy=192.168.1.42:8080")
 --script-encoding                      Sets the encoding used for the starting script (default is 'utf8')
---version                              Prints out CasperJS version
-</code></pre></div>
+--version                              Prints out CasperJS version</code></pre>
+</div>
         </section>
         <section id="events-filters">
           <div class="page-header">
@@ -1533,25 +1528,25 @@ Options:
 <a href="https://github.com/joyent/node/blob/master/lib/events.js">one</a> shipping
 with <a href="http://nodejs.org">nodejs</a>; actually it borrows most of its
 codebase. CasperJS also adds <a href="#filters"><em>filters</em></a>, which are basically
-ways to alter values asynchroneously.</p>
+ways to alter values asynchroneously.
 
+</p>
 <hr>
-
 <h2 id="events">Events</h2>
 
 <p>Using events is pretty much straightforward if you're a node developer,
-or if you worked with any evented system before:</p>
+or if you worked with any evented system before:
 
+</p>
 <pre><code>var casper = require('casper').create();
 
 casper.on('resource.received', function(resource) {
     casper.echo(resource.url);
-});
-</code></pre>
-
+});</code></pre>
 <p>Here's a table containing all the available events with all the
-parameters passed to their callback:</p>
+parameters passed to their callback:
 
+</p>
 <table class="table table-striped table-condensed" caption="Casper options">
   <thead>
     <tr>
@@ -1774,12 +1769,12 @@ parameters passed to their callback:</p>
     <tr>
       <td><code>wait.done</code></td>
       <td>None</td>
-      <td>Emitted when a <code>Casper.wait*()</code> operation ends.</td>
+      <td>Emitted when a <code>Casper.wait<em>()</em></code><em> operation ends.</em></td>
     </tr>
     <tr>
       <td><code>wait.start</code></td>
       <td>None</td>
-      <td>Emitted when a <code>Casper.wait*()</code> operation starts.</td>
+      <td>Emitted when a <code>Casper.wait()</code> operation starts.</td>
     </tr>
     <tr>
       <td><code>waitFor.timeout</code></td>
@@ -1793,10 +1788,10 @@ parameters passed to their callback:</p>
 </table>
 
 <h3>Emitting you own events</h3>
-
 <p>Of course you can emit your own events, using the <code>Casper.emit()</code>
-method:</p>
+method:
 
+</p>
 <pre><code>var casper = require('casper').create();
 
 // listening to a custom event
@@ -1809,32 +1804,30 @@ casper.start('http://google.com/', function() {
     this.emit('google.loaded');
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <hr>
-
 <h2 id="filters">Filters</h2>
 
 <p>Filters allow to alter some value asynchroneously. Sounds obscure? Let's
 take a simple example and let's imagine you would like to alter every
 single url opened by CasperJS to append a <code>foo=42</code> query string
-parameter:</p>
+parameter:
 
+</p>
 <pre><code>var casper = require('casper').create();
 
 casper.setFilter('open.location', function(location) {
     return /\?+/.test(location) ? location += "&amp;foo=42" : location += "?foo=42";
-});
-</code></pre>
-
+});</code></pre>
 <p>There you have it, every single requested url will have these appended.
 Let me bet you'll find far more interesting use cases than my silly one
-;)</p>
+;)
 
+</p>
 <p>Here'a the list of all available filters with their expected return
-value:</p>
+value:
 
+</p>
 <table class="table table-striped table-condensed" caption="Casper options">
   <thead>
     <tr>
@@ -1870,7 +1863,8 @@ value:</p>
       <td>Allows to alter every url before it being opened.</td>
     </tr>
   </tbody>
-</table></div>
+</table>
+</div>
         </section>
         <section id="client-side-utils">
           <div class="page-header">
@@ -1882,21 +1876,24 @@ value:</p>
             <div class="span9" id="clientutils_contents"><p>Casper ships with a few client-side utilitites which are injected in the
 remote DOM environment, and accessible from there through the
 <code>__utils__</code> object instance of the <code>ClientUtils</code> class of the
-<code>clientutils</code> module.</p>
+<code>clientutils</code> module.
 
+</p>
 <p><span class="label label-info">Note</span> These tools are provided to avoid
 coupling CasperJS to any third-party library like jQuery, Mootools or
 something; but you can always include these and have them available client-side
-using the <code>Casper.options.clientScripts</code> option.</p>
+using the <code>Casper.options.clientScripts</code> option.
 
+</p>
 <h3 id="phantom_Casper_ClientUtils_encode"><code>ClientUtils#encode(String contents)</code></h3>
 
 <p>Encodes a string using the <a href="http://en.wikipedia.org/wiki/Base64">base64
 algorithm</a>. For the records,
 CasperJS doesn't use builtin <code>window.btoa()</code> function because it can't
-deal efficiently with strings encoded using &gt;8b characters.</p>
+deal efficiently with strings encoded using &gt;8b characters.
 
-<pre><code>var base64;
+</p>
+<pre><code class="javascript">var base64;
 casper.start('http://foo.bar/', function() {
     base64 = this.evaluate(function() {
         return __utils__.encode("I've been a bit cryptic recently");
@@ -1905,14 +1902,13 @@ casper.start('http://foo.bar/', function() {
 
 casper.run(function() {
     this.echo(base64).exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_ClientUtils_exists"><code>ClientUtils#exists(String selector)</code></h3>
 
-<p>Checks if a DOM element matching a given CSS3 selector exists.</p>
+<p>Checks if a DOM element matching a given CSS3 selector exists.
 
-<pre><code>var exists;
+</p>
+<pre><code class="javascript">var exists;
 casper.start('http://foo.bar/', function() {
     exists = this.evaluate(function() {
         return __utils__.exists('#some_id');
@@ -1921,14 +1917,13 @@ casper.start('http://foo.bar/', function() {
 
 casper.run(function() {
     this.echo(exists).exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_ClientUtils_findAll"><code>ClientUtils#findAll(String selector)</code></h3>
 
-<p>Retrieves all DOM elements matching a given CSS3 selector.</p>
+<p>Retrieves all DOM elements matching a given CSS3 selector.
 
-<pre><code>var links;
+</p>
+<pre><code class="javascript">var links;
 casper.start('http://foo.bar/', function() {
     links = this.evaluate(function() {
         var elements = __utils__.findAll('a.menu');
@@ -1940,14 +1935,13 @@ casper.start('http://foo.bar/', function() {
 
 casper.run(function() {
     this.echo(JSON.stringify(links)).exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_ClientUtils_findOne"><code>ClientUtils#findOne(String selector)</code></h3>
 
-<p>Retrieves a single DOM element by a CSS3 selector.</p>
+<p>Retrieves a single DOM element by a CSS3 selector.
 
-<pre><code>var href;
+</p>
+<pre><code class="javascript">var href;
 casper.start('http://foo.bar/', function() {
     href = this.evaluate(function() {
         return __utils__.findOne('#my_id').getAttribute('href');
@@ -1956,16 +1950,15 @@ casper.start('http://foo.bar/', function() {
 
 casper.run(function() {
     this.echo(href).exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_ClientUtils_getBase64"><code>ClientUtils#getBase64(String url[, String method, Object data])</code></h3>
 
 <p>This method will retrieved a base64 encoded version of any resource
 behind an url. For example, let's imagine we want to retrieve the base64
-representation of some website's logo:</p>
+representation of some website's logo:
 
-<pre><code>var logo = null;
+</p>
+<pre><code class="javascript">var logo = null;
 casper.start('http://foo.bar/', function() {
     logo = this.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
@@ -1975,9 +1968,7 @@ casper.start('http://foo.bar/', function() {
 
 casper.run(function() {
     this.echo(logo).exit();
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_ClientUtils_getBinary"><code>ClientUtils#getBinary(String url[, String method, Object data])</code></h3>
 
 <p>This method will retrieved the raw contents of a given binary resource;
@@ -1985,30 +1976,38 @@ unfortunately though, PhantomJS cannot process these data directly so
 you'll have to process them within the remote DOM environment. If you
 intend to download the resource, use
 <a href="#phantom_Casper_ClientUtils_getBase64">ClientUtils.getBase64()</a> or
-<a href="#phantom_Casper_base64encode">Casper.base64encode()</a> instead.</p>
+<a href="#phantom_Casper_base64encode">Casper.base64encode()</a> instead.
 
-<pre><code>casper.start('http://foo.bar/', function() {
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/', function() {
     this.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
         console.log(__utils__.getBinary(imgUrl));
     };
 });
 
-casper.run();
-</code></pre>
-
+casper.run();</code></pre>
 <p>Warning You won't be able to pass the <em>binary string</em> from the remote
 DOM environment to PhantomJS' one. For retrieving binary contents, use
-<a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a>.</p>
+<a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a>.
 
+</p>
 <h3 id="phantom_Casper_ClientUtils_visible"><code>ClientUtils#visible(String selector)</code></h3>
 
-<p>Checks if an element is visible.</p></div>
+<p>Checks if an element is visible.
+
+</p>
+<pre><code class="javascript">casper.start('http://foo.bar/', function() {
+    if (this.visible('#cain')) {
+        this.echo("I CAN SEE YOU");
+    }
+});
+
+casper.run();</code></pre>
+</div>
             <div class="span3 apitoc">
               <div class="wrapper" id="clientutils_toc"><h3>Quick reference</h3>
-
 <h4>The <code>ClientUtils</code> class</h4>
-
 <ul>
 <li><a href="#phantom_Casper_ClientUtils_encode"><code>ClientUtils.encode()</code></a></li>
 <li><a href="#phantom_Casper_ClientUtils_exists"><code>ClientUtils.exists()</code></a></li>
@@ -2017,7 +2016,8 @@ DOM environment to PhantomJS' one. For retrieving binary contents, use
 <li><a href="#phantom_Casper_ClientUtils_getBase64"><code>ClientUtils.getBase64()</code></a></li>
 <li><a href="#phantom_Casper_ClientUtils_getBinary"><code>ClientUtils.getBinary()</code></a></li>
 <li><a href="#phantom_Casper_ClientUtils_visible"><code>ClientUtils.visible()</code></a></li>
-</ul></div>
+</ul>
+</div>
             </div>
           </div>
         </section>
@@ -2029,113 +2029,107 @@ DOM environment to PhantomJS' one. For retrieving binary contents, use
             <div class="span9" id="tester_contents"><p>Casper ships with a <code>tester</code> module and a <code>Tester</code> class providing an
 API for unit &amp; functional testing purpose. By default you can access an
 instance of this class through <code>test</code> property of any <code>Casper</code> class
-instance.</p>
+instance.
 
+</p>
 <p><span class="label label-info">Note</span> The best way to learn how to use the
 Tester API and see it in action is probably to have a look at the <a href="https://github.com/n1k0/casperjs/blob/master/tests/run.js">CasperJS
-test suite code</a>.</p>
+test suite code</a>.
 
+</p>
 <h3 id="phantom_Casper_Tester_assert"><code>Tester#assert(Boolean condition[, String message])</code></h3>
 
 <p>Asserts that the provided condition strictly resolves to a boolean
-<code>true</code>.</p>
+<code>true</code>.
 
+</p>
 <pre><code>var url = 'http://www.google.fr/';
 var casper = require('casper').create();
 casper.start(url, function() {
     this.test.assert(this.getCurrentUrl() === url, 'url is the one expected');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertEquals"><code>Tester#assertEquals(mixed testValue, mixed expected[, String message])</code></h3>
 
-<p>Asserts that two values are strictly equals.</p>
+<p>Asserts that two values are strictly equals.
 
+</p>
 <pre><code>var url = 'http://www.google.fr/';
 var casper = require('casper').create();
 casper.start(url, function() {
     this.test.assertEquals(this.getCurrentUrl(), url, 'url is the one expected');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertEval"><code>Tester#assertEval(Function fn[, String message])</code></h3>
 
-<p>Asserts that a code evaluation in remote DOM resolves to true.</p>
+<p>Asserts that a code evaluation in remote DOM resolves to true.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEval(function() {
         return document.querySelectorAll('form').length &gt; 0;
     }, 'google.fr has at least one form');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertEvalEquals"><code>Tester#assertEvalEquals(Function fn, mixed expected[, String message])</code></h3>
 
-<p>Asserts that the result of a code evaluation in remote DOM equals.</p>
+<p>Asserts that the result of a code evaluation in remote DOM equals.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEvalEquals(function() {
         return document.querySelectorAll('form').length;
     }, 1, 'google.fr provides a single form tag');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertExists"><code>Tester#assertExists(String selector[, String message])</code></h3>
 
 <p>Asserts that an element matching the provided CSS3 selector exists in
-remote DOM environment.</p>
+remote DOM environment.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEvalExists('form[name="gs"]', 'google.fr has a form with name "gs"');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertMatch"><code>Tester#assertMatch(mixed subject, RegExp pattern[, String message])</code></h3>
 
 <p>Asserts that a provided string matches a provided javascript <code>RegExp</code>
-pattern.</p>
+pattern.
 
-<pre><code>casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');
-</code></pre>
-
+</p>
+<pre><code>casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');</code></pre>
 <h3 id="phantom_Casper_Tester_assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
 
-<p>Asserts that the passed subject resolves to <code>false</code>.</p>
+<p>Asserts that the passed subject resolves to <code>false</code>.
 
-<pre><code>casper.test.assertNot(false, "Universe is still operational");
-</code></pre>
-
+</p>
+<pre><code>casper.test.assertNot(false, "Universe is still operational");</code></pre>
 <h3 id="phantom_Casper_Tester_assertRaises"><code>Tester#assertRaises(Function fn, Array args[, String message])</code></h3>
 
 <p>Asserts that the provided function called with the given parameters
-raises a javascript <code>Error</code>.</p>
+raises a javascript <code>Error</code>.
 
+</p>
 <pre><code>casper.test.assertRaises(function(throwIt) {
     if (throwIt) {
         throw new Error('thrown');
     }
-}, [true], 'Error has been raised.');
-</code></pre>
-
+}, [true], 'Error has been raised.');</code></pre>
 <h3 id="phantom_Casper_Tester_assertSelectorExists"><code>Tester#assertSelectorExists(String selector[, String message])</code></h3>
 
 <p>Asserts that at least an element matching the provided CSS3 selector
-exists in remote DOM.</p>
+exists in remote DOM.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertSelectorExists('form[name="gs"]', 'google.fr provides a form');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertResourceExists"><code>Tester#assertResourceExists(Function testFx[, String message])</code></h3>
 
 <p>The <code>testFx</code> is executed against all loaded asserts and the test passes
-when at least one resource matches.</p>
+when at least one resource matches.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertResourceExists(function (resource) {
@@ -2143,106 +2137,97 @@ casper.start('http://www.google.fr/', function() {
     }, 'google.fr logo was loaded');
     // or shorter
     this.test.assertResourceExists('logo3w.png', 'google.fr logo was loaded');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertTitle"><code>Tester#assertTitle(String expected[, String message])</code></h3>
 
-<p>Asserts that title of the remote page equals to the expected one.</p>
+<p>Asserts that title of the remote page equals to the expected one.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertTitle('Google', 'google.fr has the correct title');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertType"><code>Tester#assertType(mixed input, String type[, String message])</code></h3>
 
-<p>Asserts that the provided input is of the given type.</p>
+<p>Asserts that the provided input is of the given type.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.test.assertType(42, "number", "Okay, 42 is a number");
-casper.test.assertType([1, 2, 3], "array", "Yeah, we can test for arrays too =)");
-</code></pre>
-
+casper.test.assertType([1, 2, 3], "array", "Yeah, we can test for arrays too =)");</code></pre>
 <h3 id="phantom_Casper_Tester_assertUrlMatch"><code>Tester#assertUrlMatch(Regexp pattern[, String message])</code></h3>
 
-<p>Asserts that a the current page url matches the provided RegExp pattern.</p>
+<p>Asserts that a the current page url matches the provided RegExp pattern.
 
+</p>
 <pre><code>var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.asserturlMatch(/^http:\/\//', 'google.fr is served in http://');
-});
-</code></pre>
-
+});</code></pre>
 <h3 id="phantom_Casper_Tester_colorize"><code>Tester#colorize(String message, String style)</code></h3>
 
 <p>Render a colorized output. Basically a proxy method for
-<code>Casper.Colorizer#colorize()</code>.</p>
+<code>Casper.Colorizer#colorize()</code>.
 
+</p>
 <h3 id="phantom_Casper_Tester_comment"><code>Tester#comment(String message)</code></h3>
 
-<p>Writes a comment-style formatted message to stdout.</p>
+<p>Writes a comment-style formatted message to stdout.
 
+</p>
 <pre><code>var casper = require('casper').create();
-casper.test.comment("Hi, I'm a comment");
-</code></pre>
-
+casper.test.comment("Hi, I'm a comment");</code></pre>
 <h3 id="phantom_Casper_Tester_error"><code>Tester#error(String message)</code></h3>
 
-<p>Writes an error-style formatted message to stdout.</p>
+<p>Writes an error-style formatted message to stdout.
 
+</p>
 <pre><code>var casper = require('casper').create();
-casper.test.comment("Hi, I'm an error");
-</code></pre>
-
+casper.test.comment("Hi, I'm an error");</code></pre>
 <h3 id="phantom_Casper_Tester_fail"><code>Tester#fail(String message)</code></h3>
 
-<p>Adds a failed test entry to the stack.</p>
+<p>Adds a failed test entry to the stack.
 
+</p>
 <pre><code>var casper = require('casper').create();
-casper.test.fail("Georges W. Bush");
-</code></pre>
-
+casper.test.fail("Georges W. Bush");</code></pre>
 <h3 id="phantom_Casper_Tester_formatMessage"><code>Tester#formatMessage(String message, String style)</code></h3>
 
 <p>Formats a message to highlight some parts of it. Only used internally by
-the tester.</p>
+the tester.
 
+</p>
 <h3 id="phantom_Casper_Tester_info"><code>Tester#info(String message)</code></h3>
 
-<p>Writes an info-style formatted message to stdout.</p>
+<p>Writes an info-style formatted message to stdout.
 
+</p>
 <pre><code>var casper = require('casper').create();
-casper.test.info("Hi, I'm an informative message.");
-</code></pre>
-
+casper.test.info("Hi, I'm an informative message.");</code></pre>
 <h3 id="phantom_Casper_Tester_pass"><code>Tester#pass(String message)</code></h3>
 
-<p>Adds a successful test entry to the stack.</p>
+<p>Adds a successful test entry to the stack.
 
+</p>
 <pre><code>var casper = require('casper').create();
-casper.test.pass("Barrack Obama");
-</code></pre>
-
+casper.test.pass("Barrack Obama");</code></pre>
 <h3 id="phantom_Casper_Tester_renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
 
 <p>Render tests results, an optionnaly exit phantomjs and saves results in
-a XUnit formatted file.</p>
+a XUnit formatted file.
 
+</p>
 <pre><code>var casper = require('casper').create();
 // ...
 casper.run(function() {
     // exists with status code 0 and saves XUnit formatted results
     // in test-results.xml
     this.test.renderResults(true, 0, 'test-results.xml');
-});
-</code></pre></div>
+});</code></pre>
+</div>
             <div class="span3 apitoc">
               <div class="wrapper" id="tester_toc"><h3>Quick reference</h3>
-
 <h4>The <code>Tester</code> class</h4>
-
 <ul>
 <li><a href="#phantom_Casper_Tester_assert"><code>Tester.assert()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertEquals"><code>Tester.assertEquals()</code></a></li>
@@ -2265,7 +2250,8 @@ casper.run(function() {
 <li><a href="#phantom_Casper_Tester_info"><code>Tester.info()</code></a></li>
 <li><a href="#phantom_Casper_Tester_pass"><code>Tester.pass()</code></a></li>
 <li><a href="#phantom_Casper_Tester_renderResults"><code>Tester.renderResults()</code></a></li>
-</ul></div>
+</ul>
+</div>
             </div>
           </div>
         </section>
@@ -2275,23 +2261,21 @@ casper.run(function() {
           </div>
           <div class="row">
             <div class="span9" id="colorizer_contents"><p>Casper ships with a <code>colorizer</code> module which contains a <code>Colorizer</code>
-class which can print stuff to the console output in color:</p>
+class which can print stuff to the console output in color:
 
-<pre><code>var colorizer = require('colorizer').create();
-console.log(colorizer.colorize("Hello World", "INFO"));
-</code></pre>
-
+</p>
+<pre><code class="javascript">var colorizer = require('colorizer').create();
+console.log(colorizer.colorize("Hello World", "INFO"));</code></pre>
 <p>Though most of the times you will use it transparently using the
-<a href="#phantom_Casper_echo"><code>Casper.echo()</code></a> method:</p>
+<a href="#phantom_Casper_echo"><code>Casper.echo()</code></a> method:
 
-<pre><code>casper.echo('an informative message', 'INFO'); // printed in green
-casper.echo('an error message', 'ERROR');      // printed in red
-</code></pre>
-
+</p>
+<pre><code class="javascript">casper.echo('an informative message', 'INFO'); // printed in green
+casper.echo('an error message', 'ERROR');      // printed in red</code></pre>
 <h3>Available predefined styles</h3>
+<p>Available predefined styles are:
 
-<p>Available predefined styles are:</p>
-
+</p>
 <ul>
 <li><code>ERROR</code>: white text on red background</li>
 <li><code>INFO</code>: green text</li>
@@ -2303,32 +2287,35 @@ casper.echo('an error message', 'ERROR');      // printed in red
 <li><code>RED_BAR</code>: white text on red background</li>
 <li><code>INFO_BAR</code>: cyan text</li>
 </ul>
+<p>Here's a sample output of what it can look like:
 
-<p>Here's a sample output of what it can look like:</p>
+</p>
+<p><img src="images/colorizer.png" alt="capture">
 
-<p><img src="images/colorizer.png" alt="capture" title=""></p>
-
+</p>
 <h3 id="phantom_Casper_Colorizer_colorize"><code>Colorizer#colorize(String text, String styleName)</code></h3>
 
 <p>Computes a colored version of the provided text string using a given
-predefined style.</p>
+predefined style.
 
-<pre><code>var colorizer = require('colorizer').create();
-console.log(colorizer.colorize("I'm a red error", "ERROR"));
-</code></pre>
-
+</p>
+<pre><code class="javascript">var colorizer = require('colorizer').create();
+console.log(colorizer.colorize("I'm a red error", "ERROR"));</code></pre>
 <p><span class="label label-info">Note</span> Most of the time you won't have to
 use a <code>Colorizer</code> instance directly as CasperJS provides all the necessary
-methods.</p>
+methods.
 
-<p>See the list of the <a href="#predefined-styles">predefined styles available</a>.</p>
+</p>
+<p>See the list of the <a href="#predefined-styles">predefined styles available</a>.
 
+</p>
 <h3 id="phantom_Casper_Colorizer_format"><code>Colorizer#format(String text, Object style)</code></h3>
 
 <p>Formats a text string using the provided style definition. A style
 definition is a standard javascript <code>Object</code> instance which can define
-the following properties:</p>
+the following properties:
 
+</p>
 <ul>
 <li>String <code>bg</code>: background color name</li>
 <li>String <code>fg</code>: foreground color name</li>
@@ -2338,26 +2325,25 @@ the following properties:</p>
 <li>Boolean <code>reverse</code>: apply reverse formatting</li>
 <li>Boolean <code>conceal</code>: apply conceal formatting</li>
 </ul>
-
 <p><span class="label label-info">Note</span> Available color names are <code>black</code>,
-<code>red</code>, <code>green</code>, <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code> and <code>white</code>.</p>
+<code>red</code>, <code>green</code>, <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code> and <code>white</code>.
 
-<pre><code>var colorizer = require('colorizer').create();
+</p>
+<pre><code class="javascript">var colorizer = require('colorizer').create();
 colorizer.format("We all live in a yellow submarine", {
     bg:   'yellow',
     fg:   'blue',
     bold: true
-});
-</code></pre></div>
+});</code></pre>
+</div>
             <div class="span3 apitoc">
               <div class="wrapper" id="colorizer_toc"><h3>Quick reference</h3>
-
 <h4>The <code>Colorizer</code> class</h4>
-
 <ul>
 <li><a href="#phantom_Casper_Colorizer_colorize"><code>Colorizer.colorize()</code></a></li>
 <li><a href="#phantom_Casper_Colorizer_format"><code>Colorizer.format()</code></a></li>
-</ul></div>
+</ul>
+</div>
             </div>
           </div>
         </section>
@@ -2366,55 +2352,52 @@ colorizer.format("We all live in a yellow submarine", {
             <h1>Logging</h1>
           </div>
           <div id="logging_contents"><p>CasperJS allows logging using its <a href="#phantom_Casper_log"><code>log()</code></a> method
-and these standard event levels:</p>
+and these standard event levels:
 
+</p>
 <ul>
 <li><code>debug</code></li>
 <li><code>info</code></li>
 <li><code>warning</code></li>
 <li><code>error</code></li>
 </ul>
+<p>Sample use:
 
-<p>Sample use:</p>
-
-<pre><code>var casper = require('casper').create();
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
 casper.log('plop', 'debug');
-casper.log('plip', 'warning');
-</code></pre>
-
+casper.log('plip', 'warning');</code></pre>
 <p>Now, there are two things to distinguish: log <em>storage</em> and log
 <em>display</em>; by default CasperJS won't print the logs to the standard
-output. In order to do so, you must enable the <code>verbose</code> Casper option:</p>
+output. In order to do so, you must enable the <code>verbose</code> Casper option:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     verbose: true
-});
-</code></pre>
-
+});</code></pre>
 <p>Also, by default Casper is configured to filter logging which is under
 the <code>error</code> level; you can override this setting by configuring the
-<code>logLevel</code> option:</p>
+<code>logLevel</code> option:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     verbose: true,
     logLevel: 'debug'
-});
-</code></pre>
-
+});</code></pre>
 <p>You can also dump a JSON log of your Casper suite just by rendering the
-contents of the <code>Casper.logs</code> property:</p>
+contents of the <code>Casper.logs</code> property:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
 // ...
 casper.run(function() {
     this.echo(JSON.stringify(this.logs, null, 4)).exit();
-});
-</code></pre>
-
+});</code></pre>
 <p>Last, if you print log messages to the standard output using the
-<code>verbose</code> option, you'll get some fancy colors:</p>
+<code>verbose</code> option, you'll get some fancy colors:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     verbose: true,
     logLevel: 'debug'
 })
@@ -2422,12 +2405,13 @@ casper.log('this is a debug message', 'debug');
 casper.log('and an informative one', 'info');
 casper.log('and a warning', 'warning');
 casper.log('and an error', 'error');
-casper.exit();
-</code></pre>
+casper.exit();</code></pre>
+<p>This will give the following output:
 
-<p>This will give the following output:</p>
-
-<p><img src="images/logoutput.png" alt="image" title=""></p></div>
+</p>
+<p><img src="images/logoutput.png" alt="image">
+</p>
+</div>
         </section>
         <section id="extending">
           <div class="page-header">
@@ -2435,9 +2419,10 @@ casper.exit();
           </div>
           <div id="extending_contents"><p>Sometimes it can be convenient to add your own methods to a <code>Casper</code>
 object instance; you can easily do so as illustrated in the example
-below:</p>
+below:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     loadImages:  false,
     logLevel:   "debug",
     verbose:    true
@@ -2472,18 +2457,17 @@ Object.keys(links).forEach(function(url) {
 
 fantomas.run(function() {
     this.renderJSON(links).exit();
-});
-</code></pre>
-
+});</code></pre>
 <p>Warning As of version 0.6, the <code>Casper.extend()</code> method has been
-deprecated; please now use the method illustrated above.</p>
+deprecated; please now use the method illustrated above.
 
+</p>
 <h3>Using CoffeeScript</h3>
-
 <p>If you're writing your casper scripts using CoffeeScript, this is
-getting a bit easier:</p>
+getting a bit easier:
 
-<pre><code>links =
+</p>
+<pre><code class="coffeescript">links =
     'http://edition.cnn.com/': 0
     'http://www.nytimes.com/': 0
     'http://www.bbc.co.uk/': 0
@@ -2511,8 +2495,8 @@ for url of links
 
 fantomas.run -&gt;
     @renderJSON links
-    @exit()
-</code></pre></div>
+    @exit()</code></pre>
+</div>
         </section>
         <section id="testing">
           <div class="page-header">
@@ -2520,9 +2504,10 @@ fantomas.run -&gt;
           </div>
           <div id="testing_contents"><p>CasperJS ships with a handful set of tools to be used as a functional
 testing framework. For example, let's test write a tests suite for
-testing google search (yes, you read it well):</p>
+testing google search (yes, you read it well):
 
-<pre><code>var casper = require('casper').create();
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
 
 casper.start('http://www.google.fr/', function() {
     this.test.assertTitle('Google', 'google homepage title is the one expected');
@@ -2542,75 +2527,69 @@ casper.then(function() {
 
 casper.run(function() {
     this.test.renderResults(true);
-});
-</code></pre>
-
+});</code></pre>
 <p>As you can see, <code>casper.test</code> is a reference to a <code>tester.Tester</code> object
-instance, which is used to make the assertions and render the results.</p>
+instance, which is used to make the assertions and render the results.
 
+</p>
 <p><span class="label label-info">Note</span> You can find the whole
-<code>tester.Tester</code> API documentation in the <a href="#phantom_Casper_Tester">dedicated section</a>.</p>
+<code>tester.Tester</code> API documentation in the <a href="#phantom_Casper_Tester">dedicated section</a>.
 
-<p>Now run the tests suite:</p>
+</p>
+<p>Now run the tests suite:
 
-<pre><code>$ casperjs samples/googletest.js
-</code></pre>
+</p>
+<pre><code>$ casperjs samples/googletest.js</code></pre>
+<p>You'll probably get something like this:
 
-<p>You'll probably get something like this:</p>
+</p>
+<p><img src="images/testsuiteok.png" alt="capture">
 
-<p><img src="images/testsuiteok.png" alt="capture" title=""></p>
-
+</p>
 <p>In case any assertion fails, you'd rather get something like the
-following:</p>
+following:
 
-<p><img src="images/testsuitefail.png" alt="capture" title=""></p>
+</p>
+<p><img src="images/testsuitefail.png" alt="capture">
 
+</p>
 <hr>
-
 <h3>Exporting results in <em>xUnit</em> format</h3>
-
 <p>CasperJS can export the results of the test suite to an xUnit XML file,
 which is compatible with continous integration tools such as
 <a href="http://jenkins-ci.org/">Jenkins</a>. To save the xUnit log of your test
-suite to a <code>log.xml</code> file, you can process this way:</p>
+suite to a <code>log.xml</code> file, you can process this way:
 
-<pre><code>casper.run(function() {
+</p>
+<pre><code class="javascript">casper.run(function() {
     this.test.renderResults(true, 0, 'log.xml');
-});
-</code></pre>
-
+});</code></pre>
 <p>A cooler way is to add an option to your script using CLI argument
-parsing:</p>
+parsing:
 
-<pre><code>casper.run(function() {
+</p>
+<pre><code class="javascript">casper.run(function() {
     this.test.renderResults(true, 0, this.cli.get('save') || false);
-});
-</code></pre>
+});</code></pre>
+<p>Then you can run:
 
-<p>Then you can run:</p>
-
-<pre><code>$ casperjs test.js --save=log.xml
-</code></pre>
-
+</p>
+<pre><code>$ casperjs test.js --save=log.xml</code></pre>
 <hr>
-
 <h3>CasperJS tests</h3>
-
 <p>CasperJS has its own unit and functional test suite, located in the
 <code>tests</code> subfolder. More tests will be added in the future. To run the
-test suite, from the root of a checkout of the casperjs repository:</p>
+test suite, from the root of a checkout of the casperjs repository:
 
+</p>
 <pre><code>$ cd /path/to/casperjs
-$ casperjs test tests/suites
-</code></pre>
-
+$ casperjs test tests/suites</code></pre>
 <hr>
-
 <h3>Organizing your tests</h3>
-
 <p>Of course writing all your tests in a single file may be painful, so you
-can split them accross files.</p>
+can split them accross files.
 
+</p>
 <div class="alert-message block-message">
   <p>
     <span class="label label-important">Important</span>
@@ -2633,18 +2612,18 @@ can split them accross files.</p>
   </ol>
 </div>
 
-<p>Here's a first sample test file:</p>
+<p>Here's a first sample test file:
 
-<pre><code>// file: /path/to/test/dir/test1.js
+</p>
+<pre><code class="javascript">// file: /path/to/test/dir/test1.js
 
 casper.test.comment('My first test file');
 casper.test.assert(true, "true is so true");
-casper.test.done(); // I must be called!
-</code></pre>
+casper.test.done(); // I must be called!</code></pre>
+<p>And a second one:
 
-<p>And a second one:</p>
-
-<pre><code>// file: /path/to/test/dir/test2.js
+</p>
+<pre><code class="javascript">// file: /path/to/test/dir/test2.js
 
 casper.test.comment('This is my second test file, a bit more async');
 
@@ -2654,40 +2633,40 @@ casper.start('http://my.location.tld/', function() {
 
 casper.run(function() {
     this.test.done(); // I must be called once all the async stuff has been executed
-});
-</code></pre>
-
+});</code></pre>
 <p><span class="label label-info">Hint</span> As you can see, a standard <code>Casper</code>
 class instance, stored in a <code>casper</code> variable, is already available and exposed
 to each test file; that's because a configured one's already available as stated
-previously.</p>
+previously.
 
+</p>
 <p>The <code>casperjs test</code> command comes handy for running all the tests found
-at a given location:</p>
+at a given location:
 
-<pre><code>$ casperjs test /path/to/test/dir/
-</code></pre>
+</p>
+<pre><code>$ casperjs test /path/to/test/dir/</code></pre>
+<p>This is thericatelly what you will get:
 
-<p>This is thericatelly what you will get:</p>
+</p>
+<p><img src="images/split-test-results.png" alt="image">
 
-<p><img src="images/split-test-results.png" alt="image" title=""></p>
+</p>
+<p>Last, you can of course run a single test file:
 
-<p>Last, you can of course run a single test file:</p>
-
-<pre><code>$ casperjs test /path/to/test/dir/test1.js
-</code></pre>
-
+</p>
+<pre><code class="javascript">$ casperjs test /path/to/test/dir/test1.js</code></pre>
 <hr>
-
 <h3>Extending Casper for Testing</h3>
-
 <p>The <code>$ casper test [path]</code> command is just a shortcut for
 <code>$ casper /path/to/casperjs/tests/run.js [path]</code>; so if you want to
 extend Casper capabilities for your tests, your best bet is to write
-your own runner and extend the casper object instance from there.</p>
+your own runner and extend the casper object instance from there.
 
+</p>
 <p><span class="label label-info">Hint</span> You can find the default runner code in
-<a href="https://github.com/n1k0/casperjs/blob/master/tests/run.js"><code>./tests/run.js</code></a>.</p></div>
+<a href="https://github.com/n1k0/casperjs/blob/master/tests/run.js"><code>./tests/run.js</code></a>.
+</p>
+</div>
         </section>
         <section id="faq">
           <div class="page-header">
@@ -2695,98 +2674,95 @@ your own runner and extend the casper object instance from there.</p>
           </div>
           <div class="row">
             <div class="span7" id="faq_contents"><p>Here's a selection of the most frequesntly asked questions by casperjs
-newcomers.</p>
+newcomers.
 
+</p>
 <h2 id="faq-help">I'm stuck! What can I do?</h2>
 
 <p>Your best bet is probably to ask for help on the <a href="https://groups.google.com/forum/#!forum/casperjs">CasperJS discussion
-group</a></p>
+group</a>
 
+</p>
 <hr>
-
 <h2 id="faq-versioning">What is the versioning policy of CasperJS?</h2>
 
 <p>Releases will follow the <a href="http://semver.org/">SemVer standard</a>; they
-will be numbered with the follow format:</p>
+will be numbered with the follow format:
 
-<pre><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;[-&lt;identifier&gt;]
-</code></pre>
+</p>
+<pre><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;[-&lt;identifier&gt;]</code></pre>
+<p>And constructed with the following guidelines:
 
-<p>And constructed with the following guidelines:</p>
-
+</p>
 <ul>
 <li>Breaking backwards compatibility bumps the major</li>
 <li>New additions without breaking backwards compatibility bumps the minor</li>
 <li>Bug fixes and misc changes bump the patch</li>
 <li>Unstable, special and trunk versions will have a proper identifier</li>
 </ul>
-
 <hr>
-
-<h2 id="faq-typeerror">I'm getting *TypeError: 'undefined' is not a function*; WTF?</h2>
+<h2 id="faq-typeerror">I'm getting <em>TypeError: 'undefined' is not a function</em>; WTF?</h2>
 
 <p>Unfortunately PhantomJS ships with a QtWebKit JS engine which would
 <a href="http://code.google.com/p/phantomjs/issues/detail?id=336">need</a> quite a
 serious upgrade to have more explicit error messages, stack traces,
-location, etc.</p>
+location, etc.
 
-<p>I cannot do much to make the situation really better, unfortunately :/</p>
+</p>
+<p>I cannot do much to make the situation really better, unfortunately :/
 
+</p>
 <hr>
+<h2 id="faq-jquery">Can I use <a href="http://jquery.com/">jQuery</a> with CasperJS?</h2>
 
-<h2 id="faq-jquery">Can I use [jQuery](http://jquery.com/) with CasperJS?</h2>
+<p>Sure, as every single other javascript library on Earth.
 
-<p>Sure, as every single other javascript library on Earth.</p>
-
+</p>
 <p>A first solution is to inject it into the remote DOM environement by
-hand using the standard <code>WebPage.injectJs()</code> method:</p>
+hand using the standard <code>WebPage.injectJs()</code> method:
 
-<pre><code>casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');
-</code></pre>
-
+</p>
+<pre><code>casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');</code></pre>
 <p>If you need jQuery being available everytime, you can also make it being
 injected in every received response by setting the <code>clientScripts</code>
-option of CasperJS:</p>
+option of CasperJS:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     clientScripts: ["includes/jquery.min.js"]
-});
-</code></pre>
-
+});</code></pre>
 <hr>
-
-<h2 id="faq-executable">Can I use CasperJS without using the `casperjs` executable?</h2>
+<h2 id="faq-executable">Can I use CasperJS without using the <code>casperjs</code> executable?</h2>
 
 <p>Yes, you can call a CasperJS script directly with the <code>phantomjs</code>
 executable, but if you do so, you must set the <code>phantom.casperPath</code>
-property to the path where the library root is located on your system:</p>
+property to the path where the library root is located on your system:
 
-<pre><code>// casperscript.js
+</p>
+<pre><code class="javascript">// casperscript.js
 phantom.casperPath = '/path/to/casperjs';
 phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 
 var casper = require('casper').create();
-// ...
-</code></pre>
+// ...</code></pre>
+<p>You can run such a script like any other standard PhantomJS script:
 
-<p>You can run such a script like any other standard PhantomJS script:</p>
-
-<pre><code>$ phantomjs casperscript.js
-</code></pre>
-
+</p>
+<pre><code>$ phantomjs casperscript.js</code></pre>
 <p><span class="label label-info">Tip</span> This is especially useful if you work
 on Windows and don't have a way to use the Python-based <code>casperjs</code> executable
-easily.</p>
+easily.
 
+</p>
 <hr>
-
 <h2 id="faq-httpstatuses">How can I catch HTTP 404 and other status codes?</h2>
 
 <p>You can define your own HTTP status code handlers by using the
 <code>httpStatusHandlers</code> option of the Casper object. You can also catch
-other HTTP status codes as well, as demoed below:</p>
+other HTTP status codes as well, as demoed below:
 
-<pre><code>var casper = require('casper').create({
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
     httpStatusHandlers: {
         404: function(self, resource) {
             self.echo(resource.url + ' not found (404)');
@@ -2808,15 +2784,14 @@ casper.thenOpen('http://mywebsite/500', function() {
 
 casper.run(function() {
     this.echo('Done.').exit();
-});
-</code></pre>
-
+});</code></pre>
 <p><span class="label label-info">Hint</span> As of 0.6, casper ships with a
 complete <a href="#events-filters">event system</a> and a bunch of these are dedicated to
-HTTP statuses. You're encouraged to use them.</p></div>
+HTTP statuses. You're encouraged to use them.
+</p>
+</div>
             <div class="span5 apitoc">
               <div class="wrapper" id="faq_toc"><h3>FAQ list</h3>
-
 <ul>
 <li><a href="#faq-help">I'm stuck! What can I do?</a></li>
 <li><a href="#faq-versioning">What is the versioning policy of CasperJS?</a></li>
@@ -2825,11 +2800,12 @@ HTTP statuses. You're encouraged to use them.</p></div>
 <li><a href="#faq-executable">Can I use CasperJS without using the casperjs executable?</a></li>
 <li><a href="#faq-httpstatuses">How can I catch HTTP 404 and other status codes?</a></li>
 </ul>
-
 <p><span class="label label-info">Contribute</span> If you want to contribute FAQs
 to this section, feel free to fork the <a href="https://github.com/n1k0/casperjs/tree/gh-pages">documentation pages branch on
 github</a>, and send me a
-pull request with your tips and tricks!</p></div>
+pull request with your tips and tricks!
+</p>
+</div>
             </div>
           </div>
         </section>
@@ -2840,28 +2816,29 @@ pull request with your tips and tricks!</p></div>
           <div id="download_contents"><p>You can download this project in either
 <a href="https://github.com/n1k0/casperjs/zipball/0.6.4">zip</a> or
 <a href="https://github.com/n1k0/casperjs/tarball/0.6.4">tar</a> formats. You can
-also clone the project with <a href="http://git-scm.com">Git</a> by running:</p>
+also clone the project with <a href="http://git-scm.com">Git</a> by running:
 
-<pre><code>$ git clone git://github.com/n1k0/casperjs casperjs
-</code></pre>
+</p>
+<pre><code>$ git clone git://github.com/n1k0/casperjs casperjs</code></pre>
+<p>Always try to use a tagged version on production:
 
-<p>Always try to use a tagged version on production:</p>
-
+</p>
 <pre><code>$ cd casperjs
-$ git checkout tags/0.6.4
-</code></pre>
-
+$ git checkout tags/0.6.4</code></pre>
 <p>Feel free to play with the code and <a href="https://github.com/n1k0/casperjs/issues">report any issue on
 github</a>. CasperJS has also its own <a href="https://twitter.com/casperjs_org">on
-twitter account</a>.</p></div>
+twitter account</a>.
+</p>
+</div>
         </section>
         <section id="license">
           <div class="page-header">
             <h1>License</h1>
           </div>
           <div id="license_contents"><p><a href="http://casperjs.org">Casper.js</a> is released under the terms of the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT
-license</a>.</p>
+license</a>.
 
+</p>
 <pre><code>Copyright (c) 2011 Nicolas Perriault
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -2877,8 +2854,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
-</code></pre></div>
+DEALINGS IN THE SOFTWARE.</code></pre>
+</div>
         </section>
       </div>
         <footer>

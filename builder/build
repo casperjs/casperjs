@@ -9,8 +9,7 @@ var casper = require("casper").create({
     verbose: true,
     faultTolerant: false
 });
-var Markdown = require("./lib/markdown");
-var converter = new Markdown.Converter();
+var marked = require('./lib/marked');
 var config = JSON.parse(fs.read("config.json"));
 var templateUrl = 'file://' + fs.workingDirectory + '/' + config.template;
 var sections = {};
@@ -22,7 +21,7 @@ Object.keys(config.sources).forEach(function(id) {
         var content = fs.read(src), action = 'Included';
         if (/\.md$/.test(src)) {
             action = 'Converted';
-            content = converter.makeHtml(content);
+            content = marked(content);
         }
         sections[id] = content;
         casper.echo(action + ' ' + src);

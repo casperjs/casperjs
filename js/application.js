@@ -2,9 +2,9 @@
  * CasperJS website js code. Steal if you care, enjoy if you dare.
  */
 $(document).ready(function() {
-    // pretty printing
+    // pretty printing, only when needed
     $('pre').each(function() {
-        if ($(this).find('code').length === 1) {
+        if ($(this).find('code[class]').length === 1) {
             $(this).addClass('prettyprint');
         }
     });

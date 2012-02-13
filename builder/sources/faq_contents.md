@@ -13,7 +13,9 @@ group](https://groups.google.com/forum/#!forum/casperjs)
 Releases will follow the [SemVer standard](http://semver.org/); they
 will be numbered with the follow format:
 
-    <major>.<minor>.<patch>[-<identifier>]
+```
+<major>.<minor>.<patch>[-<identifier>]
+```
 
 And constructed with the following guidelines:
 
@@ -48,9 +50,11 @@ If you need jQuery being available everytime, you can also make it being
 injected in every received response by setting the `clientScripts`
 option of CasperJS:
 
-    var casper = require('casper').create({
-        clientScripts: ["includes/jquery.min.js"]
-    });
+```javascript
+var casper = require('casper').create({
+    clientScripts: ["includes/jquery.min.js"]
+});
+```
 
 * * * * *
 
@@ -60,16 +64,20 @@ Yes, you can call a CasperJS script directly with the `phantomjs`
 executable, but if you do so, you must set the `phantom.casperPath`
 property to the path where the library root is located on your system:
 
-    // casperscript.js
-    phantom.casperPath = '/path/to/casperjs';
-    phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
+```javascript
+// casperscript.js
+phantom.casperPath = '/path/to/casperjs';
+phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 
-    var casper = require('casper').create();
-    // ...
+var casper = require('casper').create();
+// ...
+```
 
 You can run such a script like any other standard PhantomJS script:
 
-    $ phantomjs casperscript.js
+```
+$ phantomjs casperscript.js
+```
 
 <span class="label label-info">Tip</span> This is especially useful if you work
 on Windows and don't have a way to use the Python-based `casperjs` executable
@@ -83,29 +91,31 @@ You can define your own HTTP status code handlers by using the
 `httpStatusHandlers` option of the Casper object. You can also catch
 other HTTP status codes as well, as demoed below:
 
-    var casper = require('casper').create({
-        httpStatusHandlers: {
-            404: function(self, resource) {
-                self.echo(resource.url + ' not found (404)');
-            },
-            500: function(self, resource) {
-                self.echo(resource.url + ' gave an error (500)');
-            }
+```javascript
+var casper = require('casper').create({
+    httpStatusHandlers: {
+        404: function(self, resource) {
+            self.echo(resource.url + ' not found (404)');
         },
-        verbose: true
-    });
+        500: function(self, resource) {
+            self.echo(resource.url + ' gave an error (500)');
+        }
+    },
+    verbose: true
+});
 
-    casper.start('http://mywebsite/404', function() {
-        this.echo('We suppose this url return an HTTP 404');
-    });
+casper.start('http://mywebsite/404', function() {
+    this.echo('We suppose this url return an HTTP 404');
+});
 
-    casper.thenOpen('http://mywebsite/500', function() {
-        this.echo('We suppose this url return an HTTP 500');
-    });
+casper.thenOpen('http://mywebsite/500', function() {
+    this.echo('We suppose this url return an HTTP 500');
+});
 
-    casper.run(function() {
-        this.echo('Done.').exit();
-    });
+casper.run(function() {
+    this.echo('Done.').exit();
+});
+```
 
 <span class="label label-info">Hint</span> As of 0.6, casper ships with a
 complete [event system](#events-filters) and a bunch of these are dedicated to
