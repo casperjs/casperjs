@@ -41,7 +41,10 @@ casper.start(templateUrl, function() {
 
 casper.then(function() {
     var pageContent = this.page.content;
-    pageContent = pageContent.replace(/\{\{\s?version\s?\}\}/gim, config.context.version);
+    Object.keys(config.context).forEach(function(p) {
+        var re = new RegExp('\\{{2}\s?' + p + '\s?\\}{2}', 'gim');
+        pageContent = pageContent.replace(re, config.context[p]);
+    });
     this.echo('Saving to ' + config.target);
     fs.write(config.target, pageContent, "w");
     this.echo('Saved to ' + config.target);

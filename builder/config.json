@@ -1,5 +1,6 @@
 {
     "template": "template.html",
+    "target":   "../index.html",
     "sources": {
         "#about"                 : "sources/about.html"
     ,   "#installation_contents" : "sources/installation_contents.md"
@@ -23,7 +24,9 @@
     ,   "#license_contents"      : "sources/license_contents.md"
     },
     "context": {
-        "version": "0.6.4"
-    },
-    "target": "../index.html"
+        "version":      "0.6.4"
+    ,   "title":        "CasperJS, a navigation scripting and testing utility for PhantomJS"
+    ,   "description":  "CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS."
+    ,   "keywords":     "phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping"
+    }
 }
