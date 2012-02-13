@@ -24,8 +24,7 @@
     ,   "#license_contents"      : "sources/license_contents.md"
     },
     "context": {
-        "version":      "0.6.4"
-    ,   "title":        "CasperJS, a navigation scripting and testing utility for PhantomJS"
+        "title":        "CasperJS, a navigation scripting and testing utility for PhantomJS"
     ,   "description":  "CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS."
     ,   "keywords":     "phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping"
     }

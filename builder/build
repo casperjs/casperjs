@@ -14,6 +14,11 @@ var config = JSON.parse(fs.read("config.json"));
 var templateUrl = 'file://' + fs.workingDirectory + '/' + config.template;
 var selectors = {};
 
+// this is specific to casperjs project: versioning hell removal
+if (typeof config.context === "object" && !config.context.version) {
+    config.context.version = phantom.casperVersion;
+}
+
 Object.keys(config.sources).forEach(function(selector) {
     var src = config.sources[selector];
     casper.echo('Selector "'+ selector + '": converting source ' + src);
