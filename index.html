@@ -448,7 +448,47 @@ single <code>options</code> argument which is a standard javascript object:</p>
       <td><code>pageSettings</code></td>
       <td><code>Object</code></td>
       <td><code>{}</code></td>
-      <td>PhantomJS's <code>WebPage</code> settings object</td>
+      <td>
+        <p>
+          PhantomJS's <code>WebPage</code> settings object.
+          <a href="http://code.google.com/p/phantomjs/wiki/Interface#settings_(object)">Available settings</a> are:
+        </p>
+        <ul>
+          <li>
+            <code>javascriptEnabled</code> defines whether to execute the
+            script in the page or not (default to true)
+          </li>
+          <li>
+            <code>loadImages</code> defines whether to load the inlined images
+            or not
+          </li>
+          <li>
+            <code>loadPlugins</code> defines whether to load NPAPI plugins
+            (Flash, Silverlight, ...) or not
+          </li>
+          <li>
+            <code>localToRemoteUrlAccessEnabled</code> defines whether local
+            resource (e.g. from file) can access remote URLs or not (default to false)
+          </li>
+          <li>
+            <code>userAgent</code> defines the user agent sent to server when
+            the web page requests resources.
+          </li>
+          <li>
+            <code>userName</code> sets the user name used for HTTP
+            authentication
+          </li>
+          <li>
+            <code>password</code> sets the password used for HTTP
+            authentication
+          </li>
+          <li>
+            <code>XSSAuditingEnabled</code> defines whether load requests
+            should be monitored for cross-site scripting attempts (default to
+              false)
+          </li>
+        </ul>
+      </td>
     </tr>
     <tr>
       <td><code>stepTimeout</code></td>
