@@ -12,18 +12,18 @@ var casper = require("casper").create({
 var marked = require('./lib/marked');
 var config = JSON.parse(fs.read("config.json"));
 var templateUrl = 'file://' + fs.workingDirectory + '/' + config.template;
-var sections = {};
+var selectors = {};
 
-Object.keys(config.sources).forEach(function(id) {
-    var src = config.sources[id];
-    casper.echo('Section "'+ id + '": converting source ' + src);
+Object.keys(config.sources).forEach(function(selector) {
+    var src = config.sources[selector];
+    casper.echo('Selector "'+ selector + '": converting source ' + src);
     try {
         var content = fs.read(src), action = 'Included';
         if (/\.md$/.test(src)) {
             action = 'Converted';
             content = marked(content);
         }
-        sections[id] = content;
+        selectors[selector] = content;
         casper.echo(action + ' ' + src);
     } catch (e) {
         casper.echo('Skipped ' + src + ': ' + e, 'COMMENT');
@@ -32,11 +32,11 @@ Object.keys(config.sources).forEach(function(id) {
 
 casper.start(templateUrl, function() {
     this.echo('Opening template: ' + templateUrl);
-    this.evaluate(function(sections) {
-        Object.keys(sections).forEach(function(id) {
-            document.querySelector('#' + id).innerHTML = sections[id];
+    this.evaluate(function(selectors) {
+        Object.keys(selectors).forEach(function(selector) {
+            document.querySelector(selector).innerHTML = selectors[selector];
         });
-    }, { sections: sections });
+    }, { selectors: selectors });
 });
 
 casper.then(function() {
