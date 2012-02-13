@@ -196,3 +196,28 @@ td code {
 .atn { color: #e0e2e4; }
 .atv { color: #ec7600; }
 .dec { color: purple; }
+
+// scrollbars
+// webkit-only, ya ya ya... where are FF, Op. & IE equivalents?
+::-webkit-scrollbar {
+    width: 13px;
+}
+::-webkit-scrollbar-track {
+}
+::-webkit-scrollbar-track-piece {
+    background: #333;
+    -webkit-border-radius: 2px;
+}
+::-webkit-scrollbar-thumb {
+    height: 50px;
+    background: #bbb;
+    -webkit-border-radius: 8px;
+    outline: 2px solid #333;
+    outline-offset:-2px;
+    border: 2px solid #333;
+}
+::-webkit-scrollbar-thumb:hover {
+    height: 50px;
+    background-color: #ddd;
+    -webkit-border-radius: 8px;
+}
