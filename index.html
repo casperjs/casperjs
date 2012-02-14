@@ -1493,6 +1493,17 @@ true
 bar
 false
 undefined</code></pre>
+<p><span class="label label-info">Hint</span> What if you want to check if any arg
+or option has been passed to your script? Here you go:
+
+</p>
+<pre><code class="javascript">// removing default options passed by the Python executable
+casper.cli.drop("cli");
+casper.cli.drop("casper-path");
+
+if (casper.cli.args.length === 0 &amp;&amp; Object.keys(casper.cli.options).length === 0) {
+    casper.echo("No arg nor option passed").exit();
+}</code></pre>
 <p>Last but not least, you can still use all PhantomJS standard CLI options
 as you would do with any other phantomjs script. To remeber what they
 are, just run the <code>casperjs --help</code> command:
@@ -2868,7 +2879,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=PFLy6RuaHkE.fr./sv=1/am=!Hh2SKJ9l_2-Ii1Htmg/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=ZKsErRZln-0.fr./sv=1/am=!Hh2SKJ9l_2-Ii1Htmg/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>

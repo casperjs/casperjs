@@ -72,6 +72,19 @@ false
 undefined
 ```
 
+<span class="label label-info">Hint</span> What if you want to check if any arg
+or option has been passed to your script? Here you go:
+
+```javascript
+// removing default options passed by the Python executable
+casper.cli.drop("cli");
+casper.cli.drop("casper-path");
+
+if (casper.cli.args.length === 0 && Object.keys(casper.cli.options).length === 0) {
+    casper.echo("No arg nor option passed").exit();
+}
+```
+
 Last but not least, you can still use all PhantomJS standard CLI options
 as you would do with any other phantomjs script. To remeber what they
 are, just run the `casperjs --help` command:
