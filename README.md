@@ -2,7 +2,7 @@ CasperJS Documentation
 ======================
 
 The documentation sources are in [Markdown format](http://daringfireball.net/projects/markdown/)
-and can be found in the `sources/` directory.
+and can be found in the `builder/sources/` directory.
 
 So you may wonder how to generate the documentation HTML page from these? Here
 you go:
