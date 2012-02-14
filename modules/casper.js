@@ -213,7 +213,6 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
     } else {
         self.result.time = new Date().getTime() - self.startTime;
         self.log(f("Done %s steps in %dms", self.steps.length, self.result.time), "info");
-        self.page.content = ''; // avoid having previously loaded DOM contents being still active (refs #34)
         clearInterval(self.checker);
         self.emit('run.complete');
         if (utils.isFunction(onComplete)) {
@@ -227,6 +226,20 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
             self.exit();
         }
     }
+};
+
+/**
+ * Clears the current page execution environment context. Useful to avoid
+ * having previously loaded DOM contents being still active (refs #34).
+ *
+ * Think of it as a way to stop javascript execution within the remote DOM
+ * environment.
+ *
+ * @return Casper
+ */
+Casper.prototype.clear = function clear() {
+    this.page.content = '';
+    return this;
 };
 
 /**
