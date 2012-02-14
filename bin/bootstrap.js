@@ -131,16 +131,16 @@ phantom.loadCasper = function() {
         var fs = require('fs');
         pkgFile = fs.absolute(fs.pathJoin(path, 'package.json'));
         if (!fs.exists(pkgFile)) {
-            throw new Error('Cannot find package.json at ' + pkgFile);
+            throw new CasperError('Cannot find package.json at ' + pkgFile);
         }
         try {
             pkg = JSON.parse(require('fs').read(pkgFile));
         } catch (e) {
-            throw new Error('Cannot read package file contents: ' + e);
+            throw new CasperError('Cannot read package file contents: ' + e);
         }
         parts  = pkg.version.trim().split(".");
         if (parts < 3) {
-            throw new Error("Invalid version number");
+            throw new CasperError("Invalid version number");
         }
         patchPart = parts[2].split('-');
         return {
