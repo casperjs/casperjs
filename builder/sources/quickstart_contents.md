@@ -24,7 +24,7 @@ casper.start('http://google.fr/', function() {
 casper.then(function() {
     // aggregate results for the 'casperjs' search
     links = this.evaluate(getLinks);
-    // now search for 'phantomjs' by fillin the form again
+    // now search for 'phantomjs' by filling the form again
     this.fill('form[name=f]', { q: 'phantomjs' }, true);
 });
 
