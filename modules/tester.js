@@ -146,7 +146,7 @@ var Tester = function(casper, options) {
      *
      * @param  Function  fn         A function to be evaluated in remote DOM
      * @param  String    message    Test description
-     * @param  Object    context    Object containing the parameters to inject into the function
+     * @param  Object    context    Object containing the parameters to inject into the function (optional)
      */
     this.assertEval = function assertEval(fn, message, context) {
         return this.assert(casper.evaluate(fn, context), message);
@@ -159,7 +159,7 @@ var Tester = function(casper, options) {
      * @param  Function fn         The function to be evaluated in remote DOM
      * @param  Boolean  expected   The expected value
      * @param  String   message    Test description
-     * @param  Object   context    Object containing the parameters to inject into the function
+     * @param  Object   context    Object containing the parameters to inject into the function (optional)
      */
     this.assertEvalEquals = function assertEvalEquals(fn, expected, message, context) {
         return this.assertEquals(casper.evaluate(fn, context), expected, message);
@@ -175,7 +175,6 @@ var Tester = function(casper, options) {
     this.assertExists = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message);
     };
-
 
     /**
      * Asserts that current HTTP status is the one passed as argument.
