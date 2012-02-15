@@ -1,6 +1,22 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.6.5
+------------------
+
+- **BC BREAK:** reverted 8347278 (refs [#34](https://github.com/n1k0/casperjs/issues/34) and added a new `clear()` method to *close* a page
+    You now have to call `casper.clear()` if you want to stop javascript execution within the remote DOM environment.
+- fixed 0.6.4 version number in `bootstrap.js`
+- centralized version number to package.json
+
+2012-02-09, v0.6.4
+------------------
+
+- fixed `casperjs` command wasn't passing phantomjs native option in the correct order, resulting them not being taken into account by phantomjs engine:
+  - fixed [#49](https://github.com/n1k0/casperjs/issues/49) - `casperjs` is not sending `--ssl-ignore-errors`
+  - fixed [#50](https://github.com/n1k0/casperjs/issues/50) - Cookies not being set when passing `--cookies-file` option
+- fixed Python3 compatibility of the `casperjs` executable
+
 2012-02-05, v0.6.3
 ------------------
 

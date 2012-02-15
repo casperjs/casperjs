@@ -29,21 +29,6 @@
  */
 
 phantom.loadCasper = function() {
-    // see http://semver.org/
-    phantom.casperVersion = {
-        major: 0,
-        minor: 6,
-        patch: 3,
-        ident: undefined,
-        toString: function() {
-            var version = [this.major, this.minor, this.patch].join('.');
-            if (this.ident) {
-                version = [version, this.ident].join('-');
-            }
-            return version;
-        }
-    };
-
     // Patching fs
     // TODO: watch for these methods being implemented in official fs module
     var fs = (function(fs) {
@@ -139,6 +124,39 @@ phantom.loadCasper = function() {
             enumerable: true
         });
     }
+
+    // CasperJS version, extracted from package.json - see http://semver.org/
+    phantom.casperVersion = (function getVersion(path) {
+        var parts, patchPart, pkg, pkgFile;
+        var fs = require('fs');
+        pkgFile = fs.absolute(fs.pathJoin(path, 'package.json'));
+        if (!fs.exists(pkgFile)) {
+            throw new CasperError('Cannot find package.json at ' + pkgFile);
+        }
+        try {
+            pkg = JSON.parse(require('fs').read(pkgFile));
+        } catch (e) {
+            throw new CasperError('Cannot read package file contents: ' + e);
+        }
+        parts  = pkg.version.trim().split(".");
+        if (parts < 3) {
+            throw new CasperError("Invalid version number");
+        }
+        patchPart = parts[2].split('-');
+        return {
+            major: ~~parts[0]       || 0,
+            minor: ~~parts[1]       || 0,
+            patch: ~~patchPart[0]   || 0,
+            ident: patchPart[1]     || "",
+            toString: function() {
+                var version = [this.major, this.minor, this.patch].join('.');
+                if (this.ident) {
+                    version = [version, this.ident].join('-');
+                }
+                return version;
+            }
+        };
+    })(phantom.casperPath);
 
     /**
      * Retrieves the javascript source code from a given .js or .coffee file.
