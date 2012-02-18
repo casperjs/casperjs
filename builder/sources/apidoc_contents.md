@@ -402,6 +402,30 @@ casper.start('http://www.weather.com/', function() {
 casper.run();
 ```
 
+<h3 id="phantom_Casper_clear"><code>Casper#clear()</code></h3>
+
+Clears the current page execution environment context. Useful to avoid
+having previously loaded DOM contents being still active.
+
+Think of it as a way to stop javascript execution within the remote DOM
+environment.
+
+**Example:**
+
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.clear(); // javascript execution in this page has been stopped
+});
+
+casper.then(function() {
+    // ...
+});
+
+casper.run();
+```
+
+<span class="label label-info">Note</span> This method has been added in 0.6.5.
+
 <h3 id="phantom_Casper_debugHTML"><code>Casper#debugHTML()</code></h3>
 
 Logs the HTML code of the current page directly to the standard output,

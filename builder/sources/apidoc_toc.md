@@ -8,6 +8,7 @@
 - [`Casper.click()`](#phantom_Casper_click)
 - [`Casper.capture()`](#phantom_Casper_capture)
 - [`Casper.captureSelector()`](#phantom_Casper_captureSelector)
+- [`Casper.clear()`](#phantom_Casper_clear)
 - [`Casper.debugHTML()`](#phantom_Casper_debugHTML)
 - [`Casper.debugPage()`](#phantom_Casper_debugPage)
 - [`Casper.die()`](#phantom_Casper_die)

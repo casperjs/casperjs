@@ -659,6 +659,31 @@ casper.run();</code></pre>
 });
 
 casper.run();</code></pre>
+<h3 id="phantom_Casper_clear"><code>Casper#clear()</code></h3>
+
+<p>Clears the current page execution environment context. Useful to avoid
+having previously loaded DOM contents being still active.
+
+</p>
+<p>Think of it as a way to stop javascript execution within the remote DOM
+environment.
+
+</p>
+<p><strong>Example:</strong>
+
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
+    this.clear(); // javascript execution in this page has been stopped
+});
+
+casper.then(function() {
+    // ...
+});
+
+casper.run();</code></pre>
+<p><span class="label label-info">Note</span> This method has been added in 0.6.5.
+
+</p>
 <h3 id="phantom_Casper_debugHTML"><code>Casper#debugHTML()</code></h3>
 
 <p>Logs the HTML code of the current page directly to the standard output,
@@ -1378,6 +1403,7 @@ visible in remote DOM to process a next step. Uses
 <li><a href="#phantom_Casper_click"><code>Casper.click()</code></a></li>
 <li><a href="#phantom_Casper_capture"><code>Casper.capture()</code></a></li>
 <li><a href="#phantom_Casper_captureSelector"><code>Casper.captureSelector()</code></a></li>
+<li><a href="#phantom_Casper_clear"><code>Casper.clear()</code></a></li>
 <li><a href="#phantom_Casper_debugHTML"><code>Casper.debugHTML()</code></a></li>
 <li><a href="#phantom_Casper_debugPage"><code>Casper.debugPage()</code></a></li>
 <li><a href="#phantom_Casper_die"><code>Casper.die()</code></a></li>
@@ -2880,7 +2906,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=ZKsErRZln-0.fr./sv=1/am=!Hh2SKJ9l_2-Ii1Htmg/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=HdfBetsae24.fr./sv=1/am=!Dxyecr_OdryIOx012g/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>
