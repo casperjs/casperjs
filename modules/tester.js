@@ -374,27 +374,77 @@ var Tester = function(casper, options) {
 
     /**
      * Recursively finds all test files contained in a given directory.
+     * 
+     * This returns files sorted ASCII-betically, and will return
+     * files in parent directories before files in children. For
+     * example, say you had:
+     * 
+     * <pre>
+     *   tests/
+     *     + app
+     *       - 01_config.js
+     *       - 02_deploy.js
+     *     + user
+     *       + admin
+     *         - 01_confirmation.js       
+     *       + unregistered
+     *         - 01_not_unique.js
+     *       - 01_basic_flow.js
+     *       - 02_passwords.js
+     *       - 03_ldap.js
+     *     - 01_feature.js
+     *     - 02_other_feature.js
+     *     - 03_super_feature.js
+     * </pre>
+     * 
+     * You'd get them back in the following order:
+     *
+     * <pre>    
+     *     - 01_feature.js
+     *     - 02_other_feature.js
+     *     - 03_super_feature.js
+     *     - app/01_config.js
+     *     - app/02_deploy.js
+     *     - user/01_basic_flow.js
+     *     - user/02_passwords.js
+     *     - user/03_ldap.js
+     *     - user/admin/01_confirmation.js
+     *     - user/unregistered/01_not_unique.js
+     * </pre>
      *
      * @param  String  dir  Path to some directory to scan
+     * @return Array   dir  JS files found under the given directory
      */
     this.findTestFiles = function findTestFiles(dir) {
         var self = this;
         if (!fs.isDirectory(dir)) {
             return [];
         }
-        var entries = fs.list(dir).filter(function(entry) {
+
+        var subdirs = [];
+        var files   = [];
+        fs.list(dir).filter(function(entry) {
             return entry !== '.' && entry !== '..';
-        }).map(function(entry) {
-            return fs.absolute(fs.pathJoin(dir, entry));
-        });
-        entries.forEach(function(entry) {
-            if (fs.isDirectory(entry)) {
-                entries = entries.concat(self.findTestFiles(entry));
+        })
+        .sort()
+
+        // separate paths into files and subdirs
+        .forEach(function(entry) {
+            var fullPath = fs.absolute(fs.pathJoin(dir, entry));
+            if ( fs.isDirectory( fullPath ) ) {
+                subdirs.push( fullPath );
+            }
+            else if ( utils.isJsFile( fullPath ) ) {
+                files.push( fullPath );
             }
         });
-        return entries.filter(function(entry) {
-            return utils.isJsFile(fs.absolute(fs.pathJoin(dir, entry)));
+
+        // descend into each subdir in order and add its 
+        // files to the list
+        subdirs.forEach(function(subdir) {
+            files = files.concat(self.findTestFiles(subdir));
         });
+        return files;
     };
 
     /**

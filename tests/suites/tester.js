@@ -1,4 +1,5 @@
 var t = casper.test;
+var f = require( 'utils' ).format;
 
 t.comment('Tester.testEquals()');
 t.assert(casper.test.testEquals(null, null), 'Tester.testEquals() null equality');
@@ -24,4 +25,48 @@ t.assertNot(casper.test.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26
 t.assert(casper.test.testEquals(function(x){return x;}, function(x){return x;}), 'Tester.testEquals() function equality');
 t.assertNot(casper.test.testEquals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
 
+t.comment( 'Tester.findTestFiles' );
+var files = t.findTestFiles( 'suites' );
+t.assert( files.length > 28, 'Minimum number of JS files under suites/' );
+
+// ensure that all parents come before first child...
+var firstCasper = 'suites/casper/capture.js';
+var testsAtRoot = [ 
+    'cli.js', 'coffee.coffee', 'error.js', 'fs.js', 
+    'injector.js', 'tester.js', 'utils.js', 'xunit.js' 
+];
+testsAtRoot.forEach( function( item ) {
+    assertIndexBefore( t, files, 'suites/' + item, firstCasper );
+});
+
+// ensure that all children are in the right order
+var testsInChild = [
+  'capture.js', 'encode.js', 'exists.js', 'formfill.js', 'hooks.js', 
+  'resources.coffee', 'viewport.js' 
+];
+
+for ( var i = 1, max = testsInChild.length; i < max; i++ ) {
+    assertIndexBefore( t, files, 
+                       'suites/casper/' + testsInChild[i-1], 
+                       'suites/casper/' + testsInChild[i] );
+}
+
 t.done();
+
+function fileIndexOf( files, path ) {    
+    var pattern = new RegExp( path );
+    for ( var i = 0, max = files.length; i < max; i++ ) {
+        if ( files[i].match( pattern ) ) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function assertIndexBefore( t, files, itemBefore, itemAfter ) {
+    var beforeIdx = fileIndexOf( files, itemBefore );
+    var afterIdx  = fileIndexOf( files, itemAfter );
+    t.assert( beforeIdx < afterIdx, 
+              f( "Expected file index for '%s' (%d) to be before that of '%s' (%d)",
+                 itemBefore, beforeIdx, itemAfter, afterIdx ) );
+}
