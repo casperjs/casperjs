@@ -447,26 +447,6 @@ var Tester = function(casper, options) {
         return files;
     };
 
-//    this.findTestFiles = function findTestFiles(dir) {
-//        var self = this;
-//        if (!fs.isDirectory(dir)) {
-//            return [];
-//        }
-//        var entries = fs.list(dir).filter(function(entry) {
-//            return entry !== '.' && entry !== '..';
-//        }).map(function(entry) {
-//            return fs.absolute(fs.pathJoin(dir, entry));
-//        });
-//        entries.forEach(function(entry) {
-//            if (fs.isDirectory(entry)) {
-//                entries = entries.concat(self.findTestFiles(entry));
-//            }
-//        });
-//        return entries.filter(function(entry) {
-//            return utils.isJsFile(fs.absolute(fs.pathJoin(dir, entry)));
-//        });
-//    };
-
     /**
      * Formats a message to highlight some parts of it.
      *
