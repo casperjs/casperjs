@@ -115,7 +115,7 @@ parameters passed to their callback:
     level:   "debug",
     space:   "phantom",
     message: "A message",
-    time:    "a javascript Date instance"
+    date:    "a javascript Date instance"
 }</pre>
       </td>
     </tr>
