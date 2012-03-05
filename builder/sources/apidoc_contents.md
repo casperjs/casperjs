@@ -332,10 +332,12 @@ casper.run(function() {
 
 <h3 id="phantom_Casper_click"><code>Casper#click(String selector)</code></h3>
 
-Emulates a click on the element from the provided selector using the
-mouse pointer, if possible.
+Performs a click on the element matching the provided CSS3 selector. The method tries two strategies sequentially:
 
-**Example:**
+1. trying to trigger a MouseEvent in Javascript
+2. using native QtWebKit event if the previous attempt failed
+
+Example:
 
 ```javascript
 casper.start('http://google.fr/');

@@ -110,7 +110,7 @@
 <div class="row">
   <div class="span12">
     <blockquote>
-      <q>In case you haven’t seen CasperJS yet, go and take a look, it’s an <em>extremely</em> useful companion to PhantomJS</q>
+      <q>In case you haven’t seen CasperJS yet, go and take a look, it’s an <em>extremely</em> useful companion to PhantomJS.</q>
       <cite><a href="http://ariya.ofilabs.com/2012/03/phantomjs-and-travis-ci.html">Ariya Hidayat</a>, creator of PhantomJS</cite>
     </blockquote>
   </div>
@@ -602,11 +602,14 @@ casper.start('http://domain.tld/download.html', function() {
 });</code></pre>
 <h3 id="phantom_Casper_click"><code>Casper#click(String selector)</code></h3>
 
-<p>Emulates a click on the element from the provided selector using the
-mouse pointer, if possible.
+<p>Performs a click on the element matching the provided CSS3 selector. The method tries two strategies sequentially:
 
 </p>
-<p><strong>Example:</strong>
+<ol>
+<li>trying to trigger a MouseEvent in Javascript</li>
+<li>using native QtWebKit event if the previous attempt failed</li>
+</ol>
+<p>Example:
 
 </p>
 <pre><code class="javascript">casper.start('http://google.fr/');
