@@ -151,7 +151,7 @@ Writes a comment-style formatted message to stdout.
 Writes an error-style formatted message to stdout.
 
     var casper = require('casper').create();
-    casper.test.comment("Hi, I'm an error");
+    casper.test.error("Hi, I'm an error");
 
 <h3 id="phantom_Casper_Tester_fail"><code>Tester#fail(String message)</code></h3>
 
