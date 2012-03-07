@@ -2235,7 +2235,7 @@ casper.test.comment("Hi, I'm a comment");</code></pre>
 
 </p>
 <pre><code>var casper = require('casper').create();
-casper.test.comment("Hi, I'm an error");</code></pre>
+casper.test.error("Hi, I'm an error");</code></pre>
 <h3 id="phantom_Casper_Tester_fail"><code>Tester#fail(String message)</code></h3>
 
 <p>Adds a failed test entry to the stack.
@@ -2783,6 +2783,9 @@ option of CasperJS:
 <pre><code class="javascript">var casper = require('casper').create({
     clientScripts: ["includes/jquery.min.js"]
 });</code></pre>
+<p><span class="label label-info">Note</span> You can't <em>inject</em> scripts using the HTTP protocol, you actually have to use a relative/absolute filesystem path to the script resource.
+
+</p>
 <hr>
 <h2 id="faq-executable">Can I use CasperJS without using the <code>casperjs</code> executable?</h2>
 
@@ -2917,7 +2920,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=x2qOHN0YqyE.fr./sv=1/am=!FRwcaGMpC1CIJ0aI4g/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=ksYyjbNvSIY.fr./sv=1/am=!mAdgFnmJxQOIii6qTQ/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>
