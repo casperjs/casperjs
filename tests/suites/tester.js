@@ -27,16 +27,20 @@ t.assert(t.testEquals(function(x){return x;}, function(x){return x;}), 'Tester.t
 t.assertNot(t.testEquals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
 
 t.comment('Tester.sortFiles()');
-var files = t.findTestFiles(fs.pathJoin(phantom.casperPath, 'tests', 'testdir'));
-t.assertEquals(files, [
-    "/Users/niko/Sites/casperjs/tests/testdir/01_a/abc.js",
-    "/Users/niko/Sites/casperjs/tests/testdir/01_a/def.js",
-    "/Users/niko/Sites/casperjs/tests/testdir/02_b/ABC.js",
-    "/Users/niko/Sites/casperjs/tests/testdir/02_b/abc.js",
-    "/Users/niko/Sites/casperjs/tests/testdir/03_a.js",
-    "/Users/niko/Sites/casperjs/tests/testdir/03_b.js",
-    "/Users/niko/Sites/casperjs/tests/testdir/04/01_init.js",
-    "/Users/niko/Sites/casperjs/tests/testdir/04/02_do.js"
-], 'findTestFiles() find test files and sort them');
+var testDirRoot = fs.pathJoin(phantom.casperPath, 'tests', 'testdir');
+var files = t.findTestFiles(testDirRoot);
+var expected = [
+    "01_a/abc.js",
+    "01_a/def.js",
+    "02_b/ABC.js",
+    "02_b/abc.js",
+    "03_a.js",
+    "03_b.js",
+    "04/01_init.js",
+    "04/02_do.js"
+].map(function(entry) {
+    return fs.pathJoin(testDirRoot, entry);
+});
+t.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
 
 t.done();
