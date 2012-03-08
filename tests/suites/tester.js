@@ -39,7 +39,7 @@ var expected = [
     "04/01_init.js",
     "04/02_do.js"
 ].map(function(entry) {
-    return fs.pathJoin(testDirRoot, entry);
+    return fs.pathJoin.apply(fs, [testDirRoot].concat(entry.split('/')));
 });
 t.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
 
