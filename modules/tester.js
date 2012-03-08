@@ -394,9 +394,7 @@ var Tester = function(casper, options) {
         });
         return entries.filter(function(entry) {
             return utils.isJsFile(fs.absolute(fs.pathJoin(dir, entry)));
-        }).sort(function(a, b) {
-            return a > b;
-        });
+        }).sort();
     };
 
     /**

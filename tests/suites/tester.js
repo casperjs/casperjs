@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 var t = casper.test;
 
 t.comment('Tester.testEquals()');
@@ -23,5 +25,18 @@ t.assert(t.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:
 t.assertNot(t.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:27}}), 'Tester.testEquals() complex object inequality');
 t.assert(t.testEquals(function(x){return x;}, function(x){return x;}), 'Tester.testEquals() function equality');
 t.assertNot(t.testEquals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
+
+t.comment('Tester.sortFiles()');
+var files = t.findTestFiles(fs.pathJoin(phantom.casperPath, 'tests', 'testdir'));
+t.assertEquals(files, [
+    "/Users/niko/Sites/casperjs/tests/testdir/01_a/abc.js",
+    "/Users/niko/Sites/casperjs/tests/testdir/01_a/def.js",
+    "/Users/niko/Sites/casperjs/tests/testdir/02_b/ABC.js",
+    "/Users/niko/Sites/casperjs/tests/testdir/02_b/abc.js",
+    "/Users/niko/Sites/casperjs/tests/testdir/03_a.js",
+    "/Users/niko/Sites/casperjs/tests/testdir/03_b.js",
+    "/Users/niko/Sites/casperjs/tests/testdir/04/01_init.js",
+    "/Users/niko/Sites/casperjs/tests/testdir/04/02_do.js"
+], 'findTestFiles() find test files and sort them');
 
 t.done();
