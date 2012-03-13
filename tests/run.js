@@ -10,6 +10,10 @@ var casper = require('casper').create({
     faultTolerant: false
 });
 
+// Options from cli
+casper.options.verbose = casper.cli.get('direct') || false;
+casper.options.logLevel = casper.cli.get('log-level') || "error";
+
 // Overriding Casper.open to prefix all test urls
 casper.setFilter('open.location', function(location) {
     if (!/^http/.test(location)) {
