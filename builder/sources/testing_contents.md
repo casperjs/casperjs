@@ -7,8 +7,8 @@ var casper = require('casper').create();
 
 casper.start('http://www.google.fr/', function() {
     this.test.assertTitle('Google', 'google homepage title is the one expected');
-    this.test.assertExists('form[name=f]', 'main form is found');
-    this.fill('form[name=f]', {
+    this.test.assertExists('form[action="/search"]', 'main form is found');
+    this.fill('form[action="/search"]', {
         q: 'foo'
     }, true);
 });
