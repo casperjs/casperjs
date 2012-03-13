@@ -251,7 +251,7 @@ Casper.prototype.clear = function clear() {
  * @param  String   selector        A DOM CSS3 compatible selector
  * @return Boolean
  */
-Casper.prototype.click = function click(selector, fallbackToHref) {
+Casper.prototype.click = function click(selector) {
     this.log("Click on selector: " + selector, "debug");
     if (arguments.length > 1) {
         this.emit("deprecated", "The click() method does not process the fallbackToHref argument since 0.6");

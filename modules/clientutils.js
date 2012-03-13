@@ -52,11 +52,9 @@
          * Clicks on the DOM element behind the provided selector.
          *
          * @param  String  selector        A CSS3 selector to the element to click
-         * @param  Boolean fallbackToHref  Whether to try to relocate to the value of any href attribute (default: true)
          * @return Boolean
          */
-        this.click = function(selector, fallbackToHref) {
-            fallbackToHref = typeof fallbackToHref === "undefined" ? true : !!fallbackToHref;
+        this.click = function(selector) {
             var elem = this.findOne(selector);
             if (!elem) {
                 this.log("click(): Couldn't find any element matching '" + selector + "' selector", "error");
@@ -66,25 +64,7 @@
             evt.initMouseEvent("click", true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
             // dispatchEvent return value is false if at least one of the event
             // handlers which handled this event called preventDefault
-            if (elem.dispatchEvent(evt)) {
-                return true;
-            }
-            if (fallbackToHref && elem.hasAttribute('href')) {
-                var hrefValue = elem.getAttribute('href');
-                var hrefJavascriptMatch = hrefValue.match(/^\s?javascript\s?:(.*)/i);
-                if (hrefJavascriptMatch) {
-                    try {
-                        eval(hrefJavascriptMatch[1]);
-                    } catch (e) {
-                        this.log("click(): Unable to evaluate href javascript contents: " + e, "error");
-                        return false;
-                    }
-                } else {
-                    document.location = hrefValue;
-                }
-                return true;
-            }
-            return false;
+            return elem.dispatchEvent(evt);
         };
 
         /**
