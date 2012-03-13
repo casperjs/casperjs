@@ -7,6 +7,7 @@ XXXX-XX-XX, v0.6.5
 - **BC BREAK:** reverted 8347278 (refs [#34](https://github.com/n1k0/casperjs/issues/34) and added a new `clear()` method to *close* a page
     You now have to call `casper.clear()` if you want to stop javascript execution within the remote DOM environment.
 - `tester.findTestFiles()` now returns results in predictable order
+- added `--log-level` and `--direct` options to `casper test` command
 - fixed 0.6.4 version number in `bootstrap.js`
 - centralized version number to package.json
 
