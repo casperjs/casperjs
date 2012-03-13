@@ -4,8 +4,8 @@ var casper = require('casper').create({
 
 casper.start('http://www.google.fr/', function(self) {
     self.test.assertTitle('Google', 'google homepage title is the one expected');
-    self.test.assertExists('form[name=f]', 'main form is found');
-    self.fill('form[name=f]', {
+    self.test.assertExists('form[action="/search"]', 'main form is found');
+    self.fill('form[action="/search"]', {
         q: 'foo'
     }, true);
 });

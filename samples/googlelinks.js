@@ -10,14 +10,14 @@ function getLinks() {
 
 casper.start('http://google.fr/', function(self) {
     // search for 'casperjs' from google form
-    self.fill('form[name=f]', { q: 'casperjs' }, true);
+    self.fill('form[action="/search"]', { q: 'casperjs' }, true);
 });
 
 casper.then(function(self) {
     // aggregate results for the 'casperjs' search
     links = self.evaluate(getLinks);
     // now search for 'phantomjs' by fillin the form again
-    self.fill('form[name=f]', { q: 'phantomjs' }, true);
+    self.fill('form[action="/search"]', { q: 'phantomjs' }, true);
 });
 
 casper.then(function(self) {

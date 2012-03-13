@@ -2,8 +2,8 @@ casper = require('casper').create logLevel: "debug"
 
 casper.start 'http://www.google.fr/', ->
     @test.assertTitle 'Google', 'google homepage title is the one expected'
-    @test.assertExists 'form[name=f]', 'main form is found'
-    @fill 'form[name=f]', q: 'foo', true
+    @test.assertExists 'form[action="/search"]', 'main form is found'
+    @fill 'form[action="/search"]', q: 'foo', true
 
 casper.then ->
     @test.assertTitle 'foo - Recherche Google', 'google title is ok'

@@ -30,7 +30,7 @@ casper.echo "Let the match begin between \"#{terms.join '", "'}\"!"
 casper.start "http://google.fr/"
 
 casper.each terms, (self, term) ->
-    @then -> @fill 'form[name=f]', { q: term }, true
+    @then -> @fill 'form[action="/search"]', { q: term }, true
     @then ->
         score = @fetchScore()
         scores.push term: term, score: score
