@@ -66,7 +66,7 @@ remote DOM environment.
 ```javascript
 var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
-    this.test.assertEvalExists('form[name="gs"]', 'google.fr has a form with name "gs"');
+    this.test.assertExists('form[name="gs"]', 'google.fr has a form with name "gs"');
 });
 ```
 
