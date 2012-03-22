@@ -273,7 +273,9 @@ var Tester = function(casper, options) {
      * @param  String   message    Test description
      */
     this.assertTextExists = function assertTextExists(text, message) {
-	    return this.assert( ( casper.evaluate( function(){ return document.body.innerText; } ).indexOf(text) != -1), message);
+        return this.assert((casper.evaluate(function() {
+            return document.body.innerText;
+        }).indexOf(text) != -1), message);
     };
 
     /**

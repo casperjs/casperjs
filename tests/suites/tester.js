@@ -42,4 +42,11 @@ var expected = [
 });
 t.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
 
-t.done();
+t.comment('Tester.assertTextExists()');
+casper.start('tests/site/index.html', function() {
+    t.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
+});
+
+casper.run(function() {
+    t.done();
+});
