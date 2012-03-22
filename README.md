@@ -20,3 +20,10 @@ Don't hesitate to pull request for any cool example of yours as well!
 **Read the [full documentation](http://casperjs.org/) on casperjs dedicated website.**
 
 Subscribe to the [project mailing-list](https://groups.google.com/forum/#!forum/casperjs)
+
+
+## Contributing to the docs
+
+CasperJS's documentation is written using the [Markdown format](http://daringfireball.net/projects/markdown/), and hosted on Github thanks to the [Github Pages Feature](http://pages.github.com/).
+
+To view the source files on github, head to [the gh-pages branch](https://github.com/n1k0/casperjs/tree/gh-pages), and check the [documentation's README](https://github.com/n1k0/casperjs/tree/gh-pages#readme) for further instructions.
