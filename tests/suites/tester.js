@@ -32,7 +32,6 @@ var files = t.findTestFiles(testDirRoot);
 var expected = [
     "01_a/abc.js",
     "01_a/def.js",
-    "02_b/ABC.js",
     "02_b/abc.js",
     "03_a.js",
     "03_b.js",
