@@ -267,6 +267,16 @@ var Tester = function(casper, options) {
     };
 
     /**
+     * Asserts that given text exits in the document body.
+     *
+     * @param  String   text       Text to be found
+     * @param  String   message    Test description
+     */
+    this.assertTextExists = function assertTextExists(text, message) {
+	    return this.assert( ( casper.evaluate( function(){ return document.body.innerText; } ).indexOf(text) != -1), message);
+    };
+
+    /**
      * Asserts that title of the remote page equals to the expected one.
      *
      * @param  String  expected   The expected title string
