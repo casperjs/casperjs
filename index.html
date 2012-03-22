@@ -859,6 +859,15 @@ selector.
 });
 
 casper.run();</code></pre>
+<h3 id="phantom_Casper_fetchText"><code>Casper#fetchText(String selector)</code></h3>
+
+<p>Retrieves text contents matching a given CSS3 selector. If you provide one matching
+more than one element, their textual contents will be concatenated.
+
+</p>
+<pre><code class="javascript">casper.start('http://google.com/search?q=foo', function() {
+    this.echo(this.fetchText('h3'));
+}).run();</code></pre>
 <h3 id="phantom_Casper_forward"><code>Casper#forward()</code></h3>
 
 <p>Moves a step forward in browser's history.
@@ -1432,6 +1441,7 @@ visible in remote DOM to process a next step. Uses
 <li><a href="#phantom_Casper_evaluate"><code>Casper.evaluate()</code></a></li>
 <li><a href="#phantom_Casper_evaluateOrDie"><code>Casper.evaluateOrDie()</code></a></li>
 <li><a href="#phantom_Casper_exit"><code>Casper.exit()</code></a></li>
+<li><a href="#phantom_Casper_fetchText"><code>Casper.fetchText()</code></a></li>
 <li><a href="#phantom_Casper_forward"><code>Casper.forward()</code></a></li>
 <li><a href="#phantom_Casper_log"><code>Casper.log()</code></a></li>
 <li><a href="#phantom_Casper_fill"><code>Casper.fill()</code></a></li>
