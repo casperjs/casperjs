@@ -2103,7 +2103,7 @@ test suite code</a>.
 <code>true</code>.
 
 </p>
-<pre><code>var url = 'http://www.google.fr/';
+<pre><code class="javascript">var url = 'http://www.google.fr/';
 var casper = require('casper').create();
 casper.start(url, function() {
     this.test.assert(this.getCurrentUrl() === url, 'url is the one expected');
@@ -2113,7 +2113,7 @@ casper.start(url, function() {
 <p>Asserts that two values are strictly equals.
 
 </p>
-<pre><code>var url = 'http://www.google.fr/';
+<pre><code class="javascript">var url = 'http://www.google.fr/';
 var casper = require('casper').create();
 casper.start(url, function() {
     this.test.assertEquals(this.getCurrentUrl(), url, 'url is the one expected');
@@ -2123,7 +2123,7 @@ casper.start(url, function() {
 <p>Asserts that a code evaluation in remote DOM resolves to true.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEval(function() {
         return document.querySelectorAll('form').length &gt; 0;
@@ -2134,7 +2134,7 @@ casper.start('http://www.google.fr/', function() {
 <p>Asserts that the result of a code evaluation in remote DOM equals.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEvalEquals(function() {
         return document.querySelectorAll('form').length;
@@ -2146,7 +2146,7 @@ casper.start('http://www.google.fr/', function() {
 remote DOM environment.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEvalExists('form[name="gs"]', 'google.fr has a form with name "gs"');
 });</code></pre>
@@ -2156,20 +2156,20 @@ casper.start('http://www.google.fr/', function() {
 pattern.
 
 </p>
-<pre><code>casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');</code></pre>
+<pre><code class="javascript">casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');</code></pre>
 <h3 id="phantom_Casper_Tester_assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
 
 <p>Asserts that the passed subject resolves to <code>false</code>.
 
 </p>
-<pre><code>casper.test.assertNot(false, "Universe is still operational");</code></pre>
+<pre><code class="javascript">casper.test.assertNot(false, "Universe is still operational");</code></pre>
 <h3 id="phantom_Casper_Tester_assertRaises"><code>Tester#assertRaises(Function fn, Array args[, String message])</code></h3>
 
 <p>Asserts that the provided function called with the given parameters
 raises a javascript <code>Error</code>.
 
 </p>
-<pre><code>casper.test.assertRaises(function(throwIt) {
+<pre><code class="javascript">casper.test.assertRaises(function(throwIt) {
     if (throwIt) {
         throw new Error('thrown');
     }
@@ -2180,7 +2180,7 @@ raises a javascript <code>Error</code>.
 exists in remote DOM.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertSelectorExists('form[name="gs"]', 'google.fr provides a form');
 });</code></pre>
@@ -2190,7 +2190,7 @@ casper.start('http://www.google.fr/', function() {
 when at least one resource matches.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertResourceExists(function (resource) {
       return resource.url.match('logo3w.png');
@@ -2198,12 +2198,21 @@ casper.start('http://www.google.fr/', function() {
     // or shorter
     this.test.assertResourceExists('logo3w.png', 'google.fr logo was loaded');
 });</code></pre>
+<h3 id="phantom_Casper_Tester_assertTextExists"><code>Tester#assertTextExists(String expected[, String message])</code></h3>
+
+<p>Asserts that body <strong>plain text content</strong> contains the given string.
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertTextExists('google', 'page body contains "google"');
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertTitle"><code>Tester#assertTitle(String expected[, String message])</code></h3>
 
 <p>Asserts that title of the remote page equals to the expected one.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertTitle('Google', 'google.fr has the correct title');
 });</code></pre>
@@ -2212,7 +2221,7 @@ casper.start('http://www.google.fr/', function() {
 <p>Asserts that the provided input is of the given type.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.test.assertType(42, "number", "Okay, 42 is a number");
 casper.test.assertType([1, 2, 3], "array", "Yeah, we can test for arrays too =)");</code></pre>
 <h3 id="phantom_Casper_Tester_assertUrlMatch"><code>Tester#assertUrlMatch(Regexp pattern[, String message])</code></h3>
@@ -2220,7 +2229,7 @@ casper.test.assertType([1, 2, 3], "array", "Yeah, we can test for arrays too =)"
 <p>Asserts that a the current page url matches the provided RegExp pattern.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.asserturlMatch(/^http:\/\//', 'google.fr is served in http://');
 });</code></pre>
@@ -2235,21 +2244,21 @@ casper.start('http://www.google.fr/', function() {
 <p>Writes a comment-style formatted message to stdout.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.test.comment("Hi, I'm a comment");</code></pre>
 <h3 id="phantom_Casper_Tester_error"><code>Tester#error(String message)</code></h3>
 
 <p>Writes an error-style formatted message to stdout.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.test.error("Hi, I'm an error");</code></pre>
 <h3 id="phantom_Casper_Tester_fail"><code>Tester#fail(String message)</code></h3>
 
 <p>Adds a failed test entry to the stack.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.test.fail("Georges W. Bush");</code></pre>
 <h3 id="phantom_Casper_Tester_formatMessage"><code>Tester#formatMessage(String message, String style)</code></h3>
 
@@ -2262,14 +2271,14 @@ the tester.
 <p>Writes an info-style formatted message to stdout.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.test.info("Hi, I'm an informative message.");</code></pre>
 <h3 id="phantom_Casper_Tester_pass"><code>Tester#pass(String message)</code></h3>
 
 <p>Adds a successful test entry to the stack.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 casper.test.pass("Barrack Obama");</code></pre>
 <h3 id="phantom_Casper_Tester_renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
 
@@ -2277,7 +2286,7 @@ casper.test.pass("Barrack Obama");</code></pre>
 a XUnit formatted file.
 
 </p>
-<pre><code>var casper = require('casper').create();
+<pre><code class="javascript">var casper = require('casper').create();
 // ...
 casper.run(function() {
     // exists with status code 0 and saves XUnit formatted results
@@ -2297,8 +2306,9 @@ casper.run(function() {
 <li><a href="#phantom_Casper_Tester_assertMatch"><code>Tester.assertMatch()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertNot"><code>Tester.assertNot()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertRaises"><code>Tester.assertRaises()</code></a></li>
-<li><a href="#phantom_Casper_Tester_assertSelectorExists"><code>Tester.assertSelectorExists()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertResourceExists"><code>Tester.assertResourceExists()</code></a></li>
+<li><a href="#phantom_Casper_Tester_assertSelectorExists"><code>Tester.assertSelectorExists()</code></a></li>
+<li><a href="#phantom_Casper_Tester_assertTextExists"><code>Tester.assertTextExists()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertTitle"><code>Tester.assertTitle()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertType"><code>Tester.assertType()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertUrlMatch"><code>Tester.assertUrlMatch()</code></a></li>
@@ -2928,7 +2938,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=NsBdWRnlXrg.fr./sv=1/am=!wJ3zzZyr7MyIPjLesA/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=b3Ybl0g-Fi0.fr./sv=1/am=!brN6X75-Zu-IDRYPeA/d=1/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>
