@@ -157,15 +157,21 @@ at a given location:
 $ casperjs test /path/to/test/dir/
 ```
 
-This is thericatelly what you will get:
+This is theoretically what you will get:
 
 ![image](images/split-test-results.png)
 
-Last, you can of course run a single test file:
+Also, you can of course run a single test file:
 
 ```javascript
 $ casperjs test /path/to/test/dir/test1.js
 ```
+
+Some options are available using the `casper test` command:
+
+- `--xunit=<filename>` will export test suite results in a xUnit XML file
+- `--direct` will output log messages directly to the console
+- `--log-level=<logLevel>` sets the logging level (see the [related section](#logging))
 
 * * * * *
 

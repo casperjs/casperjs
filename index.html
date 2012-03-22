@@ -2715,16 +2715,24 @@ at a given location:
 
 </p>
 <pre><code>$ casperjs test /path/to/test/dir/</code></pre>
-<p>This is thericatelly what you will get:
+<p>This is theoretically what you will get:
 
 </p>
 <p><img src="images/split-test-results.png" alt="image">
 
 </p>
-<p>Last, you can of course run a single test file:
+<p>Also, you can of course run a single test file:
 
 </p>
 <pre><code class="javascript">$ casperjs test /path/to/test/dir/test1.js</code></pre>
+<p>Some options are available using the <code>casper test</code> command:
+
+</p>
+<ul>
+<li><code>--xunit=&lt;filename&gt;</code> will export test suite results in a xUnit XML file</li>
+<li><code>--direct</code> will output log messages directly to the console</li>
+<li><code>--log-level=&lt;logLevel&gt;</code> sets the logging level (see the <a href="#logging">related section</a>)</li>
+</ul>
 <hr>
 <h3>Extending Casper for Testing</h3>
 <p>The <code>$ casper test [path]</code> command is just a shortcut for
