@@ -11,6 +11,7 @@ XXXX-XX-XX, v0.6.5
 - added `--log-level` and `--direct` options to `casper test` command
 - fixed 0.6.4 version number in `bootstrap.js`
 - centralized version number to package.json
+- ensured compatibility with PhantomJS 1.5
 
 2012-02-09, v0.6.4
 ------------------

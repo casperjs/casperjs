@@ -20,9 +20,13 @@ PHANTOMJS_NATIVE_ARGS = [
     'local-to-remote-url-access',
     'max-disk-cache-size',
     'output-encoding',
+    'remote-debugger-port',
+    'remote-debugger-autorun',
     'proxy',
+    'proxy-auth',
     'proxy-type',
     'script-encoding',
+    'web-security',
 ]
 CASPER_ARGS = []
 PHANTOMJS_ARGS = []
