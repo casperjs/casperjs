@@ -445,20 +445,6 @@ Casper.prototype.exists = function exists(selector) {
 };
 
 /**
- * Checks if an element matching the provided CSS3 selector is visible
- * current page DOM by checking that offsetWidth and offsetHeight are
- * both non-zero.
- *
- * @param  String  selector  A CSS3 selector
- * @return Boolean
- */
-Casper.prototype.visible = function visible(selector) {
-    return this.evaluate(function(selector) {
-        return __utils__.visible(selector);
-    }, { selector: selector });
-};
-
-/**
  * Exits phantom.
  *
  * @param  Number  status  Status
@@ -1039,6 +1025,20 @@ Casper.prototype.viewport = function viewport(width, height) {
     };
     this.emit('viewport.changed', [width, height]);
     return this;
+};
+
+/**
+ * Checks if an element matching the provided CSS3 selector is visible
+ * current page DOM by checking that offsetWidth and offsetHeight are
+ * both non-zero.
+ *
+ * @param  String  selector  A CSS3 selector
+ * @return Boolean
+ */
+Casper.prototype.visible = function visible(selector) {
+    return this.evaluate(function(selector) {
+        return __utils__.visible(selector);
+    }, { selector: selector });
 };
 
 /**

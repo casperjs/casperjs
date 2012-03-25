@@ -163,21 +163,6 @@
         };
 
         /**
-         * Checks if a given DOM element is visible in remote page.
-         *
-         * @param  String  selector  CSS3 selector
-         * @return Boolean
-         */
-        this.visible = function(selector) {
-            try {
-                var el = document.querySelector(selector);
-                return el && el.style.visibility !== 'hidden' && el.offsetHeight > 0 && el.offsetWidth > 0;
-            } catch (e) {
-                return false;
-            }
-        };
-
-        /**
          * Fetches innerText within the element(s) matching a given CSS3
          * selector.
          *
@@ -457,6 +442,21 @@
                 __utils__.log("Unable to blur() input field " + field.getAttribute('name') + ": " + err, "warning");
             }
             return out;
+        };
+
+        /**
+         * Checks if a given DOM element is visible in remote page.
+         *
+         * @param  String  selector  CSS3 selector
+         * @return Boolean
+         */
+        this.visible = function(selector) {
+            try {
+                var el = document.querySelector(selector);
+                return el && el.style.visibility !== 'hidden' && el.offsetHeight > 0 && el.offsetWidth > 0;
+            } catch (e) {
+                return false;
+            }
         };
     };
     exports.ClientUtils = ClientUtils;
