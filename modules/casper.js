@@ -345,6 +345,7 @@ Casper.prototype.download = function download(url, targetPath) {
     try {
         fs.write(targetPath, cu.decode(this.base64encode(url)), 'w');
         this.emit('downloaded.file', targetPath);
+        this.log(f("Downloaded and saved resource in %s", targetPath));
     } catch (e) {
         this.log(f("Error while downloading %s to %s: %s", url, targetPath, e), "error");
     }
