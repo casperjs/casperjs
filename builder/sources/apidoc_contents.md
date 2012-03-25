@@ -473,7 +473,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_download"><code>Casper#download(String url)</code></h3>
+<h3 id="phantom_Casper_download"><code>Casper#download(String url, String target)</code></h3>
 
 Saves a remote resource onto the filesystem.
 
