@@ -1,7 +1,7 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.6.5
+2012-03-28, v0.6.5
 ------------------
 
 - **BC BREAK:** reverted 8347278 (refs [#34](https://github.com/n1k0/casperjs/issues/34) and added a new `clear()` method to *close* a page
