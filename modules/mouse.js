@@ -78,6 +78,8 @@ var Mouse = function(casper) {
                 throw new CasperError('Mouse.processEvent(): Too many arguments');
         }
     }
+    
+    this.processEvent = processEvent;
 
     this.click = function click() {
         processEvent('click', arguments);
