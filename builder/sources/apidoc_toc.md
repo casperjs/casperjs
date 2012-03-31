@@ -17,6 +17,7 @@
 - [`Casper.echo()`](#phantom_Casper_echo)
 - [`Casper.evaluate()`](#phantom_Casper_evaluate)
 - [`Casper.evaluateOrDie()`](#phantom_Casper_evaluateOrDie)
+- [`Casper.exists()`](#phantom_Casper_exists)
 - [`Casper.exit()`](#phantom_Casper_exit)
 - [`Casper.fetchText()`](#phantom_Casper_fetchText)
 - [`Casper.forward()`](#phantom_Casper_forward)
