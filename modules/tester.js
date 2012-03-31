@@ -118,6 +118,7 @@ var Tester = function(casper, options) {
      */
     this.assertEquals = function assertEquals(subject, expected, message) {
         var eventName;
+        message = message || "";
         if (this.testEquals(subject, expected)) {
             eventName = "success";
             casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
