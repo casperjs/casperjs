@@ -32,7 +32,7 @@ var casper = require('casper').create({
 
 ## Casper options
 
-All the available options are detailled below:
+All the available options are detailed below:
 
 <table class="table table-striped table-condensed" caption="Casper options">
   <thead>
@@ -79,7 +79,7 @@ All the available options are detailled below:
       <td><code>"error"</code></td>
       <td>
         Logging level (see the <a href="#logging">logging
-        section</a> for more informations)
+        section</a> for more information)
       </td>
     </tr>
     <tr>
@@ -292,7 +292,7 @@ Also have a look at [`Casper.forward()`](#phantom_Casper_forward).
 
 <h3 id="phantom_Casper_base64encode"><code>Casper#base64encode(String url [, String method, Object data])</code></h3>
 
-Encodes a resource using the base64 algorithm synchroneously using
+Encodes a resource using the base64 algorithm synchronously using
 client-side XMLHttpRequest.
 
 <span class="label label-info">Note</span> We cannot use `window.btoa()`
@@ -516,7 +516,7 @@ sample script for concrete usecase.
 
 <h3 id="phantom_Casper_echo"><code>Casper#echo(String message[, String style])</code></h3>
 
-Prints something to stdout, optionnaly with some fancy color (see the
+Prints something to stdout, optionally with some fancy color (see the
 [`Colorizer`](#colorizer) section of this document for more
 information).
 
@@ -639,7 +639,7 @@ casper.run();
 
 <h3 id="phantom_Casper_fill"><code>Casper#fill(String selector,  Object values[, Boolean submit])</code></h3>
 
-Fills the fields of a form with given values and optionnaly submit it.
+Fills the fields of a form with given values and optionally submits it.
 
 Example with this sample html form:
 
@@ -846,7 +846,7 @@ casper.run();
 ```
 
 `Casper.run()` also accepts an `onComplete` callback, which you can
-consider as a custom final step to perform when all te other steps has
+consider as a custom final step to perform when all the other steps have
 been executed. Just don't forget to `exit()` Casper if you define one!
 
 ```javascript
@@ -895,7 +895,7 @@ casper.run();
 <h3 id="phantom_Casper_start"><code>Casper#start(String url[, function then])</code></h3>
 
 Configures and starts Casper, then open the provided `url` and
-optionnaly adds the step provided by the `then` argument.
+optionally adds the step provided by the `then` argument.
 
 **Example:**
 
@@ -990,7 +990,7 @@ casper.run();
 
 <h3 id="phantom_Casper_thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
 
-Adds a new navigation step for opening a new location, and optionnaly
+Adds a new navigation step for opening a new location, and optionally
 add a next step when its loaded.
 
 **Example:**
@@ -1063,7 +1063,7 @@ casper.start('http://google.com/', function() {
 
 <h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
-Pause steps suite execution for a given amount of time, and optionnaly
+Pause steps suite execution for a given amount of time, and optionally
 execute a step on done.
 
 **Example:**

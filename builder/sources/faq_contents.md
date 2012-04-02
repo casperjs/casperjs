@@ -1,4 +1,4 @@
-Here's a selection of the most frequesntly asked questions by casperjs
+Here's a selection of the most frequently asked questions by casperjs
 newcomers.
 
 <h2 id="faq-help">I'm stuck! What can I do?</h2>
@@ -41,7 +41,7 @@ I cannot do much to make the situation really better, unfortunately :/
 
 Sure, as every single other javascript library on Earth.
 
-A first solution is to inject it into the remote DOM environement by
+A first solution is to inject it into the remote DOM environment by
 hand using the standard `WebPage.injectJs()` method:
 
     casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');

@@ -52,7 +52,7 @@ following:
 ### Exporting results in *xUnit* format
 
 CasperJS can export the results of the test suite to an xUnit XML file,
-which is compatible with continous integration tools such as
+which is compatible with continuous integration tools such as
 [Jenkins](http://jenkins-ci.org/). To save the xUnit log of your test
 suite to a `log.xml` file, you can process this way:
 
@@ -95,13 +95,13 @@ $ casperjs test tests/suites
 ### Organizing your tests
 
 Of course writing all your tests in a single file may be painful, so you
-can split them accross files.
+can split them across files.
 
 <div class="alert-message block-message">
   <p>
     <span class="label label-important">Important</span>
     There are <strong>two important conditions</strong> for splitting
-    your test suite accross several files:
+    your test suite across several files:
   </p>
   <ol class="bottom">
     <li>
