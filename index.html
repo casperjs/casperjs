@@ -320,7 +320,7 @@ single <code>options</code> argument which is a standard javascript object:
     loadPlugins: false
 });</code></pre>
 <h2>Casper options</h2>
-<p>All the available options are detailled below:
+<p>All the available options are detailed below:
 
 </p>
 <table class="table table-striped table-condensed" caption="Casper options">
@@ -368,7 +368,7 @@ single <code>options</code> argument which is a standard javascript object:
       <td><code>"error"</code></td>
       <td>
         Logging level (see the <a href="#logging">logging
-        section</a> for more informations)
+        section</a> for more information)
       </td>
     </tr>
     <tr>
@@ -579,7 +579,7 @@ casper.run(function() {
 </p>
 <h3 id="phantom_Casper_base64encode"><code>Casper#base64encode(String url [, String method, Object data])</code></h3>
 
-<p>Encodes a resource using the base64 algorithm synchroneously using
+<p>Encodes a resource using the base64 algorithm synchronously using
 client-side XMLHttpRequest.
 
 </p>
@@ -790,7 +790,7 @@ sample script for concrete usecase.
 </p>
 <h3 id="phantom_Casper_echo"><code>Casper#echo(String message[, String style])</code></h3>
 
-<p>Prints something to stdout, optionnaly with some fancy color (see the
+<p>Prints something to stdout, optionally with some fancy color (see the
 <a href="#colorizer"><code>Colorizer</code></a> section of this document for more
 information).
 
@@ -906,7 +906,7 @@ what happens in the PhantomJS environment from the remote one.
 casper.run();</code></pre>
 <h3 id="phantom_Casper_fill"><code>Casper#fill(String selector,  Object values[, Boolean submit])</code></h3>
 
-<p>Fills the fields of a form with given values and optionnaly submit it.
+<p>Fills the fields of a form with given values and optionally submits it.
 
 </p>
 <p>Example with this sample html form:
@@ -1102,7 +1102,7 @@ in order to run the Casper navigation suite.
 
 casper.run();</code></pre>
 <p><code>Casper.run()</code> also accepts an <code>onComplete</code> callback, which you can
-consider as a custom final step to perform when all te other steps has
+consider as a custom final step to perform when all the other steps have
 been executed. Just don't forget to <code>exit()</code> Casper if you define one!
 
 </p>
@@ -1146,7 +1146,7 @@ casper.run();</code></pre>
 <h3 id="phantom_Casper_start"><code>Casper#start(String url[, function then])</code></h3>
 
 <p>Configures and starts Casper, then open the provided <code>url</code> and
-optionnaly adds the step provided by the <code>then</code> argument.
+optionally adds the step provided by the <code>then</code> argument.
 
 </p>
 <p><strong>Example:</strong>
@@ -1235,7 +1235,7 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
 casper.run();</code></pre>
 <h3 id="phantom_Casper_thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
 
-<p>Adds a new navigation step for opening a new location, and optionnaly
+<p>Adds a new navigation step for opening a new location, and optionally
 add a next step when its loaded.
 
 </p>
@@ -1305,7 +1305,7 @@ in remote page.
 });</code></pre>
 <h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
-<p>Pause steps suite execution for a given amount of time, and optionnaly
+<p>Pause steps suite execution for a given amount of time, and optionally
 execute a step on done.
 
 </p>
@@ -1485,13 +1485,13 @@ visible in remote DOM to process a next step. Uses
               <small>positional arguments &amp; options exposed</small>
             </h1>
           </div>
-          <div id="cli_contents"><p>CasperJS ships with a builting command line parser on top of PhantomJS'
+          <div id="cli_contents"><p>CasperJS ships with a built-in command line parser on top of PhantomJS'
 one, located in the <code>cli</code> module; it exposes passed arguments as
 <strong>positional ones</strong> and <strong>named options</strong>
 
 </p>
 <p>But no worries for manipulating the <code>cli</code> module parsing API, a <code>Casper</code>
-instance always contains a rady to use <code>cli</code> property, allowing easy
+instance always contains a ready to use <code>cli</code> property, allowing easy
 access of all these parameters.
 
 </p>
@@ -1566,7 +1566,7 @@ if (casper.cli.args.length === 0 &amp;&amp; Object.keys(casper.cli.options).leng
     casper.echo("No arg nor option passed").exit();
 }</code></pre>
 <p>Last but not least, you can still use all PhantomJS standard CLI options
-as you would do with any other phantomjs script. To remeber what they
+as you would do with any other phantomjs script. To remember what they
 are, just run the <code>casperjs --help</code> command:
 
 </p>
@@ -1596,14 +1596,14 @@ Options:
           <div class="page-header">
             <h1>
               Events &amp; filters
-              <small>hooking &amp; altering CasperJS environement at runtime</small>
+              <small>hooking &amp; altering thr CasperJS environment at runtime</small>
             </h1>
           </div>
           <div id="filters_contents"><p>CasperJS provides an <a href="#events">event handler</a> very similar to the
 <a href="https://github.com/joyent/node/blob/master/lib/events.js">one</a> shipping
 with <a href="http://nodejs.org">nodejs</a>; actually it borrows most of its
 codebase. CasperJS also adds <a href="#filters"><em>filters</em></a>, which are basically
-ways to alter values asynchroneously.
+ways to alter values asynchronously.
 
 </p>
 <hr>
@@ -1674,14 +1674,14 @@ parameters passed to their callback:
     <tr>
       <td><code>http.auth</code></td>
       <td><code>username, password</code></td>
-      <td>Emitted when http autthentification parameters are set.</td>
+      <td>Emitted when http authentication parameters are set.</td>
     </tr>
     <tr>
       <td><code>http.status.[code]</code></td>
       <td><code>resource</code></td>
       <td>
         <p>
-          Emitted when ny given HTTP reponse is received with the status code
+          Emitted when any given HTTP reponse is received with the status code
           specified by <code>[code]</code>, eg.:
         </p>
         <pre class="prettyprint">casper.on('http.status.404', function(resource) {
@@ -1786,7 +1786,7 @@ parameters passed to their callback:
     <tr>
       <td><code>run.complete</code></td>
       <td>None</td>
-      <td>Emitted when the whole serie of steps in the stack have been executed.</td>
+      <td>Emitted when the whole series of steps in the stack have been executed.</td>
     </tr>
     <tr>
       <td><code>run.start</code></td>
@@ -1883,8 +1883,8 @@ casper.run();</code></pre>
 <hr>
 <h2 id="filters">Filters</h2>
 
-<p>Filters allow to alter some value asynchroneously. Sounds obscure? Let's
-take a simple example and let's imagine you would like to alter every
+<p>Filters allow you to alter some values asynchronously. Sounds obscure? Let's
+take a simple example and imagine you would like to alter every
 single url opened by CasperJS to append a <code>foo=42</code> query string
 parameter:
 
@@ -1894,7 +1894,7 @@ parameter:
 casper.setFilter('open.location', function(location) {
     return /\?+/.test(location) ? location += "&amp;foo=42" : location += "?foo=42";
 });</code></pre>
-<p>There you have it, every single requested url will have these appended.
+<p>There you have it, every single requested url will have this appended.
 Let me bet you'll find far more interesting use cases than my silly one
 ;)
 
@@ -1948,7 +1948,7 @@ value:
               <small>utilities injected in remote DOM environment</small></h1>
           </div>
           <div class="row">
-            <div class="span9" id="clientutils_contents"><p>Casper ships with a few client-side utilitites which are injected in the
+            <div class="span9" id="clientutils_contents"><p>Casper ships with a few client-side utilities which are injected in the
 remote DOM environment, and accessible from there through the
 <code>__utils__</code> object instance of the <code>ClientUtils</code> class of the
 <code>clientutils</code> module.
@@ -2297,8 +2297,7 @@ casper.test.info("Hi, I'm an informative message.");</code></pre>
 casper.test.pass("Barrack Obama");</code></pre>
 <h3 id="phantom_Casper_Tester_renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
 
-<p>Render tests results, an optionnaly exit phantomjs and saves results in
-a XUnit formatted file.
+<p>Render tests results, save results in an XUnit formatted file, and optionally exit phantomjs.
 
 </p>
 <pre><code class="javascript">var casper = require('casper').create();
@@ -2641,7 +2640,7 @@ following:
 <hr>
 <h3>Exporting results in <em>xUnit</em> format</h3>
 <p>CasperJS can export the results of the test suite to an xUnit XML file,
-which is compatible with continous integration tools such as
+which is compatible with continuous integration tools such as
 <a href="http://jenkins-ci.org/">Jenkins</a>. To save the xUnit log of your test
 suite to a <code>log.xml</code> file, you can process this way:
 
@@ -2672,14 +2671,14 @@ $ casperjs test tests/suites</code></pre>
 <hr>
 <h3>Organizing your tests</h3>
 <p>Of course writing all your tests in a single file may be painful, so you
-can split them accross files.
+can split them across files.
 
 </p>
 <div class="alert-message block-message">
   <p>
     <span class="label label-important">Important</span>
     There are <strong>two important conditions</strong> for splitting
-    your test suite accross several files:
+    your test suite across several files:
   </p>
   <ol class="bottom">
     <li>
@@ -2766,7 +2765,7 @@ your own runner and extend the casper object instance from there.
             <h1>Frequently Asked Questions <small>in random order</small></h1>
           </div>
           <div class="row">
-            <div class="span7" id="faq_contents"><p>Here's a selection of the most frequesntly asked questions by casperjs
+            <div class="span7" id="faq_contents"><p>Here's a selection of the most frequently asked questions by casperjs
 newcomers.
 
 </p>
@@ -2811,7 +2810,7 @@ location, etc.
 <p>Sure, as every single other javascript library on Earth.
 
 </p>
-<p>A first solution is to inject it into the remote DOM environement by
+<p>A first solution is to inject it into the remote DOM environment by
 hand using the standard <code>WebPage.injectJs()</code> method:
 
 </p>
