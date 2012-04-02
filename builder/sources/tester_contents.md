@@ -228,8 +228,7 @@ casper.test.pass("Barrack Obama");
 
 <h3 id="phantom_Casper_Tester_renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
 
-Render tests results, an optionnaly exit phantomjs and saves results in
-a XUnit formatted file.
+Render tests results, save results in an XUnit formatted file, and optionally exit phantomjs.
 
 ```javascript
 var casper = require('casper').create();

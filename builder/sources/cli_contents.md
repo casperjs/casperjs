@@ -1,9 +1,9 @@
-CasperJS ships with a builting command line parser on top of PhantomJS'
+CasperJS ships with a built-in command line parser on top of PhantomJS'
 one, located in the `cli` module; it exposes passed arguments as
 **positional ones** and **named options**
 
 But no worries for manipulating the `cli` module parsing API, a `Casper`
-instance always contains a rady to use `cli` property, allowing easy
+instance always contains a ready to use `cli` property, allowing easy
 access of all these parameters.
 
 Let's consider this simple casper script:
@@ -86,7 +86,7 @@ if (casper.cli.args.length === 0 && Object.keys(casper.cli.options).length === 0
 ```
 
 Last but not least, you can still use all PhantomJS standard CLI options
-as you would do with any other phantomjs script. To remeber what they
+as you would do with any other phantomjs script. To remember what they
 are, just run the `casperjs --help` command:
 
 ```
