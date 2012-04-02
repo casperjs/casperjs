@@ -2,7 +2,7 @@ CasperJS provides an [event handler](#events) very similar to the
 [one](https://github.com/joyent/node/blob/master/lib/events.js) shipping
 with [nodejs](http://nodejs.org); actually it borrows most of its
 codebase. CasperJS also adds [*filters*](#filters), which are basically
-ways to alter values asynchroneously.
+ways to alter values asynchronously.
 
 * * * * *
 
@@ -72,14 +72,14 @@ parameters passed to their callback:
     <tr>
       <td><code>http.auth</code></td>
       <td><code>username, password</code></td>
-      <td>Emitted when http autthentification parameters are set.</td>
+      <td>Emitted when http authentication parameters are set.</td>
     </tr>
     <tr>
       <td><code>http.status.[code]</code></td>
       <td><code>resource</code></td>
       <td>
         <p>
-          Emitted when ny given HTTP reponse is received with the status code
+          Emitted when any given HTTP reponse is received with the status code
           specified by <code>[code]</code>, eg.:
         </p>
         <pre class="prettyprint">casper.on('http.status.404', function(resource) {
@@ -184,7 +184,7 @@ parameters passed to their callback:
     <tr>
       <td><code>run.complete</code></td>
       <td>None</td>
-      <td>Emitted when the whole serie of steps in the stack have been executed.</td>
+      <td>Emitted when the whole series of steps in the stack have been executed.</td>
     </tr>
     <tr>
       <td><code>run.start</code></td>
@@ -283,8 +283,8 @@ method:
 
 <h2 id="filters">Filters</h2>
 
-Filters allow to alter some value asynchroneously. Sounds obscure? Let's
-take a simple example and let's imagine you would like to alter every
+Filters allow you to alter some values asynchronously. Sounds obscure? Let's
+take a simple example and imagine you would like to alter every
 single url opened by CasperJS to append a `foo=42` query string
 parameter:
 
@@ -294,7 +294,7 @@ parameter:
         return /\?+/.test(location) ? location += "&foo=42" : location += "?foo=42";
     });
 
-There you have it, every single requested url will have these appended.
+There you have it, every single requested url will have this appended.
 Let me bet you'll find far more interesting use cases than my silly one
 ;)
 

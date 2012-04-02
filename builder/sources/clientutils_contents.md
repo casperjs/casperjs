@@ -1,4 +1,4 @@
-Casper ships with a few client-side utilitites which are injected in the
+Casper ships with a few client-side utilities which are injected in the
 remote DOM environment, and accessible from there through the
 `__utils__` object instance of the `ClientUtils` class of the
 `clientutils` module.
