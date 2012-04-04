@@ -48,6 +48,9 @@ CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
     status = subprocess.call(CASPER_COMMAND)
+except OSError, err:
+    status = 1
+    print('Fatal: %s; did you install phantomjs?' % err)
 except KeyboardInterrupt:
     print('\nCasperJS interrupted, exiting.')
     status = 0
