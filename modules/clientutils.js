@@ -303,6 +303,8 @@
                         }
                         dataString = dataList.join('&');
                         this.log("getBinary(): Using request data: '" + dataString + "'", "debug");
+                    } else if (typeof data === "string") {
+                        dataString = data;
                     }
                     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 }
