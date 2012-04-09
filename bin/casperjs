@@ -7,7 +7,8 @@ import sys
 
 def resolve(path):
     if os.path.islink(path):
-        return resolve(os.readlink(path))
+        path = os.path.join(os.path.dirname(path), os.readlink(path))
+        return resolve(path)
     return path
 
 PHANTOMJS_NATIVE_ARGS = [
