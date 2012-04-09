@@ -268,7 +268,7 @@ Casper.prototype.click = function click(selector) {
 Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
     if (!this.exists(selector)) {
-        throw new CasperError("Cannot dispath an event on nonexistent selector: " + selector);
+        throw new CasperError("Cannot dispatch an event on nonexistent selector: " + selector);
     }
     var eventSuccess = this.evaluate(function(type, selector) {
         return __utils__.mouseEvent(type, selector);
