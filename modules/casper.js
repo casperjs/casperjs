@@ -517,7 +517,11 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     if (submit) {
         this.evaluate(function(selector) {
             var form = __utils__.findOne(selector);
-            var method = form.getAttribute('method').toUpperCase() || "GET";
+            var method = form.getAttribute('method');
+            if (typeof method !== 'undefined' && method !== null)
+                method = method.toUpperCase()
+            else
+                method = "GET"
             var action = form.getAttribute('action') || "unknown";
             __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
             form.submit();
