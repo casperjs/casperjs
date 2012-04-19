@@ -82,13 +82,13 @@ casper = require('casper').create()
 
 casper.start "http://google.fr/", ->
   # search for 'casperjs' from google form
-  @fill "form[action="/search"]", q: "casperjs", true
+  @fill "form[action='/search']", q: "casperjs", true
 
 casper.then ->
   # aggregate results for the 'casperjs' search
   links = @evaluate getLinks
   # search for 'phantomjs' from google form
-  @fill "form[action="/search"]", q: "phantomjs", true
+  @fill "form[action='/search']", q: "phantomjs", true
 
 casper.then ->
   # concat results for the 'phantomjs' search
