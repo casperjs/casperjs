@@ -269,13 +269,13 @@ casper = require('casper').create()
 
 casper.start "http://google.fr/", -&gt;
   # search for 'casperjs' from google form
-  @fill "form[action="/search"]", q: "casperjs", true
+  @fill "form[action='/search']", q: "casperjs", true
 
 casper.then -&gt;
   # aggregate results for the 'casperjs' search
   links = @evaluate getLinks
   # search for 'phantomjs' from google form
-  @fill "form[action="/search"]", q: "phantomjs", true
+  @fill "form[action='/search']", q: "phantomjs", true
 
 casper.then -&gt;
   # concat results for the 'phantomjs' search
@@ -2960,7 +2960,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=ZX7NE7Xkemo.fr./sv=1/am=!JRw-TBD6dySIUpXdrg/d=1/rs=AItRSTNJszcY496aOfOPXKTWhw0tt8TJYA/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/gcm_ppb,googleapis_client,plusone/rt=j/ver=3iZt-BPw9fc.fr./sv=1/am=!-tH8OfU4iN6Ies1-GA/d=1/rs=AItRSTONhF3uOrqfY6xv8Cv7OKCHvOrA_g/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>
