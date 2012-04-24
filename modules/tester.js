@@ -264,7 +264,7 @@ var Tester = function(casper, options) {
      * @param  String   message    Test description
      */
     this.assertSelectorExists = function assertSelectorExists(selector, message) {
-        return this.assert(this.exists(selector), message);
+        return this.assert(casper.exists(selector), message);
     };
 
     /**
