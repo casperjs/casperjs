@@ -4,6 +4,7 @@ CasperJS Changelog
 2012-XX-XX, v0.6.6
 ------------------
 
+- **BC BREAK:**: moved the `page.initialized` event to where it should have always been, and is now using native phantomjs `onInitialized` event
 - fixed [#95](https://github.com/n1k0/casperjs/issues/95) - `Tester.assertSelectorExists` was broken
 
 2012-03-28, v0.6.5
