@@ -1,7 +1,7 @@
 CasperJS Changelog
 ==================
 
-2012-XX-XX, v0.6.6
+2012-04-27, v0.6.6
 ------------------
 
 - **BC BREAK:**: moved the `page.initialized` event to where it should have always been, and is now using native phantomjs `onInitialized` event
