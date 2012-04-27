@@ -48,11 +48,7 @@ CASPER_COMMAND.extend([os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casp
 CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
-    status = subprocess.call(CASPER_COMMAND)
+    os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
 except OSError, err:
-    status = 1
     print('Fatal: %s; did you install phantomjs?' % err)
-except KeyboardInterrupt:
-    print('\nCasperJS interrupted, exiting.')
-    status = 0
-sys.exit(status)
+    sys.exit(1)
