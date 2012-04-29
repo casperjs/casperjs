@@ -41,7 +41,7 @@ fantomas.run(function() {
 });
 ```
 
-Warning As of version 0.6, the `Casper.extend()` method has been
+<span class="label label-warning">Warning</span> As of version 0.6, the `Casper.extend()` method has been
 deprecated; please now use the method illustrated above.
 
 ### Using CoffeeScript

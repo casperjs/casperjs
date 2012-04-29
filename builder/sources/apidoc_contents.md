@@ -732,7 +732,7 @@ casper.run();
 
 <h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String selector)</code></h3>
 
-Warning This method has been deprecated since 0.6. Use
+<span class="label label-warning">Warning</span> This method has been deprecated since 0.6. Use
 [`Casper.click()`](#phantom_Casper_click) instead.
 
 <h3 id="phantom_Casper_open"><code>Casper#open(String location, Object Settings)</code></h3>
@@ -772,7 +772,7 @@ casper.then(function() {
 casper.run();
 ```
 
-Warning PhantomJS 1.4.0 and 1.4.1 have introduced a
+<span class="label label-warning">Warning</span> PhantomJS 1.4.0 and 1.4.1 have introduced a
 [regression](http://code.google.com/p/phantomjs/issues/detail?id=337)
 with POST requests preventing data to be actually submitted; so please
 check you're using a more recent or patched version of PhantomJS before

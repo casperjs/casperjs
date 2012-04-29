@@ -122,7 +122,7 @@ casper.start('http://foo.bar/', function() {
 casper.run();
 ```
 
-Warning You won't be able to pass the *binary string* from the remote
+<span class="label label-warning">Warning</span> You won't be able to pass the *binary string* from the remote
 DOM environment to PhantomJS' one. For retrieving binary contents, use
 [`ClientUtils.encode()`](#phantom_Casper_ClientUtils_encode).
 
