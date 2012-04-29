@@ -252,22 +252,36 @@ Casper.prototype.clear = function clear() {
  * @return Boolean
  */
 Casper.prototype.click = function click(selector) {
-    this.log("Click on selector: " + selector, "debug");
-    if (arguments.length > 1) {
-        this.emit("deprecated", "The click() method does not process the fallbackToHref argument since 0.6");
-    }
+    return this.mouseEvent('click', selector);
+};
+
+/**
+ * Emulates an event on the element from the provided selector using the mouse
+ * pointer, if possible.
+ *
+ * In case of success, `true` is returned, `false` otherwise.
+ *
+ * @param  String   type            Type of event to emulate
+ * @param  String   selector        A DOM CSS3 compatible selector
+ * @return Boolean
+ */
+Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
+    this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
     if (!this.exists(selector)) {
-        throw new CasperError("Cannot click on unexistent selector: " + selector);
+        throw new CasperError("Cannot dispatch an event on nonexistent selector: " + selector);
     }
-    var clicked = this.evaluate(function(selector) {
-        return __utils__.click(selector);
-    }, { selector: selector });
-    if (!clicked) {
+    var eventSuccess = this.evaluate(function(type, selector) {
+        return __utils__.mouseEvent(type, selector);
+    }, { 
+        type: type,
+        selector: selector 
+    });
+    if (!eventSuccess) {
         // fallback onto native QtWebKit mouse events
         try {
-            this.mouse.click(selector);
+            this.mouse.processEvent(type, selector);
         } catch (e) {
-            this.log(f("Error while trying to click on selector %s: %s", selector, e), "error");
+            this.log(f("Error while trying to emulate event %s on selector %s: %s", type, selector, e), "error");
             return false;
         }
     }
