@@ -1251,6 +1251,9 @@ function createPage(casper) {
         casper.log(msg, level, "remote");
         casper.emit('remote.message', msg);
     };
+    page.onError = function onError(msg, trace) {
+        casper.emit('page.error', msg, trace);
+    };
     page.onInitialized = function onInitialized() {
         casper.emit('page.initialized', this);
         if (utils.isFunction(casper.options.onPageInitialized)) {
