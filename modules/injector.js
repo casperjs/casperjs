@@ -30,7 +30,7 @@
 
 var utils = require('utils');
 
-exports.create = function(fn) {
+exports.create = function create(fn) {
     return new FunctionArgsInjector(fn);
 };
 
@@ -39,18 +39,18 @@ exports.create = function(fn) {
  *
  * FIXME: use new Function() instead of eval()
  */
-var FunctionArgsInjector = function(fn) {
+var FunctionArgsInjector = function FunctionArgsInjector(fn) {
     if (!utils.isFunction(fn)) {
         throw new CasperError("FunctionArgsInjector() can only process functions");
     }
     this.fn = fn;
 
-    this.extract = function(fn) {
+    this.extract = function extract(fn) {
         var match = /^function\s?(\w+)?\s?\((.*)\)\s?\{([\s\S]*)\}/i.exec(fn.toString().trim());
         if (match && match.length > 1) {
-            var args = match[2].split(',').map(function(arg) {
+            var args = match[2].split(',').map(function _map(arg) {
                 return arg.replace(new RegExp(/\/\*+.*\*\//ig), "").trim();
-            }).filter(function(arg) {
+            }).filter(function _filter(arg) {
                 return arg;
             }) || [];
             return {
@@ -61,7 +61,7 @@ var FunctionArgsInjector = function(fn) {
         }
     };
 
-    this.process = function(values) {
+    this.process = function process(values) {
         var fnObj = this.extract(this.fn);
         if (!utils.isObject(fnObj)) {
             throw new CasperError("Unable to process function " + this.fn.toString());
@@ -70,13 +70,13 @@ var FunctionArgsInjector = function(fn) {
         return 'function ' + (fnObj.name || '') + '(){' + inject + fnObj.body + '}';
     };
 
-    this.getArgsInjectionString = function(args, values) {
+    this.getArgsInjectionString = function getArgsInjectionString(args, values) {
         values = typeof values === "object" ? values : {};
         var jsonValues = escape(encodeURIComponent(JSON.stringify(values)));
         var inject = [
             'var __casper_params__ = JSON.parse(decodeURIComponent(unescape(\'' + jsonValues + '\')));'
         ];
-        args.forEach(function(arg) {
+        args.forEach(function _forEach(arg) {
             if (arg in values) {
                 inject.push('var ' + arg + '=__casper_params__["' + arg + '"];');
             }

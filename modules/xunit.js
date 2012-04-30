@@ -31,7 +31,7 @@
 var utils = require('utils');
 var fs = require('fs');
 
-exports.create = function() {
+exports.create = function create() {
     return new XUnitExporter();
 };
 
@@ -39,9 +39,9 @@ exports.create = function() {
  * JUnit XML (xUnit) exporter for test results.
  *
  */
-XUnitExporter = function() {
+XUnitExporter = function XUnitExporter() {
     this._xml = utils.node('testsuite');
-    this._xml.toString = function() {
+    this._xml.toString = function toString() {
         return this.outerHTML; // ouch
     };
 };
@@ -53,7 +53,7 @@ exports.XUnitExporter = XUnitExporter;
  * @param  String  classname
  * @param  String  name
  */
-XUnitExporter.prototype.addSuccess = function(classname, name) {
+XUnitExporter.prototype.addSuccess = function addSuccess(classname, name) {
     this._xml.appendChild(utils.node('testcase', {
         classname: generateClassName(classname),
         name:      name
@@ -68,7 +68,7 @@ XUnitExporter.prototype.addSuccess = function(classname, name) {
  * @param  String  message
  * @param  String  type
  */
-XUnitExporter.prototype.addFailure = function(classname, name, message, type) {
+XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type) {
     var fnode = utils.node('testcase', {
         classname: generateClassName(classname),
         name:      name
@@ -110,6 +110,6 @@ function generateClassName(classname) {
  *
  * @return HTMLElement
  */
-XUnitExporter.prototype.getXML = function() {
+XUnitExporter.prototype.getXML = function getXML() {
     return this._xml;
 };

@@ -37,7 +37,7 @@ var tester = require('tester');
 var utils = require('utils');
 var f = utils.format;
 
-exports.create = function(options) {
+exports.create = function create(options) {
     return new Casper(options);
 };
 
@@ -46,7 +46,7 @@ exports.create = function(options) {
  *
  * @param  Object  options  Casper options
  */
-var Casper = function(options) {
+var Casper = function Casper(options) {
     var DEFAULT_DIE_MESSAGE = "Suite explicitely interrupted without any message given.";
     var DEFAULT_USER_AGENT  = "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
     // init & checks
@@ -112,7 +112,7 @@ var Casper = function(options) {
     this.test = tester.create(this);
 
     // basic event handlers
-    this.on('deprecated', function(message) {
+    this.on('deprecated', function onDeprecated(message) {
         this.echo('[deprecated] ' + message, 'COMMENT');
     });
 };
@@ -126,9 +126,9 @@ utils.inherits(Casper, events.EventEmitter);
  * @return Casper
  */
 Casper.prototype.back = function back() {
-    return this.then(function() {
+    return this.then(function _step() {
         this.emit('back');
-        this.evaluate(function() {
+        this.evaluate(function _evaluate() {
             history.back();
         });
     });
@@ -146,7 +146,7 @@ Casper.prototype.back = function back() {
  * @return string          Base64 encoded result
  */
 Casper.prototype.base64encode = function base64encode(url, method, data) {
-    return this.evaluate(function(url, method, data) {
+    return this.evaluate(function _evaluate(url, method, data) {
         return __utils__.getBase64(url, method, data);
     }, { url: url, method: method, data: data });
 };
@@ -259,7 +259,7 @@ Casper.prototype.click = function click(selector) {
     if (!this.exists(selector)) {
         throw new CasperError("Cannot click on unexistent selector: " + selector);
     }
-    var clicked = this.evaluate(function(selector) {
+    var clicked = this.evaluate(function _evaluate(selector) {
         return __utils__.click(selector);
     }, { selector: selector });
     if (!clicked) {
@@ -296,7 +296,7 @@ Casper.prototype.createStep = function createStep(fn, options) {
  * @return Casper
  */
 Casper.prototype.debugHTML = function debugHTML() {
-    this.echo(this.evaluate(function() {
+    this.echo(this.evaluate(function _evaluate() {
         return document.body.innerHTML;
     }));
     return this;
@@ -308,7 +308,7 @@ Casper.prototype.debugHTML = function debugHTML() {
  * @return Casper
  */
 Casper.prototype.debugPage = function debugPage() {
-    this.echo(this.evaluate(function() {
+    this.echo(this.evaluate(function _evaluate() {
         return document.body.innerText;
     }));
     return this;
@@ -365,8 +365,8 @@ Casper.prototype.each = function each(array, fn) {
         this.log("each() only works with arrays", "error");
         return this;
     }
-    (function(self) {
-        array.forEach(function(item, i) {
+    (function _each(self) {
+        array.forEach(function _forEach(item, i) {
             fn.call(self, self, item, i);
         });
     })(this);
@@ -439,7 +439,7 @@ Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message) {
  * @return Boolean
  */
 Casper.prototype.exists = function exists(selector) {
-    return this.evaluate(function(selector) {
+    return this.evaluate(function _evaluate(selector) {
         return __utils__.exists(selector);
     }, { selector: selector });
 };
@@ -464,7 +464,7 @@ Casper.prototype.exit = function exit(status) {
  * @return String
  */
 Casper.prototype.fetchText = function fetchText(selector) {
-    return this.evaluate(function(selector) {
+    return this.evaluate(function _evaluate(selector) {
         return __utils__.fetchText(selector);
     }, { selector: selector });
 };
@@ -485,7 +485,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
         throw new CasperError("Form values must be provided as an object");
     }
     this.emit('fill', selector, vals, submit);
-    var fillResults = this.evaluate(function(selector, values) {
+    var fillResults = this.evaluate(function _evaluate(selector, values) {
        return __utils__.fill(selector, values);
     }, {
         selector: selector,
@@ -494,8 +494,8 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     if (!fillResults) {
         throw new CasperError("Unable to fill form");
     } else if (fillResults.errors.length > 0) {
-        (function(self){
-            fillResults.errors.forEach(function(error) {
+        (function _each(self){
+            fillResults.errors.forEach(function _forEach(error) {
                 self.log("form error: " + error, "error");
             });
         })(this);
@@ -506,8 +506,8 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     }
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
-        (function(self) {
-            fillResults.files.forEach(function(file) {
+        (function _each(self) {
+            fillResults.files.forEach(function _forEach(file) {
                 var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
                 self.page.uploadFile(fileFieldSelector, file.path);
             });
@@ -515,7 +515,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     }
     // Form submission?
     if (submit) {
-        this.evaluate(function(selector) {
+        this.evaluate(function _evaluate(selector) {
             var form = __utils__.findOne(selector);
             var method = (form.getAttribute('method') || "GET").toUpperCase();
             var action = form.getAttribute('action') || "unknown";
@@ -531,9 +531,9 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
  * @return Casper
  */
 Casper.prototype.forward = function forward(then) {
-    return this.then(function() {
+    return this.then(function _step() {
         this.emit('forward');
-        this.evaluate(function() {
+        this.evaluate(function _evaluate() {
             history.forward();
         });
     });
@@ -545,7 +545,7 @@ Casper.prototype.forward = function forward(then) {
  * @return String
  */
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
-    return decodeURIComponent(this.evaluate(function() {
+    return decodeURIComponent(this.evaluate(function _evaluate() {
         return document.location.href;
     }));
 };
@@ -560,7 +560,7 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
-    var clipRect = this.evaluate(function(selector) {
+    var clipRect = this.evaluate(function _evaluate(selector) {
         return __utils__.getElementBounds(selector);
     }, { selector: selector });
     if (!utils.isClipRect(clipRect)) {
@@ -576,7 +576,7 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
  * @return mixed
  */
 Casper.prototype.getGlobal = function getGlobal(name) {
-    var result = this.evaluate(function(name) {
+    var result = this.evaluate(function _evaluate(name) {
         var result = {};
         try {
             result.value = JSON.stringify(window[name]);
@@ -602,7 +602,7 @@ Casper.prototype.getGlobal = function getGlobal(name) {
  * @return String
  */
 Casper.prototype.getTitle = function getTitle() {
-    return this.evaluate(function() {
+    return this.evaluate(function _evaluate() {
         return document.title;
     });
 };
@@ -739,12 +739,12 @@ Casper.prototype.resourceExists = function resourceExists(test) {
     var testFn;
     switch (utils.betterTypeOf(test)) {
         case "string":
-            testFn = function(res) {
+            testFn = function _test(res) {
                 return res.url.search(test) !== -1;
             };
             break;
         case "regexp":
-            testFn = function(res) {
+            testFn = function _test(res) {
                 return test.test(res.url);
             };
             break;
@@ -788,7 +788,7 @@ Casper.prototype.runStep = function runStep(step) {
         this.log(stepInfo + f(' %s (HTTP %d)', this.getCurrentUrl(), this.currentHTTPStatus), "info");
     }
     if (utils.isNumber(this.options.stepTimeout) && this.options.stepTimeout > 0) {
-        var stepTimeoutCheckInterval = setInterval(function(self, start, stepNum) {
+        var stepTimeoutCheckInterval = setInterval(function _check(self, start, stepNum) {
             if (new Date().getTime() - start > self.options.stepTimeout) {
                 if (self.step == stepNum) {
                     self.emit('step.timeout');
@@ -881,7 +881,7 @@ Casper.prototype.start = function start(location, then) {
     this.emit('started');
     if (utils.isNumber(this.options.timeout) && this.options.timeout > 0) {
         this.log(f("Execution timeout set to %dms", this.options.timeout), "info");
-        setTimeout(function(self) {
+        setTimeout(function _check(self) {
             self.emit('timeout');
             if (utils.isFunction(self.options.onTimeout)) {
                 self.options.onTimeout.call(self, self);
@@ -891,7 +891,7 @@ Casper.prototype.start = function start(location, then) {
         }, this.options.timeout, this);
     }
     if (utils.isString(location) && location.length > 0) {
-        return this.thenOpen(location, utils.isFunction(then) ? then : this.createStep(function(self) {
+        return this.thenOpen(location, utils.isFunction(then) ? then : this.createStep(function _step(self) {
             self.log("start page is loaded", "debug");
         }));
     }
@@ -947,7 +947,7 @@ Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) 
     if (arguments.length > 2) {
         this.emit("deprecated", "The thenClick() method does not process the fallbackToHref argument since 0.6");
     }
-    this.then(function() {
+    this.then(function _step() {
         this.click(selector);
     });
     return utils.isFunction(then) ? this.then(then) : this;
@@ -963,7 +963,7 @@ Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) 
  * @see    Casper#evaluate
  */
 Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
-    return this.then(function() {
+    return this.then(function _step() {
         this.evaluate(fn, context);
     });
 };
@@ -977,7 +977,7 @@ Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
  * @see    Casper#open
  */
 Casper.prototype.thenOpen = function thenOpen(location, then) {
-    this.then(this.createStep(function() {
+    this.then(this.createStep(function _step() {
         this.open(location);
     }, {
         skipLog: true
@@ -1031,7 +1031,7 @@ Casper.prototype.viewport = function viewport(width, height) {
  * @return Boolean
  */
 Casper.prototype.visible = function visible(selector) {
-    return this.evaluate(function(selector) {
+    return this.evaluate(function _evaluate(selector) {
         return __utils__.visible(selector);
     }, { selector: selector });
 };
@@ -1052,9 +1052,9 @@ Casper.prototype.wait = function wait(timeout, then) {
     if (then && !utils.isFunction(then)) {
         this.die("wait() a step definition must be a function");
     }
-    return this.then(function() {
+    return this.then(function _step() {
         this.waitStart();
-        setTimeout(function(self) {
+        setTimeout(function _check(self) {
           self.log(f("wait() finished wating for %dms.", timeout), "info");
           if (then) {
             then.call(self, self);
@@ -1091,11 +1091,11 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
     if (then && !utils.isFunction(then)) {
         this.die("waitFor() next step definition must be a function");
     }
-    return this.then(function() {
+    return this.then(function _step() {
         this.waitStart();
         var start = new Date().getTime();
         var condition = false;
-        var interval = setInterval(function(self, testFx, timeout, onTimeout) {
+        var interval = setInterval(function _check(self, testFx, timeout, onTimeout) {
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
             } else {
@@ -1132,7 +1132,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
  */
 Casper.prototype.waitForResource = function waitForResource(test, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function(self) {
+    return this.waitFor(function _check(self) {
         return self.resourceExists(test);
     }, then, onTimeout, timeout);
 };
@@ -1149,7 +1149,7 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
  */
 Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function(self) {
+    return this.waitFor(function _check(self) {
         return self.exists(selector);
     }, then, onTimeout, timeout);
 };
@@ -1166,7 +1166,7 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
  */
 Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function(self) {
+    return this.waitFor(function _check(self) {
         return !self.exists(selector);
     }, then, onTimeout, timeout);
 };
@@ -1183,7 +1183,7 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
  */
 Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function(self) {
+    return this.waitFor(function _check(self) {
         return self.visible(selector);
     }, then, onTimeout, timeout);
 };
@@ -1200,7 +1200,7 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
  */
 Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function(self) {
+    return this.waitFor(function _check(self) {
         return !self.visible(selector);
     }, then, onTimeout, timeout);
 };
@@ -1235,14 +1235,14 @@ function createPage(casper) {
     } else {
         page = require('webpage').create();
     }
-    page.onAlert = function(message) {
+    page.onAlert = function onAlert(message) {
         casper.log('[alert] ' + message, "info", "remote");
         casper.emit('remote.alert', message);
         if (utils.isFunction(casper.options.onAlert)) {
             casper.options.onAlert.call(casper, casper, message);
         }
     };
-    page.onConsoleMessage = function(msg) {
+    page.onConsoleMessage = function onConsoleMessage(msg) {
         var level = "info", test = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
         if (test && test.length === 3) {
             level = test[1];
@@ -1251,19 +1251,19 @@ function createPage(casper) {
         casper.log(msg, level, "remote");
         casper.emit('remote.message', msg);
     };
-    page.onInitialized = function() {
+    page.onInitialized = function onInitialized() {
         casper.emit('page.initialized', this);
         if (utils.isFunction(casper.options.onPageInitialized)) {
             this.log("Post-configuring WebPage instance", "debug");
             casper.options.onPageInitialized.call(casper, page);
         }
     };
-    page.onLoadStarted = function() {
+    page.onLoadStarted = function onLoadStarted() {
         casper.loadInProgress = true;
         casper.resources = [];
         casper.emit('load.started');
     };
-    page.onLoadFinished = function(status) {
+    page.onLoadFinished = function onLoadFinished(status) {
         if (status !== "success") {
             casper.emit('load.failed', {
                 status:      status,
@@ -1284,7 +1284,7 @@ function createPage(casper) {
             if (!utils.isArray(casper.options.clientScripts)) {
                 throw new CasperError("The clientScripts option must be an array");
             } else {
-                casper.options.clientScripts.forEach(function(script) {
+                casper.options.clientScripts.forEach(function _forEach(script) {
                     if (casper.page.injectJs(script)) {
                         casper.log(f('Automatically injected %s client side', script), "debug");
                     } else {
@@ -1305,7 +1305,7 @@ function createPage(casper) {
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
-    page.onResourceReceived = function(resource) {
+    page.onResourceReceived = function onResourceReceived(resource) {
         casper.emit('resource.received', resource);
         if (utils.isFunction(casper.options.onResourceReceived)) {
             casper.options.onResourceReceived.call(casper, casper, resource);
@@ -1325,7 +1325,7 @@ function createPage(casper) {
             casper.emit('location.changed', resource.url);
         }
     };
-    page.onResourceRequested = function(request) {
+    page.onResourceRequested = function onResourceRequested(request) {
         casper.emit('resource.requested', request);
         if (utils.isFunction(casper.options.onResourceRequested)) {
             casper.options.onResourceRequested.call(casper, casper, request);

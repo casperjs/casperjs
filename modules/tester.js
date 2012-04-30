@@ -33,7 +33,7 @@ var events = require('events');
 var utils = require('utils');
 var f = utils.format;
 
-exports.create = function(casper, options) {
+exports.create = function create(casper, options) {
     return new Tester(casper, options);
 };
 
@@ -41,7 +41,7 @@ exports.create = function(casper, options) {
  * Casper tester: makes assertions, stores test results and display then.
  *
  */
-var Tester = function(casper, options) {
+var Tester = function Tester(casper, options) {
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
     }
@@ -64,16 +64,16 @@ var Tester = function(casper, options) {
     };
 
     // events
-    casper.on('step.error', function(e) {
+    casper.on('step.error', function onStepError(e) {
         casper.test.fail(e);
         casper.test.done();
     });
 
-    this.on('success', function(success) {
+    this.on('success', function onSuccess(success) {
         this.exporter.addSuccess(fs.absolute(success.file), success.message);
     });
 
-    this.on('fail', function(failure) {
+    this.on('fail', function onFail(failure) {
         this.exporter.addFailure(fs.absolute(failure.file), failure.message, failure.details || "test failed", failure.type || "unknown");
         this.testResults.failures.push(failure);
     });
@@ -274,7 +274,7 @@ var Tester = function(casper, options) {
      * @param  String   message    Test description
      */
     this.assertTextExists = function assertTextExists(text, message) {
-        return this.assert((casper.evaluate(function() {
+        return this.assert((casper.evaluate(function _evaluate() {
             return document.body.innerText;
         }).indexOf(text) != -1), message);
     };
@@ -367,7 +367,7 @@ var Tester = function(casper, options) {
             new Function('casper', phantom.getScriptCode(file))(casper);
         } catch (e) {
             var self = this;
-            phantom.processScriptError(e, file, function(error) {
+            phantom.processScriptError(e, file, function onTestScriptError(error) {
                 // do not abort the whole suite, just fail fast displaying the
                 // caught error and process next suite
                 self.fail(e);
@@ -395,17 +395,17 @@ var Tester = function(casper, options) {
         if (!fs.isDirectory(dir)) {
             return [];
         }
-        var entries = fs.list(dir).filter(function(entry) {
+        var entries = fs.list(dir).filter(function _filter(entry) {
             return entry !== '.' && entry !== '..';
-        }).map(function(entry) {
+        }).map(function _map(entry) {
             return fs.absolute(fs.pathJoin(dir, entry));
         });
-        entries.forEach(function(entry) {
+        entries.forEach(function _forEach(entry) {
             if (fs.isDirectory(entry)) {
                 entries = entries.concat(self.findTestFiles(entry));
             }
         });
-        return entries.filter(function(entry) {
+        return entries.filter(function _filter(entry) {
             return utils.isJsFile(fs.absolute(fs.pathJoin(dir, entry)));
         }).sort();
     };
@@ -452,7 +452,7 @@ var Tester = function(casper, options) {
             return;
         }
         casper.echo(f("\nDetails for the %d failed test%s:\n", failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
-        failures.forEach(function(failure) {
+        failures.forEach(function _forEach(failure) {
             var message, line;
             if (utils.isType(failure.message, "object") && failure.message.stack) {
                 line = failure.message.line ? failure.message.line : 0;
@@ -516,7 +516,7 @@ var Tester = function(casper, options) {
         if (arguments.length === 0) {
             throw new CasperError("runSuites() needs at least one path argument");
         }
-        Array.prototype.forEach.call(arguments, function(path) {
+        Array.prototype.forEach.call(arguments, function _forEach(path) {
             if (!fs.exists(path)) {
                 self.bar(f("Path %s doesn't exist", path), "RED_BAR");
             }
@@ -531,7 +531,7 @@ var Tester = function(casper, options) {
             casper.exit(1);
         }
         var current = 0;
-        var interval = setInterval(function(self) {
+        var interval = setInterval(function _check(self) {
             if (self.running) {
                 return;
             }

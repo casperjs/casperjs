@@ -37,24 +37,24 @@ var utils = require('utils');
  * @param  array  phantomArgs  phantom.args value
  * @return Object
  */
-exports.parse = function(phantomArgs) {
+exports.parse = function parse(phantomArgs) {
     var extract = {
         args: [],
         options: {},
-        drop: function(what) {
+        drop: function drop(what) {
             if (utils.isNumber(what)) {
                 // deleting an arg by its position
-                this.args = this.args.filter(function(arg, index) {
+                this.args = this.args.filter(function _filter(arg, index) {
                     return index !== what;
                 });
             } else if (utils.isString(what)) {
                 // deleting an arg by its value
-                this.args = this.args.filter(function(arg) {
+                this.args = this.args.filter(function _filter(arg) {
                     return arg !== what;
                 });
                 // deleting an option by its name (key)
                 var self = this;
-                Object.keys(this.options).forEach(function(option) {
+                Object.keys(this.options).forEach(function _forEach(option) {
                     if (option === what) {
                         delete self.options[what];
                     }
@@ -63,7 +63,7 @@ exports.parse = function(phantomArgs) {
                 throw new CasperError("cannot drop argument of type " + typeof what);
             }
         },
-        has: function(what) {
+        has: function has(what) {
             if (utils.isNumber(what)) {
                 return what in this.args;
             } else if (utils.isString(what)) {
@@ -72,7 +72,7 @@ exports.parse = function(phantomArgs) {
                 throw new CasperError("Unsupported cli arg tester " + typeof what);
             }
         },
-        get: function(what) {
+        get: function get(what) {
             if (utils.isNumber(what)) {
                 return this.args[what];
             } else if (utils.isString(what)) {
@@ -82,7 +82,7 @@ exports.parse = function(phantomArgs) {
             }
         }
     };
-    phantomArgs.forEach(function(arg) {
+    phantomArgs.forEach(function _forEach(arg) {
         if (arg.indexOf('--') === 0) {
             // named option
             var optionMatch = arg.match(/^--(.*)=(.*)/i);

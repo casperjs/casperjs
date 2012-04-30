@@ -104,7 +104,7 @@ function format(f) {
     i = 1;
     var args = arguments;
     var len = args.length;
-    var str = String(f).replace(/%[sdj%]/g, function(x) {
+    var str = String(f).replace(/%[sdj%]/g, function _replace(x) {
         if (i >= len) return x;
         switch (x) {
         case '%s':
@@ -352,7 +352,7 @@ exports.node = node;
  */
 function serialize(value) {
     if (isArray(value)) {
-        value = value.map(function(prop) {
+        value = value.map(function _map(prop) {
             return isFunction(prop) ? prop.toString().replace(/\s{2,}/, '') : prop;
         });
     }

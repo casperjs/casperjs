@@ -30,11 +30,11 @@
 
 var utils = require('utils');
 
-exports.create = function(casper) {
+exports.create = function create(casper) {
     return new Mouse(casper);
 };
 
-var Mouse = function(casper) {
+var Mouse = function Mouse(casper) {
     if (!utils.isCasperObject(casper)) {
         throw new CasperError('Mouse() needs a Casper instance');
     }
