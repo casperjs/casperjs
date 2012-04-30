@@ -192,7 +192,7 @@ phantom.loadCasper = function loadCasper() {
      * @param  Function  callback  An optional callback
      */
     phantom.processScriptError = function processScriptError(error, file, callback) {
-        if (!this.sourceIds.hasOwnProperty(error.sourceId)) {
+        if (error.sourceId && !this.sourceIds.hasOwnProperty(error.sourceId)) {
             this.sourceIds[error.sourceId] = file;
         }
         if (error.message === "__sourceId__") {
