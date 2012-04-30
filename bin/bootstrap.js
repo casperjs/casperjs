@@ -28,28 +28,28 @@
  *
  */
 
-phantom.loadCasper = function() {
+phantom.loadCasper = function loadCasper() {
     // Patching fs
     // TODO: watch for these methods being implemented in official fs module
-    var fs = (function(fs) {
+    var fs = (function _fs(fs) {
         if (!fs.hasOwnProperty('basename')) {
-            fs.basename = function(path) {
+            fs.basename = function basename(path) {
                 return path.replace(/.*\//, '');
             };
         }
         if (!fs.hasOwnProperty('dirname')) {
-            fs.dirname = function(path) {
+            fs.dirname = function dirname(path) {
                 return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
             };
         }
         if (!fs.hasOwnProperty('isWindows')) {
-            fs.isWindows = function() {
+            fs.isWindows = function isWindows() {
                 var testPath = arguments[0] || this.workingDirectory;
                 return (/^[a-z]{1,2}:/i).test(testPath) || testPath.indexOf("\\\\") === 0;
             };
         }
         if (!fs.hasOwnProperty('pathJoin')) {
-            fs.pathJoin = function() {
+            fs.pathJoin = function pathJoin() {
                 return Array.prototype.join.call(arguments, this.separator);
             };
         }
@@ -59,12 +59,12 @@ phantom.loadCasper = function() {
     // casper root path
     if (!phantom.casperPath) {
         try {
-            phantom.casperPath = phantom.args.map(function(i) {
+            phantom.casperPath = phantom.args.map(function _map(i) {
                 var match = i.match(/^--casper-path=(.*)/);
                 if (match) {
                     return fs.absolute(match[1]);
                 }
-            }).filter(function(path) {
+            }).filter(function _filter(path) {
                 return fs.isDirectory(path);
             }).pop();
         } catch (e) {}
@@ -82,7 +82,7 @@ phantom.loadCasper = function() {
     phantom.sourceIds = {};
 
     // custom global CasperError
-    window.CasperError = function(msg) {
+    window.CasperError = function CasperError(msg) {
         Error.call(this);
         try {
             // let's get where this error has been thrown from, if we can
@@ -98,7 +98,7 @@ phantom.loadCasper = function() {
     window.CasperError.prototype = Object.getPrototypeOf(new Error());
 
     // Stack formatting
-    window.CasperError.prototype.formatStack = function() {
+    window.CasperError.prototype.formatStack = function formatStack() {
         var location = this.fileName || phantom.sourceIds[this.sourceId] || "unknown";
         location += ':' + (this.line ?  this.line : 0);
         return this.toString() + '\n    ' + (this._from || "anonymous") + '() at ' + location;
@@ -111,10 +111,10 @@ phantom.loadCasper = function() {
      */
     if (!new CasperError().hasOwnProperty('stack')) {
         Object.defineProperty(CasperError.prototype, 'stack', {
-            set: function(string) {
+            set: function set(string) {
                 this._stack = string;
             },
-            get: function() {
+            get: function get() {
                 if (this._stack) {
                     return this._stack;
                 }
@@ -148,7 +148,7 @@ phantom.loadCasper = function() {
             minor: ~~parts[1]       || 0,
             patch: ~~patchPart[0]   || 0,
             ident: patchPart[1]     || "",
-            toString: function() {
+            toString: function toString() {
                 var version = [this.major, this.minor, this.patch].join('.');
                 if (this.ident) {
                     version = [version, this.ident].join('-');
@@ -164,7 +164,7 @@ phantom.loadCasper = function() {
      * @param  String         file     The path to the file
      * @param  Function|null  onError  An error callback (optional)
      */
-    phantom.getScriptCode = function(file, onError) {
+    phantom.getScriptCode = function getScriptCode(file, onError) {
         var scriptCode = fs.read(file);
         if (/\.coffee$/i.test(file)) {
             try {
@@ -191,7 +191,7 @@ phantom.loadCasper = function() {
      * @param  String    file      A file path to associate to this error
      * @param  Function  callback  An optional callback
      */
-    phantom.processScriptError = function(error, file, callback) {
+    phantom.processScriptError = function processScriptError(error, file, callback) {
         if (!this.sourceIds.hasOwnProperty(error.sourceId)) {
             this.sourceIds[error.sourceId] = file;
         }
@@ -212,11 +212,11 @@ phantom.loadCasper = function() {
      * Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
      * TODO: remove when PhantomJS has full module support
      */
-    require = (function(require, requireDir) {
+    require = (function _require(require, requireDir) {
         var phantomBuiltins = ['fs', 'webpage', 'webserver'];
         var phantomRequire = phantom.__orig__require = require;
         var requireCache = {};
-        return function(path) {
+        return function _require(path) {
             var i, dir, paths = [],
                 fileGuesses = [],
                 file,
@@ -243,7 +243,7 @@ phantom.loadCasper = function() {
                 paths.push(fs.pathJoin(requireDir, 'lib', path));
                 paths.push(fs.pathJoin(requireDir, 'modules', path));
             }
-            paths.forEach(function(testPath) {
+            paths.forEach(function _forEach(testPath) {
                 fileGuesses.push.apply(fileGuesses, [
                     testPath,
                     testPath + '.js',
@@ -287,7 +287,7 @@ phantom.loadCasper = function() {
     phantom.casperLoaded = true;
 };
 
-phantom.initCasperCli = function() {
+phantom.initCasperCli = function initCasperCli() {
     var fs = require("fs");
 
     if (!!phantom.casperArgs.options.version) {
