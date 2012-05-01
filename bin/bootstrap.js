@@ -192,7 +192,6 @@ phantom.loadCasper = function loadCasper() {
      * @param  Function  callback  An optional callback
      */
     phantom.processScriptError = function processScriptError(error, file, callback) {
-        console.log(error, file, callback)
         if (error.sourceId && !this.sourceIds.hasOwnProperty(error.sourceId)) {
             this.sourceIds[error.sourceId] = file;
         }
@@ -269,7 +268,8 @@ phantom.loadCasper = function loadCasper() {
             }
             try {
                 var scriptCode = phantom.getScriptCode(file);
-                new Function('module', 'exports', scriptCode)(module, module.exports);
+                var fn = new Function('require', 'module', 'exports', scriptCode);
+                fn(_require, module, module.exports);
             } catch (e) {
                 phantom.processScriptError(e, file);
             }
