@@ -238,7 +238,6 @@ phantom.onError = function phantom_onError(msg, backtrace) {
     if (match && match.length === 4) {
         notices.push('  in module ' + match[2]);
         notices.push('  NOTICE: errors within modules cannot be backtraced yet.');
-        cls = match[1];
         msg = match[3];
     }
     console.error(c.colorize(msg, 'RED_BAR', 80));
