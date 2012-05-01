@@ -28,6 +28,9 @@
  *
  */
 
+/**
+ * Loads and initialize the CasperJS environment.
+ */
 phantom.loadCasper = function loadCasper() {
     // Patching fs
     // TODO: watch for these methods being implemented in official fs module
@@ -78,9 +81,6 @@ phantom.loadCasper = function loadCasper() {
     // Embedded, up-to-date, validatable & controlable CoffeeScript
     phantom.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'vendors', 'coffee-script.js'));
 
-    // Index of file sources, for error localization
-    phantom.sourceIds = {};
-
     // custom global CasperError
     window.CasperError = function CasperError(msg) {
         Error.call(this);
@@ -96,34 +96,6 @@ phantom.loadCasper = function loadCasper() {
 
     // standard Error prototype inheritance
     window.CasperError.prototype = Object.getPrototypeOf(new Error());
-
-    // Stack formatting
-    window.CasperError.prototype.formatStack = function formatStack() {
-        var location = this.fileName || phantom.sourceIds[this.sourceId] || "unknown";
-        location += ':' + (this.line ?  this.line : 0);
-        return this.toString() + '\n    ' + (this._from || "anonymous") + '() at ' + location;
-    };
-
-    /**
-     * Adding pseudo stack traces to CasperError
-     * Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-     * TODO: remove when phantomjs has js engine upgrade
-     */
-    if (!new CasperError().hasOwnProperty('stack')) {
-        Object.defineProperty(CasperError.prototype, 'stack', {
-            set: function set(string) {
-                this._stack = string;
-            },
-            get: function get() {
-                if (this._stack) {
-                    return this._stack;
-                }
-                return this.formatStack();
-            },
-            configurable: true,
-            enumerable: true
-        });
-    }
 
     // CasperJS version, extracted from package.json - see http://semver.org/
     phantom.casperVersion = (function getVersion(path) {
@@ -167,43 +139,9 @@ phantom.loadCasper = function loadCasper() {
     phantom.getScriptCode = function getScriptCode(file, onError) {
         var scriptCode = fs.read(file);
         if (/\.coffee$/i.test(file)) {
-            try {
-                scriptCode = CoffeeScript.compile(scriptCode);
-            } catch (e) {
-                this.processScriptError(e, file, onError);
-            }
+            scriptCode = CoffeeScript.compile(scriptCode);
         }
-        // trick to locate source file location on error
-        scriptCode += ";var __fe__ = new CasperError('__sourceId__')";
-        scriptCode += ";__fe__.fileName = '" + file.replace(/\\+/g, '/') + "'";
-        scriptCode += ";throw __fe__;";
         return scriptCode;
-    };
-
-    /**
-     * Processes a given thrown Error; handles special cases and provides an
-     * optional callback argument.
-     *
-     * By default, the standard behavior on uncaught error is to print the
-     * error stack trace to the console and exit PhantomJS.
-     *
-     * @param  Error     error     The Error instance
-     * @param  String    file      A file path to associate to this error
-     * @param  Function  callback  An optional callback
-     */
-    phantom.processScriptError = function processScriptError(error, file, callback) {
-        if (error.sourceId && !this.sourceIds.hasOwnProperty(error.sourceId)) {
-            this.sourceIds[error.sourceId] = file;
-        }
-        if (error.message === "__sourceId__") {
-            return;
-        }
-        if (typeof callback === "function") {
-            callback(error, file);
-        } else {
-            console.error(error.stack);
-            this.exit(1);
-        }
     };
 
     /**
@@ -266,13 +204,9 @@ phantom.loadCasper = function loadCasper() {
             if (file in requireCache) {
                 return requireCache[file].exports;
             }
-            try {
-                var scriptCode = phantom.getScriptCode(file);
-                var fn = new Function('require', 'module', 'exports', scriptCode);
-                fn(_require, module, module.exports);
-            } catch (e) {
-                phantom.processScriptError(e, file);
-            }
+            var scriptCode = phantom.getScriptCode(file);
+            var fn = new Function('require', 'module', 'exports', scriptCode);
+            fn(_require, module, module.exports);
             requireCache[file] = module;
             return module.exports;
         };
@@ -288,6 +222,27 @@ phantom.loadCasper = function loadCasper() {
     phantom.casperLoaded = true;
 };
 
+/**
+ * Custom global error handler.
+ */
+phantom.onError = function phantom_onError(msg, backtrace) {
+    var c = require('colorizer').create();
+    if (msg) {
+        console.error(c.colorize(msg, 'RED_BAR', 80));
+    }
+    backtrace.forEach(function(item) {
+        var message = require('fs').absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
+        if (item['function']) {
+            message += " in " + c.colorize(item['function'], "PARAMETER");
+        }
+        console.error("  " + message);
+    });
+    phantom.exit(1);
+};
+
+/**
+ * Initializes the CasperJS Command Line Interface.
+ */
 phantom.initCasperCli = function initCasperCli() {
     var fs = require("fs");
 
@@ -317,16 +272,11 @@ phantom.initCasperCli = function initCasperCli() {
         phantom.exit(1);
     }
 
-
     // filter out the called script name from casper args
     phantom.casperArgs.drop(phantom.casperScript);
 
     // passed casperjs script execution
-    try {
-        new Function(phantom.getScriptCode(phantom.casperScript))();
-    } catch (e) {
-        phantom.processScriptError(e, phantom.casperScript);
-    }
+    phantom.injectJs(phantom.casperScript);
 };
 
 if (!phantom.casperLoaded) {

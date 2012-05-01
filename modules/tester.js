@@ -366,13 +366,10 @@ var Tester = function Tester(casper, options) {
         try {
             new Function('casper', phantom.getScriptCode(file))(casper);
         } catch (e) {
-            var self = this;
-            phantom.processScriptError(e, file, function onTestScriptError(error) {
-                // do not abort the whole suite, just fail fast displaying the
-                // caught error and process next suite
-                self.fail(e);
-                self.done();
-            });
+            // do not abort the whole suite, just fail fast displaying the
+            // caught error and process next suite
+            this.fail(e);
+            this.done();
         }
     };
 
