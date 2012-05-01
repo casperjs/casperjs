@@ -11,7 +11,7 @@ if casper.cli.args.length == 0
   casper.exit()
 
 casper.start 'http://google.com', ->
-  @fill 'form[name=f]',  q: casper.cli.args.join(' '), true
+  @fill 'form[action="/search"]',  q: casper.cli.args.join(' '), true
   @click 'input[value="Google Search"]'
 
 casper.then ->

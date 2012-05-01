@@ -30,7 +30,7 @@ casper.start("http://google.fr/");
 
 casper.each(terms, function(self, term, i) {
     self.then(function(self) {
-        self.fill('form[name=f]', { q: term }, true);
+        self.fill('form[action="/search"]', { q: term }, true);
     }).then(function(self) {
         var score = self.fetchScore();
         scores.push({
