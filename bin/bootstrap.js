@@ -205,9 +205,9 @@ phantom.loadCasper = function loadCasper() {
                 return requireCache[file].exports;
             }
             var scriptCode = phantom.getScriptCode(file);
-            var fn = new Function('require', 'module', 'exports', scriptCode);
+            var fn = new Function('__file__', 'require', 'module', 'exports', scriptCode);
             try {
-                fn(_require, module, module.exports);
+                fn(file, _require, module, module.exports);
             } catch (e) {
                 var error = new CasperError('__mod_error(' + path + '):: ' + e);
                 error.file = file;
