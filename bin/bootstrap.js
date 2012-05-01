@@ -206,7 +206,13 @@ phantom.loadCasper = function loadCasper() {
             }
             var scriptCode = phantom.getScriptCode(file);
             var fn = new Function('require', 'module', 'exports', scriptCode);
-            fn(_require, module, module.exports);
+            try {
+                fn(_require, module, module.exports);
+            } catch (e) {
+                var error = new CasperError('__mod_error(' + path + '):: ' + e);
+                error.file = file;
+                throw error;
+            }
             requireCache[file] = module;
             return module.exports;
         };
@@ -227,9 +233,18 @@ phantom.loadCasper = function loadCasper() {
  */
 phantom.onError = function phantom_onError(msg, backtrace) {
     var c = require('colorizer').create();
-    if (msg) {
-        console.error(c.colorize(msg, 'RED_BAR', 80));
+    var match = /^(.*): __mod_error(.*):: (.*)/.exec(msg);
+    var notices = [];
+    if (match && match.length === 4) {
+        notices.push('  in module ' + match[2]);
+        notices.push('  NOTICE: errors within modules cannot be backtraced yet.');
+        cls = match[1];
+        msg = match[3];
     }
+    console.error(c.colorize(msg, 'RED_BAR', 80));
+    notices.forEach(function(notice) {
+        console.error(c.colorize(notice, 'COMMENT'));
+    });
     backtrace.forEach(function(item) {
         var message = require('fs').absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
         if (item['function']) {
