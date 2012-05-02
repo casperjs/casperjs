@@ -1,41 +1,35 @@
-""" Capture multiple pages of google search results
+# Capture multiple pages of google search results
+#
+# usage:  casperjs googlepagination.coffee my search terms
+#
+# (all arguments will be used as the query)
 
-    usage:  casperjs googlepagination.coffee my search terms
-
-    (all arguments will be used as the query)
-"""
 casper = require('casper').create()
+currentPage = 1
 
 if casper.cli.args.length == 0
   casper.echo "usage: $ casperjs my search terms"
   casper.exit()
 
-casper.start 'http://google.com', ->
+processPage = ->
+  casper.echo "capturing page #{currentPage}"
+  casper.capture "google-results-p#{ currentPage }.png"
+
+  # don't go too far down the rabbit hole
+  return if currentPage >= 5
+
+  if casper.exists "#pnnext"
+    currentPage++
+    casper.echo "requesting next page: #{currentPage}"
+    casper.thenClick("#pnnext").then(processPage)
+  else
+    casper.echo "that's all, folks."
+
+casper.start 'http://google.fr/', ->
   @fill 'form[action="/search"]',  q: casper.cli.args.join(' '), true
-  @click 'input[value="Google Search"]'
 
 casper.then ->
   # google's being all ajaxy, wait for results to load...
-  @waitForSelector 'table#nav', ->
-    processPage = (cspr) ->
-      currentPage = Number cspr.evaluate(-> document.querySelector('table#nav td.cur').innerText), 10
-      currentPage = 1 if currentPage == 0
-      cspr.capture "google-results-p#{ currentPage }.png"
-
-      # don't go too far down the rabbit hole
-      return if currentPage >= 5
-
-      cspr.evaluate ->
-        if nextLink = document.querySelector('table#nav td.cur').nextElementSibling?.querySelector('a')
-          nextLink.setAttribute "id", "next-page-of-results"
-
-      nextPage = "a#next-page-of-results"
-      if cspr.exists nextPage
-        cspr.echo "requesting next page..."
-        cspr.thenClick(nextPage).then(processPage)
-      else
-        cspr.echo "that's all, folks."
-
-    processPage(casper)
+  @waitForSelector 'table#nav', => processPage(casper)
 
 casper.run()
