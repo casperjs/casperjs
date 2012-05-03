@@ -141,6 +141,41 @@ var Tester = function Tester(casper, options) {
             }
         });
     };
+    
+    /**
+     * Asserts that two values are strictly not equals.
+     *
+     * @param  Mixed   subject    The value to test
+     * @param  Mixed   expected   The unwanted value
+     * @param  String  message    Test description
+     */
+     
+    this.assertNotEquals = function assertNotEquals(subject, shouldnt, message) {
+        var eventName;
+        message = message || "";
+        if (!this.testEquals(subject, shouldnt)) {
+            eventName = "success";
+            casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
+            this.testResults.passed++;
+        } else {
+            eventName = "fail";
+            casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
+            this.comment('   got:      ' + utils.serialize(subject));
+            this.comment('   shouldnt: ' + utils.serialize(shouldnt));
+            this.testResults.failed++;
+        }
+        this.emit(eventName, {
+            type:   "assertNotEquals",
+            message: message,
+            details: f("test failed; shouldnt: %s; got: %s", shouldnt, subject),
+            file:    this.currentTestFile,
+            values:  {
+                subject:  subject,
+                shouldnt: shouldnt
+            }
+        });
+    };
+
 
     /**
      * Asserts that a code evaluation in remote DOM resolves to true.
