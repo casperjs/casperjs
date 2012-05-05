@@ -85,7 +85,7 @@ var Tester = function Tester(casper, options) {
      * @param  Boolean  subject
      * @param  String   message  Test description
      */
-    this.assert = function assert(subject, message) {
+    this.assert = this.assertTrue = function assert(subject, message) {
         var status = this.options.passText, eventName;
         if (subject === true) {
             eventName = 'success';
