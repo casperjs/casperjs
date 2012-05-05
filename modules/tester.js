@@ -116,7 +116,7 @@ var Tester = function Tester(casper, options) {
      * @param  Mixed   expected   The expected value
      * @param  String  message    Test description
      */
-    this.assertEquals = function assertEquals(subject, expected, message) {
+    this.assertEquals = this.assertEqual = function assertEquals(subject, expected, message) {
         var eventName;
         message = message || "";
         if (this.testEquals(subject, expected)) {
@@ -162,7 +162,7 @@ var Tester = function Tester(casper, options) {
      * @param  String   message    Test description
      * @param  Object   context    Object containing the parameters to inject into the function (optional)
      */
-    this.assertEvalEquals = function assertEvalEquals(fn, expected, message, context) {
+    this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, context) {
         return this.assertEquals(casper.evaluate(fn, context), expected, message);
     };
 
@@ -173,7 +173,7 @@ var Tester = function Tester(casper, options) {
      * @param  String   selector   CSS3 selector
      * @param  String   message    Test description
      */
-    this.assertExists = function assertExists(selector, message) {
+    this.assertExists = this.assertExist = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message);
     };
 
@@ -194,7 +194,7 @@ var Tester = function Tester(casper, options) {
      * @param  RegExp   pattern    A RegExp object instance
      * @param  String   message    Test description
      */
-    this.assertMatch = function assertMatch(subject, pattern, message) {
+    this.assertMatch = this.assertMatches = function assertMatch(subject, pattern, message) {
         var eventName;
         if (pattern.test(subject)) {
             eventName = "success";
@@ -237,7 +237,7 @@ var Tester = function Tester(casper, options) {
      * @param  Array     args     The arguments to pass to the function
      * @param  String    message  Test description
      */
-    this.assertRaises = function assertRaises(fn, args, message) {
+    this.assertRaises = this.assertRaise = function assertRaises(fn, args, message) {
         try {
             fn.apply(null, args);
             this.fail(message);
@@ -252,7 +252,7 @@ var Tester = function Tester(casper, options) {
      * @param Function/String  test      A test function that is called with every response
      * @param  String   message    Test description
      */
-    this.assertResourceExists = function assertResourceExists(test, message) {
+    this.assertResourceExists = this.assertResourceExist = function assertResourceExists(test, message) {
         return this.assert(casper.resourceExists(test), message);
     };
 
@@ -263,7 +263,7 @@ var Tester = function Tester(casper, options) {
      * @param  String   selector   A CSS3 selector string
      * @param  String   message    Test description
      */
-    this.assertSelectorExists = function assertSelectorExists(selector, message) {
+    this.assertSelectorExists = this.assertSelectorExist = function assertSelectorExists(selector, message) {
         return this.assert(casper.exists(selector), message);
     };
 
@@ -273,7 +273,7 @@ var Tester = function Tester(casper, options) {
      * @param  String   text       Text to be found
      * @param  String   message    Test description
      */
-    this.assertTextExists = function assertTextExists(text, message) {
+    this.assertTextExists = this.assertTextExist = function assertTextExists(text, message) {
         return this.assert((casper.evaluate(function _evaluate() {
             return document.body.innerText;
         }).indexOf(text) != -1), message);
@@ -307,7 +307,7 @@ var Tester = function Tester(casper, options) {
      * @param  RegExp   pattern    A RegExp object instance
      * @param  String   message    Test description
      */
-    this.assertUrlMatch = function assertUrlMatch(pattern, message) {
+    this.assertUrlMatch = this.assertUrlMatches = function assertUrlMatch(pattern, message) {
         return this.assertMatch(casper.getCurrentUrl(), pattern, message);
     };
 
@@ -564,7 +564,7 @@ var Tester = function Tester(casper, options) {
      * @param  Mixed  v2
      * @param  Boolean
      */
-    this.testEquals = function testEquals(v1, v2) {
+    this.testEquals = this.testEqual = function testEquals(v1, v2) {
         if (utils.betterTypeOf(v1) !== utils.betterTypeOf(v2)) {
             return false;
         }
