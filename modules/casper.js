@@ -146,6 +146,7 @@ Casper.prototype.back = function back() {
  * @return string          Base64 encoded result
  */
 Casper.prototype.base64encode = function base64encode(url, method, data) {
+    this.injectClientUtils();
     return this.evaluate(function _evaluate(url, method, data) {
         return __utils__.getBase64(url, method, data);
     }, { url: url, method: method, data: data });
@@ -605,6 +606,25 @@ Casper.prototype.getTitle = function getTitle() {
     return this.evaluate(function _evaluate() {
         return document.title;
     });
+};
+
+/**
+ * Injects Client-side utilities in current page context.
+ *
+ */
+Casper.prototype.injectClientUtils = function injectClientUtils() {
+    var clientUtilsInjected = this.evaluate(function() {
+        return typeof __utils__ === "object";
+    });
+    if (true === clientUtilsInjected) {
+        return;
+    }
+    var clientUtilsPath = require('fs').pathJoin(phantom.casperPath, 'modules', 'clientutils.js');
+    if (true === this.page.injectJs(clientUtilsPath)) {
+        this.log("Successfully injected Casper client-side utilities", "debug");
+    } else {
+        this.log("Failed to instantiate Casper client-side utilities!", "warning");
+    }
 };
 
 /**
@@ -1297,12 +1317,7 @@ function createPage(casper) {
             }
         }
         // Client-side utils injection
-        var clientUtilsPath = fs.pathJoin(phantom.casperPath, 'modules', 'clientutils.js');
-        if (true === page.injectJs(clientUtilsPath)) {
-            casper.log("Successfully injected Casper client-side utilities", "debug");
-        } else {
-            casper.log("Failed to instantiate Casper client-side utilities!", "warning");
-        }
+        casper.injectClientUtils();
         // history
         casper.history.push(casper.getCurrentUrl());
         casper.emit('load.finished', status);
