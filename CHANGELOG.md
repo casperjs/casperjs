@@ -4,6 +4,7 @@ CasperJS Changelog
 XXXX-XX-XX, v0.6.7
 ------------------
 
+- fixes [#107](https://github.com/n1k0/casperjs/issues/107): client utils were possibly not yet being injected and available when calling `Capser.base64encode()` from some events
 - merged [PR #96](https://github.com/n1k0/casperjs/pull/96): make python launcher use `os.execvp()` instead of `subprocess.Popen()` ([@jart](https://github.com/jart)):
   > This patch fixes a bug where casperjs' python launcher process won't pass along kill
   > signals to the phantomjs subprocess. This patch works by using an exec system call
