@@ -686,7 +686,6 @@ Casper.prototype.mouseClick = function mouseClick(selector) {
  * @return Casper
  */
 Casper.prototype.open = function open(location, settings) {
-    var self = this;
     // settings validation
     if (!settings) {
         settings = {
@@ -1152,8 +1151,8 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
  */
 Casper.prototype.waitForResource = function waitForResource(test, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function _check(self) {
-        return self.resourceExists(test);
+    return this.waitFor(function _check() {
+        return this.resourceExists(test);
     }, then, onTimeout, timeout);
 };
 
@@ -1169,8 +1168,8 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
  */
 Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function _check(self) {
-        return self.exists(selector);
+    return this.waitFor(function _check() {
+        return this.exists(selector);
     }, then, onTimeout, timeout);
 };
 
@@ -1186,8 +1185,8 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
  */
 Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function _check(self) {
-        return !self.exists(selector);
+    return this.waitFor(function _check() {
+        return !this.exists(selector);
     }, then, onTimeout, timeout);
 };
 
@@ -1203,8 +1202,8 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
  */
 Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function _check(self) {
-        return self.visible(selector);
+    return this.waitFor(function _check() {
+        return this.visible(selector);
     }, then, onTimeout, timeout);
 };
 
@@ -1220,8 +1219,8 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
  */
 Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, onTimeout, timeout) {
     timeout = timeout ? timeout : this.defaultWaitTimeout;
-    return this.waitFor(function _check(self) {
-        return !self.visible(selector);
+    return this.waitFor(function _check() {
+        return !this.visible(selector);
     }, then, onTimeout, timeout);
 };
 
