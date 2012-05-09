@@ -4,7 +4,7 @@
 #
 # (all arguments will be used as the query)
 
-casper = require('casper').create(verbose: true, logLevel: "debug")
+casper = require('casper').create()
 currentPage = 1
 
 if casper.cli.args.length == 0
