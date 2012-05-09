@@ -26,6 +26,8 @@ t.assertNot(t.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{na
 t.assert(t.testEquals(function(x){return x;}, function(x){return x;}), 'Tester.testEquals() function equality');
 t.assertNot(t.testEquals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
 
+t.assertNotEquals(42, 43, 'Tester.assertNotEquals() works as expected');
+
 t.comment('Tester.sortFiles()');
 var testDirRoot = fs.pathJoin(phantom.casperPath, 'tests', 'testdir');
 var files = t.findTestFiles(testDirRoot);

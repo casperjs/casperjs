@@ -13,6 +13,7 @@ XXXX-XX-XX, v0.6.7
   > saving 10 megs or so of memory because the python process is discarded.
 - fixes [#109](https://github.com/n1k0/casperjs/issues/109) - CLI args containing `=` (equals sign) were not parsed properly
 - fixes [#100](https://github.com/n1k0/casperjs/issues/100) & [#110](https://github.com/n1k0/casperjs/issues/110) - *googlepagination* sample was broken
+- merged #103 - added `Tester.assertNotEquals` method (@juliangruber)
 
 2012-04-27, v0.6.6
 ------------------
