@@ -32,10 +32,10 @@ t.comment('parse(), get(), has()');
 
 (function(parsed) {
     t.assertEquals(parsed.args, [], 'parse() returns expected positional args array');
-    t.assertEquals(parsed.options, { '&é"à': 42 }, 'parse() returns expected options object');
-    t.assertEquals(parsed.get('&é"à'), 42, 'parse() handles options with exotic names');
+    t.assertEquals(parsed.options, { '&é"à': "42===42" }, 'parse() returns expected options object');
+    t.assertEquals(parsed.get('&é"à'), "42===42", 'parse() handles options with exotic names');
     t.assert(parsed.has('&é"à'), 'has() checks if an option is set');
-})(cli.parse(['--&é"à=42']));
+})(cli.parse(['--&é"à=42===42']));
 
 (function(parsed) {
     t.assertEquals(parsed.args, ['foo & bar', 'baz & boz'], 'parse() returns expected positional args array');

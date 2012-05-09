@@ -85,7 +85,7 @@ exports.parse = function parse(phantomArgs) {
     phantomArgs.forEach(function _forEach(arg) {
         if (arg.indexOf('--') === 0) {
             // named option
-            var optionMatch = arg.match(/^--(.*)=(.*)/i);
+            var optionMatch = arg.match(/^--(.*?)=(.*)/i);
             if (optionMatch) {
                 extract.options[optionMatch[1]] = castArgument(optionMatch[2]);
             } else {

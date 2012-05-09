@@ -11,6 +11,8 @@ XXXX-XX-XX, v0.6.7
   > which causes the phantomjs subprocess to completely replace the casperjs parent
   > process (while maintaining the same pid). This patch also has the added benefit of
   > saving 10 megs or so of memory because the python process is discarded.
+- fixes [#109](https://github.com/n1k0/casperjs/issues/109) - CLI args containing `=` (equals sign) were not parsed properly
+- fixes [#100](https://github.com/n1k0/casperjs/issues/100) & [#110](https://github.com/n1k0/casperjs/issues/110) - *googlepagination* sample was broken
 
 2012-04-27, v0.6.6
 ------------------
