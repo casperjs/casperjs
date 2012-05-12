@@ -47,6 +47,7 @@
             -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
         );
+        var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
 
         /**
          * Clicks on the DOM element behind the provided selector.
@@ -241,10 +242,15 @@
          * @return NodeList|undefined
          */
         this.findAll = function findAll(selector) {
+            var pSelector = this.processSelector(selector);
             try {
-                return document.querySelectorAll(selector);
+                if (pSelector.type === 'xpath') {
+                    return this.getElementsByXPath(pSelector.path);
+                } else {
+                    return document.querySelectorAll(pSelector.path);
+                }
             } catch (e) {
-                this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
+                this.log('findAll(): invalid selector provided "' + pSelector.toString() + '":' + e, "error");
             }
         };
 
@@ -255,8 +261,13 @@
          * @return HTMLElement|undefined
          */
         this.findOne = function findOne(selector) {
+            var pSelector = this.processSelector(selector);
             try {
-                return document.querySelector(selector);
+                if (pSelector.type === 'xpath') {
+                    return this.getElementByXPath(pSelector.path);
+                } else {
+                    return document.querySelector(pSelector.path);
+                }
             } catch (e) {
                 this.log('findOne(): invalid selector provided "' + selector + '":' + e, "errors");
             }
@@ -372,6 +383,32 @@
          */
         this.log = function log(message, level) {
             console.log("[casper:" + (level || "debug") + "] " + message);
+        };
+
+        this.processSelector = function processSelector(selector) {
+            var selectorObject = {
+                toString: function toString() {
+                    return this.type + ' selector: ' + this.selector;
+                }
+            };
+            if (typeof selector === "string") {
+                // defaults to CSS selector
+                selectorObject.type = "css";
+                selectorObject.path = selector;
+                return selectorObject;
+            } else if (typeof selector === "object") {
+                // validation
+                if (!selector.hasOwnProperty('type') || !selector.hasOwnProperty('path')) {
+                    throw new Error("Incomplete selector object");
+                } else if (SUPPORTED_SELECTOR_TYPES.indexOf(selector.type) === -1) {
+                    throw new Error("Unsupported selector type: " + selector.type);
+                }
+                if (!selector.hasOwnProperty('toString')) {
+                    selector.toString = selectorObject.toString;
+                }
+                return selector;
+            }
+            throw new Error("Unsupported selector type: " + typeof selector);
         };
 
         /**
