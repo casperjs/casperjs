@@ -340,6 +340,29 @@
             }
         };
 
+        this.getElementByXPath = function getElementByXPath(expression) {
+            var a = document.evaluate(expression, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+            if (a.snapshotLength > 0) {
+                return a.snapshotItem(0);
+            }
+        };
+
+        this.getElementsByXPath = function getElementsByXPath(expression) {
+            var nodes = [];
+            var a = document.evaluate(expression, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+            for (var i = 0; i < a.snapshotLength; i++) {
+                nodes.push(a.snapshotItem(i));
+            }
+            return nodes;
+        };
+
+        this.removeElementsByXPath = function removeElementsByXPath(expression) {
+            var a = document.evaluate(expression, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+            for (var i = 0; i < a.snapshotLength; i++) {
+                a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
+            }
+        };
+
         /**
          * Logs a message. Will format the message a way CasperJS will be able
          * to log phantomjs side.
