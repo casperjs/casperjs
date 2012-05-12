@@ -20,4 +20,19 @@ for (var what in testCases) {
     casper.test.assertEquals(clientutils.decode(encoded), source, 'ClientUtils can encode and decode ' + what);
 }
 
-casper.test.done();
+casper.test.comment('XPath');
+
+casper.start('tests/site/index.html', function() {
+    this.test.assertExists({
+        type: 'xpath',
+        path: '/html/body/ul/li[2]'
+    }, 'XPath selector can find an element');
+    this.test.assertDoesntExist({
+        type: 'xpath',
+        path: '/html/body/ol/li[2]'
+    }, 'XPath selector does not retrieve an unexistent element');
+});
+
+casper.run(function() {
+    this.test.done();
+});

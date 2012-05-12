@@ -242,15 +242,15 @@
          * @return NodeList|undefined
          */
         this.findAll = function findAll(selector) {
-            var pSelector = this.processSelector(selector);
             try {
+                var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementsByXPath(pSelector.path);
                 } else {
                     return document.querySelectorAll(pSelector.path);
                 }
             } catch (e) {
-                this.log('findAll(): invalid selector provided "' + pSelector.toString() + '":' + e, "error");
+                this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
             }
         };
 
@@ -261,15 +261,15 @@
          * @return HTMLElement|undefined
          */
         this.findOne = function findOne(selector) {
-            var pSelector = this.processSelector(selector);
             try {
+                var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementByXPath(pSelector.path);
                 } else {
                     return document.querySelector(pSelector.path);
                 }
             } catch (e) {
-                this.log('findOne(): invalid selector provided "' + selector + '":' + e, "errors");
+                this.log('findOne(): invalid selector provided "' + selector + '":' + e, "error");
             }
         };
 
@@ -351,6 +351,12 @@
             }
         };
 
+        /**
+         * Retrieves a single DOM element mathcing a given XPath expression.
+         *
+         * @param  String  expression  The XPath expression
+         * @return HTMLElement or null
+         */
         this.getElementByXPath = function getElementByXPath(expression) {
             var a = document.evaluate(expression, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
             if (a.snapshotLength > 0) {
@@ -358,6 +364,12 @@
             }
         };
 
+        /**
+         * Retrieves all DOM elements matching a given XPath expression.
+         *
+         * @param  String  expression  The XPath expression
+         * @return Array
+         */
         this.getElementsByXPath = function getElementsByXPath(expression) {
             var nodes = [];
             var a = document.evaluate(expression, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -367,6 +379,12 @@
             return nodes;
         };
 
+        /**
+         * Removed all DOM elements matching a given XPath expression.
+         *
+         * @param  String  expression  The XPath expression
+         * @return Array
+         */
         this.removeElementsByXPath = function removeElementsByXPath(expression) {
             var a = document.evaluate(expression, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
             for (var i = 0; i < a.snapshotLength; i++) {
@@ -385,6 +403,20 @@
             console.log("[casper:" + (level || "debug") + "] " + message);
         };
 
+        /**
+         * Processes a selector input, either as a string or an object.
+         *
+         * If passed an object, if must be of the form:
+         *
+         *     selectorObject = {
+         *         type: <'css' or 'xpath'>,
+         *         path: <a string>
+         *     }
+         *
+         * @param  String|Object  selector  The selector string or object
+         *
+         * @return an object containing 'type' and 'path' keys
+         */
         this.processSelector = function processSelector(selector) {
             var selectorObject = {
                 toString: function toString() {

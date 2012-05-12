@@ -141,7 +141,7 @@ var Tester = function Tester(casper, options) {
             }
         });
     };
-    
+
     /**
      * Asserts that two values are strictly not equals.
      *
@@ -149,7 +149,7 @@ var Tester = function Tester(casper, options) {
      * @param  Mixed   expected   The unwanted value
      * @param  String  message    Test description
      */
-     
+
     this.assertNotEquals = function assertNotEquals(subject, shouldnt, message) {
         var eventName;
         message = message || "";
@@ -210,6 +210,10 @@ var Tester = function Tester(casper, options) {
      */
     this.assertExists = this.assertExist = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message);
+    };
+
+    this.assertDoesntExist = this.assertNotExists = function assertDoesntExist(selector, message) {
+        return this.assertNot(casper.exists(selector), message);
     };
 
     /**
