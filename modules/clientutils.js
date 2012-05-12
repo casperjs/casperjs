@@ -156,7 +156,7 @@
          */
         this.exists = function exists(selector) {
             try {
-                return document.querySelectorAll(selector).length > 0;
+                return this.findAll(selector).length > 0;
             } catch (e) {
                 return false;
             }
@@ -195,7 +195,7 @@
             if (!(form instanceof HTMLElement) || typeof form === "string") {
                 __utils__.log("attempting to fetch form element from selector: '" + form + "'", "info");
                 try {
-                    form = document.querySelector(form);
+                    form = this.findOne(form);
                 } catch (e) {
                     if (e.name === "SYNTAX_ERR") {
                         out.errors.push("invalid form selector provided: '" + form + "'");
@@ -328,7 +328,7 @@
          */
         this.getElementBounds = function getElementBounds(selector) {
             try {
-                var clipRect = document.querySelector(selector).getBoundingClientRect();
+                var clipRect = this.findOne(selector).getBoundingClientRect();
                 return {
                     top:    clipRect.top,
                     left:   clipRect.left,
@@ -477,7 +477,7 @@
          */
         this.visible = function visible(selector) {
             try {
-                var el = document.querySelector(selector);
+                var el = this.findOne(selector);
                 return el && el.style.visibility !== 'hidden' && el.offsetHeight > 0 && el.offsetWidth > 0;
             } catch (e) {
                 return false;
