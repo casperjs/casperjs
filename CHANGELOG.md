@@ -1,7 +1,7 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.6.7
+2012-05-12, v0.6.7
 ------------------
 
 - fixes [#107](https://github.com/n1k0/casperjs/issues/107): client utils were possibly not yet being injected and available when calling `Capser.base64encode()` from some events
