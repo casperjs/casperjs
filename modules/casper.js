@@ -41,6 +41,16 @@ exports.create = function create(options) {
     return new Casper(options);
 };
 
+exports.selectXPath = function selectXPath(expression) {
+    return {
+        type: 'xpath',
+        path: expression,
+        toString: function() {
+            return this.type + ' selector: ' + this.selector;
+        }
+    };
+};
+
 /**
  * Main Casper object.
  *
@@ -479,9 +489,6 @@ Casper.prototype.fetchText = function fetchText(selector) {
  */
 Casper.prototype.fill = function fill(selector, vals, submit) {
     submit = submit === true ? submit : false;
-    if (!utils.isString(selector) || !selector.length) {
-        throw new CasperError("Form selector must be a non-empty string");
-    }
     if (!utils.isObject(vals)) {
         throw new CasperError("Form values must be provided as an object");
     }
@@ -507,12 +514,17 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     }
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
-        (function _each(self) {
-            fillResults.files.forEach(function _forEach(file) {
-                var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
-                self.page.uploadFile(fileFieldSelector, file.path);
-            });
-        })(this);
+        if (utils.isObject(selector) && selector.type === 'xpath') {
+            this.echo('⚠  Filling file upload fields is currently not supported using', 'COMMENT');
+            this.echo('   XPath selectors; Please use a CSS selector instead.', 'COMMENT');
+        } else {
+            (function _each(self) {
+                fillResults.files.forEach(function _forEach(file) {
+                    var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
+                    self.page.uploadFile(fileFieldSelector, file.path);
+                });
+            })(this);
+        }
     }
     // Form submission?
     if (submit) {
