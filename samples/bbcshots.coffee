@@ -12,12 +12,12 @@ casper.hide = (selector) ->
 
 casper.start 'http://www.bbc.co.uk/', ->
     nbLinks = @evaluate ->
-        return __utils__.findAll('#carousel_items_items li').length
+        return __utils__.findAll('#promo2_carousel_items_items li').length
     @echo "#{nbLinks} items founds"
     # hide navigation arrows
     @hide '.nav_left'
     @hide '.nav_right'
-    @mouse.move '#promo_carousel'
+    @mouse.move '#promo2_carousel'
     @waitUntilVisible '.autoplay.nav_pause', ->
         @echo 'Moving over pause button'
         @mouse.move '.autoplay.nav_pause'
