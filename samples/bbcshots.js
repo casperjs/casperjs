@@ -16,13 +16,13 @@ casper.hide = function(selector) {
 
 casper.start('http://www.bbc.co.uk/', function() {
     nbLinks = this.evaluate(function() {
-        return __utils__.findAll('#carousel_items_items li').length;
+        return __utils__.findAll('#promo2_carousel_items_items li').length;
     });
     this.echo(nbLinks + ' items founds');
     // hide navigation arrows
     this.hide('.nav_left');
     this.hide('.nav_right');
-    this.mouse.move('#promo_carousel');
+    this.mouse.move('#promo2_carousel');
     this.waitUntilVisible('.autoplay.nav_pause', function() {
         this.echo('Moving over pause button');
         this.mouse.move('.autoplay.nav_pause');
