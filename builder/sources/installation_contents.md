@@ -37,4 +37,4 @@ in [Python](http://python.org/), so you can also run it using the python command
     Read the docs http://casperjs.org/
 
 <span class="label label-info">Note</span> If for some reason you don't have
-access to Python, please check this FAQ entry.
+access to Python, please check this <a href="#faq-executable">FAQ entry</a>.
