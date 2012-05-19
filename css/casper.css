@@ -3776,13 +3776,13 @@ input[type="submit"].btn.small {
 .navbar-search .search-query :-moz-placeholder {
   color: #333333;
 }
-.navbar-search .search-query::-webkit-input-placeholder {
+.navbar-search .search-query ::-webkit-input-placeholder {
   color: #333333;
 }
 .navbar-search .search-query :-moz-placeholder {
   color: #333333;
 }
-.navbar-search .search-query::-webkit-input-placeholder {
+.navbar-search .search-query ::-webkit-input-placeholder {
   color: #333333;
 }
 .navbar-search .search-query:hover {
@@ -5441,6 +5441,9 @@ td code {
 .just-informative {
   color: #fff;
 }
+.casper-intro {
+  background: #333333 url(../images/casperjs-logo.png) no-repeat right 100px;
+}
 .navbar .brand {
   color: #ccc;
 }
@@ -5485,6 +5488,9 @@ td code {
   section:first-child {
     padding-top: 0;
   }
+  .casper-intro {
+    background: #333 none;
+  }
 }
 @media (max-width: 768px) {
   .contribute img {
@@ -5499,6 +5505,9 @@ td code {
   .page-header h1 small {
     font-size: 16px;
   }
+  .casper-intro {
+    background: #333;
+  }
 }
 @media (min-width: 768px) and (max-width: 980px) {
   .contribute img {
@@ -5506,6 +5515,14 @@ td code {
   }
   section:first-child {
     padding-top: 0;
+  }
+  .casper-intro {
+    background: #333;
+  }
+}
+@media (min-width: 980px) and (max-width: 1200px) {
+  .casper-intro {
+    background: #333333 url(../images/casperjs-logo-medium.png) no-repeat right 220px;
   }
 }
 @media (min-width: 1200px) {

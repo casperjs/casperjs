@@ -153,6 +153,9 @@ td code {
 .just-informative {
     color: #fff;
 }
+.casper-intro {
+    background: #333 url(../images/casperjs-logo.png) no-repeat right 100px;
+}
 .navbar {
     .brand { color: #ccc; }
     .nav > li > a { text-shadow: none; color: #888; font-size: 14px; }
@@ -181,6 +184,9 @@ td code {
 @media (max-width: 480px) {
     .contribute img { display: none; }
     section:first-child { padding-top: 0; }
+    .casper-intro {
+        background: #333 none;
+    }
 }
 
 @media (max-width: 768px) {
@@ -192,11 +198,23 @@ td code {
             font-size: 16px;
         }
     }
+    .casper-intro {
+        background: #333;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 980px) {
     .contribute img { display: none; }
     section:first-child { padding-top: 0; }
+    .casper-intro {
+        background: #333;
+    }
+}
+
+@media (min-width: 980px) and (max-width: 1200px) {
+    .casper-intro {
+        background: #333 url(../images/casperjs-logo-medium.png) no-repeat right 220px;
+    }
 }
 
 @media (min-width: 1200px) {

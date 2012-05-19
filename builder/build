@@ -46,13 +46,19 @@ casper.start(templateUrl, function() {
 
 casper.then(function() {
     var pageContent = this.page.content;
+    var target = null;
     Object.keys(config.context).forEach(function(p) {
         var re = new RegExp('\\{{2}\s?' + p + '\s?\\}{2}', 'gim');
         pageContent = pageContent.replace(re, config.context[p]);
     });
-    this.echo('Saving to ' + config.target);
-    fs.write(config.target, pageContent, "w");
-    this.echo('Saved to ' + config.target);
+    if (config.target) {
+        target = config.target;
+    } else {
+        target = this.cli.get(0) || "output.html";
+    }
+    this.echo('Saving to ' + target);
+    fs.write(target, pageContent, "w");
+    this.echo('Saved to ' + target);
 });
 
 casper.run(function() {
