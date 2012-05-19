@@ -185,7 +185,7 @@ td code {
     .contribute img { display: none; }
     section:first-child { padding-top: 0; }
     .casper-intro {
-        background: #333 none;
+        background: #333;
     }
 }
 
@@ -193,9 +193,20 @@ td code {
     .contribute img { display: none; }
     section:first-child { padding-top: 0; }
     .page-header h1 {
-        font-size: 2em;
+        font-size: 2.4em;
         small {
             font-size: 16px;
+        }
+    }
+    #about .page-header h1 {
+        background: transparent url(../images/casperjs-logo-xsmall.png) no-repeat;
+        padding-left: 60px;
+        small {
+            display: block;
+            line-height: 1.3em;
+            margin: .5em 0;
+            display: block;
+            text-indent: none;
         }
     }
     .casper-intro {
@@ -206,6 +217,14 @@ td code {
 @media (min-width: 768px) and (max-width: 980px) {
     .contribute img { display: none; }
     section:first-child { padding-top: 0; }
+    #about .page-header h1 {
+        background: transparent url(../images/casperjs-logo-xsmall.png) no-repeat;
+        text-indent: 58px;
+        small {
+            margin: .5em 0;
+            display: block;
+        }
+    }
     .casper-intro {
         background: #333;
     }
