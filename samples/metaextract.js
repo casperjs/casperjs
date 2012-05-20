@@ -3,7 +3,10 @@ var casper = require("casper").create()
   , metas = [];
 
 if (!url) {
-    casper.echo('Usage: casperjs [url]').exit();
+    casper
+        .echo('Usage: casperjs [url]')
+        .exit(1)
+    ;
 }
 
 casper.start(url, function() {
