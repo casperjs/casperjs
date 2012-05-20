@@ -40,6 +40,8 @@ exports.create = function create(casper, options) {
 /**
  * Casper tester: makes assertions, stores test results and display then.
  *
+ * @param  Casper       casper   A valid Casper instance
+ * @param  Object|null  options  Options object
  */
 var Tester = function Tester(casper, options) {
     if (!utils.isCasperObject(casper)) {
@@ -149,7 +151,6 @@ var Tester = function Tester(casper, options) {
      * @param  Mixed   expected   The unwanted value
      * @param  String  message    Test description
      */
-
     this.assertNotEquals = function assertNotEquals(subject, shouldnt, message) {
         var eventName;
         message = message || "";
@@ -176,7 +177,6 @@ var Tester = function Tester(casper, options) {
         });
     };
 
-
     /**
      * Asserts that a code evaluation in remote DOM resolves to true.
      *
@@ -202,16 +202,23 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
-     * Asserts that an element matching the provided CSS3 selector exists in
+     * Asserts that an element matching the provided selector expression exists in
      * remote DOM.
      *
-     * @param  String   selector   CSS3 selector
+     * @param  String   selector   Selector expression
      * @param  String   message    Test description
      */
     this.assertExists = this.assertExist = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message);
     };
 
+    /**
+     * Asserts that an element matching the provided selector expression does not
+     * exists in remote DOM.
+     *
+     * @param  String   selector   Selector expression
+     * @param  String   message    Test description
+     */
     this.assertDoesntExist = this.assertNotExists = function assertDoesntExist(selector, message) {
         return this.assertNot(casper.exists(selector), message);
     };
@@ -296,10 +303,10 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
-     * Asserts that at least an element matching the provided CSS3 selector
+     * Asserts that at least an element matching the provided selector expression
      * exists in remote DOM.
      *
-     * @param  String   selector   A CSS3 selector string
+     * @param  String   selector   A selector expression string
      * @param  String   message    Test description
      */
     this.assertSelectorExists = this.assertSelectorExist = function assertSelectorExists(selector, message) {

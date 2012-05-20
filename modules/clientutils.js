@@ -352,7 +352,7 @@
         };
 
         /**
-         * Retrieves a single DOM element mathcing a given XPath expression.
+         * Retrieves a single DOM element matching a given XPath expression.
          *
          * @param  String  expression  The XPath expression
          * @return HTMLElement or null
@@ -380,7 +380,7 @@
         };
 
         /**
-         * Removed all DOM elements matching a given XPath expression.
+         * Removes all DOM elements matching a given XPath expression.
          *
          * @param  String  expression  The XPath expression
          * @return Array
