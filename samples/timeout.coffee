@@ -21,8 +21,9 @@ casper = require('casper').create
 
 timeout = ~~casper.cli.get 0
 if timeout < 1
-    casper.echo "You must pass a valid timeout value"
-    casper.exit()
+    casper
+        .echo "You must pass a valid timeout value"
+        .exit(1)
 
 casper.echo "Will google.com load in less than #{timeout}ms?"
 casper.options.timeout = timeout

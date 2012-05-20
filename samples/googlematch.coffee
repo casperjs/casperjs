@@ -20,8 +20,9 @@ casper.fetchScore = ->
 terms = casper.cli.args # terms are passed through command-line arguments
 
 if terms.length < 3
-    casper.echo 'Usage: casperjs googlematch.js term1, term2 [, term3]...'
-    casper.exit()
+    casper
+        .echo 'Usage: casperjs googlematch.js term1, term2 [, term3]...'
+        .exit(1)
 
 scores = []
 
