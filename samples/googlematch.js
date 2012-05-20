@@ -21,7 +21,10 @@ casper.fetchScore = function() {
 };
 
 if (terms.length < 2) {
-    casper.echo('Usage: casperjs googlematch.js term1, term2 [, term3]...').exit();
+    casper
+        .echo('Usage: casperjs googlematch.js term1, term2 [, term3]...')
+        .exit(1)
+    ;
 }
 
 casper.echo('Let the match begin!');

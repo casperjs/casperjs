@@ -14,8 +14,10 @@ var twitterAccount = casper.cli.get(0);
 var filename = casper.cli.get(1);
 
 if (!twitterAccount || !filename || !/\.(png|jpg|pdf)$/i.test(filename)) {
-    casper.echo("Usage $ casperjs samples/screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>");
-    casper.exit();
+    casper
+        .echo("Usage $ casperjs samples/screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>")
+        .exit(1)
+    ;
 }
 
 casper.start('https://twitter.com/#!/' + twitterAccount, function() {

@@ -3,8 +3,9 @@ url = casper.cli.get 0
 metas = []
 
 if not url
-    casper.echo "Usage: casperjs [url]"
-    casper.exit()
+    casper
+        .echo "Usage: casperjs [url]"
+        .exit(1)
 
 casper.start url, ->
     metas = @evaluate ->

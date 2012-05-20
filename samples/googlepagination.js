@@ -4,8 +4,10 @@ casper = require('casper').create();
 currentPage = 1;
 
 if (casper.cli.args.length === 0) {
-  casper.echo("usage: $ casperjs my search terms");
-  casper.exit();
+  casper
+    .echo("usage: $ casperjs my search terms")
+    .exit(1)
+  ;
 }
 
 processPage = function() {
