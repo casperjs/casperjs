@@ -1,6 +1,13 @@
 CasperJS Changelog
 ==================
 
+2012-05-20, v0.6.8
+------------------
+
+- added support for [XPath selectors](http://casperjs.org/#selectors)
+- added `Tester.assertNotEquals()` ([@juliangruber](https://github.com/juliangruber))
+- fixed [#109](https://github.com/n1k0/casperjs/issues/109) - CLI args containing `=` (equals sign) were not being parsed properly
+
 2012-05-12, v0.6.7
 ------------------
 
