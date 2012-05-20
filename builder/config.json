@@ -18,6 +18,7 @@
     ,   "#logging_contents"      : "sources/logging_contents.md"
     ,   "#extending_contents"    : "sources/extending_contents.md"
     ,   "#testing_contents"      : "sources/testing_contents.md"
+    ,   "#debugging_contents"    : "sources/debugging_contents.md"
     ,   "#faq_contents"          : "sources/faq_contents.md"
     ,   "#faq_toc"               : "sources/faq_toc.md"
     ,   "#download_contents"     : "sources/download_contents.md"
