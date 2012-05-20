@@ -20,6 +20,18 @@ casper.start(url, function() {
 });
 ```
 
+<h3 id="phantom_Casper_Tester_assertDoesntExist"><code>Tester#assertDoesntExist(String selector[, String message])</code></h3>
+
+Asserts that an element matching the provided [selector expression](#selectors) doesn't exists within
+the remote DOM environment.
+
+```javascript
+var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertDoesntExists('form[name="gs"]', 'google.fr has a form with name "gs"');
+});
+```
+
 <h3 id="phantom_Casper_Tester_assertEquals"><code>Tester#assertEquals(mixed testValue, mixed expected[, String message])</code></h3>
 
 Asserts that two values are strictly equals.
@@ -60,7 +72,7 @@ casper.start('http://www.google.fr/', function() {
 
 <h3 id="phantom_Casper_Tester_assertExists"><code>Tester#assertExists(String selector[, String message])</code></h3>
 
-Asserts that an element matching the provided CSS3 selector exists in
+Asserts that an element matching the provided [selector expression](#selectors) exists in
 remote DOM environment.
 
 ```javascript
@@ -87,6 +99,14 @@ Asserts that the passed subject resolves to `false`.
 casper.test.assertNot(false, "Universe is still operational");
 ```
 
+<h3 id="phantom_Casper_Tester_assertNotEquals"><code>Tester#assertNotEquals(mixed testValue, mixed expected[, String message])</code></h3>
+
+Asserts that two values are **not** strictly equals.
+
+```javascript
+casper.test.assertNotEquals(true, "Truth is out");
+```
+
 <h3 id="phantom_Casper_Tester_assertRaises"><code>Tester#assertRaises(Function fn, Array args[, String message])</code></h3>
 
 Asserts that the provided function called with the given parameters
@@ -102,7 +122,7 @@ casper.test.assertRaises(function(throwIt) {
 
 <h3 id="phantom_Casper_Tester_assertSelectorExists"><code>Tester#assertSelectorExists(String selector[, String message])</code></h3>
 
-Asserts that at least an element matching the provided CSS3 selector
+Asserts that at least an element matching the provided [selector expression](#selectors)
 exists in remote DOM.
 
 ```javascript

@@ -330,9 +330,10 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_click"><code>Casper#click(String selector)</code></h3>
+<h3 id="phantom_Casper_click"><code>Casper#click(String <a href="#selectors">selector</a>)</code></h3>
 
-Performs a click on the element matching the provided CSS3 selector. The method tries two strategies sequentially:
+Performs a click on the element matching the provided [selector expression](#selectors).
+The method tries two strategies sequentially:
 
 1. trying to trigger a MouseEvent in Javascript
 2. using native QtWebKit event if the previous attempt failed
@@ -390,7 +391,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_captureSelector"><code>Casper#captureSelector(String targetFile, String selector)</code></h3>
+<h3 id="phantom_Casper_captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="#selectors">selector</a>)</code></h3>
 
 Captures the page area containing the provided selector.
 
@@ -575,10 +576,9 @@ casper.run();
 
 Exits PhantomJS with an optional exit status code.
 
-<h3 id="phantom_Casper_exists"><code>Casper#exists(String selector)</code></h3>
+<h3 id="phantom_Casper_exists"><code>Casper#exists(String <a href="#selectors">selector</a>)</code></h3>
 
-Checks if any element within remote DOM matches the provided CSS3
-selector.
+Checks if any element within remote DOM matches the provided [CSS3 selector](#selectors).
 
 ```javascript
 casper.start('http://foo.bar/home', function() {
@@ -592,9 +592,9 @@ casper.start('http://foo.bar/home', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_fetchText"><code>Casper#fetchText(String selector)</code></h3>
+<h3 id="phantom_Casper_fetchText"><code>Casper#fetchText(String <a href="#selectors">selector</a>)</code></h3>
 
-Retrieves text contents matching a given CSS3 selector. If you provide one matching
+Retrieves text contents matching a given [selector expression](#selectors). If you provide one matching
 more than one element, their textual contents will be concatenated.
 
 ```javascript
@@ -637,7 +637,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_fill"><code>Casper#fill(String selector,  Object values[, Boolean submit])</code></h3>
+<h3 id="phantom_Casper_fill"><code>Casper#fill(String <a href="#selectors">selector</a>,  Object values[, Boolean submit])</code></h3>
 
 Fills the fields of a form with given values and optionally submits it.
 
@@ -686,6 +686,12 @@ casper.run(function() {
 Please Don't use CasperJS nor PhantomJS to send spam, or I'll be calling
 the Chuck. More seriously, please just don't.
 
+<span class="label label-warning">Warning</span> The `fill()` method currently
+can't fill **file fields**; PhantomJS natively only allows the use of
+[CSS3 selectors](#selectors) in
+<a href="http://code.google.com/p/phantomjs/wiki/Interface#uploadFile(selector,_fileName)">its
+uploadFile method</a>, hence this limitation.
+
 <h3 id="phantom_Casper_getCurrentUrl"><code>Casper#getCurrentUrl()</code></h3>
 
 Retrieves current page URL. <span class="label label-info">Note</span> the url
@@ -730,7 +736,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String selector)</code></h3>
+<h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String <a href="#selectors">selector</a>)</code></h3>
 
 <span class="label label-warning">Warning</span> This method has been deprecated since 0.6. Use
 [`Casper.click()`](#phantom_Casper_click) instead.
@@ -1044,9 +1050,9 @@ casper.viewport(1024, 768);
 <span class="label label-info">Note</span> PhantomJS comes with a default
 viewport size of 400x300, and CasperJS doesn't override it by default.
 
-<h3 id="phantom_Casper_visible"><code>Casper#visible(String selector)</code></h3>
+<h3 id="phantom_Casper_visible"><code>Casper#visible(String <a href="#selectors">selector</a>)</code></h3>
 
-Checks if the DOM element matching the provided CSS3 selector is visible
+Checks if the DOM element matching the provided [selector expression](#selectors) is visible
 in remote page.
 
 **Example:**
@@ -1120,9 +1126,9 @@ casper.start('http://yoursite.tld/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided CSS3 selector exists in
+Waits until an element matching the provided [selector expression](#selectors) exists in
 remote DOM to process any next step. Uses
 [Casper.waitFor()](#phantom_Casper_waitFor).
 
@@ -1138,9 +1144,9 @@ casper.start('https://twitter.com/#!/n1k0', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitWhileSelector"><code>Casper#waitWhileSelector(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="phantom_Casper_waitWhileSelector"><code>Casper#waitWhileSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided CSS3 selector does not
+Waits until an element matching the provided [selector expression](#selectors) does not
 exist in remote DOM to process a next step. Uses
 [Casper.waitFor()](#phantom_Casper_waitFor).
 
@@ -1175,14 +1181,14 @@ casper.start('http://foo.bar/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitUntilVisible"><code>Casper#waitUntilVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="phantom_Casper_waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided CSS3 selector is visible in
+Waits until an element matching the provided [selector expression](#selectors) is visible in
 the remote DOM to process a next step. Uses
 [Casper.waitFor()](#phantom_Casper_waitFor).
 
-<h3 id="phantom_Casper_waitWhileVisible"><code>Casper#waitWhileVisible(String selector[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="phantom_Casper_waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided CSS3 selector is no longer
+Waits until an element matching the provided [selector expression](#selectors) is no longer
 visible in remote DOM to process a next step. Uses
 [Casper.waitFor()](#phantom_Casper_waitFor).

@@ -30,7 +30,7 @@ casper.run(function() {
 
 <h3  id="phantom_Casper_ClientUtils_exists"><code>ClientUtils#exists(String selector)</code></h3>
 
-Checks if a DOM element matching a given CSS3 selector exists.
+Checks if a DOM element matching a given [selector expression](#selectors) exists.
 
 ```javascript
 var exists;
@@ -47,7 +47,7 @@ casper.run(function() {
 
 <h3  id="phantom_Casper_ClientUtils_findAll"><code>ClientUtils#findAll(String selector)</code></h3>
 
-Retrieves all DOM elements matching a given CSS3 selector.
+Retrieves all DOM elements matching a given [selector expression](#selectors).
 
 ```javascript
 var links;
@@ -67,7 +67,7 @@ casper.run(function() {
 
 <h3  id="phantom_Casper_ClientUtils_findOne"><code>ClientUtils#findOne(String selector)</code></h3>
 
-Retrieves a single DOM element by a CSS3 selector.
+Retrieves a single DOM element by a [selector expression](#selectors).
 
 ```javascript
 var href;
@@ -122,9 +122,13 @@ casper.start('http://foo.bar/', function() {
 casper.run();
 ```
 
-<span class="label label-warning">Warning</span> You won't be able to pass the *binary string* from the remote
-DOM environment to PhantomJS' one. For retrieving binary contents, use
-[`ClientUtils.encode()`](#phantom_Casper_ClientUtils_encode).
+<h3  id="phantom_Casper_ClientUtils_getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
+
+Retrieves a single DOM element matching a given [XPath expression](http://www.w3.org/TR/xpath/).
+
+<h3  id="phantom_Casper_ClientUtils_getElementsByXPath"><code>ClientUtils#getElementsByXPath(String expression)</code></h3>
+
+Retrieves all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/), if any.
 
 <h3  id="phantom_Casper_ClientUtils_visible"><code>ClientUtils#visible(String selector)</code></h3>
 
@@ -139,3 +143,7 @@ casper.start('http://foo.bar/', function() {
 
 casper.run();
 ```
+
+<h3  id="phantom_Casper_ClientUtils_removeElementsByXPath"><code>ClientUtils#removeElementsByXPath(String expression)</code></h3>
+
+Removes all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/).

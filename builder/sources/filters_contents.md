@@ -11,11 +11,13 @@ ways to alter values asynchronously.
 Using events is pretty much straightforward if you're a node developer,
 or if you worked with any evented system before:
 
-    var casper = require('casper').create();
+```javascript
+var casper = require('casper').create();
 
-    casper.on('resource.received', function(resource) {
-        casper.echo(resource.url);
-    });
+casper.on('resource.received', function(resource) {
+    casper.echo(resource.url);
+});
+```
 
 Here's a table containing all the available events with all the
 parameters passed to their callback:
@@ -265,19 +267,21 @@ parameters passed to their callback:
 Of course you can emit your own events, using the `Casper.emit()`
 method:
 
-    var casper = require('casper').create();
+```javascript
+var casper = require('casper').create();
 
-    // listening to a custom event
-    casper.on('google.loaded', function() {
-        this.echo('Google page title is ' + this.getTitle());
-    });
+// listening to a custom event
+casper.on('google.loaded', function() {
+    this.echo('Google page title is ' + this.getTitle());
+});
 
-    casper.start('http://google.com/', function() {
-        // emitting a custom event
-        this.emit('google.loaded');
-    });
+casper.start('http://google.com/', function() {
+    // emitting a custom event
+    this.emit('google.loaded');
+});
 
-    casper.run();
+casper.run();
+```
 
 * * * * *
 
@@ -288,11 +292,13 @@ take a simple example and imagine you would like to alter every
 single url opened by CasperJS to append a `foo=42` query string
 parameter:
 
-    var casper = require('casper').create();
+```javascript
+var casper = require('casper').create();
 
-    casper.setFilter('open.location', function(location) {
-        return /\?+/.test(location) ? location += "&foo=42" : location += "?foo=42";
-    });
+casper.setFilter('open.location', function(location) {
+    return /\?+/.test(location) ? location += "&foo=42" : location += "?foo=42";
+});
+```
 
 There you have it, every single requested url will have this appended.
 Let me bet you'll find far more interesting use cases than my silly one
