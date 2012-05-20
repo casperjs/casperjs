@@ -2,12 +2,12 @@ var casper = require('casper').create();
 
 // listening to a custom event
 casper.on('google.loaded', function(title) {
-    casper.echo('Google page title is ' + title);
+    casper.echo("Google page title is " + title);
 });
 
-casper.start('http://google.com/', function(self) {
+casper.start('http://google.com/', function() {
     // emitting a custom event
-    self.emit('google.loaded', self.getTitle());
+    this.emit('google.loaded', this.getTitle());
 });
 
 casper.run();

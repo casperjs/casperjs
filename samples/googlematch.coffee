@@ -3,11 +3,11 @@ Takes provided terms passed as arguments and query google for the number of
 estimated results each have.
 
 Usage:
-  $ casperjs samples/googlematch.js nicolas chuck borris
-  nicolas: 69600000
-  chuck:   49500000
-  borris:  2370000
-  winner is "nicolas" with 69600000 results
+    $ casperjs googlematch.js nicolas chuck borris
+    nicolas: 69600000
+    chuck:   49500000
+    borris:  2370000
+    winner is "nicolas" with 69600000 results
 ###
 
 casper = require('casper').create verbose: true
@@ -21,7 +21,7 @@ terms = casper.cli.args # terms are passed through command-line arguments
 
 if terms.length < 3
     casper
-        .echo 'Usage: casperjs googlematch.js term1, term2 [, term3]...'
+        .echo("Usage: $ casperjs googlematch.js term1, term2 [, term3]...")
         .exit(1)
 
 scores = []

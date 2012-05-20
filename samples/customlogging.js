@@ -1,8 +1,8 @@
-/**
- * A basic custom logging implementation. The idea is to (extremely) verbosely
- * log every received resource.
- *
- */
+/*
+A basic custom logging implementation. The idea is to (extremely) verbosely
+log every received resource.
+*/
+
 var casper = require('casper').create({
     /**
      * Every time a resource is received, a new log entry is added to the stack

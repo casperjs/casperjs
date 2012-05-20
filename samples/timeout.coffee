@@ -14,6 +14,7 @@ $ casperjs samples/timeout.js 2000
 Will google.com load in less than 2000ms?
 YES!
 ###
+
 casper = require('casper').create
     onTimeout: ->
         @echo 'NOPE.', 'RED_BAR'
@@ -22,7 +23,7 @@ casper = require('casper').create
 timeout = ~~casper.cli.get 0
 if timeout < 1
     casper
-        .echo "You must pass a valid timeout value"
+        .echo("You must pass a valid timeout value")
         .exit(1)
 
 casper.echo "Will google.com load in less than #{timeout}ms?"

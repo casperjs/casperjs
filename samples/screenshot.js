@@ -1,8 +1,8 @@
-/**
- * This script will capture a screenshot of a twitter account page
- *
- * Usage $ casperjs screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>
- */
+/*
+This script will capture a screenshot of a twitter account page
+Usage: $ casperjs screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>
+*/
+
 var casper = require('casper').create({
     viewportSize: {
         width: 1024,
@@ -15,7 +15,7 @@ var filename = casper.cli.get(1);
 
 if (!twitterAccount || !filename || !/\.(png|jpg|pdf)$/i.test(filename)) {
     casper
-        .echo("Usage $ casperjs samples/screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>")
+        .echo("Usage: $ casperjs screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>")
         .exit(1)
     ;
 }

@@ -6,9 +6,11 @@ var links = [
     'http://bing.com/'
 ];
 
-casper.start().each(links, function(self, link) {
-    self.thenOpen(link, function(self) {
-        self.echo(self.getTitle() + ' - ' + link);
+casper.start();
+
+casper.each(links, function(self, link) {
+    this.thenOpen(link, function() {
+        this.echo("" + (this.getTitle()) + " - " + link);
     });
 });
 

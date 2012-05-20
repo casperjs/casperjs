@@ -27,4 +27,5 @@ casper.each links, (self, link) ->
         else
             @test.pass "#{@requestUrl} loaded in less than #{timeout}ms."
 
-casper.run -> @test.renderResults true
+casper.run ->
+    @test.renderResults true

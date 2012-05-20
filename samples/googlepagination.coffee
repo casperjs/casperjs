@@ -1,15 +1,17 @@
-# Capture multiple pages of google search results
-#
-# usage:  casperjs googlepagination.coffee my search terms
-#
-# (all arguments will be used as the query)
+###
+Capture multiple pages of google search results
+
+usage:  casperjs googlepagination.coffee my search terms
+
+(all arguments will be used as the query)
+###
 
 casper = require('casper').create()
 currentPage = 1
 
-if casper.cli.args.length == 0
+if casper.cli.args.length is 0
   casper
-      .echo "usage: $ casperjs my search terms"
+      .echo("Usage: $ casperjs my search terms")
       .exit(1)
 
 processPage = ->
