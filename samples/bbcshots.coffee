@@ -18,8 +18,8 @@ casper.start "http://www.bbc.co.uk/", ->
         return __utils__.findAll('#promo2_carousel_items_items li').length
     @echo "#{nbLinks} items founds"
     # hide navigation arrows
-    @hide '.nav_left'
-    @hide '.nav_right'
+    @hide ".nav_left"
+    @hide ".nav_right"
     @mouse.move '#promo2_carousel'
     @waitUntilVisible '.autoplay.nav_pause', ->
         @echo "Moving over pause button"
@@ -29,7 +29,7 @@ casper.start "http://www.bbc.co.uk/", ->
         @waitUntilVisible '.autoplay.nav_play', ->
             @echo "Carousel has been paused"
             # hide play button
-            @hide '.autoplay'
+            @hide ".autoplay"
 
 # Capture carrousel area
 next = ->
@@ -57,7 +57,7 @@ buildPage = ->
     fs.write 'result.html', pageHtml, 'w'
     @thenOpen "file://#{fs.workingDirectory}/result.html", ->
         @echo "Resulting image saved to result.png"
-        @capture 'result.png'
+        @capture "result.png"
 
 casper.then next
 

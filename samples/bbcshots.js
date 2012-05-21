@@ -21,8 +21,8 @@ casper.start("http://www.bbc.co.uk/", function() {
     });
     this.echo(nbLinks + " items founds");
     // hide navigation arrows
-    this.hide('.nav_left');
-    this.hide('.nav_right');
+    this.hide(".nav_left");
+    this.hide(".nav_right");
     this.mouse.move('#promo2_carousel');
     this.waitUntilVisible('.autoplay.nav_pause', function() {
         this.echo("Moving over pause button");
@@ -32,7 +32,7 @@ casper.start("http://www.bbc.co.uk/", function() {
         this.waitUntilVisible('.autoplay.nav_play', function() {
             this.echo("Carousel has been paused");
             // hide play button
-            this.hide('.autoplay');
+            this.hide(".autoplay");
         });
     });
 });
@@ -65,7 +65,7 @@ var buildPage = function buildPage() {
     fs.write('result.html', pageHtml, 'w');
     this.thenOpen("file://" + fs.workingDirectory + "/result.html", function() {
         this.echo("Resulting image saved to result.png");
-        this.capture('result.png');
+        this.capture("result.png");
     });
 };
 
