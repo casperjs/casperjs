@@ -36,7 +36,7 @@ var start = function start(link) {
 var addLinks = function addLinks(link) {
     this.then(function() {
         var found = this.evaluate(searchLinks);
-        this.echo("" + found.length + " links found on " + link);
+        this.echo(found.length + " links found on " + link);
         links = links.concat(found);
     });
 };

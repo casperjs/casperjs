@@ -10,7 +10,7 @@ casper.start();
 
 casper.each(links, function(self, link) {
     this.thenOpen(link, function() {
-        this.echo("" + (this.getTitle()) + " - " + link);
+        this.echo((this.getTitle()) + " - " + link);
     });
 });
 

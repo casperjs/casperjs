@@ -13,7 +13,7 @@ var suites = [
             this.echo("Page title: " + (this.getTitle()));
         });
         this.then(function() {
-            this.echo("" + (this.evaluate(countLinks)) + " links");
+            this.echo((this.evaluate(countLinks)) + " links");
         });
     }, function() {
         this.echo('Suite 2');
@@ -21,7 +21,7 @@ var suites = [
             this.echo("Page title: " + (this.getTitle()));
         });
         this.then(function() {
-            this.echo("" + (this.evaluate(countLinks)) + " links");
+            this.echo((this.evaluate(countLinks)) + " links");
         });
     }, function() {
         this.echo('Suite 3');
@@ -29,7 +29,7 @@ var suites = [
             this.echo("Page title: " + (this.getTitle()));
         });
         this.then(function() {
-            this.echo("" + (this.evaluate(countLinks)) + " links");
+            this.echo((this.evaluate(countLinks)) + " links");
         });
     }
 ];

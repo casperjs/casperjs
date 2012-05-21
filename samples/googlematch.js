@@ -49,7 +49,7 @@ casper.each(terms, function(self, term) {
             term: term,
             score: score
         });
-        self.echo("" + term + ": " + score);
+        self.echo(term + ": " + score);
     });
 });
 

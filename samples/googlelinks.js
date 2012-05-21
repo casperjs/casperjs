@@ -32,7 +32,7 @@ casper.then(function() {
 
 casper.run(function() {
     // display results
-    this.echo("" + links.length + " links found:");
+    this.echo(links.length + " links found:");
     this.echo(" - " + links.join("\n - "));
     this.exit();
 });

@@ -19,7 +19,7 @@ casper.start('http://www.bbc.co.uk/', function() {
     nbLinks = this.evaluate(function() {
         return __utils__.findAll('#promo2_carousel_items_items li').length;
     });
-    this.echo("" + nbLinks + " items founds");
+    this.echo(nbLinks + " items founds");
     // hide navigation arrows
     this.hide('.nav_left');
     this.hide('.nav_right');
