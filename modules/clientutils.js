@@ -35,7 +35,7 @@
     /**
      * Casper client-side helpers.
      */
-    ClientUtils = function ClientUtils() {
+    exports.ClientUtils = function ClientUtils() {
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -553,7 +553,6 @@
             }
         };
     };
-    exports.ClientUtils = ClientUtils;
 
     // silly "hack" to force having an instance available
     exports.__utils__ = new exports.ClientUtils();
