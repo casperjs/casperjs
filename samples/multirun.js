@@ -2,7 +2,7 @@ var casper = require('casper').create({
     verbose: true
 });
 
-var countLinks = function() {
+var countLinks = function countLinks() {
     return document.querySelectorAll('a').length;
 };
 
@@ -42,7 +42,7 @@ casper.then(function() {
 
 var currentSuite = 0;
 
-var check = function() {
+var check = function check() {
     if (suites[currentSuite]) {
         suites[currentSuite].call(this);
         currentSuite++;

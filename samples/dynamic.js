@@ -7,7 +7,7 @@ var upTo = ~~casper.cli.get(0) || 10; // max 10 links
 
 // Fetch all <a> elements from the page and return
 // the ones which contains a href starting with 'http://'
-var searchLinks = function() {
+var searchLinks = function searchLinks() {
     var filter = Array.prototype.filter;
     var map = Array.prototype.map;
     return map.call(filter.call(document.querySelectorAll("a"), function(a) {
@@ -25,7 +25,7 @@ var links = [
 ];
 
 // Just opens the page and prints the title
-var start = function(link) {
+var start = function start(link) {
     this.start(link, function() {
         this.echo("Page title: " + (this.getTitle()));
     });
@@ -33,7 +33,7 @@ var start = function(link) {
 
 // Get the links, and add them to the links array
 // (It could be done all in one step, but it is intentionally splitted)
-var addLinks = function(link) {
+var addLinks = function addLinks(link) {
     this.then(function() {
         var found = this.evaluate(searchLinks);
         this.echo("" + found.length + " links found on " + link);
@@ -50,7 +50,7 @@ casper.then(function() {
 var currentLink = 0;
 
 // As long as it has a next link, and is under the maximum limit, will keep running
-var check = function() {
+var check = function check() {
     if (links[currentLink] && currentLink < upTo) {
         this.echo("--- Link " + currentLink + " ---");
         start.call(this, links[currentLink]);

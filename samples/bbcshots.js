@@ -37,7 +37,7 @@ casper.start('http://www.bbc.co.uk/', function() {
     });
 });
 
-var next = function() {
+var next = function next() {
     var image = "bbcshot" + currentLink + ".png";
     images.push(image);
     this.echo("Processing image " + currentLink);
@@ -53,7 +53,7 @@ var next = function() {
     }
 };
 
-var buildPage = function() {
+var buildPage = function buildPage() {
     this.echo('Build result page');
     var fs = require('fs');
     this.viewport(624, 400);

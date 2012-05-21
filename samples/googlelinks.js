@@ -1,4 +1,4 @@
-var getLinks = function() {
+var getLinks = function getLinks() {
     var links;
     links = document.querySelectorAll("h3.r a");
     return Array.prototype.map.call(links, function(e) {

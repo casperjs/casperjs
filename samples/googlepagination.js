@@ -17,7 +17,7 @@ if (casper.cli.args.length === 0) {
     ;
 }
 
-var processPage = function() {
+var processPage = function processPage() {
     var url;
     this.echo("capturing page " + currentPage);
     this.capture("google-results-p" + currentPage + ".png");
