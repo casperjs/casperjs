@@ -6,7 +6,10 @@ casper.cli.drop("cli");
 casper.cli.drop("casper-path");
 
 if (casper.cli.args.length === 0 && Object.keys(casper.cli.options).length === 0) {
-    casper.echo("Pass some args and options to see how they are handled by CasperJS").exit();
+    casper
+        .echo("Pass some args and options to see how they are handled by CasperJS")
+        .exit(1)
+    ;
 }
 
 casper.echo("Casper CLI passed args:");
