@@ -376,11 +376,9 @@ Casper.prototype.each = function each(array, fn) {
         this.log("each() only works with arrays", "error");
         return this;
     }
-    (function _each(self) {
-        array.forEach(function _forEach(item, i) {
-            fn.call(self, self, item, i);
-        });
-    })(this);
+    array.forEach.call(this, function _forEach(item, i) {
+        fn.call(this, this, item, i);
+    });
     return this;
 };
 
@@ -922,8 +920,8 @@ Casper.prototype.start = function start(location, then) {
         }, this.options.timeout, this);
     }
     if (utils.isString(location) && location.length > 0) {
-        return this.thenOpen(location, utils.isFunction(then) ? then : this.createStep(function _step(self) {
-            self.log("start page is loaded", "debug");
+        return this.thenOpen(location, utils.isFunction(then) ? then : this.createStep(function _step() {
+            this.log("start page is loaded", "debug");
         }));
     }
     return this;
