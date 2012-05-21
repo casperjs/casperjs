@@ -23,13 +23,13 @@ casper.start("http://www.bbc.co.uk/", function() {
     // hide navigation arrows
     this.hide(".nav_left");
     this.hide(".nav_right");
-    this.mouse.move('#promo2_carousel');
-    this.waitUntilVisible('.autoplay.nav_pause', function() {
+    this.mouse.move("#promo2_carousel");
+    this.waitUntilVisible(".autoplay.nav_pause", function() {
         this.echo("Moving over pause button");
-        this.mouse.move('.autoplay.nav_pause');
+        this.mouse.move(".autoplay.nav_pause");
         this.click(".autoplay.nav_pause");
         this.echo("Clicked on pause button");
-        this.waitUntilVisible('.autoplay.nav_play', function() {
+        this.waitUntilVisible(".autoplay.nav_play", function() {
             this.echo("Carousel has been paused");
             // hide play button
             this.hide(".autoplay");
@@ -62,7 +62,7 @@ var buildPage = function buildPage() {
         pageHtml += "<img src='file://" + fs.workingDirectory + "/" + image + "'><br>";
     });
     pageHtml += "</body></html>";
-    fs.write('result.html', pageHtml, 'w');
+    fs.write("result.html", pageHtml, 'w');
     this.thenOpen("file://" + fs.workingDirectory + "/result.html", function() {
         this.echo("Resulting image saved to result.png");
         this.capture("result.png");

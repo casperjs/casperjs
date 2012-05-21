@@ -20,13 +20,13 @@ casper.start "http://www.bbc.co.uk/", ->
     # hide navigation arrows
     @hide ".nav_left"
     @hide ".nav_right"
-    @mouse.move '#promo2_carousel'
-    @waitUntilVisible '.autoplay.nav_pause', ->
+    @mouse.move "#promo2_carousel"
+    @waitUntilVisible ".autoplay.nav_pause", ->
         @echo "Moving over pause button"
-        @mouse.move '.autoplay.nav_pause'
+        @mouse.move ".autoplay.nav_pause"
         @click ".autoplay.nav_pause"
         @echo "Clicked on pause button"
-        @waitUntilVisible '.autoplay.nav_play', ->
+        @waitUntilVisible ".autoplay.nav_play", ->
             @echo "Carousel has been paused"
             # hide play button
             @hide ".autoplay"
@@ -54,7 +54,7 @@ buildPage = ->
     for image in images
         pageHtml += "<img src='file://#{fs.workingDirectory}/#{image}'><br>"
     pageHtml += "</body></html>"
-    fs.write 'result.html', pageHtml, 'w'
+    fs.write "result.html", pageHtml, 'w'
     @thenOpen "file://#{fs.workingDirectory}/result.html", ->
         @echo "Resulting image saved to result.png"
         @capture "result.png"
