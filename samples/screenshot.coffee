@@ -17,9 +17,12 @@ if not twitterAccount or not filename or not /\.(png|jpg|pdf)$/i.test filename
         .exit(1)
 
 casper.start "https://twitter.com/#!/#{twitterAccount}", ->
-    capture = ->
-        @captureSelector filename, 'html'
+    @waitForSelector ".tweet-row", (->
+        @captureSelector filename, "html"
         @echo "Saved screenshot of #{@getCurrentUrl()} to #{filename}"
-    @waitForSelector '.tweet-row', capture, null, 12000
+    ), (->
+        @die("Timeout reached. Fail whale?")
+        @exit()
+    ), 12000
 
 casper.run()

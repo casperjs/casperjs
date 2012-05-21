@@ -1,3 +1,7 @@
+###
+This script will add a custom HTTP status code handler, here for 404 pages.
+###
+
 casper = require("casper").create()
 
 casper.on "http.status.200", (resource) ->
@@ -16,14 +20,15 @@ casper.on "http.status.500", (resource) ->
     @echo "#{resource.url} is in error", "ERROR"
 
 links = [
-    'http://google.com/'
-    'http://www.google.com/'
-    'http://www.google.com/plop'
+    "http://google.com/"
+    "http://www.google.com/"
+    "http://www.google.com/plop"
 ]
 
 casper.start()
 
-for link in links
-    casper.thenOpen link, -> @echo "#{link} loaded"
+casper.each links, (self, link) ->
+    self.thenOpen link, ->
+        @echo "#{link} loaded"
 
 casper.run()

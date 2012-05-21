@@ -1,7 +1,9 @@
-var casper = require("casper").create();
-var dump = require("utils").dump;
+var casper, dump;
 
-// removing default options passed by the Python executable
+casper = require("casper").create();
+dump = require("utils").dump;
+
+/* removing default options passed by the Python executable */
 casper.cli.drop("cli");
 casper.cli.drop("casper-path");
 

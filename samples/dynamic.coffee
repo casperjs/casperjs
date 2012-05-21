@@ -1,10 +1,13 @@
-casper = require("casper").create verbose: true
+casper = require("casper").create
+    verbose: true
 
-# If we don't set a limit, it could go on forever
-upTo = ~~casper.cli.get(0) || 10  # max 10 links
+### If we don't set a limit, it could go on forever ###
+upTo = ~~casper.cli.get(0) || 10
 
-# Fetch all <a> elements from the page and return
-# the ones which contains a href starting with 'http://'
+###
+Fetch all <a> elements from the page and return
+the ones which contains a href starting with 'http://'
+###
 searchLinks = ->
     filter = Array::filter
     map = Array::map
@@ -13,20 +16,22 @@ searchLinks = ->
     ), (a) ->
         a.getAttribute "href"
 
-# The base links array
+### The base links array ###
 links = [
-    'http://google.com/'
-    'http://yahoo.com/'
-    'http://bing.com/'
+    "http://google.com/"
+    "http://yahoo.com/"
+    "http://bing.com/"
 ]
 
-# Just opens the page and prints the title
+### Just opens the page and prints the title ###
 start = (link) ->
     @start link, ->
         @echo "Page title: #{ @getTitle() }"
 
-# Get the links, and add them to the links array
-# (It could be done all in one step, but it is intentionally splitted)
+###
+Get the links, and add them to the links array
+(It could be done all in one step, but it is intentionally splitted)
+###
 addLinks = (link) ->
     @then ->
         found = @evaluate searchLinks
@@ -35,11 +40,12 @@ addLinks = (link) ->
 
 casper.start()
 
-casper.then -> @echo "Starting"
+casper.then ->
+    @echo "Starting"
 
 currentLink = 0;
 
-# As long as it has a next link, and is under the maximum limit, will keep running
+### As long as it has a next link, and is under the maximum limit, will keep running ###
 check = ->
     if links[currentLink] && currentLink < upTo
         @echo "--- Link #{currentLink} ---"

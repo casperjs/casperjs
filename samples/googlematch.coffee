@@ -3,7 +3,7 @@ Takes provided terms passed as arguments and query google for the number of
 estimated results each have.
 
 Usage:
-    $ casperjs googlematch.js nicolas chuck borris
+    $ casperjs googlematch.coffee nicolas chuck borris
     nicolas: 69600000
     chuck:   49500000
     borris:  2370000

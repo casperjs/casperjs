@@ -10,18 +10,21 @@ Usage:
     winner is "nicolas" with 69600000 results
 */
 
-var casper = require("casper").create({
+var casper, scores, terms;
+
+casper = require("casper").create({
     verbose: true
 });
 
 casper.fetchScore = function() {
     return this.evaluate(function() {
-        var result = document.querySelector('#resultStats').innerText;
+        var result;
+        result = document.querySelector('#resultStats').innerText;
         return ~~(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''));
     });
 };
 
-var terms = casper.cli.args;
+terms = casper.cli.args;
 
 if (terms.length < 2) {
     casper
@@ -30,7 +33,7 @@ if (terms.length < 2) {
     ;
 }
 
-var scores = [];
+scores = [];
 
 casper.echo("Let the match begin between \"" + (terms.join('", "')) + "\"!");
 
@@ -54,10 +57,11 @@ casper.each(terms, function(self, term) {
 });
 
 casper.run(function() {
+    var winner;
     scores.sort(function(a, b) {
         return b.score - a.score;
     });
-    var winner = scores[0];
+    winner = scores[0];
     this.echo("Winner is \"" + winner.term + "\" with " + winner.score + " results");
     this.exit();
 });

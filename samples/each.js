@@ -1,16 +1,18 @@
-var casper = require("casper").create();
+var casper, links;
 
-var links = [
-    'http://google.com/',
-    'http://yahoo.com/',
-    'http://bing.com/'
+casper = require("casper").create();
+
+links = [
+    "http://google.com/",
+    "http://yahoo.com/",
+    "http://bing.com/"
 ];
 
 casper.start();
 
 casper.each(links, function(self, link) {
     this.thenOpen(link, function() {
-        this.echo((this.getTitle()) + " - " + link);
+        this.echo(this.getTitle() + " - " + link);
     });
 });
 

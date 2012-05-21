@@ -6,21 +6,21 @@ links = []
 casper = require("casper").create()
 
 casper.start "http://google.fr/", ->
-    # search for 'casperjs' from google form
+    ### search for 'casperjs' from google form ###
     @fill 'form[action="/search"]', q: "casperjs", true
 
 casper.then ->
-    # aggregate results for the 'casperjs' search
+    ### aggregate results for the 'casperjs' search ###
     links = @evaluate getLinks
-    # search for 'phantomjs' from google form
+    ### search for 'phantomjs' from google form ###
     @fill 'form[action="/search"]', q: "phantomjs", true
 
 casper.then ->
-    # concat results for the 'phantomjs' search
+    ### concat results for the 'phantomjs' search ###
     links = links.concat @evaluate(getLinks)
 
 casper.run ->
-    # display results
+    ### display results ###
     @echo "#{links.length} links found:"
     @echo " - " + links.join "\n - "
     @exit()

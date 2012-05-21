@@ -24,16 +24,16 @@ processPage = ->
     if @exists "#pnnext"
         currentPage++
         @echo "requesting next page: #{currentPage}"
-        #@thenClick("#pnnext").then(processPage)
         url = @getCurrentUrl()
         @thenClick("#pnnext").then ->
-            check = -> url != @getCurrentUrl()
-            @waitFor check, processPage
+            @waitFor (->
+                url isnt @getCurrentUrl()
+            ), processPage
     else
         @echo "that's all, folks."
 
 casper.start "http://google.fr/", ->
-    @fill 'form[action="/search"]',  q: casper.cli.args.join(' '), true
+    @fill 'form[action="/search"]',  q: casper.cli.args.join(" "), true
 
 casper.then processPage
 

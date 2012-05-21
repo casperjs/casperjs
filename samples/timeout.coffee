@@ -17,7 +17,7 @@ YES!
 
 casper = require("casper").create
     onTimeout: ->
-        @echo "NOPE.", 'RED_BAR'
+        @echo "NOPE.", "RED_BAR"
         @exit()
 
 timeout = ~~casper.cli.get 0
@@ -30,7 +30,7 @@ casper.echo "Will google.com load in less than #{timeout}ms?"
 casper.options.timeout = timeout
 
 casper.start "http://www.google.com/", ->
-    @echo "YES!", 'GREEN_BAR'
+    @echo "YES!", "GREEN_BAR"
     @exit()
 
 casper.run()

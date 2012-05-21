@@ -2,7 +2,9 @@
 Download the google logo image as base64
 */
 
-var casper = require("casper").create({
+var casper;
+
+casper = require("casper").create({
     verbose: true
 });
 

@@ -1,29 +1,29 @@
+casper = require("casper").create
+    loadImages: false
+    logLevel:   "debug"
+    verbose:    true
+
 links =
-    'http://edition.cnn.com/': 0
-    'http://www.nytimes.com/': 0
-    'http://www.bbc.co.uk/': 0
-    'http://www.guardian.co.uk/': 0
+    "http://edition.cnn.com/": 0
+    "http://www.nytimes.com/": 0
+    "http://www.bbc.co.uk/": 0
+    "http://www.guardian.co.uk/": 0
 
-class Fantomas extends require("casper").Casper
-    countLinks: ->
-        @evaluate ->
-            __utils__.findAll('a').length
+fantomas = Object.create(casper)
 
-    renderJSON: (what) ->
-        @echo JSON.stringify what, null, '  '
+fantomas.countLinks = ->
+    @evaluate ->
+        __utils__.findAll("a[href]").length
 
-fantomas = new Fantomas
-    loadImages:  false
-    logLevel:    "debug"
-    verbose:     true
+fantomas.renderJSON = (what) ->
+    @echo JSON.stringify(what, null, "  ")
 
 fantomas.start()
 
-for url of links
-    do (url) ->
-        fantomas.thenOpen url, ->
-            links[url] = @countLinks()
+Object.keys(links).forEach (url) ->
+    fantomas.thenOpen url, ->
+        links[url] = @countLinks()
 
 fantomas.run ->
-    @renderJSON links
+    @renderJSON(links)
     @exit()

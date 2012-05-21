@@ -4,8 +4,8 @@ metas = []
 
 if not url
     casper
-        .echo "Usage: casperjs [url]"
-        .exit(1)
+        .echo("Usage: $ casperjs metaextract.coffee <url>")
+        .exit 1
 
 casper.start url, ->
     metas = @evaluate ->
