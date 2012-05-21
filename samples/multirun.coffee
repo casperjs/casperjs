@@ -1,6 +1,7 @@
 casper = require('casper').create verbose: true
 
-countLinks = -> document.querySelectorAll('a').length
+countLinks = ->
+    document.querySelectorAll('a').length
 
 suites = [
     ->
@@ -19,7 +20,8 @@ suites = [
 
 casper.start()
 
-casper.then -> @echo('Starting')
+casper.then ->
+    @echo('Starting')
 
 currentSuite = 0;
 
@@ -29,7 +31,7 @@ check = ->
         currentSuite++;
         casper.run check
     else
-        @echo 'All done.'
+        @echo "All done."
         @exit()
 
 casper.run check

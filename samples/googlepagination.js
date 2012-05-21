@@ -1,7 +1,7 @@
 /*
 Capture multiple pages of google search results
 
-Usage: casperjs googlepagination.coffee my search terms
+Usage: $ casperjs googlepagination.coffee my search terms
 
 (all arguments will be used as the query)
 */
@@ -12,7 +12,7 @@ var currentPage = 1;
 
 if (casper.cli.args.length === 0) {
     casper
-        .echo("Usage: $ casperjs my search terms")
+        .echo("Usage: $ casperjs googlepagination.coffee my search terms")
         .exit(1)
     ;
 }

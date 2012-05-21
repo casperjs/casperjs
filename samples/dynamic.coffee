@@ -7,11 +7,11 @@ upTo = ~~casper.cli.get(0) || 10  # max 10 links
 # the ones which contains a href starting with 'http://'
 searchLinks = ->
     filter = Array::filter
-    map    = Array::map
-    links  = document.querySelectorAll 'a'
-    absolutes = filter.call links, (a) ->
-        /^http:\/\/.*/i.test a.getAttribute 'href'
-    return map.call absolutes, (a) -> a.getAttribute 'href'
+    map = Array::map
+    map.call filter.call(document.querySelectorAll("a"), (a) ->
+        (/^http:\/\/.*/i).test a.getAttribute("href")
+    ), (a) ->
+        a.getAttribute "href"
 
 # The base links array
 links = [
@@ -21,7 +21,9 @@ links = [
 ]
 
 # Just opens the page and prints the title
-start = (link) -> @start link, -> @echo "Page title: #{ @getTitle() }"
+start = (link) ->
+    @start link, ->
+        @echo "Page title: #{ @getTitle() }"
 
 # Get the links, and add them to the links array
 # (It could be done all in one step, but it is intentionally splitted)

@@ -1,10 +1,13 @@
-### Create a mosaic image from all headline photos on BBC homepage
 ###
+Create a mosaic image from all headline photos on BBC homepage
+###
+
 casper = require('casper').create()
 nbLinks = 0
 currentLink = 1
 images = []
 
+# helper to hide some element from remote DOM
 casper.hide = (selector) ->
     @evaluate (selector) ->
         document.querySelector(selector).style.display = "none"
@@ -28,20 +31,6 @@ casper.start 'http://www.bbc.co.uk/', ->
             # hide play button
             @hide '.autoplay'
 
-# Building resulting page and image
-buildPage = ->
-    @echo 'Build result page'
-    fs = require 'fs'
-    @viewport 624, 400
-    pageHtml = "<html><body style='background:black;margin:0;padding:0'>"
-    for image in images
-        pageHtml += "<img src='file://#{fs.workingDirectory}/#{image}'><br>"
-    pageHtml += "</body></html>"
-    fs.write 'result.html', pageHtml, 'w'
-    @thenOpen "file://#{fs.workingDirectory}/result.html", ->
-        @echo 'Resulting image saved to result.png'
-        @capture 'result.png'
-
 # Capture carrousel area
 next = ->
     image = "bbcshot#{currentLink}.png"
@@ -55,6 +44,20 @@ next = ->
             currentLink++
     else
         @then buildPage
+
+# Building resulting page and image
+buildPage = ->
+    @echo 'Build result page'
+    fs = require 'fs'
+    @viewport 624, 400
+    pageHtml = "<html><body style='background:black;margin:0;padding:0'>"
+    for image in images
+        pageHtml += "<img src='file://#{fs.workingDirectory}/#{image}'><br>"
+    pageHtml += "</body></html>"
+    fs.write 'result.html', pageHtml, 'w'
+    @thenOpen "file://#{fs.workingDirectory}/result.html", ->
+        @echo 'Resulting image saved to result.png'
+        @capture 'result.png'
 
 casper.then next
 

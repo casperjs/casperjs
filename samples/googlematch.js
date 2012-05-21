@@ -23,9 +23,9 @@ casper.fetchScore = function() {
 
 var terms = casper.cli.args;
 
-if (terms.length < 3) {
+if (terms.length < 2) {
     casper
-        .echo("Usage: $ casperjs googlematch.js term1, term2 [, term3]...")
+        .echo("Usage: $ casperjs googlematch.js term1 term2 [term3]...")
         .exit(1)
     ;
 }
@@ -36,24 +36,28 @@ casper.echo("Let the match begin between \"" + (terms.join('", "')) + "\"!");
 
 casper.start("http://google.fr/");
 
-casper.each(terms, function(self, term, i) {
-    self.then(function(self) {
-        self.fill('form[action="/search"]', { q: term }, true);
-    }).then(function(self) {
-        var score = self.fetchScore();
+casper.each(terms, function(self, term) {
+    this.then(function() {
+        this.fill('form[action="/search"]', {
+            q: term
+        }, true);
+    });
+    this.then(function() {
+        var score;
+        score = this.fetchScore();
         scores.push({
-            term:  term,
+            term: term,
             score: score
         });
-        self.echo(term + ': ' + score);
+        self.echo("" + term + ": " + score);
     });
 });
 
-casper.run(function(self) {
+casper.run(function() {
     scores.sort(function(a, b) {
-            return b.score - a.score;
+        return b.score - a.score;
     });
     var winner = scores[0];
-    self.echo('winner is "' + winner.term + '" with ' + winner.score + ' results');
-    self.exit();
+    this.echo("Winner is \"" + winner.term + "\" with " + winner.score + " results");
+    this.exit();
 });
