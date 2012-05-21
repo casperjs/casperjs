@@ -29,7 +29,7 @@
  */
 (function(exports) {
     exports.create = function create() {
-        return new ClientUtils();
+        return new this.ClientUtils();
     };
 
     /**
