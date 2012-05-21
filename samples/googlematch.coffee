@@ -10,7 +10,7 @@ Usage:
     winner is "nicolas" with 69600000 results
 ###
 
-casper = require('casper').create verbose: true
+casper = require("casper").create verbose: true
 
 casper.fetchScore = ->
     @evaluate ->

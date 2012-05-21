@@ -3,7 +3,7 @@ getLinks = ->
     Array::map.call links, (e) -> e.getAttribute "href"
 
 links = []
-casper = require('casper').create()
+casper = require("casper").create()
 
 casper.start "http://google.fr/", ->
     # search for 'casperjs' from google form

@@ -3,7 +3,7 @@ A basic custom logging implementation. The idea is to (extremely) verbosely
 log every received resource.
 ###
 
-casper = require('casper').create
+casper = require("casper").create
     # Every time a resource is received, a new log entry is added to the stack
     # at the 'verbose' level.
     onResourceReceived: (self, resource) ->
@@ -20,5 +20,5 @@ casper = require('casper').create
 casper.logLevels = ['verbose'].concat casper.logLevels
 
 # test our new logger with google
-casper.start 'http://www.google.com/'
+casper.start "http://www.google.com/"
 casper.run()

@@ -1,4 +1,4 @@
-casper = require('casper').create()
+casper = require("casper").create()
 
 links = [
     'http://google.com/'

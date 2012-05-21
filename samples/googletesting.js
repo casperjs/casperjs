@@ -1,8 +1,8 @@
-var casper = require('casper').create({
+var casper = require("casper").create({
     logLevel: "debug"
 });
 
-casper.start('http://www.google.fr/', function(self) {
+casper.start("http://www.google.fr/", function(self) {
     self.test.assertTitle('Google', 'google homepage title is the one expected');
     self.test.assertExists('form[action="/search"]', 'main form is found');
     self.fill('form[action="/search"]', {

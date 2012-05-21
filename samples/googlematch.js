@@ -10,7 +10,7 @@ Usage:
     winner is "nicolas" with 69600000 results
 */
 
-var casper = require('casper').create({
+var casper = require("casper").create({
     verbose: true
 });
 

@@ -1,4 +1,4 @@
-casper = require('casper').create()
+casper = require("casper").create()
 
 casper.on "http.status.200", (resource) ->
     @echo "#{resource.url} is OK", "INFO"

@@ -7,7 +7,7 @@ var getLinks = function getLinks() {
 };
 
 var links = [];
-var casper = require('casper').create();
+var casper = require("casper").create();
 
 casper.start("http://google.fr/", function() {
     // search for 'casperjs' from google form

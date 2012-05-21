@@ -2,7 +2,7 @@
 Create a mosaic image from all headline photos on BBC homepage
 */
 
-var casper = require('casper').create();
+var casper = require("casper").create();
 var nbLinks = 0;
 var currentLink = 1;
 var images = [];
@@ -15,7 +15,7 @@ casper.hide = function(selector) {
     });
 };
 
-casper.start('http://www.bbc.co.uk/', function() {
+casper.start("http://www.bbc.co.uk/", function() {
     nbLinks = this.evaluate(function() {
         return __utils__.findAll('#promo2_carousel_items_items li').length;
     });
@@ -25,12 +25,12 @@ casper.start('http://www.bbc.co.uk/', function() {
     this.hide('.nav_right');
     this.mouse.move('#promo2_carousel');
     this.waitUntilVisible('.autoplay.nav_pause', function() {
-        this.echo('Moving over pause button');
+        this.echo("Moving over pause button");
         this.mouse.move('.autoplay.nav_pause');
-        this.click('.autoplay.nav_pause');
-        this.echo('Clicked on pause button');
+        this.click(".autoplay.nav_pause");
+        this.echo("Clicked on pause button");
         this.waitUntilVisible('.autoplay.nav_play', function() {
-            this.echo('Carousel has been paused');
+            this.echo("Carousel has been paused");
             // hide play button
             this.hide('.autoplay');
         });
@@ -54,8 +54,8 @@ var next = function next() {
 };
 
 var buildPage = function buildPage() {
-    this.echo('Build result page');
-    var fs = require('fs');
+    this.echo("Build result page");
+    var fs = require("fs");
     this.viewport(624, 400);
     var pageHtml = "<html><body style='background:black;margin:0;padding:0'>";
     images.forEach(function(image) {
@@ -64,7 +64,7 @@ var buildPage = function buildPage() {
     pageHtml += "</body></html>";
     fs.write('result.html', pageHtml, 'w');
     this.thenOpen("file://" + fs.workingDirectory + "/result.html", function() {
-        this.echo('Resulting image saved to result.png');
+        this.echo("Resulting image saved to result.png");
         this.capture('result.png');
     });
 };

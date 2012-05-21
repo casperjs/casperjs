@@ -1,4 +1,4 @@
-var casper = require('casper').create({
+var casper = require("casper").create({
     verbose: true
 });
 
@@ -44,7 +44,7 @@ var addLinks = function addLinks(link) {
 casper.start();
 
 casper.then(function() {
-    this.echo('Starting');
+    this.echo("Starting");
 });
 
 var currentLink = 0;
@@ -58,7 +58,7 @@ var check = function check() {
         currentLink++;
         this.run(check);
     } else {
-        this.echo('All done.');
+        this.echo("All done.");
         this.exit();
     }
 };

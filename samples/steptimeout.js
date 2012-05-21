@@ -1,6 +1,6 @@
 var failed = [];
 
-var casper = require('casper').create({
+var casper = require("casper").create({
     onStepTimeout: function() {
         failed.push(this.requestUrl);
     }

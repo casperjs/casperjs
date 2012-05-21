@@ -4,7 +4,7 @@ var casper = require("casper").create()
 
 if (!url) {
     casper
-        .echo('Usage: casperjs [url]')
+        .echo("Usage: casperjs [url]")
         .exit(1)
     ;
 }

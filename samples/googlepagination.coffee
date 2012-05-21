@@ -6,7 +6,7 @@ Usage: $ casperjs googlepagination.coffee my search terms
 (all arguments will be used as the query)
 ###
 
-casper = require('casper').create()
+casper = require("casper").create()
 currentPage = 1
 
 if casper.cli.args.length is 0
@@ -32,7 +32,7 @@ processPage = ->
     else
         @echo "that's all, folks."
 
-casper.start 'http://google.fr/', ->
+casper.start "http://google.fr/", ->
     @fill 'form[action="/search"]',  q: casper.cli.args.join(' '), true
 
 casper.then processPage

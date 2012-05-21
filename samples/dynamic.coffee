@@ -1,4 +1,4 @@
-casper = require('casper').create verbose: true
+casper = require("casper").create verbose: true
 
 # If we don't set a limit, it could go on forever
 upTo = ~~casper.cli.get(0) || 10  # max 10 links
@@ -35,7 +35,7 @@ addLinks = (link) ->
 
 casper.start()
 
-casper.then -> @echo 'Starting'
+casper.then -> @echo "Starting"
 
 currentLink = 0;
 
@@ -48,7 +48,7 @@ check = ->
         currentLink++
         @run check
     else
-        @echo 'All done.'
+        @echo "All done."
         @exit()
 
 casper.run check

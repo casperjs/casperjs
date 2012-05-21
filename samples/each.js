@@ -1,4 +1,4 @@
-var casper = require('casper').create();
+var casper = require("casper").create();
 
 var links = [
     'http://google.com/',

@@ -1,4 +1,4 @@
-var casper = require('casper').create({
+var casper = require("casper").create({
     loadImages:  false,
     logLevel:   "debug",
     verbose:    true

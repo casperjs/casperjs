@@ -3,7 +3,7 @@ This script will capture a screenshot of a twitter account page
 Usage: $ casperjs screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>
 ###
 
-casper = require('casper').create
+casper = require("casper").create
     viewportSize:
         width: 1024
         height: 768

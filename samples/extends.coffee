@@ -4,7 +4,7 @@ links =
     'http://www.bbc.co.uk/': 0
     'http://www.guardian.co.uk/': 0
 
-class Fantomas extends require('casper').Casper
+class Fantomas extends require("casper").Casper
     countLinks: ->
         @evaluate ->
             __utils__.findAll('a').length

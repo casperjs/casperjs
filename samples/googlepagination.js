@@ -6,7 +6,7 @@ Usage: $ casperjs googlepagination.coffee my search terms
 (all arguments will be used as the query)
 */
 
-var casper = require('casper').create();
+var casper = require("casper").create();
 
 var currentPage = 1;
 
@@ -38,7 +38,7 @@ var processPage = function processPage() {
     }
 };
 
-casper.start('http://google.fr/', function() {
+casper.start("http://google.fr/", function() {
     return this.fill('form[action="/search"]', {
         q: casper.cli.args.join(' ')
     }, true);

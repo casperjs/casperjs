@@ -1,6 +1,6 @@
 failed = [];
 
-casper = require('casper').create
+casper = require("casper").create
     onStepTimeout: -> failed.push @requestUrl
 
 links = [
