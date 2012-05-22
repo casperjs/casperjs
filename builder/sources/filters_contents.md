@@ -33,7 +33,7 @@ parameters passed to their callback:
   <tbody>
     <tr>
       <td><code>back</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when the embedded browser is asked to go back a step in its history.</td>
     </tr>
     <tr>
@@ -68,7 +68,7 @@ parameters passed to their callback:
     </tr>
     <tr>
       <td><code>forward</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when the embedded browser is asked to go forward a step in its history.</td>
     </tr>
     <tr>
@@ -91,7 +91,7 @@ parameters passed to their callback:
     </td>
     <tr>
       <td><code>load.started</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when PhantomJS' <code>WebPage.onLoadStarted</code> event callback is called.</td>
     </tr>
     <tr>
@@ -170,7 +170,7 @@ parameters passed to their callback:
     </tr>
     <tr>
       <td><code>page.initialized</code></td>
-      <td>page</td>
+      <td><code>page</code></td>
       <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been initialized.</td>
     </tr>
     <tr>
@@ -195,22 +195,22 @@ parameters passed to their callback:
     </tr>
     <tr>
       <td><code>run.complete</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when the whole series of steps in the stack have been executed.</td>
     </tr>
     <tr>
       <td><code>run.start</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when <code>Casper.run()</code> is called.</td>
     </tr>
     <tr>
       <td><code>starting</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when <code>Casper.start()</code> is called.</td>
     </tr>
     <tr>
       <td><code>started</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when Casper has been started using <code>Casper.start()</code>.</td>
     </tr>
     <tr>
@@ -235,12 +235,12 @@ parameters passed to their callback:
     </tr>
     <tr>
       <td><code>step.timeout</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when a navigation step has been executed.</td>
     </tr>
     <tr>
       <td><code>timeout</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>
         Emitted when the execution time of the script has reached
         the <code>Casper.options.timeout</code> value.
@@ -253,17 +253,17 @@ parameters passed to their callback:
     </tr>
     <tr>
       <td><code>wait.done</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when a <code>Casper.wait*()</code> operation ends.</td>
     </tr>
     <tr>
       <td><code>wait.start</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>Emitted when a <code>Casper.wait*()</code> operation starts.</td>
     </tr>
     <tr>
       <td><code>waitFor.timeout</code></td>
-      <td>None</td>
+      <td><code>None</code></td>
       <td>
         Emitted when the execution time of a <code>Casper.wait*()</code>
         operation has exceeded the value of <code>Casper.options.stepTimeout</code>.
