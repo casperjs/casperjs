@@ -159,6 +159,16 @@ parameters passed to their callback:
       <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been created.</td>
     </tr>
     <tr>
+      <td><code>page.error</code></td>
+      <td><code>message, trace</code></td>
+      <td>
+        Emitted when retrieved page leaved a Javascript error uncaught:
+        <pre class="prettyprint">casper.on("page.error", function(msg, trace) {
+    this.echo("Error: " + msg, "ERROR");
+});</pre>
+      </td>
+    </tr>
+    <tr>
       <td><code>page.initialized</code></td>
       <td>page</td>
       <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been initialized.</td>
