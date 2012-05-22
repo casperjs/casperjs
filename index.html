@@ -2000,6 +2000,23 @@ something; but you can always include these and have them available client-side
 using the <code>Casper.options.clientScripts</code> option.
 
 </p>
+<h2 id="bookmarklet">Bookmarlet</h2>
+
+<p>A bookmarklet is also available to help injecting Casper's client-side
+utilities in the DOM of your favorite browser.
+
+</p>
+<p>Just drag this link
+<span class="label label-info"><a href="javascript:void(function()%7Bif(!document.getElementById('CasperUtils'))%7Bvar%20CasperUtils=document.createElement('script');CasperUtils.id='CasperUtils';CasperUtils.src='https://raw.github.com/n1k0/casperjs/master/modules/clientutils.js';document.documentElement.appendChild(CasperUtils);%7D%7D());">CasperJS utils</a></span>
+onto your favorites toobar; when clicking, a <code><strong>utils</strong></code> object will
+be available within the console of your browser.
+
+</p>
+<p><span class="label label-info">Note</span> CasperJS and PhantomJS being based
+on Webkit, you're strongly encouraged to use a recent Webkit compatible browser
+to use this bookmarklet (Chrome, Safari, etc…)
+
+</p>
 <h3 id="phantom_Casper_ClientUtils_encode"><code>ClientUtils#encode(String contents)</code></h3>
 
 <p>Encodes a string using the <a href="http://en.wikipedia.org/wiki/Base64">base64
@@ -3152,7 +3169,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=z1JSYGTNurg.fr./sv=1/am=!tbK8W_8mwqaIodoNDQ/d=1/rs=AItRSTOuMtThdRGqBhaNLUHGkwN0vZQrmw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=iFxIuT39UF0.fr./sv=1/am=!tbK8W_8mwqaIodoNDQ/d=1/rs=AItRSTM2pJNlVPibx3u4Y3bl8rlzWoqkWw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>
