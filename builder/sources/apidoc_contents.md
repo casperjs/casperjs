@@ -480,8 +480,8 @@ Saves a remote resource onto the filesystem.
 
 ```javascript
 casper.start('http://www.google.fr/', function() {
-    var logoUrl = 'http://www.google.fr/intl/fr/about/corporate/company/';
-    this.download(logoUrl, 'google_company.html');
+    var url = 'http://www.google.fr/intl/fr/about/corporate/company/';
+    this.download(url, 'google_company.html');
 });
 
 casper.run(function() {
@@ -513,7 +513,7 @@ casper.run();
 
 <span class="label label-info">Hint</span> Have a look at the
 [googlematch.js](https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js)
-sample script for concrete usecase.
+sample script for a concrete use case.
 
 <h3 id="phantom_Casper_echo"><code>Casper#echo(String message[, String style])</code></h3>
 
@@ -533,9 +533,9 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_evaluate"><code>Casper#evaluate(function  fn[, Object replacements])</code></h3>
+<h3 id="phantom_Casper_evaluate"><code>Casper#evaluate(function fn[, Object replacements])</code></h3>
 
-Evaluates an expression in the page context, a bit like what PhantomJS'
+Evaluates an expression **in the remote page context**, a bit like what PhantomJS'
 `WebPage#evaluate` does, but can also handle passed arguments if you
 define their context:
 
@@ -555,7 +555,14 @@ casper.evaluate(function(username, password) {
 <span class="label label-info">Note</span> For filling and submitting forms, rather use the
 [`Casper#fill()`](#phantom_Casper_fill) method.
 
-<h3 id="phantom_Casper_evaluateOrDie"><code>Casper#evaluateOrDie(function  fn[, String message])</code></h3>
+<span class="label label-info">Note</span> The concept behind this method is
+probably the most difficult to understand when discovering CasperJS.
+As a reminder, think of the `evaluate()` method as a *gate* between the CasperJS
+environment and the one of the page you have opened; everytime you pass a closure to
+`evaluate()`, you're entering the page and execute code as if you were using the
+browser console.
+
+<h3 id="phantom_Casper_evaluateOrDie"><code>Casper#evaluateOrDie(function fn[, String message])</code></h3>
 
 Evaluates an expression within the current page DOM and `die()` if it
 returns anything but `true`.
@@ -710,7 +717,8 @@ casper.run();
 <h3 id="phantom_Casper_getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 Retrieves a global variable value within the remote DOM environment by
-its name.
+its name. Basically, `getGlobal('foo')` will retrieve the value of `window.foo`
+from the page.
 
 **Example:**
 
@@ -782,8 +790,7 @@ casper.run();
 [regression](http://code.google.com/p/phantomjs/issues/detail?id=337)
 with POST requests preventing data to be actually submitted; so please
 check you're using a more recent or patched version of PhantomJS before
-reporting any issue regarding this bug. PhantomJS 1.3 is not affected by
-the bug.
+reporting any issue regarding this bug.
 
 <h3 id="phantom_Casper_repeat"><code>Casper#repeat(int times,  function then)</code></h3>
 
@@ -792,15 +799,8 @@ Repeats a navigation step a given number of times.
 **Example:**
 
 ```javascript
-var i = 0;
-casper.start('http://foo.bar/home', function() {
-    this.evaluateOrDie(function() {
-        return /logged in/.match(document.title);
-    }, 'not authenticated');
-});
-
-casper.repeat(5, function() {
-    this.echo("I am step #" + ++i);
+casper.start().repeat(3, function() {
+    this.echo("Badger");
 });
 
 casper.run();
@@ -824,6 +824,9 @@ casper.start('http://www.google.com/', function() {
 
 casper.run();
 ```
+
+<span class="label label-info">Note</span> If you want to wait for a resource to
+be loaded, use the [`waitForResource()`](#phantom_Casper_waitForResource) method.
 
 <h3 id="phantom_Casper_run"><code>Casper#run(fn onComplete[, int  time])</code></h3>
 
@@ -892,9 +895,11 @@ Of course you can directly pass the auth string in the url to open:
 
 ```javascript
 var url = 'http://sheldon.cooper:b4z1ng4@password-protected.domain.tld/';
+
 casper.start(url, function() {
     this.echo("I'm in. Bazinga.");
 })
+
 casper.run();
 ```
 
@@ -957,25 +962,37 @@ you'll get an error message inviting you to do so anyway.
 
 <h3 id="phantom_Casper_then"><code>Casper#then(function fn)</code></h3>
 
-The standard way to add a new navigation step to the Casper suite by
-provide a callback function which will be executed when the requested
-page is loaded.
-
-**Example:**
+This method is the standard way to add a new navigation step to the stack, by
+providing a simple function:
 
 ```javascript
-casper.start('http://google.fr/').then(function() {
+casper.start('http://google.fr/');
+
+casper.then(function() {
     this.echo("I'm in your google.");
+});
+
+casper.then(function() {
+    this.echo('Now, let me write something');
+});
+
+casper.then(function() {
+    this.echo('Oh well.');
 });
 
 casper.run();
 ```
 
-If you want to open a page as a next step in your navigation scenario,
-please refer to the [`Casper#thenOpen()`](#phantom_Casper_thenOpen)
-method documentation.
+You can add as many steps as you need. Note that the current `Casper` instance
+automatically binds the `this` keyword for you within step functions.
 
-<h3 id="phantom_Casper_thenEvaluate"><code>Casper#thenEvaluate(function  fn[, Object replacements])</code></h3>
+To run all the steps you defined, call the [`run()`](#phantom_Casper_run) method,
+and voila.
+
+<span class="label label-info">Note</span> You must [`start()`](#phantom_Casper_start)
+the casper instance in order to use the `then()` method.
+
+<h3 id="phantom_Casper_thenEvaluate"><code>Casper#thenEvaluate(function fn[, Object replacements])</code></h3>
 
 Adds a new navigation step to perform code evaluation within the current
 retrieved page DOM.
@@ -993,6 +1010,10 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
 
 casper.run();
 ```
+
+This method is basically a convenient a shortcut for chaining a
+[`then()`](#phantom_Casper_then) and an [`evaluate()`](#phantom_Casper_evaluate)
+calls.
 
 <h3 id="phantom_Casper_thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
 
@@ -1084,7 +1105,19 @@ casper.start('http://yoursite.tld/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function  testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
+You can also write the same thing like this:
+
+```javascript
+casper.start('http://yoursite.tld/');
+
+casper.wait(1000, function() {
+    this.echo("I've waited for a second.");
+});
+
+casper.run();
+```
+
+<h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until a function returns true to process any next step.
 
@@ -1095,14 +1128,14 @@ default timeout is set to 5000ms.
 **Example:**
 
 ```javascript
-casper.start('http://yoursite.tld/', function() {
-    this.waitFor(function() {
-        return this.evaluate(function() {
-            return document.querySelectorAll('ul.your-list li').length > 2;
-        });
-    }, function() {
-        this.captureSelector('yoursitelist.png', 'ul.your-list');
+casper.start('http://yoursite.tld/');
+
+casper.waitFor(function check() {
+    return this.evaluate(function() {
+        return document.querySelectorAll('ul.your-list li').length > 2;
     });
+}, function then() {
+    this.captureSelector('yoursitelist.png', 'ul.your-list');
 });
 
 casper.run();
@@ -1111,16 +1144,16 @@ casper.run();
 Example using the `onTimeout` callback:
 
 ```javascript
-casper.start('http://yoursite.tld/', function() {
-    this.waitFor(function() {
-        return this.evaluate(function() {
-            return document.querySelectorAll('ul.your-list li').length > 2;
-        });
-    }, function() {
-        this.captureSelector('yoursitelist.png', 'ul.your-list');
-    }, function() {
-        this.echo("I can't haz my screenshot.").exit();
+casper.start('http://yoursite.tld/');
+
+casper.waitFor(function check() {
+    return this.evaluate(function() {
+        return document.querySelectorAll('ul.your-list li').length > 2;
     });
+}, function then() {    // step to execute when check() is ok
+    this.captureSelector('yoursitelist.png', 'ul.your-list');
+}, function timeout() { // step to execute if check has failed
+    this.echo("I can't haz my screenshot.").exit();
 });
 
 casper.run();
@@ -1135,10 +1168,10 @@ remote DOM to process any next step. Uses
 **Example:**
 
 ```javascript
-casper.start('https://twitter.com/#!/n1k0', function() {
-    this.waitForSelector('.tweet-row', function() {
-        this.captureSelector('twitter.png', 'html');
-    });
+casper.start('https://twitter.com/#!/n1k0');
+
+casper.waitForSelector('.tweet-row', function() {
+    this.captureSelector('twitter.png', 'html');
 });
 
 casper.run();
@@ -1153,16 +1186,16 @@ exist in remote DOM to process a next step. Uses
 **Example:**
 
 ```javascript
-casper.start('http://foo.bar/', function() {
-    this.waitWhileSelector('.selector', function() {
-        this.echo('.selector is no more!');
-    });
+casper.start('http://foo.bar/');
+
+casper.waitWhileSelector('.selector', function() {
+    this.echo('.selector is no more!');
 });
 
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitForResource"><code>Casper#waitForResource(Function  testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="phantom_Casper_waitForResource"><code>Casper#waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Wait until a resource that matches the given `testFx` is loaded to
 process a next step. Uses [Casper.waitFor()](#phantom_Casper_waitFor).
@@ -1171,11 +1204,23 @@ process a next step. Uses [Casper.waitFor()](#phantom_Casper_waitFor).
 
 ```javascript
 casper.start('http://foo.bar/', function() {
-    this.waitForResource(function (resource) {
-        return resource.url.match("foobar.png");
-    }, function() {
-        this.echo('foobar.png is loaded');
-    });
+    this.waitForResource("foobar.png");
+});
+
+casper.then(function() {
+    this.echo('foobar.png has been loaded.');
+});
+
+casper.run();
+```
+
+Another way to write the exact same behavior:
+
+```javascript
+casper.start('http://foo.bar/');
+
+casper.waitForResource("foobar.png", function() {
+    this.echo('foobar.png has been loaded.');
 });
 
 casper.run();
