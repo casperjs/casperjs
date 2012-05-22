@@ -531,7 +531,12 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
             var method = (form.getAttribute('method') || "GET").toUpperCase();
             var action = form.getAttribute('action') || "unknown";
             __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
-            form.submit();
+            if (typeof form.submit === "function") {
+                form.submit();
+            } else {
+                // http://www.spiration.co.uk/post/1232/Submit-is-not-a-function
+                form.submit.click();
+            }
         }, { selector: selector });
     }
 };
