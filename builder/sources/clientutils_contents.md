@@ -15,7 +15,7 @@ utilities in the DOM of your favorite browser.
 
 Just drag this link
 <span class="label label-info"><a href="javascript:void(function()%7Bif(!document.getElementById('CasperUtils'))%7Bvar%20CasperUtils=document.createElement('script');CasperUtils.id='CasperUtils';CasperUtils.src='https://raw.github.com/n1k0/casperjs/master/modules/clientutils.js';document.documentElement.appendChild(CasperUtils);%7D%7D());">CasperJS utils</a></span>
-onto your favorites toobar; when clicking, a <code>\__utils__</code> object will
+onto your favorites toobar; when clicking, a <code>\_\_utils\__</code> object will
 be available within the console of your browser.
 
 <span class="label label-info">Note</span> CasperJS and PhantomJS being based
@@ -34,7 +34,7 @@ var base64;
 casper.start('http://foo.bar/', function() {
     base64 = this.evaluate(function() {
         return __utils__.encode("I've been a bit cryptic recently");
-    };
+    });
 });
 
 casper.run(function() {
@@ -51,7 +51,7 @@ var exists;
 casper.start('http://foo.bar/', function() {
     exists = this.evaluate(function() {
         return __utils__.exists('#some_id');
-    };
+    });
 });
 
 casper.run(function() {
@@ -71,7 +71,7 @@ casper.start('http://foo.bar/', function() {
         return Array.prototype.forEach.call(elements, function(e) {
             return e.getAttribute('href');
         });
-    };
+    });
 });
 
 casper.run(function() {
@@ -88,7 +88,7 @@ var href;
 casper.start('http://foo.bar/', function() {
     href = this.evaluate(function() {
         return __utils__.findOne('#my_id').getAttribute('href');
-    };
+    });
 });
 
 casper.run(function() {
@@ -108,7 +108,7 @@ casper.start('http://foo.bar/', function() {
     logo = this.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
         return __utils__.getBase64(imgUrl);
-    };
+    });
 });
 
 casper.run(function() {
@@ -130,7 +130,7 @@ casper.start('http://foo.bar/', function() {
     this.evaluate(function() {
         var imgUrl = document.querySelector('img.logo').getAttribute('src');
         console.log(__utils__.getBinary(imgUrl));
-    };
+    });
 });
 
 casper.run();
