@@ -2299,6 +2299,16 @@ remote DOM environment.
 casper.start('http://www.google.fr/', function() {
     this.test.assertExists('form[name="gs"]', 'google.fr has a form with name "gs"');
 });</code></pre>
+<h3 id="phantom_Casper_Tester_assertHttpStatus"><code>Tester#assertHttpStatus(Number status[, String message])</code></h3>
+
+<p>Asserts that current <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">HTTP status code</a>
+is the same as the one passed as argument.
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertHttpStatus(200, 'google.fr is up');
+});</code></pre>
 <h3 id="phantom_Casper_Tester_assertMatch"><code>Tester#assertMatch(mixed subject, RegExp pattern[, String message])</code></h3>
 
 <p>Asserts that a provided string matches a provided javascript <code>RegExp</code>
@@ -2458,6 +2468,7 @@ casper.run(function() {
 <li><a href="#phantom_Casper_Tester_assertEval"><code>assertEval()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertEvalEquals"><code>assertEvalEquals()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertExists"><code>assertExists()</code></a></li>
+<li><a href="#phantom_Casper_Tester_assertHttpStatus"><code>assertHttpStatus()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertMatch"><code>assertMatch()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertNot"><code>assertNot()</code></a></li>
 <li><a href="#phantom_Casper_Tester_assertNotEquals"><code>assertNotEquals()</code></a></li>

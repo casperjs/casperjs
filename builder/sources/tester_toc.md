@@ -8,6 +8,7 @@
 - [`assertEval()`](#phantom_Casper_Tester_assertEval)
 - [`assertEvalEquals()`](#phantom_Casper_Tester_assertEvalEquals)
 - [`assertExists()`](#phantom_Casper_Tester_assertExists)
+- [`assertHttpStatus()`](#phantom_Casper_Tester_assertHttpStatus)
 - [`assertMatch()`](#phantom_Casper_Tester_assertMatch)
 - [`assertNot()`](#phantom_Casper_Tester_assertNot)
 - [`assertNotEquals()`](#phantom_Casper_Tester_assertNotEquals)

@@ -82,6 +82,18 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
+<h3 id="phantom_Casper_Tester_assertHttpStatus"><code>Tester#assertHttpStatus(Number status[, String message])</code></h3>
+
+Asserts that current [HTTP status code](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
+is the same as the one passed as argument.
+
+```javascript
+var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertHttpStatus(200, 'google.fr is up');
+});
+```
+
 <h3 id="phantom_Casper_Tester_assertMatch"><code>Tester#assertMatch(mixed subject, RegExp pattern[, String message])</code></h3>
 
 Asserts that a provided string matches a provided javascript `RegExp`
