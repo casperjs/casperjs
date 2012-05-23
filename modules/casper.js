@@ -156,7 +156,6 @@ Casper.prototype.back = function back() {
  * @return string          Base64 encoded result
  */
 Casper.prototype.base64encode = function base64encode(url, method, data) {
-    this.injectClientUtils();
     return this.evaluate(function _evaluate(url, method, data) {
         return __utils__.getBase64(url, method, data);
     }, { url: url, method: method, data: data });
@@ -420,6 +419,9 @@ Casper.prototype.echo = function echo(text, style, pad) {
  * @see    WebPage#evaluate
  */
 Casper.prototype.evaluate = function evaluate(fn, context) {
+    // ensure client utils are always injected
+    this.injectClientUtils();
+    // function processing
     context = utils.isObject(context) ? context : {};
     var newFn = require('injector').create(fn).process(context);
     return this.page.evaluate(newFn);
@@ -628,7 +630,7 @@ Casper.prototype.getTitle = function getTitle() {
  *
  */
 Casper.prototype.injectClientUtils = function injectClientUtils() {
-    var clientUtilsInjected = this.evaluate(function() {
+    var clientUtilsInjected = this.page.evaluate(function() {
         return typeof __utils__ === "object";
     });
     if (true === clientUtilsInjected) {
