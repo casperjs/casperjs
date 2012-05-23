@@ -1,6 +1,12 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.6.9
+------------------
+
+- fixed [#114](https://github.com/n1k0/casperjs/issues/114) - ensured client-side utils are injected before any `evaluate()` call
+- fixed [#117](https://github.com/n1k0/casperjs/issues/117) - `fill()` coulnd't `submit()` a form with a submit input named *submit*
+
 2012-05-20, v0.6.8
 ------------------
 
