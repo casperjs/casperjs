@@ -67,8 +67,8 @@ var Tester = function Tester(casper, options) {
 
     // events
     casper.on('step.error', function onStepError(e) {
-        casper.test.fail(e);
-        casper.test.done();
+        this.test.uncaughtError(e, this.test.currentTestFile);
+        this.test.done();
     });
 
     this.on('success', function onSuccess(success) {
@@ -87,19 +87,9 @@ var Tester = function Tester(casper, options) {
      * @param  Boolean  subject
      * @param  String   message  Test description
      */
-    this.assert = this.assertTrue = function assert(subject, message) {
-        var status = this.options.passText, eventName;
-        if (subject === true) {
-            eventName = 'success';
-            style = 'INFO';
-            this.testResults.passed++;
-        } else {
-            eventName = 'fail';
-            status = this.options.failText;
-            style = 'RED_BAR';
-            this.testResults.failed++;
-        }
-        this.emit(eventName, {
+    this.assert = this.assertTrue = function assert(subject, message, context) {
+        this.processAssertionResult(utils.mergeObjects({
+            success: subject === true,
             type:    "assert",
             details: "test failed",
             message: message,
@@ -107,8 +97,7 @@ var Tester = function Tester(casper, options) {
             values:  {
                 subject: subject
             }
-        });
-        casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
+        }, context || {}));
     };
 
     /**
@@ -414,7 +403,7 @@ var Tester = function Tester(casper, options) {
         } catch (e) {
             // do not abort the whole suite, just fail fast displaying the
             // caught error and process next suite
-            this.fail(e);
+            this.uncaughtError(e, file);
             this.done();
         }
     };
@@ -424,8 +413,8 @@ var Tester = function Tester(casper, options) {
      *
      * @param  String  message
      */
-    this.fail = function fail(message) {
-        this.assert(false, message);
+    this.fail = function fail(message, context) {
+        this.assert(false, message, context);
     };
 
     /**
@@ -486,6 +475,28 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
+     * Processes an assertion result.
+     *
+     * @param  Object  result  An assertion result object
+     */
+    this.processAssertionResult = function processAssertionResult(result) {
+        var eventName, style, status;
+        if (result.success === true) {
+            eventName = 'success';
+            style = 'INFO';
+            status = this.options.passText;
+            this.testResults.passed++;
+        } else {
+            eventName = 'fail';
+            style = 'RED_BAR';
+            status = this.options.failText;
+            this.testResults.failed++;
+        }
+        this.emit(eventName, result);
+        casper.echo([this.colorize(status, style), this.formatMessage(result.message)].join(' '));
+    };
+
+    /**
      * Renders a detailed report for each failed test.
      *
      * @param  Array  failures
@@ -496,16 +507,12 @@ var Tester = function Tester(casper, options) {
         }
         casper.echo(f("\nDetails for the %d failed test%s:\n", failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
         failures.forEach(function _forEach(failure) {
-            var message, line;
-            if (utils.isType(failure.message, "object") && failure.message.stack) {
-                line = failure.message.line ? failure.message.line : 0;
-                message = failure.message.stack;
-            } else {
-                line = 0;
-                message = failure.message;
-            }
+            var type, message, line;
+            type = failure.type || "unknown";
+            line = ~~failure.line;
+            message = failure.message;
             casper.echo(f('In %s:%d', failure.file, line));
-            casper.echo(f('    %s', message), "COMMENT");
+            casper.echo(f('   %s: %s', type, message || "(no message was entered)"), "COMMENT");
         });
     };
 
@@ -598,7 +605,7 @@ var Tester = function Tester(casper, options) {
         try {
             this.exec(testFile);
         } catch (e) {
-            this.fail(e);
+            this.uncaughtError(e, testFile);
             this.done();
         }
     };
@@ -629,6 +636,22 @@ var Tester = function Tester(casper, options) {
             return true;
         }
         return v1 === v2;
+    };
+
+    /**
+     * Processes an error caught while running tests contained in a given test
+     * file.
+     *
+     * @param  Error|String  error  The error
+     * @param  String        file   Test file where the error occured
+     */
+    this.uncaughtError = function uncaughtError(error, file) {
+        this.processAssertionResult({
+            success: false,
+            type: "uncaughtError",
+            file: this.currentTestFile,
+            message: utils.isObject(error) ? error.message : error
+        });
     };
 };
 
