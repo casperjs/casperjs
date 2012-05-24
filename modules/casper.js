@@ -350,10 +350,10 @@ Casper.prototype.die = function die(message, status) {
  * @param  String  targetPath  The destination file path
  * @return Casper
  */
-Casper.prototype.download = function download(url, targetPath) {
+Casper.prototype.download = function download(url, targetPath, method, data) {
     var cu = require('clientutils').create();
     try {
-        fs.write(targetPath, cu.decode(this.base64encode(url)), 'w');
+        fs.write(targetPath, cu.decode(this.base64encode(url, method, data)), 'w');
         this.emit('downloaded.file', targetPath);
         this.log(f("Downloaded and saved resource in %s", targetPath));
     } catch (e) {
