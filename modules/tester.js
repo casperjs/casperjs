@@ -76,16 +76,25 @@ var Tester = function Tester(casper, options) {
     });
 
     this.on('fail', function onFail(failure) {
+        // export
         this.exporter.addFailure(fs.absolute(failure.file), failure.message, failure.details || "test failed", failure.type || "unknown");
         this.testResults.failures.push(failure);
+        // special printing
+        switch (failure.type) {
+            case 'assertEquals':
+                this.comment('   got:      ' + utils.serialize(failure.values.subject));
+                this.comment('   expected: ' + utils.serialize(failure.values.expected));
+                break;
+        }
     });
 
     // methods
     /**
      * Asserts that a condition strictly resolves to true.
      *
-     * @param  Boolean  subject
-     * @param  String   message  Test description
+     * @param  Boolean      subject
+     * @param  String       message  Test description
+     * @param  Object|null  context  Assertion context object
      */
     this.assert = this.assertTrue = function assert(subject, message, context) {
         this.processAssertionResult(utils.mergeObjects({
@@ -103,34 +112,23 @@ var Tester = function Tester(casper, options) {
     /**
      * Asserts that two values are strictly equals.
      *
-     * @param  Mixed   subject    The value to test
-     * @param  Mixed   expected   The expected value
-     * @param  String  message    Test description
+     * @param  Mixed        subject   The value to test
+     * @param  Mixed        expected  The expected value
+     * @param  String       message   Test description
+     * @param  Object|null  context   Assertion context object
      */
-    this.assertEquals = this.assertEqual = function assertEquals(subject, expected, message) {
-        var eventName;
-        message = message || "";
-        if (this.testEquals(subject, expected)) {
-            eventName = "success";
-            casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
-            this.testResults.passed++;
-        } else {
-            eventName = "fail";
-            casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-            this.comment('   got:      ' + utils.serialize(subject));
-            this.comment('   expected: ' + utils.serialize(expected));
-            this.testResults.failed++;
-        }
-        this.emit(eventName, {
-            type:   "assertEquals",
-            message: message,
+    this.assertEquals = this.assertEqual = function assertEquals(subject, expected, message, context) {
+        this.processAssertionResult(utils.mergeObjects({
+            success: this.testEquals(subject, expected),
+            type:    "assertEquals",
             details: f("test failed; expected: %s; got: %s", expected, subject),
+            message: message,
             file:    this.currentTestFile,
             values:  {
                 subject:  subject,
                 expected: expected
             }
-        });
+        }, context || {}));
     };
 
     /**
@@ -169,22 +167,22 @@ var Tester = function Tester(casper, options) {
     /**
      * Asserts that a code evaluation in remote DOM resolves to true.
      *
-     * @param  Function  fn         A function to be evaluated in remote DOM
-     * @param  String    message    Test description
-     * @param  Object    context    Object containing the parameters to inject into the function (optional)
+     * @param  Function  fn       A function to be evaluated in remote DOM
+     * @param  String    message  Test description
+     * @param  Object    params   Object containing the parameters to inject into the function (optional)
      */
-    this.assertEval = function assertEval(fn, message, context) {
-        return this.assert(casper.evaluate(fn, context), message);
+    this.assertEval = function assertEval(fn, message, params, context) {
+        return this.assert(casper.evaluate(fn, params), message, context);
     };
 
     /**
      * Asserts that the result of a code evaluation in remote DOM equals
      * an expected value.
      *
-     * @param  Function fn         The function to be evaluated in remote DOM
-     * @param  Boolean  expected   The expected value
-     * @param  String   message    Test description
-     * @param  Object   context    Object containing the parameters to inject into the function (optional)
+     * @param  Function  fn        The function to be evaluated in remote DOM
+     * @param  Boolean   expected  The expected value
+     * @param  String    message   Test description
+     * @param  Object    params    Object containing the parameters to inject into the function (optional)
      */
     this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, context) {
         return this.assertEquals(casper.evaluate(fn, context), expected, message);
@@ -414,7 +412,13 @@ var Tester = function Tester(casper, options) {
      * @param  String  message
      */
     this.fail = function fail(message, context) {
-        this.assert(false, message, context);
+        this.processAssertionResult(utils.mergeObjects({
+            success: false,
+            type:    "fail",
+            details: "explicit call to fail()",
+            message: message,
+            file:    this.currentTestFile
+        }, context || {}));
     };
 
     /**
@@ -470,8 +474,14 @@ var Tester = function Tester(casper, options) {
      *
      * @param  String  message
      */
-    this.pass = function pass(message) {
-        this.assert(true, message);
+    this.pass = function pass(message, context) {
+        this.processAssertionResult(utils.mergeObjects({
+            success: true,
+            type:    "pass",
+            details: "explicit call to pass()",
+            message: message,
+            file:    this.currentTestFile
+        }, context || {}));
     };
 
     /**
