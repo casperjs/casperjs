@@ -82,6 +82,7 @@ var Tester = function Tester(casper, options) {
         // special printing
         switch (failure.type) {
             case 'assertEquals':
+            case 'assertEvalEquals':
                 this.comment('   got:      ' + utils.serialize(failure.values.subject));
                 this.comment('   expected: ' + utils.serialize(failure.values.expected));
                 break;
@@ -160,25 +161,47 @@ var Tester = function Tester(casper, options) {
     /**
      * Asserts that a code evaluation in remote DOM resolves to true.
      *
-     * @param  Function  fn       A function to be evaluated in remote DOM
-     * @param  String    message  Test description
-     * @param  Object    params   Object containing the parameters to inject into the function (optional)
+     * @param  Function     fn       A function to be evaluated in remote DOM
+     * @param  String       message  Test description
+     * @param  Object       params   Object containing the parameters to inject into the function (optional)
+     * @param  Object|null  context  Assertion context object (Optional)
      */
-    this.assertEval = function assertEval(fn, message, params, context) {
-        return this.assert(casper.evaluate(fn, params), message, context);
+    this.assertEval = this.assertEvaluate = function assertEval(fn, message, params, context) {
+        return this.processAssertionResult(utils.mergeObjects({
+            success: casper.evaluate(fn, params),
+            type:    "assertEval",
+            details: "function didn't evaluate to true",
+            message: message,
+            file:    this.currentTestFile,
+            values:  {
+                fn:  fn,
+                params: params
+            }
+        }, context || {}));
     };
 
     /**
      * Asserts that the result of a code evaluation in remote DOM equals
      * an expected value.
      *
-     * @param  Function  fn        The function to be evaluated in remote DOM
-     * @param  Boolean   expected  The expected value
-     * @param  String    message   Test description
-     * @param  Object    params    Object containing the parameters to inject into the function (optional)
+     * @param  Function     fn        The function to be evaluated in remote DOM
+     * @param  Boolean      expected  The expected value
+     * @param  String|null  message   Test description
+     * @param  Object|null  params    Object containing the parameters to inject into the function (optional)
+     * @param  Object|null  context   Assertion context object (Optional)
      */
-    this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, context) {
-        return this.assertEquals(casper.evaluate(fn, context), expected, message);
+    this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, params, context) {
+        return this.processAssertionResult(utils.mergeObjects({
+            success: this.testEquals(casper.evaluate(fn, params), expected),
+            type:    "assertEvalEquals",
+            details: f("test failed; expected: %s; got: %s", expected, subject),
+            message: message,
+            file:    this.currentTestFile,
+            values:  {
+                subject:  subject,
+                expected: expected
+            }
+        }, context || {}));
     };
 
     /**
