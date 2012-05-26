@@ -85,6 +85,10 @@ var Tester = function Tester(casper, options) {
                 this.comment('   got:      ' + utils.serialize(failure.values.subject));
                 this.comment('   expected: ' + utils.serialize(failure.values.expected));
                 break;
+            case 'assertNotEquals':
+                this.comment('   got:      ' + utils.serialize(failure.values.subject));
+                this.comment('   shouldnt: ' + utils.serialize(failure.values.shouldnt));
+                break;
         }
     });
 
@@ -114,11 +118,11 @@ var Tester = function Tester(casper, options) {
      *
      * @param  Mixed        subject   The value to test
      * @param  Mixed        expected  The expected value
-     * @param  String       message   Test description
-     * @param  Object|null  context   Assertion context object
+     * @param  String       message   Test description (Optional)
+     * @param  Object|null  context   Assertion context object (Optional)
      */
     this.assertEquals = this.assertEqual = function assertEquals(subject, expected, message, context) {
-        this.processAssertionResult(utils.mergeObjects({
+        return this.processAssertionResult(utils.mergeObjects({
             success: this.testEquals(subject, expected),
             type:    "assertEquals",
             details: f("test failed; expected: %s; got: %s", expected, subject),
@@ -134,34 +138,23 @@ var Tester = function Tester(casper, options) {
     /**
      * Asserts that two values are strictly not equals.
      *
-     * @param  Mixed   subject    The value to test
-     * @param  Mixed   expected   The unwanted value
-     * @param  String  message    Test description
+     * @param  Mixed        subject   The value to test
+     * @param  Mixed        expected  The unwanted value
+     * @param  String|null  message   Test description (Optional)
+     * @param  Object|null  context   Assertion context object (Optional)
      */
-    this.assertNotEquals = function assertNotEquals(subject, shouldnt, message) {
-        var eventName;
-        message = message || "";
-        if (!this.testEquals(subject, shouldnt)) {
-            eventName = "success";
-            casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
-            this.testResults.passed++;
-        } else {
-            eventName = "fail";
-            casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-            this.comment('   got:      ' + utils.serialize(subject));
-            this.comment('   shouldnt: ' + utils.serialize(shouldnt));
-            this.testResults.failed++;
-        }
-        this.emit(eventName, {
-            type:   "assertNotEquals",
+    this.assertNotEquals = function assertNotEquals(subject, shouldnt, message, context) {
+        return this.processAssertionResult(utils.mergeObjects({
+            success: !this.testEquals(subject, shouldnt),
+            type:    "assertNotEquals",
+            details: f("test failed; shouldn't be %s, but was.", shouldnt),
             message: message,
-            details: f("test failed; shouldnt: %s; got: %s", shouldnt, subject),
             file:    this.currentTestFile,
             values:  {
                 subject:  subject,
                 shouldnt: shouldnt
             }
-        });
+        }, context || {}));
     };
 
     /**
@@ -412,7 +405,7 @@ var Tester = function Tester(casper, options) {
      * @param  String  message
      */
     this.fail = function fail(message, context) {
-        this.processAssertionResult(utils.mergeObjects({
+        return this.processAssertionResult(utils.mergeObjects({
             success: false,
             type:    "fail",
             details: "explicit call to fail()",
@@ -485,9 +478,11 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
-     * Processes an assertion result.
+     * Processes an assertion result by emitting the appropriate event and
+     * printing result onto the console.
      *
      * @param  Object  result  An assertion result object
+     * @return Object  The passed assertion result Object
      */
     this.processAssertionResult = function processAssertionResult(result) {
         var eventName, style, status;
@@ -502,8 +497,9 @@ var Tester = function Tester(casper, options) {
             status = this.options.failText;
             this.testResults.failed++;
         }
-        this.emit(eventName, result);
         casper.echo([this.colorize(status, style), this.formatMessage(result.message)].join(' '));
+        this.emit(eventName, result);
+        return result;
     };
 
     /**
