@@ -656,7 +656,10 @@ var Tester = function Tester(casper, options) {
             success: false,
             type: "uncaughtError",
             file: this.currentTestFile,
-            message: utils.isObject(error) ? error.message : error
+            message: utils.isObject(error) ? error.message : error,
+            values: {
+                error: error
+            }
         });
     };
 };
