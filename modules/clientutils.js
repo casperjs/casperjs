@@ -546,8 +546,14 @@
          */
         this.visible = function visible(selector) {
             try {
-                var el = this.findOne(selector);
-                return el && el.style.visibility !== 'hidden' && el.offsetHeight > 0 && el.offsetWidth > 0;
+                var comp,
+                    el = this.findOne(selector);
+
+                if (el) {
+                    comp = window.getComputedStyle(el, null);
+                    return comp.visibility !== 'hidden' && comp.display !== 'none' && el.offsetHeight > 0 && el.offsetWidth > 0;
+                }
+                return false;
             } catch (e) {
                 return false;
             }
