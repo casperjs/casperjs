@@ -474,9 +474,11 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_download"><code>Casper#download(String url, String target)</code></h3>
+<h3 id="phantom_Casper_download"><code>Casper#download(String url, String target[, String method, Object data])</code></h3>
 
-Saves a remote resource onto the filesystem.
+Saves a remote resource onto the filesystem. You can optionally set the HTTP
+method using the `method` argument, and pass request arguments through the `data`
+object (see [base64encode](#phantom_Casper_base64encode)).
 
 ```javascript
 casper.start('http://www.google.fr/', function() {

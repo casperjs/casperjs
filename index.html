@@ -753,9 +753,11 @@ code.
 });
 
 casper.run();</code></pre>
-<h3 id="phantom_Casper_download"><code>Casper#download(String url, String target)</code></h3>
+<h3 id="phantom_Casper_download"><code>Casper#download(String url, String target[, String method, Object data])</code></h3>
 
-<p>Saves a remote resource onto the filesystem.
+<p>Saves a remote resource onto the filesystem. You can optionally set the HTTP
+method using the <code>method</code> argument, and pass request arguments through the <code>data</code>
+object (see <a href="#phantom_Casper_base64encode">base64encode</a>).
 
 </p>
 <pre><code class="javascript">casper.start('http://www.google.fr/', function() {
@@ -3235,7 +3237,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=iFxIuT39UF0.fr./sv=1/am=!tbK8W_8mwqaIodoNDQ/d=1/rs=AItRSTM2pJNlVPibx3u4Y3bl8rlzWoqkWw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=A3bb517OCjM.fr./sv=1/am=!gFuVl93svF6I1poz5g/d=1/rs=AItRSTPEA-Ahw_-gX7xWdQPOaFAPQcbJfQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>
