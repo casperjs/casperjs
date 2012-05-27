@@ -170,10 +170,9 @@ var Tester = function Tester(casper, options) {
      * @param  Function     fn       A function to be evaluated in remote DOM
      * @param  String       message  Test description
      * @param  Object       params   Object containing the parameters to inject into the function (optional)
-     * @param  Object|null  context  Assertion context object (Optional)
      * @return Object                An assertion result object
      */
-    this.assertEval = this.assertEvaluate = function assertEval(fn, message, params, context) {
+    this.assertEval = this.assertEvaluate = function assertEval(fn, message, params) {
         return this.assert(casper.evaluate(fn, params), message, {
             type:    "assertEval",
             details: "Function didn't evaluate to true"
@@ -188,10 +187,9 @@ var Tester = function Tester(casper, options) {
      * @param  Boolean      expected  The expected value
      * @param  String|null  message   Test description
      * @param  Object|null  params    Object containing the parameters to inject into the function (optional)
-     * @param  Object|null  context   Assertion context object (Optional)
      * @return Object                 An assertion result object
      */
-    this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, params, context) {
+    this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, params) {
         var subject = casper.evaluate(fn, params);
         return this.assertEquals(subject, expected, message, {
             type:    "assertEvalEquals",
