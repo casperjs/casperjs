@@ -66,7 +66,6 @@ var Casper = function Casper(options) {
     // default options
     this.defaults = {
         clientScripts:       [],
-        faultTolerant:       true,
         logLevel:            "error",
         httpStatusHandlers:  {},
         onAlert:             null,
@@ -226,11 +225,7 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         clearInterval(self.checker);
         self.emit('run.complete');
         if (utils.isFunction(onComplete)) {
-            try {
-                onComplete.call(self, self);
-            } catch (err) {
-                self.log("Could not complete final step: " + err, "error");
-            }
+            onComplete.call(self, self);
         } else {
             // default behavior is to exit
             self.exit();
@@ -375,9 +370,11 @@ Casper.prototype.each = function each(array, fn) {
         this.log("each() only works with arrays", "error");
         return this;
     }
-    array.forEach.call(this, function _forEach(item, i) {
-        fn.call(this, this, item, i);
-    });
+    (function _each(self) {
+        array.forEach(function _forEach(item, i) {
+            fn.call(self, self, item, i);
+        });
+    })(this);
     return this;
 };
 
@@ -841,16 +838,7 @@ Casper.prototype.runStep = function runStep(step) {
         }, this.options.stepTimeout, this, new Date().getTime(), this.step);
     }
     this.emit('step.start', step);
-    try {
-        stepResult = step.call(this, this);
-    } catch (e) {
-        this.emit('step.error', e);
-        if (this.options.faultTolerant) {
-            this.log("Step error: " + e, "error");
-        } else {
-            throw e;
-        }
-    }
+    stepResult = step.call(this, this);
     if (utils.isFunction(this.options.onStepComplete)) {
         this.options.onStepComplete.call(this, this, stepResult);
     }

@@ -1,11 +1,5 @@
 var failed = [];
-
-var casper = require('casper').create({
-    onStepTimeout: function(self) {
-        failed.push(self.requestUrl);
-    }
-});
-
+var start = null;
 var links = [
     'http://google.com/',
     'http://akei.com/',
@@ -14,25 +8,38 @@ var links = [
     'http://cdiscount.fr/'
 ];
 
+var casper = require('casper').create({
+    onStepTimeout: function() {
+        failed.push(this.requestUrl);
+        this.test.fail(this.requestUrl + " loads in less than " + timeout + "ms.");
+    }
+});
+
+casper.on('load.finished', function() {
+    this.echo(this.requestUrl + ' loaded in ' + (new Date() - start) + 'ms', 'PARAMETER');
+});
+
 var timeout = ~~casper.cli.get(0);
 casper.options.stepTimeout = timeout > 0 ? timeout : 1000;
 
-casper.echo('Testing with timeout=' + casper.options.stepTimeout + 'ms.');
+casper.echo('Testing with timeout=' + casper.options.stepTimeout + 'ms, please be patient.');
 
 casper.start();
 
-casper.each(links, function(self, link) {
-    self.test.comment('Adding ' + link + ' to test suite');
-    self.thenOpen(link, function(self) {
-        var testStatus = self.test.pass;
-        if (failed.indexOf(self.requestUrl) > -1) {
-            self.test.fail(self.requestUrl);
-        } else {
-            self.test.pass(self.requestUrl);
+casper.each(links, function(casper, link) {
+    this.then(function() {
+        this.test.comment('Loading ' + link);
+        start = new Date();
+        this.open(link);
+    });
+    this.then(function() {
+        var message = this.requestUrl + " loads in less than " + timeout + "ms.";
+        if (failed.indexOf(this.requestUrl) === -1) {
+            this.test.pass(message);
         }
     });
 });
 
-casper.run(function(self) {
-    self.test.renderResults(true);
+casper.run(function() {
+    this.test.renderResults(true);
 });

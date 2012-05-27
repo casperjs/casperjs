@@ -4,6 +4,7 @@ if (phantom.casperArgs.args.length !== 1) {
 }
 
 var casper = require('casper').create({
+    logLevel: "debug",
     verbose: true
 });
 
@@ -30,38 +31,38 @@ var links = [
 ];
 
 // Just opens the page and prints the title
-var start = function(self, link) {
-    self.start(link, function(self) {
-        self.echo('Page title: ' + self.getTitle());
+var start = function(link) {
+    this.start(link, function() {
+        this.echo('Page title: ' + this.getTitle());
     });
 };
 
 // Get the links, and add them to the links array
 // (It could be done all in one step, but it is intentionally splitted)
 var addLinks = function(link) {
-    this.then(function(self) {
-        var found = self.evaluate(searchLinks);
-        self.echo(found.length + " links found on " + link);
+    this.then(function() {
+        var found = this.evaluate(searchLinks);
+        this.echo(found.length + " links found on " + link);
         links = links.concat(found);
     });
 };
 
-casper.start().then(function(self) {
-    self.echo('Starting');
+casper.start().then(function() {
+    this.echo('Starting');
 });
 
 var currentLink = 0;
 
 // As long as it has a next link, and is under the maximum limit, will keep running
-function check(self) {
+function check() {
     if (links[currentLink] && currentLink < upTo) {
-        self.echo('--- Link ' + currentLink + ' ---');
-        start(self, links[currentLink]);
-        addLinks.call(self, links[currentLink]);
+        this.echo('--- Link ' + currentLink + ' ---');
+        start.call(this, links[currentLink]);
+        addLinks.call(this, links[currentLink]);
         currentLink++;
-        self.run(check);
+        this.run(check);
     } else {
-        self.echo('All done.').exit();
+        this.echo('All done.').exit();
     }
 }
 

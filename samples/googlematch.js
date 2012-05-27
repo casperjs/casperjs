@@ -16,7 +16,7 @@ var casper = new require('casper').create({
 casper.fetchScore = function() {
     return this.evaluate(function() {
         var result = document.querySelector('#resultStats').innerText;
-        return parseInt(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''));
+        return parseInt(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''), 10);
     });
 };
 
@@ -31,24 +31,31 @@ casper.echo('Let the match begin!');
 
 casper.start("http://google.fr/");
 
-casper.each(terms, function(self, term, i) {
-    self.then(function(self) {
-        self.fill('form[action="/search"]', { q: term }, true);
-    }).then(function(self) {
-        var score = self.fetchScore();
+casper.each(terms, function(casper, term, i) {
+    this.echo('Fecthing score for ' + term);
+    this.then(function() {
+        this.fill('form[action="/search"]', { q: term }, true);
+    });
+    this.then(function() {
+        var score = this.fetchScore();
         scores.push({
             term:  term,
             score: score
         });
-        self.echo(term + ': ' + score);
+        this.echo(term + ': ' + score);
     });
 });
 
-casper.run(function(self) {
+casper.run(function() {
+    if (scores.length === 0) {
+        this.echo('No result found').exit();
+    }
     var winner = scores[0];
-    for (var i = 0, len = scores.length; i < len; i++)
-      if (scores[i].score > winner.score)
-        winner = scores[i];
-    self.echo('winner is "' + winner.term + '" with ' + winner.score + ' results');
-    self.exit();
+    scores.forEach(function(score) {
+        if (score.score > winner.score) {
+            winner = score.score;
+        }
+    });
+    this.echo('winner is "' + winner.term + '" with ' + winner.score + ' results');
+    this.exit();
 });

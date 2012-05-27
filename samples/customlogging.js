@@ -31,6 +31,6 @@ var casper = require('casper').create({
 casper.logLevels = ['verbose'].concat(casper.logLevels);
 
 // test our new logger with google
-casper.start('http://www.google.com/').run(function(self) {
-    self.exit();
+casper.start('http://www.google.com/').run(function() {
+    this.exit();
 });
