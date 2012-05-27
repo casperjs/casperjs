@@ -226,11 +226,7 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         clearInterval(self.checker);
         self.emit('run.complete');
         if (utils.isFunction(onComplete)) {
-            try {
-                onComplete.call(self, self);
-            } catch (err) {
-                self.log("Could not complete final step: " + err, "error");
-            }
+            onComplete.call(self, self);
         } else {
             // default behavior is to exit
             self.exit();
@@ -375,9 +371,11 @@ Casper.prototype.each = function each(array, fn) {
         this.log("each() only works with arrays", "error");
         return this;
     }
-    array.forEach.call(this, function _forEach(item, i) {
-        fn.call(this, this, item, i);
-    });
+    (function _each(self) {
+        array.forEach(function _forEach(item, i) {
+            fn.call(self, self, item, i);
+        });
+    })(this);
     return this;
 };
 
