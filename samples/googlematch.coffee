@@ -35,7 +35,7 @@ casper.each terms, (self, term) ->
     @then ->
         score = @fetchScore()
         scores.push term: term, score: score
-        self.echo "#{term}: #{score}"
+        @echo "#{term}: #{score}"
 
 casper.run ->
     winner = scores[0]

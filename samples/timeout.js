@@ -15,8 +15,8 @@
  * YES!
  */
 var casper = require('casper').create({
-    onTimeout: function(self) {
-        self.echo('NOPE.', 'RED_BAR').exit();
+    onTimeout: function() {
+        this.echo('NOPE.', 'RED_BAR').exit();
     }
 });
 
@@ -30,8 +30,8 @@ if (timeout < 1) {
 casper.echo('Will google.com load in less than ' + timeout + 'ms?');
 casper.options.timeout = timeout;
 
-casper.start('http://www.google.com/', function(self) {
-    self.echo('YES!', 'GREEN_BAR').exit();
+casper.start('http://www.google.com/', function() {
+    this.echo('YES!', 'GREEN_BAR').exit();
 });
 
 casper.run();
