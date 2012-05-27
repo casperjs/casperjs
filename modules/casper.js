@@ -66,7 +66,6 @@ var Casper = function Casper(options) {
     // default options
     this.defaults = {
         clientScripts:       [],
-        faultTolerant:       true,
         logLevel:            "error",
         httpStatusHandlers:  {},
         onAlert:             null,
@@ -839,16 +838,7 @@ Casper.prototype.runStep = function runStep(step) {
         }, this.options.stepTimeout, this, new Date().getTime(), this.step);
     }
     this.emit('step.start', step);
-    try {
-        stepResult = step.call(this, this);
-    } catch (e) {
-        this.emit('step.error', e);
-        if (this.options.faultTolerant) {
-            this.log("Step error: " + e, "error");
-        } else {
-            throw e;
-        }
-    }
+    stepResult = step.call(this, this);
     if (utils.isFunction(this.options.onStepComplete)) {
         this.options.onStepComplete.call(this, this, stepResult);
     }
