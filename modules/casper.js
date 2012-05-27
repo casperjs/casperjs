@@ -746,6 +746,7 @@ Casper.prototype.open = function open(location, settings) {
         operation: settings.method,
         data:      settings.data
     }, this.page.settings);
+    this.resources = [];
     return this;
 };
 
@@ -775,17 +776,18 @@ Casper.prototype.resourceExists = function resourceExists(test) {
     var testFn;
     switch (utils.betterTypeOf(test)) {
         case "string":
-            testFn = function _test(res) {
+            testFn = function _testResourceExists_String(res) {
                 return res.url.search(test) !== -1;
             };
             break;
         case "regexp":
-            testFn = function _test(res) {
+            testFn = function _testResourceExists_Regexp(res) {
                 return test.test(res.url);
             };
             break;
         case "function":
             testFn = test;
+            testFn.name = "_testResourceExists_Function";
             break;
         default:
             throw new CasperError("Invalid type");
@@ -1299,7 +1301,6 @@ function createPage(casper) {
     };
     page.onLoadStarted = function onLoadStarted() {
         casper.loadInProgress = true;
-        casper.resources = [];
         casper.emit('load.started');
     };
     page.onLoadFinished = function onLoadFinished(status) {
