@@ -16,7 +16,7 @@ var casper = new require('casper').create({
 casper.fetchScore = function() {
     return this.evaluate(function() {
         var result = document.querySelector('#resultStats').innerText;
-        return ~~(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''));
+        return parseInt(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''));
     });
 };
 
@@ -45,10 +45,10 @@ casper.each(terms, function(self, term, i) {
 });
 
 casper.run(function(self) {
-    scores.sort(function(a, b) {
-        return b.score - a.score;
-    });
     var winner = scores[0];
+    for (var i = 0, len = scores.length; i < len; i++)
+      if (scores[i].score > winner.score)
+        winner = scores[i];
     self.echo('winner is "' + winner.term + '" with ' + winner.score + ' results');
     self.exit();
 });
