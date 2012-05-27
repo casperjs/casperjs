@@ -36,19 +36,6 @@ The `verbose` setting will tell Casper to write every logged message at the
 `logLevel` logging level onto the standard output, so you'll be able to trace
 every step made.
 
-Another useful setting is the `faultTolerant` one; by default, CasperJS will
-not fail when any uncaught exception is thrown during any navigation step
-execution; if you want to disable this behavior, create your casper instance
-that way:
-
-```javascript
-var casper = require('casper').create({
-    verbose: true,
-    logLevel: "debug",
-    faultTolerant: false
-});
-```
-
 <span class="label label-warning">Warning</span> Output will then be pretty
 verbose, and will potentially display sensitive informations onto the console.
 **Use with care on production.**

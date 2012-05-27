@@ -54,15 +54,6 @@ All the available options are detailed below:
       </td>
     </tr>
     <tr>
-      <td><code>faultTolerant</code></td>
-      <td><code>Boolean</code></td>
-      <td><code>true</code></td>
-      <td>
-        Catch and log exceptions when executing steps in a
-        non-blocking fashion
-      </td>
-    </tr>
-    <tr>
       <td><code>httpStatusHandlers</code></td>
       <td><code>Object</code></td>
       <td><code>{}</code></td>

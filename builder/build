@@ -6,8 +6,7 @@ phantom.casperPath = fs.workingDirectory + "/../..";
 phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 
 var casper = require("casper").create({
-    verbose: true,
-    faultTolerant: false
+    verbose: true
 });
 var marked = require('./lib/marked');
 var config = JSON.parse(fs.read("config.json"));
