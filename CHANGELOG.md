@@ -1,14 +1,16 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.6.9
+2012-05-29, v0.6.9
 ------------------
 
+- **BC BREAK:** PhantomJS 1.5 is now the minimal PhantomJS version supported.
 - fixed [#114](https://github.com/n1k0/casperjs/issues/114) - ensured client-side utils are injected before any `evaluate()` call
 - merged [#89](https://github.com/n1k0/casperjs/pull/89) - Support for more mouse events (@nrabinowitz)
+- [added a new `error` event, better error reporting](https://github.com/n1k0/casperjs/commit/2e6988ae821b3251e063d11ba28af59b0683852a)
 - fixed [#117](https://github.com/n1k0/casperjs/issues/117) - `fill()` coulnd't `submit()` a form with a submit input named *submit*
 - merged [#122](https://github.com/n1k0/casperjs/pull/122) - allow downloads to be triggered by more than just `GET` requests
-- closed [#57](https://github.com/n1k0/casperjs/issues/57) - added context to emitted test events
+- closed [#57](https://github.com/n1k0/casperjs/issues/57) - added context to emitted test events + complete assertion framework refactor
 - fixed loaded resources array is now reset adequately [reference discussion](https://groups.google.com/forum/?hl=fr?fromgroups#!topic/casperjs/TCkNzrj1IoA)
 - fixed incomplete error message logged when passed an erroneous selector (xpath and css)
 
