@@ -742,11 +742,6 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String <a href="#selectors">selector</a>)</code></h3>
-
-<span class="label label-warning">Warning</span> This method has been deprecated since 0.6. Use
-[`Casper.click()`](#phantom_Casper_click) instead.
-
 <h3 id="phantom_Casper_open"><code>Casper#open(String location, Object Settings)</code></h3>
 
 Performs an HTTP request for opening a given location. You can forge
