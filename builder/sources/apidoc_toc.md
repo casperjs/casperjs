@@ -26,6 +26,7 @@
 - [`getCurrentUrl()`](#phantom_Casper_getCurrentUrl)
 - [`getGlobal()`](#phantom_Casper_getGlobal)
 - [`getTitle()`](#phantom_Casper_getTitle)
+- [`mouseEvent()`](#phantom_Casper_mouseEvent)
 - [`open()`](#phantom_Casper_open)
 - [`repeat()`](#phantom_Casper_repeat)
 - [`resourceExists()`](#phantom_Casper_resourceExists)

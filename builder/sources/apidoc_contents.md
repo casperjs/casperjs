@@ -742,6 +742,22 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
+<h3 id="phantom_Casper_mouseEvent"><code>Casper#mouseEvent(String type, String <a href="#selectors">selector</a>)</code></h3>
+
+Trigger a mouse event on the first element found matching the provided selector.
+
+Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover` and `mouseout`.
+
+**Example:**
+
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.mouseEvent('click', 'h2 a');
+});
+
+casper.run();
+```
+
 <h3 id="phantom_Casper_open"><code>Casper#open(String location, Object Settings)</code></h3>
 
 Performs an HTTP request for opening a given location. You can forge

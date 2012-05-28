@@ -1011,12 +1011,22 @@ casper.run();</code></pre>
 });
 
 casper.run();</code></pre>
-<h3 id="phantom_Casper_mouseClick"><code>Casper#mouseClick(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="phantom_Casper_mouseEvent"><code>Casper#mouseEvent(String type, String <a href="#selectors">selector</a>)</code></h3>
 
-<p><span class="label label-warning">Warning</span> This method has been deprecated since 0.6. Use
-<a href="#phantom_Casper_click"><code>Casper.click()</code></a> instead.
+<p>Trigger a mouse event on the first element found matching the provided selector.
 
 </p>
+<p>Supported events are <code>mouseup</code>, <code>mousedown</code>, <code>click</code>, <code>mousemove</code>, <code>mouseover</code> and <code>mouseout</code>.
+
+</p>
+<p><strong>Example:</strong>
+
+</p>
+<pre><code class="javascript">casper.start('http://www.google.fr/', function() {
+    this.mouseEvent('click', 'h2 a');
+});
+
+casper.run();</code></pre>
 <h3 id="phantom_Casper_open"><code>Casper#open(String location, Object Settings)</code></h3>
 
 <p>Performs an HTTP request for opening a given location. You can forge
@@ -1508,7 +1518,7 @@ visible in remote DOM to process a next step. Uses
 <li><a href="#phantom_Casper_getCurrentUrl"><code>getCurrentUrl()</code></a></li>
 <li><a href="#phantom_Casper_getGlobal"><code>getGlobal()</code></a></li>
 <li><a href="#phantom_Casper_getTitle"><code>getTitle()</code></a></li>
-<li><a href="#phantom_Casper_mouseClick"><code>mouseClick()</code></a></li>
+<li><a href="#phantom_Casper_mouseEvent"><code>mouseEvent()</code></a></li>
 <li><a href="#phantom_Casper_open"><code>open()</code></a></li>
 <li><a href="#phantom_Casper_repeat"><code>repeat()</code></a></li>
 <li><a href="#phantom_Casper_resourceExists"><code>resourceExists()</code></a></li>
