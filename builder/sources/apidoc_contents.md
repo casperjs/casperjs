@@ -555,6 +555,11 @@ environment and the one of the page you have opened; everytime you pass a closur
 `evaluate()`, you're entering the page and execute code as if you were using the
 browser console.
 
+Here's a quickly drafted diagram trying to basically explain the separation of
+concerns:
+
+![diagram](images/evaluate-diagram.png)
+
 <h3 id="phantom_Casper_evaluateOrDie"><code>Casper#evaluateOrDie(function fn[, String message])</code></h3>
 
 Evaluates an expression within the current page DOM and `die()` if it
