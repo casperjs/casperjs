@@ -420,7 +420,7 @@
         this.processSelector = function processSelector(selector) {
             var selectorObject = {
                 toString: function toString() {
-                    return this.type + ' selector: ' + this.selector;
+                    return this.type + ' selector: ' + this.path;
                 }
             };
             if (typeof selector === "string") {
