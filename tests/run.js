@@ -6,7 +6,9 @@ if (!phantom.casperLoaded) {
 var fs = require('fs');
 var utils = require('utils');
 var f = utils.format;
-var casper = require('casper').create();
+var casper = require('casper').create({
+    exitOnError: false
+});
 
 // Options from cli
 casper.options.verbose = casper.cli.get('direct') || false;

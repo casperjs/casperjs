@@ -66,6 +66,7 @@ var Casper = function Casper(options) {
     // default options
     this.defaults = {
         clientScripts:       [],
+        exitOnError:         true,
         logLevel:            "error",
         httpStatusHandlers:  {},
         onAlert:             null,
@@ -120,7 +121,32 @@ var Casper = function Casper(options) {
     this.steps = [];
     this.test = tester.create(this);
 
-    // basic event handlers
+    // init phantomjs error handler
+    this.initErrorHandler();
+
+    this.on('error', function(msg, backtrace) {
+        var c = colorizer.create();
+        var match = /^(.*): __mod_error(.*):: (.*)/.exec(msg);
+        var notices = [];
+        if (match && match.length === 4) {
+            notices.push('  in module ' + match[2]);
+            notices.push('  NOTICE: errors within modules cannot be backtraced yet.');
+            msg = match[3];
+        }
+        console.error(c.colorize(msg, 'RED_BAR', 80));
+        notices.forEach(function(notice) {
+            console.error(c.colorize(notice, 'COMMENT'));
+        });
+        backtrace.forEach(function(item) {
+            var message = fs.absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
+            if (item['function']) {
+                message += " in " + c.colorize(item['function'], "PARAMETER");
+            }
+            console.error("  " + message);
+        });
+    });
+
+    // deprecated feature event handler
     this.on('deprecated', function onDeprecated(message) {
         this.echo('[deprecated] ' + message, 'COMMENT');
     });
@@ -634,6 +660,20 @@ Casper.prototype.getTitle = function getTitle() {
     return this.evaluate(function _evaluate() {
         return document.title;
     });
+};
+
+/**
+ * Initializes PhantomJS error handler.
+ *
+ */
+Casper.prototype.initErrorHandler = function initErrorHandler() {
+    var casper = this;
+    phantom.onError = function phantom_onError(msg, backtrace) {
+        casper.emit('error', msg, backtrace);
+        if (casper.options.exitOnError === true) {
+            casper.exit(1);
+        }
+    };
 };
 
 /**

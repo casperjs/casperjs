@@ -233,32 +233,6 @@ phantom.loadCasper = function loadCasper() {
 };
 
 /**
- * Custom global error handler.
- */
-phantom.onError = function phantom_onError(msg, backtrace) {
-    var c = require('colorizer').create();
-    var match = /^(.*): __mod_error(.*):: (.*)/.exec(msg);
-    var notices = [];
-    if (match && match.length === 4) {
-        notices.push('  in module ' + match[2]);
-        notices.push('  NOTICE: errors within modules cannot be backtraced yet.');
-        msg = match[3];
-    }
-    console.error(c.colorize(msg, 'RED_BAR', 80));
-    notices.forEach(function(notice) {
-        console.error(c.colorize(notice, 'COMMENT'));
-    });
-    backtrace.forEach(function(item) {
-        var message = require('fs').absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
-        if (item['function']) {
-            message += " in " + c.colorize(item['function'], "PARAMETER");
-        }
-        console.error("  " + message);
-    });
-    phantom.exit(1);
-};
-
-/**
  * Initializes the CasperJS Command Line Interface.
  */
 phantom.initCasperCli = function initCasperCli() {

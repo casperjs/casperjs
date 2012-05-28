@@ -66,6 +66,15 @@ var Tester = function Tester(casper, options) {
     };
 
     // events
+    casper.on('error', function(msg, backtrace) {
+        var line = 0;
+        try {
+            line = backtrace[0].line;
+        } catch (e) {}
+        this.test.uncaughtError(msg, this.test.currentTestFile, line);
+        this.test.done();
+    });
+
     casper.on('step.error', function onStepError(e) {
         this.test.uncaughtError(e, this.test.currentTestFile);
         this.test.done();
@@ -80,8 +89,11 @@ var Tester = function Tester(casper, options) {
         this.exporter.addFailure(fs.absolute(failure.file), failure.message, failure.details || "test failed", failure.type || "unknown");
         this.testResults.failures.push(failure);
         // special printing
+        if (failure.type) {
+            this.comment('   type: ' + failure.type);
+        }
         if (failure.details) {
-            this.comment('   details:  ' + failure.details);
+            this.comment('   details: ' + failure.details);
         }
         if (failure.values && Object.keys(failure.values).length > 0) {
             for (var name in failure.values) {
@@ -469,14 +481,7 @@ var Tester = function Tester(casper, options) {
             throw e;
         }
         this.currentTestFile = file;
-        try {
-            new Function('casper', phantom.getScriptCode(file))(casper);
-        } catch (e) {
-            // do not abort the whole suite, just fail fast displaying the
-            // caught error and process next suite
-            this.uncaughtError(e, file);
-            this.done();
-        }
+        phantom.injectJs(file);
     };
 
     /**
@@ -591,7 +596,7 @@ var Tester = function Tester(casper, options) {
             type = failure.type || "unknown";
             line = ~~failure.line;
             message = failure.message;
-            casper.echo(f('In %s:%d', failure.file, line));
+            casper.echo(f('In %s:%s', failure.file, line));
             casper.echo(f('   %s: %s', type, message || "(no message was entered)"), "COMMENT");
         });
     };
@@ -682,12 +687,7 @@ var Tester = function Tester(casper, options) {
     this.runTest = function runTest(testFile) {
         this.bar(f('Test file: %s', testFile), 'INFO_BAR');
         this.running = true; // this.running is set back to false with done()
-        try {
-            this.exec(testFile);
-        } catch (e) {
-            this.uncaughtError(e, testFile);
-            this.done();
-        }
+        this.exec(testFile);
     };
 
     /**
@@ -722,14 +722,16 @@ var Tester = function Tester(casper, options) {
      * Processes an error caught while running tests contained in a given test
      * file.
      *
-     * @param  Error|String  error  The error
-     * @param  String        file   Test file where the error occured
+     * @param  Error|String  error      The error
+     * @param  String        file       Test file where the error occured
+     * @param  Number        line       Line number (optional)
      */
-    this.uncaughtError = function uncaughtError(error, file) {
+    this.uncaughtError = function uncaughtError(error, file, line) {
         return this.processAssertionResult({
             success: false,
             type: "uncaughtError",
-            file: this.currentTestFile,
+            file: file,
+            line: ~~line || "unknown",
             message: utils.isObject(error) ? error.message : error,
             values: {
                 error: error
