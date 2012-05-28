@@ -54,6 +54,15 @@ All the available options are detailed below:
       </td>
     </tr>
     <tr>
+      <td><code>exitOnError</code></td>
+      <td><code>Boolean</code></td>
+      <td><code>true</code></td>
+      <td>
+        Sets if CasperJS must exist when any uncaught error has been thrown by
+        the script.
+      </td>
+    </tr>
+    <tr>
       <td><code>httpStatusHandlers</code></td>
       <td><code>Object</code></td>
       <td><code>{}</code></td>
