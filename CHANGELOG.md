@@ -7,6 +7,7 @@ XXXX-XX-XX, v0.6.9
 - fixed [#114](https://github.com/n1k0/casperjs/issues/114) - ensured client-side utils are injected before any `evaluate()` call
 - fixed [#117](https://github.com/n1k0/casperjs/issues/117) - `fill()` coulnd't `submit()` a form with a submit input named *submit*
 - merged [#122](https://github.com/n1k0/casperjs/pull/122) - allow downloads to be triggered by more than just `GET` requests
+- closed [#57](https://github.com/n1k0/casperjs/issues/57) - added context to emitted test events
 - fixed loaded resources array is now reset adequately [reference discussion](https://groups.google.com/forum/?hl=fr?fromgroups#!topic/casperjs/TCkNzrj1IoA)
 - fixed incomplete error message logged when passed an erroneous selector (xpath and css)
 
