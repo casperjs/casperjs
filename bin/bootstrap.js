@@ -155,7 +155,7 @@ phantom.loadCasper = function loadCasper() {
      * TODO: remove when PhantomJS has full module support
      */
     require = (function _require(require, requireDir) {
-        var phantomBuiltins = ['fs', 'webpage', 'webserver'];
+        var phantomBuiltins = ['fs', 'webpage', 'webserver', 'system'];
         var phantomRequire = phantom.__orig__require = require;
         var requireCache = {};
         return function _require(path) {
