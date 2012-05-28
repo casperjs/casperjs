@@ -10,5 +10,6 @@
 - [`getBinary()`](#phantom_Casper_ClientUtils_getBinary)
 - [`getElementByXPath()`](#phantom_Casper_ClientUtils_getElementByXPath)
 - [`getElementsByXPath()`](#phantom_Casper_ClientUtils_getElementsByXPath)
+- [`mouseEvent()`](#phantom_Casper_ClientUtils_mouseEvent)
 - [`removeElementsByXPath()`](#phantom_Casper_ClientUtils_removeElementsByXPath)
 - [`visible()`](#phantom_Casper_ClientUtils_visible)

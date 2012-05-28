@@ -144,6 +144,12 @@ Retrieves a single DOM element matching a given [XPath expression](http://www.w3
 
 Retrieves all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/), if any.
 
+<h3 id="phantom_Casper_ClientUtils_mouseEvent"><code>ClientUtils#mouseEvent(String type, String selector)</code></h3>
+
+Dispatches a mouse event to the DOM element behind the provided selector.
+
+Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover` and `mouseout`.
+
 <h3 id="phantom_Casper_ClientUtils_visible"><code>ClientUtils#visible(String selector)</code></h3>
 
 Checks if an element is visible.

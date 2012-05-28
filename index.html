@@ -2194,6 +2194,14 @@ casper.run();</code></pre>
 <p>Retrieves all DOM elements matching a given <a href="http://www.w3.org/TR/xpath/">XPath expression</a>, if any.
 
 </p>
+<h3 id="phantom_Casper_ClientUtils_mouseEvent"><code>ClientUtils#mouseEvent(String type, String selector)</code></h3>
+
+<p>Dispatches a mouse event to the DOM element behind the provided selector.
+
+</p>
+<p>Supported events are <code>mouseup</code>, <code>mousedown</code>, <code>click</code>, <code>mousemove</code>, <code>mouseover</code> and <code>mouseout</code>.
+
+</p>
 <h3 id="phantom_Casper_ClientUtils_visible"><code>ClientUtils#visible(String selector)</code></h3>
 
 <p>Checks if an element is visible.
@@ -2223,6 +2231,7 @@ casper.run();</code></pre>
 <li><a href="#phantom_Casper_ClientUtils_getBinary"><code>getBinary()</code></a></li>
 <li><a href="#phantom_Casper_ClientUtils_getElementByXPath"><code>getElementByXPath()</code></a></li>
 <li><a href="#phantom_Casper_ClientUtils_getElementsByXPath"><code>getElementsByXPath()</code></a></li>
+<li><a href="#phantom_Casper_ClientUtils_mouseEvent"><code>mouseEvent()</code></a></li>
 <li><a href="#phantom_Casper_ClientUtils_removeElementsByXPath"><code>removeElementsByXPath()</code></a></li>
 <li><a href="#phantom_Casper_ClientUtils_visible"><code>visible()</code></a></li>
 </ul>
