@@ -50,22 +50,33 @@
         var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
 
         /**
-         * Clicks on the DOM element behind the provided selector.
+         * Dispatches a mouse event to the DOM element behind the provided selector.
          *
-         * @param  String  selector        A CSS3 selector to the element to click
+         * @param  String   type     Type of event to dispatch
+         * @param  String  selector  A CSS3 selector to the element to click
          * @return Boolean
          */
-        this.click = function click(selector) {
+        this.mouseEvent = function(type, selector) {
             var elem = this.findOne(selector);
             if (!elem) {
-                this.log("click(): Couldn't find any element matching '" + selector + "' selector", "error");
+                this.log("mouseEvent(): Couldn't find any element matching '" + selector + "' selector", "error");
                 return false;
             }
             var evt = document.createEvent("MouseEvents");
-            evt.initMouseEvent("click", true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
+            evt.initMouseEvent(type, true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
             // dispatchEvent return value is false if at least one of the event
             // handlers which handled this event called preventDefault
             return elem.dispatchEvent(evt);
+        };
+
+        /**
+         * Clicks on the DOM element behind the provided selector.
+         *
+         * @param  String  selector  A CSS3 selector to the element to click
+         * @return Boolean
+         */
+        this.click = function(selector) {
+            return this.mouseEvent('click', selector);
         };
 
         /**

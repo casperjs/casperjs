@@ -39,7 +39,11 @@ var Mouse = function Mouse(casper) {
         throw new CasperError('Mouse() needs a Casper instance');
     }
 
-    var supportedEvents = ['mouseup', 'mousedown', 'click', 'mousemove'];
+    var slice = Array.prototype.slice;
+
+    var nativeEvents = ['mouseup', 'mousedown', 'click', 'mousemove'];
+    var emulatedEvents = ['mouseover', 'mouseout'];
+    var supportedEvents = nativeEvents.concat(emulatedEvents);
 
     function computeCenter(selector) {
         var bounds = casper.getElementBounds(selector);
@@ -54,7 +58,10 @@ var Mouse = function Mouse(casper) {
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
             throw new CasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }
-        args = Array.prototype.slice.call(args); // cast Arguments -> Array
+        if (supportedEvents.indexOf(type) > 0) {
+            casper.log("Mouse.processEvent(): no native fallback for type " + type, "warning");
+        }
+        args = slice.call(args); // cast Arguments -> Array
         casper.emit('mouse.' + type.replace('mouse', ''), args);
         switch (args.length) {
             case 0:
@@ -78,6 +85,10 @@ var Mouse = function Mouse(casper) {
                 throw new CasperError('Mouse.processEvent(): Too many arguments');
         }
     }
+
+    this.processEvent = function() {
+        processEvent(arguments[0], slice.call(arguments, 1));
+    };
 
     this.click = function click() {
         processEvent('click', arguments);
