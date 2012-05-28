@@ -1717,7 +1717,7 @@ casper.on('resource.received', function(resource) {
 parameters passed to their callback:
 
 </p>
-<table class="table table-striped table-condensed" caption="Casper options">
+<table class="table table-striped table-condensed" caption="Casper events">
   <thead>
     <tr>
       <th>Name</th>
@@ -1750,6 +1750,14 @@ parameters passed to their callback:
       <td><code>downloaded.file</code></td>
       <td><code>targetPath</code></td>
       <td>Emitted when </td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>msg, backtrace</code></td>
+      <td>
+        Emitted when an error hasn't been caught. Do basically what PhantomJS'
+        <code>onError()</code> native handler does.
+      </td>
     </tr>
     <tr>
       <td><code>exit</code></td>
