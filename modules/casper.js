@@ -1081,7 +1081,7 @@ Casper.prototype.wait = function wait(timeout, then) {
     return this.then(function _step() {
         this.waitStart();
         setTimeout(function _check(self) {
-          self.log(f("wait() finished wating for %dms.", timeout), "info");
+          self.log(f("wait() finished waiting for %dms.", timeout), "info");
           if (then) {
             then.call(self, self);
           }
