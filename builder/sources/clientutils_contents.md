@@ -155,13 +155,9 @@ Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover` a
 Checks if an element is visible.
 
 ```javascript
-casper.start('http://foo.bar/', function() {
-    if (this.visible('#cain')) {
-        this.echo("I CAN SEE YOU");
-    }
+var logoIsVisible = casper.evaluate(function() {
+    return __utils__.visible('h1');
 });
-
-casper.run();
 ```
 
 <h3 id="phantom_Casper_ClientUtils_removeElementsByXPath"><code>ClientUtils#removeElementsByXPath(String expression)</code></h3>

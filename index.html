@@ -2207,13 +2207,9 @@ casper.run();</code></pre>
 <p>Checks if an element is visible.
 
 </p>
-<pre><code class="javascript">casper.start('http://foo.bar/', function() {
-    if (this.visible('#cain')) {
-        this.echo("I CAN SEE YOU");
-    }
-});
-
-casper.run();</code></pre>
+<pre><code class="javascript">var logoIsVisible = casper.evaluate(function() {
+    return __utils__.visible('h1');
+});</code></pre>
 <h3 id="phantom_Casper_ClientUtils_removeElementsByXPath"><code>ClientUtils#removeElementsByXPath(String expression)</code></h3>
 
 <p>Removes all DOM elements matching a given <a href="http://www.w3.org/TR/xpath/">XPath expression</a>.
