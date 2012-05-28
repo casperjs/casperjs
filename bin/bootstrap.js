@@ -27,6 +27,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+if (phantom.version.major !== 1 || phantom.version.minor < 5) {
+    console.error('CasperJS needs at least PhantomJS v1.5.0');
+    phantom.exit(1);
+}
 
 /**
  * Loads and initialize the CasperJS environment.
