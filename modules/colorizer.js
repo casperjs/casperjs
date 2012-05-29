@@ -28,10 +28,13 @@
  *
  */
 
+/*global exports console require*/
+
 var fs = require('fs');
 var utils = require('utils');
 
 exports.create = function create(type) {
+    "use strict";
     if (!type) {
         return;
     }
@@ -48,6 +51,7 @@ exports.create = function create(type) {
  * (c) Fabien Potencier, Symfony project, MIT license
  */
 var Colorizer = function Colorizer() {
+    "use strict";
     var options    = { bold: 1, underscore: 4, blink: 5, reverse: 7, conceal: 8 };
     var foreground = { black: 30, red: 31, green: 32, yellow: 33, blue: 34, magenta: 35, cyan: 36, white: 37 };
     var background = { black: 40, red: 41, green: 42, yellow: 43, blue: 44, magenta: 45, cyan: 46, white: 47 };
@@ -104,7 +108,7 @@ var Colorizer = function Colorizer() {
         if (typeof pad === "number" && text.length < pad) {
             text += new Array(pad - text.length + 1).join(' ');
         }
-        return "\033[" + codes.join(';') + 'm' + text + "\033[0m";
+        return "\u001b[" + codes.join(';') + 'm' + text + "\u001b[0m";
     };
 };
 exports.Colorizer = Colorizer;
@@ -114,6 +118,7 @@ exports.Colorizer = Colorizer;
  *
  */
 var Dummy = function Dummy() {
+    "use strict";
     this.colorize = function colorize(text, styleName, pad) {
         return text;
     };

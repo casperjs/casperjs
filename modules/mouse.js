@@ -28,13 +28,17 @@
  *
  */
 
+/*global CasperError exports require*/
+
 var utils = require('utils');
 
 exports.create = function create(casper) {
+    "use strict";
     return new Mouse(casper);
 };
 
 var Mouse = function Mouse(casper) {
+    "use strict";
     if (!utils.isCasperObject(casper)) {
         throw new CasperError('Mouse() needs a Casper instance');
     }

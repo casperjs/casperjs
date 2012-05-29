@@ -9,6 +9,7 @@ XXXX-XX-XX, v0.6.11
 - closed [#144](https://github.com/n1k0/casperjs/issues/144) - added a `safeLogs` option to blur password values in debug logs. **This option is set to `true` by default.**
 - added [`Casper.userAgent()`](http://casperjs.org/api.html#casper.userAgent) to ease a more dynamic setting of user-agent string
 - switched to more standard `.textContent` property to get a node text; this allows a better compatibility of the clientutils bookmarklet with non-webkit browsers
+- casper modules now all use [javascript strict mode](http://www.nczonline.net/blog/2012/03/13/its-time-to-start-using-javascript-strict-mode/)
 
 2012-06-04, v0.6.10
 -------------------

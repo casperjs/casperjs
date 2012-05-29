@@ -27,7 +27,12 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
+/*global console escape exports NodeList window*/
+
 (function(exports) {
+    "use strict";
+
     exports.create = function create(options) {
         return new this.ClientUtils(options);
     };
@@ -466,7 +471,7 @@
          * @param  mixed                 value  The field value to set
          */
         this.setField = function setField(field, value) {
-            var fields, out;
+            var logValue, fields, out;
             value = logValue = (value || "");
             if (field instanceof NodeList) {
                 fields = field;
@@ -477,7 +482,7 @@
             }
             if (this.options && this.options.safeLogs && field.getAttribute('type') === "password") {
                 // obfuscate password value
-                logValue = Array(value.length + 1).join("*");
+                logValue = new Array(value.length + 1).join("*");
             }
             this.log('Set "' + field.getAttribute('name') + '" field value to ' + logValue, "debug");
             try {

@@ -28,10 +28,13 @@
  *
  */
 
+/*global CasperError console exports phantom require*/
+
 var utils = require('utils');
 var fs = require('fs');
 
 exports.create = function create() {
+    "use strict";
     return new XUnitExporter();
 };
 
@@ -39,12 +42,13 @@ exports.create = function create() {
  * JUnit XML (xUnit) exporter for test results.
  *
  */
-XUnitExporter = function XUnitExporter() {
+function XUnitExporter() {
+    "use strict";
     this._xml = utils.node('testsuite');
     this._xml.toString = function toString() {
         return this.outerHTML; // ouch
     };
-};
+}
 exports.XUnitExporter = XUnitExporter;
 
 /**
@@ -54,6 +58,7 @@ exports.XUnitExporter = XUnitExporter;
  * @param  String  name
  */
 XUnitExporter.prototype.addSuccess = function addSuccess(classname, name) {
+    "use strict";
     this._xml.appendChild(utils.node('testcase', {
         classname: generateClassName(classname),
         name:      name
@@ -69,6 +74,7 @@ XUnitExporter.prototype.addSuccess = function addSuccess(classname, name) {
  * @param  String  type
  */
 XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type) {
+    "use strict";
     var fnode = utils.node('testcase', {
         classname: generateClassName(classname),
         name:      name
@@ -91,6 +97,7 @@ XUnitExporter.prototype.addFailure = function addFailure(classname, name, messag
  * @return String
  */
 function generateClassName(classname) {
+    "use strict";
     classname = classname.replace(phantom.casperPath, "").trim();
     var script = classname || phantom.casperScript;
     if (script.indexOf(fs.workingDirectory) === 0) {
@@ -111,5 +118,6 @@ function generateClassName(classname) {
  * @return HTMLElement
  */
 XUnitExporter.prototype.getXML = function getXML() {
+    "use strict";
     return this._xml;
 };

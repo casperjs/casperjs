@@ -28,6 +28,8 @@
  *
  */
 
+/*global CasperError console exports phantom require*/
+
 /**
  * Provides a better typeof operator equivalent, able to retrieve the array
  * type.
@@ -37,6 +39,7 @@
  * @see    http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
  */
 function betterTypeOf(input) {
+    "use strict";
     try {
         return Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
     } catch (e) {
@@ -52,6 +55,7 @@ exports.betterTypeOf = betterTypeOf;
  * @param  Mixed  value
  */
 function dump(value) {
+    "use strict";
     console.log(serialize(value));
 }
 exports.dump = dump;
@@ -63,6 +67,7 @@ exports.dump = dump;
  * @return string
  */
 function fileExt(file) {
+    "use strict";
     try {
         return file.split('.').pop().toLowerCase().trim();
     } catch(e) {
@@ -79,6 +84,7 @@ exports.fileExt = fileExt;
  * @return String
  */
 function fillBlanks(text, pad) {
+    "use strict";
     pad = pad || 80;
     if (text.length < pad) {
         text += new Array(pad - text.length + 1).join(' ');
@@ -93,15 +99,8 @@ exports.fillBlanks = fillBlanks;
  * @return String
  */
 function format(f) {
-    var i;
-    if (typeof f !== 'string') {
-        var objects = [];
-        for (i = 0; i < arguments.length; i++) {
-            objects.push(inspect(arguments[i]));
-        }
-        return objects.join(' ');
-    }
-    i = 1;
+    "use strict";
+    var i = 1;
     var args = arguments;
     var len = args.length;
     var str = String(f).replace(/%[sdj%]/g, function _replace(x) {
@@ -123,7 +122,7 @@ function format(f) {
         if (x === null || typeof x !== 'object') {
             str += ' ' + x;
         } else {
-            str += ' ' + inspect(x);
+            str += '[obj]';
         }
     }
     return str;
@@ -138,6 +137,7 @@ exports.format = format;
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
 function inherits(ctor, superCtor) {
+    "use strict";
     ctor.super_ = ctor.__super__ = superCtor;
     ctor.prototype = Object.create(superCtor.prototype, {
         constructor: {
@@ -157,6 +157,7 @@ exports.inherits = inherits;
  * @return Boolean
  */
 function isArray(value) {
+    "use strict";
     return Array.isArray(value) || isType(value, "array");
 }
 exports.isArray = isArray;
@@ -168,6 +169,7 @@ exports.isArray = isArray;
  * @return Boolean
  */
 function isCasperObject(value) {
+    "use strict";
     return value instanceof require('casper').Casper;
 }
 exports.isCasperObject = isCasperObject;
@@ -179,6 +181,7 @@ exports.isCasperObject = isCasperObject;
  * @return Boolean
  */
 function isClipRect(value) {
+    "use strict";
     return isType(value, "cliprect") || (
         isObject(value) &&
         isNumber(value.top) && isNumber(value.left) &&
@@ -194,6 +197,7 @@ exports.isClipRect = isClipRect;
  * @return Boolean
  */
 function isFunction(value) {
+    "use strict";
     return isType(value, "function");
 }
 exports.isFunction = isFunction;
@@ -205,6 +209,7 @@ exports.isFunction = isFunction;
  * @return Boolean
  */
 function isJsFile(file) {
+    "use strict";
     var ext = fileExt(file);
     return isString(ext, "string") && ['js', 'coffee'].indexOf(ext) !== -1;
 }
@@ -216,6 +221,7 @@ exports.isJsFile = isJsFile;
  * @return Boolean
  */
 function isNull(value) {
+    "use strict";
     return isType(value, "null");
 }
 exports.isNull = isNull;
@@ -227,6 +233,7 @@ exports.isNull = isNull;
  * @return Boolean
  */
 function isNumber(value) {
+    "use strict";
     return isType(value, "number");
 }
 exports.isNumber = isNumber;
@@ -238,6 +245,7 @@ exports.isNumber = isNumber;
  * @return Boolean
  */
 function isObject(value) {
+    "use strict";
     return isType(value, "object");
 }
 exports.isObject = isObject;
@@ -249,6 +257,7 @@ exports.isObject = isObject;
  * @return Boolean
  */
 function isString(value) {
+    "use strict";
     return isType(value, "string");
 }
 exports.isString = isString;
@@ -262,6 +271,7 @@ exports.isString = isString;
  * @return Boolean
  */
 function isType(what, typeName) {
+    "use strict";
     if (typeof typeName !== "string" || !typeName) {
         throw new CasperError("You must pass isType() a typeName string");
     }
@@ -275,6 +285,7 @@ exports.isType = isType;
  * @return Boolean
  */
 function isUndefined(value) {
+    "use strict";
     return isType(value, "undefined");
 }
 exports.isUndefined = isUndefined;
@@ -286,14 +297,11 @@ exports.isUndefined = isUndefined;
  * @return Boolean
  */
 function isWebPage(what) {
+    "use strict";
     if (!what || !isObject(what)) {
         return false;
     }
-    if (phantom.version.major <= 1 && phantom.version.minor < 3 && isFunction(require)) {
-        return what instanceof WebPage;
-    } else {
-        return what.toString().indexOf('WebPage(') === 0;
-    }
+    return what.toString().indexOf('WebPage(') === 0;
 }
 exports.isWebPage = isWebPage;
 
@@ -305,6 +313,7 @@ exports.isWebPage = isWebPage;
  * @return Object
  */
 function mergeObjects(origin, add) {
+    "use strict";
     for (var p in add) {
         try {
             if (add[p].constructor === Object) {
@@ -328,6 +337,7 @@ exports.mergeObjects = mergeObjects;
  * @return HTMLElement
  */
 function node(name, attributes) {
+    "use strict";
     var _node = document.createElement(name);
     for (var attrName in attributes) {
         var value = attributes[attrName];
@@ -346,6 +356,7 @@ exports.node = node;
  * @return String
  */
 function serialize(value) {
+    "use strict";
     if (isArray(value)) {
         value = value.map(function _map(prop) {
             return isFunction(prop) ? prop.toString().replace(/\s{2,}/, '') : prop;
@@ -364,6 +375,7 @@ exports.serialize = serialize;
  * @return Array
  */
 function unique(array) {
+    "use strict";
     var o = {},
         r = [];
     for (var i = 0, len = array.length; i !== len; i++) {

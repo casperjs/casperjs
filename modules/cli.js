@@ -28,6 +28,8 @@
  *
  */
 
+/*global CasperError console exports phantom require*/
+
 var utils = require('utils');
 
 /**
@@ -38,6 +40,7 @@ var utils = require('utils');
  * @return Object
  */
 exports.parse = function parse(phantomArgs) {
+    "use strict";
     var extract = {
         args: [],
         options: {},
@@ -110,6 +113,7 @@ exports.parse = function parse(phantomArgs) {
  * @return Mixed
  */
 function castArgument(arg) {
+    "use strict";
     if (arg.match(/^-?\d+$/)) {
         return parseInt(arg, 10);
     } else if (arg.match(/^-?\d+\.\d+$/)) {

@@ -28,12 +28,15 @@
  *
  */
 
+/*global CasperError exports phantom require*/
+
 var fs = require('fs');
 var events = require('events');
 var utils = require('utils');
 var f = utils.format;
 
 exports.create = function create(casper, options) {
+    "use strict";
     return new Tester(casper, options);
 };
 
@@ -44,6 +47,7 @@ exports.create = function create(casper, options) {
  * @param  Object|null  options  Options object
  */
 var Tester = function Tester(casper, options) {
+    "use strict";
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
     }
