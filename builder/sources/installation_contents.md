@@ -1,4 +1,4 @@
-[PhantomJS](http://phantomjs.org/) >= 1.3 must be installed (1.5.0 highly
+[PhantomJS](http://phantomjs.org/) >= 1.5 must be installed (1.5.0 highly
 recommended). Check out [PhantomJS' installation
 instructions](http://code.google.com/p/phantomjs/wiki/Installation), and:
 
@@ -6,8 +6,8 @@ instructions](http://code.google.com/p/phantomjs/wiki/Installation), and:
   static builds over other package installation methods
 
 * <span class="label label-warning">Ubuntu users</span> Double check the
-  version of PhantomJS provided by your apt repository. Often, only PhantomJS
-  1.2 is provided.
+  version of PhantomJS provided by your apt repository. Often, only old versions
+  are provided.
 
 Once PhantomJS's installed on your machine, you should obtain something like this:
 
