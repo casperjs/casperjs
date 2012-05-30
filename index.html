@@ -183,8 +183,9 @@ in <a href="http://python.org/">Python</a>, so you can also run it using the pyt
 CasperJS version 0.6.9 at /Users/niko/casperjs
 Usage: casperjs script.(js|coffee) [options...]
 Read the docs http://casperjs.org/</code></pre>
-<p><span class="label label-info">Note</span> If for some reason you don't have
-access to Python, please check this <a href="#faq-executable">FAQ entry</a>.
+<p><span class="label label-info">Note</span> If for any reason you <strong>don't have
+access to Python</strong> or are <strong>running Windows</strong>, please check this
+<a href="#faq-executable">FAQ entry</a>.
 </p>
 </div>
         </section>
@@ -3139,11 +3140,16 @@ var casper = require('casper').create();
 
 </p>
 <pre><code>$ phantomjs casperscript.js</code></pre>
-<p><span class="label label-info">Tip</span> This is especially useful if you work
-on Windows and don't have a way to use the Python-based <code>casperjs</code> executable
-easily.
+<p><strong>If you're on Windows</strong>, this is the way you may manage to get casper working
+the most easily:
 
 </p>
+<pre><code class="javascript">phantom.casperPath = 'C:\\path\\to\\your\\repo\\lib\\casperjs-0.6.X';
+phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
+
+var casper = require('casper').create();
+
+// do stuff</code></pre>
 <hr>
 <h2 id="faq-httpstatuses">How can I catch HTTP 404 and other status codes?</h2>
 

@@ -81,9 +81,17 @@ You can run such a script like any other standard PhantomJS script:
 $ phantomjs casperscript.js
 ```
 
-<span class="label label-info">Tip</span> This is especially useful if you work
-on Windows and don't have a way to use the Python-based `casperjs` executable
-easily.
+**If you're on Windows**, this is the way you may manage to get casper working
+the most easily:
+
+```javascript
+phantom.casperPath = 'C:\\path\\to\\your\\repo\\lib\\casperjs-0.6.X';
+phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
+
+var casper = require('casper').create();
+
+// do stuff
+```
 
 * * * * *
 
