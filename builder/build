@@ -6,10 +6,12 @@ phantom.casperPath = fs.workingDirectory + "/../..";
 phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 
 var casper = require("casper").create({
-    verbose: true
+    //verbose: true,
+    //logLevel: "debug"
 });
 var marked = require('./lib/marked');
 var config = JSON.parse(fs.read("config.json"));
+var docsRoot = fs.absolute(fs.pathJoin(phantom.casperPath, 'docs'));
 var sourcesDir = fs.pathJoin(fs.workingDirectory, 'sources');
 var templatesDir = fs.pathJoin(fs.workingDirectory, 'templates');
 var layout = fs.pathJoin(templatesDir, 'layout.html');
@@ -18,54 +20,65 @@ var selectors = {};
 // force storing current CasperJS version in global context
 config.context.version = phantom.casperVersion;
 
+casper.replaceDomContent = function replaceDomContent(selector, content) {
+    return this.evaluate(function replace(selector, content) {
+        try {
+            __utils__.findOne(selector).innerHTML = content;
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }, {
+        selector: selector,
+        content: content
+    });
+};
+
+casper.compileTemplate = function compileTemplate(file, data, includes) {
+    var template = fs.read(fs.pathJoin(templatesDir, file));
+    this.replaceDomContent('.content', template);
+    for (var dataSelector in data) {
+        this.replaceDomContent(dataSelector, data[dataSelector]);
+    }
+    for (var includeSelector in includes) {
+        var includeFile = includes[includeSelector];
+        var content = this.getFileContent(includeFile);
+        this.replaceDomContent(includeSelector, content);
+    }
+};
+
+casper.getFileContent = function getFileContent(file) {
+    var content = fs.read(file);
+    if (/\.md$/.test(file)) {
+        content = marked(content);
+    }
+    return content;
+};
+
 casper.start();
 
 casper.each(config.pages, function(self, page) {
     this.thenOpen(layout, function() {
-        var tpl = this.page.content;
-        // if (!page.file || !page.source) {
-        //     return;
-        // }
-        // var content = fs.read(fs.pathJoin(sourcesDir, page.source));
-        // if (/\.md$/.test(page.source)) {
-        //     content = marked(content);
-        // }
-        // this.page.content = fs.read(layout);
+        if (!page.file) {
+            return;
+        }
+        if (page.source) {
+            // full page, no intermediate template set
+            var content = this.getFileContent(fs.pathJoin(sourcesDir, page.source));
+            this.replaceDomContent('.content', content);
+        } else if (page.template) {
+            // intermediate template processing
+            var template = this.compileTemplate(page.template, page.data || {}, page.includes || {});
+        }
+        var file = fs.pathJoin(docsRoot, page.file);
+        fs.write(file, this.page.content, 'w');
+        console.log('written ' + file);
     });
 });
 
-config.pages.forEach(function(page) {
-
-    // if ('context' in page) {
-    //     content =
-    // } else {
-    //     ;
-    // }
-    // var src = page[selector];
-    // casper.echo('Selector "'+ selector + '": converting page source ' + src);
-    // try {
-    //     var content = fs.read(src), action = 'Included';
-    //     if (/\.md$/.test(src)) {
-    //         action = 'Converted';
-    //         content = marked(content);
-    //     }
-    //     selectors[selector] = content;
-    //     casper.echo(action + ' ' + src);
-    // } catch (e) {
-    //     casper.echo('Skipped ' + src + ': ' + e, 'COMMENT');
-    // }
+casper.run(function() {
+    this.echo('All done.', 'INFO').exit();
 });
-
-casper.run();
-
-// casper.start(templateUrl, function() {
-//     this.echo('Opening template: ' + templateUrl);
-//     this.evaluate(function(selectors) {
-//         Object.keys(selectors).forEach(function(selector) {
-//             document.querySelector(selector).innerHTML = selectors[selector];
-//         });
-//     }, { selectors: selectors });
-// });
 
 // casper.then(function() {
 //     var pageContent = this.page.content;
@@ -82,8 +95,4 @@ casper.run();
 //     this.echo('Saving to ' + target);
 //     fs.write(target, pageContent, "w");
 //     this.echo('Saved to ' + target);
-// });
-
-// casper.run(function() {
-//     this.echo('All done.', 'INFO').exit();
 // });

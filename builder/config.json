@@ -2,16 +2,21 @@
     "template": "template.html",
     "pages": [
         {
+            "layout": "layout.html",
             "file": "index.html",
-            "source": "index.html",
+            "source": "home.html",
             "title": null
         },
         {
+            "layout": "layout.html",
+            "template": "section.html",
             "file": "installation.html",
-            "source": "installation_contents.md",
-            "title": "Installation",
-            "context": {
-                "#installation_contents": "sources/installation_contents.md"
+            "data": {
+                ".section-title": "Installation",
+                ".section-subtitle": "get started in no time"
+            },
+            "includes": {
+                ".section-content": "sources/installation_contents.md"
             }
         }
     ],
