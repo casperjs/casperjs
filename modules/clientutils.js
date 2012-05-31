@@ -50,32 +50,12 @@
         var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
 
         /**
-         * Dispatches a mouse event to the DOM element behind the provided selector.
-         *
-         * @param  String   type     Type of event to dispatch
-         * @param  String  selector  A CSS3 selector to the element to click
-         * @return Boolean
-         */
-        this.mouseEvent = function(type, selector) {
-            var elem = this.findOne(selector);
-            if (!elem) {
-                this.log("mouseEvent(): Couldn't find any element matching '" + selector + "' selector", "error");
-                return false;
-            }
-            var evt = document.createEvent("MouseEvents");
-            evt.initMouseEvent(type, true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
-            // dispatchEvent return value is false if at least one of the event
-            // handlers which handled this event called preventDefault
-            return elem.dispatchEvent(evt);
-        };
-
-        /**
          * Clicks on the DOM element behind the provided selector.
          *
          * @param  String  selector  A CSS3 selector to the element to click
          * @return Boolean
          */
-        this.click = function(selector) {
+        this.click = function click(selector) {
             return this.mouseEvent('click', selector);
         };
 
@@ -391,19 +371,6 @@
         };
 
         /**
-         * Removes all DOM elements matching a given XPath expression.
-         *
-         * @param  String  expression  The XPath expression
-         * @return Array
-         */
-        this.removeElementsByXPath = function removeElementsByXPath(expression) {
-            var a = document.evaluate(expression, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-            for (var i = 0; i < a.snapshotLength; i++) {
-                a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
-            }
-        };
-
-        /**
          * Logs a message. Will format the message a way CasperJS will be able
          * to log phantomjs side.
          *
@@ -412,6 +379,26 @@
          */
         this.log = function log(message, level) {
             console.log("[casper:" + (level || "debug") + "] " + message);
+        };
+
+        /**
+         * Dispatches a mouse event to the DOM element behind the provided selector.
+         *
+         * @param  String   type     Type of event to dispatch
+         * @param  String  selector  A CSS3 selector to the element to click
+         * @return Boolean
+         */
+        this.mouseEvent = function mouseEvent(type, selector) {
+            var elem = this.findOne(selector);
+            if (!elem) {
+                this.log("mouseEvent(): Couldn't find any element matching '" + selector + "' selector", "error");
+                return false;
+            }
+            var evt = document.createEvent("MouseEvents");
+            evt.initMouseEvent(type, true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
+            // dispatchEvent return value is false if at least one of the event
+            // handlers which handled this event called preventDefault
+            return elem.dispatchEvent(evt);
         };
 
         /**
@@ -452,6 +439,19 @@
                 return selector;
             }
             throw new Error("Unsupported selector type: " + typeof selector);
+        };
+
+        /**
+         * Removes all DOM elements matching a given XPath expression.
+         *
+         * @param  String  expression  The XPath expression
+         * @return Array
+         */
+        this.removeElementsByXPath = function removeElementsByXPath(expression) {
+            var a = document.evaluate(expression, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+            for (var i = 0; i < a.snapshotLength; i++) {
+                a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
+            }
         };
 
         /**

@@ -46,7 +46,7 @@ exports.selectXPath = function selectXPath(expression) {
         type: 'xpath',
         path: expression,
         toString: function() {
-            return this.type + ' selector: ' + this.selector;
+            return this.type + ' selector: ' + this.path;
         }
     };
 };
@@ -279,7 +279,7 @@ Casper.prototype.clear = function clear() {
  *
  * In case of success, `true` is returned, `false` otherwise.
  *
- * @param  String   selector        A DOM CSS3 compatible selector
+ * @param  String   selector  A DOM CSS3 compatible selector
  * @return Boolean
  */
 Casper.prototype.click = function click(selector) {
@@ -287,36 +287,15 @@ Casper.prototype.click = function click(selector) {
 };
 
 /**
- * Emulates an event on the element from the provided selector using the mouse
- * pointer, if possible.
+ * Emulates a click on the element having `label` as innerText. The first
+ * element matching this label will be selected, so use with caution.
  *
- * In case of success, `true` is returned, `false` otherwise.
- *
- * @param  String   type      Type of event to emulate
- * @param  String   selector  A DOM CSS3 compatible selector
+ * @param  String   label  Element innerText value
  * @return Boolean
  */
-Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
-    this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
-    if (!this.exists(selector)) {
-        throw new CasperError("Cannot dispatch an event on nonexistent selector: " + selector);
-    }
-    var eventSuccess = this.evaluate(function(type, selector) {
-        return __utils__.mouseEvent(type, selector);
-    }, {
-        type: type,
-        selector: selector
-    });
-    if (!eventSuccess) {
-        // fallback onto native QtWebKit mouse events
-        try {
-            this.mouse.processEvent(type, selector);
-        } catch (e) {
-            this.log(f("Error while trying to emulate event %s on selector %s: %s", type, selector, e), "error");
-            return false;
-        }
-    }
-    return true;
+Casper.prototype.clickLabel = function clickLabel(label) {
+    var selector = exports.selectXPath('//*[text()="' + label.toString() + '"]');
+    return this.click(selector);
 };
 
 /**
@@ -730,6 +709,39 @@ Casper.prototype.log = function log(message, level, space) {
     this.result.log.push(entry);
     this.emit('log', entry);
     return this;
+};
+
+/**
+ * Emulates an event on the element from the provided selector using the mouse
+ * pointer, if possible.
+ *
+ * In case of success, `true` is returned, `false` otherwise.
+ *
+ * @param  String   type      Type of event to emulate
+ * @param  String   selector  A DOM CSS3 compatible selector
+ * @return Boolean
+ */
+Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
+    this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
+    if (!this.exists(selector)) {
+        throw new CasperError("Cannot dispatch an event on nonexistent selector: " + selector);
+    }
+    var eventSuccess = this.evaluate(function(type, selector) {
+        return __utils__.mouseEvent(type, selector);
+    }, {
+        type: type,
+        selector: selector
+    });
+    if (!eventSuccess) {
+        // fallback onto native QtWebKit mouse events
+        try {
+            this.mouse.processEvent(type, selector);
+        } catch (e) {
+            this.log(f("Couldn't emulate event '%s' on %s: %s", type, selector, e), "error");
+            return false;
+        }
+    }
+    return true;
 };
 
 /**

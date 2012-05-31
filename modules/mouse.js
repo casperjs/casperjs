@@ -58,7 +58,7 @@ var Mouse = function Mouse(casper) {
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
             throw new CasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }
-        if (supportedEvents.indexOf(type) > 0) {
+        if (emulatedEvents.indexOf(type) > -1) {
             casper.log("Mouse.processEvent(): no native fallback for type " + type, "warning");
         }
         args = slice.call(args); // cast Arguments -> Array
@@ -69,9 +69,6 @@ var Mouse = function Mouse(casper) {
             case 1:
                 // selector
                 var selector = args[0];
-                if (!utils.isString(selector)) {
-                    throw new CasperError('Mouse.processEvent(): No valid CSS selector passed: ' + selector);
-                }
                 casper.page.sendEvent.apply(casper.page, [type].concat(computeCenter(selector)));
                 break;
             case 2:
