@@ -1,0 +1,138 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="http://casperjs.org/">
+    <title>Installation | CasperJS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <meta name="keywords" content="{{keywords}}">
+    <meta name="description" content="{{description}}">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
+    <link rel="stylesheet" href="prettify/prettify.css">
+    <link rel="stylesheet" href="css/casper.css">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body data-spy="scroll" data-offset="50">
+    <a href="http://github.com/n1k0/casperjs" class="contribute">
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
+    </a>
+    <div class="navbar navbar-fixed-top" data-spy="scroll" id="topbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="index.html">CasperJS</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="#installation">Install</a></li>
+                        <li><a href="#quickstart">Quickstart</a></li>
+                        <li><a href="#apidoc">API</a></li>
+                        <li><a href="#cli"><acronym title="Command Line Interface">CLI</acronym></a></li>
+                        <li><a href="#selectors">Selectors</a></li>
+                        <li><a href="#events-filters">Events</a></li>
+                        <li><a href="#client-side-utils">Client-side utils</a></li>
+                        <li><a href="#logging">Logging</a></li>
+                        <li><a href="#extending">Extending</a></li>
+                        <li><a href="#testing">Testing</a></li>
+                        <li><a href="#debugging">Debugging</a></li>
+                        <li><a href="#faq"><acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
+                        <li><a href="#download">Download</a></li>
+                        <li><a href="https://groups.google.com/forum/#!forum/casperjs">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="overview">
+        <div class="content"><section>
+    <div class="page-header">
+        <h1>
+            <span class="section-title">Installation</span>
+            <small class="section-subtitle">get started in no time</small>
+        </h1>
+    </div>
+    <div class="section-content"><p><a href="http://phantomjs.org/">PhantomJS</a> &gt;= 1.5 must be installed (1.5.0 highly
+recommended). Check out <a href="http://code.google.com/p/phantomjs/wiki/Installation">PhantomJS' installation
+instructions</a>, and:
+
+</p>
+<ul>
+<li><p>Ensure to always install the latest available version of PhantomJS, and prefer
+static builds over other package installation methods</p>
+</li>
+<li><p><span class="label label-warning">Ubuntu users</span> Double check the
+version of PhantomJS provided by your apt repository. Often, only old versions
+are provided.</p>
+</li>
+</ul>
+<p>Once PhantomJS's installed on your machine, you should obtain something like this:
+
+</p>
+<pre><code>$ phantomjs --version
+1.5.0</code></pre>
+<p>Now just follow these instructions:
+
+</p>
+<pre><code>$ git clone git://github.com/n1k0/casperjs.git
+$ cd casperjs
+$ git checkout tags/{{version}}
+$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs</code></pre>
+<p>So now you should get something like this:
+
+</p>
+<pre><code>$ casperjs --version
+{{version}}</code></pre>
+<p>You are now ready to write your first script!
+
+</p>
+<p><span class="label label-info">Note</span> The casperjs executable is written
+in <a href="http://python.org/">Python</a>, so you can also run it using the python command:
+
+</p>
+<pre><code>$ python /path/to/casperjs/bin/casperjs
+CasperJS version {{version}} at /Users/niko/casperjs
+Usage: casperjs script.(js|coffee) [options...]
+Read the docs http://casperjs.org/</code></pre>
+<p><span class="label label-info">Note</span> If for any reason you <strong>don't have
+access to Python</strong> or are <strong>running Windows</strong>, please check this
+<a href="#faq-executable">FAQ entry</a>.
+</p>
+</div>
+</section>
+</div>
+        <footer>
+            <p>
+                © 2011-2012 <a href="https://nicolas.perriault.net/">Nicolas Perriault</a> — get
+                the source code on GitHub: <a href="http://github.com/n1k0/casperjs">n1k0/casperjs</a> —
+                logo by <a href="http://www.forveillejeremy.com/">Jeremy Forveille</a>
+            </p>
+        </footer>
+    </div>
+    <script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=zM_TkILrUYw.fr./sv=1/am=!3Knd3SMj0U-IYYHMOA/d=1/rs=AItRSTMr-PfxeuHOkCg3o2RjyBu1kbXQEw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="prettify/prettify.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script type="text/javascript">
+    (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+    </script>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-71239-7']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+
+
+</body></html>

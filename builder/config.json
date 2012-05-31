@@ -12,6 +12,7 @@
             "template": "section.html",
             "file": "installation.html",
             "data": {
+                "title": "Installation | CasperJS",
                 ".section-title": "Installation",
                 ".section-subtitle": "get started in no time"
             },
