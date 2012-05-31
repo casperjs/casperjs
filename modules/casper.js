@@ -66,6 +66,7 @@ var Casper = function Casper(options) {
     // default options
     this.defaults = {
         clientScripts:       [],
+        colorizerType:       'Colorizer',
         exitOnError:         true,
         logLevel:            "error",
         httpStatusHandlers:  {},
@@ -88,10 +89,12 @@ var Casper = function Casper(options) {
         timeout:             null,
         verbose:             false
     };
+    // options
+    this.options = utils.mergeObjects(this.defaults, options);
     // properties
     this.checker = null;
     this.cli = phantom.casperArgs;
-    this.colorizer = colorizer.create();
+    this.colorizer = this.getColorizer();
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = 200;
     this.defaultWaitTimeout = 5000;
@@ -106,7 +109,6 @@ var Casper = function Casper(options) {
         error:   'ERROR'
     };
     this.mouse = mouse.create(this);
-    this.options = utils.mergeObjects(this.defaults, options);
     this.page = null;
     this.pendingWait = false;
     this.requestUrl = 'about:blank';
@@ -125,7 +127,7 @@ var Casper = function Casper(options) {
     this.initErrorHandler();
 
     this.on('error', function(msg, backtrace) {
-        var c = colorizer.create();
+        var c = this.getColorizer();
         var match = /^(.*): __mod_error(.*):: (.*)/.exec(msg);
         var notices = [];
         if (match && match.length === 4) {
@@ -571,6 +573,16 @@ Casper.prototype.forward = function forward(then) {
             history.forward();
         });
     });
+};
+
+/**
+ * Creates a new Colorizer instance. Sets `Casper.options.type` to change the
+ * colorizer type name (see the `colorizer` module).
+ *
+ * @return Object
+ */
+Casper.prototype.getColorizer = function getColorizer() {
+    return colorizer.create(this.options.colorizerType || 'Colorizer');
 };
 
 /**
