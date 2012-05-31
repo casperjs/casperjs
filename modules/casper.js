@@ -152,6 +152,9 @@ var Casper = function Casper(options) {
     this.on('deprecated', function onDeprecated(message) {
         this.echo('[deprecated] ' + message, 'COMMENT');
     });
+
+    // dispatching an event when configuration is achieved
+    this.emit('init');
 };
 
 // Casper class is an EventEmitter
