@@ -19,6 +19,11 @@ function Plip() { return 'plop'; }
 function foo_bar(boz) {}
 var gni = function ($bubu_bibi, __popo__) {};
 var gno = function    (  arg1,    /*plop*/ arg2  ) {    };
+function issue129(term) {
+    // see issue #129
+    return term;
+    // see issue #129
+}
 t.assertEquals(injector.extract(Plop), {
     name: 'Plop',
     args: ['foo', 'bar'],
@@ -51,5 +56,9 @@ eval('processed = ' + injector.process({ a: 1, b: 2 }));
 
 t.assertType(processed, "function", 'FunctionArgsInjector.process() processed a function');
 t.assertEquals(processed(), 3, 'FunctionArgsInjector.process() processed the function correctly');
+
+// Issue #129
+var fnIssue129 = createInjector(issue129).process({term: 'fixed'});
+t.assertEquals(fnIssue129('fixed'), 'fixed', 'FunctionArgsInjector.process() has issue #129 fixed');
 
 t.done();
