@@ -320,8 +320,10 @@ single <code>options</code> argument which is a standard javascript object:
 
 </p>
 <pre><code class="javascript">var casper = require('casper').create({
-    loadImages: false,
-    loadPlugins: false
+    pageSettings: {
+        loadImages: false,
+        loadPlugins: false
+    }
 });</code></pre>
 <h2>Casper options</h2>
 <p>All the available options are detailed below:
