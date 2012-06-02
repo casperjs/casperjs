@@ -30,7 +30,7 @@ As you can see, `casper.test` is a reference to a `tester.Tester` object
 instance, which is used to make the assertions and render the results.
 
 <span class="label label-info">Note</span> You can find the whole
-`tester.Tester` API documentation in the [dedicated section](#phantom_Casper_Tester).
+`tester.Tester` API documentation in the [dedicated section](tester.html).
 
 Now run the tests suite:
 

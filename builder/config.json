@@ -60,6 +60,24 @@
         },
         {
             "layout": "layout.html",
+            "template": "section_with_toc.html",
+            "file": "client-utils.html",
+            "data": {
+                "dom": {
+                    ".section-title": "Client-side utils",
+                    ".section-subtitle": null
+                },
+                "includes": {
+                    ".section-content": "sources/clientutils_contents.md",
+                    ".section-toc": "sources/clientutils_toc.md"
+                },
+                "vars": {
+                    "title": "Client-side utils"
+                }
+            }
+        },
+        {
+            "layout": "layout.html",
             "template": "section.html",
             "file": "cli.html",
             "data": {
@@ -202,11 +220,7 @@
         "#tester_contents": "sources/tester_contents.md",
         "#tester_toc": "sources/tester_toc.md",
         "#colorizer_contents": "sources/colorizer_contents.md",
-        "#colorizer_toc": "sources/colorizer_toc.md",
-
-
-        "#download_contents": "sources/download_contents.md",
-        "#license_contents": "sources/license_contents.md"
+        "#colorizer_toc": "sources/colorizer_toc.md"
     },
     "context": {
         "title": "CasperJS, a navigation scripting and testing utility for PhantomJS",

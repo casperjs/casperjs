@@ -18,7 +18,7 @@ yourself:
 var casper = new require('casper').Casper();
 ```
 
-<h3 id="phantom_Casper_options"><code>Casper([Object options])</code></h3>
+<h3 id="options"><code>Casper([Object options])</code></h3>
 
 Both the `Casper` constructor and the `create()` function accept a
 single `options` argument which is a standard javascript object:
@@ -274,7 +274,7 @@ var casper = require('casper').create({
 But no worry, usually you'll just need to instantiate Casper using
 `require('casper').create()`.
 
-<h3 id="phantom_Casper_back"><code>Casper#back()</code></h3>
+<h3 id="back"><code>Casper#back()</code></h3>
 
 Moves back a step in browser's history.
 
@@ -288,9 +288,9 @@ casper.run(function() {
 });
 ```
 
-Also have a look at [`Casper.forward()`](#phantom_Casper_forward).
+Also have a look at [`Casper.forward()`](#forward).
 
-<h3 id="phantom_Casper_base64encode"><code>Casper#base64encode(String url [, String method, Object data])</code></h3>
+<h3 id="base64encode"><code>Casper#base64encode(String url [, String method, Object data])</code></h3>
 
 Encodes a resource using the base64 algorithm synchronously using
 client-side XMLHttpRequest.
@@ -330,9 +330,9 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_click"><code>Casper#click(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="click"><code>Casper#click(String <a href="#selectors">selector</a>)</code></h3>
 
-Performs a click on the element matching the provided [selector expression](#selectors).
+Performs a click on the element matching the provided [selector expression](selectors.html).
 The method tries two strategies sequentially:
 
 1. trying to trigger a MouseEvent in Javascript
@@ -370,7 +370,7 @@ casper.then(function() {
 });
 ```
 
-<h3 id="phantom_Casper_capture"><code>Casper#capture(String targetFilepath, Object clipRect)</code></h3>
+<h3 id="capture"><code>Casper#capture(String targetFilepath, Object clipRect)</code></h3>
 
 Proxy method for PhantomJS' `WebPage#render`. Adds a clipRect parameter
 for automatically setting page clipRect setting values and sets it back
@@ -391,7 +391,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="#selectors">selector</a>)</code></h3>
 
 Captures the page area containing the provided selector.
 
@@ -405,7 +405,7 @@ casper.start('http://www.weather.com/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_clear"><code>Casper#clear()</code></h3>
+<h3 id="clear"><code>Casper#clear()</code></h3>
 
 Clears the current page execution environment context. Useful to avoid
 having previously loaded DOM contents being still active.
@@ -429,7 +429,7 @@ casper.run();
 
 <span class="label label-info">Note</span> This method has been added in 0.6.5.
 
-<h3 id="phantom_Casper_debugHTML"><code>Casper#debugHTML()</code></h3>
+<h3 id="debugHTML"><code>Casper#debugHTML()</code></h3>
 
 Logs the HTML code of the current page directly to the standard output,
 for debugging purpose.
@@ -444,7 +444,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_debugPage"><code>Casper#debugPage()</code></h3>
+<h3 id="debugPage"><code>Casper#debugPage()</code></h3>
 
 Logs the textual contents of the current page directly to the standard
 output, for debugging purpose.
@@ -459,7 +459,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_die"><code>Casper#die(String message[, int  status])</code></h3>
+<h3 id="die"><code>Casper#die(String message[, int  status])</code></h3>
 
 Exits phantom with a logged error message and an optional exit status
 code.
@@ -474,11 +474,11 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_download"><code>Casper#download(String url, String target[, String method, Object data])</code></h3>
+<h3 id="download"><code>Casper#download(String url, String target[, String method, Object data])</code></h3>
 
 Saves a remote resource onto the filesystem. You can optionally set the HTTP
 method using the `method` argument, and pass request arguments through the `data`
-object (see [base64encode](#phantom_Casper_base64encode)).
+object (see [base64encode](#base64encode)).
 
 ```javascript
 casper.start('http://www.google.fr/', function() {
@@ -491,7 +491,7 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_each"><code>Casper#each(Array array,  Function fn)</code></h3>
+<h3 id="each"><code>Casper#each(Array array,  Function fn)</code></h3>
 
 Iterates over provided array items and execute a callback.
 
@@ -517,10 +517,10 @@ casper.run();
 [googlematch.js](https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js)
 sample script for a concrete use case.
 
-<h3 id="phantom_Casper_echo"><code>Casper#echo(String message[, String style])</code></h3>
+<h3 id="echo"><code>Casper#echo(String message[, String style])</code></h3>
 
 Prints something to stdout, optionally with some fancy color (see the
-[`Colorizer`](#colorizer) section of this document for more
+[`Colorizer`](colorizer.html) section of this document for more
 information).
 
 **Example:**
@@ -535,7 +535,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_evaluate"><code>Casper#evaluate(function fn[, Object replacements])</code></h3>
+<h3 id="evaluate"><code>Casper#evaluate(function fn[, Object replacements])</code></h3>
 
 Evaluates an expression **in the remote page context**, a bit like what PhantomJS'
 `WebPage#evaluate` does, but can also handle passed arguments if you
@@ -555,7 +555,7 @@ casper.evaluate(function(username, password) {
 ```
 
 <span class="label label-info">Note</span> For filling and submitting forms, rather use the
-[`Casper#fill()`](#phantom_Casper_fill) method.
+[`Casper#fill()`](#fill) method.
 
 <span class="label label-info">Note</span> The concept behind this method is
 probably the most difficult to understand when discovering CasperJS.
@@ -569,7 +569,7 @@ concerns:
 
 ![diagram](images/evaluate-diagram.png)
 
-<h3 id="phantom_Casper_evaluateOrDie"><code>Casper#evaluateOrDie(function fn[, String message])</code></h3>
+<h3 id="evaluateOrDie"><code>Casper#evaluateOrDie(function fn[, String message])</code></h3>
 
 Evaluates an expression within the current page DOM and `die()` if it
 returns anything but `true`.
@@ -586,13 +586,14 @@ casper.start('http://foo.bar/home', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_exit"><code>Casper#exit([int status])</code></h3>
+<h3 id="exit"><code>Casper#exit([int status])</code></h3>
 
 Exits PhantomJS with an optional exit status code.
 
-<h3 id="phantom_Casper_exists"><code>Casper#exists(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="exists"><code>Casper#exists(String <a href="#selectors">selector</a>)</code></h3>
 
-Checks if any element within remote DOM matches the provided [CSS3 selector](#selectors).
+Checks if any element within remote DOM matches the provided
+[selector](selectors.html).
 
 ```javascript
 casper.start('http://foo.bar/home', function() {
@@ -606,10 +607,11 @@ casper.start('http://foo.bar/home', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_fetchText"><code>Casper#fetchText(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="fetchText"><code>Casper#fetchText(String <a href="#selectors">selector</a>)</code></h3>
 
-Retrieves text contents matching a given [selector expression](#selectors). If you provide one matching
-more than one element, their textual contents will be concatenated.
+Retrieves text contents matching a given [selector expression](selectors.html).
+If you provide one matching more than one element, their textual contents will
+be concatenated.
 
 ```javascript
 casper.start('http://google.com/search?q=foo', function() {
@@ -617,7 +619,7 @@ casper.start('http://google.com/search?q=foo', function() {
 }).run();
 ```
 
-<h3 id="phantom_Casper_forward"><code>Casper#forward()</code></h3>
+<h3 id="forward"><code>Casper#forward()</code></h3>
 
 Moves a step forward in browser's history.
 
@@ -631,9 +633,9 @@ casper.forward(); // http://foo.bar/2
 casper.run();
 ```
 
-Also have a look at [`Casper.back()`](#phantom_Casper_back).
+Also have a look at [`Casper.back()`](#back).
 
-<h3 id="phantom_Casper_log"><code>Casper#log(String message[, String level, String space])</code></h3>
+<h3 id="log"><code>Casper#log(String message[, String level, String space])</code></h3>
 
 Logs a message with an optional level in an optional space. Available
 levels are `debug`, `info`, `warning` and `error`. A space is a kind of
@@ -651,7 +653,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_fill"><code>Casper#fill(String <a href="#selectors">selector</a>,  Object values[, Boolean submit])</code></h3>
+<h3 id="fill"><code>Casper#fill(String <a href="#selectors">selector</a>,  Object values[, Boolean submit])</code></h3>
 
 Fills the fields of a form with given values and optionally submits it.
 
@@ -702,11 +704,11 @@ the Chuck. More seriously, please just don't.
 
 <span class="label label-warning">Warning</span> The `fill()` method currently
 can't fill **file fields**; PhantomJS natively only allows the use of
-[CSS3 selectors](#selectors) in
+[selectors](selectors.html) in
 <a href="http://code.google.com/p/phantomjs/wiki/Interface#uploadFile(selector,_fileName)">its
 uploadFile method</a>, hence this limitation.
 
-<h3 id="phantom_Casper_getCurrentUrl"><code>Casper#getCurrentUrl()</code></h3>
+<h3 id="getCurrentUrl"><code>Casper#getCurrentUrl()</code></h3>
 
 Retrieves current page URL. <span class="label label-info">Note</span> the url
 will be url-decoded.
@@ -721,7 +723,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_getGlobal"><code>Casper#getGlobal(String name)</code></h3>
+<h3 id="getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 Retrieves a global variable value within the remote DOM environment by
 its name. Basically, `getGlobal('foo')` will retrieve the value of `window.foo`
@@ -737,7 +739,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_getTitle"><code>Casper#getTitle()</code></h3>
+<h3 id="getTitle"><code>Casper#getTitle()</code></h3>
 
 Retrieves current page title.
 
@@ -751,11 +753,12 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_mouseEvent"><code>Casper#mouseEvent(String type, String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="mouseEvent"><code>Casper#mouseEvent(String type, String <a href="#selectors">selector</a>)</code></h3>
 
 Trigger a mouse event on the first element found matching the provided selector.
 
-Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover` and `mouseout`.
+Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover`
+and `mouseout`.
 
 **Example:**
 
@@ -767,7 +770,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_open"><code>Casper#open(String location, Object Settings)</code></h3>
+<h3 id="open"><code>Casper#open(String location, Object Settings)</code></h3>
 
 Performs an HTTP request for opening a given location. You can forge
 `GET`, `POST`, `PUT`, `DELETE` and `HEAD` requests.
@@ -804,13 +807,13 @@ casper.then(function() {
 casper.run();
 ```
 
-<span class="label label-warning">Warning</span> PhantomJS 1.4.0 and 1.4.1 have introduced a
-[regression](http://code.google.com/p/phantomjs/issues/detail?id=337)
+<span class="label label-warning">Warning</span> PhantomJS 1.4.0 and 1.4.1 have
+introduced a [regression](http://code.google.com/p/phantomjs/issues/detail?id=337)
 with POST requests preventing data to be actually submitted; so please
 check you're using a more recent or patched version of PhantomJS before
 reporting any issue regarding this bug.
 
-<h3 id="phantom_Casper_repeat"><code>Casper#repeat(int times,  function then)</code></h3>
+<h3 id="repeat"><code>Casper#repeat(int times,  function then)</code></h3>
 
 Repeats a navigation step a given number of times.
 
@@ -824,7 +827,7 @@ casper.start().repeat(3, function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_resourceExists"><code>Casper#resourceExists(Mixed  test)</code></h3>
+<h3 id="resourceExists"><code>Casper#resourceExists(Mixed  test)</code></h3>
 
 Checks if a resource has been loaded. You can pass either a function or
 a string to perform the test.
@@ -844,9 +847,9 @@ casper.run();
 ```
 
 <span class="label label-info">Note</span> If you want to wait for a resource to
-be loaded, use the [`waitForResource()`](#phantom_Casper_waitForResource) method.
+be loaded, use the [`waitForResource()`](#waitForResource) method.
 
-<h3 id="phantom_Casper_run"><code>Casper#run(fn onComplete[, int  time])</code></h3>
+<h3 id="run"><code>Casper#run(fn onComplete[, int  time])</code></h3>
 
 Runs the whole suite of steps and optionally executes a callback when
 they've all been done. Obviously, **calling this method is mandatory**
@@ -891,9 +894,9 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_setHttpauth"><code>Casper#setHttpauth(String username, String password)</code></h3>
+<h3 id="setHttpAuth"><code>Casper#setHttpAuth(String username, String password)</code></h3>
 
-Sets `HTTP_AUTH_USER` and `HTTP_AUTH_PW` for HTTP based authentication
+Sets `HTTP_AUTH_USER` and `HTTP_AUTH_PW` values for HTTP based authentication
 systems.
 
 **Example:**
@@ -921,7 +924,7 @@ casper.start(url, function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_start"><code>Casper#start(String url[, function then])</code></h3>
+<h3 id="start"><code>Casper#start(String url[, function then])</code></h3>
 
 Configures and starts Casper, then open the provided `url` and
 optionally adds the step provided by the `then` argument.
@@ -978,7 +981,7 @@ Matter of taste!
 in order to be able to add navigation steps** and run the suite. If you don't
 you'll get an error message inviting you to do so anyway.
 
-<h3 id="phantom_Casper_then"><code>Casper#then(function fn)</code></h3>
+<h3 id="then"><code>Casper#then(function fn)</code></h3>
 
 This method is the standard way to add a new navigation step to the stack, by
 providing a simple function:
@@ -1004,13 +1007,13 @@ casper.run();
 You can add as many steps as you need. Note that the current `Casper` instance
 automatically binds the `this` keyword for you within step functions.
 
-To run all the steps you defined, call the [`run()`](#phantom_Casper_run) method,
+To run all the steps you defined, call the [`run()`](#run) method,
 and voila.
 
-<span class="label label-info">Note</span> You must [`start()`](#phantom_Casper_start)
+<span class="label label-info">Note</span> You must [`start()`](#start)
 the casper instance in order to use the `then()` method.
 
-<h3 id="phantom_Casper_thenEvaluate"><code>Casper#thenEvaluate(function fn[, Object replacements])</code></h3>
+<h3 id="thenEvaluate"><code>Casper#thenEvaluate(function fn[, Object replacements])</code></h3>
 
 Adds a new navigation step to perform code evaluation within the current
 retrieved page DOM.
@@ -1030,10 +1033,10 @@ casper.run();
 ```
 
 This method is basically a convenient a shortcut for chaining a
-[`then()`](#phantom_Casper_then) and an [`evaluate()`](#phantom_Casper_evaluate)
+[`then()`](#then) and an [`evaluate()`](#evaluate)
 calls.
 
-<h3 id="phantom_Casper_thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
+<h3 id="thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
 
 Adds a new navigation step for opening a new location, and optionally
 add a next step when its loaded.
@@ -1052,7 +1055,7 @@ casper.thenOpen('http://yahoo.fr/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then, Object replacements])</code></h3>
+<h3 id="thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then, Object replacements])</code></h3>
 
 Basically a shortcut for opening an url and evaluate code against remote
 DOM environment.
@@ -1076,7 +1079,7 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_viewport"><code>Casper#viewport(Number  width, Number height)</code></h3>
+<h3 id="viewport"><code>Casper#viewport(Number  width, Number height)</code></h3>
 
 Changes current viewport size.
 
@@ -1089,9 +1092,9 @@ casper.viewport(1024, 768);
 <span class="label label-info">Note</span> PhantomJS comes with a default
 viewport size of 400x300, and CasperJS doesn't override it by default.
 
-<h3 id="phantom_Casper_visible"><code>Casper#visible(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="visible"><code>Casper#visible(String <a href="#selectors">selector</a>)</code></h3>
 
-Checks if the DOM element matching the provided [selector expression](#selectors) is visible
+Checks if the DOM element matching the provided [selector expression](selectors.html) is visible
 in remote page.
 
 **Example:**
@@ -1106,7 +1109,7 @@ casper.start('http://google.com/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
+<h3 id="wait"><code>Casper#wait(Number timeout[, Function then])</code></h3>
 
 Pause steps suite execution for a given amount of time, and optionally
 execute a step on done.
@@ -1135,7 +1138,7 @@ casper.wait(1000, function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitFor"><code>Casper#waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="waitFor"><code>Casper#waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until a function returns true to process any next step.
 
@@ -1177,11 +1180,11 @@ casper.waitFor(function check() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitForSelector"><code>Casper#waitForSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="waitForSelector"><code>Casper#waitForSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided [selector expression](#selectors) exists in
+Waits until an element matching the provided [selector expression](selectors.html) exists in
 remote DOM to process any next step. Uses
-[Casper.waitFor()](#phantom_Casper_waitFor).
+[Casper.waitFor()](#waitFor).
 
 **Example:**
 
@@ -1195,11 +1198,11 @@ casper.waitForSelector('.tweet-row', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitWhileSelector"><code>Casper#waitWhileSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="waitWhileSelector"><code>Casper#waitWhileSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided [selector expression](#selectors) does not
+Waits until an element matching the provided [selector expression](selectors.html) does not
 exist in remote DOM to process a next step. Uses
-[Casper.waitFor()](#phantom_Casper_waitFor).
+[Casper.waitFor()](#waitFor).
 
 **Example:**
 
@@ -1213,10 +1216,10 @@ casper.waitWhileSelector('.selector', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitForResource"><code>Casper#waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="waitForResource"><code>Casper#waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Wait until a resource that matches the given `testFx` is loaded to
-process a next step. Uses [Casper.waitFor()](#phantom_Casper_waitFor).
+process a next step. Uses [Casper.waitFor()](#waitFor).
 
 **Example:**
 
@@ -1244,14 +1247,14 @@ casper.waitForResource("foobar.png", function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided [selector expression](#selectors) is visible in
+Waits until an element matching the provided [selector expression](selectors.html) is visible in
 the remote DOM to process a next step. Uses
-[Casper.waitFor()](#phantom_Casper_waitFor).
+[Casper.waitFor()](#waitFor).
 
-<h3 id="phantom_Casper_waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
-Waits until an element matching the provided [selector expression](#selectors) is no longer
+Waits until an element matching the provided [selector expression](selectors.html) is no longer
 visible in remote DOM to process a next step. Uses
-[Casper.waitFor()](#phantom_Casper_waitFor).
+[Casper.waitFor()](#waitFor).

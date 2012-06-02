@@ -22,7 +22,7 @@ be available within the console of your browser.
 on Webkit, you're strongly encouraged to use a recent Webkit compatible browser
 to use this bookmarklet (Chrome, Safari, etc…)
 
-<h3 id="phantom_Casper_ClientUtils_encode"><code>ClientUtils#encode(String contents)</code></h3>
+<h3 id="encode"><code>ClientUtils#encode(String contents)</code></h3>
 
 Encodes a string using the [base64
 algorithm](http://en.wikipedia.org/wiki/Base64). For the records,
@@ -42,9 +42,9 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_ClientUtils_exists"><code>ClientUtils#exists(String selector)</code></h3>
+<h3 id="exists"><code>ClientUtils#exists(String selector)</code></h3>
 
-Checks if a DOM element matching a given [selector expression](#selectors) exists.
+Checks if a DOM element matching a given [selector expression](selectors.html) exists.
 
 ```javascript
 var exists;
@@ -59,9 +59,9 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_ClientUtils_findAll"><code>ClientUtils#findAll(String selector)</code></h3>
+<h3 id="findAll"><code>ClientUtils#findAll(String selector)</code></h3>
 
-Retrieves all DOM elements matching a given [selector expression](#selectors).
+Retrieves all DOM elements matching a given [selector expression](selectors.html).
 
 ```javascript
 var links;
@@ -79,9 +79,9 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_ClientUtils_findOne"><code>ClientUtils#findOne(String selector)</code></h3>
+<h3 id="findOne"><code>ClientUtils#findOne(String selector)</code></h3>
 
-Retrieves a single DOM element by a [selector expression](#selectors).
+Retrieves a single DOM element by a [selector expression](selectors.html).
 
 ```javascript
 var href;
@@ -96,7 +96,7 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_ClientUtils_getBase64"><code>ClientUtils#getBase64(String url[, String method, Object data])</code></h3>
+<h3 id="getBase64"><code>ClientUtils#getBase64(String url[, String method, Object data])</code></h3>
 
 This method will retrieved a base64 encoded version of any resource
 behind an url. For example, let's imagine we want to retrieve the base64
@@ -116,13 +116,13 @@ casper.run(function() {
 });
 ```
 
-<h3 id="phantom_Casper_ClientUtils_getBinary"><code>ClientUtils#getBinary(String url[, String method, Object data])</code></h3>
+<h3 id="getBinary"><code>ClientUtils#getBinary(String url[, String method, Object data])</code></h3>
 
 This method will retrieved the raw contents of a given binary resource;
 unfortunately though, PhantomJS cannot process these data directly so
 you'll have to process them within the remote DOM environment. If you
 intend to download the resource, use
-[ClientUtils.getBase64()](#phantom_Casper_ClientUtils_getBase64) or
+[ClientUtils.getBase64()](#getBase64) or
 [Casper.base64encode()](#phantom_Casper_base64encode) instead.
 
 ```javascript
@@ -136,21 +136,21 @@ casper.start('http://foo.bar/', function() {
 casper.run();
 ```
 
-<h3 id="phantom_Casper_ClientUtils_getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
+<h3 id="getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
 
 Retrieves a single DOM element matching a given [XPath expression](http://www.w3.org/TR/xpath/).
 
-<h3 id="phantom_Casper_ClientUtils_getElementsByXPath"><code>ClientUtils#getElementsByXPath(String expression)</code></h3>
+<h3 id="getElementsByXPath"><code>ClientUtils#getElementsByXPath(String expression)</code></h3>
 
 Retrieves all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/), if any.
 
-<h3 id="phantom_Casper_ClientUtils_mouseEvent"><code>ClientUtils#mouseEvent(String type, String selector)</code></h3>
+<h3 id="mouseEvent"><code>ClientUtils#mouseEvent(String type, String selector)</code></h3>
 
 Dispatches a mouse event to the DOM element behind the provided selector.
 
 Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover` and `mouseout`.
 
-<h3 id="phantom_Casper_ClientUtils_visible"><code>ClientUtils#visible(String selector)</code></h3>
+<h3 id="visible"><code>ClientUtils#visible(String selector)</code></h3>
 
 Checks if an element is visible.
 
@@ -160,6 +160,6 @@ var logoIsVisible = casper.evaluate(function() {
 });
 ```
 
-<h3 id="phantom_Casper_ClientUtils_removeElementsByXPath"><code>ClientUtils#removeElementsByXPath(String expression)</code></h3>
+<h3 id="removeElementsByXPath"><code>ClientUtils#removeElementsByXPath(String expression)</code></h3>
 
 Removes all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/).

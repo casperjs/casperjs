@@ -27,6 +27,10 @@ var selectors = {};
 config.context.version = phantom.casperVersion;
 config.context.year = new Date().getFullYear();
 
+casper.on('remote.message', function(msg) {
+    this.echo('Remote: ' + msg, 'COMMENT');
+});
+
 casper.replaceDomContent = function replaceDomContent(selector, content) {
     return this.evaluate(function replace(selector, content) {
         try {
@@ -86,6 +90,24 @@ casper.getFileContent = function getFileContent(file) {
     return content;
 };
 
+casper.updateMenu = function updateMenu(path) {
+    var url = fs.basename(path);
+    var found = this.evaluate(function(url) {
+        var found = false;
+        var entries = __utils__.findAll('.navbar ul.nav li a');
+        [].forEach.call(entries, function(entry) {
+            if (entry.getAttribute('href') === url) {
+                entry.parentNode.classList.add('active');
+                found = true;
+            }
+        });
+        return found;
+    }, { url: url });
+    if (!found) {
+        this.log('could not find menu with href=' + url);
+    }
+};
+
 casper.start();
 
 casper.each(config.pages, function(self, page) {
@@ -107,8 +129,10 @@ casper.each(config.pages, function(self, page) {
             this.log('replacing ' + placeholder, "debug");
             this.replacePlaceholder(placeholder, config.context[placeholder]);
         }
-        // write contents into destination file
         var file = fs.pathJoin(docsRoot, page.file);
+        // update menu
+        this.updateMenu(file);
+        // write contents into destination file
         fs.write(file, this.page.content, 'w');
         console.log('written ' + file);
     });

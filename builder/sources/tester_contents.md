@@ -7,7 +7,7 @@ instance.
 Tester API and see it in action is probably to have a look at the [CasperJS
 test suite code](https://github.com/n1k0/casperjs/blob/master/tests/run.js).
 
-<h3 id="phantom_Casper_Tester_assert"><code>Tester#assert(Boolean condition[, String message])</code></h3>
+<h3 id="assert"><code>Tester#assert(Boolean condition[, String message])</code></h3>
 
 Asserts that the provided condition strictly resolves to a boolean
 `true`.
@@ -20,9 +20,9 @@ casper.start(url, function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertDoesntExist"><code>Tester#assertDoesntExist(String selector[, String message])</code></h3>
+<h3 id="assertDoesntExist"><code>Tester#assertDoesntExist(String selector[, String message])</code></h3>
 
-Asserts that an element matching the provided [selector expression](#selectors) doesn't exists within
+Asserts that an element matching the provided [selector expression](selectors.html) doesn't exists within
 the remote DOM environment.
 
 ```javascript
@@ -32,7 +32,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertEquals"><code>Tester#assertEquals(mixed testValue, mixed expected[, String message])</code></h3>
+<h3 id="assertEquals"><code>Tester#assertEquals(mixed testValue, mixed expected[, String message])</code></h3>
 
 Asserts that two values are strictly equals.
 
@@ -44,7 +44,7 @@ casper.start(url, function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertEval"><code>Tester#assertEval(Function fn[, String message])</code></h3>
+<h3 id="assertEval"><code>Tester#assertEval(Function fn[, String message])</code></h3>
 
 Asserts that a code evaluation in remote DOM resolves to true.
 
@@ -57,7 +57,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertEvalEquals"><code>Tester#assertEvalEquals(Function fn, mixed expected[, String message])</code></h3>
+<h3 id="assertEvalEquals"><code>Tester#assertEvalEquals(Function fn, mixed expected[, String message])</code></h3>
 
 Asserts that the result of a code evaluation in remote DOM equals.
 
@@ -70,9 +70,9 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertExists"><code>Tester#assertExists(String selector[, String message])</code></h3>
+<h3 id="assertExists"><code>Tester#assertExists(String selector[, String message])</code></h3>
 
-Asserts that an element matching the provided [selector expression](#selectors) exists in
+Asserts that an element matching the provided [selector expression](selectors.html) exists in
 remote DOM environment.
 
 ```javascript
@@ -82,7 +82,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertHttpStatus"><code>Tester#assertHttpStatus(Number status[, String message])</code></h3>
+<h3 id="assertHttpStatus"><code>Tester#assertHttpStatus(Number status[, String message])</code></h3>
 
 Asserts that current [HTTP status code](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
 is the same as the one passed as argument.
@@ -94,7 +94,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertMatch"><code>Tester#assertMatch(mixed subject, RegExp pattern[, String message])</code></h3>
+<h3 id="assertMatch"><code>Tester#assertMatch(mixed subject, RegExp pattern[, String message])</code></h3>
 
 Asserts that a provided string matches a provided javascript `RegExp`
 pattern.
@@ -103,7 +103,7 @@ pattern.
 casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');
 ```
 
-<h3 id="phantom_Casper_Tester_assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
+<h3 id="assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
 
 Asserts that the passed subject resolves to `false`.
 
@@ -111,7 +111,7 @@ Asserts that the passed subject resolves to `false`.
 casper.test.assertNot(false, "Universe is still operational");
 ```
 
-<h3 id="phantom_Casper_Tester_assertNotEquals"><code>Tester#assertNotEquals(mixed testValue, mixed expected[, String message])</code></h3>
+<h3 id="assertNotEquals"><code>Tester#assertNotEquals(mixed testValue, mixed expected[, String message])</code></h3>
 
 Asserts that two values are **not** strictly equals.
 
@@ -119,7 +119,7 @@ Asserts that two values are **not** strictly equals.
 casper.test.assertNotEquals(true, "Truth is out");
 ```
 
-<h3 id="phantom_Casper_Tester_assertRaises"><code>Tester#assertRaises(Function fn, Array args[, String message])</code></h3>
+<h3 id="assertRaises"><code>Tester#assertRaises(Function fn, Array args[, String message])</code></h3>
 
 Asserts that the provided function called with the given parameters
 raises a javascript `Error`.
@@ -132,9 +132,9 @@ casper.test.assertRaises(function(throwIt) {
 }, [true], 'Error has been raised.');
 ```
 
-<h3 id="phantom_Casper_Tester_assertSelectorExists"><code>Tester#assertSelectorExists(String selector[, String message])</code></h3>
+<h3 id="assertSelectorExists"><code>Tester#assertSelectorExists(String selector[, String message])</code></h3>
 
-Asserts that at least an element matching the provided [selector expression](#selectors)
+Asserts that at least an element matching the provided [selector expression](selectors.html)
 exists in remote DOM.
 
 ```javascript
@@ -144,7 +144,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertResourceExists"><code>Tester#assertResourceExists(Function testFx[, String message])</code></h3>
+<h3 id="assertResourceExists"><code>Tester#assertResourceExists(Function testFx[, String message])</code></h3>
 
 The `testFx` is executed against all loaded asserts and the test passes
 when at least one resource matches.
@@ -160,7 +160,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertTextExists"><code>Tester#assertTextExists(String expected[, String message])</code></h3>
+<h3 id="assertTextExists"><code>Tester#assertTextExists(String expected[, String message])</code></h3>
 
 Asserts that body **plain text content** contains the given string.
 
@@ -171,7 +171,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertTitle"><code>Tester#assertTitle(String expected[, String message])</code></h3>
+<h3 id="assertTitle"><code>Tester#assertTitle(String expected[, String message])</code></h3>
 
 Asserts that title of the remote page equals to the expected one.
 
@@ -182,7 +182,7 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_assertType"><code>Tester#assertType(mixed input, String type[, String message])</code></h3>
+<h3 id="assertType"><code>Tester#assertType(mixed input, String type[, String message])</code></h3>
 
 Asserts that the provided input is of the given type.
 
@@ -192,7 +192,7 @@ casper.test.assertType(42, "number", "Okay, 42 is a number");
 casper.test.assertType([1, 2, 3], "array", "Yeah, we can test for arrays too =)");
 ```
 
-<h3 id="phantom_Casper_Tester_assertUrlMatch"><code>Tester#assertUrlMatch(Regexp pattern[, String message])</code></h3>
+<h3 id="assertUrlMatch"><code>Tester#assertUrlMatch(Regexp pattern[, String message])</code></h3>
 
 Asserts that a the current page url matches the provided RegExp pattern.
 
@@ -203,12 +203,12 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="phantom_Casper_Tester_colorize"><code>Tester#colorize(String message, String style)</code></h3>
+<h3 id="colorize"><code>Tester#colorize(String message, String style)</code></h3>
 
 Render a colorized output. Basically a proxy method for
 `Casper.Colorizer#colorize()`.
 
-<h3 id="phantom_Casper_Tester_comment"><code>Tester#comment(String message)</code></h3>
+<h3 id="comment"><code>Tester#comment(String message)</code></h3>
 
 Writes a comment-style formatted message to stdout.
 
@@ -217,7 +217,7 @@ var casper = require('casper').create();
 casper.test.comment("Hi, I'm a comment");
 ```
 
-<h3 id="phantom_Casper_Tester_error"><code>Tester#error(String message)</code></h3>
+<h3 id="error"><code>Tester#error(String message)</code></h3>
 
 Writes an error-style formatted message to stdout.
 
@@ -226,7 +226,7 @@ var casper = require('casper').create();
 casper.test.error("Hi, I'm an error");
 ```
 
-<h3 id="phantom_Casper_Tester_fail"><code>Tester#fail(String message)</code></h3>
+<h3 id="fail"><code>Tester#fail(String message)</code></h3>
 
 Adds a failed test entry to the stack.
 
@@ -235,12 +235,12 @@ var casper = require('casper').create();
 casper.test.fail("Georges W. Bush");
 ```
 
-<h3 id="phantom_Casper_Tester_formatMessage"><code>Tester#formatMessage(String message, String style)</code></h3>
+<h3 id="formatMessage"><code>Tester#formatMessage(String message, String style)</code></h3>
 
 Formats a message to highlight some parts of it. Only used internally by
 the tester.
 
-<h3 id="phantom_Casper_Tester_info"><code>Tester#info(String message)</code></h3>
+<h3 id="info"><code>Tester#info(String message)</code></h3>
 
 Writes an info-style formatted message to stdout.
 
@@ -249,7 +249,7 @@ var casper = require('casper').create();
 casper.test.info("Hi, I'm an informative message.");
 ```
 
-<h3 id="phantom_Casper_Tester_pass"><code>Tester#pass(String message)</code></h3>
+<h3 id="pass"><code>Tester#pass(String message)</code></h3>
 
 Adds a successful test entry to the stack.
 
@@ -258,7 +258,7 @@ var casper = require('casper').create();
 casper.test.pass("Barrack Obama");
 ```
 
-<h3 id="phantom_Casper_Tester_renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
+<h3 id="renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
 
 Render tests results, save results in an XUnit formatted file, and optionally exit phantomjs.
 
