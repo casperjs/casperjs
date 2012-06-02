@@ -25,8 +25,8 @@ single `options` argument which is a standard javascript object:
 
 ```javascript
 var casper = require('casper').create({
-    loadImages: false,
-    loadPlugins: false
+    verbose: true,
+    logLevel: "debug"
 });
 ```
 
