@@ -7,7 +7,7 @@ console.log(colorizer.colorize("Hello World", "INFO"));
 ```
 
 Though most of the times you will use it transparently using the
-[`Casper.echo()`](#phantom_Casper_echo) method:
+[`Casper.echo()`](api.html#echo) method:
 
 ```javascript
 casper.echo('an informative message', 'INFO'); // printed in green

@@ -123,7 +123,7 @@ unfortunately though, PhantomJS cannot process these data directly so
 you'll have to process them within the remote DOM environment. If you
 intend to download the resource, use
 [ClientUtils.getBase64()](#getBase64) or
-[Casper.base64encode()](#phantom_Casper_base64encode) instead.
+[Casper.base64encode()](api.html#base64encode) instead.
 
 ```javascript
 casper.start('http://foo.bar/', function() {

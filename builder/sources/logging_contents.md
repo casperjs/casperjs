@@ -1,4 +1,4 @@
-CasperJS allows logging using its [`log()`](#phantom_Casper_log) method
+CasperJS allows logging using its [`log()`](api.html#log) method
 and these standard event levels:
 
 - `debug`
