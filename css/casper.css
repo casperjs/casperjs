@@ -5408,7 +5408,18 @@ td code {
 .center {
   text-align: center;
 }
+.container > footer {
+  padding: 1em 0 .3em;
+}
+.container > footer hr {
+  display: block;
+  width: 50%;
+  margin: 0 auto;
+  border-top: 1px solid #aaa;
+  border-bottom: none;
+}
 .container > footer p {
+  padding-top: 1em;
   text-align: center;
 }
 .contribute img {

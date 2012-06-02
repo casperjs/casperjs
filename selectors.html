@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="http://casperjs.org/">
-    <title>Installation | CasperJS 0.6.9</title>
+    <title>Selectors | CasperJS 0.6.9</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
@@ -50,55 +50,47 @@
         <div class="content"><section>
     <div class="page-header">
         <h1>
-            <span class="section-title">Installation</span>
-            
+            <span class="section-title">Selectors</span>
+            <small class="section-subtitle">transparently use CSS3 or XPath selectors</small>
         </h1>
     </div>
-    <div class="section-content"><p><a href="http://phantomjs.org/">PhantomJS</a> &gt;= 1.5 must be installed (1.5.0 highly
-recommended). Check out <a href="http://code.google.com/p/phantomjs/wiki/Installation">PhantomJS' installation
-instructions</a>, and:
+    <div class="section-content"><p>CasperJS makes an heavy use of selectors in order to work with the
+<a href="http://www.w3.org/TR/dom/">DOM</a>, and can transparently use either
+<a href="http://www.w3.org/TR/selectors/">CSS3</a> or <a href="http://www.w3.org/TR/xpath/">XPath</a>
+expressions.
 
 </p>
-<ul>
-<li><p>Ensure to always install the latest available version of PhantomJS, and prefer
-static builds over other package installation methods</p>
-</li>
-<li><p><span class="label label-warning">Ubuntu users</span> Double check the
-version of PhantomJS provided by your apt repository. Often, only old versions
-are provided.</p>
-</li>
-</ul>
-<p>Once PhantomJS's installed on your machine, you should obtain something like this:
+<p>By default, Casper will accept <a href="http://www.w3.org/TR/selectors/#selectors">CSS3 selector strings</a>
+to check for elements within the DOM. For example, to check if a <code>&lt;div id="plop"&gt;</code>
+element exists in a page, you can use:
 
 </p>
-<pre><code>$ phantomjs --version
-1.5.0</code></pre>
-<p>Now just follow these instructions:
+<pre><code class="javascript">casper.start('http://domain.tld/page.html', function() {
+    casper.test.assertExists('#plop', 'the element exists');
+});</code></pre>
+<p>But you can alternatively use <a href="">XPath expression strings</a> instead:
 
 </p>
-<pre><code>$ git clone git://github.com/n1k0/casperjs.git
-$ cd casperjs
-$ git checkout tags/0.6.9
-$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs</code></pre>
-<p>So now you should get something like this:
+<pre><code class="javascript">casper.thenOpen('http://domain.tld/page.html', function() {
+    this.test.assertExists({
+        type: 'xpath',
+        path: '//*[@id="plop"]'
+    }, 'the element exists');
+});</code></pre>
+<p>To ease the use and reading of XPath expressions, a <code>selectXPath</code> helper is
+available from the <code>casper</code> module:
 
 </p>
-<pre><code>$ casperjs --version
-0.6.9</code></pre>
-<p>You are now ready to write your first script!
+<pre><code class="javascript">var x = require('casper').selectXPath;
 
-</p>
-<p><span class="label label-info">Note</span> The casperjs executable is written
-in <a href="http://python.org/">Python</a>, so you can also run it using the python command:
-
-</p>
-<pre><code>$ python /path/to/casperjs/bin/casperjs
-CasperJS version 0.6.9 at /Users/niko/casperjs
-Usage: casperjs script.(js|coffee) [options...]
-Read the docs http://casperjs.org/</code></pre>
-<p><span class="label label-info">Note</span> If for any reason you <strong>don't have
-access to Python</strong> or are <strong>running Windows</strong>, please check this
-<a href="#faq-executable">FAQ entry</a>.
+casper.thenOpen('http://domain.tld/page.html', function() {
+    this.test.assertExists(x('//*[@id="plop"]'), 'the element exists');
+});</code></pre>
+<p><span class="label label-warning">Warning</span> The only limitation of XPath use
+in CasperJS is in the <a href="#phantom_Casper_fill"><code>fill()</code></a> method when you want to fill <strong>file fields</strong>; PhantomJS
+natively only allows the use of CSS3 selectors in
+<a href="http://code.google.com/p/phantomjs/wiki/Interface#uploadFile(selector,_fileName)">its
+uploadFile method</a>, hence this limitation.
 </p>
 </div>
 </section>

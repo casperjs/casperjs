@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="http://casperjs.org/">
-    <title>Installation | CasperJS 0.6.9</title>
+    <title>Logging | CasperJS 0.6.9</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
@@ -50,55 +50,69 @@
         <div class="content"><section>
     <div class="page-header">
         <h1>
-            <span class="section-title">Installation</span>
+            <span class="section-title">Logging</span>
             
         </h1>
     </div>
-    <div class="section-content"><p><a href="http://phantomjs.org/">PhantomJS</a> &gt;= 1.5 must be installed (1.5.0 highly
-recommended). Check out <a href="http://code.google.com/p/phantomjs/wiki/Installation">PhantomJS' installation
-instructions</a>, and:
+    <div class="section-content"><p>CasperJS allows logging using its <a href="#phantom_Casper_log"><code>log()</code></a> method
+and these standard event levels:
 
 </p>
 <ul>
-<li><p>Ensure to always install the latest available version of PhantomJS, and prefer
-static builds over other package installation methods</p>
-</li>
-<li><p><span class="label label-warning">Ubuntu users</span> Double check the
-version of PhantomJS provided by your apt repository. Often, only old versions
-are provided.</p>
-</li>
+<li><code>debug</code></li>
+<li><code>info</code></li>
+<li><code>warning</code></li>
+<li><code>error</code></li>
 </ul>
-<p>Once PhantomJS's installed on your machine, you should obtain something like this:
+<p>Sample use:
 
 </p>
-<pre><code>$ phantomjs --version
-1.5.0</code></pre>
-<p>Now just follow these instructions:
+<pre><code class="javascript">var casper = require('casper').create();
+casper.log('plop', 'debug');
+casper.log('plip', 'warning');</code></pre>
+<p>Now, there are two things to distinguish: log <em>storage</em> and log
+<em>display</em>; by default CasperJS won't print the logs to the standard
+output. In order to do so, you must enable the <code>verbose</code> Casper option:
 
 </p>
-<pre><code>$ git clone git://github.com/n1k0/casperjs.git
-$ cd casperjs
-$ git checkout tags/0.6.9
-$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs</code></pre>
-<p>So now you should get something like this:
+<pre><code class="javascript">var casper = require('casper').create({
+    verbose: true
+});</code></pre>
+<p>Also, by default Casper is configured to filter logging which is under
+the <code>error</code> level; you can override this setting by configuring the
+<code>logLevel</code> option:
 
 </p>
-<pre><code>$ casperjs --version
-0.6.9</code></pre>
-<p>You are now ready to write your first script!
+<pre><code class="javascript">var casper = require('casper').create({
+    verbose: true,
+    logLevel: 'debug'
+});</code></pre>
+<p>You can also dump a JSON log of your Casper suite just by rendering the
+contents of the <code>Casper.logs</code> property:
 
 </p>
-<p><span class="label label-info">Note</span> The casperjs executable is written
-in <a href="http://python.org/">Python</a>, so you can also run it using the python command:
+<pre><code class="javascript">var casper = require('casper').create({
+// ...
+casper.run(function() {
+    this.echo(JSON.stringify(this.logs, null, 4)).exit();
+});</code></pre>
+<p>Last, if you print log messages to the standard output using the
+<code>verbose</code> option, you'll get some fancy colors:
 
 </p>
-<pre><code>$ python /path/to/casperjs/bin/casperjs
-CasperJS version 0.6.9 at /Users/niko/casperjs
-Usage: casperjs script.(js|coffee) [options...]
-Read the docs http://casperjs.org/</code></pre>
-<p><span class="label label-info">Note</span> If for any reason you <strong>don't have
-access to Python</strong> or are <strong>running Windows</strong>, please check this
-<a href="#faq-executable">FAQ entry</a>.
+<pre><code class="javascript">var casper = require('casper').create({
+    verbose: true,
+    logLevel: 'debug'
+})
+casper.log('this is a debug message', 'debug');
+casper.log('and an informative one', 'info');
+casper.log('and a warning', 'warning');
+casper.log('and an error', 'error');
+casper.exit();</code></pre>
+<p>This will give the following output:
+
+</p>
+<p><img src="images/logoutput.png" alt="image">
 </p>
 </div>
 </section>

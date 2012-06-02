@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="http://casperjs.org/">
-    <title>Installation | CasperJS 0.6.9</title>
+    <title>Extending | CasperJS 0.6.9</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
@@ -50,56 +50,89 @@
         <div class="content"><section>
     <div class="page-header">
         <h1>
-            <span class="section-title">Installation</span>
+            <span class="section-title">Extending Casper</span>
             
         </h1>
     </div>
-    <div class="section-content"><p><a href="http://phantomjs.org/">PhantomJS</a> &gt;= 1.5 must be installed (1.5.0 highly
-recommended). Check out <a href="http://code.google.com/p/phantomjs/wiki/Installation">PhantomJS' installation
-instructions</a>, and:
+    <div class="section-content"><p>Sometimes it can be convenient to add your own methods to a <code>Casper</code>
+object instance; you can easily do so as illustrated in the example
+below:
 
 </p>
-<ul>
-<li><p>Ensure to always install the latest available version of PhantomJS, and prefer
-static builds over other package installation methods</p>
-</li>
-<li><p><span class="label label-warning">Ubuntu users</span> Double check the
-version of PhantomJS provided by your apt repository. Often, only old versions
-are provided.</p>
-</li>
-</ul>
-<p>Once PhantomJS's installed on your machine, you should obtain something like this:
+<pre><code class="javascript">var casper = require('casper').create({
+    loadImages:  false,
+    logLevel:   "debug",
+    verbose:    true
+});
+
+var links = {
+    'http://edition.cnn.com/': 0,
+    'http://www.nytimes.com/': 0,
+    'http://www.bbc.co.uk/': 0,
+    'http://www.guardian.co.uk/': 0
+};
+
+var fantomas = Object.create(casper);
+
+fantomas.countLinks = function(selector) {
+    return this.evaluate(function() {
+        return __utils__.findAll('a[href]').length;
+    });
+};
+
+fantomas.renderJSON = function(what) {
+    return this.echo(JSON.stringify(what, null, '  '));
+};
+
+fantomas.start();
+
+Object.keys(links).forEach(function(url) {
+    fantomas.thenOpen(url, function() {
+        links[url] = this.countLinks();
+    });
+});
+
+fantomas.run(function() {
+    this.renderJSON(links).exit();
+});</code></pre>
+<p><span class="label label-warning">Warning</span> As of version 0.6, the <code>Casper.extend()</code> method has been
+deprecated; please now use the method illustrated above.
 
 </p>
-<pre><code>$ phantomjs --version
-1.5.0</code></pre>
-<p>Now just follow these instructions:
+<h3>Using CoffeeScript</h3>
+<p>If you're writing your casper scripts using CoffeeScript, this is
+getting a bit easier:
 
 </p>
-<pre><code>$ git clone git://github.com/n1k0/casperjs.git
-$ cd casperjs
-$ git checkout tags/0.6.9
-$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs</code></pre>
-<p>So now you should get something like this:
+<pre><code class="coffeescript">links =
+    'http://edition.cnn.com/': 0
+    'http://www.nytimes.com/': 0
+    'http://www.bbc.co.uk/': 0
+    'http://www.guardian.co.uk/': 0
 
-</p>
-<pre><code>$ casperjs --version
-0.6.9</code></pre>
-<p>You are now ready to write your first script!
+class Fantomas extends require('casper').Casper
+    countLinks: -&gt;
+        @evaluate -&gt;
+            __utils__.findAll('a').length
 
-</p>
-<p><span class="label label-info">Note</span> The casperjs executable is written
-in <a href="http://python.org/">Python</a>, so you can also run it using the python command:
+    renderJSON: (what) -&gt;
+        @echo JSON.stringify what, null, '  '
 
-</p>
-<pre><code>$ python /path/to/casperjs/bin/casperjs
-CasperJS version 0.6.9 at /Users/niko/casperjs
-Usage: casperjs script.(js|coffee) [options...]
-Read the docs http://casperjs.org/</code></pre>
-<p><span class="label label-info">Note</span> If for any reason you <strong>don't have
-access to Python</strong> or are <strong>running Windows</strong>, please check this
-<a href="#faq-executable">FAQ entry</a>.
-</p>
+fantomas = new Fantomas
+    loadImages:  false
+    logLevel:    "debug"
+    verbose:     true
+
+fantomas.start()
+
+for url of links
+    do (url) -&gt;
+        fantomas.thenOpen url, -&gt;
+            links[url] = @countLinks()
+
+fantomas.run -&gt;
+    @renderJSON links
+    @exit()</code></pre>
 </div>
 </section>
 </div>

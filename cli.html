@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="http://casperjs.org/">
-    <title>Installation | CasperJS 0.6.9</title>
+    <title>API documentation | CasperJS 0.6.9</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
@@ -50,55 +50,97 @@
         <div class="content"><section>
     <div class="page-header">
         <h1>
-            <span class="section-title">Installation</span>
-            
+            <span class="section-title">Command Line Interface</span>
+            <small class="section-subtitle">positional arguments &amp; options exposed</small>
         </h1>
     </div>
-    <div class="section-content"><p><a href="http://phantomjs.org/">PhantomJS</a> &gt;= 1.5 must be installed (1.5.0 highly
-recommended). Check out <a href="http://code.google.com/p/phantomjs/wiki/Installation">PhantomJS' installation
-instructions</a>, and:
+    <div class="section-content"><p>CasperJS ships with a built-in command line parser on top of PhantomJS'
+one, located in the <code>cli</code> module; it exposes passed arguments as
+<strong>positional ones</strong> and <strong>named options</strong>
 
 </p>
-<ul>
-<li><p>Ensure to always install the latest available version of PhantomJS, and prefer
-static builds over other package installation methods</p>
-</li>
-<li><p><span class="label label-warning">Ubuntu users</span> Double check the
-version of PhantomJS provided by your apt repository. Often, only old versions
-are provided.</p>
-</li>
-</ul>
-<p>Once PhantomJS's installed on your machine, you should obtain something like this:
+<p>But no worries for manipulating the <code>cli</code> module parsing API, a <code>Casper</code>
+instance always contains a ready to use <code>cli</code> property, allowing easy
+access of all these parameters.
 
 </p>
-<pre><code>$ phantomjs --version
-1.5.0</code></pre>
-<p>Now just follow these instructions:
+<p>Let's consider this simple casper script:
 
 </p>
-<pre><code>$ git clone git://github.com/n1k0/casperjs.git
-$ cd casperjs
-$ git checkout tags/0.6.9
-$ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs</code></pre>
-<p>So now you should get something like this:
+<pre><code class="javascript">var casper = require("casper").create();
+
+casper.echo("Casper CLI passed args:");
+require("utils").dump(casper.cli.args);
+
+casper.echo("Casper CLI passed options:");
+require("utils").dump(casper.cli.options);
+
+casper.exit();</code></pre>
+<p><span class="label label-info">Note</span> Please note the two <code>casper-path</code>
+and <code>cli</code> options; these are passed to the casper script through the <code>casperjs</code>
+Python executable.
 
 </p>
-<pre><code>$ casperjs --version
-0.6.9</code></pre>
-<p>You are now ready to write your first script!
+<p>Execution results:
 
 </p>
-<p><span class="label label-info">Note</span> The casperjs executable is written
-in <a href="http://python.org/">Python</a>, so you can also run it using the python command:
+<pre><code>$ casperjs test.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+Casper CLI passed args: [
+    "arg1",
+    "arg2",
+    "arg3",
+    "anotherarg"
+]
+Casper CLI passed options: {
+    "casper-path": "/Users/niko/Sites/casperjs",
+    "cli": true,
+    "foo": "bar",
+    "plop": true
+}</code></pre>
+<p>Getting, checking or dropping parameters:
 
 </p>
-<pre><code>$ python /path/to/casperjs/bin/casperjs
-CasperJS version 0.6.9 at /Users/niko/casperjs
-Usage: casperjs script.(js|coffee) [options...]
-Read the docs http://casperjs.org/</code></pre>
-<p><span class="label label-info">Note</span> If for any reason you <strong>don't have
-access to Python</strong> or are <strong>running Windows</strong>, please check this
-<a href="#faq-executable">FAQ entry</a>.
+<pre><code class="javascript">var casper = require("casper").create();
+casper.echo(casper.cli.has(0));
+casper.echo(casper.cli.get(0));
+casper.echo(casper.cli.has(3));
+casper.echo(casper.cli.get(3));
+casper.echo(casper.cli.has("foo"));
+casper.echo(casper.cli.get("foo"));
+casper.cli.drop("foo");
+casper.echo(casper.cli.has("foo"));
+casper.echo(casper.cli.get("foo"));
+casper.exit();</code></pre>
+<p>Execution results:
+
+</p>
+<pre><code>$ casperjs test.js arg1 arg2 arg3 --foo=bar --plop anotherarg
+true
+arg1
+true
+anotherarg
+true
+bar
+false
+undefined</code></pre>
+<p><span class="label label-info">Hint</span> What if you want to check if any arg
+or option has been passed to your script? Here you go:
+
+</p>
+<pre><code class="javascript">// removing default options passed by the Python executable
+casper.cli.drop("cli");
+casper.cli.drop("casper-path");
+
+if (casper.cli.args.length === 0 &amp;&amp; Object.keys(casper.cli.options).length === 0) {
+    casper.echo("No arg nor option passed").exit();
+}</code></pre>
+<p>Last but not least, you can still use all PhantomJS standard CLI options
+as you would do with any other phantomjs script:
+
+</p>
+<pre><code>$ casperjs --web-security=no --cookies-file=/tmp/mycookies.txt myscript.js</code></pre>
+<p><span class="label label-info">Hint</span> To remember what the native
+phantomjs available cli options are, run the <code>phantomjs --help</code> command.
 </p>
 </div>
 </section>
