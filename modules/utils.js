@@ -131,27 +131,22 @@ function format(f) {
 exports.format = format;
 
 /**
- * Inherit the prototype methods from one constructor into another, also
- * exposes the `__super__` property to child class.
+ * Inherit the prototype methods from one constructor into another.
  *
- * @param  Function  child   Constructor function which needs to inherit the
- *                           prototype.
- * @param  Function  parent  Constructor function to inherit prototype from.
- * @return Function          The child class
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
  */
-function inherits(child, parent) {
-    for (var key in parent) {
-        if (Object.prototype.hasOwnProperty.call(parent, key)) {
-            child[key] = parent[key];
+function inherits(ctor, superCtor) {
+    ctor.super_ = ctor.__super__ = superCtor;
+    ctor.prototype = Object.create(superCtor.prototype, {
+        constructor: {
+            value: ctor,
+            enumerable: false,
+            writable: true,
+            configurable: true
         }
-    }
-    function ctor() {
-        this.constructor = child;
-    }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor();
-    child.__super__ = parent.prototype;
-    return child;
+    });
 }
 exports.inherits = inherits;
 
