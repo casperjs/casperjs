@@ -409,7 +409,7 @@ casper.start('http://domain.tld/download.html', function() {
 <pre><code class="javascript">casper.run(function() {
     this.echo(base46contents).exit();
 });</code></pre>
-<h3 id="casper.click"><code>Casper#click(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.click"><code>Casper#click(String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Performs a click on the element matching the provided <a href="selectors.html">selector expression</a>.
 The method tries two strategies sequentially:
@@ -467,7 +467,7 @@ once done.
 });
 
 casper.run();</code></pre>
-<h3 id="casper.captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Captures the page area containing the provided selector.
 
@@ -663,7 +663,7 @@ casper.run();</code></pre>
 <p>Exits PhantomJS with an optional exit status code.
 
 </p>
-<h3 id="casper.exists"><code>Casper#exists(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.exists"><code>Casper#exists(String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Checks if any element within remote DOM matches the provided
 <a href="selectors.html">selector</a>.
@@ -678,7 +678,7 @@ casper.run();</code></pre>
 });
 
 casper.run();</code></pre>
-<h3 id="casper.fetchText"><code>Casper#fetchText(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.fetchText"><code>Casper#fetchText(String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Retrieves text contents matching a given <a href="selectors.html">selector expression</a>.
 If you provide one matching more than one element, their textual contents will
@@ -720,7 +720,7 @@ what happens in the PhantomJS environment from the remote one.
 });
 
 casper.run();</code></pre>
-<h3 id="casper.fill"><code>Casper#fill(String <a href="#selectors">selector</a>,  Object values[, Boolean submit])</code></h3>
+<h3 id="casper.fill"><code>Casper#fill(String <a href="selectors.html">selector</a>,  Object values[, Boolean submit])</code></h3>
 
 <p>Fills the fields of a form with given values and optionally submits it.
 
@@ -788,7 +788,7 @@ will be url-decoded.
 });
 
 casper.run();</code></pre>
-<h3 id="casper.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.getElementBounds"><code>Casper#getElementBounds(String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Retrieves boundaries for a DOM element matching the provided
 <a href="selectors.html">selector</a>.
@@ -845,7 +845,7 @@ casper.run();</code></pre>
 });
 
 casper.run();</code></pre>
-<h3 id="casper.mouseEvent"><code>Casper#mouseEvent(String type, String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.mouseEvent"><code>Casper#mouseEvent(String type, String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Trigger a mouse event on the first element found matching the provided selector.
 
@@ -1167,7 +1167,7 @@ casper.run(function() {
 viewport size of 400x300, and CasperJS doesn't override it by default.
 
 </p>
-<h3 id="casper.visible"><code>Casper#visible(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.visible"><code>Casper#visible(String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Checks if the DOM element matching the provided <a href="selectors.html">selector expression</a> is visible
 in remote page.
@@ -1249,7 +1249,7 @@ casper.waitFor(function check() {
 });
 
 casper.run();</code></pre>
-<h3 id="casper.waitForSelector"><code>Casper#waitForSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitForSelector"><code>Casper#waitForSelector(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> exists in
 remote DOM to process any next step. Uses
@@ -1266,7 +1266,7 @@ casper.waitForSelector('.tweet-row', function() {
 });
 
 casper.run();</code></pre>
-<h3 id="casper.waitWhileSelector"><code>Casper#waitWhileSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitWhileSelector"><code>Casper#waitWhileSelector(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> does not
 exist in remote DOM to process a next step. Uses
@@ -1311,14 +1311,14 @@ casper.waitForResource("foobar.png", function() {
 });
 
 casper.run();</code></pre>
-<h3 id="casper.waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> is visible in
 the remote DOM to process a next step. Uses
 <a href="#casper.waitFor">Casper.waitFor()</a>.
 
 </p>
-<h3 id="casper.waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> is no longer
 visible in remote DOM to process a next step. Uses
@@ -1518,7 +1518,7 @@ intend to download the resource, use
 });
 
 casper.run();</code></pre>
-<h3 id="clientutils.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="clientutils.getElementBounds"><code>Casper#getElementBounds(String <a href="selectors.html">selector</a>)</code></h3>
 
 <p>Retrieves boundaries for a DOM element matching the provided
 <a href="selectors.html">selector</a>.

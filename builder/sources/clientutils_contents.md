@@ -136,7 +136,7 @@ casper.start('http://foo.bar/', function() {
 casper.run();
 ```
 
-<h3 id="clientutils.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="clientutils.getElementBounds"><code>Casper#getElementBounds(String <a href="selectors.html">selector</a>)</code></h3>
 
 Retrieves boundaries for a DOM element matching the provided
 [selector](selectors.html).

@@ -333,7 +333,7 @@ casper.run(function() {
 });
 ```
 
-<h3 id="casper.click"><code>Casper#click(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.click"><code>Casper#click(String <a href="selectors.html">selector</a>)</code></h3>
 
 Performs a click on the element matching the provided [selector expression](selectors.html).
 The method tries two strategies sequentially:
@@ -394,7 +394,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="casper.captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="selectors.html">selector</a>)</code></h3>
 
 Captures the page area containing the provided selector.
 
@@ -593,7 +593,7 @@ casper.run();
 
 Exits PhantomJS with an optional exit status code.
 
-<h3 id="casper.exists"><code>Casper#exists(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.exists"><code>Casper#exists(String <a href="selectors.html">selector</a>)</code></h3>
 
 Checks if any element within remote DOM matches the provided
 [selector](selectors.html).
@@ -610,7 +610,7 @@ casper.start('http://foo.bar/home', function() {
 casper.run();
 ```
 
-<h3 id="casper.fetchText"><code>Casper#fetchText(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.fetchText"><code>Casper#fetchText(String <a href="selectors.html">selector</a>)</code></h3>
 
 Retrieves text contents matching a given [selector expression](selectors.html).
 If you provide one matching more than one element, their textual contents will
@@ -656,7 +656,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="casper.fill"><code>Casper#fill(String <a href="#selectors">selector</a>,  Object values[, Boolean submit])</code></h3>
+<h3 id="casper.fill"><code>Casper#fill(String <a href="selectors.html">selector</a>,  Object values[, Boolean submit])</code></h3>
 
 Fills the fields of a form with given values and optionally submits it.
 
@@ -726,7 +726,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="casper.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.getElementBounds"><code>Casper#getElementBounds(String <a href="selectors.html">selector</a>)</code></h3>
 
 Retrieves boundaries for a DOM element matching the provided
 [selector](selectors.html).
@@ -787,7 +787,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="casper.mouseEvent"><code>Casper#mouseEvent(String type, String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.mouseEvent"><code>Casper#mouseEvent(String type, String <a href="selectors.html">selector</a>)</code></h3>
 
 Trigger a mouse event on the first element found matching the provided selector.
 
@@ -1126,7 +1126,7 @@ casper.viewport(1024, 768);
 <span class="label label-info">Note</span> PhantomJS comes with a default
 viewport size of 400x300, and CasperJS doesn't override it by default.
 
-<h3 id="casper.visible"><code>Casper#visible(String <a href="#selectors">selector</a>)</code></h3>
+<h3 id="casper.visible"><code>Casper#visible(String <a href="selectors.html">selector</a>)</code></h3>
 
 Checks if the DOM element matching the provided [selector expression](selectors.html) is visible
 in remote page.
@@ -1214,7 +1214,7 @@ casper.waitFor(function check() {
 casper.run();
 ```
 
-<h3 id="casper.waitForSelector"><code>Casper#waitForSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitForSelector"><code>Casper#waitForSelector(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until an element matching the provided [selector expression](selectors.html) exists in
 remote DOM to process any next step. Uses
@@ -1232,7 +1232,7 @@ casper.waitForSelector('.tweet-row', function() {
 casper.run();
 ```
 
-<h3 id="casper.waitWhileSelector"><code>Casper#waitWhileSelector(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitWhileSelector"><code>Casper#waitWhileSelector(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until an element matching the provided [selector expression](selectors.html) does not
 exist in remote DOM to process a next step. Uses
@@ -1281,13 +1281,13 @@ casper.waitForResource("foobar.png", function() {
 casper.run();
 ```
 
-<h3 id="casper.waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until an element matching the provided [selector expression](selectors.html) is visible in
 the remote DOM to process a next step. Uses
 [Casper.waitFor()](#casper.waitFor).
 
-<h3 id="casper.waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until an element matching the provided [selector expression](selectors.html) is no longer
 visible in remote DOM to process a next step. Uses
