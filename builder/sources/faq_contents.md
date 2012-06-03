@@ -56,7 +56,9 @@ var casper = require('casper').create({
 });
 ```
 
-<span class="label label-info">Note</span> You can't *inject* scripts using the HTTP protocol, you actually have to use a relative/absolute filesystem path to the script resource.
+<span class="label label-info">Note</span>
+You can't *inject* scripts using the HTTP protocol, you actually have to use
+a relative/absolute filesystem path to the script resource.
 
 * * * * *
 

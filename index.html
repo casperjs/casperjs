@@ -2693,9 +2693,8 @@ below:
 
 </p>
 <pre><code class="javascript">var casper = require('casper').create({
-    loadImages:  false,
-    logLevel:   "debug",
-    verbose:    true
+    verbose: true,
+    logLevel: "debug"
 });
 
 var links = {
@@ -2705,17 +2704,63 @@ var links = {
     'http://www.guardian.co.uk/': 0
 };
 
-var fantomas = Object.create(casper);
-
-fantomas.countLinks = function(selector) {
+casper.countLinks = function(selector) {
     return this.evaluate(function() {
         return __utils__.findAll('a[href]').length;
     });
 };
 
-fantomas.renderJSON = function(what) {
+casper.renderJSON = function(what) {
     return this.echo(JSON.stringify(what, null, '  '));
 };
+
+casper.start();
+
+casper.each(Object.keys(links), function(casper, link) {
+    this.thenOpen(link, function() {
+        links[link] = this.countLinks();
+    });
+});
+
+casper.run(function() {
+    this.renderJSON(links).exit();
+});</code></pre>
+<p>But that's just plain old <em>monkey-patching</em> the <code>casper</code> object, and you may
+probably want a more OO approach… That's where the <code>inherits()</code> function from
+the <code>utils</code> module and ported from <a href="http://nodejs.org/">nodejs</a> comes handy:
+
+</p>
+<pre><code class="javascript">var Casper = require('casper').Casper;
+var utils = require('utils');
+var links = {
+    'http://edition.cnn.com/': 0,
+    'http://www.nytimes.com/': 0,
+    'http://www.bbc.co.uk/': 0,
+    'http://www.guardian.co.uk/': 0
+};
+
+function Fantomas() {
+    Fantomas.super_.apply(this, arguments);
+}
+
+// Let's make our Fantomas class extending the Casper one
+// please note that at this point, CHILD CLASS PROTOTYPE WILL BE OVERRIDEN
+utils.inherits(Fantomas, Casper);
+
+Fantomas.prototype.countLinks = function(selector) {
+    return this.evaluate(function() {
+        return __utils__.findAll('a[href]').length;
+    });
+};
+
+Fantomas.prototype.renderJSON = function(what) {
+    return this.echo(JSON.stringify(what, null, '  '));
+};
+
+var fantomas = new Fantomas({
+    verbose: true,
+    logLevel: "debug"
+});
 
 fantomas.start();
 
@@ -2728,13 +2773,22 @@ Object.keys(links).forEach(function(url) {
 fantomas.run(function() {
     this.renderJSON(links).exit();
 });</code></pre>
-<p><span class="label label-warning">Warning</span> As of version 0.6, the <code>Casper.extend()</code> method has been
-deprecated; please now use the method illustrated above.
+<p>Note the use of the <code>super_</code> child class property which becomes available
+once its parent has been defined using <code>inherits()</code>; it contains a reference
+to the parent constructor. <strong>Don't forget to call <code>Casper</code>'s parent
+constructor!</strong>
+
+</p>
+<p><span class="label label-info">Note</span>
+Of course this approach is bit more verbose than the easy <em>monkey-patching</em>
+one, so please ensure you're not just overengineering stuff by subclassing the
+<code>Casper</code> class.
 
 </p>
 <h3>Using CoffeeScript</h3>
-<p>If you're writing your casper scripts using CoffeeScript, this is
-getting a bit easier:
+<p>If you're writing your casper scripts using
+<a href="http://coffeescript.org/">CoffeeScript</a>, extending casper is getting a bit
+straightforward:
 
 </p>
 <pre><code class="coffeescript">links =
@@ -3119,7 +3173,9 @@ option of CasperJS:
 <pre><code class="javascript">var casper = require('casper').create({
     clientScripts: ["includes/jquery.min.js"]
 });</code></pre>
-<p><span class="label label-info">Note</span> You can't <em>inject</em> scripts using the HTTP protocol, you actually have to use a relative/absolute filesystem path to the script resource.
+<p><span class="label label-info">Note</span>
+You can't <em>inject</em> scripts using the HTTP protocol, you actually have to use
+a relative/absolute filesystem path to the script resource.
 
 </p>
 <hr>
@@ -3262,7 +3318,7 @@ DEALINGS IN THE SOFTWARE.</code></pre>
           </p>
         </footer>
       </div>
-      <script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=A3bb517OCjM.fr./sv=1/am=!gFuVl93svF6I1poz5g/d=1/rs=AItRSTPEA-Ahw_-gX7xWdQPOaFAPQcbJfQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+      <script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=LafFAl1n9F0.fr./sv=1/am=!-uF4IJcG30GIH1WarA/d=1/rs=AItRSTODVvje3v6NlgjFafbFGtWBcx-Fbg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
       <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript" src="prettify/prettify.js"></script>
       <script type="text/javascript" src="js/application.js"></script>
