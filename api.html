@@ -35,11 +35,11 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="active"><a href="api.html">Home</a></li>
+                                <li><a href="api.html#intro">Home</a></li>
                                 <li class="divider"></li>
                                 <li><a href="api.html#casper">Casper API</a></li>
                                 <li><a href="api.html#client-utils">Client-side utils</a></li>
-                                <li><a href="api.html#colorizer">Colorize API</a></li>
+                                <li><a href="api.html#colorizer">Colorizer API</a></li>
                                 <li><a href="api.html#tester">Tester API</a></li>
                             </ul>
                         </li>
@@ -58,10 +58,32 @@
         </div>
     </div>
     <div class="container" id="overview">
-        <div class="content"><section id="casper">
+        <div class="content"><section id="intro">
     <div class="page-header">
         <h1>
             <span class="section-title">Api documentation</span>
+        </h1>
+    </div>
+    <div class="section-content">
+        <p>
+            This page details the APIs of the following CasperJS classes &amp;
+            modules, as well as their usage:
+        </p>
+        <div class="subnav">
+            <ul class="nav nav-pills">
+                <li><a href="api.html#casper">The Casper class</a></li>
+                <li><a href="api.html#client-utils">The client-side utils</a></li>
+                <li><a href="api.html#colorizer">The Colorizer API</a></li>
+                <li><a href="api.html#tester">The Tester API</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="casper">
+    <div class="page-header">
+        <h1>
+            <span class="section-title">The Casper class</span>
         </h1>
     </div>
     <div class="row">
@@ -142,7 +164,7 @@ single <code>options</code> argument which is a standard javascript object:
       <td><code>String</code></td>
       <td><code>"error"</code></td>
       <td>
-        Logging level (see the <a href="#logging">logging
+        Logging level (see the <a href="logging.html">logging
         section</a> for more information)
       </td>
     </tr>
@@ -1275,8 +1297,8 @@ visible in remote DOM to process a next step. Uses
 </p>
 </div>
         <div class="span3 apitoc ">
-            <div class="wrapper api-toc"><h2>Quick reference</h2>
-<h3>The <code>Casper</code> class</h3>
+            <div class="wrapper api-toc"><h3>Quick reference</h3>
+<h4>The <code>Casper</code> class</h4>
 <ul>
 <li><a href="#casper.options"><code>options</code></a></li>
 <li><a href="#casper.back"><code>back()</code></a></li>
@@ -1623,7 +1645,7 @@ colorizer.format("We all live in a yellow submarine", {
     <div class="row">
         <div class="span9 tester-content"><p>Casper ships with a <code>tester</code> module and a <code>Tester</code> class providing an
 API for unit &amp; functional testing purpose. By default you can access an
-instance of this class through <code>test</code> property of any <code>Casper</code> class
+instance of this class through the <code>test</code> property of any <code>Casper</code> class
 instance.
 
 </p>
@@ -1645,8 +1667,9 @@ casper.start(url, function() {
 });</code></pre>
 <h3 id="tester.assertDoesntExist"><code>Tester#assertDoesntExist(String selector[, String message])</code></h3>
 
-<p>Asserts that an element matching the provided <a href="selectors.html">selector expression</a> doesn't exists within
-the remote DOM environment.
+<p>Asserts that an element matching the provided
+<a href="selectors.html">selector expression</a> doesn't exists within the remote DOM
+environment.
 
 </p>
 <pre><code class="javascript">var casper = require('casper').create();
@@ -1711,7 +1734,7 @@ casper.start('http://www.google.fr/', function() {
 pattern.
 
 </p>
-<pre><code class="javascript">casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');</code></pre>
+<pre><code class="javascript">casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is Chuck');</code></pre>
 <h3 id="tester.assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
 
 <p>Asserts that the passed subject resolves to <code>false</code>.
@@ -1843,7 +1866,8 @@ casper.test.info("Hi, I'm an informative message.");</code></pre>
 casper.test.pass("Barrack Obama");</code></pre>
 <h3 id="tester.renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
 
-<p>Render tests results, save results in an XUnit formatted file, and optionally exit phantomjs.
+<p>Render tests results, save results in an XUnit formatted file, and optionally
+exit phantomjs.
 
 </p>
 <pre><code class="javascript">var casper = require('casper').create();

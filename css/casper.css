@@ -4965,7 +4965,7 @@ pre.prettyprint code {
   color: #fff;
 }
 section {
-  padding-top: 60px;
+  padding-top: 80px;
 }
 section h2[id],
 section h3[id],
@@ -5185,6 +5185,21 @@ td code {
   .navbar .nav > li > a {
     font-size: 13px;
     padding-left: 0;
+  }
+  .subnav-fixed {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0;
+    z-index: 1020;
+    /* 10 less than .navbar-fixed to prevent any overlap */
+  
+    background: #000000 url("../images/bg.png");
+  }
+  .subnav-fixed .nav {
+    width: 938px;
+    margin: 0 auto;
+    padding: 0 1px;
   }
   .casper-intro {
     background: #333333 url(../images/casperjs-logo-medium.png) no-repeat right 220px;

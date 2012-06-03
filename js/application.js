@@ -90,4 +90,26 @@ $(document).ready(function() {
             $(initials).each(position);
         };
     })(window.jQuery);
+
+    // subnav scroll
+    $(document).scroll(function() {
+        var subnav = $('.subnav');
+        if (!subnav.length) {
+            return;
+        }
+        // If has not activated (has no attribute "data-top"
+        if (!subnav.attr('data-top')) {
+            // If already fixed, then do nothing
+            if (subnav.hasClass('subnav-fixed')) {
+                return;
+            }
+            // Remember top position
+            subnav.attr('data-top', subnav.offset().top);
+        }
+        if (subnav.attr('data-top') - subnav.outerHeight() <= $(this).scrollTop()) {
+            subnav.addClass('subnav-fixed');
+        } else {
+            subnav.removeClass('subnav-fixed');
+        }
+    });
 });

@@ -61,7 +61,7 @@ pre, pre.prettyprint {
     }
 }
 section {
-    padding-top: 60px;
+    padding-top: 80px;
 }
 section h2[id], section h3[id], section h4[id] {
     padding-top: 50px;
@@ -95,6 +95,9 @@ td code {
 }
 #commits-master a {
     color: #eee;
+}
+#intro .nav-pills {
+    // COLORS?
 }
 .alert {
     .alphabg;
@@ -253,6 +256,20 @@ td code {
     .navbar .nav > li > a {
         font-size: 13px;
         padding-left: 0;
+    }
+    // stolen from twitter bootstrap page :)
+    .subnav-fixed {
+        position: fixed;
+        top: 40px;
+        left: 0;
+        right: 0;
+        z-index: 1020; /* 10 less than .navbar-fixed to prevent any overlap */
+        background: #000 url("../images/bg.png");
+        .nav {
+            width: 938px;
+            margin: 0 auto;
+            padding: 0 1px;
+        }
     }
     .casper-intro {
         background: #333 url(../images/casperjs-logo-medium.png) no-repeat right 220px;

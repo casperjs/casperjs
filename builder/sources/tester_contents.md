@@ -1,6 +1,6 @@
 Casper ships with a `tester` module and a `Tester` class providing an
 API for unit & functional testing purpose. By default you can access an
-instance of this class through `test` property of any `Casper` class
+instance of this class through the `test` property of any `Casper` class
 instance.
 
 <span class="label label-info">Note</span> The best way to learn how to use the
@@ -22,8 +22,9 @@ casper.start(url, function() {
 
 <h3 id="tester.assertDoesntExist"><code>Tester#assertDoesntExist(String selector[, String message])</code></h3>
 
-Asserts that an element matching the provided [selector expression](selectors.html) doesn't exists within
-the remote DOM environment.
+Asserts that an element matching the provided
+[selector expression](selectors.html) doesn't exists within the remote DOM
+environment.
 
 ```javascript
 var casper = require('casper').create();
@@ -100,7 +101,7 @@ Asserts that a provided string matches a provided javascript `RegExp`
 pattern.
 
 ```javascript
-casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is chuck');
+casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is Chuck');
 ```
 
 <h3 id="tester.assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
@@ -260,7 +261,8 @@ casper.test.pass("Barrack Obama");
 
 <h3 id="tester.renderResults"><code>Tester#renderResults(Boolean exit, Number status, String save)</code></h3>
 
-Render tests results, save results in an XUnit formatted file, and optionally exit phantomjs.
+Render tests results, save results in an XUnit formatted file, and optionally
+exit phantomjs.
 
 ```javascript
 var casper = require('casper').create();

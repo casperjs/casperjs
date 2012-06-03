@@ -81,7 +81,7 @@ All the available options are detailed below:
       <td><code>String</code></td>
       <td><code>"error"</code></td>
       <td>
-        Logging level (see the <a href="#logging">logging
+        Logging level (see the <a href="logging.html">logging
         section</a> for more information)
       </td>
     </tr>

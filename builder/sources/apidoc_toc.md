@@ -1,6 +1,6 @@
-## Quick reference
+### Quick reference
 
-### The `Casper` class
+#### The `Casper` class
 
 - [`options`](#casper.options)
 - [`back()`](#casper.back)
