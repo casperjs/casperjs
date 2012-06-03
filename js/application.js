@@ -11,8 +11,6 @@ $(document).ready(function() {
     prettyPrint();
     // topbar
     $(".collapse").collapse();
-    $('#topbar').scrollspy({ offset: 50 });
-    $('.dropdown-toggle').dropdown();
     // apitoc
     function checkApiTocLinks() {
         $('.apitoc a[class*="hashactive"]').removeClass('hashactive');

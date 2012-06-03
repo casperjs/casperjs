@@ -96,7 +96,8 @@ casper.updateMenu = function updateMenu(path) {
         var found = false;
         var entries = __utils__.findAll('.navbar ul.nav li a');
         [].forEach.call(entries, function(entry) {
-            if (entry.getAttribute('href') === url) {
+            var rootUrl = /([a-z0-9\-_\.]+)#?.*/.exec(entry.getAttribute('href'));
+            if (rootUrl && rootUrl[1] === url) {
                 entry.parentNode.classList.add('active');
                 found = true;
             }
