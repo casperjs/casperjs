@@ -4967,6 +4967,9 @@ pre.prettyprint code {
 section {
   padding-top: 80px;
 }
+section hr {
+  display: none;
+}
 section h2[id],
 section h3[id],
 section h4[id] {
