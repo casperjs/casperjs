@@ -1,0 +1,462 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="http://casperjs.org/">
+    <title>Events &amp; filters | CasperJS 0.6.9</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
+    <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
+    <link rel="stylesheet" href="prettify/prettify.css">
+    <link rel="stylesheet" href="css/casper.css">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+    <a href="http://github.com/n1k0/casperjs" class="contribute">
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
+    </a>
+    <div class="navbar navbar-fixed-top" data-spy="scroll" id="topbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="./index.html">CasperJS</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="installation.html">Install</a></li>
+                        <li><a href="quickstart.html">Quickstart</a></li>
+                        <li class="dropdown" id="api-menu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#api-menu" href="api.html">
+                                <acronym title="Application Programming Interface">API</acronym>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="api.html#intro">Home</a></li>
+                                <li class="divider"></li>
+                                <li><a href="api.html#casper">Casper API</a></li>
+                                <li><a href="api.html#client-utils">Client-side utils</a></li>
+                                <li><a href="api.html#colorizer">Colorizer API</a></li>
+                                <li><a href="api.html#tester">Tester API</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="cli.html"><acronym title="Command Line Interface">CLI</acronym></a></li>
+                        <li><a href="selectors.html">Selectors</a></li>
+                        <li class="active"><a href="events-filters.html">Events</a></li>
+                        <li><a href="logging.html">Logging</a></li>
+                        <li><a href="extending.html">Extending</a></li>
+                        <li><a href="testing.html">Testing</a></li>
+                        <li><a href="debugging.html">Debugging</a></li>
+                        <li><a href="faq.html"><acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
+                        <li><a href="https://groups.google.com/forum/#!forum/casperjs">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="overview">
+        <div class="content"><section>
+    <div class="page-header">
+        <h1>
+            <span class="section-title">Events &amp; filters</span>
+            <small class="section-subtitle">hooking &amp; altering the CasperJS environment at runtime</small>
+        </h1>
+    </div>
+    <div class="section-content"><p>CasperJS provides an <a href="#events">event handler</a> very similar to the
+<a href="https://github.com/joyent/node/blob/master/lib/events.js">one</a> shipping
+with <a href="http://nodejs.org">nodejs</a>; actually it borrows most of its
+codebase. CasperJS also adds <a href="#filters"><em>filters</em></a>, which are basically
+ways to alter values asynchronously.
+
+</p>
+<hr>
+<h2 id="events">Events</h2>
+
+<p>Using events is pretty much straightforward if you're a node developer,
+or if you worked with any evented system before:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+
+casper.on('resource.received', function(resource) {
+    casper.echo(resource.url);
+});</code></pre>
+<p>Here's a table containing all the available events with all the
+parameters passed to their callback:
+
+</p>
+<table class="table table-striped table-condensed" caption="Casper events">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Arguments</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>back</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when the embedded browser is asked to go back a step in its history.</td>
+    </tr>
+    <tr>
+      <td><code>capture.saved</code></td>
+      <td><code>targetFile</code></td>
+      <td>Emitted when a screenshot image has been captured.</td>
+    </tr>
+    <tr>
+      <td><code>click</code></td>
+      <td><code>selector</code></td>
+      <td>Emitted when the <code>Casper.click()</code> method has been called.</td>
+    </tr>
+    <tr>
+      <td><code>die</code></td>
+      <td><code>message, status</code></td>
+      <td>Emitted when the <code>Casper.die()</code> method has been called.</td>
+    </tr>
+    <tr>
+      <td><code>downloaded.file</code></td>
+      <td><code>targetPath</code></td>
+      <td>Emitted when </td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>msg, backtrace</code></td>
+      <td>
+        Emitted when an error hasn't been caught. Do basically what PhantomJS'
+        <code>onError()</code> native handler does.
+      </td>
+    </tr>
+    <tr>
+      <td><code>exit</code></td>
+      <td><code>status</code></td>
+      <td>Emitted when the <code>Casper.exit()</code> method has been called.</td>
+    </tr>
+    <tr>
+      <td><code>fill</code></td>
+      <td><code>selector, vals, submit</code></td>
+      <td>Emitted when a form is filled using the <code>Casper.fill()</code> method.</td>
+    </tr>
+    <tr>
+      <td><code>forward</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when the embedded browser is asked to go forward a step in its history.</td>
+    </tr>
+    <tr>
+      <td><code>http.auth</code></td>
+      <td><code>username, password</code></td>
+      <td>Emitted when http authentication parameters are set.</td>
+    </tr>
+    <tr>
+      <td><code>http.status.[code]</code></td>
+      <td><code>resource</code></td>
+      <td>
+        <p>
+          Emitted when any given HTTP reponse is received with the status code
+          specified by <code>[code]</code>, eg.:
+        </p>
+        <pre class="prettyprint">casper.on('http.status.404', function(resource) {
+    casper.echo(resource.url + ' is 404');
+})</pre>
+        </td>
+    
+    </tr><tr>
+      <td><code>load.started</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when PhantomJS' <code>WebPage.onLoadStarted</code> event callback is called.</td>
+    </tr>
+    <tr>
+      <td><code>load.failed</code></td>
+      <td><code>Object</code></td>
+      <td>
+        Emitted when PhantomJS' <code>WebPage.onLoadFinished</code> event callback has been called and
+        failed.
+      </td>
+    </tr>
+    <tr>
+      <td><code>load.finished</code></td>
+      <td><code>status</code></td>
+      <td>Emitted when PhantomJS' <code>WebPage.onLoadFinished</code> event callback is called.</td>
+    </tr>
+    <tr>
+      <td><code>log</code></td>
+      <td><code>entry</code></td>
+      <td>
+        <p>Emitted when the <code>Casper.log()</code> method has been called. The
+        <code>entry</code> parameter is an Object like this:</p>
+        <pre class="prettyprint">{
+    level:   "debug",
+    space:   "phantom",
+    message: "A message",
+    date:    "a javascript Date instance"
+}</pre>
+      </td>
+    </tr>
+    <tr>
+      <td><code>mouse.click</code></td>
+      <td><code>args</code></td>
+      <td>Emitted when the mouse left-click something or somewhere.</td>
+    </tr>
+    <tr>
+      <td><code>mouse.down</code></td>
+      <td><code>args</code></td>
+      <td>Emitted when the mouse presses on something or somewhere with the left button.</td>
+    </tr>
+    <tr>
+      <td><code>mouse.move</code></td>
+      <td><code>args</code></td>
+      <td>Emitted when the mouse moves onto something or somewhere.</td>
+    </tr>
+    <tr>
+      <td><code>mouse.up</code></td>
+      <td><code>args</code></td>
+      <td>Emitted when the mouse releases the left button over something or somewhere.</td>
+    </tr>
+    <tr>
+      <td><code>open</code></td>
+      <td><code>location, settings</code></td>
+      <td>
+        <p>Emitted when an HTTP request is sent. First callback arg is
+        the location, second one is a request settings Object of the form:</p>
+        <pre class="prettyprint">{
+    method: "post",
+    data:   "foo=42&amp;chuck=norris"
+}</pre>
+      </td>
+    </tr>
+    <tr>
+      <td><code>page.created</code></td>
+      <td><code>page</code></td>
+      <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been created.</td>
+    </tr>
+    <tr>
+      <td><code>page.error</code></td>
+      <td><code>message, trace</code></td>
+      <td>
+        Emitted when retrieved page leaved a Javascript error uncaught:
+        <pre class="prettyprint">casper.on("page.error", function(msg, trace) {
+    this.echo("Error: " + msg, "ERROR");
+});</pre>
+      </td>
+    </tr>
+    <tr>
+      <td><code>page.initialized</code></td>
+      <td><code>page</code></td>
+      <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been initialized.</td>
+    </tr>
+    <tr>
+      <td><code>remote.alert</code></td>
+      <td><code>message</code></td>
+      <td>Emitted when a remote <code>alert()</code> call has been performed.</td>
+    </tr>
+    <tr>
+      <td><code>remote.message</code></td>
+      <td><code>msg</code></td>
+      <td>Emitted when any remote console logging call has been performed.</td>
+    </tr>
+    <tr>
+      <td><code>resource.received</code></td>
+      <td><code>resource</code></td>
+      <td>Emitted when any resource has been received.</td>
+    </tr>
+    <tr>
+      <td><code>resource.requested</code></td>
+      <td><code>request</code></td>
+      <td>Emitted when any resource has been requested.</td>
+    </tr>
+    <tr>
+      <td><code>run.complete</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when the whole series of steps in the stack have been executed.</td>
+    </tr>
+    <tr>
+      <td><code>run.start</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when <code>Casper.run()</code> is called.</td>
+    </tr>
+    <tr>
+      <td><code>starting</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when <code>Casper.start()</code> is called.</td>
+    </tr>
+    <tr>
+      <td><code>started</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when Casper has been started using <code>Casper.start()</code>.</td>
+    </tr>
+    <tr>
+      <td><code>step.added</code></td>
+      <td><code>step</code></td>
+      <td>Emitted when a new navigation step has been added to the stack.</td>
+    </tr>
+    <tr>
+      <td><code>step.complete</code></td>
+      <td><code>stepResult</code></td>
+      <td>Emitted when a navigation step has been executed.</td>
+    </tr>
+    <tr>
+      <td><code>step.created</code></td>
+      <td><code>fn</code></td>
+      <td>Emitted when a new navigation step has been created.</td>
+    </tr>
+    <tr>
+      <td><code>step.start</code></td>
+      <td><code>step</code></td>
+      <td>Emitted when a navigation step has been started.</td>
+    </tr>
+    <tr>
+      <td><code>step.timeout</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when a navigation step has been executed.</td>
+    </tr>
+    <tr>
+      <td><code>timeout</code></td>
+      <td><code>None</code></td>
+      <td>
+        Emitted when the execution time of the script has reached
+        the <code>Casper.options.timeout</code> value.
+      </td>
+    </tr>
+    <tr>
+      <td><code>viewport.changed</code></td>
+      <td><code>[width, height]</code></td>
+      <td>Emitted when the viewport has been changed.</td>
+    </tr>
+    <tr>
+      <td><code>wait.done</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when a <code>Casper.wait<em>()</em></code><em> operation ends.</em></td>
+    </tr>
+    <tr>
+      <td><code>wait.start</code></td>
+      <td><code>None</code></td>
+      <td>Emitted when a <code>Casper.wait()</code> operation starts.</td>
+    </tr>
+    <tr>
+      <td><code>waitFor.timeout</code></td>
+      <td><code>None</code></td>
+      <td>
+        Emitted when the execution time of a <code>Casper.wait*()</code>
+        operation has exceeded the value of <code>Casper.options.stepTimeout</code>.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Emitting you own events</h3>
+<p>Of course you can emit your own events, using the <code>Casper.emit()</code>
+method:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+
+// listening to a custom event
+casper.on('google.loaded', function() {
+    this.echo('Google page title is ' + this.getTitle());
+});
+
+casper.start('http://google.com/', function() {
+    // emitting a custom event
+    this.emit('google.loaded');
+});
+
+casper.run();</code></pre>
+<hr>
+<h2 id="filters">Filters</h2>
+
+<p>Filters allow you to alter some values asynchronously. Sounds obscure? Let's
+take a simple example and imagine you would like to alter every
+single url opened by CasperJS to append a <code>foo=42</code> query string
+parameter:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+
+casper.setFilter('open.location', function(location) {
+    return /\?+/.test(location) ? location += "&amp;foo=42" : location += "?foo=42";
+});</code></pre>
+<p>There you have it, every single requested url will have this appended.
+Let me bet you'll find far more interesting use cases than my silly one
+;)
+
+</p>
+<p>Here'a the list of all available filters with their expected return
+value:
+
+</p>
+<table class="table table-striped table-condensed" caption="Casper options">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Arguments</th>
+      <th>Return type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>capture.target_filename</code></td>
+      <td><code>args</code></td>
+      <td><code>String</code></td>
+      <td>Allows to alter the value of the filename where a screen capture should be stored.</td>
+    </tr>
+    <tr>
+      <td><code>echo.message</code></td>
+      <td><code>message</code></td>
+      <td><code>String</code></td>
+      <td>Allows to alter every message written onto stdout.</td>
+    </tr>
+    <tr>
+      <td><code>log.message</code></td>
+      <td><code>message</code></td>
+      <td><code>String</code></td>
+      <td>Allows to alter every log message.</td>
+    </tr>
+    <tr>
+      <td><code>open.location</code></td>
+      <td><code>args</code></td>
+      <td><code>String</code></td>
+      <td>Allows to alter every url before it being opened.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+</div>
+        <footer>
+            <hr>
+            <p>
+                © 2011-2012 <a href="https://nicolas.perriault.net/">Nicolas Perriault</a> — get
+                the source code on GitHub: <a href="http://github.com/n1k0/casperjs">n1k0/casperjs</a> —
+                logo by <a href="http://www.forveillejeremy.com/">Jeremy Forveille</a>
+            </p>
+        </footer>
+    </div>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=LafFAl1n9F0.fr./sv=1/am=!-uF4IJcG30GIH1WarA/d=1/rs=AItRSTODVvje3v6NlgjFafbFGtWBcx-Fbg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="prettify/prettify.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script type="text/javascript">
+    (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+    </script>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-71239-7']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+
+
+</body></html>

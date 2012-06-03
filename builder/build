@@ -1,63 +1,141 @@
 #!/usr/bin/env phantomjs
 
-// casperjs setup
+/**
+ * This is an ugly script, full of bad practices, used to build de CasperJS
+ * documentation.
+ *
+ */
+
 var fs = require("fs");
 phantom.casperPath = fs.workingDirectory + "/../..";
 phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
+var utils = require("utils");
 
 var casper = require("casper").create({
-    verbose: true
+    // verbose: true,
+    // logLevel: "debug"
 });
 var marked = require('./lib/marked');
 var config = JSON.parse(fs.read("config.json"));
-var templateUrl = 'file://' + fs.workingDirectory + '/' + config.template;
+var docsRoot = fs.absolute(fs.pathJoin(phantom.casperPath, 'docs'));
+var sourcesDir = fs.pathJoin(fs.workingDirectory, 'sources');
+var templatesDir = fs.pathJoin(fs.workingDirectory, 'templates');
+var layout = fs.pathJoin(templatesDir, 'layout.html');
 var selectors = {};
 
-// this is specific to casperjs project: versioning hell removal
-if (typeof config.context === "object" && !config.context.version) {
-    config.context.version = phantom.casperVersion;
-}
+// force storing current CasperJS version in global context
+config.context.version = phantom.casperVersion;
+config.context.year = new Date().getFullYear();
 
-Object.keys(config.sources).forEach(function(selector) {
-    var src = config.sources[selector];
-    casper.echo('Selector "'+ selector + '": converting source ' + src);
-    try {
-        var content = fs.read(src), action = 'Included';
-        if (/\.md$/.test(src)) {
-            action = 'Converted';
-            content = marked(content);
+casper.on('remote.message', function(msg) {
+    this.echo('Remote: ' + msg, 'COMMENT');
+});
+
+casper.replaceDomContent = function replaceDomContent(selector, content) {
+    return this.evaluate(function replace(selector, content) {
+        try {
+            if (content === null) {
+                // drop element instead of leaving it empty
+                __utils__.findOne(selector).outerHTML = null;
+            } else {
+                __utils__.findOne(selector).innerHTML = content;
+            }
+            return true;
+        } catch (e) {
+            return false;
         }
-        selectors[selector] = content;
-        casper.echo(action + ' ' + src);
-    } catch (e) {
-        casper.echo('Skipped ' + src + ': ' + e, 'COMMENT');
-    }
-});
-
-casper.start(templateUrl, function() {
-    this.echo('Opening template: ' + templateUrl);
-    this.evaluate(function(selectors) {
-        Object.keys(selectors).forEach(function(selector) {
-            document.querySelector(selector).innerHTML = selectors[selector];
-        });
-    }, { selectors: selectors });
-});
-
-casper.then(function() {
-    var pageContent = this.page.content;
-    var target = null;
-    Object.keys(config.context).forEach(function(p) {
-        var re = new RegExp('\\{{2}\s?' + p + '\s?\\}{2}', 'gim');
-        pageContent = pageContent.replace(re, config.context[p]);
+    }, {
+        selector: selector,
+        content: content
     });
-    if (config.target) {
-        target = config.target;
-    } else {
-        target = this.cli.get(0) || "output.html";
+};
+
+casper.replacePlaceholder = function replacePlaceholder(placeholder, value) {
+    var re = new RegExp('\{{2}\s?' + placeholder + '\s?\}{2}', 'gim');
+    this.page.content = this.page.content.replace(re, value);
+};
+
+casper.processTemplate = function processTemplate(content, data) {
+    this.replaceDomContent('.content', content);
+    if ('dom' in data) {
+        this.log('processing DOM replacements', "debug");
+        for (var domSelector in data.dom) {
+            this.log('replacing DOM element ' + domSelector, "debug");
+            this.replaceDomContent(domSelector, data.dom[domSelector]);
+        }
     }
-    this.echo('Saving to ' + target);
-    fs.write(target, pageContent, "w");
-    this.echo('Saved to ' + target);
+    if ('includes' in data) {
+        this.log('processing template includes', "debug");
+        for (var includeSelector in data.includes) {
+            var includeFile = data.includes[includeSelector];
+            this.log('including ' + includeFile + ' into ' + includeSelector, "debug");
+            var tplContent = this.getFileContent(includeFile);
+            this.replaceDomContent(includeSelector, tplContent);
+        }
+    }
+    if ('vars' in data) {
+        this.log('processing template vars', "debug");
+        for (var placeholder in data.vars) {
+            this.log('replacing ' + placeholder, "debug");
+            this.replacePlaceholder(placeholder, data.vars[placeholder]);
+        }
+    }
+};
+
+casper.getFileContent = function getFileContent(file) {
+    var content = fs.read(file);
+    if (/\.md$/.test(file)) {
+        content = marked(content);
+    }
+    return content;
+};
+
+casper.updateMenu = function updateMenu(path) {
+    var url = fs.basename(path);
+    var found = this.evaluate(function(url) {
+        var found = false;
+        var entries = __utils__.findAll('.navbar ul.nav li a');
+        [].forEach.call(entries, function(entry) {
+            if (entry.getAttribute('href') === url) {
+                entry.parentNode.classList.add('active');
+                found = true;
+            }
+        });
+        return found;
+    }, { url: url });
+    if (!found) {
+        this.log('could not find menu with href=' + url);
+    }
+};
+
+casper.start();
+
+casper.each(config.pages, function(self, page) {
+    this.thenOpen(layout, function() {
+        if (!page.file) {
+            return;
+        }
+        if (page.source) {
+            // full page, no intermediate template set
+            var content = this.getFileContent(fs.pathJoin(sourcesDir, page.source));
+            this.replaceDomContent('.content', content);
+        } else if (page.template) {
+            // intermediate template processing
+            var template = fs.read(fs.pathJoin(templatesDir, page.template));
+            this.processTemplate(template, page.data);
+        }
+        // global context replacements
+        for (var placeholder in config.context) {
+            this.log('replacing ' + placeholder, "debug");
+            this.replacePlaceholder(placeholder, config.context[placeholder]);
+        }
+        var file = fs.pathJoin(docsRoot, page.file);
+        // update menu
+        this.updateMenu(file);
+        // write contents into destination file
+        fs.write(file, this.page.content, 'w');
+        console.log('written ' + file);
+    });
 });
 
 casper.run(function() {

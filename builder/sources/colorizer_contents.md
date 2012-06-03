@@ -7,7 +7,7 @@ console.log(colorizer.colorize("Hello World", "INFO"));
 ```
 
 Though most of the times you will use it transparently using the
-[`Casper.echo()`](#phantom_Casper_echo) method:
+[`Casper.echo()`](api.html#echo) method:
 
 ```javascript
 casper.echo('an informative message', 'INFO'); // printed in green
@@ -32,7 +32,7 @@ Here's a sample output of what it can look like:
 
 ![capture](images/colorizer.png)
 
-<h3 id="phantom_Casper_Colorizer_colorize"><code>Colorizer#colorize(String text, String styleName)</code></h3>
+<h3 id="colorizer.colorize"><code>Colorizer#colorize(String text, String styleName)</code></h3>
 
 Computes a colored version of the provided text string using a given
 predefined style.
@@ -48,7 +48,7 @@ methods.
 
 See the list of the [predefined styles available](#predefined-styles).
 
-<h3 id="phantom_Casper_Colorizer_format"><code>Colorizer#format(String text, Object style)</code></h3>
+<h3 id="colorizer.format"><code>Colorizer#format(String text, Object style)</code></h3>
 
 Formats a text string using the provided style definition. A style
 definition is a standard javascript `Object` instance which can define

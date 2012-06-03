@@ -1,0 +1,237 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="http://casperjs.org/">
+    <title>Extending | CasperJS 0.6.9</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
+    <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
+    <link rel="stylesheet" href="prettify/prettify.css">
+    <link rel="stylesheet" href="css/casper.css">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+    <a href="http://github.com/n1k0/casperjs" class="contribute">
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
+    </a>
+    <div class="navbar navbar-fixed-top" data-spy="scroll" id="topbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="./index.html">CasperJS</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="installation.html">Install</a></li>
+                        <li><a href="quickstart.html">Quickstart</a></li>
+                        <li class="dropdown" id="api-menu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#api-menu" href="api.html">
+                                <acronym title="Application Programming Interface">API</acronym>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="api.html#intro">Home</a></li>
+                                <li class="divider"></li>
+                                <li><a href="api.html#casper">Casper API</a></li>
+                                <li><a href="api.html#client-utils">Client-side utils</a></li>
+                                <li><a href="api.html#colorizer">Colorizer API</a></li>
+                                <li><a href="api.html#tester">Tester API</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="cli.html"><acronym title="Command Line Interface">CLI</acronym></a></li>
+                        <li><a href="selectors.html">Selectors</a></li>
+                        <li><a href="events-filters.html">Events</a></li>
+                        <li><a href="logging.html">Logging</a></li>
+                        <li class="active"><a href="extending.html">Extending</a></li>
+                        <li><a href="testing.html">Testing</a></li>
+                        <li><a href="debugging.html">Debugging</a></li>
+                        <li><a href="faq.html"><acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
+                        <li><a href="https://groups.google.com/forum/#!forum/casperjs">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="overview">
+        <div class="content"><section>
+    <div class="page-header">
+        <h1>
+            <span class="section-title">Extending Casper</span>
+            
+        </h1>
+    </div>
+    <div class="section-content"><p>Sometimes it can be convenient to add your own methods to a <code>Casper</code>
+object instance; you can easily do so as illustrated in the example
+below:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
+    verbose: true,
+    logLevel: "debug"
+});
+
+var links = {
+    'http://edition.cnn.com/': 0,
+    'http://www.nytimes.com/': 0,
+    'http://www.bbc.co.uk/': 0,
+    'http://www.guardian.co.uk/': 0
+};
+
+casper.countLinks = function(selector) {
+    return this.evaluate(function() {
+        return __utils__.findAll('a[href]').length;
+    });
+};
+
+casper.renderJSON = function(what) {
+    return this.echo(JSON.stringify(what, null, '  '));
+};
+
+casper.start();
+
+casper.each(Object.keys(links), function(casper, link) {
+    this.thenOpen(link, function() {
+        links[link] = this.countLinks();
+    });
+});
+
+casper.run(function() {
+    this.renderJSON(links).exit();
+});</code></pre>
+<p>But that's just plain old <em>monkey-patching</em> the <code>casper</code> object, and you may
+probably want a more OO approach… That's where the <code>inherits()</code> function from
+the <code>utils</code> module and ported from <a href="http://nodejs.org/">nodejs</a> comes handy:
+
+</p>
+<pre><code class="javascript">var Casper = require('casper').Casper;
+var utils = require('utils');
+var links = {
+    'http://edition.cnn.com/': 0,
+    'http://www.nytimes.com/': 0,
+    'http://www.bbc.co.uk/': 0,
+    'http://www.guardian.co.uk/': 0
+};
+
+function Fantomas() {
+    Fantomas.super_.apply(this, arguments);
+}
+
+// Let's make our Fantomas class extending the Casper one
+// please note that at this point, CHILD CLASS PROTOTYPE WILL BE OVERRIDEN
+utils.inherits(Fantomas, Casper);
+
+Fantomas.prototype.countLinks = function(selector) {
+    return this.evaluate(function() {
+        return __utils__.findAll('a[href]').length;
+    });
+};
+
+Fantomas.prototype.renderJSON = function(what) {
+    return this.echo(JSON.stringify(what, null, '  '));
+};
+
+var fantomas = new Fantomas({
+    verbose: true,
+    logLevel: "debug"
+});
+
+fantomas.start();
+
+Object.keys(links).forEach(function(url) {
+    fantomas.thenOpen(url, function() {
+        links[url] = this.countLinks();
+    });
+});
+
+fantomas.run(function() {
+    this.renderJSON(links).exit();
+});</code></pre>
+<p>Note the use of the <code>super_</code> child class property which becomes available
+once its parent has been defined using <code>inherits()</code>; it contains a reference
+to the parent constructor. <strong>Don't forget to call <code>Casper</code>'s parent
+constructor!</strong>
+
+</p>
+<p><span class="label label-info">Note</span>
+Of course this approach is bit more verbose than the easy <em>monkey-patching</em>
+one, so please ensure you're not just overengineering stuff by subclassing the
+<code>Casper</code> class.
+
+</p>
+<h3>Using CoffeeScript</h3>
+<p>If you're writing your casper scripts using
+<a href="http://coffeescript.org/">CoffeeScript</a>, extending casper is getting a bit
+straightforward:
+
+</p>
+<pre><code class="coffeescript">links =
+    'http://edition.cnn.com/': 0
+    'http://www.nytimes.com/': 0
+    'http://www.bbc.co.uk/': 0
+    'http://www.guardian.co.uk/': 0
+
+class Fantomas extends require('casper').Casper
+    countLinks: -&gt;
+        @evaluate -&gt;
+            __utils__.findAll('a').length
+
+    renderJSON: (what) -&gt;
+        @echo JSON.stringify what, null, '  '
+
+fantomas = new Fantomas
+    loadImages:  false
+    logLevel:    "debug"
+    verbose:     true
+
+fantomas.start()
+
+for url of links
+    do (url) -&gt;
+        fantomas.thenOpen url, -&gt;
+            links[url] = @countLinks()
+
+fantomas.run -&gt;
+    @renderJSON links
+    @exit()</code></pre>
+</div>
+</section>
+</div>
+        <footer>
+            <hr>
+            <p>
+                © 2011-2012 <a href="https://nicolas.perriault.net/">Nicolas Perriault</a> — get
+                the source code on GitHub: <a href="http://github.com/n1k0/casperjs">n1k0/casperjs</a> —
+                logo by <a href="http://www.forveillejeremy.com/">Jeremy Forveille</a>
+            </p>
+        </footer>
+    </div>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=LafFAl1n9F0.fr./sv=1/am=!-uF4IJcG30GIH1WarA/d=1/rs=AItRSTODVvje3v6NlgjFafbFGtWBcx-Fbg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="prettify/prettify.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script type="text/javascript">
+    (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+    </script>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-71239-7']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+
+
+</body></html>

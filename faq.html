@@ -1,0 +1,249 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="http://casperjs.org/">
+    <title>F.A.Q | CasperJS 0.6.9</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
+    <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
+    <link rel="stylesheet" href="prettify/prettify.css">
+    <link rel="stylesheet" href="css/casper.css">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+    <a href="http://github.com/n1k0/casperjs" class="contribute">
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
+    </a>
+    <div class="navbar navbar-fixed-top" data-spy="scroll" id="topbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="./index.html">CasperJS</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="installation.html">Install</a></li>
+                        <li><a href="quickstart.html">Quickstart</a></li>
+                        <li class="dropdown" id="api-menu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#api-menu" href="api.html">
+                                <acronym title="Application Programming Interface">API</acronym>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="api.html#intro">Home</a></li>
+                                <li class="divider"></li>
+                                <li><a href="api.html#casper">Casper API</a></li>
+                                <li><a href="api.html#client-utils">Client-side utils</a></li>
+                                <li><a href="api.html#colorizer">Colorizer API</a></li>
+                                <li><a href="api.html#tester">Tester API</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="cli.html"><acronym title="Command Line Interface">CLI</acronym></a></li>
+                        <li><a href="selectors.html">Selectors</a></li>
+                        <li><a href="events-filters.html">Events</a></li>
+                        <li><a href="logging.html">Logging</a></li>
+                        <li><a href="extending.html">Extending</a></li>
+                        <li><a href="testing.html">Testing</a></li>
+                        <li><a href="debugging.html">Debugging</a></li>
+                        <li class="active"><a href="faq.html"><acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
+                        <li><a href="https://groups.google.com/forum/#!forum/casperjs">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="overview">
+        <div class="content"><section>
+    <div class="page-header">
+        <h1>
+            <span class="section-title">Frequently Asked Questions</span>
+            <small class="section-subtitle">in random order</small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span6 section-content"><p>Here's a selection of the most frequently asked questions by casperjs
+newcomers.
+
+</p>
+<h2 id="faq-help">I'm stuck! What can I do?</h2>
+
+<p>Your best bet is probably to ask for help on the <a href="https://groups.google.com/forum/#!forum/casperjs">CasperJS discussion
+group</a>
+
+</p>
+<hr>
+<h2 id="faq-versioning">What is the versioning policy of CasperJS?</h2>
+
+<p>Releases will follow the <a href="http://semver.org/">SemVer standard</a>; they
+will be numbered with the follow format:
+
+</p>
+<pre><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;[-&lt;identifier&gt;]</code></pre>
+<p>And constructed with the following guidelines:
+
+</p>
+<ul>
+<li>Breaking backwards compatibility bumps the major</li>
+<li>New additions without breaking backwards compatibility bumps the minor</li>
+<li>Bug fixes and misc changes bump the patch</li>
+<li>Unstable, special and trunk versions will have a proper identifier</li>
+</ul>
+<hr>
+<h2 id="faq-typeerror">I'm getting <em>TypeError: 'undefined' is not a function</em>; WTF?</h2>
+
+<p>Unfortunately PhantomJS ships with a QtWebKit JS engine which would
+<a href="http://code.google.com/p/phantomjs/issues/detail?id=336">need</a> quite a
+serious upgrade to have more explicit error messages, stack traces,
+location, etc.
+
+</p>
+<p>I cannot do much to make the situation really better, unfortunately :/
+
+</p>
+<hr>
+<h2 id="faq-jquery">Can I use <a href="http://jquery.com/">jQuery</a> with CasperJS?</h2>
+
+<p>Sure, as every single other javascript library on Earth.
+
+</p>
+<p>A first solution is to inject it into the remote DOM environment by
+hand using the standard <code>WebPage.injectJs()</code> method:
+
+</p>
+<pre><code>casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');</code></pre>
+<p>If you need jQuery being available everytime, you can also make it being
+injected in every received response by setting the <code>clientScripts</code>
+option of CasperJS:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
+    clientScripts: ["includes/jquery.min.js"]
+});</code></pre>
+<p><span class="label label-info">Note</span>
+You can't <em>inject</em> scripts using the HTTP protocol, you actually have to use
+a relative/absolute filesystem path to the script resource.
+
+</p>
+<hr>
+<h2 id="faq-executable">Can I use CasperJS without using the <code>casperjs</code> executable?</h2>
+
+<p>Yes, you can call a CasperJS script directly with the <code>phantomjs</code>
+executable, but if you do so, you must set the <code>phantom.casperPath</code>
+property to the path where the library root is located on your system:
+
+</p>
+<pre><code class="javascript">// casperscript.js
+phantom.casperPath = '/path/to/casperjs';
+phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
+
+var casper = require('casper').create();
+// ...</code></pre>
+<p>You can run such a script like any other standard PhantomJS script:
+
+</p>
+<pre><code>$ phantomjs casperscript.js</code></pre>
+<p><strong>If you're on Windows</strong>, this is the way you may manage to get casper working
+the most easily:
+
+</p>
+<pre><code class="javascript">phantom.casperPath = 'C:\\path\\to\\your\\repo\\lib\\casperjs-0.6.X';
+phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
+
+var casper = require('casper').create();
+
+// do stuff</code></pre>
+<hr>
+<h2 id="faq-httpstatuses">How can I catch HTTP 404 and other status codes?</h2>
+
+<p>You can define your own HTTP status code handlers by using the
+<code>httpStatusHandlers</code> option of the Casper object. You can also catch
+other HTTP status codes as well, as demoed below:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
+    httpStatusHandlers: {
+        404: function(self, resource) {
+            self.echo(resource.url + ' not found (404)');
+        },
+        500: function(self, resource) {
+            self.echo(resource.url + ' gave an error (500)');
+        }
+    },
+    verbose: true
+});
+
+casper.start('http://mywebsite/404', function() {
+    this.echo('We suppose this url return an HTTP 404');
+});
+
+casper.thenOpen('http://mywebsite/500', function() {
+    this.echo('We suppose this url return an HTTP 500');
+});
+
+casper.run(function() {
+    this.echo('Done.').exit();
+});</code></pre>
+<p><span class="label label-info">Hint</span> As of 0.6, casper ships with a
+complete <a href="#events-filters">event system</a> and a bunch of these are dedicated to
+HTTP statuses. You're encouraged to use them.
+</p>
+</div>
+        <div class="span4 apitoc">
+            <div class="wrapper section-toc"><h3>FAQ list</h3>
+<ul>
+<li><a href="#faq-help">I'm stuck! What can I do?</a></li>
+<li><a href="#faq-versioning">What is the versioning policy of CasperJS?</a></li>
+<li><a href="#faq-typeerror">I'm getting <em>TypeError: 'undefined' is not a function</em>; WTF?</a></li>
+<li><a href="#faq-jquery">Can I use jQuery with CasperJS?</a></li>
+<li><a href="#faq-executable">Can I use CasperJS without using the casperjs executable?</a></li>
+<li><a href="#faq-httpstatuses">How can I catch HTTP 404 and other status codes?</a></li>
+</ul>
+<p><span class="label label-info">Contribute</span> If you want to contribute FAQs
+to this section, feel free to fork the <a href="https://github.com/n1k0/casperjs/tree/gh-pages">documentation pages branch on
+github</a>, and send me a
+pull request with your tips and tricks!
+</p>
+</div>
+        </div>
+    </div>
+</section>
+</div>
+        <footer>
+            <hr>
+            <p>
+                © 2011-2012 <a href="https://nicolas.perriault.net/">Nicolas Perriault</a> — get
+                the source code on GitHub: <a href="http://github.com/n1k0/casperjs">n1k0/casperjs</a> —
+                logo by <a href="http://www.forveillejeremy.com/">Jeremy Forveille</a>
+            </p>
+        </footer>
+    </div>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=LafFAl1n9F0.fr./sv=1/am=!-uF4IJcG30GIH1WarA/d=1/rs=AItRSTODVvje3v6NlgjFafbFGtWBcx-Fbg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="prettify/prettify.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script type="text/javascript">
+    (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+    </script>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-71239-7']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+
+
+</body></html>

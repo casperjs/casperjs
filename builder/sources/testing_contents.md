@@ -30,7 +30,7 @@ As you can see, `casper.test` is a reference to a `tester.Tester` object
 instance, which is used to make the assertions and render the results.
 
 <span class="label label-info">Note</span> You can find the whole
-`tester.Tester` API documentation in the [dedicated section](#phantom_Casper_Tester).
+`tester.Tester` API documentation in the [dedicated section](api.html#tester).
 
 Now run the tests suite:
 
@@ -171,7 +171,8 @@ Some options are available using the `casper test` command:
 
 - `--xunit=<filename>` will export test suite results in a xUnit XML file
 - `--direct` will output log messages directly to the console
-- `--log-level=<logLevel>` sets the logging level (see the [related section](#logging))
+- `--log-level=<logLevel>` sets the logging level (see the
+  [related section](logging.html))
 
 * * * * *
 

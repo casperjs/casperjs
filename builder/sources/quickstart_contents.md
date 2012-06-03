@@ -67,7 +67,7 @@ $ casperjs googlelinks.js
  - http://www.readwriteweb.com/hack/2011/03/phantomjs-the-power-of-webkit.php
 ```
 
-### CoffeeScript
+## CoffeeScript
 
 You can also write Casper scripts using the [CoffeeScript
 syntax](http://jashkenas.github.com/coffee-script/):
@@ -100,4 +100,4 @@ casper.run ->
   @echo(" - " + links.join("\n - ")).exit()
 ```
 
-Just remember to suffix your script with the `.coffee`extension.
+Just remember to suffix your script with the `.coffee` extension.
