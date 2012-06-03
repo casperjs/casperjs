@@ -305,23 +305,23 @@ exports.isWebPage = isWebPage;
 /**
  * Object recursive merging utility.
  *
- * @param  Object  obj1  the destination object
- * @param  Object  obj2  the source object
+ * @param  Object  origin  the origin object
+ * @param  Object  add     the object to merge data into origin
  * @return Object
  */
-function mergeObjects(obj1, obj2) {
-    for (var p in obj2) {
+function mergeObjects(origin, add) {
+    for (var p in add) {
         try {
-            if (obj2[p].constructor === Object) {
-                obj1[p] = mergeObjects(obj1[p], obj2[p]);
+            if (add[p].constructor === Object) {
+                origin[p] = mergeObjects(origin[p], add[p]);
             } else {
-                obj1[p] = obj2[p];
+                origin[p] = add[p];
             }
         } catch(e) {
-          obj1[p] = obj2[p];
+          origin[p] = add[p];
         }
     }
-    return obj1;
+    return origin;
 }
 exports.mergeObjects = mergeObjects;
 
