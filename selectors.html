@@ -29,7 +29,20 @@
                     <ul class="nav">
                         <li><a href="installation.html">Install</a></li>
                         <li><a href="quickstart.html">Quickstart</a></li>
-                        <li><a href="api.html">API</a></li>
+                        <li class="dropdown" id="api-menu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#api-menu" href="api.html">
+                                <acronym title="Application Programming Interface">API</acronym>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="api.html">Home</a></li>
+                                <li class="divider"></li>
+                                <li><a href="api.html#casper">Casper API</a></li>
+                                <li><a href="api.html#client-utils">Client-side utils</a></li>
+                                <li><a href="api.html#colorizer">Colorize API</a></li>
+                                <li><a href="api.html#tester">Tester API</a></li>
+                            </ul>
+                        </li>
                         <li><a href="cli.html"><acronym title="Command Line Interface">CLI</acronym></a></li>
                         <li class="active"><a href="selectors.html">Selectors</a></li>
                         <li><a href="events-filters.html">Events</a></li>
