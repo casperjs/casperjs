@@ -5039,6 +5039,9 @@ td code {
   margin-bottom: 0;
   padding-bottom: 0;
 }
+.casper-intro {
+  background: #333333 url(../images/casperjs-logo.png) no-repeat right 100px;
+}
 .center {
   text-align: center;
 }
@@ -5086,8 +5089,8 @@ td code {
 .just-informative {
   color: #fff;
 }
-.casper-intro {
-  background: #333333 url(../images/casperjs-logo.png) no-repeat right 100px;
+.label-info a {
+  color: #fff;
 }
 .navbar .brand {
   color: #ccc;

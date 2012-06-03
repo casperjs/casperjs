@@ -14,7 +14,7 @@ casper.echo('an informative message', 'INFO'); // printed in green
 casper.echo('an error message', 'ERROR');      // printed in red
 ```
 
-### Available predefined styles
+<h3 id="colorizer.styles">Available predefined styles</h3>
 
 Available predefined styles are:
 
@@ -46,7 +46,7 @@ console.log(colorizer.colorize("I'm a red error", "ERROR"));
 use a `Colorizer` instance directly as CasperJS provides all the necessary
 methods.
 
-See the list of the [predefined styles available](#predefined-styles).
+See the list of the [predefined styles available](#colorizer.styles).
 
 <h3 id="colorizer.format"><code>Colorizer#format(String text, Object style)</code></h3>
 

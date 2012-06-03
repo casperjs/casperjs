@@ -122,8 +122,8 @@ This method will retrieved the raw contents of a given binary resource;
 unfortunately though, PhantomJS cannot process these data directly so
 you'll have to process them within the remote DOM environment. If you
 intend to download the resource, use
-[ClientUtils.getBase64()](#getBase64) or
-[Casper.base64encode()](api.html#base64encode) instead.
+[ClientUtils.getBase64()](#clientutils.getBase64) or
+[Casper.base64encode()](api.html#casper.base64encode) instead.
 
 ```javascript
 casper.start('http://foo.bar/', function() {

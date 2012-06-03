@@ -480,8 +480,8 @@ casper.run();
 <h3 id="casper.download"><code>Casper#download(String url, String target[, String method, Object data])</code></h3>
 
 Saves a remote resource onto the filesystem. You can optionally set the HTTP
-method using the `method` argument, and pass request arguments through the `data`
-object (see [base64encode](#base64encode)).
+method using the `method` argument, and pass request arguments through the
+`data` object (see [base64encode](api.html#casper.base64encode)).
 
 ```javascript
 casper.start('http://www.google.fr/', function() {
@@ -850,7 +850,7 @@ casper.run();
 ```
 
 <span class="label label-info">Note</span> If you want to wait for a resource to
-be loaded, use the [`waitForResource()`](#waitForResource) method.
+be loaded, use the [`waitForResource()`](#casper.waitForResource) method.
 
 <h3 id="casper.run"><code>Casper#run(fn onComplete[, int  time])</code></h3>
 
@@ -1187,7 +1187,7 @@ casper.run();
 
 Waits until an element matching the provided [selector expression](selectors.html) exists in
 remote DOM to process any next step. Uses
-[Casper.waitFor()](#waitFor).
+[Casper.waitFor()](#casper.waitFor).
 
 **Example:**
 
@@ -1205,7 +1205,7 @@ casper.run();
 
 Waits until an element matching the provided [selector expression](selectors.html) does not
 exist in remote DOM to process a next step. Uses
-[Casper.waitFor()](#waitFor).
+[Casper.waitFor()](#casper.waitFor).
 
 **Example:**
 
@@ -1222,7 +1222,7 @@ casper.run();
 <h3 id="casper.waitForResource"><code>Casper#waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Wait until a resource that matches the given `testFx` is loaded to
-process a next step. Uses [Casper.waitFor()](#waitFor).
+process a next step. Uses [Casper.waitFor()](#casper.waitFor).
 
 **Example:**
 
@@ -1254,10 +1254,10 @@ casper.run();
 
 Waits until an element matching the provided [selector expression](selectors.html) is visible in
 the remote DOM to process a next step. Uses
-[Casper.waitFor()](#waitFor).
+[Casper.waitFor()](#casper.waitFor).
 
 <h3 id="casper.waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until an element matching the provided [selector expression](selectors.html) is no longer
 visible in remote DOM to process a next step. Uses
-[Casper.waitFor()](#waitFor).
+[Casper.waitFor()](#casper.waitFor).

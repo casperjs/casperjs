@@ -550,8 +550,8 @@ casper.run();</code></pre>
 <h3 id="casper.download"><code>Casper#download(String url, String target[, String method, Object data])</code></h3>
 
 <p>Saves a remote resource onto the filesystem. You can optionally set the HTTP
-method using the <code>method</code> argument, and pass request arguments through the <code>data</code>
-object (see <a href="#base64encode">base64encode</a>).
+method using the <code>method</code> argument, and pass request arguments through the
+<code>data</code> object (see <a href="api.html#casper.base64encode">base64encode</a>).
 
 </p>
 <pre><code class="javascript">casper.start('http://www.google.fr/', function() {
@@ -906,7 +906,7 @@ a string to perform the test.
 
 casper.run();</code></pre>
 <p><span class="label label-info">Note</span> If you want to wait for a resource to
-be loaded, use the <a href="#waitForResource"><code>waitForResource()</code></a> method.
+be loaded, use the <a href="#casper.waitForResource"><code>waitForResource()</code></a> method.
 
 </p>
 <h3 id="casper.run"><code>Casper#run(fn onComplete[, int  time])</code></h3>
@@ -1224,7 +1224,7 @@ casper.run();</code></pre>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> exists in
 remote DOM to process any next step. Uses
-<a href="#waitFor">Casper.waitFor()</a>.
+<a href="#casper.waitFor">Casper.waitFor()</a>.
 
 </p>
 <p><strong>Example:</strong>
@@ -1241,7 +1241,7 @@ casper.run();</code></pre>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> does not
 exist in remote DOM to process a next step. Uses
-<a href="#waitFor">Casper.waitFor()</a>.
+<a href="#casper.waitFor">Casper.waitFor()</a>.
 
 </p>
 <p><strong>Example:</strong>
@@ -1257,7 +1257,7 @@ casper.run();</code></pre>
 <h3 id="casper.waitForResource"><code>Casper#waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Wait until a resource that matches the given <code>testFx</code> is loaded to
-process a next step. Uses <a href="#waitFor">Casper.waitFor()</a>.
+process a next step. Uses <a href="#casper.waitFor">Casper.waitFor()</a>.
 
 </p>
 <p><strong>Example:</strong>
@@ -1286,14 +1286,14 @@ casper.run();</code></pre>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> is visible in
 the remote DOM to process a next step. Uses
-<a href="#waitFor">Casper.waitFor()</a>.
+<a href="#casper.waitFor">Casper.waitFor()</a>.
 
 </p>
 <h3 id="casper.waitWhileVisible"><code>Casper#waitWhileVisible(String <a href="#selectors">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p>Waits until an element matching the provided <a href="selectors.html">selector expression</a> is no longer
 visible in remote DOM to process a next step. Uses
-<a href="#waitFor">Casper.waitFor()</a>.
+<a href="#casper.waitFor">Casper.waitFor()</a>.
 </p>
 </div>
         <div class="span3 apitoc ">
@@ -1476,8 +1476,8 @@ casper.run(function() {
 unfortunately though, PhantomJS cannot process these data directly so
 you'll have to process them within the remote DOM environment. If you
 intend to download the resource, use
-<a href="#getBase64">ClientUtils.getBase64()</a> or
-<a href="api.html#base64encode">Casper.base64encode()</a> instead.
+<a href="#clientutils.getBase64">ClientUtils.getBase64()</a> or
+<a href="api.html#casper.base64encode">Casper.base64encode()</a> instead.
 
 </p>
 <pre><code class="javascript">casper.start('http://foo.bar/', function() {
@@ -1560,7 +1560,8 @@ console.log(colorizer.colorize("Hello World", "INFO"));</code></pre>
 </p>
 <pre><code class="javascript">casper.echo('an informative message', 'INFO'); // printed in green
 casper.echo('an error message', 'ERROR');      // printed in red</code></pre>
-<h3>Available predefined styles</h3>
+<h3 id="colorizer.styles">Available predefined styles</h3>
+
 <p>Available predefined styles are:
 
 </p>
@@ -1594,7 +1595,7 @@ use a <code>Colorizer</code> instance directly as CasperJS provides all the nece
 methods.
 
 </p>
-<p>See the list of the <a href="#predefined-styles">predefined styles available</a>.
+<p>See the list of the <a href="#colorizer.styles">predefined styles available</a>.
 
 </p>
 <h3 id="colorizer.format"><code>Colorizer#format(String text, Object style)</code></h3>
