@@ -42,37 +42,21 @@
         },
         {
             "layout": "layout.html",
-            "template": "section_with_toc.html",
+            "template": "api.html",
             "file": "api.html",
             "data": {
-                "dom": {
-                    ".section-title": "API documentation",
-                    ".section-subtitle": null
-                },
                 "includes": {
-                    ".section-content": "sources/apidoc_contents.md",
-                    ".section-toc": "sources/apidoc_toc.md"
+                    ".api-content": "sources/apidoc_contents.md",
+                    ".api-toc": "sources/apidoc_toc.md",
+                    ".client-utils-content": "sources/clientutils_contents.md",
+                    ".client-utils-toc": "sources/clientutils_toc.md",
+                    ".colorizer-content": "sources/colorizer_contents.md",
+                    ".colorizer-toc": "sources/colorizer_toc.md",
+                    ".tester-content": "sources/tester_contents.md",
+                    ".tester-toc": "sources/tester_toc.md"
                 },
                 "vars": {
                     "title": "API documentation"
-                }
-            }
-        },
-        {
-            "layout": "layout.html",
-            "template": "section_with_toc.html",
-            "file": "client-utils.html",
-            "data": {
-                "dom": {
-                    ".section-title": "Client-side utils",
-                    ".section-subtitle": null
-                },
-                "includes": {
-                    ".section-content": "sources/clientutils_contents.md",
-                    ".section-toc": "sources/clientutils_toc.md"
-                },
-                "vars": {
-                    "title": "Client-side utils"
                 }
             }
         },
@@ -214,14 +198,6 @@
             }
         }
     ],
-    "sources": {
-        "#clientutils_contents": "sources/clientutils_contents.md",
-        "#clientutils_toc": "sources/clientutils_toc.md",
-        "#tester_contents": "sources/tester_contents.md",
-        "#tester_toc": "sources/tester_toc.md",
-        "#colorizer_contents": "sources/colorizer_contents.md",
-        "#colorizer_toc": "sources/colorizer_toc.md"
-    },
     "context": {
         "title": "CasperJS, a navigation scripting and testing utility for PhantomJS",
         "description": "CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.",

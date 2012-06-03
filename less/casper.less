@@ -14,9 +14,23 @@
     font-family: Consolas, Inconsolata, Monaco, monospace;
 }
 
+// bootstrap overrides
+.table-striped tbody tr:nth-child(odd) td,
+.table-striped tbody tr:nth-child(odd) th {
+  background-color: none;
+}
+.table tbody tr:hover td,
+.table tbody tr:hover th {
+  background-color: none;
+}
+
 // tags
 html, body {
     background: #000 url("../images/bg.png");
+    font-family: Asap;
+    color: #fff;
+    font-size: 16px;
+    line-height: 24px;
 }
 a code {
     text-decoration: underline
@@ -39,9 +53,7 @@ h3 code {
     color: #fff;
     border: none;
 }
-hr {
-    display: none;
-}
+
 pre, pre.prettyprint {
     .monospace;
     .alphabg;
@@ -95,6 +107,10 @@ td code {
 .alert {
     .alphabg;
     text-shadow: none;
+}
+.apinav {
+    margin-top: 135px;
+    text-align: right;
 }
 .apitoc {
     .alphabg;

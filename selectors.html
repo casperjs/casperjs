@@ -33,7 +33,6 @@
                         <li><a href="cli.html"><acronym title="Command Line Interface">CLI</acronym></a></li>
                         <li class="active"><a href="selectors.html">Selectors</a></li>
                         <li><a href="events-filters.html">Events</a></li>
-                        <li><a href="client-utils.html">Client-side utils</a></li>
                         <li><a href="logging.html">Logging</a></li>
                         <li><a href="extending.html">Extending</a></li>
                         <li><a href="testing.html">Testing</a></li>
@@ -86,8 +85,8 @@ casper.thenOpen('http://domain.tld/page.html', function() {
     this.test.assertExists(x('//*[@id="plop"]'), 'the element exists');
 });</code></pre>
 <p><span class="label label-warning">Warning</span> The only limitation of XPath use
-in CasperJS is in the <a href="#phantom_Casper_fill"><code>fill()</code></a> method when you want to fill <strong>file fields</strong>; PhantomJS
-natively only allows the use of CSS3 selectors in
+in CasperJS is in the <a href="api.html#fill"><code>fill()</code></a> method when you want to fill
+<strong>file fields</strong>; PhantomJS natively only allows the use of CSS3 selectors in
 <a href="http://code.google.com/p/phantomjs/wiki/Interface#uploadFile(selector,_fileName)">its
 uploadFile method</a>, hence this limitation.
 </p>

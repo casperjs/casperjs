@@ -20,7 +20,7 @@ $(document).ready(function() {
     }
     $(window).bind('hashchange', checkApiTocLinks);
     checkApiTocLinks();
-    (function(window) {
+    (function($) {
         var containerSelector = 'section';
         var padding = 50;
         var elements = $('.apitoc');
@@ -39,25 +39,28 @@ $(document).ready(function() {
             });
         }
         function position(i, initial) {
-            var element = initial.element
-              , container = initial.container
-              , sy = window.scrollY
-              , ep = element.position().top
-              , eh = element.height()
-              , cl = container.position().left
-              , ct = container.position().top
-              , cw = container.width()
-              , ch = container.height()
-              , cp = element.css('position')
-              , mp = ct + ch - eh
-              , em = element.position().left
-              , ew = element.width()
-            ;
+            var element = initial.element;
+            var container = initial.container;
+            var sy = window.scrollY;
+            var ep = element.position().top;
+            var eh = element.height();
+            var cl = container.position().left;
+            var ct = container.position().top;
+            var cw = container.width();
+            var ch = container.height();
+            var cp = element.css('position');
+            var mp = ct + ch - eh;
+            var em = element.position().left;
+            var ew = element.width();
             if (window.innerHeight < eh) {
                 return;
             }
             if (sy > ep && sy < mp && cp !== "fixed") {
-                element.css('position', 'fixed').css('top', padding).css('left', em).css('margin-top', initial.margintop);
+                element.css('position', 'fixed')
+                    .css('top', padding)
+                    .css('left', em)
+                    .css('margin-top', initial.margintop)
+                    .width(ew);
             } else if (cp === "fixed") {
                 if (sy < ct + padding) {
                     element.css('position', initial.position).css('margin-top', initial.margintop);
@@ -86,5 +89,5 @@ $(document).ready(function() {
             size();
             $(initials).each(position);
         };
-    })(window);
+    })(window.jQuery);
 });

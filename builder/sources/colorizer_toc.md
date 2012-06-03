@@ -2,5 +2,5 @@
 
 #### The `Colorizer` class
 
--   [`colorize()`](#colorize)
--   [`format()`](#format)
+-   [`colorize()`](#colorizer.colorize)
+-   [`format()`](#colorizer.format)
