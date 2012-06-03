@@ -136,6 +136,14 @@ casper.start('http://foo.bar/', function() {
 casper.run();
 ```
 
+<h3 id="clientutils.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+
+Retrieves boundaries for a DOM element matching the provided
+[selector](selectors.html).
+
+It returns an Object with four keys: `top`, `left`, `width` and `height`, or
+`null` if the selector doesn't exist.
+
 <h3 id="clientutils.getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
 
 Retrieves a single DOM element matching a given [XPath expression](http://www.w3.org/TR/xpath/).

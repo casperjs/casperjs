@@ -24,6 +24,7 @@
 - [`log()`](#casper.log)
 - [`fill()`](#casper.fill)
 - [`getCurrentUrl()`](#casper.getCurrentUrl)
+- [`getElementBounds()`](#casper.getElementBounds)
 - [`getGlobal()`](#casper.getGlobal)
 - [`getTitle()`](#casper.getTitle)
 - [`mouseEvent()`](#casper.mouseEvent)

@@ -726,6 +726,37 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
+<h3 id="casper.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+
+Retrieves boundaries for a DOM element matching the provided
+[selector](selectors.html).
+
+It returns an Object with four keys: `top`, `left`, `width` and `height`, or
+`null` if the selector doesn't exist.
+
+**Example:**
+
+```javascript
+var casper = require('casper').create();
+
+casper.start('http://www.google.fr/', function() {
+    require('utils').dump(this.getElementBounds('div[title="Google"]'));
+});
+
+casper.run();
+```
+
+This will output something like:
+
+```
+{
+    "height": 95,
+    "left": 352,
+    "top": 16,
+    "width": 275
+}
+```
+
 <h3 id="casper.getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 Retrieves a global variable value within the remote DOM environment by

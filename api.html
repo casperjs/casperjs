@@ -788,6 +788,35 @@ will be url-decoded.
 });
 
 casper.run();</code></pre>
+<h3 id="casper.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+
+<p>Retrieves boundaries for a DOM element matching the provided
+<a href="selectors.html">selector</a>.
+
+</p>
+<p>It returns an Object with four keys: <code>top</code>, <code>left</code>, <code>width</code> and <code>height</code>, or
+<code>null</code> if the selector doesn't exist.
+
+</p>
+<p><strong>Example:</strong>
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+
+casper.start('http://www.google.fr/', function() {
+    require('utils').dump(this.getElementBounds('div[title="Google"]'));
+});
+
+casper.run();</code></pre>
+<p>This will output something like:
+
+</p>
+<pre><code>{
+    "height": 95,
+    "left": 352,
+    "top": 16,
+    "width": 275
+}</code></pre>
 <h3 id="casper.getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 <p>Retrieves a global variable value within the remote DOM environment by
@@ -1322,6 +1351,7 @@ visible in remote DOM to process a next step. Uses
 <li><a href="#casper.log"><code>log()</code></a></li>
 <li><a href="#casper.fill"><code>fill()</code></a></li>
 <li><a href="#casper.getCurrentUrl"><code>getCurrentUrl()</code></a></li>
+<li><a href="#casper.getElementBounds"><code>getElementBounds()</code></a></li>
 <li><a href="#casper.getGlobal"><code>getGlobal()</code></a></li>
 <li><a href="#casper.getTitle"><code>getTitle()</code></a></li>
 <li><a href="#casper.mouseEvent"><code>mouseEvent()</code></a></li>
@@ -1488,6 +1518,16 @@ intend to download the resource, use
 });
 
 casper.run();</code></pre>
+<h3 id="clientutils.getElementBounds"><code>Casper#getElementBounds(String <a href="#selectors">selector</a>)</code></h3>
+
+<p>Retrieves boundaries for a DOM element matching the provided
+<a href="selectors.html">selector</a>.
+
+</p>
+<p>It returns an Object with four keys: <code>top</code>, <code>left</code>, <code>width</code> and <code>height</code>, or
+<code>null</code> if the selector doesn't exist.
+
+</p>
 <h3 id="clientutils.getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
 
 <p>Retrieves a single DOM element matching a given <a href="http://www.w3.org/TR/xpath/">XPath expression</a>.
@@ -1530,6 +1570,7 @@ casper.run();</code></pre>
 <li><a href="#clientutils.findOne"><code>findOne()</code></a></li>
 <li><a href="#clientutils.getBase64"><code>getBase64()</code></a></li>
 <li><a href="#clientutils.getBinary"><code>getBinary()</code></a></li>
+<li><a href="#clientutils.getElementBounds"><code>getElementBounds()</code></a></li>
 <li><a href="#clientutils.getElementByXPath"><code>getElementByXPath()</code></a></li>
 <li><a href="#clientutils.getElementsByXPath"><code>getElementsByXPath()</code></a></li>
 <li><a href="#clientutils.mouseEvent"><code>mouseEvent()</code></a></li>

@@ -8,6 +8,7 @@
 - [`findOne()`](#clientutils.findOne)
 - [`getBase64()`](#clientutils.getBase64)
 - [`getBinary()`](#clientutils.getBinary)
+- [`getElementBounds()`](#clientutils.getElementBounds)
 - [`getElementByXPath()`](#clientutils.getElementByXPath)
 - [`getElementsByXPath()`](#clientutils.getElementsByXPath)
 - [`mouseEvent()`](#clientutils.mouseEvent)
