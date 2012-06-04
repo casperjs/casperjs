@@ -24,6 +24,7 @@ var layout = fs.pathJoin(templatesDir, 'layout.html');
 var selectors = {};
 
 // force storing current CasperJS version in global context
+config.context.time = new Date().getTime();
 config.context.version = phantom.casperVersion;
 config.context.year = new Date().getFullYear();
 
