@@ -1,26 +1,26 @@
-var casper = require('casper').create({
-    loadImages:  false,
+var casper = require("casper").create({
+    loadImages: false,
     logLevel:   "debug",
     verbose:    true
 });
 
 var links = {
-    'http://edition.cnn.com/': 0,
-    'http://www.nytimes.com/': 0,
-    'http://www.bbc.co.uk/': 0,
-    'http://www.guardian.co.uk/': 0
+    "http://edition.cnn.com/": 0,
+    "http://www.nytimes.com/": 0,
+    "http://www.bbc.co.uk/": 0,
+    "http://www.guardian.co.uk/": 0
 };
 
 var fantomas = Object.create(casper);
 
-fantomas.countLinks = function(selector) {
+fantomas.countLinks = function() {
     return this.evaluate(function() {
-        return __utils__.findAll('a[href]').length;
+        return __utils__.findAll("a[href]").length;
     });
 };
 
 fantomas.renderJSON = function(what) {
-    return this.echo(JSON.stringify(what, null, '  '));
+    this.echo(JSON.stringify(what, null, "  "));
 };
 
 fantomas.start();
@@ -32,5 +32,6 @@ Object.keys(links).forEach(function(url) {
 });
 
 fantomas.run(function() {
-    this.renderJSON(links).exit();
+    this.renderJSON(links);
+    this.exit();
 });

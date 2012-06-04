@@ -3,14 +3,14 @@ Takes provided terms passed as arguments and query google for the number of
 estimated results each have.
 
 Usage:
-  $ casperjs samples/googlematch.js nicolas chuck borris
-  nicolas: 69600000
-  chuck:   49500000
-  borris:  2370000
-  winner is "nicolas" with 69600000 results
+    $ casperjs googlematch.coffee nicolas chuck borris
+    nicolas: 69600000
+    chuck:   49500000
+    borris:  2370000
+    winner is "nicolas" with 69600000 results
 ###
 
-casper = require('casper').create verbose: true
+casper = require("casper").create verbose: true
 
 casper.fetchScore = ->
     @evaluate ->
@@ -19,9 +19,9 @@ casper.fetchScore = ->
 
 terms = casper.cli.args # terms are passed through command-line arguments
 
-if terms.length < 3
+if terms.length < 2
     casper
-        .echo 'Usage: casperjs googlematch.js term1, term2 [, term3]...'
+        .echo("Usage: $ casperjs googlematch.js term1 term2 [term3]...")
         .exit(1)
 
 scores = []
@@ -38,7 +38,10 @@ casper.each terms, (self, term) ->
         @echo "#{term}: #{score}"
 
 casper.run ->
-    winner = scores[0]
-    winner = x for x in scores when x.score > winner.score
-    @echo "Winner is #{winner.term} with #{winner.score} results"
-    @exit()
+    if scores.length is 0
+        @echo "No result found"
+    else
+        scores.sort (a, b) -> b.score - a.score
+        winner = scores[0]
+        @echo "Winner is \"" + winner.term + "\" with " + winner.score + " results"
+  @exit()

@@ -1,33 +1,30 @@
-if (phantom.casperArgs.args.length !== 1) {
-    console.log('You must provide the maximum number of pages to visit');
-    phantom.exit(1);
-}
-
-var casper = require('casper').create({
-    logLevel: "debug",
+var casper = require("casper").create({
     verbose: true
 });
 
 // If we don't set a limit, it could go on forever
-var upTo = ~~casper.cli.get(0) || 10; // max 10 links
+var upTo = ~~casper.cli.get(0) || 10;
 
-// Fetch all <a> elements from the page and return
-// the ones which contains a href starting with 'http://'
-function searchLinks() {
-    var filter = Array.prototype.filter,
-        map    = Array.prototype.map;
-    return map.call(filter.call(document.querySelectorAll('a'), function(a) {
-        return (/^http:\/\/.*/i).test(a.getAttribute('href'));
+/*
+Fetch all <a> elements from the page and return
+the ones which contains a href starting with 'http://'
+*/
+var searchLinks = function() {
+    var filter, map;
+    filter = Array.prototype.filter;
+    map = Array.prototype.map;
+    return map.call(filter.call(document.querySelectorAll("a"), function(a) {
+        return /^http:\/\/.*/i.test(a.getAttribute("href"));
     }), function(a) {
-        return a.getAttribute('href');
+        return a.getAttribute("href");
     });
-}
+};
 
 // The base links array
 var links = [
-    'http://google.com/',
-    'http://yahoo.com/',
-    'http://bing.com/'
+    "http://google.com/",
+    "http://yahoo.com/",
+    "http://bing.com/"
 ];
 
 // Just opens the page and prints the title
@@ -47,8 +44,10 @@ var addLinks = function(link) {
     });
 };
 
-casper.start().then(function() {
-    this.echo('Starting');
+casper.start();
+
+casper.then(function() {
+    this.echo("Starting");
 });
 
 var currentLink = 0;
@@ -62,8 +61,9 @@ function check() {
         currentLink++;
         this.run(check);
     } else {
-        this.echo('All done.').exit();
+        this.echo("All done.");
+        this.exit();
     }
-}
+};
 
 casper.run(check);

@@ -1,37 +1,39 @@
-# Capture multiple pages of google search results
-#
-# usage:  casperjs googlepagination.coffee my search terms
-#
-# (all arguments will be used as the query)
+###
+Capture multiple pages of google search results
 
-casper = require('casper').create()
+Usage: $ casperjs googlepagination.coffee my search terms
+
+(all arguments will be used as the query)
+###
+
+casper = require("casper").create()
 currentPage = 1
 
-if casper.cli.args.length == 0
-  casper
-      .echo "usage: $ casperjs my search terms"
-      .exit(1)
+if casper.cli.args.length is 0
+    casper
+        .echo("Usage: $ casperjs googlepagination.coffee my search terms")
+        .exit(1)
 
 processPage = ->
-  @echo "capturing page #{currentPage}"
-  @capture "google-results-p#{currentPage}.png"
+    @echo "capturing page #{currentPage}"
+    @capture "google-results-p#{currentPage}.png"
 
-  # don't go too far down the rabbit hole
-  return if currentPage >= 5
+    # don't go too far down the rabbit hole
+    return if currentPage >= 5
 
-  if @exists "#pnnext"
-    currentPage++
-    @echo "requesting next page: #{currentPage}"
-    #@thenClick("#pnnext").then(processPage)
-    url = @getCurrentUrl()
-    @thenClick("#pnnext").then ->
-      check = -> url != @getCurrentUrl()
-      @waitFor check, processPage
-  else
-    @echo "that's all, folks."
+    if @exists "#pnnext"
+        currentPage++
+        @echo "requesting next page: #{currentPage}"
+        url = @getCurrentUrl()
+        @thenClick("#pnnext").then ->
+            @waitFor (->
+                url isnt @getCurrentUrl()
+            ), processPage
+    else
+        @echo "that's all, folks."
 
-casper.start 'http://google.fr/', ->
-  @fill 'form[action="/search"]',  q: casper.cli.args.join(' '), true
+casper.start "http://google.fr/", ->
+    @fill 'form[action="/search"]',  q: casper.cli.args.join(" "), true
 
 casper.then processPage
 

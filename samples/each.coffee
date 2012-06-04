@@ -1,9 +1,9 @@
-casper = require('casper').create()
+casper = require("casper").create()
 
 links = [
-    'http://google.com/'
-    'http://yahoo.com/'
-    'http://bing.com/'
+    "http://google.com/"
+    "http://yahoo.com/"
+    "http://bing.com/"
 ]
 
 casper.start()

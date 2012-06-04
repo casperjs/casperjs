@@ -1,20 +1,20 @@
 failed = []
 start = null
 links = [
-    'http://google.com/'
-    'http://akei.com/'
-    'http://lemonde.fr/'
-    'http://liberation.fr/'
-    'http://cdiscount.fr/'
+    "http://google.com/"
+    "http://akei.com/"
+    "http://lemonde.fr/"
+    "http://liberation.fr/"
+    "http://cdiscount.fr/"
 ]
 
-casper = require('casper').create
+casper = require("casper").create
     onStepTimeout: ->
         failed.push @requestUrl
         @test.fail "#{@requestUrl} loads in less than #{timeout}ms."
 
-casper.on 'load.finished', ->
-    @echo "#{@requestUrl} loaded in #{new Date() - start}ms", 'PARAMETER'
+casper.on "load.finished", ->
+    @echo "#{@requestUrl} loaded in #{new Date() - start}ms", "PARAMETER"
 
 timeout = ~~casper.cli.get(0)
 timeout = 1000 if timeout < 1
@@ -33,4 +33,5 @@ casper.each links, (self, link) ->
         if @requestUrl not in failed
             @test.pass "#{@requestUrl} loaded in less than #{timeout}ms."
 
-casper.run -> @test.renderResults true
+casper.run ->
+    @test.renderResults true
