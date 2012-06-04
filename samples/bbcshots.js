@@ -2,12 +2,11 @@
  * Create a mosaic image from all headline photos on BBC homepage
  */
 
-var buildPage, casper, currentLink, images, nbLinks, next;
-
-casper = require("casper").create();
-nbLinks = 0;
-currentLink = 1;
-images = [];
+var casper = require("casper").create();
+var nbLinks = 0;
+var currentLink = 1;
+var images = [];
+var buildPage, next;
 
 // helper to hide some element from remote DOM
 casper.hide = function(selector) {

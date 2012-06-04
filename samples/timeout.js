@@ -18,9 +18,7 @@
  * YES!
  */
 
-var casper, timeout;
-
-casper = require("casper").create({
+var casper = require("casper").create({
     onTimeout: function() {
         this
             .echo("NOPE.", "RED_BAR")
@@ -29,7 +27,7 @@ casper = require("casper").create({
     }
 });
 
-timeout = ~~casper.cli.get(0);
+var timeout = ~~casper.cli.get(0);
 
 if (timeout < 1) {
     casper

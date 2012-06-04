@@ -1,8 +1,6 @@
-var casper, links;
+var casper = require("casper").create();
 
-casper = require("casper").create();
-
-links = [
+var links = [
     "http://google.com/",
     "http://yahoo.com/",
     "http://bing.com/"

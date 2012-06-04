@@ -1,17 +1,15 @@
-var addLinks, casper, check, currentLink, links, searchLinks, start, upTo;
-
-casper = require("casper").create({
+var casper = require("casper").create({
     verbose: true
 });
 
 // If we don't set a limit, it could go on forever
-upTo = ~~casper.cli.get(0) || 10;
+var upTo = ~~casper.cli.get(0) || 10;
 
 /*
 Fetch all <a> elements from the page and return
 the ones which contains a href starting with 'http://'
 */
-searchLinks = function() {
+var searchLinks = function() {
     var filter, map;
     filter = Array.prototype.filter;
     map = Array.prototype.map;
@@ -23,7 +21,7 @@ searchLinks = function() {
 };
 
 // The base links array
-links = [
+var links = [
     "http://google.com/",
     "http://yahoo.com/",
     "http://bing.com/"
@@ -52,7 +50,7 @@ casper.then(function() {
     this.echo("Starting");
 });
 
-currentLink = 0;
+var currentLink = 0;
 
 // As long as it has a next link, and is under the maximum limit, will keep running
 function check() {

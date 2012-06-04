@@ -10,9 +10,7 @@
  *     winner is "nicolas" with 69600000 results
  */
 
-var casper, scores, terms;
-
-casper = require("casper").create({
+var casper = require("casper").create({
     verbose: true
 });
 
@@ -23,7 +21,7 @@ casper.fetchScore = function() {
     });
 };
 
-terms = casper.cli.args;
+var terms = casper.cli.args;
 
 if (terms.length < 2) {
     casper
@@ -32,7 +30,7 @@ if (terms.length < 2) {
     ;
 }
 
-scores = [];
+var scores = [];
 
 casper.echo("Let the match begin between \"" + (terms.join('", "')) + "\"!");
 

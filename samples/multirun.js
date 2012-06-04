@@ -1,14 +1,12 @@
-var casper, check, countLinks, currentSuite, suites;
-
-casper = require("casper").create({
+var casper = require("casper").create({
     verbose: true
 });
 
-countLinks = function() {
+var countLinks = function() {
     return document.querySelectorAll('a').length;
 };
 
-suites = [
+var suites = [
     function() {
         this.echo("Suite 1");
         this.start("http://google.com/", function() {
@@ -42,9 +40,9 @@ casper.then(function() {
     this.echo("Starting");
 });
 
-currentSuite = 0;
+var currentSuite = 0;
 
-check = function() {
+var check = function() {
     if (suites[currentSuite]) {
         suites[currentSuite].call(this);
         currentSuite++;

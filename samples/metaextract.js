@@ -1,8 +1,6 @@
-var casper, metas, url;
-
-casper = require("casper").create();
-url = casper.cli.get(0);
-metas = [];
+var casper = require("casper").create();
+var url = casper.cli.get(0);
+var metas = [];
 
 if (!url) {
     casper

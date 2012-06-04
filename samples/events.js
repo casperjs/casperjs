@@ -2,9 +2,7 @@
  * This script will add a custom HTTP status code handler, here for 404 pages.
  */
 
-var casper, links;
-
-casper = require("casper").create();
+var casper = require("casper").create();
 
 casper.on("http.status.200", function(resource) {
     this.echo(resource.url + " is OK", "INFO");
@@ -26,7 +24,7 @@ casper.on("http.status.500", function(resource) {
     this.echo(resource.url + " is in error", "ERROR");
 });
 
-links = [
+var links = [
     "http://google.com/",
     "http://www.google.com/",
     "http://www.google.com/plop"

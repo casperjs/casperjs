@@ -6,10 +6,8 @@
  * (all arguments will be used as the query)
  */
 
-var casper, currentPage, processPage;
-
-casper = require("casper").create();
-currentPage = 1;
+var casper = require("casper").create();
+var currentPage = 1;
 
 if (casper.cli.args.length === 0) {
     casper
@@ -18,13 +16,16 @@ if (casper.cli.args.length === 0) {
     ;
 }
 
-processPage = function() {
+var processPage = function() {
     var url;
     this.echo("capturing page " + currentPage);
     this.capture("google-results-p" + currentPage + ".png");
+
+    // don't go too far down the rabbit hole
     if (currentPage >= 5) {
         return;
     }
+
     if (this.exists("#pnnext")) {
         currentPage++;
         this.echo("requesting next page: " + currentPage);
@@ -35,7 +36,7 @@ processPage = function() {
             }, processPage);
         });
     } else {
-        return this.echo("that's all, folks.");
+        this.echo("that's all, folks.");
     }
 };
 
