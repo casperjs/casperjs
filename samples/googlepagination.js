@@ -1,10 +1,10 @@
 /*
-Capture multiple pages of google search results
-
-Usage: $ casperjs googlepagination.coffee my search terms
-
-(all arguments will be used as the query)
-*/
+ * Capture multiple pages of google search results
+ *
+ * Usage: $ casperjs googlepagination.coffee my search terms
+ *
+ * (all arguments will be used as the query)
+ */
 
 var casper, currentPage, processPage;
 

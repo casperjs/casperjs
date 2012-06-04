@@ -1,7 +1,7 @@
 /*
-This script will capture a screenshot of a twitter account page
-Usage: $ casperjs screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>
-*/
+ * This script will capture a screenshot of a twitter account page
+ * Usage: $ casperjs screenshot.coffee <twitter-account> <filename.[jpg|png|pdf]>
+ */
 
 var casper, filename, twitterAccount;
 

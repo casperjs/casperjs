@@ -1,6 +1,6 @@
 /*
-This script will add a custom HTTP status code handler, here for 404 pages.
-*/
+ * This script will add a custom HTTP status code handler, here for 404 pages.
+ */
 
 var casper, links;
 

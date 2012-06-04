@@ -1,6 +1,6 @@
 /*
-Create a mosaic image from all headline photos on BBC homepage
-*/
+ * Create a mosaic image from all headline photos on BBC homepage
+ */
 
 var buildPage, casper, currentLink, images, nbLinks, next;
 
