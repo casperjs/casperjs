@@ -1,6 +1,17 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v0.6.10
+-------------------
+
+- fixed [#73](https://github.com/n1k0/casperjs/issues/73) - `Casper.download()` not working correctly with binaries
+- fixed [#129](https://github.com/n1k0/casperjs/issues/129) - Can't put `//` comments in evaluate() function
+- closed [#130](https://github.com/n1k0/casperjs/issues/130) - Added a `Dummy` [colorizer](http://casperjs.org/api.html#colorizer) class, in order to disable colors in console output
+- fixed [#133](https://github.com/n1k0/casperjs/issues/133) - updated and fixed documentation about [extensibility](http://casperjs.org/extending.html)
+- added `Casper.clickLabel()` for clicking on an element found by its `innerText` content
+
+As a side note, the official website monolithic page has been split across several ones: http://casperjs.org/
+
 2012-05-29, v0.6.9
 ------------------
 

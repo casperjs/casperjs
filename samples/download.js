@@ -1,11 +1,9 @@
-// download the google logo image as base64
+// download the google logo image onto the local filesystem
 
-var casper = require('casper').create({
-    verbose: true
-});
+var casper = require('casper').create();
 
 casper.start('http://www.google.fr/', function() {
-    this.echo(self.base64encode('http://www.google.fr/images/srpr/logo3w.png'));
+    this.download('http://www.google.fr/images/srpr/logo3w.png', 'logo.png');
 });
 
 casper.run();

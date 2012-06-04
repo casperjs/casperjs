@@ -153,7 +153,7 @@ var Casper = function Casper(options) {
         this.echo('[deprecated] ' + message, 'COMMENT');
     });
 
-    // dispatching an event when configuration is achieved
+    // dispatching an event when instance has been constructed
     this.emit('init');
 };
 
@@ -372,7 +372,7 @@ Casper.prototype.die = function die(message, status) {
 Casper.prototype.download = function download(url, targetPath, method, data) {
     var cu = require('clientutils').create();
     try {
-        fs.write(targetPath, cu.decode(this.base64encode(url, method, data)), 'w');
+        fs.write(targetPath, cu.decode(this.base64encode(url, method, data)), 'wb');
         this.emit('downloaded.file', targetPath);
         this.log(f("Downloaded and saved resource in %s", targetPath));
     } catch (e) {
