@@ -1,7 +1,7 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.6.10
+2012-06-04, v0.6.10
 -------------------
 
 - fixed [#73](https://github.com/n1k0/casperjs/issues/73) - `Casper.download()` not working correctly with binaries
