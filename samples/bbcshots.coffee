@@ -7,7 +7,7 @@ nbLinks = 0
 currentLink = 1
 images = []
 
-### helper to hide some element from remote DOM ###
+# helper to hide some element from remote DOM
 casper.hide = (selector) ->
     @evaluate (selector) ->
         document.querySelector(selector).style.display = "none"
@@ -17,7 +17,7 @@ casper.start "http://www.bbc.co.uk/", ->
     nbLinks = @evaluate ->
         return __utils__.findAll('#promo2_carousel_items_items li').length
     @echo "#{nbLinks} items founds"
-    ### hide navigation arrows ###
+    # hide navigation arrows
     @hide ".nav_left"
     @hide ".nav_right"
     @mouse.move "#promo2_carousel"
@@ -28,10 +28,10 @@ casper.start "http://www.bbc.co.uk/", ->
         @echo "Clicked on pause button"
         @waitUntilVisible ".autoplay.nav_play", ->
             @echo "Carousel has been paused"
-            ### hide play button ###
+            # hide play button
             @hide ".autoplay"
 
-### Capture carrousel area ###
+# Capture carrousel area
 next = ->
     image = "bbcshot#{currentLink}.png"
     images.push image
@@ -45,7 +45,7 @@ next = ->
     else
         @then buildPage
 
-### Building resulting page and image ###
+# Building resulting page and image
 buildPage = ->
     @echo "Build result page"
     fs = require "fs"

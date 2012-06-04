@@ -1,7 +1,7 @@
 casper = require("casper").create
     verbose: true
 
-### If we don't set a limit, it could go on forever ###
+# If we don't set a limit, it could go on forever
 upTo = ~~casper.cli.get(0) || 10
 
 ###
@@ -16,14 +16,14 @@ searchLinks = ->
     ), (a) ->
         a.getAttribute "href"
 
-### The base links array ###
+# The base links array
 links = [
     "http://google.com/"
     "http://yahoo.com/"
     "http://bing.com/"
 ]
 
-### Just opens the page and prints the title ###
+# Just opens the page and prints the title
 start = (link) ->
     @start link, ->
         @echo "Page title: #{ @getTitle() }"
@@ -45,7 +45,7 @@ casper.then ->
 
 currentLink = 0;
 
-### As long as it has a next link, and is under the maximum limit, will keep running ###
+# As long as it has a next link, and is under the maximum limit, will keep running
 check = ->
     if links[currentLink] && currentLink < upTo
         @echo "--- Link #{currentLink} ---"

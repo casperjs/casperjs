@@ -4,7 +4,7 @@ casper = require("casper").create({
     verbose: true
 });
 
-/* If we don't set a limit, it could go on forever */
+// If we don't set a limit, it could go on forever
 upTo = ~~casper.cli.get(0) || 10;
 
 /*
@@ -22,7 +22,7 @@ searchLinks = function() {
     });
 };
 
-/* The base links array */
+// The base links array
 links = [
     "http://google.com/",
     "http://yahoo.com/",

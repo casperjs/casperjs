@@ -33,7 +33,7 @@ var casper = require("casper").create({
     logLevel: "verbose"
 });
 
-/* add a new 'verbose' logging level at the lowest priority */
+// add a new 'verbose' logging level at the lowest priority
 casper.logLevels = ["verbose"].concat(casper.logLevels);
 
 // test our new logger with google

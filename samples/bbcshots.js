@@ -9,7 +9,7 @@ nbLinks = 0;
 currentLink = 1;
 images = [];
 
-/* helper to hide some element from remote DOM */
+// helper to hide some element from remote DOM
 casper.hide = function(selector) {
     this.evaluate(function(selector) {
         document.querySelector(selector).style.display = "none";
@@ -23,7 +23,7 @@ casper.start("http://www.bbc.co.uk/", function() {
         return __utils__.findAll('#promo2_carousel_items_items li').length;
     });
     this.echo(nbLinks + " items founds");
-    /* hide navigation arrows */
+    // hide navigation arrows
     this.hide(".nav_left");
     this.hide(".nav_right");
     this.mouse.move("#promo2_carousel");
@@ -34,13 +34,13 @@ casper.start("http://www.bbc.co.uk/", function() {
         this.echo("Clicked on pause button");
         this.waitUntilVisible(".autoplay.nav_play", function() {
             this.echo("Carousel has been paused");
-            /* hide play button */
+            // hide play button
             this.hide(".autoplay");
         });
     });
 });
 
-/* Capture carrousel area */
+// Capture carrousel area
 next = function() {
     var image;
     image = "bbcshot" + currentLink + ".png";
@@ -58,7 +58,7 @@ next = function() {
     }
 };
 
-/* Building resulting page and image */
+// Building resulting page and image
 buildPage = function() {
     var fs, pageHtml;
     this.echo("Build result page");

@@ -3,7 +3,7 @@ var casper, dump;
 casper = require("casper").create();
 dump = require("utils").dump;
 
-/* removing default options passed by the Python executable */
+// removing default options passed by the Python executable
 casper.cli.drop("cli");
 casper.cli.drop("casper-path");
 
