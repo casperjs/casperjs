@@ -15,7 +15,7 @@ casper = require("casper").create verbose: true
 casper.fetchScore = ->
     @evaluate ->
         result = document.querySelector('#resultStats').innerText
-        ~~(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''))
+        parseInt /Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, '')
 
 terms = casper.cli.args # terms are passed through command-line arguments
 
@@ -35,10 +35,13 @@ casper.each terms, (self, term) ->
     @then ->
         score = @fetchScore()
         scores.push term: term, score: score
-        self.echo "#{term}: #{score}"
+        @echo "#{term}: #{score}"
 
 casper.run ->
-    scores.sort (a, b) -> b.score - a.score;
-    winner = scores[0]
-    @echo "Winner is \"#{winner.term}\" with #{winner.score} results"
-    @exit()
+    if scores.length is 0
+        @echo "No result found"
+    else
+        scores.sort (a, b) -> b.score - a.score
+        winner = scores[0]
+        @echo "Winner is \"" + winner.term + "\" with " + winner.score + " results"
+  @exit()

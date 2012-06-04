@@ -1,11 +1,9 @@
 /*
-A basic custom logging implementation. The idea is to (extremely) verbosely log
-every received resource.
-*/
+ * A basic custom logging implementation. The idea is to (extremely) verbosely
+ * log every received resource.
+ */
 
-var casper;
-
-casper = require("casper").create({
+var casper = require("casper").create({
     /*
     Every time a resource is received, a new log entry is added to the stack at
     the 'verbose' level.
@@ -38,7 +36,7 @@ casper = require("casper").create({
 /* add a new 'verbose' logging level at the lowest priority */
 casper.logLevels = ["verbose"].concat(casper.logLevels);
 
-/* test our new logger with google */
-casper.start("http://www.google.com/");
-
-casper.run();
+// test our new logger with google
+casper.start("http://www.google.com/").run(function() {
+    this.exit();
+});

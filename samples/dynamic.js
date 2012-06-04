@@ -29,21 +29,18 @@ links = [
     "http://bing.com/"
 ];
 
-/* Just opens the page and prints the title */
-start = function(link) {
+// Just opens the page and prints the title
+var start = function(link) {
     this.start(link, function() {
-        this.echo("Page title: " + this.getTitle());
+        this.echo('Page title: ' + this.getTitle());
     });
 };
 
-/*
-Get the links, and add them to the links array
-(It could be done all in one step, but it is intentionally splitted)
-*/
-addLinks = function(link) {
+// Get the links, and add them to the links array
+// (It could be done all in one step, but it is intentionally splitted)
+var addLinks = function(link) {
     this.then(function() {
-        var found;
-        found = this.evaluate(searchLinks);
+        var found = this.evaluate(searchLinks);
         this.echo(found.length + " links found on " + link);
         links = links.concat(found);
     });
@@ -57,10 +54,10 @@ casper.then(function() {
 
 currentLink = 0;
 
-/* As long as it has a next link, and is under the maximum limit, will keep running */
-check = function() {
+// As long as it has a next link, and is under the maximum limit, will keep running
+function check() {
     if (links[currentLink] && currentLink < upTo) {
-        this.echo("--- Link " + currentLink + " ---");
+        this.echo('--- Link ' + currentLink + ' ---');
         start.call(this, links[currentLink]);
         addLinks.call(this, links[currentLink]);
         currentLink++;

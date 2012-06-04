@@ -27,6 +27,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+if (phantom.version.major !== 1 || phantom.version.minor < 5) {
+    console.error('CasperJS needs at least PhantomJS v1.5.0');
+    phantom.exit(1);
+}
 
 /**
  * Loads and initialize the CasperJS environment.
@@ -151,7 +155,7 @@ phantom.loadCasper = function loadCasper() {
      * TODO: remove when PhantomJS has full module support
      */
     require = (function _require(require, requireDir) {
-        var phantomBuiltins = ['fs', 'webpage', 'webserver'];
+        var phantomBuiltins = ['fs', 'webpage', 'webserver', 'system'];
         var phantomRequire = phantom.__orig__require = require;
         var requireCache = {};
         return function _require(path) {
@@ -226,32 +230,6 @@ phantom.loadCasper = function loadCasper() {
 
     // loaded status
     phantom.casperLoaded = true;
-};
-
-/**
- * Custom global error handler.
- */
-phantom.onError = function phantom_onError(msg, backtrace) {
-    var c = require('colorizer').create();
-    var match = /^(.*): __mod_error(.*):: (.*)/.exec(msg);
-    var notices = [];
-    if (match && match.length === 4) {
-        notices.push('  in module ' + match[2]);
-        notices.push('  NOTICE: errors within modules cannot be backtraced yet.');
-        msg = match[3];
-    }
-    console.error(c.colorize(msg, 'RED_BAR', 80));
-    notices.forEach(function(notice) {
-        console.error(c.colorize(notice, 'COMMENT'));
-    });
-    backtrace.forEach(function(item) {
-        var message = require('fs').absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
-        if (item['function']) {
-            message += " in " + c.colorize(item['function'], "PARAMETER");
-        }
-        console.error("  " + message);
-    });
-    phantom.exit(1);
 };
 
 /**

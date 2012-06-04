@@ -4,7 +4,7 @@ CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.
 It eases the process of defining a full navigation scenario and provides useful
 high-level functions, methods & syntaxic sugar for doing common tasks such as:
 
-- defining & ordering [navigation steps](http://casperjs.org/#phantom_Casper_run)
+- defining & ordering [navigation steps](http://casperjs.org/#quickstart)
 - [filling forms](http://casperjs.org/#phantom_Casper_fill)
 - [clicking links](http://casperjs.org/#phantom_Casper_click)
 - [capturing screenshots](http://casperjs.org/#phantom_Casper_captureSelector) of a page (or an area)
@@ -12,15 +12,16 @@ high-level functions, methods & syntaxic sugar for doing common tasks such as:
 - [logging](http://casperjs.org/#logging) & [events](http://casperjs.org/#events-filters)
 - [downloading base64](http://casperjs.org/#phantom_Casper_download) encoded resources, even binary ones
 - catching errors and react accordingly
-- writing [functional test suite](http://casperjs.org/#testing), exporting results as JUnit XML (xUnit)
+- writing [functional test suites](http://casperjs.org/#testing), exporting results as JUnit XML (xUnit)
 
-Feel free to browse our [sample examples repository](https://github.com/n1k0/casperjs/tree/master/samples).
+Browse the [sample examples repository](https://github.com/n1k0/casperjs/tree/master/samples).
 Don't hesitate to pull request for any cool example of yours as well!
 
 **Read the [full documentation](http://casperjs.org/) on casperjs dedicated website.**
 
 Subscribe to the [project mailing-list](https://groups.google.com/forum/#!forum/casperjs)
 
+Follow [@casperjs_org on twitter](https://twitter.com/casperjs_org).
 
 ## Contributing to the docs
 

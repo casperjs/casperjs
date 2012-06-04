@@ -1,19 +1,22 @@
 /*
-Just a silly game.
-
-$ casperjs samples/timeout.js 500
-Will google.com load in less than 500ms?
-NOPE.
-$ casperjs samples/timeout.js 1000
-Will google.com load in less than 1000ms?
-NOPE.
-$ casperjs samples/timeout.js 1500
-Will google.com load in less than 1500ms?
-NOPE.
-$ casperjs samples/timeout.js 2000
-Will google.com load in less than 2000ms?
-YES!
-*/
+ * Just a silly game.
+ *
+ * $ casperjs samples/timeout.js 500
+ * Will google.com load in less than 500ms?
+ * NOPE.
+ *
+ * $ casperjs samples/timeout.js 1000
+ * Will google.com load in less than 1000ms?
+ * NOPE.
+ *
+ * $ casperjs samples/timeout.js 1500
+ * Will google.com load in less than 1500ms?
+ * NOPE.
+ *
+ * $ casperjs samples/timeout.js 2000
+ * Will google.com load in less than 2000ms?
+ * YES!
+ */
 
 var casper, timeout;
 
@@ -39,7 +42,7 @@ casper.echo("Will google.com load in less than " + timeout + "ms?");
 casper.options.timeout = timeout;
 
 casper.start("http://www.google.com/", function() {
-    this.echo("YES!", 'GREEN_BAR');
+    this.echo("YES!", "GREEN_BAR");
     this.exit();
 });
 

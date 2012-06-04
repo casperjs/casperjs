@@ -1,26 +1,24 @@
 getLinks = ->
-    links = document.querySelectorAll "h3.r a"
-    Array::map.call links, (e) -> e.getAttribute "href"
-
-links = []
-casper = require("casper").create()
+    links = document.querySelectorAll("h3.r a")
+    Array::map.call links, (e) ->
+        e.getAttribute "href"
 
 casper.start "http://google.fr/", ->
-    ### search for 'casperjs' from google form ###
-    @fill 'form[action="/search"]', q: "casperjs", true
+    # search for 'casperjs' from google form
+    @fill "form[action=\"/search\"]", q: "casperjs" , true
 
 casper.then ->
-    ### aggregate results for the 'casperjs' search ###
-    links = @evaluate getLinks
-    ### search for 'phantomjs' from google form ###
-    @fill 'form[action="/search"]', q: "phantomjs", true
+    # aggregate results for the 'casperjs' search
+    links = @evaluate(getLinks)
+    # now search for 'phantomjs' by fillin the form again
+    @fill "form[action=\"/search\"]", q: "phantomjs" , true
 
 casper.then ->
-    ### concat results for the 'phantomjs' search ###
-    links = links.concat @evaluate(getLinks)
+    # aggregate results for the 'phantomjs' search
+    links = links.concat(@evaluate(getLinks))
 
 casper.run ->
-    ### display results ###
-    @echo "#{links.length} links found:"
-    @echo " - " + links.join "\n - "
+    # echo results in some pretty fashion
+    @echo links.length + " links found:"
+    @echo(" - " + links.join("\n - "))
     @exit()

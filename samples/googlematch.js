@@ -1,14 +1,14 @@
 /*
-Takes provided terms passed as arguments and query google for the number of
-estimated results each have.
-
-Usage:
-    $ casperjs googlematch.js nicolas chuck borris
-    nicolas: 69600000
-    chuck:   49500000
-    borris:  2370000
-    winner is "nicolas" with 69600000 results
-*/
+ * Takes provided terms passed as arguments and query google for the number of
+ * estimated results each have.
+ *
+ * Usage:
+ *     $ casperjs googlematch.js nicolas chuck borris
+ *     nicolas: 69600000
+ *     chuck:   49500000
+ *     borris:  2370000
+ *     winner is "nicolas" with 69600000 results
+ */
 
 var casper, scores, terms;
 
@@ -18,9 +18,8 @@ casper = require("casper").create({
 
 casper.fetchScore = function() {
     return this.evaluate(function() {
-        var result;
-        result = document.querySelector('#resultStats').innerText;
-        return ~~(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''));
+        var result = document.querySelector('#resultStats').innerText;
+        return parseInt(/Environ ([0-9\s]{1,}).*/.exec(result)[1].replace(/\s/g, ''), 10);
     });
 };
 
@@ -39,29 +38,30 @@ casper.echo("Let the match begin between \"" + (terms.join('", "')) + "\"!");
 
 casper.start("http://google.fr/");
 
-casper.each(terms, function(self, term) {
+casper.each(terms, function(casper, term, i) {
+    this.echo('Fecthing score for ' + term);
     this.then(function() {
-        this.fill('form[action="/search"]', {
-            q: term
-        }, true);
+        this.fill('form[action="/search"]', {q: term}, true);
     });
     this.then(function() {
-        var score;
-        score = this.fetchScore();
+        var score = this.fetchScore();
         scores.push({
             term: term,
             score: score
         });
-        self.echo(term + ": " + score);
+        this.echo(term + ': ' + score);
     });
 });
 
 casper.run(function() {
-    var winner;
-    scores.sort(function(a, b) {
-        return b.score - a.score;
-    });
-    winner = scores[0];
-    this.echo("Winner is \"" + winner.term + "\" with " + winner.score + " results");
+    if (scores.length === 0) {
+        this.echo("No result found");
+    } else {
+        scores.sort(function(a, b) {
+            return b.score - a.score;
+        });
+        var winner = scores[0];
+        this.echo("Winner is \"" + winner.term + "\" with " + winner.score + " results");
+    }
     this.exit();
 });

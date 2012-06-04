@@ -29,13 +29,13 @@
  */
 (function(exports) {
     exports.create = function create() {
-        return new ClientUtils();
+        return new this.ClientUtils();
     };
 
     /**
      * Casper client-side helpers.
      */
-    ClientUtils = function ClientUtils() {
+    exports.ClientUtils = function ClientUtils() {
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -52,20 +52,11 @@
         /**
          * Clicks on the DOM element behind the provided selector.
          *
-         * @param  String  selector        A CSS3 selector to the element to click
+         * @param  String  selector  A CSS3 selector to the element to click
          * @return Boolean
          */
         this.click = function click(selector) {
-            var elem = this.findOne(selector);
-            if (!elem) {
-                this.log("click(): Couldn't find any element matching '" + selector + "' selector", "error");
-                return false;
-            }
-            var evt = document.createEvent("MouseEvents");
-            evt.initMouseEvent("click", true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
-            // dispatchEvent return value is false if at least one of the event
-            // handlers which handled this event called preventDefault
-            return elem.dispatchEvent(evt);
+            return this.mouseEvent('click', selector);
         };
 
         /**
@@ -380,19 +371,6 @@
         };
 
         /**
-         * Removes all DOM elements matching a given XPath expression.
-         *
-         * @param  String  expression  The XPath expression
-         * @return Array
-         */
-        this.removeElementsByXPath = function removeElementsByXPath(expression) {
-            var a = document.evaluate(expression, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-            for (var i = 0; i < a.snapshotLength; i++) {
-                a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
-            }
-        };
-
-        /**
          * Logs a message. Will format the message a way CasperJS will be able
          * to log phantomjs side.
          *
@@ -401,6 +379,26 @@
          */
         this.log = function log(message, level) {
             console.log("[casper:" + (level || "debug") + "] " + message);
+        };
+
+        /**
+         * Dispatches a mouse event to the DOM element behind the provided selector.
+         *
+         * @param  String   type     Type of event to dispatch
+         * @param  String  selector  A CSS3 selector to the element to click
+         * @return Boolean
+         */
+        this.mouseEvent = function mouseEvent(type, selector) {
+            var elem = this.findOne(selector);
+            if (!elem) {
+                this.log("mouseEvent(): Couldn't find any element matching '" + selector + "' selector", "error");
+                return false;
+            }
+            var evt = document.createEvent("MouseEvents");
+            evt.initMouseEvent(type, true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
+            // dispatchEvent return value is false if at least one of the event
+            // handlers which handled this event called preventDefault
+            return elem.dispatchEvent(evt);
         };
 
         /**
@@ -420,7 +418,7 @@
         this.processSelector = function processSelector(selector) {
             var selectorObject = {
                 toString: function toString() {
-                    return this.type + ' selector: ' + this.selector;
+                    return this.type + ' selector: ' + this.path;
                 }
             };
             if (typeof selector === "string") {
@@ -441,6 +439,19 @@
                 return selector;
             }
             throw new Error("Unsupported selector type: " + typeof selector);
+        };
+
+        /**
+         * Removes all DOM elements matching a given XPath expression.
+         *
+         * @param  String  expression  The XPath expression
+         * @return Array
+         */
+        this.removeElementsByXPath = function removeElementsByXPath(expression) {
+            var a = document.evaluate(expression, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+            for (var i = 0; i < a.snapshotLength; i++) {
+                a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
+            }
         };
 
         /**
@@ -546,14 +557,19 @@
          */
         this.visible = function visible(selector) {
             try {
-                var el = this.findOne(selector);
-                return el && el.style.visibility !== 'hidden' && el.offsetHeight > 0 && el.offsetWidth > 0;
+                var comp,
+                    el = this.findOne(selector);
+
+                if (el) {
+                    comp = window.getComputedStyle(el, null);
+                    return comp.visibility !== 'hidden' && comp.display !== 'none' && el.offsetHeight > 0 && el.offsetWidth > 0;
+                }
+                return false;
             } catch (e) {
                 return false;
             }
         };
     };
-    exports.ClientUtils = ClientUtils;
 
     // silly "hack" to force having an instance available
     exports.__utils__ = new exports.ClientUtils();

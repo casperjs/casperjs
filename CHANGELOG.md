@@ -1,6 +1,30 @@
 CasperJS Changelog
 ==================
 
+2012-06-04, v0.6.10
+-------------------
+
+- fixed [#73](https://github.com/n1k0/casperjs/issues/73) - `Casper.download()` not working correctly with binaries
+- fixed [#129](https://github.com/n1k0/casperjs/issues/129) - Can't put `//` comments in evaluate() function
+- closed [#130](https://github.com/n1k0/casperjs/issues/130) - Added a `Dummy` [colorizer](http://casperjs.org/api.html#colorizer) class, in order to disable colors in console output
+- fixed [#133](https://github.com/n1k0/casperjs/issues/133) - updated and fixed documentation about [extensibility](http://casperjs.org/extending.html)
+- added `Casper.clickLabel()` for clicking on an element found by its `innerText` content
+
+As a side note, the official website monolithic page has been split across several ones: http://casperjs.org/
+
+2012-05-29, v0.6.9
+------------------
+
+- **BC BREAK:** PhantomJS 1.5 is now the minimal PhantomJS version supported.
+- fixed [#114](https://github.com/n1k0/casperjs/issues/114) - ensured client-side utils are injected before any `evaluate()` call
+- merged [#89](https://github.com/n1k0/casperjs/pull/89) - Support for more mouse events (@nrabinowitz)
+- [added a new `error` event, better error reporting](https://github.com/n1k0/casperjs/commit/2e6988ae821b3251e063d11ba28af59b0683852a)
+- fixed [#117](https://github.com/n1k0/casperjs/issues/117) - `fill()` coulnd't `submit()` a form with a submit input named *submit*
+- merged [#122](https://github.com/n1k0/casperjs/pull/122) - allow downloads to be triggered by more than just `GET` requests
+- closed [#57](https://github.com/n1k0/casperjs/issues/57) - added context to emitted test events + complete assertion framework refactor
+- fixed loaded resources array is now reset adequately [reference discussion](https://groups.google.com/forum/?hl=fr?fromgroups#!topic/casperjs/TCkNzrj1IoA)
+- fixed incomplete error message logged when passed an erroneous selector (xpath and css)
+
 2012-05-20, v0.6.8
 ------------------
 

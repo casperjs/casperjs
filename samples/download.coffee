@@ -1,10 +1,10 @@
 ###
-Download the google logo image as base64
+Download the google logo image onto the local filesystem
 ###
 
-casper = require("casper").create verbose: true
+casper = require("casper").create()
 
 casper.start "http://www.google.fr/", ->
-    @echo @base64encode "http://www.google.fr/images/srpr/logo3w.png"
+    @echo @download "http://www.google.fr/images/srpr/logo3w.png", "logo.png"
 
 casper.run()

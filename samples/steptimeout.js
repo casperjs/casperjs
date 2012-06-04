@@ -1,42 +1,41 @@
-var casper, failed, links, timeout,
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var failed = [];
+var start = null;
+var links = [
+    "http://google.com/'",
+    "http://akei.com/'",
+    "http://lemonde.fr/'",
+    "http://liberation.fr/'",
+    "http://cdiscount.fr/"
+];
 
-failed = [];
-
-casper = require("casper").create({
+var casper = require("casper").create({
     onStepTimeout: function() {
         failed.push(this.requestUrl);
+        this.test.fail(this.requestUrl + " loads in less than " + timeout + "ms.");
     }
 });
 
-links = [
-    'http://google.com/',
-    'http://akei.com/',
-    'http://lemonde.fr/',
-    'http://liberation.fr/',
-    'http://cdiscount.fr/'
-];
+casper.on("load.finished", function() {
+    this.echo(this.requestUrl + " loaded in " + (new Date() - start) + "ms", "PARAMETER");
+});
 
-timeout = ~~casper.cli.get(0);
+var timeout = ~~casper.cli.get(0);
+casper.options.stepTimeout = timeout > 0 ? timeout : 1000;
 
-if (timeout < 1) {
-    timeout = 1000;
-}
-
-casper.options.stepTimeout = timeout;
-
-casper.echo("Testing with timeout=" + casper.options.stepTimeout + "ms.");
+casper.echo("Testing with timeout=" + casper.options.stepTimeout + "ms, please be patient.");
 
 casper.start();
 
-casper.each(links, function(self, link) {
-    this.test.comment("Adding " + link + " to test suite");
-    this.thenOpen(link, function() {
-        var _ref;
-        if (_ref = this.requestUrl, __indexOf.call(failed, _ref) >= 0) {
-            this.test.fail("" + this.requestUrl + " loaded in less than " + timeout + "ms.");
-        } else {
-            this.test.pass("" + this.requestUrl + " loaded in less than " + timeout + "ms.");
+casper.each(links, function(casper, link) {
+    this.then(function() {
+        this.test.comment("Loading " + link);
+        start = new Date();
+        this.open(link);
+    });
+    this.then(function() {
+        var message = this.requestUrl + " loads in less than " + timeout + "ms.";
+        if (failed.indexOf(this.requestUrl) === -1) {
+            this.test.pass(message);
         }
     });
 });

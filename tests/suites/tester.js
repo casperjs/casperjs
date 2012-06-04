@@ -2,6 +2,8 @@ var fs = require('fs');
 
 var t = casper.test;
 
+casper.start();
+
 t.comment('Tester.testEquals()');
 t.assert(t.testEquals(null, null), 'Tester.testEquals() null equality');
 t.assertNot(t.testEquals(null, undefined), 'Tester.testEquals() null vs. undefined inequality');
@@ -26,8 +28,6 @@ t.assertNot(t.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{na
 t.assert(t.testEquals(function(x){return x;}, function(x){return x;}), 'Tester.testEquals() function equality');
 t.assertNot(t.testEquals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
 
-t.assertNotEquals(42, 43, 'Tester.assertNotEquals() works as expected');
-
 t.comment('Tester.sortFiles()');
 var testDirRoot = fs.pathJoin(phantom.casperPath, 'tests', 'testdir');
 var files = t.findTestFiles(testDirRoot);
@@ -44,9 +44,63 @@ var expected = [
 });
 t.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
 
-t.comment('Tester.assertTextExists()');
-casper.start('tests/site/index.html', function() {
+casper.thenOpen('tests/site/index.html', function() {
+    t.comment('Tester.assertTextExists()');
     t.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
+});
+
+casper.then(function() {
+    t.comment('Tester.assert()');
+    t.assert(true, 'Tester.assert() works as expected');
+
+    t.comment('Tester.assertNot()');
+    t.assertNot(false, 'Tester.assertNot() works as expected');
+
+    t.comment('Tester.assertEquals()');
+    t.assertEquals(true, true, 'Tester.assertEquals() works as expected');
+
+    t.comment('Tester.assertNotEquals()');
+    t.assertNotEquals(true, false, 'Tester.assertNotEquals() works as expected');
+
+    t.comment('Tester.assertEval()');
+    t.assertEval(function() {
+        return true;
+    }, 'Tester.assertEval() works as expected');
+
+    t.comment('Tester.assertEvalEquals()');
+    t.assertEvalEquals(function() {
+        return 42;
+    }, 42, 'Tester.assertEvalEquals() works as expected');
+
+    t.comment('Tester.assertExists()');
+    t.assertExists('body', 'Tester.assertExists() works as expected');
+
+    t.comment('Tester.assertDoesntExist()');
+    t.assertDoesntExist('foobar', 'Tester.assertDoesntExist() works as expected');
+
+    t.comment('Tester.assertHttpStatus()');
+    // using file:// protocol, HTTP status is always null
+    t.assertHttpStatus(null, 'Tester.assertHttpStatus() works as expected');
+
+    t.comment('Tester.assertMatch()');
+    t.assertMatch("the lazy dog", /lazy/, 'Tester.assertMatch() works as expected');
+
+    t.comment('Tester.assertRaises()');
+    t.assertRaises(function() {
+        throw new Error('plop');
+    }, [], 'Tester.assertRaises() works as expected');
+
+    t.comment('Tester.assertResourceExists()');
+    t.assertResourceExists(/index\.html/, 'Tester.assertResourceExists() works as expected');
+
+    t.comment('Tester.assertTitle()');
+    t.assertTitle('CasperJS test index', 'Tester.assertTitle() works as expected');
+
+    t.comment('Tester.assertType()');
+    t.assertType("plop", "string", "Tester.assertType() works as expected");
+
+    t.comment('Tester.assertUrlMatch()');
+    t.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
 });
 
 casper.run(function() {

@@ -4,12 +4,15 @@ Just a silly game.
 $ casperjs samples/timeout.js 500
 Will google.com load in less than 500ms?
 NOPE.
+
 $ casperjs samples/timeout.js 1000
 Will google.com load in less than 1000ms?
 NOPE.
+
 $ casperjs samples/timeout.js 1500
 Will google.com load in less than 1500ms?
 NOPE.
+
 $ casperjs samples/timeout.js 2000
 Will google.com load in less than 2000ms?
 YES!

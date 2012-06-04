@@ -1,7 +1,7 @@
 {
   "name": "casperjs",
   "description": "Navigation scripting & testing utility for PhantomJS",
-  "version": "0.6.8",
+  "version": "0.6.10",
   "keywords": [
     "phantomjs",
     "javascript"
@@ -14,7 +14,7 @@
     }
   ],
   "dependencies": {
-    "http://www.phantomjs.org/": "1.3"
+    "http://www.phantomjs.org/": "1.5"
   },
   "bugs": {
     "url": "https://github.com/n1k0/casperjs/issues"

@@ -66,9 +66,18 @@ var Tester = function Tester(casper, options) {
     };
 
     // events
+    casper.on('error', function(msg, backtrace) {
+        var line = 0;
+        try {
+            line = backtrace[0].line;
+        } catch (e) {}
+        this.test.uncaughtError(msg, this.test.currentTestFile, line);
+        this.test.done();
+    });
+
     casper.on('step.error', function onStepError(e) {
-        casper.test.fail(e);
-        casper.test.done();
+        this.test.uncaughtError(e, this.test.currentTestFile);
+        this.test.done();
     });
 
     this.on('success', function onSuccess(success) {
@@ -76,67 +85,63 @@ var Tester = function Tester(casper, options) {
     });
 
     this.on('fail', function onFail(failure) {
+        // export
         this.exporter.addFailure(fs.absolute(failure.file), failure.message, failure.details || "test failed", failure.type || "unknown");
         this.testResults.failures.push(failure);
+        // special printing
+        if (failure.type) {
+            this.comment('   type: ' + failure.type);
+        }
+        if (failure.details) {
+            this.comment('   details: ' + failure.details);
+        }
+        if (failure.values && Object.keys(failure.values).length > 0) {
+            for (var name in failure.values) {
+                this.comment('   ' + name + ': ' + utils.serialize(failure.values[name]));
+            }
+        }
     });
 
     // methods
     /**
-     * Asserts that a condition strictly resolves to true.
+     * Asserts that a condition strictly resolves to true. Also returns an
+     * "assertion object" containing useful informations about the test case
+     * results.
      *
-     * @param  Boolean  subject
-     * @param  String   message  Test description
+     * This method is also used as the base one used for all other `assert*`
+     * family methods; supplementary informations are then passed using the
+     * `context` argument.
+     *
+     * @param  Boolean      subject  The condition to test
+     * @param  String       message  Test description
+     * @param  Object|null  context  Assertion context object (Optional)
+     * @return Object                An assertion result object
      */
-    this.assert = this.assertTrue = function assert(subject, message) {
-        var status = this.options.passText, eventName;
-        if (subject === true) {
-            eventName = 'success';
-            style = 'INFO';
-            this.testResults.passed++;
-        } else {
-            eventName = 'fail';
-            status = this.options.failText;
-            style = 'RED_BAR';
-            this.testResults.failed++;
-        }
-        this.emit(eventName, {
+    this.assert = this.assertTrue = function assert(subject, message, context) {
+        return this.processAssertionResult(utils.mergeObjects({
+            success: subject === true,
             type:    "assert",
-            details: "test failed",
+            details: "Subject's not a strict boolean true",
             message: message,
             file:    this.currentTestFile,
             values:  {
                 subject: subject
             }
-        });
-        casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
+        }, context || {}));
     };
 
     /**
      * Asserts that two values are strictly equals.
      *
-     * @param  Mixed   subject    The value to test
-     * @param  Mixed   expected   The expected value
-     * @param  String  message    Test description
+     * @param  Mixed   subject   The value to test
+     * @param  Mixed   expected  The expected value
+     * @param  String  message   Test description (Optional)
+     * @return Object            An assertion result object
      */
     this.assertEquals = this.assertEqual = function assertEquals(subject, expected, message) {
-        var eventName;
-        message = message || "";
-        if (this.testEquals(subject, expected)) {
-            eventName = "success";
-            casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
-            this.testResults.passed++;
-        } else {
-            eventName = "fail";
-            casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-            this.comment('   got:      ' + utils.serialize(subject));
-            this.comment('   expected: ' + utils.serialize(expected));
-            this.testResults.failed++;
-        }
-        this.emit(eventName, {
-            type:   "assertEquals",
-            message: message,
-            details: f("test failed; expected: %s; got: %s", expected, subject),
-            file:    this.currentTestFile,
+        return this.assert(this.testEquals(subject, expected), message, {
+            type:    "assertEquals",
+            details: "Subject didn't equal the expected value",
             values:  {
                 subject:  subject,
                 expected: expected
@@ -147,29 +152,15 @@ var Tester = function Tester(casper, options) {
     /**
      * Asserts that two values are strictly not equals.
      *
-     * @param  Mixed   subject    The value to test
-     * @param  Mixed   expected   The unwanted value
-     * @param  String  message    Test description
+     * @param  Mixed        subject   The value to test
+     * @param  Mixed        expected  The unwanted value
+     * @param  String|null  message   Test description (Optional)
+     * @return Object                 An assertion result object
      */
     this.assertNotEquals = function assertNotEquals(subject, shouldnt, message) {
-        var eventName;
-        message = message || "";
-        if (!this.testEquals(subject, shouldnt)) {
-            eventName = "success";
-            casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
-            this.testResults.passed++;
-        } else {
-            eventName = "fail";
-            casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-            this.comment('   got:      ' + utils.serialize(subject));
-            this.comment('   shouldnt: ' + utils.serialize(shouldnt));
-            this.testResults.failed++;
-        }
-        this.emit(eventName, {
-            type:   "assertNotEquals",
-            message: message,
-            details: f("test failed; shouldnt: %s; got: %s", shouldnt, subject),
-            file:    this.currentTestFile,
+        return this.assert(!this.testEquals(subject, shouldnt), message, {
+            type:    "assertNotEquals",
+            details: "Subject actually equals to what it shouldn't be",
             values:  {
                 subject:  subject,
                 shouldnt: shouldnt
@@ -180,47 +171,80 @@ var Tester = function Tester(casper, options) {
     /**
      * Asserts that a code evaluation in remote DOM resolves to true.
      *
-     * @param  Function  fn         A function to be evaluated in remote DOM
-     * @param  String    message    Test description
-     * @param  Object    context    Object containing the parameters to inject into the function (optional)
+     * @param  Function  fn       A function to be evaluated in remote DOM
+     * @param  String    message  Test description
+     * @param  Object    params   Object containing the parameters to inject into the function (optional)
+     * @return Object             An assertion result object
      */
-    this.assertEval = function assertEval(fn, message, context) {
-        return this.assert(casper.evaluate(fn, context), message);
+    this.assertEval = this.assertEvaluate = function assertEval(fn, message, params) {
+        return this.assert(casper.evaluate(fn, params), message, {
+            type:    "assertEval",
+            details: "Function didn't evaluate to true",
+            values: {
+                fn: fn,
+                params: params
+            }
+        });
     };
 
     /**
      * Asserts that the result of a code evaluation in remote DOM equals
      * an expected value.
      *
-     * @param  Function fn         The function to be evaluated in remote DOM
-     * @param  Boolean  expected   The expected value
-     * @param  String   message    Test description
-     * @param  Object   context    Object containing the parameters to inject into the function (optional)
+     * @param  Function     fn        The function to be evaluated in remote DOM
+     * @param  Boolean      expected  The expected value
+     * @param  String|null  message   Test description
+     * @param  Object|null  params    Object containing the parameters to inject into the function (optional)
+     * @return Object                 An assertion result object
      */
-    this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, context) {
-        return this.assertEquals(casper.evaluate(fn, context), expected, message);
+    this.assertEvalEquals = this.assertEvalEqual = function assertEvalEquals(fn, expected, message, params) {
+        var subject = casper.evaluate(fn, params);
+        return this.assert(this.testEquals(subject, expected), message, {
+            type:    "assertEvalEquals",
+            details: "Evaluated function didn't return the expected value",
+            values:  {
+                fn: fn,
+                params: params,
+                subject:  subject,
+                expected: expected
+            }
+        });
     };
 
     /**
      * Asserts that an element matching the provided selector expression exists in
      * remote DOM.
      *
-     * @param  String   selector   Selector expression
-     * @param  String   message    Test description
+     * @param  String   selector  Selector expression
+     * @param  String   message   Test description
+     * @return Object             An assertion result object
      */
-    this.assertExists = this.assertExist = function assertExists(selector, message) {
-        return this.assert(casper.exists(selector), message);
+    this.assertExists = this.assertExist = this.assertSelectorExists = this.assertSelectorExist = function assertExists(selector, message) {
+        return this.assert(casper.exists(selector), message, {
+            type: "assertExists",
+            details: f("No element matching selector %s was found", selector),
+            values: {
+                selector: selector
+            }
+        });
     };
 
     /**
      * Asserts that an element matching the provided selector expression does not
      * exists in remote DOM.
      *
-     * @param  String   selector   Selector expression
-     * @param  String   message    Test description
+     * @param  String   selector  Selector expression
+     * @param  String   message   Test description
+     * @return Object             An assertion result object
      */
     this.assertDoesntExist = this.assertNotExists = function assertDoesntExist(selector, message) {
-        return this.assertNot(casper.exists(selector), message);
+        return this.assert(!casper.exists(selector), message, {
+            type: "assertDoesntExist",
+            details: f("At least one element matching selector %s was found", selector),
+            values: {
+                selector: selector
+            }
+        });
     };
 
     /**
@@ -228,36 +252,32 @@ var Tester = function Tester(casper, options) {
      *
      * @param  Number  status   HTTP status code
      * @param  String  message  Test description
+     * @return Object           An assertion result object
      */
     this.assertHttpStatus = function assertHttpStatus(status, message) {
-        return this.assertEquals(casper.currentHTTPStatus, status, message || f("HTTP status code is %d", status));
+        var currentHTTPStatus = casper.currentHTTPStatus;
+        return this.assert(this.testEquals(casper.currentHTTPStatus, status), message, {
+            type: "assertHttpStatus",
+            details: f("HTTP status code is not %s, but %s", status, currentHTTPStatus),
+            values: {
+                current: currentHTTPStatus,
+                expected: status
+            }
+        });
     };
 
     /**
      * Asserts that a provided string matches a provided RegExp pattern.
      *
-     * @param  String   subject    The string to test
-     * @param  RegExp   pattern    A RegExp object instance
-     * @param  String   message    Test description
+     * @param  String   subject  The string to test
+     * @param  RegExp   pattern  A RegExp object instance
+     * @param  String   message  Test description
+     * @return Object            An assertion result object
      */
     this.assertMatch = this.assertMatches = function assertMatch(subject, pattern, message) {
-        var eventName;
-        if (pattern.test(subject)) {
-            eventName = "success";
-            casper.echo(this.colorize(this.options.passText, 'INFO') + ' ' + this.formatMessage(message));
-            this.testResults.passed++;
-        } else {
-            eventName = "fail";
-            casper.echo(this.colorize(this.options.failText, 'RED_BAR') + ' ' + this.formatMessage(message, 'WARNING'));
-            this.comment('   subject: ' + subject);
-            this.comment('   pattern: ' + pattern.toString());
-            this.testResults.failed++;
-        }
-        this.emit(eventName, {
-            type:   "assertMatch",
-            message: message,
-            details: f("test failed; subject: %s; pattern: %s", subject, pattern.toString()),
-            file:    this.currentTestFile,
+        return this.assert(pattern.test(subject), message, {
+            type: "assertMatch",
+            details: "Subject didn't match the provided pattern",
             values:  {
                 subject: subject,
                 pattern: pattern
@@ -268,11 +288,18 @@ var Tester = function Tester(casper, options) {
     /**
      * Asserts a condition resolves to false.
      *
-     * @param  Boolean  condition
+     * @param  Boolean  condition  The condition to test
      * @param  String   message    Test description
+     * @return Object              An assertion result object
      */
     this.assertNot = function assertNot(condition, message) {
-        return this.assert(!condition, message);
+        return this.assert(!condition, message, {
+            type: "assertNot",
+            details: "The condition is not falsy",
+            values: {
+                condition: condition
+            }
+        });
     };
 
     /**
@@ -282,68 +309,100 @@ var Tester = function Tester(casper, options) {
      * @param  Function  fn       The function to test
      * @param  Array     args     The arguments to pass to the function
      * @param  String    message  Test description
+     * @return Object             An assertion result object
      */
-    this.assertRaises = this.assertRaise = function assertRaises(fn, args, message) {
+    this.assertRaises = this.assertRaise = this.assertThrows = function assertRaises(fn, args, message) {
+        var context = {
+            type: "assertRaises",
+            details: "Function didn't raise any error"
+        };
         try {
             fn.apply(null, args);
-            this.fail(message);
-        } catch (e) {
-            this.pass(message);
+            this.assert(false, message, context);
+        } catch (error) {
+            this.assert(true, message, utils.mergeObjects(context, {
+                values: {
+                    error: error
+                }
+            }));
         }
     };
 
     /**
      * Asserts that the current page has a resource that matches the provided test
      *
-     * @param Function/String  test      A test function that is called with every response
-     * @param  String   message    Test description
+     * @param  Function/String  test     A test function that is called with every response
+     * @param  String           message  Test description
+     * @return Object                    An assertion result object
      */
     this.assertResourceExists = this.assertResourceExist = function assertResourceExists(test, message) {
-        return this.assert(casper.resourceExists(test), message);
-    };
-
-    /**
-     * Asserts that at least an element matching the provided selector expression
-     * exists in remote DOM.
-     *
-     * @param  String   selector   A selector expression string
-     * @param  String   message    Test description
-     */
-    this.assertSelectorExists = this.assertSelectorExist = function assertSelectorExists(selector, message) {
-        return this.assert(casper.exists(selector), message);
+        return this.assert(casper.resourceExists(test), message, {
+            type: "assertResourceExists",
+            details: "Resource was not found",
+            values: {
+                test: test
+            }
+        });
     };
 
     /**
      * Asserts that given text exits in the document body.
      *
-     * @param  String   text       Text to be found
-     * @param  String   message    Test description
+     * @param  String  text     Text to be found
+     * @param  String  message  Test description
+     * @return Object           An assertion result object
      */
     this.assertTextExists = this.assertTextExist = function assertTextExists(text, message) {
-        return this.assert((casper.evaluate(function _evaluate() {
+        var textFound = (casper.evaluate(function _evaluate() {
             return document.body.innerText;
-        }).indexOf(text) != -1), message);
+        }).indexOf(text) != -1);
+        return this.assert(textFound, message, {
+            type: "assertTextExists",
+            details: "Text was not found within the document body textual contents",
+            values: {
+                text: text
+            }
+        });
     };
 
     /**
      * Asserts that title of the remote page equals to the expected one.
      *
-     * @param  String  expected   The expected title string
-     * @param  String  message    Test description
+     * @param  String  expected  The expected title string
+     * @param  String  message   Test description
+     * @return Object            An assertion result object
      */
     this.assertTitle = function assertTitle(expected, message) {
-        return this.assertEquals(casper.getTitle(), expected, message);
+        var currentTitle = casper.getTitle();
+        return this.assert(this.testEquals(currentTitle, expected), message, {
+            type: "assertTitle",
+            details: "Page title is not the one expected",
+            values: {
+                subject: currentTitle,
+                expected: expected
+            }
+        });
     };
 
     /**
-     * Asserts that the provided input is of the given type.
+     * Asserts that the provided subject is of the given type.
      *
-     * @param  mixed   input    The value to test
+     * @param  mixed   subject  The value to test
      * @param  String  type     The javascript type name
      * @param  String  message  Test description
+     * @return Object           An assertion result object
      */
-    this.assertType = function assertType(input, type, message) {
-        return this.assertEquals(utils.betterTypeOf(input), type, message);
+    this.assertType = function assertType(subject, type, message) {
+        var actual = utils.betterTypeOf(subject);
+        return this.assert(this.testEquals(actual, type), message, {
+            type: "assertType",
+            details: f("Expected type %s, got %s", typeof subject, actual),
+            values: {
+                subject: subject,
+                type: type,
+                actual: actual
+            }
+        });
     };
 
     /**
@@ -352,11 +411,24 @@ var Tester = function Tester(casper, options) {
      *
      * @param  RegExp   pattern    A RegExp object instance
      * @param  String   message    Test description
+     * @return Object              An assertion result object
      */
     this.assertUrlMatch = this.assertUrlMatches = function assertUrlMatch(pattern, message) {
-        return this.assertMatch(casper.getCurrentUrl(), pattern, message);
+        var currentUrl = casper.getCurrentUrl();
+        return this.assert(pattern.test(currentUrl), message, {
+            type: "assertUrlMatch",
+            details: "Current url did not match the provided pattern",
+            values: {
+                currentUrl: currentUrl,
+                pattern: pattern
+            }
+        });
     };
 
+    /**
+     * Prints out a colored bar onto the console.
+     *
+     */
     this.bar = function bar(text, style) {
         casper.echo(text, style, this.options.pad);
     };
@@ -409,14 +481,7 @@ var Tester = function Tester(casper, options) {
             throw e;
         }
         this.currentTestFile = file;
-        try {
-            new Function('casper', phantom.getScriptCode(file))(casper);
-        } catch (e) {
-            // do not abort the whole suite, just fail fast displaying the
-            // caught error and process next suite
-            this.fail(e);
-            this.done();
-        }
+        phantom.injectJs(file);
     };
 
     /**
@@ -425,7 +490,10 @@ var Tester = function Tester(casper, options) {
      * @param  String  message
      */
     this.fail = function fail(message) {
-        this.assert(false, message);
+        return this.assert(false, message, {
+            type:    "fail",
+            details: "explicit call to fail()"
+        });
     };
 
     /**
@@ -482,7 +550,35 @@ var Tester = function Tester(casper, options) {
      * @param  String  message
      */
     this.pass = function pass(message) {
-        this.assert(true, message);
+        return this.assert(true, message, {
+            type:    "pass",
+            details: "explicit call to pass()"
+        });
+    };
+
+    /**
+     * Processes an assertion result by emitting the appropriate event and
+     * printing result onto the console.
+     *
+     * @param  Object  result  An assertion result object
+     * @return Object  The passed assertion result Object
+     */
+    this.processAssertionResult = function processAssertionResult(result) {
+        var eventName, style, status;
+        if (result.success === true) {
+            eventName = 'success';
+            style = 'INFO';
+            status = this.options.passText;
+            this.testResults.passed++;
+        } else {
+            eventName = 'fail';
+            style = 'RED_BAR';
+            status = this.options.failText;
+            this.testResults.failed++;
+        }
+        casper.echo([this.colorize(status, style), this.formatMessage(result.message)].join(' '));
+        this.emit(eventName, result);
+        return result;
     };
 
     /**
@@ -496,16 +592,12 @@ var Tester = function Tester(casper, options) {
         }
         casper.echo(f("\nDetails for the %d failed test%s:\n", failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
         failures.forEach(function _forEach(failure) {
-            var message, line;
-            if (utils.isType(failure.message, "object") && failure.message.stack) {
-                line = failure.message.line ? failure.message.line : 0;
-                message = failure.message.stack;
-            } else {
-                line = 0;
-                message = failure.message;
-            }
-            casper.echo(f('In %s:%d', failure.file, line));
-            casper.echo(f('    %s', message), "COMMENT");
+            var type, message, line;
+            type = failure.type || "unknown";
+            line = ~~failure.line;
+            message = failure.message;
+            casper.echo(f('In %s:%s', failure.file, line));
+            casper.echo(f('   %s: %s', type, message || "(no message was entered)"), "COMMENT");
         });
     };
 
@@ -595,12 +687,7 @@ var Tester = function Tester(casper, options) {
     this.runTest = function runTest(testFile) {
         this.bar(f('Test file: %s', testFile), 'INFO_BAR');
         this.running = true; // this.running is set back to false with done()
-        try {
-            this.exec(testFile);
-        } catch (e) {
-            this.fail(e);
-            this.done();
-        }
+        this.exec(testFile);
     };
 
     /**
@@ -629,6 +716,27 @@ var Tester = function Tester(casper, options) {
             return true;
         }
         return v1 === v2;
+    };
+
+    /**
+     * Processes an error caught while running tests contained in a given test
+     * file.
+     *
+     * @param  Error|String  error      The error
+     * @param  String        file       Test file where the error occured
+     * @param  Number        line       Line number (optional)
+     */
+    this.uncaughtError = function uncaughtError(error, file, line) {
+        return this.processAssertionResult({
+            success: false,
+            type: "uncaughtError",
+            file: file,
+            line: ~~line || "unknown",
+            message: utils.isObject(error) ? error.message : error,
+            values: {
+                error: error
+            }
+        });
     };
 };
 

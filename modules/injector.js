@@ -67,7 +67,9 @@ var FunctionArgsInjector = function FunctionArgsInjector(fn) {
             throw new CasperError("Unable to process function " + this.fn.toString());
         }
         var inject = this.getArgsInjectionString(fnObj.args, values);
-        return 'function ' + (fnObj.name || '') + '(){' + inject + fnObj.body + '}';
+        var newFn = new Function([inject, fnObj.body].join('\n'));
+        newFn.name = fnObj.name || '';
+        return newFn;
     };
 
     this.getArgsInjectionString = function getArgsInjectionString(args, values) {

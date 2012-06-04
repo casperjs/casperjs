@@ -31,13 +31,19 @@
 var fs = require('fs');
 var utils = require('utils');
 
-exports.create = function create() {
-    return new Colorizer();
+exports.create = function create(type) {
+    if (!type) {
+        return;
+    }
+    if (!(type in exports)) {
+        throw new Error(utils.format('Unsupported colorizer type "%s"', type));
+    }
+    return new exports[type]();
 };
 
 /**
  * This is a port of lime colorizer.
- * http://trac.symfony-project.org/browser/tools/lime/trunk/lib/lime.php)
+ * http://trac.symfony-project.org/browser/tools/lime/trunk/lib/lime.php
  *
  * (c) Fabien Potencier, Symfony project, MIT license
  */
@@ -102,3 +108,17 @@ var Colorizer = function Colorizer() {
     };
 };
 exports.Colorizer = Colorizer;
+
+/**
+ * Dummy colorizer. Does basically nothing.
+ *
+ */
+var Dummy = function Dummy() {
+    this.colorize = function colorize(text, styleName, pad) {
+        return text;
+    };
+    this.format = function format(text, style, pad){
+        return text;
+    };
+};
+exports.Dummy = Dummy;
