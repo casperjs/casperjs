@@ -188,10 +188,28 @@ td code {
     color: #fff;
 }
 .navbar {
-    .brand { color: #ccc; }
-    .nav > li > a { text-shadow: none; color: #888; font-size: 14px; }
-    .nav > li > a:hover { color: #fff; }
-    .nav .active > a, .nav .active > a:hover { color: #fff; background: none; }
+    .brand {
+        color: #ccc;
+    }
+    .nav > li > a {
+        text-shadow: none;
+        color: #888;
+        font-size: 14px;
+    }
+    .nav > li > a:hover {
+        color: #fff;
+    }
+    .nav .dropdown.active > a, .nav .dropdown.active > a:hover {
+        color: #fff;
+        background: none;
+    }
+    .nav .dropdown-menu li a {
+        background: #fff;
+        color: #222;
+    }
+    .nav .dropdown-menu li a:hover {
+        background: #444;
+    }
 }
 .page-header {
     padding: 20px 20px 10px;
