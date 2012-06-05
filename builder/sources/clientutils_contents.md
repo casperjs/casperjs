@@ -8,7 +8,7 @@ coupling CasperJS to any third-party library like jQuery, Mootools or
 something; but you can always include these and have them available client-side
 using the `Casper.options.clientScripts` option.
 
-<h2 id="bookmarklet">Bookmarlet</h2>
+<h2 id="bookmarklet">Bookmarklet</h2>
 
 A bookmarklet is also available to help injecting Casper's client-side
 utilities in the DOM of your favorite browser.
