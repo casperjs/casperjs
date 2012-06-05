@@ -229,7 +229,7 @@ var Tester = function Tester(casper, options) {
     this.assertExists = this.assertExist = this.assertSelectorExists = this.assertSelectorExist = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message, {
             type: "assertExists",
-            standard: f("Found an element matching %s", selector),
+            standard: f("Found an element matching %s", this.colorize(selector, 'COMMENT')),
             values: {
                 selector: selector
             }
@@ -247,7 +247,7 @@ var Tester = function Tester(casper, options) {
     this.assertDoesntExist = this.assertNotExists = function assertDoesntExist(selector, message) {
         return this.assert(!casper.exists(selector), message, {
             type: "assertDoesntExist",
-            standard: f("No element matching selector %s is found", selector),
+            standard: f("No element matching selector %s is found", this.colorize(selector, 'COMMENT')),
             values: {
                 selector: selector
             }
@@ -265,7 +265,7 @@ var Tester = function Tester(casper, options) {
         var currentHTTPStatus = casper.currentHTTPStatus;
         return this.assert(this.testEquals(casper.currentHTTPStatus, status), message, {
             type: "assertHttpStatus",
-            standard: f("HTTP status code is %s", status),
+            standard: f("HTTP status code is %s", this.colorize(status, 'COMMENT')),
             values: {
                 current: currentHTTPStatus,
                 expected: status
@@ -383,7 +383,7 @@ var Tester = function Tester(casper, options) {
         var currentTitle = casper.getTitle();
         return this.assert(this.testEquals(currentTitle, expected), message, {
             type: "assertTitle",
-            standard: f('Page title is "%s"', expected),
+            standard: f('Page title is "%s"', this.colorize(expected, 'COMMENT')),
             values: {
                 subject: currentTitle,
                 expected: expected
@@ -403,7 +403,7 @@ var Tester = function Tester(casper, options) {
         var actual = utils.betterTypeOf(subject);
         return this.assert(this.testEquals(actual, type), message, {
             type: "assertType",
-            standard: f('Subject type is "%s"', type),
+            standard: f('Subject type is "%s"', this.colorize(type, 'COMMENT')),
             values: {
                 subject: subject,
                 type: type,
@@ -445,7 +445,7 @@ var Tester = function Tester(casper, options) {
      * Casper.Colorizer#colorize()
      */
     this.colorize = function colorize(message, style) {
-        return casper.colorizer.colorize(message, style);
+        return casper.getColorizer().colorize(message, style);
     };
 
     /**
@@ -535,7 +535,7 @@ var Tester = function Tester(casper, options) {
      * @param  String  style
      */
     this.formatMessage = function formatMessage(message, style) {
-        var parts = /([a-z0-9_\.]+\(\))(.*)/i.exec(message);
+        var parts = /^([a-z0-9_\.]+\(\))(.*)/i.exec(message);
         if (!parts) {
             return message;
         }
