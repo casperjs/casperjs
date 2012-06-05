@@ -325,9 +325,7 @@ Casper.prototype.createStep = function createStep(fn, options) {
  * @return Casper
  */
 Casper.prototype.debugHTML = function debugHTML() {
-    this.echo(this.evaluate(function _evaluate() {
-        return document.body.innerHTML;
-    }));
+    this.echo(this.page.content);
     return this;
 };
 
@@ -739,7 +737,7 @@ Casper.prototype.log = function log(message, level, space) {
 Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
     if (!this.exists(selector)) {
-        throw new CasperError("Cannot dispatch an event on nonexistent selector: " + selector);
+        throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
     }
     var eventSuccess = this.evaluate(function(type, selector) {
         return __utils__.mouseEvent(type, selector);
@@ -752,7 +750,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
         try {
             this.mouse.processEvent(type, selector);
         } catch (e) {
-            this.log(f("Couldn't emulate event '%s' on %s: %s", type, selector, e), "error");
+            this.log(f("Couldn't emulate '%s' event on %s: %s", type, selector, e), "error");
             return false;
         }
     }

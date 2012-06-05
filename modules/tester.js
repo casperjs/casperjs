@@ -28,12 +28,15 @@
  *
  */
 
+/*global exports:false, phantom:false, require:false, CasperError:false*/
+
 var fs = require('fs');
 var events = require('events');
 var utils = require('utils');
 var f = utils.format;
 
 exports.create = function create(casper, options) {
+    "use strict";
     return new Tester(casper, options);
 };
 
@@ -44,6 +47,8 @@ exports.create = function create(casper, options) {
  * @param  Object|null  options  Options object
  */
 var Tester = function Tester(casper, options) {
+    "use strict";
+
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
     }
@@ -86,14 +91,16 @@ var Tester = function Tester(casper, options) {
 
     this.on('fail', function onFail(failure) {
         // export
-        this.exporter.addFailure(fs.absolute(failure.file), failure.message, failure.details || "test failed", failure.type || "unknown");
+        this.exporter.addFailure(
+            fs.absolute(failure.file),
+            failure.message  || failure.standard,
+            failure.standard || "test failed",
+            failure.type     || "unknown"
+        );
         this.testResults.failures.push(failure);
         // special printing
         if (failure.type) {
             this.comment('   type: ' + failure.type);
-        }
-        if (failure.details) {
-            this.comment('   details: ' + failure.details);
         }
         if (failure.values && Object.keys(failure.values).length > 0) {
             for (var name in failure.values) {
@@ -119,11 +126,11 @@ var Tester = function Tester(casper, options) {
      */
     this.assert = this.assertTrue = function assert(subject, message, context) {
         return this.processAssertionResult(utils.mergeObjects({
-            success: subject === true,
-            type:    "assert",
-            details: "Subject's not a strict boolean true",
-            message: message,
-            file:    this.currentTestFile,
+            success:  subject === true,
+            type:     "assert",
+            standard: "Subject is strictly true",
+            message:  message,
+            file:     this.currentTestFile,
             values:  {
                 subject: subject
             }
@@ -140,8 +147,8 @@ var Tester = function Tester(casper, options) {
      */
     this.assertEquals = this.assertEqual = function assertEquals(subject, expected, message) {
         return this.assert(this.testEquals(subject, expected), message, {
-            type:    "assertEquals",
-            details: "Subject didn't equal the expected value",
+            type:     "assertEquals",
+            standard: "Subject equals the expected value",
             values:  {
                 subject:  subject,
                 expected: expected
@@ -160,7 +167,7 @@ var Tester = function Tester(casper, options) {
     this.assertNotEquals = function assertNotEquals(subject, shouldnt, message) {
         return this.assert(!this.testEquals(subject, shouldnt), message, {
             type:    "assertNotEquals",
-            details: "Subject actually equals to what it shouldn't be",
+            standard: "Subject doesn't equal what it shouldn't be",
             values:  {
                 subject:  subject,
                 shouldnt: shouldnt
@@ -179,7 +186,7 @@ var Tester = function Tester(casper, options) {
     this.assertEval = this.assertEvaluate = function assertEval(fn, message, params) {
         return this.assert(casper.evaluate(fn, params), message, {
             type:    "assertEval",
-            details: "Function didn't evaluate to true",
+            standard: "Evaluated function returns true",
             values: {
                 fn: fn,
                 params: params
@@ -201,7 +208,7 @@ var Tester = function Tester(casper, options) {
         var subject = casper.evaluate(fn, params);
         return this.assert(this.testEquals(subject, expected), message, {
             type:    "assertEvalEquals",
-            details: "Evaluated function didn't return the expected value",
+            standard: "Evaluated function returns the expected value",
             values:  {
                 fn: fn,
                 params: params,
@@ -222,7 +229,7 @@ var Tester = function Tester(casper, options) {
     this.assertExists = this.assertExist = this.assertSelectorExists = this.assertSelectorExist = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message, {
             type: "assertExists",
-            details: f("No element matching selector %s was found", selector),
+            standard: f("Found an element matching %s", selector),
             values: {
                 selector: selector
             }
@@ -240,7 +247,7 @@ var Tester = function Tester(casper, options) {
     this.assertDoesntExist = this.assertNotExists = function assertDoesntExist(selector, message) {
         return this.assert(!casper.exists(selector), message, {
             type: "assertDoesntExist",
-            details: f("At least one element matching selector %s was found", selector),
+            standard: f("No element matching selector %s is found", selector),
             values: {
                 selector: selector
             }
@@ -258,7 +265,7 @@ var Tester = function Tester(casper, options) {
         var currentHTTPStatus = casper.currentHTTPStatus;
         return this.assert(this.testEquals(casper.currentHTTPStatus, status), message, {
             type: "assertHttpStatus",
-            details: f("HTTP status code is not %s, but %s", status, currentHTTPStatus),
+            standard: f("HTTP status code is %s", status),
             values: {
                 current: currentHTTPStatus,
                 expected: status
@@ -277,7 +284,7 @@ var Tester = function Tester(casper, options) {
     this.assertMatch = this.assertMatches = function assertMatch(subject, pattern, message) {
         return this.assert(pattern.test(subject), message, {
             type: "assertMatch",
-            details: "Subject didn't match the provided pattern",
+            standard: "Subject matches the provided pattern",
             values:  {
                 subject: subject,
                 pattern: pattern
@@ -295,7 +302,7 @@ var Tester = function Tester(casper, options) {
     this.assertNot = function assertNot(condition, message) {
         return this.assert(!condition, message, {
             type: "assertNot",
-            details: "The condition is not falsy",
+            standard: "Subject is falsy",
             values: {
                 condition: condition
             }
@@ -314,7 +321,7 @@ var Tester = function Tester(casper, options) {
     this.assertRaises = this.assertRaise = this.assertThrows = function assertRaises(fn, args, message) {
         var context = {
             type: "assertRaises",
-            details: "Function didn't raise any error"
+            standard: "Function raises an error"
         };
         try {
             fn.apply(null, args);
@@ -338,7 +345,7 @@ var Tester = function Tester(casper, options) {
     this.assertResourceExists = this.assertResourceExist = function assertResourceExists(test, message) {
         return this.assert(casper.resourceExists(test), message, {
             type: "assertResourceExists",
-            details: "Resource was not found",
+            standard: "Expected resource has been found",
             values: {
                 test: test
             }
@@ -355,10 +362,10 @@ var Tester = function Tester(casper, options) {
     this.assertTextExists = this.assertTextExist = function assertTextExists(text, message) {
         var textFound = (casper.evaluate(function _evaluate() {
             return document.body.innerText;
-        }).indexOf(text) != -1);
+        }).indexOf(text) !== -1);
         return this.assert(textFound, message, {
             type: "assertTextExists",
-            details: "Text was not found within the document body textual contents",
+            standard: "Found expected text within the document body",
             values: {
                 text: text
             }
@@ -376,7 +383,7 @@ var Tester = function Tester(casper, options) {
         var currentTitle = casper.getTitle();
         return this.assert(this.testEquals(currentTitle, expected), message, {
             type: "assertTitle",
-            details: "Page title is not the one expected",
+            standard: f('Page title is "%s"', expected),
             values: {
                 subject: currentTitle,
                 expected: expected
@@ -396,7 +403,7 @@ var Tester = function Tester(casper, options) {
         var actual = utils.betterTypeOf(subject);
         return this.assert(this.testEquals(actual, type), message, {
             type: "assertType",
-            details: f("Expected type %s, got %s", typeof subject, actual),
+            standard: f('Subject type is "%s"', type),
             values: {
                 subject: subject,
                 type: type,
@@ -417,7 +424,7 @@ var Tester = function Tester(casper, options) {
         var currentUrl = casper.getCurrentUrl();
         return this.assert(pattern.test(currentUrl), message, {
             type: "assertUrlMatch",
-            details: "Current url did not match the provided pattern",
+            standard: "Current url matches the provided pattern",
             values: {
                 currentUrl: currentUrl,
                 pattern: pattern
@@ -492,7 +499,7 @@ var Tester = function Tester(casper, options) {
     this.fail = function fail(message) {
         return this.assert(false, message, {
             type:    "fail",
-            details: "explicit call to fail()"
+            standard: "explicit call to fail()"
         });
     };
 
@@ -552,7 +559,7 @@ var Tester = function Tester(casper, options) {
     this.pass = function pass(message) {
         return this.assert(true, message, {
             type:    "pass",
-            details: "explicit call to pass()"
+            standard: "explicit call to pass()"
         });
     };
 
@@ -576,7 +583,8 @@ var Tester = function Tester(casper, options) {
             status = this.options.failText;
             this.testResults.failed++;
         }
-        casper.echo([this.colorize(status, style), this.formatMessage(result.message)].join(' '));
+        var message = result.message || result.standard;
+        casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
         this.emit(eventName, result);
         return result;
     };
