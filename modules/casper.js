@@ -760,10 +760,16 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
 };
 
 /**
- * Performs an HTTP request.
+ * Performs an HTTP request, with optional settings.
+ *
+ * Available settings are:
+ *
+ * - String  method:   The HTTP method to use
+ * - Object  data:     The data to use to perform the request, eg. {foo: 'bar'}
+ * - Array   headers:  An array of request headers, eg. [{'Cache-Control': 'max-age=0'}]
  *
  * @param  String  location  The url to open
- * @param  Object  settings  The request settings
+ * @param  Object  settings  The request settings (optional)
  * @return Casper
  */
 Casper.prototype.open = function open(location, settings) {
@@ -809,7 +815,8 @@ Casper.prototype.open = function open(location, settings) {
     this.log(f('opening url: %s, HTTP %s', this.requestUrl, settings.method.toUpperCase()), "debug");
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
-        data:      settings.data
+        data:      settings.data,
+        headers:   settings.headers || {}
     }, this.page.settings);
     this.resources = [];
     return this;
