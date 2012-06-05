@@ -816,7 +816,7 @@ Casper.prototype.open = function open(location, settings) {
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
         data:      settings.data,
-        headers:   settings.headers || {}
+        headers:   settings.headers
     }, this.page.settings);
     this.resources = [];
     return this;
