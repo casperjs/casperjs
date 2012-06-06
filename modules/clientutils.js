@@ -70,35 +70,35 @@
             while (i < len) {
                 do {
                     c1 = BASE64_DECODE_CHARS[str.charCodeAt(i++) & 0xff];
-                } while (i < len && c1 == -1);
-                if (c1 == -1) {
+                } while (i < len && c1 === -1);
+                if (c1 === -1) {
                     break;
                 }
                 do {
                     c2 = BASE64_DECODE_CHARS[str.charCodeAt(i++) & 0xff];
-                } while (i < len && c2 == -1);
-                if (c2 == -1) {
+                } while (i < len && c2 === -1);
+                if (c2 === -1) {
                     break;
                 }
                 out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
                 do {
                     c3 = str.charCodeAt(i++) & 0xff;
-                    if (c3 == 61)
+                    if (c3 === 61)
                     return out;
                     c3 = BASE64_DECODE_CHARS[c3];
-                } while (i < len && c3 == -1);
-                if (c3 == -1) {
+                } while (i < len && c3 === -1);
+                if (c3 === -1) {
                     break;
                 }
                 out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
                 do {
                     c4 = str.charCodeAt(i++) & 0xff;
-                    if (c4 == 61) {
+                    if (c4 === 61) {
                         return out;
                     }
                     c4 = BASE64_DECODE_CHARS[c4];
-                } while (i < len && c4 == -1);
-                if (c4 == -1) {
+                } while (i < len && c4 === -1);
+                if (c4 === -1) {
                     break;
                 }
                 out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
@@ -117,14 +117,14 @@
             var out = "", i = 0, len = str.length, c1, c2, c3;
             while (i < len) {
                 c1 = str.charCodeAt(i++) & 0xff;
-                if (i == len) {
+                if (i === len) {
                     out += BASE64_ENCODE_CHARS.charAt(c1 >> 2);
                     out += BASE64_ENCODE_CHARS.charAt((c1 & 0x3) << 4);
                     out += "==";
                     break;
                 }
                 c2 = str.charCodeAt(i++);
-                if (i == len) {
+                if (i === len) {
                     out += BASE64_ENCODE_CHARS.charAt(c1 >> 2);
                     out += BASE64_ENCODE_CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
                     out += BASE64_ENCODE_CHARS.charAt((c2 & 0xF) << 2);
