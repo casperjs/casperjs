@@ -50,6 +50,7 @@ var Tester = function Tester(casper, options) {
 
     this.currentTestFile = null;
     this.exporter = require('xunit').create();
+    this.includes = [];
     this.running = false;
     this.suites = [];
     this.options = utils.mergeObjects({
@@ -687,6 +688,9 @@ var Tester = function Tester(casper, options) {
     this.runTest = function runTest(testFile) {
         this.bar(f('Test file: %s', testFile), 'INFO_BAR');
         this.running = true; // this.running is set back to false with done()
+        this.includes.forEach(function(include) {
+            phantom.injectJs(include);
+        });
         this.exec(testFile);
     };
 

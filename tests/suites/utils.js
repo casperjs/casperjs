@@ -90,4 +90,29 @@ t.comment('mergeObjects()');
     });
 })();
 
+t.comment('unique()');
+(function() {
+    testCases = [
+        {
+            input:  [1,2,3],
+            output: [1,2,3]
+        },
+        {
+            input:  [1,2,3,2,1],
+            output: [1,2,3]
+        },
+        {
+            input:  ["foo", "bar", "foo"],
+            output: ["foo", "bar"]
+        },
+        {
+            input:  [],
+            output: []
+        }
+    ];
+    testCases.forEach(function(testCase) {
+        t.assertEquals(utils.unique(testCase.input), testCase.output, 'unique() computes unique values of an array');
+    });
+})();
+
 t.done();

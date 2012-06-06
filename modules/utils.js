@@ -354,3 +354,25 @@ function serialize(value) {
     return JSON.stringify(value, null, 4);
 }
 exports.serialize = serialize;
+
+/**
+ * Returns unique values from an array.
+ *
+ * Note: ugly code is ugly, but efficient: http://jsperf.com/array-unique2/8
+ *
+ * @param  Array  array
+ * @return Array
+ */
+function unique(array) {
+    var o = {},
+        r = [];
+    for (var i = 0, len = array.length; i !== len; i++) {
+        var d = array[i];
+        if (o[d] !== 1) {
+            o[d] = 1;
+            r[r.length] = d;
+        }
+    }
+    return r;
+}
+exports.unique = unique;
