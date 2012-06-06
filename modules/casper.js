@@ -41,7 +41,14 @@ exports.create = function create(options) {
     return new Casper(options);
 };
 
-exports.selectXPath = function selectXPath(expression) {
+/**
+ * Shortcut to build an XPath selector object.
+ *
+ * @param  String  expression  The XPath expression
+ * @return Object
+ * @see    http://casperjs.org/selectors.html
+ */
+function selectXPath(expression) {
     return {
         type: 'xpath',
         path: expression,
@@ -49,7 +56,8 @@ exports.selectXPath = function selectXPath(expression) {
             return this.type + ' selector: ' + this.path;
         }
     };
-};
+}
+exports.selectXPath = selectXPath;
 
 /**
  * Main Casper object.
@@ -296,10 +304,13 @@ Casper.prototype.click = function click(selector) {
  * element matching this label will be selected, so use with caution.
  *
  * @param  String   label  Element innerText value
+ * @param  String   tag    An element tag name (eg. `a` or `button`) (optional)
  * @return Boolean
  */
-Casper.prototype.clickLabel = function clickLabel(label) {
-    var selector = exports.selectXPath('//*[text()="' + label.toString() + '"]');
+Casper.prototype.clickLabel = function clickLabel(label, tag) {
+    tag = tag || "*";
+    var escapedLabel = label.toString().replace(/"/g, '\\"');
+    var selector = selectXPath(f('//%s[text()="%s"]', tag, escapedLabel));
     return this.click(selector);
 };
 
