@@ -6,6 +6,7 @@
 - [`back()`](#casper.back)
 - [`base64encode()`](#casper.base64encode)
 - [`click()`](#casper.click)
+- [`clickLabel()`](#casper.clickLabel)
 - [`capture()`](#casper.capture)
 - [`captureSelector()`](#casper.captureSelector)
 - [`clear()`](#casper.clear)

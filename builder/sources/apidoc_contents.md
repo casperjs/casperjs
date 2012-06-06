@@ -363,13 +363,20 @@ casper.then(function() {
 casper.run();
 ```
 
-<span class="label label-info">Hint</span> If you want the mouse to click a
-given point within the viewport area, you can use the `mouse` property of the
-`Casper` instance:
+<h3 id="casper.clickLabel"><code>Casper#clickLabel(String label[, String tag])</code></h3>
+
+Clicks on the first DOM element found containing `label` text.
+Optionaly ensures that the element node name is `tag`.
 
 ```javascript
+// <a href="...">My link is beautiful</a>
 casper.then(function() {
-    this.mouse.click(150, 200);
+    this.clickLabel('My link is beautiful', 'a');
+});
+
+// <button type="submit">But my button is sexier</button>
+casper.then(function() {
+    this.clickLabel('But my button is sexier', 'button');
 });
 ```
 
