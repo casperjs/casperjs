@@ -158,7 +158,7 @@ var Casper = function Casper(options) {
 
     // deprecated feature event handler
     this.on('deprecated', function onDeprecated(message) {
-        this.echo('[deprecated] ' + message, 'COMMENT');
+        this.warn('[deprecated] ' + message);
     });
 
     // dispatching an event when instance has been constructed
@@ -1149,6 +1149,18 @@ Casper.prototype.visible = function visible(selector) {
 };
 
 /**
+ * Displays a warning message onto the console and logs the event.
+ *
+ * @param  String  message
+ * @return Casper
+ */
+Casper.prototype.warn = function warn(message) {
+    this.log(message, "warning", "phantom");
+    var formatted = f.apply(null, ["⚠  " + message].concat([].slice.call(arguments, 1)));
+    return this.echo(formatted, 'COMMENT');
+};
+
+/**
  * Adds a new step that will wait for a given amount of time (expressed
  * in milliseconds) before processing an optional next one.
  *
@@ -1325,7 +1337,7 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
  * @since 0.6
  */
 Casper.extend = function(proto) {
-    console.warn('Casper.extend() has been deprecated since 0.6; check the docs');
+    this.warn('Casper.extend() has been deprecated since 0.6; check the docs');
     if (!utils.isObject(proto)) {
         throw new CasperError("extends() only accept objects as prototypes");
     }
