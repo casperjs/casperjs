@@ -565,7 +565,7 @@ casper.evaluate(function(username, password) {
 ```
 
 <span class="label label-info">Note</span> For filling and submitting forms, rather use the
-[`Casper#fill()`](#fill) method.
+[`Casper#fill()`](#casper.fill) method.
 
 <span class="label label-info">Note</span> The concept behind this method is
 probably the most difficult to understand when discovering CasperJS.

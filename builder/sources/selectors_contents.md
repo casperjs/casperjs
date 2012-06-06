@@ -40,7 +40,7 @@ casper.thenOpen('http://domain.tld/page.html', function() {
 ```
 
 <span class="label label-warning">Warning</span> The only limitation of XPath use
-in CasperJS is in the [`fill()`](api.html#fill) method when you want to fill
+in CasperJS is in the [`fill()`](api.html#casper.fill) method when you want to fill
 **file fields**; PhantomJS natively only allows the use of CSS3 selectors in
 <a href="http://code.google.com/p/phantomjs/wiki/Interface#uploadFile(selector,_fileName)">its
 uploadFile method</a>, hence this limitation.
