@@ -1299,3 +1299,11 @@ the remote DOM to process a next step. Uses
 Waits until an element matching the provided [selector expression](selectors.html) is no longer
 visible in remote DOM to process a next step. Uses
 [Casper.waitFor()](#casper.waitFor).
+
+<h3 id="casper.warn"><code>Casper#warn(message)</code></h3>
+
+Logs and prints a warning message to the standard output.
+
+```javascript
+casper.warn("I'm a warning message.");
+```
