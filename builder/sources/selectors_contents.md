@@ -3,6 +3,8 @@ CasperJS makes an heavy use of selectors in order to work with the
 [CSS3](http://www.w3.org/TR/selectors/) or [XPath](http://www.w3.org/TR/xpath/)
 expressions.
 
+## CSS3 selectors
+
 By default, Casper will accept [CSS3 selector strings](http://www.w3.org/TR/selectors/#selectors)
 to check for elements within the DOM. For example, to check if a `<div id="plop">`
 element exists in a page, you can use:
@@ -13,7 +15,9 @@ casper.start('http://domain.tld/page.html', function() {
 });
 ```
 
-But you can alternatively use [XPath expression strings]() instead:
+## XPath
+
+You can alternatively use [XPath expression strings]() instead:
 
 ```javascript
 casper.thenOpen('http://domain.tld/page.html', function() {
