@@ -41,7 +41,7 @@ casper.options.logLevel = casper.cli.get('log-level') || "error";
 // overriding Casper.open to prefix all test urls
 casper.setFilter('open.location', function(location) {
     if (!/^http/.test(location)) {
-        return f('file://%s/%s', phantom.casperPath, location);
+        return f('file://%s/%s', fs.workingDirectory, location);
     }
     return location;
 });
