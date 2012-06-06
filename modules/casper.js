@@ -349,7 +349,7 @@ Casper.prototype.debugHTML = function debugHTML() {
  */
 Casper.prototype.debugPage = function debugPage() {
     this.echo(this.evaluate(function _evaluate() {
-        return document.body.innerText;
+        return document.body.textContent || document.body.innerText;
     }));
     return this;
 };

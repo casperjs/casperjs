@@ -355,8 +355,8 @@ var Tester = function Tester(casper, options) {
      */
     this.assertTextExists = this.assertTextExist = function assertTextExists(text, message) {
         var textFound = (casper.evaluate(function _evaluate() {
-            return document.body.innerText;
-        }).indexOf(text) != -1);
+            return document.body.textContent || document.body.innerText;
+        }).indexOf(text) !== -1);
         return this.assert(textFound, message, {
             type: "assertTextExists",
             details: "Text was not found within the document body textual contents",

@@ -165,7 +165,7 @@
             var text = '', elements = this.findAll(selector);
             if (elements && elements.length) {
                 Array.prototype.forEach.call(elements, function _forEach(element) {
-                    text += element.innerText;
+                    text += element.textContent || element.innerText;
                 });
             }
             return text;
