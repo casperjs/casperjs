@@ -53,7 +53,9 @@
                     ".colorizer-content": "sources/colorizer_contents.md",
                     ".colorizer-toc": "sources/colorizer_toc.md",
                     ".tester-content": "sources/tester_contents.md",
-                    ".tester-toc": "sources/tester_toc.md"
+                    ".tester-toc": "sources/tester_toc.md",
+                    ".utils-content": "sources/utils_contents.md",
+                    ".utils-toc": "sources/utils_toc.md"
                 },
                 "vars": {
                     "title": "API documentation"

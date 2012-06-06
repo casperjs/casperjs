@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1338961482312">
-    <link rel="stylesheet" href="css/casper.css?1338961482312">
+    <link rel="stylesheet" href="prettify/prettify.css?1338964649394">
+    <link rel="stylesheet" href="css/casper.css?1338964649394">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -41,6 +41,7 @@
                                 <li class="active"><a href="api.html#client-utils">Client-side utils</a></li>
                                 <li class="active"><a href="api.html#colorizer">Colorizer API</a></li>
                                 <li class="active"><a href="api.html#tester">Tester API</a></li>
+                                <li class="active"><a href="api.html#utils">Utils API</a></li>
                             </ul>
                         </li>
                         <li><a href="cli.html"><acronym title="Command Line Interface">CLI</acronym></a></li>
@@ -75,6 +76,7 @@
                 <li><a href="api.html#client-utils">The client-side utils</a></li>
                 <li><a href="api.html#colorizer">The Colorizer API</a></li>
                 <li><a href="api.html#tester">The Tester API</a></li>
+                <li><a href="api.html#utils">The utils API</a></li>
             </ul>
         </div>
     </div>
@@ -1339,7 +1341,7 @@ visible in remote DOM to process a next step. Uses
 </p>
 <pre><code class="javascript">casper.warn("I'm a warning message.");</code></pre>
 </div>
-        <div class="span3 apitoc ">
+        <div class="span3 apitoc">
             <div class="wrapper api-toc"><h3>Quick reference</h3>
 <h4>The <code>Casper</code> class</h4>
 <ul>
@@ -1576,7 +1578,7 @@ casper.run();</code></pre>
     return __utils__.visible('h1');
 });</code></pre>
 </div>
-        <div class="span3 apitoc ">
+        <div class="span3 apitoc">
             <div class="wrapper client-utils-toc"><h3>Quick reference</h3>
 <h4>The <code>ClientUtils</code> class</h4>
 <ul>
@@ -1682,7 +1684,7 @@ colorizer.format("We all live in a yellow submarine", {
     bold: true
 });</code></pre>
 </div>
-        <div class="span3 apitoc ">
+        <div class="span3 apitoc">
             <div class="wrapper colorizer-toc"><h3>Quick reference</h3>
 <h4>The <code>Colorizer</code> class</h4>
 <ul>
@@ -1936,7 +1938,7 @@ casper.run(function() {
     this.test.renderResults(true, 0, 'test-results.xml');
 });</code></pre>
 </div>
-        <div class="span3 apitoc ">
+        <div class="span3 apitoc">
             <div class="wrapper tester-toc"><h3>Quick reference</h3>
 <h4>The <code>Tester</code> class</h4>
 <ul>
@@ -1970,6 +1972,178 @@ casper.run(function() {
         </div>
     </div>
 </section>
+
+<section id="utils">
+    <div class="page-header">
+        <h1>
+            <span class="section-title">Utils</span>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span9 utils-content"><p>The <code>utils</code> module contains simple functions which circumvent some lacks in the
+standard Javascript API.
+
+</p>
+<p>Usage is pretty much straightforward:
+
+</p>
+<pre><code class="javascript">var utils = require('utils');
+
+utils.dump({plop: 42});</code></pre>
+<h3 id="utils.betterTypeOf"><code>utils.betterTypeOf(input)</code></h3>
+
+<p>Provides a better <code>typeof</code> operator equivalent, able to retrieve the <code>Array</code>
+type.
+
+</p>
+<h3 id="utils.dump"><code>utils.dump(value)</code></h3>
+
+<p>Dumps a JSON representation od passed argument onto the standard output. Useful
+for <a href="debugging.html">debugging</a>.
+
+</p>
+<h3 id="utils.fileExt"><code>utils.fileExt(file)</code></h3>
+
+<p>Retrieves the extension of passed filename.
+
+</p>
+<h3 id="utils.fillBlanks"><code>utils.fillBlanks(text, pad)</code></h3>
+
+<p>Fills a string with trailing spaces to match <code>pad</code> length.
+
+</p>
+<h3 id="utils.format"><code>utils.format(f)</code></h3>
+
+<p>Formats a string against passed args. <code>sprintf</code> equivalent.
+
+</p>
+<p><span class="label label-info">Note</span>
+This is a port of nodejs <code>util.format()</code>.
+
+</p>
+<h3 id="utils.inherits"><code>utils.inherits(ctor, superCtor)</code></h3>
+
+<p>Makes a constructor inheriting from another. Useful for subclassing and
+<a href="extending.html">extending</a>.
+
+</p>
+<p><span class="label label-info">Note</span>
+This is a port of nodejs <code>util.inherits()</code>.
+
+</p>
+<h3 id="utils.isArray"><code>utils.isArray(value)</code></h3>
+
+<p>Checks if passed argument is an instance of <code>Array</code>.
+
+</p>
+<h3 id="utils.isCasperObject"><code>utils.isCasperObject(value)</code></h3>
+
+<p>Checks if passed argument is an instance of <code>Casper</code>.
+
+</p>
+<h3 id="utils.isClipRect"><code>utils.isClipRect(value)</code></h3>
+
+<p>Checks if passed argument is a <code>cliprect</code> object.
+
+</p>
+<h3 id="utils.isFunction"><code>utils.isFunction(value)</code></h3>
+
+<p>Checks if passed argument is a function.
+
+</p>
+<h3 id="utils.isJsFile"><code>utils.isJsFile(file)</code></h3>
+
+<p>Checks if passed filename is a Javascript one (by checking if it has a <code>.js</code> or
+<code>.coffee</code> file extension).
+
+</p>
+<h3 id="utils.isNull"><code>utils.isNull(value)</code></h3>
+
+<p>Checks if passed argument is a <code>null</code>.
+
+</p>
+<h3 id="utils.isNumber"><code>utils.isNumber(value)</code></h3>
+
+<p>Checks if passed argument is an instance of <code>Number</code>.
+
+</p>
+<h3 id="utils.isObject"><code>utils.isObject(value)</code></h3>
+
+<p>Checks if passed argument is an object.
+
+</p>
+<h3 id="utils.isString"><code>utils.isString(value)</code></h3>
+
+<p>Checks if passed argument is an instance of <code>String</code>.
+
+</p>
+<h3 id="utils.isType"><code>utils.isType(what, type)</code></h3>
+
+<p>Checks if passed argument has its type matching the <code>type</code> argument.
+
+</p>
+<h3 id="utils.isUndefined"><code>utils.isUndefined(value)</code></h3>
+
+<p>Checks if passed argument is <code>undefined</code>.
+
+</p>
+<h3 id="utils.isWebPage"><code>utils.isWebPage(what)</code></h3>
+
+<p>Checks if passed argument is an instance of native PhantomJS' <code>WebPage</code> object.
+
+</p>
+<h3 id="utils.mergeObjects"><code>utils.mergeObjects(origin, add)</code></h3>
+
+<p>Merges two objects recursively.
+
+</p>
+<h3 id="utils.node"><code>utils.node(name, attributes)</code></h3>
+
+<p>Creates an (HT|X)ML element, having opitonal <code>attributes</code> added.
+
+</p>
+<h3 id="utils.serialize"><code>utils.serialize(value)</code></h3>
+
+<p>Serializes a value using JSON format. Will serialize functions as strings.
+Useful for <a href="debugging.html">debugging</a> and comparing objects.
+
+</p>
+<h3 id="utils.unique"><code>utils.unique(array)</code></h3>
+
+<p>Retrieves unique values from within a given <code>Array</code>.
+</p>
+</div>
+        <div class="span3 apitoc">
+            <div class="wrapper utils-toc"><h3>Quick reference</h3>
+<h4>The <code>utils</code> module</h4>
+<ul>
+<li><a href="#utils.betterTypeOf"><code>betterTypeOf()</code></a></li>
+<li><a href="#utils.dump"><code>dump()</code></a></li>
+<li><a href="#utils.fileExt"><code>fileExt()</code></a></li>
+<li><a href="#utils.fillBlanks"><code>fillBlanks()</code></a></li>
+<li><a href="#utils.format"><code>format()</code></a></li>
+<li><a href="#utils.inherits"><code>inherits()</code></a></li>
+<li><a href="#utils.isArray"><code>isArray()</code></a></li>
+<li><a href="#utils.isCasperObject"><code>isCasperObject()</code></a></li>
+<li><a href="#utils.isClipRect"><code>isClipRect()</code></a></li>
+<li><a href="#utils.isFunction"><code>isFunction()</code></a></li>
+<li><a href="#utils.isJsFile"><code>isJsFile()</code></a></li>
+<li><a href="#utils.isNull"><code>isNull()</code></a></li>
+<li><a href="#utils.isNumber"><code>isNumber()</code></a></li>
+<li><a href="#utils.isObject"><code>isObject()</code></a></li>
+<li><a href="#utils.isString"><code>isString()</code></a></li>
+<li><a href="#utils.isType"><code>isType()</code></a></li>
+<li><a href="#utils.isUndefined"><code>isUndefined()</code></a></li>
+<li><a href="#utils.isWebPage"><code>isWebPage()</code></a></li>
+<li><a href="#utils.mergeObjects"><code>mergeObjects()</code></a></li>
+<li><a href="#utils.node"><code>node()</code></a></li>
+<li><a href="#utils.serialize"><code>serialize()</code></a></li>
+<li><a href="#utils.unique"><code>unique()</code></a></li>
+</ul>
+</div>
+        </div>
+    </div>
+</section>
 </div>
         <footer>
             <hr>
@@ -1980,10 +2154,10 @@ casper.run(function() {
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=l1Rtk0rZyoY.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNUgX3iT0ytKlFiwUJkHz0tOAxDNg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1338961482312"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1338961482312"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1338961482312"></script>
-    <script type="text/javascript" src="js/application.js?1338961482312"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=l1Rtk0rZyoY.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNUgX3iT0ytKlFiwUJkHz0tOAxDNg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1338964649394"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1338964649394"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1338964649394"></script>
+    <script type="text/javascript" src="js/application.js?1338964649394"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {

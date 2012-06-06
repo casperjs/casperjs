@@ -1,0 +1,26 @@
+### Quick reference
+
+#### The `utils` module
+
+- [`betterTypeOf()`](#utils.betterTypeOf)
+- [`dump()`](#utils.dump)
+- [`fileExt()`](#utils.fileExt)
+- [`fillBlanks()`](#utils.fillBlanks)
+- [`format()`](#utils.format)
+- [`inherits()`](#utils.inherits)
+- [`isArray()`](#utils.isArray)
+- [`isCasperObject()`](#utils.isCasperObject)
+- [`isClipRect()`](#utils.isClipRect)
+- [`isFunction()`](#utils.isFunction)
+- [`isJsFile()`](#utils.isJsFile)
+- [`isNull()`](#utils.isNull)
+- [`isNumber()`](#utils.isNumber)
+- [`isObject()`](#utils.isObject)
+- [`isString()`](#utils.isString)
+- [`isType()`](#utils.isType)
+- [`isUndefined()`](#utils.isUndefined)
+- [`isWebPage()`](#utils.isWebPage)
+- [`mergeObjects()`](#utils.mergeObjects)
+- [`node()`](#utils.node)
+- [`serialize()`](#utils.serialize)
+- [`unique()`](#utils.unique)
