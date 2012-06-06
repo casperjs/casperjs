@@ -150,6 +150,8 @@ class instance, stored in a `casper` variable, is already available and exposed
 to each test file; that's because a configured one's already available as stated
 previously.
 
+## The `casper test` command
+
 The `casperjs test` command comes handy for running all the tests found
 at a given location:
 
@@ -173,6 +175,14 @@ Some options are available using the `casper test` command:
 - `--direct` will output log messages directly to the console
 - `--log-level=<logLevel>` sets the logging level (see the
   [related section](logging.html))
+- `--includes=foo.js,bar.js` will includes the `foo.js` and `bar.js` files
+  before each suite execution
+
+Sample command:
+
+```
+$ casperjs test --includes=foo.js,bar.js --direct --log-level=debug test1.js test2.js /path/to/dome/test/dir
+```
 
 * * * * *
 

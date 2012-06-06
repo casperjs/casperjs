@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1338951334583">
-    <link rel="stylesheet" href="css/casper.css?1338951334583">
+    <link rel="stylesheet" href="prettify/prettify.css?1338961168837">
+    <link rel="stylesheet" href="css/casper.css?1338961168837">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -203,6 +203,7 @@ to each test file; that's because a configured one's already available as stated
 previously.
 
 </p>
+<h2>The <code>casper test</code> command</h2>
 <p>The <code>casperjs test</code> command comes handy for running all the tests found
 at a given location:
 
@@ -226,7 +227,13 @@ at a given location:
 <li><code>--direct</code> will output log messages directly to the console</li>
 <li><code>--log-level=&lt;logLevel&gt;</code> sets the logging level (see the
 <a href="logging.html">related section</a>)</li>
+<li><code>--includes=foo.js,bar.js</code> will includes the <code>foo.js</code> and <code>bar.js</code> files
+before each suite execution</li>
 </ul>
+<p>Sample command:
+
+</p>
+<pre><code>$ casperjs test --includes=foo.js,bar.js --direct --log-level=debug test1.js test2.js /path/to/dome/test/dir</code></pre>
 <hr>
 <h3>Extending Casper for Testing</h3>
 <p>The <code>$ casper test [path]</code> command is just a shortcut for
@@ -250,10 +257,10 @@ your own runner and extend the casper object instance from there.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=l1Rtk0rZyoY.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNUgX3iT0ytKlFiwUJkHz0tOAxDNg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1338951334583"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1338951334583"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1338951334583"></script>
-    <script type="text/javascript" src="js/application.js?1338951334583"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=l1Rtk0rZyoY.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNUgX3iT0ytKlFiwUJkHz0tOAxDNg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1338961168837"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1338961168837"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1338961168837"></script>
+    <script type="text/javascript" src="js/application.js?1338961168837"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {
