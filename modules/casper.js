@@ -828,6 +828,9 @@ Casper.prototype.open = function open(location, settings) {
     }
     this.emit('open', this.requestUrl, settings);
     this.log(f('opening url: %s, HTTP %s', this.requestUrl, settings.method.toUpperCase()), "debug");
+    if ('headers' in settings && phantom.version.minor < 6) {
+        this.warn('Custom headers in outgoing requests are supported in PhantomJS >= 1.6');
+    }
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
         data:      settings.data,
