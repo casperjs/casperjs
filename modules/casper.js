@@ -37,6 +37,10 @@ var tester = require('tester');
 var utils = require('utils');
 var f = utils.format;
 
+
+var defaultUserAgent = phantom.defaultPageSettings.userAgent
+    .replace('PhantomJS', f("CasperJS/%s", phantom.casperVersion) + '+Phantomjs');
+
 exports.create = function create(options) {
     return new Casper(options);
 };
@@ -65,8 +69,6 @@ exports.selectXPath = selectXPath;
  * @param  Object  options  Casper options
  */
 var Casper = function Casper(options) {
-    var DEFAULT_DIE_MESSAGE = "Suite explicitely interrupted without any message given.";
-    var DEFAULT_USER_AGENT  = "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
     // init & checks
     if (!(this instanceof arguments.callee)) {
         return new Casper(options);
@@ -91,7 +93,7 @@ var Casper = function Casper(options) {
         page:                null,
         pageSettings:        {
             localToRemoteUrlAccessEnabled: true,
-            userAgent:                     DEFAULT_USER_AGENT
+            userAgent:                     defaultUserAgent
         },
         stepTimeout:         null,
         timeout:             null,
@@ -364,7 +366,9 @@ Casper.prototype.debugPage = function debugPage() {
 Casper.prototype.die = function die(message, status) {
     this.result.status = "error";
     this.result.time = new Date().getTime() - this.startTime;
-    message = utils.isString(message) && message.length > 0 ? message : DEFAULT_DIE_MESSAGE;
+    if (!utils.isString(message) || !message.length) {
+        message = "Suite explicitely interrupted without any message given.";
+    }
     this.log(message, "error");
     this.emit('die', message, status);
     if (utils.isFunction(this.options.onDie)) {
@@ -1110,6 +1114,20 @@ Casper.prototype.thenOpen = function thenOpen(location, then) {
  */
 Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn, context) {
     return this.thenOpen(location).thenEvaluate(fn, context);
+};
+
+/**
+ * Sets the user-agent string currently used when requesting urls.
+ *
+ * @param  String  userAgent  User agent string
+ * @return String
+ */
+Casper.prototype.userAgent = function userAgent(agent) {
+    if (!this.started) {
+        throw new CasperError("Casper not started, can't set userAgent");
+    }
+    this.options.pageSettings.userAgent = this.page.settings.userAgent = agent;
+    return this;
 };
 
 /**
