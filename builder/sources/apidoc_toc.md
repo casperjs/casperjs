@@ -39,6 +39,7 @@
 - [`thenEvaluate()`](#casper.thenEvaluate)
 - [`thenOpen()`](#casper.thenOpen)
 - [`thenOpenAndEvaluate()`](#casper.thenOpenAndEvaluate)
+- [`userAgent()`](#casper.userAgent)
 - [`viewport()`](#casper.viewport)
 - [`visible()`](#casper.visible)
 - [`wait()`](#casper.wait)

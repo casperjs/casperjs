@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1339015913439">
-    <link rel="stylesheet" href="css/casper.css?1339015913439">
+    <link rel="stylesheet" href="prettify/prettify.css?1339228022398">
+    <link rel="stylesheet" href="css/casper.css?1339228022398">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1163,6 +1163,30 @@ casper.run(function() {
     this.debugPage();
     this.exit();
 });</code></pre>
+<h3 id="casper.userAgent"><code>Casper#userAgent(String agent)</code></h3>
+
+<p>Sets the <a href="http://en.wikipedia.org/wiki/User-Agent">User-Agent string</a> to send
+through headers when performing requests.
+
+</p>
+<p><strong>Example:</strong>
+
+</p>
+<pre><code class="javascript">casper.start();
+
+casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X)');
+
+casper.thenOpen('http://google.com/', function() {
+    this.echo("I'm a Mac.");
+});
+
+casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
+
+casper.thenOpen('http://google.com/', function() {
+    this.echo("I'm a PC.");
+});
+
+casper.run();</code></pre>
 <h3 id="casper.viewport"><code>Casper#viewport(Number  width, Number height)</code></h3>
 
 <p>Changes current viewport size.
@@ -1382,6 +1406,7 @@ visible in remote DOM to process a next step. Uses
 <li><a href="#casper.thenEvaluate"><code>thenEvaluate()</code></a></li>
 <li><a href="#casper.thenOpen"><code>thenOpen()</code></a></li>
 <li><a href="#casper.thenOpenAndEvaluate"><code>thenOpenAndEvaluate()</code></a></li>
+<li><a href="#casper.userAgent"><code>userAgent()</code></a></li>
 <li><a href="#casper.viewport"><code>viewport()</code></a></li>
 <li><a href="#casper.visible"><code>visible()</code></a></li>
 <li><a href="#casper.wait"><code>wait()</code></a></li>
@@ -2154,10 +2179,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=l1Rtk0rZyoY.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNUgX3iT0ytKlFiwUJkHz0tOAxDNg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339015913439"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339015913439"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1339015913439"></script>
-    <script type="text/javascript" src="js/application.js?1339015913439"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339228022398"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339228022398"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1339228022398"></script>
+    <script type="text/javascript" src="js/application.js?1339228022398"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {

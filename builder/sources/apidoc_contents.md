@@ -1120,6 +1120,31 @@ casper.run(function() {
 });
 ```
 
+<h3 id="casper.userAgent"><code>Casper#userAgent(String agent)</code></h3>
+
+Sets the [User-Agent string](http://en.wikipedia.org/wiki/User-Agent) to send
+through headers when performing requests.
+
+**Example:**
+
+```javascript
+casper.start();
+
+casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X)');
+
+casper.thenOpen('http://google.com/', function() {
+    this.echo("I'm a Mac.");
+});
+
+casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
+
+casper.thenOpen('http://google.com/', function() {
+    this.echo("I'm a PC.");
+});
+
+casper.run();
+```
+
 <h3 id="casper.viewport"><code>Casper#viewport(Number  width, Number height)</code></h3>
 
 Changes current viewport size.
