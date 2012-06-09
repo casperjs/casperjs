@@ -6,6 +6,8 @@ XXXX-XX-XX, v0.6.11
 
 - closed [#132](https://github.com/n1k0/casperjs/issues/132) - added ability to include js/coffee files using a dedicated option when using the `casper test` command
 - fixes [#140](https://github.com/n1k0/casperjs/issues/140) - `casper test` now resolves local paths urls
+- added `Casper.userAgent()` to ease a more dynamic setting of user-agent string
+- switched to more standard `.textContent` property to get a node text; this allows a better compatibility of the clientutils bookmarklet with non-webkit browsers
 
 2012-06-04, v0.6.10
 -------------------
