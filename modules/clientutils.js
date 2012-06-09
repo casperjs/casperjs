@@ -28,14 +28,15 @@
  *
  */
 (function(exports) {
-    exports.create = function create() {
-        return new this.ClientUtils();
+    exports.create = function create(options) {
+        return new this.ClientUtils(options);
     };
 
     /**
      * Casper client-side helpers.
      */
-    exports.ClientUtils = function ClientUtils() {
+    exports.ClientUtils = function ClientUtils(options) {
+        // private members
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -48,6 +49,9 @@
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
         );
         var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
+
+        // public members
+        this.options = options || {};
 
         /**
          * Clicks on the DOM element behind the provided selector.
@@ -185,7 +189,7 @@
                 files:  []
             };
             if (!(form instanceof HTMLElement) || typeof form === "string") {
-                __utils__.log("attempting to fetch form element from selector: '" + form + "'", "info");
+                this.log("attempting to fetch form element from selector: '" + form + "'", "info");
                 try {
                     form = this.findOne(form);
                 } catch (e) {
@@ -463,7 +467,7 @@
          */
         this.setField = function setField(field, value) {
             var fields, out;
-            value = value || "";
+            value = logValue = (value || "");
             if (field instanceof NodeList) {
                 fields = field;
                 field = fields[0];
@@ -471,11 +475,15 @@
             if (!field instanceof HTMLElement) {
                 this.log("Invalid field type; only HTMLElement and NodeList are supported", "error");
             }
-            this.log('Set "' + field.getAttribute('name') + '" field value to ' + value, "debug");
+            if (this.options && this.options.safeLogs && field.getAttribute('type') === "password") {
+                // obfuscate password value
+                logValue = Array(value.length + 1).join("*");
+            }
+            this.log('Set "' + field.getAttribute('name') + '" field value to ' + logValue, "debug");
             try {
                 field.focus();
             } catch (e) {
-                __utils__.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
+                this.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
             }
             var nodeName = field.nodeName.toLowerCase();
             switch (nodeName) {
@@ -544,7 +552,7 @@
             try {
                 field.blur();
             } catch (err) {
-                __utils__.log("Unable to blur() input field " + field.getAttribute('name') + ": " + err, "warning");
+                this.log("Unable to blur() input field " + field.getAttribute('name') + ": " + err, "warning");
             }
             return out;
         };
@@ -570,7 +578,4 @@
             }
         };
     };
-
-    // silly "hack" to force having an instance available
-    exports.__utils__ = new exports.ClientUtils();
 })(typeof exports === "object" ? exports : window);

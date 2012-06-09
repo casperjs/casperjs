@@ -80,6 +80,7 @@ var Casper = function Casper(options) {
         exitOnError:         true,
         logLevel:            "error",
         httpStatusHandlers:  {},
+        safeLogs:            true,
         onAlert:             null,
         onDie:               null,
         onError:             null,
@@ -385,7 +386,7 @@ Casper.prototype.die = function die(message, status) {
  * @return Casper
  */
 Casper.prototype.download = function download(url, targetPath, method, data) {
-    var cu = require('clientutils').create();
+    var cu = require('clientutils').create(this.options);
     try {
         fs.write(targetPath, cu.decode(this.base64encode(url, method, data)), 'wb');
         this.emit('downloaded.file', targetPath);
@@ -700,8 +701,13 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
     if (true === this.page.injectJs(clientUtilsPath)) {
         this.log("Successfully injected Casper client-side utilities", "debug");
     } else {
-        this.log("Failed to instantiate Casper client-side utilities!", "warning");
+        this.warn("Failed to inject Casper client-side utilities");
     }
+    // ClientUtils and Casper shares the same options
+    // These are not the lines I'm the most proud of in my life, but it works.
+    this.page.evaluate(function() {
+        __utils__ = new ClientUtils(__options);
+    }.toString().replace('__options', JSON.stringify(this.options)));
 };
 
 /**
