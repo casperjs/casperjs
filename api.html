@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1339228022398">
-    <link rel="stylesheet" href="css/casper.css?1339228022398">
+    <link rel="stylesheet" href="prettify/prettify.css?1339232029380">
+    <link rel="stylesheet" href="css/casper.css?1339232029380">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -443,7 +443,8 @@ casper.then(function() {
 casper.run();</code></pre>
 <h3 id="casper.clickLabel"><code>Casper#clickLabel(String label[, String tag])</code></h3>
 
-<p>Clicks on the first DOM element found containing <code>label</code> text.
+<p><span class="label label-success">Added in 0.6.10</span>
+Clicks on the first DOM element found containing <code>label</code> text.
 Optionaly ensures that the element node name is <code>tag</code>.
 
 </p>
@@ -491,7 +492,8 @@ casper.run();</code></pre>
 casper.run();</code></pre>
 <h3 id="casper.clear"><code>Casper#clear()</code></h3>
 
-<p>Clears the current page execution environment context. Useful to avoid
+<p><span class="label label-success">Added in 0.6.5</span>
+Clears the current page execution environment context. Useful to avoid
 having previously loaded DOM contents being still active.
 
 </p>
@@ -511,9 +513,6 @@ casper.then(function() {
 });
 
 casper.run();</code></pre>
-<p><span class="label label-info">Note</span> This method has been added in 0.6.5.
-
-</p>
 <h3 id="casper.debugHTML"><code>Casper#debugHTML()</code></h3>
 
 <p>Logs the HTML code of the current page directly to the standard output,
@@ -856,7 +855,9 @@ casper.run();</code></pre>
 casper.run();</code></pre>
 <h3 id="casper.mouseEvent"><code>Casper#mouseEvent(String type, String <a href="selectors.html">selector</a>)</code></h3>
 
-<p>Trigger a mouse event on the first element found matching the provided selector.
+<p><span class="label label-success">Added in 0.6.9</span>
+Triggers a mouse event on the first element found matching the provided
+selector.
 
 </p>
 <p>Supported events are <code>mouseup</code>, <code>mousedown</code>, <code>click</code>, <code>mousemove</code>, <code>mouseover</code>
@@ -1165,7 +1166,8 @@ casper.run(function() {
 });</code></pre>
 <h3 id="casper.userAgent"><code>Casper#userAgent(String agent)</code></h3>
 
-<p>Sets the <a href="http://en.wikipedia.org/wiki/User-Agent">User-Agent string</a> to send
+<p><span class="label label-success">Added in 0.6.11</span>
+Sets the <a href="http://en.wikipedia.org/wiki/User-Agent">User-Agent string</a> to send
 through headers when performing requests.
 
 </p>
@@ -1828,7 +1830,8 @@ pattern.
 <pre><code class="javascript">casper.test.assertNot(false, "Universe is still operational");</code></pre>
 <h3 id="tester.assertNotEquals"><code>Tester#assertNotEquals(mixed testValue, mixed expected[, String message])</code></h3>
 
-<p>Asserts that two values are <strong>not</strong> strictly equals.
+<p><span class="label label-success">Added in 0.6.7</span>
+Asserts that two values are <strong>not</strong> strictly equals.
 
 </p>
 <pre><code class="javascript">casper.test.assertNotEquals(true, "Truth is out");</code></pre>
@@ -2179,10 +2182,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339228022398"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339228022398"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1339228022398"></script>
-    <script type="text/javascript" src="js/application.js?1339228022398"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339232029380"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339232029380"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1339232029380"></script>
+    <script type="text/javascript" src="js/application.js?1339232029380"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {

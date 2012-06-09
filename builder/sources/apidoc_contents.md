@@ -365,6 +365,7 @@ casper.run();
 
 <h3 id="casper.clickLabel"><code>Casper#clickLabel(String label[, String tag])</code></h3>
 
+<span class="label label-success">Added in 0.6.10</span>
 Clicks on the first DOM element found containing `label` text.
 Optionaly ensures that the element node name is `tag`.
 
@@ -417,6 +418,7 @@ casper.run();
 
 <h3 id="casper.clear"><code>Casper#clear()</code></h3>
 
+<span class="label label-success">Added in 0.6.5</span>
 Clears the current page execution environment context. Useful to avoid
 having previously loaded DOM contents being still active.
 
@@ -436,8 +438,6 @@ casper.then(function() {
 
 casper.run();
 ```
-
-<span class="label label-info">Note</span> This method has been added in 0.6.5.
 
 <h3 id="casper.debugHTML"><code>Casper#debugHTML()</code></h3>
 
@@ -796,7 +796,9 @@ casper.run();
 
 <h3 id="casper.mouseEvent"><code>Casper#mouseEvent(String type, String <a href="selectors.html">selector</a>)</code></h3>
 
-Trigger a mouse event on the first element found matching the provided selector.
+<span class="label label-success">Added in 0.6.9</span>
+Triggers a mouse event on the first element found matching the provided
+selector.
 
 Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover`
 and `mouseout`.
@@ -1122,6 +1124,7 @@ casper.run(function() {
 
 <h3 id="casper.userAgent"><code>Casper#userAgent(String agent)</code></h3>
 
+<span class="label label-success">Added in 0.6.11</span>
 Sets the [User-Agent string](http://en.wikipedia.org/wiki/User-Agent) to send
 through headers when performing requests.
 

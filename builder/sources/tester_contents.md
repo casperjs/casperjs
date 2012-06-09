@@ -114,6 +114,7 @@ casper.test.assertNot(false, "Universe is still operational");
 
 <h3 id="tester.assertNotEquals"><code>Tester#assertNotEquals(mixed testValue, mixed expected[, String message])</code></h3>
 
+<span class="label label-success">Added in 0.6.7</span>
 Asserts that two values are **not** strictly equals.
 
 ```javascript

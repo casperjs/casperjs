@@ -60,6 +60,7 @@ parameters passed to their callback:
       <td><code>error</code></td>
       <td><code>msg, backtrace</code></td>
       <td>
+        <span class="label label-success">Added in 0.6.9</span>
         Emitted when an error hasn't been caught. Do basically what PhantomJS'
         <code>onError()</code> native handler does.
       </td>

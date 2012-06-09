@@ -17,6 +17,7 @@ casper.start('http://domain.tld/page.html', function() {
 
 ## XPath
 
+<span class="label label-success">Added in 0.6.8</span>
 You can alternatively use [XPath expression strings]() instead:
 
 ```javascript
