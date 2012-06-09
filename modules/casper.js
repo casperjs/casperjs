@@ -1407,17 +1407,19 @@ function createPage(casper) {
             }
         }
         if (casper.options.clientScripts) {
+            if (utils.isString(casper.options.clientScripts)) {
+                casper.options.clientScripts = [casper.options.clientScripts];
+            }
             if (!utils.isArray(casper.options.clientScripts)) {
                 throw new CasperError("The clientScripts option must be an array");
-            } else {
-                casper.options.clientScripts.forEach(function _forEach(script) {
-                    if (casper.page.injectJs(script)) {
-                        casper.log(f('Automatically injected %s client side', script), "debug");
-                    } else {
-                        casper.log(f('Failed injecting %s client side', script), "warning");
-                    }
-                });
             }
+            casper.options.clientScripts.forEach(function _forEach(script) {
+                if (casper.page.injectJs(script)) {
+                    casper.log(f('Automatically injected %s client side', script), "debug");
+                } else {
+                    casper.warn('Failed injecting %s client side', script);
+                }
+            });
         }
         // Client-side utils injection
         casper.injectClientUtils();
