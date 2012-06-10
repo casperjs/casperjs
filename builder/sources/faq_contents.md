@@ -99,9 +99,10 @@ var casper = require('casper').create();
 
 <h2 id="faq-httpstatuses">How can I catch HTTP 404 and other status codes?</h2>
 
-You can define your own HTTP status code handlers by using the
-`httpStatusHandlers` option of the Casper object. You can also catch
-other HTTP status codes as well, as demoed below:
+You can define your own
+[HTTP status code](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+handlers by using the `httpStatusHandlers` option of the Casper object. You can
+also catch other HTTP status codes as well, as demoed below:
 
 ```javascript
 var casper = require('casper').create({
@@ -130,5 +131,5 @@ casper.run(function() {
 ```
 
 <span class="label label-info">Hint</span> As of 0.6, casper ships with a
-complete [event system](#events-filters) and a bunch of these are dedicated to
-HTTP statuses. You're encouraged to use them.
+complete [event system](events-filters.html) and a bunch of these are dedicated
+to HTTP statuses. You're encouraged to use them.

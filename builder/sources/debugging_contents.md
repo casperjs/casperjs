@@ -42,7 +42,7 @@ verbose, and will potentially display sensitive informations onto the console.
 
 ## Hook in the deep using events
 
-[Events](#events-filters) are a very powerful features of CasperJS, and you
+[Events](events-filters.html) are a very powerful features of CasperJS, and you
 should probably give it a look if you haven't already.
 
 Some interesting events you may eventually use to debug your scripts:
@@ -63,7 +63,8 @@ casper.on('http.status.404', function(resource) {
 });
 ```
 
-Ensure to check the [full list](#events) of all the other available events.
+Ensure to check the [full list](events.html#events) of all the other available
+events.
 
 ## Localize yourself in modules
 
