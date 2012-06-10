@@ -63,8 +63,8 @@ casper.on('http.status.404', function(resource) {
 });
 ```
 
-Ensure to check the [full list](events.html#events) of all the other available
-events.
+Ensure to check the [full list](events-filters.html#events) of all the other
+available events.
 
 ## Localize yourself in modules
 
