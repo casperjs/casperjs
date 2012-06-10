@@ -850,11 +850,22 @@ casper.then(function() {
 casper.run();
 ```
 
-<span class="label label-warning">Warning</span> PhantomJS 1.4.0 and 1.4.1 have
-introduced a [regression](http://code.google.com/p/phantomjs/issues/detail?id=337)
-with POST requests preventing data to be actually submitted; so please
-check you're using a more recent or patched version of PhantomJS before
-reporting any issue regarding this bug.
+<span class="label label-info">PhantomJS >= 1.6</span>
+You can also set custom request headers to send when performing an outgoing
+request, passing the `headers` option:
+
+```javascript
+casper.open('http://some.testserver.com/post.php', {
+    method: 'post',
+    data:   {
+        'title': 'Plop',
+        'body':  'Wow.'
+    },
+    headers: {
+        'Accept-Language': 'fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3'
+    }
+});
+```
 
 <h3 id="casper.repeat"><code>Casper#repeat(int times,  function then)</code></h3>
 

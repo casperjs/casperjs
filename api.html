@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1339232029380">
-    <link rel="stylesheet" href="css/casper.css?1339232029380">
+    <link rel="stylesheet" href="prettify/prettify.css?1339322446406">
+    <link rel="stylesheet" href="css/casper.css?1339322446406">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -906,13 +906,21 @@ casper.then(function() {
 });
 
 casper.run();</code></pre>
-<p><span class="label label-warning">Warning</span> PhantomJS 1.4.0 and 1.4.1 have
-introduced a <a href="http://code.google.com/p/phantomjs/issues/detail?id=337">regression</a>
-with POST requests preventing data to be actually submitted; so please
-check you're using a more recent or patched version of PhantomJS before
-reporting any issue regarding this bug.
+<p><span class="label label-info">PhantomJS &gt;= 1.6</span>
+You can also set custom request headers to send when performing an outgoing
+request, passing the <code>headers</code> option:
 
 </p>
+<pre><code class="javascript">casper.open('http://some.testserver.com/post.php', {
+    method: 'post',
+    data:   {
+        'title': 'Plop',
+        'body':  'Wow.'
+    },
+    headers: {
+        'Accept-Language': 'fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3'
+    }
+});</code></pre>
 <h3 id="casper.repeat"><code>Casper#repeat(int times,  function then)</code></h3>
 
 <p>Repeats a navigation step a given number of times.
@@ -1451,7 +1459,7 @@ utilities in the DOM of your favorite browser.
 
 </p>
 <p>Just drag this link
-<span class="label label-info"><a href="javascript:void(function()%7Bif(!document.getElementById('CasperUtils'))%7Bvar%20CasperUtils=document.createElement('script');CasperUtils.id='CasperUtils';CasperUtils.src='https://raw.github.com/n1k0/casperjs/master/modules/clientutils.js';document.documentElement.appendChild(CasperUtils);%7D%7D());">CasperJS utils</a></span>
+<span class="label label-info"><a href="javascript:void(function()%7Bif(!document.getElementById('CasperUtils'))%7Bvar%20CasperUtils=document.createElement('script');CasperUtils.id='CasperUtils';CasperUtils.src='https://raw.github.com/n1k0/casperjs/master/modules/clientutils.js';document.documentElement.appendChild(CasperUtils);%7D%7D());void(window.onload=function(){window.__utils__=new%20window.ClientUtils();})">CasperJS utils</a></span>
 onto your favorites toobar; when clicking, a <code>__utils__</code> object will
 be available within the console of your browser.
 
@@ -2182,10 +2190,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339232029380"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339232029380"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1339232029380"></script>
-    <script type="text/javascript" src="js/application.js?1339232029380"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339322446406"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339322446406"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1339322446406"></script>
+    <script type="text/javascript" src="js/application.js?1339322446406"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {

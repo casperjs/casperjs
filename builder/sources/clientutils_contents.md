@@ -14,7 +14,7 @@ A bookmarklet is also available to help injecting Casper's client-side
 utilities in the DOM of your favorite browser.
 
 Just drag this link
-<span class="label label-info"><a href="javascript:void(function()%7Bif(!document.getElementById('CasperUtils'))%7Bvar%20CasperUtils=document.createElement('script');CasperUtils.id='CasperUtils';CasperUtils.src='https://raw.github.com/n1k0/casperjs/master/modules/clientutils.js';document.documentElement.appendChild(CasperUtils);%7D%7D());">CasperJS utils</a></span>
+<span class="label label-info"><a href="javascript:void(function()%7Bif(!document.getElementById('CasperUtils'))%7Bvar%20CasperUtils=document.createElement('script');CasperUtils.id='CasperUtils';CasperUtils.src='https://raw.github.com/n1k0/casperjs/master/modules/clientutils.js';document.documentElement.appendChild(CasperUtils);%7D%7D());void(window.onload=function(){window.__utils__=new%20window.ClientUtils();})">CasperJS utils</a></span>
 onto your favorites toobar; when clicking, a <code>\_\_utils\__</code> object will
 be available within the console of your browser.
 
