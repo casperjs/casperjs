@@ -224,6 +224,18 @@ All the available options are detailed below:
       </td>
     </tr>
     <tr>
+      <td><code>safeLogs</code></td>
+      <td><code>Boolean</code></td>
+      <td><code>true</code></td>
+      <td>
+        <span class="label label-success">Added in 0.6.11</span>
+        When this option is set to <code>true</code>&nbsp;— which is the
+        default, any password information will be obfuscated in log messages.
+        Set <code>safeLogs</code> to false to disclosure passwords in plain
+        text <strong>(not recommended)</strong>.
+      </td>
+    </tr>
+    <tr>
       <td><code>stepTimeout</code></td>
       <td><code>Number</code></td>
       <td><code>null</code></td>
