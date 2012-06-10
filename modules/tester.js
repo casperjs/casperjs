@@ -390,6 +390,25 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
+     * Asserts that title of the remote page matched the provided pattern.
+     *
+     * @param  RegExp  pattern  The pattern to test the title against
+     * @param  String  message  Test description
+     * @return Object           An assertion result object
+     */
+    this.assertTitleMatch = this.assertTitleMatches = function assertTitleMatch(pattern, message) {
+        var currentTitle = casper.getTitle();
+        return this.assert(pattern.test(currentTitle), message, {
+            type: "assertTitle",
+            details: "Page title does not match the provided pattern",
+            values: {
+                subject: currentTitle,
+                pattern: pattern
+            }
+        });
+    };
+
+    /**
      * Asserts that the provided subject is of the given type.
      *
      * @param  mixed   subject  The value to test

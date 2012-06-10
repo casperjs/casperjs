@@ -96,6 +96,9 @@ casper.then(function() {
     t.comment('Tester.assertTitle()');
     t.assertTitle('CasperJS test index', 'Tester.assertTitle() works as expected');
 
+    t.comment('Tester.assertTitleMatch()');
+    t.assertTitleMatch(/test index/, 'Tester.assertTitleMatch() works as expected');
+
     t.comment('Tester.assertType()');
     t.assertType("plop", "string", "Tester.assertType() works as expected");
 
