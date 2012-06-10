@@ -1,8 +1,27 @@
 casper = require("casper").create
     verbose: true
 
+# The base links array
+links = [
+    "http://google.com/"
+    "http://yahoo.com/"
+    "http://bing.com/"
+]
+
+currentLink = 0;
+
 # If we don't set a limit, it could go on forever
 upTo = ~~casper.cli.get(0) || 10
+
+###
+Get the links, and add them to the links array
+(It could be done all in one step, but it is intentionally splitted)
+###
+addLinks = (link) ->
+    @then ->
+        found = @evaluate searchLinks
+        @echo "#{found.length} links found on #{link}"
+        links = links.concat found
 
 ###
 Fetch all <a> elements from the page and return
@@ -16,34 +35,10 @@ searchLinks = ->
     ), (a) ->
         a.getAttribute "href"
 
-# The base links array
-links = [
-    "http://google.com/"
-    "http://yahoo.com/"
-    "http://bing.com/"
-]
-
 # Just opens the page and prints the title
 start = (link) ->
     @start link, ->
         @echo "Page title: #{ @getTitle() }"
-
-###
-Get the links, and add them to the links array
-(It could be done all in one step, but it is intentionally splitted)
-###
-addLinks = (link) ->
-    @then ->
-        found = @evaluate searchLinks
-        @echo "#{found.length} links found on #{link}"
-        links = links.concat found
-
-casper.start()
-
-casper.then ->
-    @echo "Starting"
-
-currentLink = 0;
 
 # As long as it has a next link, and is under the maximum limit, will keep running
 check = ->
@@ -56,5 +51,10 @@ check = ->
     else
         @echo "All done."
         @exit()
+
+casper.start()
+
+casper.then ->
+    @echo "Starting"
 
 casper.run check
