@@ -1,35 +1,39 @@
-[PhantomJS](http://phantomjs.org/) >= 1.5 must be installed (1.5.0 highly
-recommended). Check out [PhantomJS' installation
-instructions](http://code.google.com/p/phantomjs/wiki/Installation), and:
+**[PhantomJS](http://phantomjs.org/) >= 1.5 must be installed on your system**.
+Check out [PhantomJS' installation instructions](http://code.google.com/p/phantomjs/wiki/Installation),
+and:
 
-* Ensure to always install the latest available version of PhantomJS, and prefer
-  static builds over other package installation methods
+* Ensure to always install the **latest stable version of PhantomJS**;
 
 * <span class="label label-warning">Ubuntu users</span> Double check the
-  version of PhantomJS provided by your apt repository. Often, only old versions
-  are provided.
+  version of PhantomJS provided by your apt repository, if any. Often, only old
+  versions are provided.
 
-Once PhantomJS's installed on your machine, you should obtain something like this:
+* <span class="label label-info">OSX users</span> If you use
+  [Homebrew](http://mxcl.github.com/homebrew/), you can install both CasperJS
+  and PhantomJS using this command:
 
-    $ phantomjs --version
-    1.5.0
+      $ brew install casperjs
 
-Now just follow these instructions:
+Installation can be achieved using [git](http://git-scm.com/):
 
     $ git clone git://github.com/n1k0/casperjs.git
     $ cd casperjs
     $ git checkout tags/{{version}}
     $ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
 
-So now you should get something like this:
+Once PhantomJS and CasperJS installed on your machine, you should obtain
+something like this:
 
+    $ phantomjs --version
+    1.5.0
     $ casperjs --version
     {{version}}
 
-You are now ready to write your first script!
+You are now ready to write your [first script](quickstart.html)!
 
 <span class="label label-info">Note</span> The casperjs executable is written
-in [Python](http://python.org/), so you can also run it using the python command:
+in [Python](http://python.org/), so you can also run it using the python
+command:
 
     $ python /path/to/casperjs/bin/casperjs
     CasperJS version {{version}} at /Users/niko/casperjs
