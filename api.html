@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1339397177839">
-    <link rel="stylesheet" href="css/casper.css?1339397177839">
+    <link rel="stylesheet" href="prettify/prettify.css?1339397505866">
+    <link rel="stylesheet" href="css/casper.css?1339397505866">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1795,7 +1795,8 @@ casper.start(url, function() {
 });</code></pre>
 <h3 id="tester.assertEval"><code>Tester#assertEval(Function fn[, String message])</code></h3>
 
-<p>Asserts that a code evaluation in remote DOM resolves to true.
+<p>Asserts that a <a href="api.html#casper.evaluate">code evaluation in remote DOM</a>
+resolves to a boolean <code>true</code>.
 
 </p>
 <pre><code class="javascript">var casper = require('casper').create();
@@ -1806,7 +1807,9 @@ casper.start('http://www.google.fr/', function() {
 });</code></pre>
 <h3 id="tester.assertEvalEquals"><code>Tester#assertEvalEquals(Function fn, mixed expected[, String message])</code></h3>
 
-<p>Asserts that the result of a code evaluation in remote DOM equals.
+<p>Asserts that the result of a
+<a href="api.html#casper.evaluate">code evaluation in remote DOM</a> equals to the
+expected value.
 
 </p>
 <pre><code class="javascript">var casper = require('casper').create();
@@ -1844,7 +1847,8 @@ pattern.
 <pre><code class="javascript">casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is Chuck');</code></pre>
 <h3 id="tester.assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
 
-<p>Asserts that the passed subject resolves to <code>false</code>.
+<p>Asserts that the passed subject resolves to some
+<a href="http://11heavens.com/falsy-and-truthy-in-javascript">falsy value</a>.
 
 </p>
 <pre><code class="javascript">casper.test.assertNot(false, "Universe is still operational");</code></pre>
@@ -1865,7 +1869,13 @@ raises a javascript <code>Error</code>.
     if (throwIt) {
         throw new Error('thrown');
     }
-}, [true], 'Error has been raised.');</code></pre>
+}, [true], 'Error has been raised.');
+
+casper.test.assertRaises(function(throwIt) {
+    if (throwIt) {
+        throw new Error('thrown');
+    }
+}, [false], 'Error has been raised.'); // fails</code></pre>
 <h3 id="tester.assertSelectorExists"><code>Tester#assertSelectorExists(String selector[, String message])</code></h3>
 
 <p>Asserts that at least an element matching the provided <a href="selectors.html">selector expression</a>
@@ -1878,7 +1888,7 @@ casper.start('http://www.google.fr/', function() {
 });</code></pre>
 <h3 id="tester.assertResourceExists"><code>Tester#assertResourceExists(Function testFx[, String message])</code></h3>
 
-<p>The <code>testFx</code> is executed against all loaded asserts and the test passes
+<p>The <code>testFx</code> function is executed against all loaded assets and the test passes
 when at least one resource matches.
 
 </p>
@@ -1890,6 +1900,9 @@ casper.start('http://www.google.fr/', function() {
     // or shorter
     this.test.assertResourceExists('logo3w.png', 'google.fr logo was loaded');
 });</code></pre>
+<p>Check the documentation for <a href="api.html#casper.resourceExists"><code>Casper.resourceExists()</code></a>.
+
+</p>
 <h3 id="tester.assertTextExists"><code>Tester#assertTextExists(String expected[, String message])</code></h3>
 
 <p>Asserts that body <strong>plain text content</strong> contains the given string.
@@ -2212,10 +2225,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339397177839"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339397177839"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1339397177839"></script>
-    <script type="text/javascript" src="js/application.js?1339397177839"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339397505866"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339397505866"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1339397505866"></script>
+    <script type="text/javascript" src="js/application.js?1339397505866"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {

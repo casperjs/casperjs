@@ -47,7 +47,8 @@ casper.start(url, function() {
 
 <h3 id="tester.assertEval"><code>Tester#assertEval(Function fn[, String message])</code></h3>
 
-Asserts that a code evaluation in remote DOM resolves to true.
+Asserts that a [code evaluation in remote DOM](api.html#casper.evaluate)
+resolves to a boolean `true`.
 
 ```javascript
 var casper = require('casper').create();
@@ -60,7 +61,9 @@ casper.start('http://www.google.fr/', function() {
 
 <h3 id="tester.assertEvalEquals"><code>Tester#assertEvalEquals(Function fn, mixed expected[, String message])</code></h3>
 
-Asserts that the result of a code evaluation in remote DOM equals.
+Asserts that the result of a
+[code evaluation in remote DOM](api.html#casper.evaluate) equals to the
+expected value.
 
 ```javascript
 var casper = require('casper').create();
@@ -106,7 +109,8 @@ casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is 
 
 <h3 id="tester.assertNot"><code>Tester#assertNot(mixed subject[, String message])</code></h3>
 
-Asserts that the passed subject resolves to `false`.
+Asserts that the passed subject resolves to some
+[falsy value](http://11heavens.com/falsy-and-truthy-in-javascript).
 
 ```javascript
 casper.test.assertNot(false, "Universe is still operational");
@@ -132,6 +136,12 @@ casper.test.assertRaises(function(throwIt) {
         throw new Error('thrown');
     }
 }, [true], 'Error has been raised.');
+
+casper.test.assertRaises(function(throwIt) {
+    if (throwIt) {
+        throw new Error('thrown');
+    }
+}, [false], 'Error has been raised.'); // fails
 ```
 
 <h3 id="tester.assertSelectorExists"><code>Tester#assertSelectorExists(String selector[, String message])</code></h3>
@@ -148,7 +158,7 @@ casper.start('http://www.google.fr/', function() {
 
 <h3 id="tester.assertResourceExists"><code>Tester#assertResourceExists(Function testFx[, String message])</code></h3>
 
-The `testFx` is executed against all loaded asserts and the test passes
+The `testFx` function is executed against all loaded assets and the test passes
 when at least one resource matches.
 
 ```javascript
@@ -161,6 +171,8 @@ casper.start('http://www.google.fr/', function() {
     this.test.assertResourceExists('logo3w.png', 'google.fr logo was loaded');
 });
 ```
+
+Check the documentation for [`Casper.resourceExists()`](api.html#casper.resourceExists).
 
 <h3 id="tester.assertTextExists"><code>Tester#assertTextExists(String expected[, String message])</code></h3>
 
