@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1339396597293">
-    <link rel="stylesheet" href="css/casper.css?1339396597293">
+    <link rel="stylesheet" href="prettify/prettify.css?1339397177839">
+    <link rel="stylesheet" href="css/casper.css?1339397177839">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1908,6 +1908,15 @@ casper.start('http://www.google.fr/', function() {
 casper.start('http://www.google.fr/', function() {
     this.test.assertTitle('Google', 'google.fr has the correct title');
 });</code></pre>
+<h3 id="tester.assertTitleMatch"><code>Tester#assertTitleMatch(RegExp pattern[, String message])</code></h3>
+
+<p>Asserts that title of the remote page matches the provided RegExp pattern.
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertTitleMatch(/Google/, 'google.fr has a quite predictable title');
+});</code></pre>
 <h3 id="tester.assertType"><code>Tester#assertType(mixed input, String type[, String message])</code></h3>
 
 <p>Asserts that the provided input is of the given type.
@@ -2005,6 +2014,7 @@ casper.run(function() {
 <li><a href="#tester.assertSelectorExists"><code>assertSelectorExists()</code></a></li>
 <li><a href="#tester.assertTextExists"><code>assertTextExists()</code></a></li>
 <li><a href="#tester.assertTitle"><code>assertTitle()</code></a></li>
+<li><a href="#tester.assertTitleMatch"><code>assertTitleMatch()</code></a></li>
 <li><a href="#tester.assertType"><code>assertType()</code></a></li>
 <li><a href="#tester.assertUrlMatch"><code>assertUrlMatch()</code></a></li>
 <li><a href="#tester.colorize"><code>colorize()</code></a></li>
@@ -2202,10 +2212,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339396597293"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339396597293"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1339396597293"></script>
-    <script type="text/javascript" src="js/application.js?1339396597293"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=-_aRI8oQhK4.fr./sv=1/am=!PemfnfjrL2yI81ARQg/d=1/rs=AItRSTNPfyei_XsC2ZyIq1cB9Y215ePy0g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1339397177839"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1339397177839"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1339397177839"></script>
+    <script type="text/javascript" src="js/application.js?1339397177839"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {

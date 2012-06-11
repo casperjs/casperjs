@@ -184,6 +184,17 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
+<h3 id="tester.assertTitleMatch"><code>Tester#assertTitleMatch(RegExp pattern[, String message])</code></h3>
+
+Asserts that title of the remote page matches the provided RegExp pattern.
+
+```javascript
+var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertTitleMatch(/Google/, 'google.fr has a quite predictable title');
+});
+```
+
 <h3 id="tester.assertType"><code>Tester#assertType(mixed input, String type[, String message])</code></h3>
 
 Asserts that the provided input is of the given type.

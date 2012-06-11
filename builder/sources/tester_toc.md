@@ -17,6 +17,7 @@
 - [`assertSelectorExists()`](#tester.assertSelectorExists)
 - [`assertTextExists()`](#tester.assertTextExists)
 - [`assertTitle()`](#tester.assertTitle)
+- [`assertTitleMatch()`](#tester.assertTitleMatch)
 - [`assertType()`](#tester.assertType)
 - [`assertUrlMatch()`](#tester.assertUrlMatch)
 - [`colorize()`](#tester.colorize)
