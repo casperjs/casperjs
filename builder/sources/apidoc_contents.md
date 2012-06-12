@@ -230,9 +230,10 @@ All the available options are detailed below:
       <td>
         <span class="label label-success">Added in 0.6.11</span>
         When this option is set to <code>true</code>&nbsp;— which is the
-        default, any password information will be obfuscated in log messages.
-        Set <code>safeLogs</code> to false to disclosure passwords in plain
-        text <strong>(not recommended)</strong>.
+        default, any password information entered in
+        <code>&lt;input type="password"&gt;</code> will be obfuscated in log
+        messages. Set <code>safeLogs</code> to false to disclose passwords in
+        plain text <strong>(not recommended)</strong>.
       </td>
     </tr>
     <tr>
