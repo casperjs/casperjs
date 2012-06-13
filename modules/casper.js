@@ -400,6 +400,8 @@ Casper.prototype.die = function die(message, status) {
  *
  * @param  String  url         The url of the resource to download
  * @param  String  targetPath  The destination file path
+ * @param  String  method      The HTTP method to use (default: GET)
+ * @param  String  data        Optional data to pass performing the request
  * @return Casper
  */
 Casper.prototype.download = function download(url, targetPath, method, data) {

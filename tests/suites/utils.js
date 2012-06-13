@@ -29,6 +29,13 @@ t.comment('fillBlanks()');
     }
 })();
 
+t.comment('isArray()');
+(function() {
+    t.assertEquals(utils.isArray([]), true, 'isArray() checks for an Array');
+    t.assertEquals(utils.isArray({}), false, 'isArray() checks for an Array');
+    t.assertEquals(utils.isArray("foo"), false, 'isArray() checks for an Array');
+})();
+
 t.comment('isClipRect()');
 (function() {
     testCases = [
@@ -42,6 +49,26 @@ t.comment('isClipRect()');
     testCases.forEach(function(testCase) {
         t.assertEquals(utils.isClipRect(testCase[0]), testCase[1], 'isClipRect() checks for a ClipRect');
     });
+})();
+
+t.comment('isObject()');
+(function() {
+    t.assertEquals(utils.isObject({}), true, 'isObject() checks for an Object');
+    t.assertEquals(utils.isObject([]), true, 'isObject() checks for an Object');
+    t.assertEquals(utils.isObject(1), false, 'isObject() checks for an Object');
+    t.assertEquals(utils.isObject("1"), false, 'isObject() checks for an Object');
+    t.assertEquals(utils.isObject(function(){}), false, 'isObject() checks for an Object');
+    t.assertEquals(utils.isObject(new Function('return {};')()), true, 'isObject() checks for an Object');
+    t.assertEquals(utils.isObject(require('webpage').create()), true, 'isObject() checks for an Object');
+    t.assertEquals(utils.isObject(null), false, 'isObject() checks for an Object');
+})();
+
+t.comment('isWebPage()');
+(function() {
+    var pageModule = require('webpage');
+    t.assertEquals(utils.isWebPage(pageModule), false, 'isWebPage() checks for a WebPage instance');
+    t.assertEquals(utils.isWebPage(pageModule.create()), true, 'isWebPage() checks for a WebPage instance');
+    t.assertEquals(utils.isWebPage(null), false, 'isWebPage() checks for a WebPage instance');
 })();
 
 t.comment('isJsFile()');

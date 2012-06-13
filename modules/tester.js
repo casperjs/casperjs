@@ -100,7 +100,7 @@ var Tester = function Tester(casper, options) {
         if (failure.details) {
             this.comment('   details: ' + failure.details);
         }
-        if (failure.values && Object.keys(failure.values).length > 0) {
+        if (utils.isObject(failure.values) && Object.keys(failure.values).length > 0) {
             for (var name in failure.values) {
                 this.comment('   ' + name + ': ' + utils.serialize(failure.values[name]));
             }
