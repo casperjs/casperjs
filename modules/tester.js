@@ -285,7 +285,7 @@ var Tester = function Tester(casper, options) {
             details: "Subject didn't match the provided pattern",
             values:  {
                 subject: subject,
-                pattern: pattern
+                pattern: pattern.toString()
             }
         });
     };
@@ -403,7 +403,7 @@ var Tester = function Tester(casper, options) {
             details: "Page title does not match the provided pattern",
             values: {
                 subject: currentTitle,
-                pattern: pattern
+                pattern: pattern.toString()
             }
         });
     };
@@ -444,7 +444,7 @@ var Tester = function Tester(casper, options) {
             details: "Current url did not match the provided pattern",
             values: {
                 currentUrl: currentUrl,
-                pattern: pattern
+                pattern: pattern.toString()
             }
         });
     };
