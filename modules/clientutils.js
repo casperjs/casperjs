@@ -238,16 +238,18 @@
         /**
          * Finds all DOM elements matching by the provided selector.
          *
-         * @param  String  selector  CSS3 selector
+         * @param  String            selector  CSS3 selector
+         * @param  HTMLElement|null  scope     Element to search child elements within
          * @return NodeList|undefined
          */
-        this.findAll = function findAll(selector) {
+        this.findAll = function findAll(selector, scope) {
+            scope = scope || document;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementsByXPath(pSelector.path);
                 } else {
-                    return document.querySelectorAll(pSelector.path);
+                    return scope.querySelectorAll(pSelector.path);
                 }
             } catch (e) {
                 this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
@@ -257,16 +259,18 @@
         /**
          * Finds a DOM element by the provided selector.
          *
-         * @param  String  selector  CSS3 selector
+         * @param  String            selector  CSS3 selector
+         * @param  HTMLElement|null  scope     Element to search child elements within
          * @return HTMLElement|undefined
          */
-        this.findOne = function findOne(selector) {
+        this.findOne = function findOne(selector, scope) {
+            scope = scope || document;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementByXPath(pSelector.path);
                 } else {
-                    return document.querySelector(pSelector.path);
+                    return scope.querySelector(pSelector.path);
                 }
             } catch (e) {
                 this.log('findOne(): invalid selector provided "' + selector + '":' + e, "error");
