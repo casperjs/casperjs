@@ -7,6 +7,7 @@ XXXX-XX-XX, v0.6.11
 - closed [#132](https://github.com/n1k0/casperjs/issues/132) - added ability to include js/coffee files using a dedicated option when using the `casper test` command
 - fixed [#140](https://github.com/n1k0/casperjs/issues/140) - `casper test` now resolves local paths urls
 - fixed [#148](https://github.com/n1k0/casperjs/issues/148) - `utils.isWebPage()` was broken
+- fixed [#149](https://github.com/n1k0/casperjs/issues/149) - `ClientUtils.fill()` was searching elements globally
 - closed [#144](https://github.com/n1k0/casperjs/issues/144) - added a `safeLogs` option to blur password values in debug logs. **This option is set to `true` by default.**
 - added [`Casper.userAgent()`](http://casperjs.org/api.html#casper.userAgent) to ease a more dynamic setting of user-agent string
 - added `Tester.assertTitleMatch()` method
