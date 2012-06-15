@@ -52,6 +52,18 @@ casper.then(function() {
     this.test.assertUrlMatch(/topic=bar/, 'Casper.fill() select field was submitted');
 });
 
+// multiple forms
+casper.thenOpen('tests/site/multiple-forms.html', function() {
+    this.test.comment('Multiple forms');
+    this.fill('form[name="f2"]', {
+        yo: "ok"
+    }, true);
+});
+
+casper.then(function() {
+    this.test.assertUrlMatch(/\?f=f2&yo=ok$/, 'Casper.fill() handles multiple forms');
+}),
+
 casper.run(function() {
     this.test.done();
 });
