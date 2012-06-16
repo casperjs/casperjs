@@ -27,13 +27,15 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
-/*global exports, phantom, require, CasperError*/
+
+/*global CasperError console exports phantom require*/
+
 var utils = require('utils');
 var fs = require('fs');
 
 exports.create = function create() {
     "use strict";
-    return new this.XUnitExporter();
+    return new XUnitExporter();
 };
 
 /**

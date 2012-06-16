@@ -48,6 +48,6 @@ CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
     os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
-except OSError, err:
-    print('Fatal: %s; did you install phantomjs?' % err)
+except OSError as err:
+    print(('Fatal: %s; did you install phantomjs?' % err))
     sys.exit(1)

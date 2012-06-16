@@ -27,15 +27,21 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
+/*global console escape exports NodeList window*/
+
 (function(exports) {
-    exports.create = function create() {
-        return new this.ClientUtils();
+    "use strict";
+
+    exports.create = function create(options) {
+        return new this.ClientUtils(options);
     };
 
     /**
      * Casper client-side helpers.
      */
-    exports.ClientUtils = function ClientUtils() {
+    exports.ClientUtils = function ClientUtils(options) {
+        // private members
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -48,6 +54,9 @@
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
         );
         var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
+
+        // public members
+        this.options = options || {};
 
         /**
          * Clicks on the DOM element behind the provided selector.
@@ -70,35 +79,35 @@
             while (i < len) {
                 do {
                     c1 = BASE64_DECODE_CHARS[str.charCodeAt(i++) & 0xff];
-                } while (i < len && c1 == -1);
-                if (c1 == -1) {
+                } while (i < len && c1 === -1);
+                if (c1 === -1) {
                     break;
                 }
                 do {
                     c2 = BASE64_DECODE_CHARS[str.charCodeAt(i++) & 0xff];
-                } while (i < len && c2 == -1);
-                if (c2 == -1) {
+                } while (i < len && c2 === -1);
+                if (c2 === -1) {
                     break;
                 }
                 out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
                 do {
                     c3 = str.charCodeAt(i++) & 0xff;
-                    if (c3 == 61)
+                    if (c3 === 61)
                     return out;
                     c3 = BASE64_DECODE_CHARS[c3];
-                } while (i < len && c3 == -1);
-                if (c3 == -1) {
+                } while (i < len && c3 === -1);
+                if (c3 === -1) {
                     break;
                 }
                 out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
                 do {
                     c4 = str.charCodeAt(i++) & 0xff;
-                    if (c4 == 61) {
+                    if (c4 === 61) {
                         return out;
                     }
                     c4 = BASE64_DECODE_CHARS[c4];
-                } while (i < len && c4 == -1);
-                if (c4 == -1) {
+                } while (i < len && c4 === -1);
+                if (c4 === -1) {
                     break;
                 }
                 out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
@@ -117,14 +126,14 @@
             var out = "", i = 0, len = str.length, c1, c2, c3;
             while (i < len) {
                 c1 = str.charCodeAt(i++) & 0xff;
-                if (i == len) {
+                if (i === len) {
                     out += BASE64_ENCODE_CHARS.charAt(c1 >> 2);
                     out += BASE64_ENCODE_CHARS.charAt((c1 & 0x3) << 4);
                     out += "==";
                     break;
                 }
                 c2 = str.charCodeAt(i++);
-                if (i == len) {
+                if (i === len) {
                     out += BASE64_ENCODE_CHARS.charAt(c1 >> 2);
                     out += BASE64_ENCODE_CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
                     out += BASE64_ENCODE_CHARS.charAt((c2 & 0xF) << 2);
@@ -165,7 +174,7 @@
             var text = '', elements = this.findAll(selector);
             if (elements && elements.length) {
                 Array.prototype.forEach.call(elements, function _forEach(element) {
-                    text += element.innerText;
+                    text += element.textContent || element.innerText;
                 });
             }
             return text;
@@ -185,7 +194,7 @@
                 files:  []
             };
             if (!(form instanceof HTMLElement) || typeof form === "string") {
-                __utils__.log("attempting to fetch form element from selector: '" + form + "'", "info");
+                this.log("attempting to fetch form element from selector: '" + form + "'", "info");
                 try {
                     form = this.findOne(form);
                 } catch (e) {
@@ -203,7 +212,7 @@
                 if (!vals.hasOwnProperty(name)) {
                     continue;
                 }
-                var field = this.findAll('[name="' + name + '"]');
+                var field = this.findAll('[name="' + name + '"]', form);
                 var value = vals[name];
                 if (!field) {
                     out.errors.push('no field named "' + name + '" in form');
@@ -229,16 +238,18 @@
         /**
          * Finds all DOM elements matching by the provided selector.
          *
-         * @param  String  selector  CSS3 selector
+         * @param  String            selector  CSS3 selector
+         * @param  HTMLElement|null  scope     Element to search child elements within
          * @return NodeList|undefined
          */
-        this.findAll = function findAll(selector) {
+        this.findAll = function findAll(selector, scope) {
+            scope = scope || document;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementsByXPath(pSelector.path);
                 } else {
-                    return document.querySelectorAll(pSelector.path);
+                    return scope.querySelectorAll(pSelector.path);
                 }
             } catch (e) {
                 this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
@@ -248,16 +259,18 @@
         /**
          * Finds a DOM element by the provided selector.
          *
-         * @param  String  selector  CSS3 selector
+         * @param  String            selector  CSS3 selector
+         * @param  HTMLElement|null  scope     Element to search child elements within
          * @return HTMLElement|undefined
          */
-        this.findOne = function findOne(selector) {
+        this.findOne = function findOne(selector, scope) {
+            scope = scope || document;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementByXPath(pSelector.path);
                 } else {
-                    return document.querySelector(pSelector.path);
+                    return scope.querySelector(pSelector.path);
                 }
             } catch (e) {
                 this.log('findOne(): invalid selector provided "' + selector + '":' + e, "error");
@@ -462,8 +475,8 @@
          * @param  mixed                 value  The field value to set
          */
         this.setField = function setField(field, value) {
-            var fields, out;
-            value = value || "";
+            var logValue, fields, out;
+            value = logValue = (value || "");
             if (field instanceof NodeList) {
                 fields = field;
                 field = fields[0];
@@ -471,11 +484,15 @@
             if (!field instanceof HTMLElement) {
                 this.log("Invalid field type; only HTMLElement and NodeList are supported", "error");
             }
-            this.log('Set "' + field.getAttribute('name') + '" field value to ' + value, "debug");
+            if (this.options && this.options.safeLogs && field.getAttribute('type') === "password") {
+                // obfuscate password value
+                logValue = new Array(value.length + 1).join("*");
+            }
+            this.log('Set "' + field.getAttribute('name') + '" field value to ' + logValue, "debug");
             try {
                 field.focus();
             } catch (e) {
-                __utils__.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
+                this.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
             }
             var nodeName = field.nodeName.toLowerCase();
             switch (nodeName) {
@@ -544,7 +561,7 @@
             try {
                 field.blur();
             } catch (err) {
-                __utils__.log("Unable to blur() input field " + field.getAttribute('name') + ": " + err, "warning");
+                this.log("Unable to blur() input field " + field.getAttribute('name') + ": " + err, "warning");
             }
             return out;
         };
@@ -570,7 +587,4 @@
             }
         };
     };
-
-    // silly "hack" to force having an instance available
-    exports.__utils__ = new exports.ClientUtils();
 })(typeof exports === "object" ? exports : window);

@@ -2,6 +2,7 @@ casper.start('tests/site/form.html', function() {
     this.test.comment('Casper.fill()');
     this.fill('form[action="result.html"]', {
         email:         'chuck@norris.com',
+        password:      'chuck',
         content:       'Am watching thou',
         check:         true,
         choice:        'no',
@@ -12,6 +13,9 @@ casper.start('tests/site/form.html', function() {
     this.test.assertEvalEquals(function() {
         return document.querySelector('input[name="email"]').value;
     }, 'chuck@norris.com', 'Casper.fill() can fill an input[type=text] form field');
+    this.test.assertEvalEquals(function() {
+        return document.querySelector('input[name="password"]').value;
+    }, 'chuck', 'Casper.fill() can fill an input[type=password] form field');
     this.test.assertEvalEquals(function() {
         return document.querySelector('textarea[name="content"]').value;
     }, 'Am watching thou', 'Casper.fill() can fill a textarea form field');
@@ -41,11 +45,24 @@ casper.start('tests/site/form.html', function() {
 casper.then(function() {
     this.test.comment('Form submitted');
     this.test.assertUrlMatch(/email=chuck@norris.com/, 'Casper.fill() input[type=email] field was submitted');
+    this.test.assertUrlMatch(/password=chuck/, 'Casper.fill() input[type=password] field was submitted');
     this.test.assertUrlMatch(/content=Am\+watching\+thou/, 'Casper.fill() textarea field was submitted');
     this.test.assertUrlMatch(/check=on/, 'Casper.fill() input[type=checkbox] field was submitted');
     this.test.assertUrlMatch(/choice=no/, 'Casper.fill() input[type=radio] field was submitted');
     this.test.assertUrlMatch(/topic=bar/, 'Casper.fill() select field was submitted');
 });
+
+// multiple forms
+casper.thenOpen('tests/site/multiple-forms.html', function() {
+    this.test.comment('Multiple forms');
+    this.fill('form[name="f2"]', {
+        yo: "ok"
+    }, true);
+});
+
+casper.then(function() {
+    this.test.assertUrlMatch(/\?f=f2&yo=ok$/, 'Casper.fill() handles multiple forms');
+}),
 
 casper.run(function() {
     this.test.done();

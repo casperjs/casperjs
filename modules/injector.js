@@ -28,9 +28,12 @@
  *
  */
 
+/*global CasperError console encodeURIComponent escape exports require*/
+
 var utils = require('utils');
 
 exports.create = function create(fn) {
+    "use strict";
     return new FunctionArgsInjector(fn);
 };
 
@@ -40,6 +43,7 @@ exports.create = function create(fn) {
  * FIXME: use new Function() instead of eval()
  */
 var FunctionArgsInjector = function FunctionArgsInjector(fn) {
+    "use strict";
     if (!utils.isFunction(fn)) {
         throw new CasperError("FunctionArgsInjector() can only process functions");
     }

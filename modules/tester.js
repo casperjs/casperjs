@@ -28,7 +28,7 @@
  *
  */
 
-/*global exports:false, phantom:false, require:false, CasperError:false*/
+/*global CasperError exports phantom require*/
 
 var fs = require('fs');
 var events = require('events');
@@ -55,6 +55,7 @@ var Tester = function Tester(casper, options) {
 
     this.currentTestFile = null;
     this.exporter = require('xunit').create();
+    this.includes = [];
     this.running = false;
     this.suites = [];
     this.options = utils.mergeObjects({
@@ -287,7 +288,7 @@ var Tester = function Tester(casper, options) {
             standard: "Subject matches the provided pattern",
             values:  {
                 subject: subject,
-                pattern: pattern
+                pattern: pattern.toString()
             }
         });
     };
@@ -361,7 +362,7 @@ var Tester = function Tester(casper, options) {
      */
     this.assertTextExists = this.assertTextExist = function assertTextExists(text, message) {
         var textFound = (casper.evaluate(function _evaluate() {
-            return document.body.innerText;
+            return document.body.textContent || document.body.innerText;
         }).indexOf(text) !== -1);
         return this.assert(textFound, message, {
             type: "assertTextExists",
@@ -387,6 +388,25 @@ var Tester = function Tester(casper, options) {
             values: {
                 subject: currentTitle,
                 expected: expected
+            }
+        });
+    };
+
+    /**
+     * Asserts that title of the remote page matched the provided pattern.
+     *
+     * @param  RegExp  pattern  The pattern to test the title against
+     * @param  String  message  Test description
+     * @return Object           An assertion result object
+     */
+    this.assertTitleMatch = this.assertTitleMatches = function assertTitleMatch(pattern, message) {
+        var currentTitle = casper.getTitle();
+        return this.assert(pattern.test(currentTitle), message, {
+            type: "assertTitle",
+            details: "Page title does not match the provided pattern",
+            values: {
+                subject: currentTitle,
+                pattern: pattern.toString()
             }
         });
     };
@@ -427,7 +447,7 @@ var Tester = function Tester(casper, options) {
             standard: "Current url matches the provided pattern",
             values: {
                 currentUrl: currentUrl,
-                pattern: pattern
+                pattern: pattern.toString()
             }
         });
     };
@@ -695,6 +715,9 @@ var Tester = function Tester(casper, options) {
     this.runTest = function runTest(testFile) {
         this.bar(f('Test file: %s', testFile), 'INFO_BAR');
         this.running = true; // this.running is set back to false with done()
+        this.includes.forEach(function(include) {
+            phantom.injectJs(include);
+        });
         this.exec(testFile);
     };
 
