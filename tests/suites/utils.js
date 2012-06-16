@@ -29,6 +29,43 @@ t.comment('fillBlanks()');
     }
 })();
 
+t.comment('getPropertyPath()');
+(function() {
+    testCases = [
+        {
+            input:  utils.getPropertyPath({}, 'a.b.c'),
+            output: undefined
+        },
+        {
+            input:  utils.getPropertyPath([1, 2, 3], 'a.b.c'),
+            output: undefined
+        },
+        {
+            input:  utils.getPropertyPath({ a: { b: { c: 1 } }, c: 2 }, 'a.b.c'),
+            output: 1
+        },
+        {
+            input:  utils.getPropertyPath({ a: { b: { c: 1 } }, c: 2 }, 'a.b.x'),
+            output: undefined
+        },
+        {
+            input:  utils.getPropertyPath({ a: { b: { c: 1 } }, c: 2 }, 'a.b'),
+            output: { c: 1 }
+        },
+        {
+            input:  utils.getPropertyPath({ 'a-b': { 'c-d': 1} }, 'a-b.c-d'),
+            output: 1
+        },
+        {
+            input:  utils.getPropertyPath({ 'a.b': { 'c.d': 1} }, 'a.b.c.d'),
+            output: undefined
+        }
+    ];
+    testCases.forEach(function(testCase) {
+        t.assertEquals(testCase.input, testCase.output, 'getPropertyPath() gets a property using a path');
+    });
+})();
+
 t.comment('isArray()');
 (function() {
     t.assertEquals(utils.isArray([]), true, 'isArray() checks for an Array');

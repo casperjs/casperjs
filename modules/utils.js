@@ -128,6 +128,32 @@
     exports.format = format;
 
     /**
+     * Retrieves the value of an Object foreign property using a bot-separated
+     * path string.
+     *
+     * Beware, this function doesn't handle object key names containing a dot.
+     *
+     * @param  Object  obj   The source object
+     * @param  String  path  Dot separated path, eg. "x.y.z"
+     */
+    function getPropertyPath(obj, path) {
+        if (!isObject(obj) || !isString(path)) {
+            return undefined;
+        }
+        var value = obj;
+        path.split('.').forEach(function(property) {
+            if (typeof value === "object" && property in value) {
+                value = value[property];
+            } else {
+                value = undefined;
+                return;
+            }
+        });
+        return value;
+    }
+    exports.getPropertyPath = getPropertyPath;
+
+    /**
      * Inherit the prototype methods from one constructor into another.
      *
      * @param {function} ctor Constructor function which needs to inherit the
