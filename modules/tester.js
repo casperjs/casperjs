@@ -133,7 +133,7 @@ var Tester = function Tester(casper, options) {
             message:  message,
             file:     this.currentTestFile,
             values:  {
-                subject: subject
+                subject: utils.getPropertyPath(context, 'values.subject') || subject
             }
         }, context || {}));
     };
