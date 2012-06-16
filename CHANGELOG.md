@@ -9,8 +9,10 @@ XXXX-XX-XX, v0.6.11
 - fixed [#148](https://github.com/n1k0/casperjs/issues/148) - [`utils.isWebPage()`](http://casperjs.org/api.html#utils.isWebPage) was broken
 - fixed [#149](https://github.com/n1k0/casperjs/issues/149) - [`ClientUtils.fill()`](http://casperjs.org/api.html#casper.fill) was searching elements globally
 - fixed [#144](https://github.com/n1k0/casperjs/issues/144) - added a [`safeLogs` option](http://casperjs.org/api.html#casper.options) to blur password values in debug logs. **This option is set to `true` by default.**
+- fixed failed test messages didn't expose the subject correctly
 - added [`Casper.userAgent()`](http://casperjs.org/api.html#casper.userAgent) to ease a more dynamic setting of user-agent string
 - added [`Tester.assertTitleMatch()`](http://casperjs.org/api.html#tester.assertTitleMatch) method
+- added [`utils.getPropertyPath()`](http://casperjs.org/api.html#utils.getPropertyPath)
 - added experimental support of custom headers sending in outgoing request (refs [#137](https://github.com/n1k0/casperjs/issues/137) - PhantomJS 1.6 required)
 - switched to more standard `.textContent` property to get a node text; this allows a better compatibility of the clientutils bookmarklet with non-webkit browsers
 - casper modules now all use [javascript strict mode](http://www.nczonline.net/blog/2012/03/13/its-time-to-start-using-javascript-strict-mode/)
