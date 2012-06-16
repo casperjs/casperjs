@@ -128,7 +128,7 @@
     exports.format = format;
 
     /**
-     * Retrieves the value of an Object foreign property using a bot-separated
+     * Retrieves the value of an Object foreign property using a dot-separated
      * path string.
      *
      * Beware, this function doesn't handle object key names containing a dot.
