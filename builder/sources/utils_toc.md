@@ -7,6 +7,7 @@
 - [`fileExt()`](#utils.fileExt)
 - [`fillBlanks()`](#utils.fillBlanks)
 - [`format()`](#utils.format)
+- [`getPropertyPath()`](#utils.getPropertyPath)
 - [`inherits()`](#utils.inherits)
 - [`isArray()`](#utils.isArray)
 - [`isCasperObject()`](#utils.isCasperObject)

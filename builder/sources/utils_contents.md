@@ -34,6 +34,26 @@ Formats a string against passed args. `sprintf` equivalent.
 <span class="label label-info">Note</span>
 This is a port of nodejs `util.format()`.
 
+<h3 id="utils.getPropertyPath"><code>utils.getPropertyPath(Object obj, String path)</code></h3>
+
+<span class="label label-success">Added in 0.6.11</span>
+Retrieves the value of an Object foreign property using a dot-separated
+path string:
+
+```javascript
+var account = {
+    username: 'chuck',
+    skills: {
+        kick: {
+            roundhouse: true
+        }
+    }
+}
+utils.getPropertyPath(account, 'skills.kick.roundhouse'); // true
+```
+
+**Beware, this function doesn't handle object key names containing a dot.**
+
 <h3 id="utils.inherits"><code>utils.inherits(ctor, superCtor)</code></h3>
 
 Makes a constructor inheriting from another. Useful for subclassing and
