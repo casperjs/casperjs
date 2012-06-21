@@ -560,7 +560,7 @@
             }
             // firing the `change` event
             var changeEvent = document.createEvent("HTMLEvents");
-            changeEvent.initEvent(event, true, true);
+            changeEvent.initEvent('change', true, true);
             field.dispatchEvent(changeEvent);
             // blur the field
             try {
