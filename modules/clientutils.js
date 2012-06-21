@@ -558,6 +558,11 @@
                     out = 'Unsupported field type: ' + nodeName;
                     break;
             }
+            // firing the `change` event
+            var changeEvent = document.createEvent("HTMLEvents");
+            changeEvent.initEvent(event, true, true);
+            field.dispatchEvent(changeEvent);
+            // blur the field
             try {
                 field.blur();
             } catch (err) {
