@@ -726,8 +726,8 @@ Please Don't use CasperJS nor PhantomJS to send spam, or I'll be calling
 the Chuck. More seriously, please just don't.
 
 <span class="label label-warning">Warning</span> The `fill()` method currently
-can't fill **file fields**; PhantomJS natively only allows the use of
-[selectors](selectors.html) in
+can't fill **file fields using XPath selectors**; PhantomJS natively only allows
+the use of CSS3 selectors in
 <a href="http://code.google.com/p/phantomjs/wiki/Interface#uploadFile(selector,_fileName)">its
 uploadFile method</a>, hence this limitation.
 
