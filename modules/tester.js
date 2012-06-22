@@ -625,7 +625,7 @@ var Tester = function Tester(casper, options) {
             line = ~~failure.line;
             message = failure.message;
             casper.echo(f('In %s:%s', failure.file, line));
-            casper.echo(f('   %s: %s', type, message || "(no message was entered)"), "COMMENT");
+            casper.echo(f('   %s: %s', type, message || failure.standard || "(no message was entered)"), "COMMENT");
         });
     };
 

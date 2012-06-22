@@ -112,7 +112,7 @@ var Casper = function Casper(options) {
     this.cli = phantom.casperArgs;
     this.colorizer = this.getColorizer();
     this.currentUrl = 'about:blank';
-    this.currentHTTPStatus = 200;
+    this.currentHTTPStatus = 0;
     this.defaultWaitTimeout = 5000;
     this.history = [];
     this.loadInProgress = false;
@@ -1521,7 +1521,7 @@ function createPage(casper) {
         if (resource.stage === "end") {
             casper.resources.push(resource);
         }
-        if (resource.url === casper.requestUrl && resource.stage === "start") {
+        if (resource.url === casper.requestUrl && resource.stage === "end") {
             casper.currentHTTPStatus = resource.status;
             casper.emit('http.status.' + resource.status, resource);
             if (utils.isObject(casper.options.httpStatusHandlers) &&

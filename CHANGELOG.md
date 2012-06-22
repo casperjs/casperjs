@@ -4,6 +4,7 @@ CasperJS Changelog
 XXXX-XX-XX, v0.6.11
 -------------------
 
+- fixed [#119](https://github.com/n1k0/casperjs/issues/119) - HTTP status wasn't properly caught
 - fixed [#132](https://github.com/n1k0/casperjs/issues/132) - added ability to include js/coffee files using a dedicated option when using the [`casper test` command](http://casperjs.org/testing.html)
 - fixed [#140](https://github.com/n1k0/casperjs/issues/140) - `casper test` now resolves local paths urls
 - fixed [#148](https://github.com/n1k0/casperjs/issues/148) - [`utils.isWebPage()`](http://casperjs.org/api.html#utils.isWebPage) was broken
