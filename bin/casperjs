@@ -18,14 +18,16 @@ PHANTOMJS_NATIVE_ARGS = [
     'ignore-ssl-errors',
     'load-images',
     'load-plugins',
+    'local-storage-path',
+    'local-storage-quota',
     'local-to-remote-url-access',
     'max-disk-cache-size',
     'output-encoding',
-    'remote-debugger-port',
-    'remote-debugger-autorun',
     'proxy',
     'proxy-auth',
     'proxy-type',
+    'remote-debugger-port',
+    'remote-debugger-autorun',
     'script-encoding',
     'web-security',
 ]
@@ -44,7 +46,11 @@ for arg in sys.argv[1:]:
 CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
 CASPER_COMMAND = os.environ.get('PHANTOMJS_EXECUTABLE', 'phantomjs').split(' ')
 CASPER_COMMAND.extend(PHANTOMJS_ARGS)
-CASPER_COMMAND.extend([os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'), '--casper-path=%s' % CASPER_PATH, '--cli'])
+CASPER_COMMAND.extend([
+    os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'),
+    '--casper-path=%s' % CASPER_PATH,
+    '--cli'
+])
 CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
