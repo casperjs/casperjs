@@ -1418,6 +1418,28 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
 };
 
 /**
+ * Changes the current page zoom factor.
+ *
+ * @param  Number  factor  The zoom factor
+ * @return Casper
+ */
+Casper.prototype.zoom = function zoom(factor) {
+    "use strict";
+    if (!this.started) {
+        throw new CasperError("Casper has not been started, can't set zoom factor");
+    }
+    if (!utils.isNumber(factor) || factor <= 0) {
+        throw new CasperError("Invalid zoom factor: " + factor);
+    }
+    if ('zoomFactor' in this.page) {
+        this.page.zoomFactor = factor;
+    } else {
+        this.warn("zoom() requires PhantomJS >= 1.6");
+    }
+    return this;
+};
+
+/**
  * Extends Casper's prototype with provided one.
  *
  * @param  Object  proto  Prototype methods to add to Casper

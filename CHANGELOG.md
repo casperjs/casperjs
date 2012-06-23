@@ -1,8 +1,8 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v0.6.11
--------------------
+XXXX-XX-XX, v1.0
+----------------
 
 - fixed [#119](https://github.com/n1k0/casperjs/issues/119) - HTTP status wasn't properly caught
 - fixed [#132](https://github.com/n1k0/casperjs/issues/132) - added ability to include js/coffee files using a dedicated option when using the [`casper test` command](http://casperjs.org/testing.html)
@@ -11,6 +11,7 @@ XXXX-XX-XX, v0.6.11
 - fixed [#149](https://github.com/n1k0/casperjs/issues/149) - [`ClientUtils.fill()`](http://casperjs.org/api.html#casper.fill) was searching elements globally
 - fixed [#154](https://github.com/n1k0/casperjs/issues/154) - firing the `change` event after a field value has been set
 - fixed [#144](https://github.com/n1k0/casperjs/issues/144) - added a [`safeLogs` option](http://casperjs.org/api.html#casper.options) to blur password values in debug logs. **This option is set to `true` by default.**
+- fixed [#157](https://github.com/n1k0/casperjs/issues/157) - added support for PhantomJS 1.6 `WebPage#zoomFactor`
 - fixed failed test messages didn't expose the subject correctly
 - added [`Casper.userAgent()`](http://casperjs.org/api.html#casper.userAgent) to ease a more dynamic setting of user-agent string
 - added [`Tester.assertTitleMatch()`](http://casperjs.org/api.html#tester.assertTitleMatch) method
