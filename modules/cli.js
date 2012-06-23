@@ -30,13 +30,14 @@
 
 /*global CasperError console exports phantom require*/
 
+var system = require('system');
 var utils = require('utils');
 
 /**
  * Extracts, normalize ad organize PhantomJS CLI arguments in a dedicated
  * Object.
  *
- * @param  array  phantomArgs  phantom.args value
+ * @param  array  phantomArgs  system.args value
  * @return Object
  */
 exports.parse = function parse(phantomArgs) {

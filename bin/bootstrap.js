@@ -30,10 +30,12 @@
 
 /*global console phantom require*/
 
-if (phantom.version.major !== 1 || phantom.version.minor < 5) {
+if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
     console.error('CasperJS needs at least PhantomJS v1.5.0');
     phantom.exit(1);
 }
+
+var system = require('system');
 
 (function bootstrap(global) {
     "use strict";
@@ -71,7 +73,7 @@ if (phantom.version.major !== 1 || phantom.version.minor < 5) {
         // casper root path
         if (!phantom.casperPath) {
             try {
-                phantom.casperPath = phantom.args.map(function _map(i) {
+                phantom.casperPath = system.args.map(function _map(i) {
                     var match = i.match(/^--casper-path=(.*)/);
                     if (match) {
                         return fs.absolute(match[1]);
@@ -232,7 +234,7 @@ if (phantom.version.major !== 1 || phantom.version.minor < 5) {
         phantom.Casper = require('casper').Casper;
 
         // casper cli args
-        phantom.casperArgs = require('cli').parse(phantom.args);
+        phantom.casperArgs = require('cli').parse(system.args);
 
         // loaded status
         phantom.casperLoaded = true;
