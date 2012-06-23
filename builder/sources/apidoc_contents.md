@@ -1352,10 +1352,25 @@ Waits until an element matching the provided [selector expression](selectors.htm
 visible in remote DOM to process a next step. Uses
 [Casper.waitFor()](#casper.waitFor).
 
-<h3 id="casper.warn"><code>Casper#warn(message)</code></h3>
+<h3 id="casper.warn"><code>Casper#warn(String message)</code></h3>
 
 Logs and prints a warning message to the standard output.
 
 ```javascript
 casper.warn("I'm a warning message.");
+```
+
+<h3 id="casper.zoom"><code>Casper#zoom(Number factor)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Sets the current page zoom factor.
+
+```javascript
+var casper = require('casper').create();
+
+casper.start().zoom(2).thenOpen('http://google.com', function() {
+    this.capture('big-google.png');
+});
+
+casper.run();
 ```

@@ -50,3 +50,4 @@
 - [`waitUntilVisible()`](#casper.waitUntilVisible)
 - [`waitWhileVisible()`](#casper.waitWhileVisible)
 - [`warn()`](#casper.warn)
+- [`zoom()`](#casper.zoom)
