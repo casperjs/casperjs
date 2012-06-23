@@ -863,6 +863,7 @@ casper.then(function() {
 casper.run();
 ```
 
+<span class="label label-success">Added in 1.0</span>
 <span class="label label-info">PhantomJS >= 1.6</span>
 You can also set custom request headers to send when performing an outgoing
 request, passing the `headers` option:
@@ -1363,6 +1364,7 @@ casper.warn("I'm a warning message.");
 <h3 id="casper.zoom"><code>Casper#zoom(Number factor)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
+<span class="label label-info">PhantomJS >= 1.6</span>
 Sets the current page zoom factor.
 
 ```javascript

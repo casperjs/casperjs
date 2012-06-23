@@ -360,5 +360,35 @@ value:
       <td><code>String</code></td>
       <td>Allows to alter every url before it being opened.</td>
     </tr>
+    <tr>
+      <td><code>page.confirm</code></td>
+      <td><code>message</code></td>
+      <td><code>Boolean</code></td>
+      <td>
+        <p>
+          <span class="label label-success">Added in 1.0</span>
+          <span class="label label-info">PhantomJS >= 1.6</span>
+          Allows to react on a javascript <code>confirm()</code> call:</p>
+        <pre class="prettyprint">casper.setFilter("page.confirm", function(msg) {
+    return msg === "Do you like vbscript?" ? false : true;
+});</pre>
+      </td>
+    <tr>
+      <td><code>page.prompt</code></td>
+      <td><code>message, value</code></td>
+      <td><code>String</code></td>
+      <td>
+        <p>
+          <span class="label label-success">Added in 1.0</span>
+          <span class="label label-info">PhantomJS >= 1.6</span>
+          Allows to react on a javascript <code>prompt()</code> call:
+        </p>
+        <pre class="prettyprint">casper.setFilter("page.prompt", function(msg, value) {
+    if (msg === "What's your name?") {
+        return "Chuck";
+    }
+});</pre>
+      </td>
+    </tr>
   </tbody>
 </table>
