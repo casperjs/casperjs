@@ -13,6 +13,7 @@ def resolve(path):
 PHANTOMJS_NATIVE_ARGS = [
     'cookies-file',
     'config',
+    'debug',
     'disk-cache',
     'ignore-ssl-errors',
     'load-images',
