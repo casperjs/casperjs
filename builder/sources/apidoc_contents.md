@@ -228,7 +228,7 @@ All the available options are detailed below:
       <td><code>Boolean</code></td>
       <td><code>true</code></td>
       <td>
-        <span class="label label-success">Added in 0.6.11</span>
+        <span class="label label-success">Added in 1.0</span>
         When this option is set to <code>true</code>&nbsp;— which is the
         default, any password information entered in
         <code>&lt;input type="password"&gt;</code> will be obfuscated in log
@@ -1148,7 +1148,7 @@ casper.run(function() {
 
 <h3 id="casper.userAgent"><code>Casper#userAgent(String agent)</code></h3>
 
-<span class="label label-success">Added in 0.6.11</span>
+<span class="label label-success">Added in 1.0</span>
 Sets the [User-Agent string](http://en.wikipedia.org/wiki/User-Agent) to send
 through headers when performing requests.
 
