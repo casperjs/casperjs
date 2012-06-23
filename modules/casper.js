@@ -1473,6 +1473,9 @@ function createPage(casper) {
             casper.options.onAlert.call(casper, casper, message);
         }
     };
+    page.onConfirm = function onConfirm(message) {
+        return casper.filter('page.confirm', message) || true;
+    };
     page.onConsoleMessage = function onConsoleMessage(msg) {
         var level = "info", test = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
         if (test && test.length === 3) {
@@ -1534,6 +1537,9 @@ function createPage(casper) {
         casper.history.push(casper.getCurrentUrl());
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
+    };
+    page.onPrompt = function onPrompt(message, value) {
+        return casper.filter('page.prompt', message, value);
     };
     page.onResourceReceived = function onResourceReceived(resource) {
         casper.emit('resource.received', resource);

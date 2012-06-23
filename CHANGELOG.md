@@ -13,6 +13,7 @@ XXXX-XX-XX, v1.0
 - fixed [#144](https://github.com/n1k0/casperjs/issues/144) - added a [`safeLogs` option](http://casperjs.org/api.html#casper.options) to blur password values in debug logs. **This option is set to `true` by default.**
 - fixed [#157](https://github.com/n1k0/casperjs/issues/157) - added support for PhantomJS 1.6 `WebPage#zoomFactor`
 - fixed failed test messages didn't expose the subject correctly
+- added support for `prompt()` and `confirm()` (PhantomJS 1.6 only) - closes [#125](https://github.com/n1k0/casperjs/issues/125)
 - added [`Casper.userAgent()`](http://casperjs.org/api.html#casper.userAgent) to ease a more dynamic setting of user-agent string
 - added [`Tester.assertTitleMatch()`](http://casperjs.org/api.html#tester.assertTitleMatch) method
 - added [`utils.getPropertyPath()`](http://casperjs.org/api.html#utils.getPropertyPath)
