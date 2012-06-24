@@ -35,8 +35,6 @@ if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
     phantom.exit(1);
 }
 
-var system = require('system');
-
 (function bootstrap(global) {
     "use strict";
     /**
@@ -73,7 +71,7 @@ var system = require('system');
         // casper root path
         if (!phantom.casperPath) {
             try {
-                phantom.casperPath = system.args.map(function _map(i) {
+                phantom.casperPath = phantom.args.map(function _map(i) {
                     var match = i.match(/^--casper-path=(.*)/);
                     if (match) {
                         return fs.absolute(match[1]);
@@ -234,7 +232,7 @@ var system = require('system');
         phantom.Casper = require('casper').Casper;
 
         // casper cli args
-        phantom.casperArgs = require('cli').parse(system.args);
+        phantom.casperArgs = require('cli').parse(phantom.args);
 
         // loaded status
         phantom.casperLoaded = true;
