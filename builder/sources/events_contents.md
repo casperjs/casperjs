@@ -258,7 +258,13 @@ parameters passed to their callback:
     <tr>
       <td><code>url.changed</code></td>
       <td><code>url</code></td>
-      <td>Emitted each time the current page url changes.</td>
+      <td>
+        <p>
+          <span class="label label-success">Added in 1.0</span>
+          <span class="label label-info">PhantomJS >= 1.6</span>
+          Emitted each time the current page url changes.
+        </p>
+      </td>
     </tr>
     <tr>
       <td><code>viewport.changed</code></td>
