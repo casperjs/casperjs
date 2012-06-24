@@ -884,6 +884,26 @@ Casper.prototype.open = function open(location, settings) {
 };
 
 /**
+ * Reloads current page.
+ *
+ * @param  Function  then  a next step function
+ * @return Casper
+ */
+Casper.prototype.reload = function reload(then) {
+    "use strict";
+    if (!this.started) {
+        throw new CasperError("Casper not started, can't reload()");
+    }
+    this.evaluate(function() {
+        window.location.reload();
+    });
+    if (then && utils.isFunction(then)) {
+        this.then(this.createStep(then));
+    }
+    return this;
+};
+
+/**
  * Repeats a step a given number of times.
  *
  * @param  Number    times  Number of times to repeat step
