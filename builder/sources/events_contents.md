@@ -151,6 +151,19 @@ parameters passed to their callback:
       <td>Emitted when the mouse releases the left button over something or somewhere.</td>
     </tr>
     <tr>
+      <td><code>navigation.requested</code></td>
+      <td><code>url, navigationType, navigationLocked, isMainFrame</code></td>
+      <td>
+        <p>
+          <span class="label label-success">Added in 1.0</span>
+          <span class="label label-info">PhantomJS >= 1.6</span>
+          Emitted each time a navigation operation has been requested.
+          Available navigation types are: `LinkClicked`, `FormSubmitted`,
+          `BackOrForward`, `Reload`, `FormResubmitted` and `Other`.
+        </p>
+      </td>
+    </tr>
+    <tr>
       <td><code>open</code></td>
       <td><code>location, settings</code></td>
       <td>
