@@ -5077,7 +5077,7 @@ td code {
   color: #fff;
 }
 .download {
-  padding-top: 1.5em;
+  padding-top: .5em;
   text-align: center;
 }
 .download p {
@@ -5085,6 +5085,16 @@ td code {
 }
 .download p.social {
   text-indent: 42px;
+}
+.download .flattr {
+  margin-top: -1em;
+}
+.download form {
+  display: inline;
+}
+.download form input[type="image"] {
+  width: 92px;
+  height: 26px;
 }
 .just-informative {
   color: #fff;
