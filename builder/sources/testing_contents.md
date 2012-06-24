@@ -175,7 +175,8 @@ Some options are available using the `casper test` command:
 - `--direct` will output log messages directly to the console
 - `--log-level=<logLevel>` sets the logging level (see the
   [related section](logging.html))
-- `--includes=foo.js,bar.js` will includes the `foo.js` and `bar.js` files
+- <span class="label label-success">Added in 1.0</span>
+  `--includes=foo.js,bar.js` will includes the `foo.js` and `bar.js` files
   before each suite execution
 
 Sample command:
