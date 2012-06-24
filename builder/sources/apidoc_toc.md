@@ -30,6 +30,7 @@
 - [`getTitle()`](#casper.getTitle)
 - [`mouseEvent()`](#casper.mouseEvent)
 - [`open()`](#casper.open)
+- [`reload()`](#casper.reload)
 - [`repeat()`](#casper.repeat)
 - [`resourceExists()`](#casper.resourceExists)
 - [`run()`](#casper.run)

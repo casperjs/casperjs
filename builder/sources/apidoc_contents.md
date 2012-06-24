@@ -514,7 +514,7 @@ casper.run(function() {
 });
 ```
 
-<h3 id="casper.each"><code>Casper#each(Array array,  Function fn)</code></h3>
+<h3 id="casper.each"><code>Casper#each(Array array, Function fn)</code></h3>
 
 Iterates over provided array items and execute a callback.
 
@@ -558,7 +558,7 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="casper.evaluate"><code>Casper#evaluate(function fn[, Object replacements])</code></h3>
+<h3 id="casper.evaluate"><code>Casper#evaluate(Function fn[, Object replacements])</code></h3>
 
 Evaluates an expression **in the remote page context**, a bit like what PhantomJS'
 `WebPage#evaluate` does, but can also handle passed arguments if you
@@ -592,7 +592,7 @@ concerns:
 
 ![diagram](images/evaluate-diagram.png)
 
-<h3 id="casper.evaluateOrDie"><code>Casper#evaluateOrDie(function fn[, String message])</code></h3>
+<h3 id="casper.evaluateOrDie"><code>Casper#evaluateOrDie(Function fn[, String message])</code></h3>
 
 Evaluates an expression within the current page DOM and `die()` if it
 returns anything but `true`.
@@ -881,7 +881,25 @@ casper.open('http://some.testserver.com/post.php', {
 });
 ```
 
-<h3 id="casper.repeat"><code>Casper#repeat(int times,  function then)</code></h3>
+<h3 id="casper.reload"><code>Casper#reload([Function then])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Reloads current page location.
+
+**Example:**
+
+```javascript
+casper.start('http://google.com', function() {
+    this.echo("loaded");
+    this.reload(function() {
+        this.echo("loaded again");
+    });
+});
+
+casper.run();
+```
+
+<h3 id="casper.repeat"><code>Casper#repeat(int times, function then)</code></h3>
 
 Repeats a navigation step a given number of times.
 
@@ -1049,7 +1067,7 @@ Matter of taste!
 in order to be able to add navigation steps** and run the suite. If you don't
 you'll get an error message inviting you to do so anyway.
 
-<h3 id="casper.then"><code>Casper#then(function fn)</code></h3>
+<h3 id="casper.then"><code>Casper#then(Function fn)</code></h3>
 
 This method is the standard way to add a new navigation step to the stack, by
 providing a simple function:
@@ -1081,7 +1099,7 @@ and voila.
 <span class="label label-info">Note</span> You must [`start()`](#start)
 the casper instance in order to use the `then()` method.
 
-<h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(function fn[, Object replacements])</code></h3>
+<h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, Object replacements])</code></h3>
 
 Adds a new navigation step to perform code evaluation within the current
 retrieved page DOM.

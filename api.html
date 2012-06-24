@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1340525502903">
-    <link rel="stylesheet" href="css/casper.css?1340525502903">
+    <link rel="stylesheet" href="prettify/prettify.css?1340527688402">
+    <link rel="stylesheet" href="css/casper.css?1340527688402">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -583,7 +583,7 @@ method using the <code>method</code> argument, and pass request arguments throug
 casper.run(function() {
     this.echo('Done.').exit();
 });</code></pre>
-<h3 id="casper.each"><code>Casper#each(Array array,  Function fn)</code></h3>
+<h3 id="casper.each"><code>Casper#each(Array array, Function fn)</code></h3>
 
 <p>Iterates over provided array items and execute a callback.
 
@@ -626,7 +626,7 @@ information).
 });
 
 casper.run();</code></pre>
-<h3 id="casper.evaluate"><code>Casper#evaluate(function fn[, Object replacements])</code></h3>
+<h3 id="casper.evaluate"><code>Casper#evaluate(Function fn[, Object replacements])</code></h3>
 
 <p>Evaluates an expression <strong>in the remote page context</strong>, a bit like what PhantomJS'
 <code>WebPage#evaluate</code> does, but can also handle passed arguments if you
@@ -663,7 +663,7 @@ concerns:
 <p><img src="images/evaluate-diagram.png" alt="diagram">
 
 </p>
-<h3 id="casper.evaluateOrDie"><code>Casper#evaluateOrDie(function fn[, String message])</code></h3>
+<h3 id="casper.evaluateOrDie"><code>Casper#evaluateOrDie(Function fn[, String message])</code></h3>
 
 <p>Evaluates an expression within the current page DOM and <code>die()</code> if it
 returns anything but <code>true</code>.
@@ -935,7 +935,24 @@ request, passing the <code>headers</code> option:
         'Accept-Language': 'fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3'
     }
 });</code></pre>
-<h3 id="casper.repeat"><code>Casper#repeat(int times,  function then)</code></h3>
+<h3 id="casper.reload"><code>Casper#reload([Function then])</code></h3>
+
+<p><span class="label label-success">Added in 1.0</span>
+Reloads current page location.
+
+</p>
+<p><strong>Example:</strong>
+
+</p>
+<pre><code class="javascript">casper.start('http://google.com', function() {
+    this.echo("loaded");
+    this.reload(function() {
+        this.echo("loaded again");
+    });
+});
+
+casper.run();</code></pre>
+<h3 id="casper.repeat"><code>Casper#repeat(int times, function then)</code></h3>
 
 <p>Repeats a navigation step a given number of times.
 
@@ -1089,7 +1106,7 @@ in order to be able to add navigation steps</strong> and run the suite. If you d
 you'll get an error message inviting you to do so anyway.
 
 </p>
-<h3 id="casper.then"><code>Casper#then(function fn)</code></h3>
+<h3 id="casper.then"><code>Casper#then(Function fn)</code></h3>
 
 <p>This method is the standard way to add a new navigation step to the stack, by
 providing a simple function:
@@ -1122,7 +1139,7 @@ and voila.
 the casper instance in order to use the <code>then()</code> method.
 
 </p>
-<h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(function fn[, Object replacements])</code></h3>
+<h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, Object replacements])</code></h3>
 
 <p>Adds a new navigation step to perform code evaluation within the current
 retrieved page DOM.
@@ -1435,6 +1452,7 @@ casper.run();</code></pre>
 <li><a href="#casper.getTitle"><code>getTitle()</code></a></li>
 <li><a href="#casper.mouseEvent"><code>mouseEvent()</code></a></li>
 <li><a href="#casper.open"><code>open()</code></a></li>
+<li><a href="#casper.reload"><code>reload()</code></a></li>
 <li><a href="#casper.repeat"><code>repeat()</code></a></li>
 <li><a href="#casper.resourceExists"><code>resourceExists()</code></a></li>
 <li><a href="#casper.run"><code>run()</code></a></li>
@@ -2262,10 +2280,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=2ZW0KBg0EX4.fr./sv=1/am=!rFmBCPi40VqIDfp2cA/d=1/rs=AItRSTOEhFqRHO9WTLAOj5USRO4wbxgsUw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1340525502903"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1340525502903"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1340525502903"></script>
-    <script type="text/javascript" src="js/application.js?1340525502903"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=2ZW0KBg0EX4.fr./sv=1/am=!rFmBCPi40VqIDfp2cA/d=1/rs=AItRSTOEhFqRHO9WTLAOj5USRO4wbxgsUw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1340527688402"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1340527688402"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1340527688402"></script>
+    <script type="text/javascript" src="js/application.js?1340527688402"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {
