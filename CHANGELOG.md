@@ -1,8 +1,8 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0
-----------------
+XXXX-XX-XX, v1.0.0-RC1
+----------------------
 
 - fixed [#119](https://github.com/n1k0/casperjs/issues/119) - HTTP status wasn't properly caught
 - fixed [#132](https://github.com/n1k0/casperjs/issues/132) - added ability to include js/coffee files using a dedicated option when using the [`casper test` command](http://casperjs.org/testing.html)

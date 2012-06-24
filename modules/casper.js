@@ -1637,6 +1637,10 @@ function createPage(casper) {
             casper.options.onResourceRequested.call(casper, casper, request);
         }
     };
+    page.onUrlChanged = function onUrlChanged(url) {
+        casper.log(f('url changed to "%s"', url), "debug");
+        casper.emit('url.changed', url);
+    };
     casper.emit('page.created', page);
     return page;
 }
