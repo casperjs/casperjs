@@ -8,6 +8,7 @@
 - [`click()`](#casper.click)
 - [`clickLabel()`](#casper.clickLabel)
 - [`capture()`](#casper.capture)
+- [`captureBase64()`](#casper.captureBase64)
 - [`captureSelector()`](#casper.captureSelector)
 - [`clear()`](#casper.clear)
 - [`debugHTML()`](#casper.debugHTML)

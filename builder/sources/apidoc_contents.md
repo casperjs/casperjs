@@ -415,6 +415,41 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
+<h3 id="casper.captureBase64"><code>Casper#captureBase64(String format[, Mixed area])</code></h3>
+
+Computes the [Base64](http://en.wikipedia.org/wiki/Base64) representation of a
+binary image capture of the current page, or an area within the page, in a
+given format.
+
+Supported image formats are `bmp`, `jpg`, `jpeg`, `png`, `ppm`, `tiff`,
+`xbm` and `xpm`.
+
+The `area` argument can be either of the following types:
+
+- `String`: area is a CSS3 selector string, eg. `div#plop form[name="form"] input[type="submit"]`
+- `clipRect`: area is a clipRect object, eg. `{"top":0,"left":0,"width":320,"height":200}`
+- `Object`: area is a [selector object](selectors.html), eg. an XPath selector
+
+**Example:**
+
+```javascript
+casper.start('http://google.com', function() {
+    // selector capture
+    console.log(this.captureBase64('png', '#lga'));
+    // clipRect capture
+    console.log(this.captureBase64('png', {
+        top: 0,
+        left: 0,
+        width: 320,
+        height: 200
+    }));
+    // whole page capture
+    console.log(this.captureBase64('png'));
+});
+
+casper.run();
+```
+
 <h3 id="casper.captureSelector"><code>Casper#captureSelector(String targetFile, String <a href="selectors.html">selector</a>)</code></h3>
 
 Captures the page area containing the provided selector.

@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1340527688402">
-    <link rel="stylesheet" href="css/casper.css?1340527688402">
+    <link rel="stylesheet" href="prettify/prettify.css?1340538347661">
+    <link rel="stylesheet" href="css/casper.css?1340538347661">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -487,6 +487,43 @@ once done.
         width: 500,
         height: 400
     });
+});
+
+casper.run();</code></pre>
+<h3 id="casper.captureBase64"><code>Casper#captureBase64(String format[, Mixed area])</code></h3>
+
+<p>Computes the <a href="http://en.wikipedia.org/wiki/Base64">Base64</a> representation of a
+binary image capture of the current page, or an area within the page, in a
+given format.
+
+</p>
+<p>Supported image formats are <code>bmp</code>, <code>jpg</code>, <code>jpeg</code>, <code>png</code>, <code>ppm</code>, <code>tiff</code>,
+<code>xbm</code> and <code>xpm</code>.
+
+</p>
+<p>The <code>area</code> argument can be either of the following types:
+
+</p>
+<ul>
+<li><code>String</code>: area is a CSS3 selector string, eg. <code>div#plop form[name="form"] input[type="submit"]</code></li>
+<li><code>clipRect</code>: area is a clipRect object, eg. <code>{"top":0,"left":0,"width":320,"height":200}</code></li>
+<li><p><code>Object</code>: area is a <a href="selectors.html">selector object</a>, eg. an XPath selector</p>
+</li>
+<li><p><em>Example:*</em></p>
+</li>
+</ul>
+<pre><code class="javascript">casper.start('http://google.com', function() {
+    // selector capture
+    console.log(this.captureBase64('png', '#lga'));
+    // clipRect capture
+    console.log(this.captureBase64('png', {
+        top: 0,
+        left: 0,
+        width: 320,
+        height: 200
+    }));
+    // whole page capture
+    console.log(this.captureBase64('png'));
 });
 
 casper.run();</code></pre>
@@ -1430,6 +1467,7 @@ casper.run();</code></pre>
 <li><a href="#casper.click"><code>click()</code></a></li>
 <li><a href="#casper.clickLabel"><code>clickLabel()</code></a></li>
 <li><a href="#casper.capture"><code>capture()</code></a></li>
+<li><a href="#casper.captureBase64"><code>captureBase64()</code></a></li>
 <li><a href="#casper.captureSelector"><code>captureSelector()</code></a></li>
 <li><a href="#casper.clear"><code>clear()</code></a></li>
 <li><a href="#casper.debugHTML"><code>debugHTML()</code></a></li>
@@ -2280,10 +2318,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=2ZW0KBg0EX4.fr./sv=1/am=!rFmBCPi40VqIDfp2cA/d=1/rs=AItRSTOEhFqRHO9WTLAOj5USRO4wbxgsUw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1340527688402"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1340527688402"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1340527688402"></script>
-    <script type="text/javascript" src="js/application.js?1340527688402"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=2ZW0KBg0EX4.fr./sv=1/am=!rFmBCPi40VqIDfp2cA/d=1/rs=AItRSTOEhFqRHO9WTLAOj5USRO4wbxgsUw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script type="text/javascript" src="js/jquery.min.js?1340538347661"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1340538347661"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1340538347661"></script>
+    <script type="text/javascript" src="js/application.js?1340538347661"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     <script type="text/javascript">
     (function() {
