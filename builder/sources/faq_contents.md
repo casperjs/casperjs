@@ -105,16 +105,14 @@ handlers by using the `httpStatusHandlers` option of the Casper object. You can
 also catch other HTTP status codes as well, as demoed below:
 
 ```javascript
-var casper = require('casper').create({
-    httpStatusHandlers: {
-        404: function(self, resource) {
-            self.echo(resource.url + ' not found (404)');
-        },
-        500: function(self, resource) {
-            self.echo(resource.url + ' gave an error (500)');
-        }
-    },
-    verbose: true
+var casper = require('casper').create();
+
+casper.on('http.status.404', function(resource) {
+    this.echo('wait, this url is 404: ' + resource.url);
+});
+
+casper.on('http.status.500', function(resource) {
+    this.echo('woops, 500 error: ' + resource.url);
 });
 
 casper.start('http://mywebsite/404', function() {
