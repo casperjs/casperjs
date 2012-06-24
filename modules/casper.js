@@ -221,6 +221,9 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
  */
 Casper.prototype.capture = function capture(targetFile, clipRect) {
     "use strict";
+    if (!this.started) {
+        throw new CasperError("Casper not started, can't capture()");
+    }
     var previousClipRect;
     targetFile = fs.absolute(targetFile);
     if (clipRect) {
@@ -258,6 +261,13 @@ Casper.prototype.capture = function capture(targetFile, clipRect) {
  */
 Casper.prototype.captureBase64 = function captureBase64(format, area) {
     "use strict";
+    if (!this.started) {
+        throw new CasperError("Casper not started, can't captureBase64()");
+    }
+    if (!('renderBase64' in this.page)) {
+        this.warn('captureBase64() requires PhantomJS >= 1.6');
+        return;
+    }
     var base64;
     var previousClipRect;
     var formats = ['bmp', 'jpg', 'jpeg', 'png', 'ppm', 'tiff', 'xbm', 'xpm'];
