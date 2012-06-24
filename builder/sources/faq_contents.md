@@ -128,6 +128,5 @@ casper.run(function() {
 });
 ```
 
-<span class="label label-info">Hint</span> As of 0.6, casper ships with a
-complete [event system](events-filters.html) and a bunch of these are dedicated
-to HTTP statuses. You're encouraged to use them.
+<span class="label label-info">Hint</span>
+Check out all the other cool [events](events-filters.html) you may use as well.
