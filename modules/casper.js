@@ -1608,6 +1608,11 @@ function createPage(casper) {
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
+    page.onNavigationRequested = function onNavigationRequested(url, navigationType, navigationLocked, isMainFrame) {
+        casper.log(f('Navigation requested: url=%s, type=%s, lock=%s, isMainFrame=%s',
+                     url, navigationType, navigationLocked, isMainFrame), "debug");
+        casper.emit('navigation.requested', url, navigationType, navigationLocked, isMainFrame);
+    };
     page.onPrompt = function onPrompt(message, value) {
         return casper.filter('page.prompt', message, value);
     };
