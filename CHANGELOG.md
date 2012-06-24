@@ -1,7 +1,7 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0-RC1
+2012-06-26, v1.0.0-RC1
 ----------------------
 
 ### PhantomJS 1.5 & 1.6
