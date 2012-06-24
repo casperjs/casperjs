@@ -256,6 +256,11 @@ parameters passed to their callback:
       </td>
     </tr>
     <tr>
+      <td><code>url.changed</code></td>
+      <td><code>url</code></td>
+      <td>Emitted each time the current page url changes.</td>
+    </tr>
+    <tr>
       <td><code>viewport.changed</code></td>
       <td><code>[width, height]</code></td>
       <td>Emitted when the viewport has been changed.</td>
