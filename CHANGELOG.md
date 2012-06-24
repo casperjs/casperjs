@@ -17,6 +17,7 @@ XXXX-XX-XX, v1.0
 - added [`Casper.userAgent()`](http://casperjs.org/api.html#casper.userAgent) to ease a more dynamic setting of user-agent string
 - added [`Tester.assertTitleMatch()`](http://casperjs.org/api.html#tester.assertTitleMatch) method
 - added [`utils.getPropertyPath()`](http://casperjs.org/api.html#utils.getPropertyPath)
+- added [`Casper.captureBase64()`](http://casperjs.org/api.html#casper.captureBase64) for rendering screen captures as base64 strings - closes [#150](https://github.com/n1k0/casperjs/issues/150)
 - added [`Casper.reload()`](http://casperjs.org/api.html#casper.reload)
 - added experimental support of custom headers sending in outgoing request (refs [#137](https://github.com/n1k0/casperjs/issues/137) - PhantomJS 1.6 required)
 - switched to more standard `.textContent` property to get a node text; this allows a better compatibility of the clientutils bookmarklet with non-webkit browsers

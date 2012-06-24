@@ -246,7 +246,47 @@ Casper.prototype.capture = function capture(targetFile, clipRect) {
 };
 
 /**
- * Captures the page area containing the provided selector.
+ * Returns a Base64 representation of a binary image capture of the current
+ * page, or an area within the page, in a given format.
+ *
+ * Supported image formats are `bmp`, `jpg`, `jpeg`, `png`, `ppm`, `tiff`,
+ * `xbm` and `xpm`.
+ *
+ * @param  String                   format    The image format
+ * @param  String|Object|undefined  selector  CSS3 selector or clipRect object (optional)
+ * @return Casper
+ */
+Casper.prototype.captureBase64 = function captureBase64(format, area) {
+    "use strict";
+    var base64;
+    var previousClipRect;
+    var formats = ['bmp', 'jpg', 'jpeg', 'png', 'ppm', 'tiff', 'xbm', 'xpm'];
+    if (formats.indexOf(format.toLowerCase()) === -1) {
+        throw new CasperError(f('Unsupported format "%s"', format));
+    }
+    if (utils.isClipRect(area)) {
+        // if area is a clipRect object
+        this.log(f("Capturing base64 %s representation of %s", format, utils.serialize(area)), "debug");
+        previousClipRect = this.page.clipRect;
+        this.page.clipRect = area;
+        base64 = this.page.renderBase64(format);
+    } else if (utils.isValidSelector(area)) {
+        // if area is a selector string or object
+        this.log(f("Capturing base64 %s representation of %s", format, area), "debug");
+        base64 = this.captureBase64(format, this.getElementBounds(area));
+    } else {
+        // whole page capture
+        this.log(f("Capturing base64 %s representation of page", format), "debug");
+        base64 = this.page.renderBase64(format);
+    }
+    if (previousClipRect) {
+        this.page.clipRect = previousClipRect;
+    }
+    return base64;
+};
+
+/**
+ * Captures the page area matching the provided selector.
  *
  * @param  String  targetFile  Target destination file path.
  * @param  String  selector    CSS3 selector

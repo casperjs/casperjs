@@ -57,7 +57,7 @@
      * @param  Mixed  value
      */
     function dump(value) {
-        console.log(serialize(value));
+        console.log(serialize(value, 4));
     }
     exports.dump = dump;
 
@@ -304,6 +304,39 @@
     exports.isUndefined = isUndefined;
 
     /**
+     * Checks if value is a valid selector Object.
+     *
+     * @param  mixed  value
+     * @return Boolean
+     */
+    function isValidSelector(value) {
+        if (isString(value)) {
+            try {
+                // phantomjs env has a working document object, let's use it
+                document.querySelector(value);
+            } catch(e) {
+                if ('name' in e && e.name === 'SYNTAX_ERR') {
+                    return false;
+                }
+            }
+            return true;
+        } else if (isObject(value)) {
+            if (!value.hasOwnProperty('type')) {
+                return false;
+            }
+            if (!value.hasOwnProperty('path')) {
+                return false;
+            }
+            if (['css', 'xpath'].indexOf(value.type) === -1) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    exports.isValidSelector = isValidSelector;
+
+    /**
      * Checks if the provided var is a WebPage instance
      *
      * @param  mixed  what
@@ -362,13 +395,13 @@
      * @param  Mixed  value
      * @return String
      */
-    function serialize(value) {
+    function serialize(value, indent) {
         if (isArray(value)) {
             value = value.map(function _map(prop) {
                 return isFunction(prop) ? prop.toString().replace(/\s{2,}/, '') : prop;
             });
         }
-        return JSON.stringify(value, null, 4);
+        return JSON.stringify(value, null, indent);
     }
     exports.serialize = serialize;
 

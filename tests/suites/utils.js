@@ -1,4 +1,4 @@
-var utils = require('utils'), t = casper.test;
+var utils = require('utils'), t = casper.test, x = require('casper').selectXPath;
 
 t.comment('fileExt()');
 (function() {
@@ -98,6 +98,33 @@ t.comment('isObject()');
     t.assertEquals(utils.isObject(new Function('return {};')()), true, 'isObject() checks for an Object');
     t.assertEquals(utils.isObject(require('webpage').create()), true, 'isObject() checks for an Object');
     t.assertEquals(utils.isObject(null), false, 'isObject() checks for an Object');
+})();
+
+t.comment('isValidSelector()');
+(function() {
+    t.assertEquals(utils.isValidSelector({}), false, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector(""), false, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector("a"), true, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector('div#plop form[name="form"] input[type="submit"]'), true, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector(x('//a')), true, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector({
+        type: "css",
+        path: 'div#plop form[name="form"] input[type="submit"]'
+    }), true, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector({
+        type: "xpath",
+        path: '//a'
+    }), true, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector({
+        type: "css"
+    }), false, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector({
+        type: "xpath"
+    }), false, 'isValidSelector() checks for a valid selector');
+    t.assertEquals(utils.isValidSelector({
+        type: "css3",
+        path: "a"
+    }), false, 'isValidSelector() checks for a valid selector');
 })();
 
 t.comment('isWebPage()');
