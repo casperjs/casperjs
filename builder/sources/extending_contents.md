@@ -15,7 +15,7 @@ var links = {
     'http://www.guardian.co.uk/': 0
 };
 
-casper.countLinks = function(selector) {
+casper.countLinks = function() {
     return this.evaluate(function() {
         return __utils__.findAll('a[href]').length;
     });
@@ -60,7 +60,7 @@ function Fantomas() {
 // please note that at this point, CHILD CLASS PROTOTYPE WILL BE OVERRIDEN
 utils.inherits(Fantomas, Casper);
 
-Fantomas.prototype.countLinks = function(selector) {
+Fantomas.prototype.countLinks = function() {
     return this.evaluate(function() {
         return __utils__.findAll('a[href]').length;
     });
