@@ -936,6 +936,32 @@ Casper.prototype.open = function open(location, settings) {
 };
 
 /**
+ * Retrieves a DOM element matching the provided CSS3 selector.
+ *
+ * @param  String  selector  A CSS3 selector
+ * @return HTMLElement  The requested DOM element
+ */
+Casper.prototype.querySelector = function querySelector(selector) {
+    "use strict";
+    return this.evaluate(function _evaluate(selector) {
+        return window.querySelector(selector);
+    }, { selector: selector });
+};
+
+/**
+ * Retrieves a NodeList of DOM elements matching the provided CSS3 selector.
+ *
+ * @param  String  selector  A CSS3 selector
+ * @return HTMLElement[]  The requested NodeList of DOM elements
+ */
+Casper.prototype.querySelectorAll = function querySelectorAll(selector) {
+    "use strict";
+    return this.evaluate(function _evaluate(selector) {
+        return window.querySelectorAll(selector);
+    }, { selector: selector });
+};
+
+/**
  * Reloads current page.
  *
  * @param  Function  then  a next step function
