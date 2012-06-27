@@ -415,31 +415,6 @@
         };
 
         /**
-         * Dispatches a keyboard event to the DOM element behind the provided selector.
-         *
-         * @see http://www.w3.org/TR/DOM-Level-3-Events/#events-KeyboardEvent
-         *
-         * @param  String  type      Type of event to dispatch
-         * @param  String  selector  A CSS3 selector to the element to click
-         * @param  String  character Character value of the key pressed
-         * @param  String  key       Key value of the key pressed
-         * @return Boolean
-         */
-        this.keyboardEvent = function keyboardEvent(type, selector, character, key) {
-            var elem = this.findOne(selector);
-            if (!elem) {
-                this.log("keyboardEvent(): Couldn't find any element matching '" + selector + "' selector", "error");
-                return false;
-            }
-            var evt = document.createEvent("KeyboardEvents");
-            evt.initKeyboardEvent(type, true, true, window, character, key, false, false, false, false, false);
-            elem.value += character;
-            // dispatchEvent return value is false if at least one of the event
-            // handlers which handled this event called preventDefault
-            return elem.dispatchEvent(evt);
-        };
-
-        /**
          * Processes a selector input, either as a string or an object.
          *
          * If passed an object, if must be of the form:

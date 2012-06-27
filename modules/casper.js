@@ -869,38 +869,6 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
 };
 
 /**
- * Emulates an keyboard event on the element from the provided selector
- *
- * In case of success, `true` is returned, `false` otherwise.
- *
- * @param  String   type      Type of event to emulate
- * @param  String   selector  A DOM CSS3 compatible selector
- * @param  String   character Character value of the key pressed
- * @param  String   key       Key value of the key pressed
- * @return Boolean
- */
-Casper.prototype.keyboardEvent = function keyboardEvent(type, selector, character, key) {
-    "use strict";
-    this.log("Keyboard event '" + type + "' on selector: " + selector, "debug");
-    if (!this.exists(selector)) {
-        throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
-    }
-    var eventSuccess = this.evaluate(function(type, selector, character, key) {
-        return window.__utils__.keyboardEvent(type, selector, character, key);
-    }, {
-        type: type,
-        selector: selector,
-        character: character,
-        key: key
-    });
-    if (!eventSuccess) {
-        this.log(f("Couldn't emulate '%s' event on %s: %s", type, selector, e), "error");
-        return false;
-    }
-    return true;
-};
-
-/**
  * Performs an HTTP request, with optional settings.
  *
  * Available settings are:
