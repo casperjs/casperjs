@@ -497,6 +497,17 @@ Casper.prototype.each = function each(array, fn) {
  */
 Casper.prototype.echo = function echo(text, style, pad) {
     "use strict";
+    if (!utils.isString(text)) {
+        try {
+            text = text.toString();
+        } catch (e) {
+            try {
+                text = utils.serialize(text);
+            } catch (e) {
+                text = '';
+            }
+        }
+    }
     var message = style ? this.colorizer.colorize(text, style, pad) : text;
     console.log(this.filter('echo.message', message) || message);
     return this;
