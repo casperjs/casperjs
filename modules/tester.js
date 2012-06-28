@@ -572,10 +572,10 @@ var Tester = function Tester(casper, options) {
      * @return Array  casedata.cases An array of all the failed case objects
      */
     this.getFailures = function getFailures() {
-        return JSON.parse(JSON.stringify({
+        return {
             length: this.testResults.failed,
             cases: this.testResults.failures
-        }));
+        };
     };
 
     /**
@@ -586,10 +586,10 @@ var Tester = function Tester(casper, options) {
      * @return Array  casedata.cases An array of all the passed case objects
      */
     this.getPasses = function getPasses() {
-        return JSON.parse(JSON.stringify({
+        return {
             length: this.testResults.passed,
             cases: this.testResults.passes
-        }));
+        };
     };
 
     /**

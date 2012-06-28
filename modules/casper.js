@@ -695,6 +695,20 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
 };
 
 /**
+ * Retrieves the value of an attribute on the first element matching the provided CSS3 selector.
+ *
+ * @param  String  selector  A CSS3 selector
+ * @param  String  attribute  The attribute to lookup
+ * @return String  The requested DOM element
+ */
+Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
+    "use strict";
+    return this.evaluate(function _evaluate(selector, attribute) {
+        return document.querySelector(selector).getAttribute(attribute);
+    }, { selector: selector, attribute: attribute });
+};
+
+/**
  * Retrieves boundaries for a DOM element matching the provided CSS3 selector.
  *
  * @param  String  selector  A CSS3 selector
@@ -933,32 +947,6 @@ Casper.prototype.open = function open(location, settings) {
     }, this.page.settings);
     this.resources = [];
     return this;
-};
-
-/**
- * Retrieves a DOM element matching the provided CSS3 selector.
- *
- * @param  String  selector  A CSS3 selector
- * @return HTMLElement  The requested DOM element
- */
-Casper.prototype.querySelector = function querySelector(selector) {
-    "use strict";
-    return this.evaluate(function _evaluate(selector) {
-        return window.querySelector(selector);
-    }, { selector: selector });
-};
-
-/**
- * Retrieves a NodeList of DOM elements matching the provided CSS3 selector.
- *
- * @param  String  selector  A CSS3 selector
- * @return HTMLElement[]  The requested NodeList of DOM elements
- */
-Casper.prototype.querySelectorAll = function querySelectorAll(selector) {
-    "use strict";
-    return this.evaluate(function _evaluate(selector) {
-        return window.querySelectorAll(selector);
-    }, { selector: selector });
 };
 
 /**
