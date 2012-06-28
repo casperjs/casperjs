@@ -106,6 +106,16 @@ casper.then(function() {
     t.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
 });
 
+casper.then(function() {
+    t.comment('Tester.getFailures()');
+    t.assertEquals(typeof t.getFailures().length, "number", "Tester.getFailures() works as expected");
+
+    var passCount = t.getPasses().length;
+    t.comment('Tester.getPasses()');
+    t.assertEquals(1, 1, "Rogue assertEquals pass case");
+    t.assertEquals(t.getPasses().length, passCount + 1, "Tester.getPasses() works as expected");
+});
+
 casper.run(function() {
     t.done();
 });

@@ -706,6 +706,20 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
 };
 
 /**
+ * Retrieves the value of an attribute on the first element matching the provided CSS3 selector.
+ *
+ * @param  String  selector  A CSS3 selector
+ * @param  String  attribute  The attribute to lookup
+ * @return String  The requested DOM element
+ */
+Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
+    "use strict";
+    return this.evaluate(function _evaluate(selector, attribute) {
+        return document.querySelector(selector).getAttribute(attribute);
+    }, { selector: selector, attribute: attribute });
+};
+
+/**
  * Retrieves boundaries for a DOM element matching the provided CSS3 selector.
  *
  * @param  String  selector  A CSS3 selector
