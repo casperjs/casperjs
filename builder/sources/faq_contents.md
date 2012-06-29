@@ -44,7 +44,9 @@ Sure, as every single other javascript library on Earth.
 A first solution is to inject it into the remote DOM environment by
 hand using the standard `WebPage.injectJs()` method:
 
-    casper.page.injectJs('http://code.jquery.com/jquery-1.7.min.js');
+```javascript
+casper.page.injectJs('/path/to/jquery.js');
+```
 
 If you need jQuery being available everytime, you can also make it being
 injected in every received response by setting the `clientScripts`
