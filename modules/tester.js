@@ -87,7 +87,7 @@ var Tester = function Tester(casper, options) {
     });
 
     this.on('success', function onSuccess(success) {
-        this.exporter.addSuccess(fs.absolute(success.file), success.message);
+        this.exporter.addSuccess(fs.absolute(success.file), success.message || success.standard);
     });
 
     this.on('fail', function onFail(failure) {
