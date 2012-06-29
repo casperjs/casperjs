@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+# Ruby Wrapper for CasperJs
+# Version: 1.0.0
+# by hannyu
+
+
+CASPER_PATH = File.dirname(File.dirname(File.expand_path(__FILE__)))
+
+PHANTOMJS_NATIVE_ARGS = [
+    '--cookies-file',
+    '--config',
+    '--disk-cache',
+    '--ignore-ssl-errors',
+    '--load-images',
+    '--load-plugins',
+    '--local-to-remote-url-access',
+    '--max-disk-cache-size',
+    '--output-encoding',
+    '--remote-debugger-port',
+    '--remote-debugger-autorun',
+    '--proxy',
+    '--proxy-auth',
+    '--proxy-type',
+    '--script-encoding',
+    '--web-security',
+]
+
+CASPER_ARGS = []
+PHANTOMJS_ARGS = []
+ARGV.each do |arg|
+    is_found = false
+    PHANTOMJS_NATIVE_ARGS.each do |pna|
+        if arg.start_with? pna
+            PHANTOMJS_ARGS << arg 
+            is_found = true
+            break
+        end
+    end
+    CASPER_ARGS << arg if not is_found
+end
+
+CASPER_COMMAND = []
+CASPER_COMMAND << (ENV["PHANTOMJS_EXECUTABLE"] || "phantomjs")
+CASPER_COMMAND.concat PHANTOMJS_ARGS
+CASPER_COMMAND << File.join(CASPER_PATH, "bin", "bootstrap.js")
+CASPER_COMMAND << "--casper-path=#{CASPER_PATH}"
+CASPER_COMMAND << "--cli"
+CASPER_COMMAND.concat CASPER_ARGS
+
+if system(CASPER_COMMAND.join(" ")).nil?
+    puts "Fatal: Did you install phantomjs?"
+end
+
+exit $?.exitstatus
+
