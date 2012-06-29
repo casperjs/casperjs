@@ -68,6 +68,7 @@ var Tester = function Tester(casper, options) {
     this.testResults = {
         passed: 0,
         failed: 0,
+        passes: [],
         failures: []
     };
 
@@ -87,6 +88,7 @@ var Tester = function Tester(casper, options) {
     });
 
     this.on('success', function onSuccess(success) {
+        this.testResults.passes.push(success);
         this.exporter.addSuccess(fs.absolute(success.file), success.message);
     });
 
@@ -560,6 +562,34 @@ var Tester = function Tester(casper, options) {
             return message;
         }
         return this.colorize(parts[1], 'PARAMETER') + this.colorize(parts[2], style);
+    };
+
+    /**
+     * Retrieves current failure data and all failed cases.
+     *
+     * @return Object casedata An object containg information about cases
+     * @return Number casedata.length The number of failed cases
+     * @return Array  casedata.cases An array of all the failed case objects
+     */
+    this.getFailures = function getFailures() {
+        return {
+            length: this.testResults.failed,
+            cases: this.testResults.failures
+        };
+    };
+
+    /**
+     * Retrieves current passed data and all passed cases.
+     *
+     * @return Object casedata An object containg information about cases
+     * @return Number casedata.length The number of passed cases
+     * @return Array  casedata.cases An array of all the passed case objects
+     */
+    this.getPasses = function getPasses() {
+        return {
+            length: this.testResults.passed,
+            cases: this.testResults.passes
+        };
     };
 
     /**
