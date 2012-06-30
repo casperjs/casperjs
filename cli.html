@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1340958412628">
-    <link rel="stylesheet" href="css/casper.css?1340958412628">
+    <link rel="stylesheet" href="prettify/prettify.css?1341069014687">
+    <link rel="stylesheet" href="css/casper.css?1341069014687">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -153,7 +153,43 @@ as you would do with any other phantomjs script:
 <pre><code>$ casperjs --web-security=no --cookies-file=/tmp/mycookies.txt myscript.js</code></pre>
 <p><span class="label label-info">Hint</span> To remember what the native
 phantomjs available cli options are, run the <code>phantomjs --help</code> command.
+
 </p>
+<h2 id="raw">Accessing raw values of passed parameters</h2>
+
+<p>By default, the cli object will process every passed argument &amp; cast them to the appropriate
+detected type; example script:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+var utils = require('utils');
+
+utils.dump(casper.cli.get('foo'));
+
+casper.exit();</code></pre>
+<p>If you run this script:
+
+</p>
+<pre><code>$ casperjs c.js --foo=01234567
+1234567</code></pre>
+<p>As you can see, the <code>01234567</code> value has been cast to a <em>Number</em>. Sometimes, you just want
+the original string; then you can use the <code>raw</code> property of the <code>cli</code> object, which contains
+the raw values of passed parameters:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+var utils = require('utils');
+
+utils.dump(casper.cli.get('foo'));
+utils.dump(casper.cli.raw.get('foo'));
+
+casper.exit();</code></pre>
+<p>Sample usage:
+
+</p>
+<pre><code>$ casperjs c.js --foo=01234567
+1234567
+"01234567"</code></pre>
 </div>
 </section>
 </div>
@@ -168,10 +204,10 @@ phantomjs available cli options are, run the <code>phantomjs --help</code> comma
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=RYYrbB9o5Tw.fr./sv=1/am=!0Tt3uNrLr0Coc6egjA/d=1/rs=AItRSTNcMRcwSjnXUHOHZ_B_Nkw_jLc3IA/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1340958412628"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1340958412628"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1340958412628"></script>
-    <script type="text/javascript" src="js/application.js?1340958412628"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=fBIcnub5FkE.fr./sv=1/am=!0Tt3uNrLr0Coc6egjA/d=1/rs=AItRSTPeldBWrBpK0m0NMKef-JQUxAX00w/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1341069014687"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1341069014687"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1341069014687"></script>
+    <script type="text/javascript" src="js/application.js?1341069014687"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

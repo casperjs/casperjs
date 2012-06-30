@@ -94,3 +94,46 @@ $ casperjs --web-security=no --cookies-file=/tmp/mycookies.txt myscript.js
 
 <span class="label label-info">Hint</span> To remember what the native
 phantomjs available cli options are, run the `phantomjs --help` command.
+
+<h2 id="raw">Accessing raw values of passed parameters</h2>
+
+By default, the cli object will process every passed argument & cast them to the appropriate
+detected type; example script:
+
+```javascript
+var casper = require('casper').create();
+var utils = require('utils');
+
+utils.dump(casper.cli.get('foo'));
+
+casper.exit();
+```
+
+If you run this script:
+
+```
+$ casperjs c.js --foo=01234567
+1234567
+```
+
+As you can see, the `01234567` value has been cast to a *Number*. Sometimes, you just want
+the original string; then you can use the `raw` property of the `cli` object, which contains
+the raw values of passed parameters:
+
+```javascript
+var casper = require('casper').create();
+var utils = require('utils');
+
+utils.dump(casper.cli.get('foo'));
+utils.dump(casper.cli.raw.get('foo'));
+
+casper.exit();
+```
+
+Sample usage:
+
+```
+$ casperjs c.js --foo=01234567
+1234567
+"01234567"
+```
