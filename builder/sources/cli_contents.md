@@ -97,6 +97,7 @@ phantomjs available cli options are, run the `phantomjs --help` command.
 
 <h2 id="raw">Accessing raw values of passed parameters</h2>
 
+<span class="label label-success">Added in 1.0</span>
 By default, the cli object will process every passed argument & cast them to the appropriate
 detected type; example script:
 
