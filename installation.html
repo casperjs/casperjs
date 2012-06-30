@@ -8,8 +8,8 @@
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1341069100555">
-    <link rel="stylesheet" href="css/casper.css?1341069100555">
+    <link rel="stylesheet" href="prettify/prettify.css?1341076296871">
+    <link rel="stylesheet" href="css/casper.css?1341076296871">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -102,18 +102,41 @@ $ casperjs --version
 <p>You are now ready to write your <a href="quickstart.html">first script</a>!
 
 </p>
-<p><span class="label label-info">Note</span> The casperjs executable is written
-in <a href="http://python.org/">Python</a>, so you can also run it using the python
-command:
+<p><span class="label label-info">Note</span>
+The <code>casperjs</code> executable is written in <a href="http://python.org/">Python</a>, so please ensure
+that a Python interepreter is available on your platform.
 
 </p>
-<pre><code>$ python /path/to/casperjs/bin/casperjs
-CasperJS version 1.0.0-RC1 at /Users/niko/casperjs
-Usage: casperjs script.(js|coffee) [options...]
-Read the docs http://casperjs.org/</code></pre>
-<p><span class="label label-info">Note</span> If for any reason you <strong>don't have
-access to Python</strong> or are <strong>running Windows</strong>, please check this
-<a href="faq.html#faq-executable">FAQ entry</a>.
+<h2>Ruby version</h2>
+<p><span class="label label-success">Added in 1.0</span>
+A <a href="http://ruby-lang.org/">Ruby</a> version of the <code>casperjs</code> executable is also
+available in the <code>bin/</code> directory; in order to use the ruby version instead
+of the python one:
+
+</p>
+<pre><code>$ ln -sf `pwd`/bin/casperjs_ruby /usr/local/bin/casperjs</code></pre>
+<p>Or using the ruby interpreter:
+
+</p>
+<pre><code>$ ruby /path/to/casperjs/bin/casperjs_ruby
+CasperJS version 1.0.0-RC1 at /Users/niko/Sites/casperjs, using PhantomJS version 1.6.0
+...</code></pre>
+<h2>Help! I don't have Python nor Ruby (Hi, Windows user)</h2>
+<p><strong>If you're on Windows</strong>, this is the way you may manage to get casper working
+the most easily:
+
+</p>
+<pre><code class="javascript">phantom.casperPath = 'C:\\path\\to\\your\\repo\\lib\\casperjs-0.6.X';
+phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
+
+var casper = require('casper').create();
+
+// do stuff</code></pre>
+<p>Then just run your script using the <code>python.exe</code> program.
+
+</p>
+<p><span class="label label-info">Note</span>
+There is no output coloration when running CasperJS on Microsoft platforms.
 
 </p>
 <h2>Contribute!</h2>
@@ -135,10 +158,10 @@ twitter account</a>.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=fBIcnub5FkE.fr./sv=1/am=!0Tt3uNrLr0Coc6egjA/d=1/rs=AItRSTPeldBWrBpK0m0NMKef-JQUxAX00w/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1341069100555"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1341069100555"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1341069100555"></script>
-    <script type="text/javascript" src="js/application.js?1341069100555"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=fBIcnub5FkE.fr./sv=1/am=!0Tt3uNrLr0Coc6egjA/d=1/rs=AItRSTPeldBWrBpK0m0NMKef-JQUxAX00w/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1341076296871"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1341076296871"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1341076296871"></script>
+    <script type="text/javascript" src="js/application.js?1341076296871"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
