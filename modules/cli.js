@@ -45,6 +45,10 @@ exports.parse = function parse(phantomArgs) {
     var extract = {
         args: [],
         options: {},
+        raw: {
+            args: [],
+            options: {}
+        },
         drop: function drop(what) {
             if (utils.isNumber(what)) {
                 // deleting an arg by its position
@@ -92,17 +96,24 @@ exports.parse = function parse(phantomArgs) {
             var optionMatch = arg.match(/^--(.*?)=(.*)/i);
             if (optionMatch) {
                 extract.options[optionMatch[1]] = castArgument(optionMatch[2]);
+                extract.raw.options[optionMatch[1]] = optionMatch[2];
             } else {
                 // flag
                 var flagMatch = arg.match(/^--(.*)/);
                 if (flagMatch) {
-                    extract.options[flagMatch[1]] = true;
+                    extract.options[flagMatch[1]] = extract.raw.options[flagMatch[1]] = true;
                 }
             }
         } else {
             // positional arg
-            extract.args.push(arg);
+            extract.args.push(castArgument(arg));
+            extract.raw.args.push(castArgument(arg));
         }
+    });
+    extract.raw = utils.mergeObjects(extract.raw, {
+        drop: extract.drop,
+        has: extract.has,
+        get: extract.get
     });
     return extract;
 };
