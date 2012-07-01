@@ -265,6 +265,84 @@ casper.test.fail("Georges W. Bush");
 Formats a message to highlight some parts of it. Only used internally by
 the tester.
 
+<h3 id="tester.getFailures"><code>Tester#getFailures()</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Retrieves failures for current test suite.
+
+```javascript
+casper.test.assertEquals(true, false);
+require('utils').dump(casper.test.getFailures());
+casper.test.done();
+```
+
+That will give something like this:
+
+```
+$ casperjs test test-getFailures.js
+Test file: test-getFailures.js
+FAIL Subject equals the expected value
+#    type: assertEquals
+#    subject: true
+#    expected: false
+{
+    "length": 1,
+    "cases": [
+        {
+            "success": false,
+            "type": "assertEquals",
+            "standard": "Subject equals the expected value",
+            "file": "test-getFailures.js",
+            "values": {
+                "subject": true,
+                "expected": false
+            }
+        }
+    ]
+}
+FAIL 1 tests executed, 0 passed, 1 failed.
+
+Details for the 1 failed test:
+
+In c.js:0
+   assertEquals: Subject equals the expected value
+```
+
+<h3 id="tester.getPasses"><code>Tester#getPasses()</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Retrieves a report for successful test cases in the current test suite.
+
+```javascript
+casper.test.assertEquals(true, true);
+require('utils').dump(casper.test.getPasses());
+casper.test.done();
+```
+
+That will give something like this:
+
+```
+$ casperjs test test-getPasses.js
+Test file: test-getPasses.js
+PASS Subject equals the expected value
+{
+    "length": 1,
+    "cases": [
+        {
+            "success": true,
+            "type": "assertEquals",
+            "standard": "Subject equals the expected value",
+            "file": "test-getPasses.js",
+            "values": {
+                "subject": true,
+                "expected": true
+            }
+        }
+    ]
+}
+PASS 1 tests executed, 1 passed, 0 failed.
+```
+
 <h3 id="tester.info"><code>Tester#info(String message)</code></h3>
 
 Writes an info-style formatted message to stdout.

@@ -783,6 +783,24 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
+<h3 id="casper.getElementAttribute"><code>Casper#getElementAttribute(String <a href="selectors.html">selector</a>, String attribute)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Retrieves the value of an attribute on the first element matching the provided
+[selector](selectors.html).
+
+**Example:**
+
+```javascript
+var casper = require('casper').create();
+
+casper.start('http://www.google.fr/', function() {
+    require('utils').dump(this.getElementAttribute('div[title="Google"]', 'title')); // "Google"
+});
+
+casper.run();
+```
+
 <h3 id="casper.getElementBounds"><code>Casper#getElementBounds(String <a href="selectors.html">selector</a>)</code></h3>
 
 Retrieves boundaries for a DOM element matching the provided

@@ -26,6 +26,7 @@
 - [`log()`](#casper.log)
 - [`fill()`](#casper.fill)
 - [`getCurrentUrl()`](#casper.getCurrentUrl)
+- [`getElementAttribute()`](#casper.getElementAttribute)
 - [`getElementBounds()`](#casper.getElementBounds)
 - [`getGlobal()`](#casper.getGlobal)
 - [`getTitle()`](#casper.getTitle)

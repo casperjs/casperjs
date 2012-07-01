@@ -25,6 +25,8 @@
 - [`error()`](#tester.error)
 - [`fail()`](#tester.fail)
 - [`formatMessage()`](#tester.formatMessage)
+- [`getFailures()`](#tester.getFailures)
+- [`getPasses()`](#tester.getPasses)
 - [`info()`](#tester.info)
 - [`pass()`](#tester.pass)
 - [`renderResults()`](#tester.renderResults)

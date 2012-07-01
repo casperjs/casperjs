@@ -64,7 +64,7 @@ CasperJS version {{version}} at /Users/niko/Sites/casperjs, using PhantomJS vers
 the most easily:
 
 ```javascript
-phantom.casperPath = 'C:\\path\\to\\your\\repo\\lib\\casperjs-0.6.X';
+phantom.casperPath = 'C:\\path\\to\\your\\repo\\lib\\casperjs-{{version}}';
 phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
 
 var casper = require('casper').create();
