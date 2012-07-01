@@ -256,7 +256,7 @@ Casper.prototype.capture = function capture(targetFile, clipRect) {
  * `xbm` and `xpm`.
  *
  * @param  String                   format    The image format
- * @param  String|Object|undefined  selector  CSS3 selector or clipRect object (optional)
+ * @param  String|Object|undefined  selector  DOM CSS3/XPath selector or clipRect object (optional)
  * @return Casper
  */
 Casper.prototype.captureBase64 = function captureBase64(format, area) {
@@ -299,7 +299,7 @@ Casper.prototype.captureBase64 = function captureBase64(format, area) {
  * Captures the page area matching the provided selector.
  *
  * @param  String  targetFile  Target destination file path.
- * @param  String  selector    CSS3 selector
+ * @param  String  selector    DOM CSS3/XPath selector
  * @return Casper
  */
 Casper.prototype.captureSelector = function captureSelector(targetFile, selector) {
@@ -563,10 +563,10 @@ Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message) {
 };
 
 /**
- * Checks if an element matching the provided CSS3 selector exists in
+ * Checks if an element matching the provided DOM CSS3/XPath selector exists in
  * current page DOM.
  *
- * @param  String  selector  A CSS3 selector
+ * @param  String  selector  A DOM CSS3/XPath selector
  * @return Boolean
  */
 Casper.prototype.exists = function exists(selector) {
@@ -593,7 +593,7 @@ Casper.prototype.exit = function exit(status) {
  * Fetches innerText within the element(s) matching a given CSS3
  * selector.
  *
- * @param  String  selector  A CSS3 selector
+ * @param  String  selector  A DOM CSS3/XPath selector
  * @return String
  */
 Casper.prototype.fetchText = function fetchText(selector) {
@@ -606,7 +606,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
 /**
  * Fills a form with provided field values.
  *
- * @param  String  selector  A CSS3 selector to the target form to fill
+ * @param  String  selector  A DOM CSS3/XPath selector to the target form to fill
  * @param  Object  vals      Field values
  * @param  Boolean submit    Submit the form?
  */
@@ -706,11 +706,12 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
 };
 
 /**
- * Retrieves the value of an attribute on the first element matching the provided CSS3 selector.
+ * Retrieves the value of an attribute on the first element matching the provided
+ * DOM CSS3/XPath selector.
  *
- * @param  String  selector  A CSS3 selector
- * @param  String  attribute  The attribute to lookup
- * @return String  The requested DOM element
+ * @param  String  selector   A DOM CSS3/XPath selector
+ * @param  String  attribute  The attribute name to lookup
+ * @return String  The requested DOM element attribute value
  */
 Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
     "use strict";
@@ -720,9 +721,9 @@ Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = functio
 };
 
 /**
- * Retrieves boundaries for a DOM element matching the provided CSS3 selector.
+ * Retrieves boundaries for a DOM element matching the provided DOM CSS3/XPath selector.
  *
- * @param  String  selector  A CSS3 selector
+ * @param  String  selector  A DOM CSS3/XPath selector
  * @return Object
  */
 Casper.prototype.getElementBounds = function getElementBounds(selector) {
@@ -1309,11 +1310,11 @@ Casper.prototype.viewport = function viewport(width, height) {
 };
 
 /**
- * Checks if an element matching the provided CSS3 selector is visible
+ * Checks if an element matching the provided DOM CSS3/XPath selector is visible
  * current page DOM by checking that offsetWidth and offsetHeight are
  * both non-zero.
  *
- * @param  String  selector  A CSS3 selector
+ * @param  String  selector  A DOM CSS3/XPath selector
  * @return Boolean
  */
 Casper.prototype.visible = function visible(selector) {
@@ -1443,10 +1444,10 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
 };
 
 /**
- * Waits until an element matching the provided CSS3 selector exists in
+ * Waits until an element matching the provided DOM CSS3/XPath selector exists in
  * remote DOM to process a next step.
  *
- * @param  String    selector   A CSS3 selector
+ * @param  String    selector   A DOM CSS3/XPath selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
@@ -1461,10 +1462,10 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
 };
 
 /**
- * Waits until an element matching the provided CSS3 selector does not
+ * Waits until an element matching the provided DOM CSS3/XPath selector does not
  * exist in the remote DOM to process a next step.
  *
- * @param  String    selector   A CSS3 selector
+ * @param  String    selector   A DOM CSS3/XPath selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
@@ -1479,10 +1480,10 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
 };
 
 /**
- * Waits until an element matching the provided CSS3 selector is
+ * Waits until an element matching the provided DOM CSS3/XPath selector is
  * visible in the remote DOM to process a next step.
  *
- * @param  String    selector   A CSS3 selector
+ * @param  String    selector   A DOM CSS3/XPath selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
@@ -1497,10 +1498,10 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
 };
 
 /**
- * Waits until an element matching the provided CSS3 selector is no
+ * Waits until an element matching the provided DOM CSS3/XPath selector is no
  * longer visible in remote DOM to process a next step.
  *
- * @param  String    selector   A CSS3 selector
+ * @param  String    selector   A DOM CSS3/XPath selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
