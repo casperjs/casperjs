@@ -1,8 +1,10 @@
+# by hannyu
 
+CASPERJS_VERSION = File.read("package.json")[/version.*:.*"(.*?)"/,1].gsub(/[\-_\+]/,".")
 
 Gem::Specification.new do |s|
   s.name                = "casperjs"
-  s.version             = "1.0.0.RC1"
+  s.version             = CASPERJS_VERSION
   s.homepage            = "http://casperjs.org/"
   s.authors             = ["Nicolas Perriault", ]
   s.email               = ["nperriault@gmail.com",]
