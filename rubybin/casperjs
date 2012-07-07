@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
-
 # Ruby Wrapper for CasperJs
-# Version: 1.0.0
 # by hannyu
 
 
@@ -10,18 +8,21 @@ CASPER_PATH = File.dirname(File.dirname(File.expand_path(__FILE__)))
 PHANTOMJS_NATIVE_ARGS = [
     '--cookies-file',
     '--config',
+    '--debug',
     '--disk-cache',
     '--ignore-ssl-errors',
     '--load-images',
     '--load-plugins',
+    '--local-storage-path',
+    '--local-storage-quota',
     '--local-to-remote-url-access',
     '--max-disk-cache-size',
     '--output-encoding',
-    '--remote-debugger-port',
-    '--remote-debugger-autorun',
     '--proxy',
     '--proxy-auth',
     '--proxy-type',
+    '--remote-debugger-port',
+    '--remote-debugger-autorun',
     '--script-encoding',
     '--web-security',
 ]
