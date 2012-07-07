@@ -1245,10 +1245,16 @@ Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
  * @return Casper
  * @see    Casper#open
  */
-Casper.prototype.thenOpen = function thenOpen(location, then) {
+Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
     "use strict";
+    if (utils.isFunction(settings)) {
+        then = settings;
+        settings = {
+            "method": "get"
+        };
+    }
     this.then(this.createStep(function _step() {
-        this.open(location);
+        this.open(location, settings);
     }, {
         skipLog: true
     }));
