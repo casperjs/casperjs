@@ -5,6 +5,7 @@ XXXX-XX-XX, v1.0.0
 ------------------
 
 - fixed [#164](https://github.com/n1k0/casperjs/issues/164) - ability to force CLI parameters as strings (see [related documentation](http://casperjs.org/cli.html#raw)).
+- fixed [#153](https://github.com/n1k0/casperjs/issues/153) - erroneous mouse event results when event.preventDefault() was used
 
 2012-06-26, v1.0.0-RC1
 ----------------------
