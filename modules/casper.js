@@ -695,6 +695,29 @@ Casper.prototype.getColorizer = function getColorizer() {
 };
 
 /**
+ * Retrieves current page contents, dealing with exotic other content types than HTML.
+ *
+ * @return String
+ */
+Casper.prototype.getPageContent = function getPageContent() {
+    "use strict";
+    if (!this.started) {
+        throw new CasperError("Casper not started, can't getPageContent()");
+    }
+    var contentType = utils.getPropertyPath(this, 'currentResponse.contentType');
+    if (!utils.isString(contentType)) {
+        return this.page.content;
+    }
+    // for some reason webkit/qtwebkit will always enclose body contents within html tags
+    var match = (new RegExp('^<html><head></head><body><pre.+?>(.*)</pre></body></html>$')).exec(this.page.content);
+    if (!match) {
+        // Non-HTML response
+        return this.page.content;
+    }
+    return match[1];
+};
+
+/**
  * Retrieves current document url.
  *
  * @return String
