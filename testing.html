@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1342026851054">
-    <link rel="stylesheet" href="css/casper.css?1342026851054">
+    <link rel="stylesheet" href="prettify/prettify.css?1342031082911">
+    <link rel="stylesheet" href="css/casper.css?1342031082911">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -93,7 +93,7 @@ casper.then(function() {
 casper.run(function() {
     this.test.renderResults(true);
 });</code></pre>
-<p>As you can see, <code>casper.test</code> is a reference to a <code>tester.Tester</code> object
+<p>As you can see, <code>casper.test</code> is a reference to a <a href="api.html#tester"><code>tester.Tester</code></a> object
 instance, which is used to make the assertions and render the results.
 
 </p>
@@ -116,6 +116,10 @@ following:
 
 </p>
 <p><img src="images/testsuitefail.png" alt="capture">
+
+</p>
+<p><span class="label label-info">Note</span> If you intend to write large test suites, check out the
+<a href="#casper-test-command"><code>casperjs test</code> command</a>.
 
 </p>
 <hr>
@@ -141,20 +145,49 @@ parsing:
 </p>
 <pre><code>$ casperjs test.js --save=log.xml</code></pre>
 <hr>
-<h3>CasperJS tests</h3>
-<p>CasperJS has its own unit and functional test suite, located in the
-<code>tests</code> subfolder. More tests will be added in the future. To run the
-test suite, from the root of a checkout of the casperjs repository:
+<h1 id="casper-test-command">The <code>casperjs test</code> command</h1>
+
+<p>**Writing all your tests in a single file would be painful, to say the least. That's where the
+<code>casperjs test</code> command comes to the rescue, as it allows to split your tests across different
+files among other handy little things.
 
 </p>
-<pre><code>$ cd /path/to/casperjs
-$ casperjs test tests/suites</code></pre>
-<hr>
-<h3>Organizing your tests</h3>
-<p>Of course writing all your tests in a single file may be painful, so you
-can split them across files.
+<p>Let's take this first test file as an example:
 
 </p>
+<pre><code class="javascript">// file: /path/to/test/dir/test1.js
+
+casper.test.comment('My first test file');
+casper.test.assert(true, "true is so true");
+casper.test.done(); // I must be called!</code></pre>
+<p>And this second one:
+
+</p>
+<pre><code class="javascript">// file: /path/to/test/dir/test2.js
+
+casper.test.comment('This is my second test file, a bit more async');
+
+casper.start('http://my.location.tld/', function() {
+    this.test.assertNot(false, "false is so false");
+});
+
+casper.run(function() {
+    this.test.done(); // I must be called once all the async stuff has been executed
+});</code></pre>
+<p>Now let's run our test suite using <code>casperjs test</code>:
+
+</p>
+<pre><code>$ casperjs test /path/to/test/dir/</code></pre>
+<p>This is theoretically what you will get:
+
+</p>
+<p><img src="images/split-test-results.png" alt="image">
+
+</p>
+<p>Also, you can of course run a single test file as well:
+
+</p>
+<pre><code class="javascript">$ casperjs test /path/to/test/dir/test1.js</code></pre>
 <div class="alert-message block-message">
   <p>
     <span class="label label-important">Important</span>
@@ -177,51 +210,9 @@ can split them across files.
   </ol>
 </div>
 
-<p>Here's a first sample test file:
-
-</p>
-<pre><code class="javascript">// file: /path/to/test/dir/test1.js
-
-casper.test.comment('My first test file');
-casper.test.assert(true, "true is so true");
-casper.test.done(); // I must be called!</code></pre>
-<p>And a second one:
-
-</p>
-<pre><code class="javascript">// file: /path/to/test/dir/test2.js
-
-casper.test.comment('This is my second test file, a bit more async');
-
-casper.start('http://my.location.tld/', function() {
-    this.test.assertNot(false, "false is so false");
-});
-
-casper.run(function() {
-    this.test.done(); // I must be called once all the async stuff has been executed
-});</code></pre>
-<p><span class="label label-info">Hint</span> As you can see, a standard <code>Casper</code>
-class instance, stored in a <code>casper</code> variable, is already available and exposed
-to each test file; that's because a configured one's already available as stated
-previously.
-
-</p>
-<h2>The <code>casper test</code> command</h2>
-<p>The <code>casperjs test</code> command comes handy for running all the tests found
-at a given location:
-
-</p>
-<pre><code>$ casperjs test /path/to/test/dir/</code></pre>
-<p>This is theoretically what you will get:
-
-</p>
-<p><img src="images/split-test-results.png" alt="image">
-
-</p>
-<p>Also, you can of course run a single test file:
-
-</p>
-<pre><code class="javascript">$ casperjs test /path/to/test/dir/test1.js</code></pre>
-<p>Some options are available using the <code>casper test</code> command:
+<hr>
+<h3>Options</h3>
+<p>Some options are available using the <code>casperjs test</code> command:
 
 </p>
 <ul>
@@ -233,13 +224,22 @@ at a given location:
 <code>--includes=foo.js,bar.js</code> will includes the <code>foo.js</code> and <code>bar.js</code> files
 before each suite execution</li>
 </ul>
-<p>Sample command:
+<p>Sample custom command:
 
 </p>
 <pre><code>$ casperjs test --includes=foo.js,bar.js --direct --log-level=debug test1.js test2.js /path/to/dome/test/dir</code></pre>
 <hr>
+<h3>CasperJS own test suite</h3>
+<p>CasperJS has its own unit and functional test suite, located in the
+<code>tests</code> subfolder. More tests will be added in the future. To run the
+test suite, from the root of a checkout of the casperjs repository:
+
+</p>
+<pre><code>$ cd /path/to/casperjs
+$ casperjs test tests/suites</code></pre>
+<hr>
 <h3>Extending Casper for Testing</h3>
-<p>The <code>$ casper test [path]</code> command is just a shortcut for
+<p>The <code>$ casperjs test [path]</code> command is just a shortcut for
 <code>$ casper /path/to/casperjs/tests/run.js [path]</code>; so if you want to
 extend Casper capabilities for your tests, your best bet is to write
 your own runner and extend the casper object instance from there.
@@ -262,10 +262,10 @@ your own runner and extend the casper object instance from there.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=zpQ53UZ_p9A.fr./sv=1/am=!y-LKr2sJxIeYKm8EeQ/d=1/rs=AItRSTO7dQX7-RqqmeSDH2DfOjNtUIV0KQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1342026851054"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1342026851054"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1342026851054"></script>
-    <script type="text/javascript" src="js/application.js?1342026851054"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=zpQ53UZ_p9A.fr./sv=1/am=!y-LKr2sJxIeYKm8EeQ/d=1/rs=AItRSTO7dQX7-RqqmeSDH2DfOjNtUIV0KQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1342031082911"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1342031082911"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1342031082911"></script>
+    <script type="text/javascript" src="js/application.js?1342031082911"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

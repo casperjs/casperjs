@@ -26,7 +26,7 @@ casper.run(function() {
 });
 ```
 
-As you can see, `casper.test` is a reference to a `tester.Tester` object
+As you can see, `casper.test` is a reference to a [`tester.Tester`](api.html#tester) object
 instance, which is used to make the assertions and render the results.
 
 <span class="label label-info">Note</span> You can find the whole
@@ -46,6 +46,9 @@ In case any assertion fails, you'd rather get something like the
 following:
 
 ![capture](images/testsuitefail.png)
+
+<span class="label label-info">Note</span> If you intend to write large test suites, check out the
+[`casperjs test` command](#casper-test-command).
 
 * * * * *
 
@@ -79,23 +82,53 @@ $ casperjs test.js --save=log.xml
 
 * * * * *
 
-### CasperJS tests
+<h1 id="casper-test-command">The <code>casperjs test</code> command</h1>
 
-CasperJS has its own unit and functional test suite, located in the
-`tests` subfolder. More tests will be added in the future. To run the
-test suite, from the root of a checkout of the casperjs repository:
+**Writing all your tests in a single file would be painful, to say the least. That's where the
+`casperjs test` command comes to the rescue, as it allows to split your tests across different
+files among other handy little things.
+
+Let's take this first test file as an example:
+
+```javascript
+// file: /path/to/test/dir/test1.js
+
+casper.test.comment('My first test file');
+casper.test.assert(true, "true is so true");
+casper.test.done(); // I must be called!
+```
+
+And this second one:
+
+```javascript
+// file: /path/to/test/dir/test2.js
+
+casper.test.comment('This is my second test file, a bit more async');
+
+casper.start('http://my.location.tld/', function() {
+    this.test.assertNot(false, "false is so false");
+});
+
+casper.run(function() {
+    this.test.done(); // I must be called once all the async stuff has been executed
+});
+```
+
+Now let's run our test suite using `casperjs test`:
 
 ```
-$ cd /path/to/casperjs
-$ casperjs test tests/suites
+$ casperjs test /path/to/test/dir/
 ```
 
-* * * * *
+This is theoretically what you will get:
 
-### Organizing your tests
+![image](images/split-test-results.png)
 
-Of course writing all your tests in a single file may be painful, so you
-can split them across files.
+Also, you can of course run a single test file as well:
+
+```javascript
+$ casperjs test /path/to/test/dir/test1.js
+```
 
 <div class="alert-message block-message">
   <p>
@@ -119,57 +152,11 @@ can split them across files.
   </ol>
 </div>
 
-Here's a first sample test file:
+* * * * *
 
-```javascript
-// file: /path/to/test/dir/test1.js
+### Options
 
-casper.test.comment('My first test file');
-casper.test.assert(true, "true is so true");
-casper.test.done(); // I must be called!
-```
-
-And a second one:
-
-```javascript
-// file: /path/to/test/dir/test2.js
-
-casper.test.comment('This is my second test file, a bit more async');
-
-casper.start('http://my.location.tld/', function() {
-    this.test.assertNot(false, "false is so false");
-});
-
-casper.run(function() {
-    this.test.done(); // I must be called once all the async stuff has been executed
-});
-```
-
-<span class="label label-info">Hint</span> As you can see, a standard `Casper`
-class instance, stored in a `casper` variable, is already available and exposed
-to each test file; that's because a configured one's already available as stated
-previously.
-
-## The `casper test` command
-
-The `casperjs test` command comes handy for running all the tests found
-at a given location:
-
-```
-$ casperjs test /path/to/test/dir/
-```
-
-This is theoretically what you will get:
-
-![image](images/split-test-results.png)
-
-Also, you can of course run a single test file:
-
-```javascript
-$ casperjs test /path/to/test/dir/test1.js
-```
-
-Some options are available using the `casper test` command:
+Some options are available using the `casperjs test` command:
 
 - `--xunit=<filename>` will export test suite results in a xUnit XML file
 - `--direct` will output log messages directly to the console
@@ -179,7 +166,7 @@ Some options are available using the `casper test` command:
   `--includes=foo.js,bar.js` will includes the `foo.js` and `bar.js` files
   before each suite execution
 
-Sample command:
+Sample custom command:
 
 ```
 $ casperjs test --includes=foo.js,bar.js --direct --log-level=debug test1.js test2.js /path/to/dome/test/dir
@@ -187,9 +174,22 @@ $ casperjs test --includes=foo.js,bar.js --direct --log-level=debug test1.js tes
 
 * * * * *
 
+### CasperJS own test suite
+
+CasperJS has its own unit and functional test suite, located in the
+`tests` subfolder. More tests will be added in the future. To run the
+test suite, from the root of a checkout of the casperjs repository:
+
+```
+$ cd /path/to/casperjs
+$ casperjs test tests/suites
+```
+
+* * * * *
+
 ### Extending Casper for Testing
 
-The `$ casper test [path]` command is just a shortcut for
+The `$ casperjs test [path]` command is just a shortcut for
 `$ casper /path/to/casperjs/tests/run.js [path]`; so if you want to
 extend Casper capabilities for your tests, your best bet is to write
 your own runner and extend the casper object instance from there.
