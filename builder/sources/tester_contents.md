@@ -29,7 +29,7 @@ environment.
 ```javascript
 var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
-    this.test.assertDoesntExists('form[name="gs"]', 'google.fr has a form with name "gs"');
+    this.test.assertDoesntExist('form[name="gs"]', 'google.fr has a form with name "gs"');
 });
 ```
 
