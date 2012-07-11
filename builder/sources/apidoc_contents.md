@@ -848,6 +848,31 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
+<h3 id="casper.getPageContent"><code>Casper#getPageContent()</code></h3>
+
+<span class="label label-success">Added in 1.0.0</span>
+Retrieves current page contents, dealing with exotic other content types than HTML.
+
+**Example:**
+
+```javascript
+var casper = require('casper').create();
+
+casper.start().then(function() {
+    this.open('http://search.twitter.com/search.json?q=casperjs', {
+        method: 'get',
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
+});
+
+casper.run(function() {
+    require('utils').dump(JSON.parse(this.getPageContent()));
+    this.exit();
+});
+```
+
 <h3 id="casper.getTitle"><code>Casper#getTitle()</code></h3>
 
 Retrieves current page title.
