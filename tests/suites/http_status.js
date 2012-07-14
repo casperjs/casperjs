@@ -1,3 +1,7 @@
+/**
+ * Special test server to test for HTTP status codes
+ *
+ */
 var server = require('webserver').create();
 var service = server.listen(8090, function (request, response) {
     var code = parseInt(/^\/(\d+)$/.exec(request.url)[1], 10);

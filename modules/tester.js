@@ -709,6 +709,9 @@ var Tester = function Tester(casper, options) {
         if (arguments.length === 0) {
             throw new CasperError("runSuites() needs at least one path argument");
         }
+        this.includes.forEach(function(include) {
+            phantom.injectJs(include);
+        });
         Array.prototype.forEach.call(arguments, function _forEach(path) {
             if (!fs.exists(path)) {
                 self.bar(f("Path %s doesn't exist", path), "RED_BAR");
@@ -745,9 +748,6 @@ var Tester = function Tester(casper, options) {
     this.runTest = function runTest(testFile) {
         this.bar(f('Test file: %s', testFile), 'INFO_BAR');
         this.running = true; // this.running is set back to false with done()
-        this.includes.forEach(function(include) {
-            phantom.injectJs(include);
-        });
         this.exec(testFile);
     };
 

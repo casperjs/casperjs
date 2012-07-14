@@ -1,6 +1,8 @@
 var fs = require('fs');
 
-casper.start('tests/site/index.html', function() {
+// FIXME: we're using local url scheme until https://github.com/ariya/phantomjs/pull/288 is
+// possibly merged
+casper.start('file://' + phantom.casperPath + '/tests/site/index.html', function() {
     var imageUrl = 'file://' + phantom.casperPath + '/tests/site/images/phantom.png';
     var image = this.base64encode(imageUrl);
 

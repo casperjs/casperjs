@@ -80,7 +80,7 @@ casper.then(function() {
 
     t.comment('Tester.assertHttpStatus()');
     // using file:// protocol, HTTP status is always null
-    t.assertHttpStatus(null, 'Tester.assertHttpStatus() works as expected');
+    t.assertHttpStatus(200, 'Tester.assertHttpStatus() works as expected');
 
     t.comment('Tester.assertMatch()');
     t.assertMatch("the lazy dog", /lazy/, 'Tester.assertMatch() works as expected');
