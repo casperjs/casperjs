@@ -250,6 +250,17 @@ if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
         } else if (phantom.casperArgs.get(0) === "test") {
             phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
             phantom.casperArgs.drop("test");
+        } else if (phantom.casperArgs.get(0) === "selftest") {
+            phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
+            phantom.casperArgs.options.includes = fs.pathJoin(phantom.casperPath, 'tests', 'selftest.js');
+            if (phantom.casperArgs.args.length > 1) {
+                // we want a single test file
+                phantom.casperArgs.args.push(fs.pathJoin(phantom.casperPath, phantom.casperArgs.get(1)));
+            } else {
+                // run the whole casperjs test suite
+                phantom.casperArgs.args.push(fs.pathJoin(phantom.casperPath, 'tests', 'suites'));
+            }
+            phantom.casperArgs.drop("selftest");
         } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
             var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
             var f = require("utils").format;

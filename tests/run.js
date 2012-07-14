@@ -38,14 +38,6 @@ function checkIncludeFile(include) {
 casper.options.verbose = casper.cli.get('direct') || false;
 casper.options.logLevel = casper.cli.get('log-level') || "error";
 
-// overriding Casper.open to prefix all test urls
-casper.setFilter('open.location', function(location) {
-    if (!/^http/.test(location)) {
-        return f('file://%s/%s', fs.workingDirectory, location);
-    }
-    return location;
-});
-
 // test paths are passed as args
 if (casper.cli.args.length) {
     tests = casper.cli.args.filter(function(path) {
