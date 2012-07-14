@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1342031082911">
-    <link rel="stylesheet" href="css/casper.css?1342031082911">
+    <link rel="stylesheet" href="prettify/prettify.css?1342256821694">
+    <link rel="stylesheet" href="css/casper.css?1342256821694">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1243,7 +1243,7 @@ casper.run();</code></pre>
 calls.
 
 </p>
-<h3 id="casper.thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
+<h3 id="casper.thenOpen"><code>Casper#thenOpen(String location[, mixed options])</code></h3>
 
 <p>Adds a new navigation step for opening a new location, and optionally
 add a next step when its loaded.
@@ -1258,6 +1258,22 @@ add a next step when its loaded.
 
 casper.thenOpen('http://yahoo.fr/', function() {
     this.echo("Now I'm in your yahoo.")
+});
+
+casper.run();</code></pre>
+<p><span class="label label-success">Added in 1.0</span>
+You can also specify request settings by passing a <a href="#casper.open">setting object</a> as the second
+argument:
+
+</p>
+<pre><code class="javascript">casper.start().thenOpen('http://url.to/some/uri', {
+    method: "post",
+    data: {
+      username: 'chuck',
+      password: 'n0rr15'
+    }
+}, function() {
+    this.echo("POST request has been sent.")
 });
 
 casper.run();</code></pre>
@@ -2438,10 +2454,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=zpQ53UZ_p9A.fr./sv=1/am=!y-LKr2sJxIeYKm8EeQ/d=1/rs=AItRSTO7dQX7-RqqmeSDH2DfOjNtUIV0KQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1342031082911"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1342031082911"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1342031082911"></script>
-    <script type="text/javascript" src="js/application.js?1342031082911"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=kmg-PG9GKj0.fr./sv=1/am=!lyGc5tr3etuYn9V-kw/d=1/rs=AItRSTMlmqBbLzzGOO6SAvX7DBBs7MDXIQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1342256821694"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1342256821694"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1342256821694"></script>
+    <script type="text/javascript" src="js/application.js?1342256821694"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

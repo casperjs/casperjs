@@ -1202,7 +1202,7 @@ This method is basically a convenient a shortcut for chaining a
 [`then()`](#then) and an [`evaluate()`](#evaluate)
 calls.
 
-<h3 id="casper.thenOpen"><code>Casper#thenOpen(String location[, function then])</code></h3>
+<h3 id="casper.thenOpen"><code>Casper#thenOpen(String location[, mixed options])</code></h3>
 
 Adds a new navigation step for opening a new location, and optionally
 add a next step when its loaded.
@@ -1216,6 +1216,24 @@ casper.start('http://google.fr/').then(function() {
 
 casper.thenOpen('http://yahoo.fr/', function() {
     this.echo("Now I'm in your yahoo.")
+});
+
+casper.run();
+```
+
+<span class="label label-success">Added in 1.0</span>
+You can also specify request settings by passing a [setting object](#casper.open) as the second
+argument:
+
+```javascript
+casper.start().thenOpen('http://url.to/some/uri', {
+    method: "post",
+    data: {
+      username: 'chuck',
+      password: 'n0rr15'
+    }
+}, function() {
+    this.echo("POST request has been sent.")
 });
 
 casper.run();

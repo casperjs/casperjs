@@ -29,8 +29,8 @@ casper.run(function() {
 As you can see, `casper.test` is a reference to a [`tester.Tester`](api.html#tester) object
 instance, which is used to make the assertions and render the results.
 
-<span class="label label-info">Note</span> You can find the whole
-`tester.Tester` API documentation in the [dedicated section](api.html#tester).
+<span class="label label-info">Note</span>
+You can find the whole `tester.Tester` API documentation in the [dedicated section](api.html#tester).
 
 Now run the tests suite:
 
@@ -164,7 +164,7 @@ Some options are available using the `casperjs test` command:
   [related section](logging.html))
 - <span class="label label-success">Added in 1.0</span>
   `--includes=foo.js,bar.js` will includes the `foo.js` and `bar.js` files
-  before each suite execution
+  before the whole suite execution
 
 Sample custom command:
 
@@ -176,14 +176,19 @@ $ casperjs test --includes=foo.js,bar.js --direct --log-level=debug test1.js tes
 
 ### CasperJS own test suite
 
+<span class="label label-success">Added in 1.0</span>
 CasperJS has its own unit and functional test suite, located in the
-`tests` subfolder. More tests will be added in the future. To run the
-test suite, from the root of a checkout of the casperjs repository:
+`tests` subfolder. To run this test suite:
 
 ```
 $ cd /path/to/casperjs
-$ casperjs test tests/suites
+$ casperjs selftest
 ```
+
+<span class="label label-info">Note</span>
+Running this test suite is a great way to find any bug on your platform. If it fails, feel free to
+[file an issue](https://github.com/n1k0/casperjs/issues/new) or to ask on the
+[CasperJS mailing-list](https://groups.google.com/forum/#!forum/casperjs).
 
 * * * * *
 
