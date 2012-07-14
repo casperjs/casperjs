@@ -107,7 +107,18 @@ var Tester = function Tester(casper, options) {
         }
         if (failure.values && Object.keys(failure.values).length > 0) {
             for (var name in failure.values) {
-                this.comment('   ' + name + ': ' + utils.serialize(failure.values[name]));
+                var comment = '   ' + name + ': ';
+                var value = failure.values[name];
+                try {
+                    comment += utils.serialize(failure.values[name]);
+                } catch (e) {
+                    try {
+                        comment += utils.serialize(failure.values[name].toString());
+                    } catch (e) {
+                        comment += '(unserializable value)';
+                    }
+                }
+                this.comment(comment);
             }
         }
     });
