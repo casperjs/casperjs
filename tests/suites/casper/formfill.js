@@ -62,7 +62,7 @@ casper.thenOpen('tests/site/multiple-forms.html', function() {
 
 casper.then(function() {
     this.test.assertUrlMatch(/\?f=f2&yo=ok$/, 'Casper.fill() handles multiple forms');
-}),
+});
 
 casper.run(function() {
     this.test.done();
