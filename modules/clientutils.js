@@ -551,7 +551,7 @@
                                     e.checked = (e.value === value);
                                 });
                             } else {
-                                out = 'Urovided radio elements are empty';
+                                out = 'Provided radio elements are empty';
                             }
                             break;
                         default:
