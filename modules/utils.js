@@ -146,7 +146,6 @@
                 value = value[property];
             } else {
                 value = undefined;
-                return;
             }
         });
         return value;
