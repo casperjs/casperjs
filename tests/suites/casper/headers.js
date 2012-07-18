@@ -22,6 +22,7 @@ function dumpHeaders () {
 
 casper.start('tests/site/index.html', function thenLocalPage () {
     this.test.assertEquals(casper.getCurrentHeader('Status'), null, 'No Status header on local page');
+    this.test.assertEquals(casper.getCurrentHeader('Content-Language'), null, 'No Content-Language on local page');
     this.test.assert(casper.getCurrentHeaders().length === 0, 'No headers sent back');
 });
 
