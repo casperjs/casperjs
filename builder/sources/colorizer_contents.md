@@ -2,7 +2,7 @@ Casper ships with a `colorizer` module which contains a `Colorizer`
 class which can print stuff to the console output in color:
 
 ```javascript
-var colorizer = require('colorizer').create();
+var colorizer = require('colorizer').create('Colorizer');
 console.log(colorizer.colorize("Hello World", "INFO"));
 ```
 
@@ -13,6 +13,23 @@ Though most of the times you will use it transparently using the
 casper.echo('an informative message', 'INFO'); // printed in green
 casper.echo('an error message', 'ERROR');      // printed in red
 ```
+
+<h3 id="colorizer.Dummy">Skipping CasperJS styling operations</h3>
+
+If you wish to skip the whole coloration operation and get uncolored plain text, just set the
+`colorizerType` casper option to `Dummy`:
+
+```javascript
+var casper = require('casper').create({
+    colorizerType: 'Dummy'
+});
+
+casper.echo("Hello", "INFO");
+```
+
+<span class="label label-info">Note</span>
+That's especially useful if you're using CapserJS on the Windows platform, as there's no support
+for colored output on this platform.
 
 <h3 id="colorizer.styles">Available predefined styles</h3>
 
@@ -42,9 +59,9 @@ var colorizer = require('colorizer').create();
 console.log(colorizer.colorize("I'm a red error", "ERROR"));
 ```
 
-<span class="label label-info">Note</span> Most of the time you won't have to
-use a `Colorizer` instance directly as CasperJS provides all the necessary
-methods.
+<span class="label label-info">Note</span>
+Most of the time you won't have to use a `Colorizer` instance directly as CasperJS provides all the
+necessary methods.
 
 See the list of the [predefined styles available](#colorizer.styles).
 

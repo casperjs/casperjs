@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1342256821694">
-    <link rel="stylesheet" href="css/casper.css?1342256821694">
+    <link rel="stylesheet" href="prettify/prettify.css?1342605221939">
+    <link rel="stylesheet" href="css/casper.css?1342605221939">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1793,7 +1793,7 @@ casper.run();</code></pre>
 class which can print stuff to the console output in color:
 
 </p>
-<pre><code class="javascript">var colorizer = require('colorizer').create();
+<pre><code class="javascript">var colorizer = require('colorizer').create('Colorizer');
 console.log(colorizer.colorize("Hello World", "INFO"));</code></pre>
 <p>Though most of the times you will use it transparently using the
 <a href="api.html#echo"><code>Casper.echo()</code></a> method:
@@ -1801,6 +1801,22 @@ console.log(colorizer.colorize("Hello World", "INFO"));</code></pre>
 </p>
 <pre><code class="javascript">casper.echo('an informative message', 'INFO'); // printed in green
 casper.echo('an error message', 'ERROR');      // printed in red</code></pre>
+<h3 id="colorizer.Dummy">Skipping CasperJS styling operations</h3>
+
+<p>If you wish to skip the whole coloration operation and get uncolored plain text, just set the
+<code>colorizerType</code> casper option to <code>Dummy</code>:
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create({
+    colorizerType: 'Dummy'
+});
+
+casper.echo("Hello", "INFO");</code></pre>
+<p><span class="label label-info">Note</span>
+That's especially useful if you're using CapserJS on the Windows platform, as there's no support
+for colored output on this platform.
+
+</p>
 <h3 id="colorizer.styles">Available predefined styles</h3>
 
 <p>Available predefined styles are:
@@ -1831,9 +1847,9 @@ predefined style.
 </p>
 <pre><code class="javascript">var colorizer = require('colorizer').create();
 console.log(colorizer.colorize("I'm a red error", "ERROR"));</code></pre>
-<p><span class="label label-info">Note</span> Most of the time you won't have to
-use a <code>Colorizer</code> instance directly as CasperJS provides all the necessary
-methods.
+<p><span class="label label-info">Note</span>
+Most of the time you won't have to use a <code>Colorizer</code> instance directly as CasperJS provides all the
+necessary methods.
 
 </p>
 <p>See the list of the <a href="#colorizer.styles">predefined styles available</a>.
@@ -2454,10 +2470,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=kmg-PG9GKj0.fr./sv=1/am=!lyGc5tr3etuYn9V-kw/d=1/rs=AItRSTMlmqBbLzzGOO6SAvX7DBBs7MDXIQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1342256821694"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1342256821694"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1342256821694"></script>
-    <script type="text/javascript" src="js/application.js?1342256821694"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=rKDO5nzPUSk.fr./sv=1/am=!V1HSHW0XVB-YepGbpQ/d=1/rs=AItRSTPGKcg2EMstyyqObJc-s_BileKPHw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1342605221939"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1342605221939"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1342605221939"></script>
+    <script type="text/javascript" src="js/application.js?1342605221939"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
