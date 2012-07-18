@@ -730,6 +730,38 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
 };
 
 /**
+ * Retrieves all the currentResponse headers
+ * Each item follows this structure: `{name: 'Header-Name', value: 'Header-Value'}`.
+ *
+ * @return Array
+ */
+Casper.prototype.getCurrentHeaders = function getCurrentHeaders() {
+    "use strict";
+
+    return this.currentResponse === undefined ? [] : this.currentResponse.headers;
+};
+
+/**
+ * Retrieves a given header based on its name
+ *
+ * @param   String  name    A case-sensitive response header name
+ * @return  mixed   A header string or `null` if not found
+ */
+Casper.prototype.getCurrentHeader = function getCurrentHeader(name) {
+    "use strict";
+
+    var headerValue = null;
+
+    this.getCurrentHeaders().some(function(header){
+        if (header.name === name){
+            headerValue = header.value;
+        }
+    });
+
+    return headerValue;
+};
+
+/**
  * Retrieves the value of an attribute on the first element matching the provided
  * DOM CSS3/XPath selector.
  *
