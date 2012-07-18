@@ -3,6 +3,7 @@ if (!phantom.casperLoaded) {
     phantom.exit(1);
 }
 
+var colorizer = require('colorizer');
 var fs = require('fs');
 var utils = require('utils');
 var f = utils.format;
@@ -37,6 +38,11 @@ function checkIncludeFile(include) {
 // parse some options from cli
 casper.options.verbose = casper.cli.get('direct') || false;
 casper.options.logLevel = casper.cli.get('log-level') || "error";
+if (casper.cli.get('no-colors')) {
+    var cls = 'Dummy';
+    casper.options.colorizerType = cls;
+    casper.colorizer = colorizer.create(cls);
+}
 
 // test paths are passed as args
 if (casper.cli.args.length) {
