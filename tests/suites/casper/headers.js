@@ -20,12 +20,12 @@ function dumpHeaders () {
     });
 }
 
-casper.start('tests/site/index.html', function thenLocalPage () {
-    this.test.assertEquals(casper.currentResponse, undefined, 'No response available on local page');
+casper.start('tests/site/index.html', function thenLocalPage (response) {
+    this.test.assertEquals(response, undefined, 'No response available on local page');
 });
 
-casper.thenOpen('http://localhost:8090/', function thenLocalhost () {
-    var headers = casper.currentResponse.headers;
+casper.thenOpen('http://localhost:8090/', function thenLocalhost (response) {
+    var headers = response.headers;
 
     this.test.assertEquals(headers.get('Content-Language'), 'en', 'Checking existing header (case sensitive)');
     this.test.assertEquals(headers.get('content-language'), 'en', 'Checking existing header (case insensitive)');
