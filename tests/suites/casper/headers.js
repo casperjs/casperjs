@@ -32,6 +32,12 @@ casper.thenOpen('http://localhost:8090/', function thenLocalhost (response) {
     this.test.assertEquals(headers.get('X-Is-Troll'), null, 'Checking unexisting header');
 });
 
+casper.back();
+
+casper.then(function(response){
+    this.test.assertEquals(response, undefined, 'Response should match the one of the previous step');
+});
+
 casper.run(function () {
     server.close();
     this.test.done();
