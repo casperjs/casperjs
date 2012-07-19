@@ -27,8 +27,8 @@ casper.start('tests/site/index.html', function thenLocalPage () {
 casper.thenOpen('http://localhost:8090/', function thenLocalhost () {
     var headers = casper.currentResponse.headers;
 
-    this.test.assertEquals(headers.get('Content-Language'), 'en', 'Checking existing header');
-    this.test.assertEquals(headers.get('content-language'), null, 'Checking header typecase');
+    this.test.assertEquals(headers.get('Content-Language'), 'en', 'Checking existing header (case sensitive)');
+    this.test.assertEquals(headers.get('content-language'), 'en', 'Checking existing header (case insensitive)');
     this.test.assertEquals(headers.get('X-Is-Troll'), null, 'Checking unexisting header');
 });
 
