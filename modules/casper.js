@@ -1120,7 +1120,7 @@ Casper.prototype.runStep = function runStep(step) {
         }, this.options.stepTimeout, this, new Date().getTime(), this.test.currentSuiteNum + "-" + this.step);
     }
     this.emit('step.start', step);
-    stepResult = step.call(this, this);
+    stepResult = step.call(this, this.currentResponse || undefined);
     if (utils.isFunction(this.options.onStepComplete)) {
         this.options.onStepComplete.call(this, this, stepResult);
     }
