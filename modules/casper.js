@@ -1592,16 +1592,17 @@ responseHeaders.prototype = new Array;
 /**
  * Retrieves a given header based on its name
  *
- * @param   String  name    A case-sensitive response header name
+ * @param   String  name    A case-insensitive response header name
  * @return  mixed   A header string or `null` if not found
  */
 responseHeaders.prototype.get = function get(name){
     "use strict";
 
     var headerValue = null;
+    name = name.toLowerCase();
 
     this.some(function(header){
-        if (header.name === name){
+        if (header.name.toLowerCase() === name){
             headerValue = header.value;
             return true;
         }
