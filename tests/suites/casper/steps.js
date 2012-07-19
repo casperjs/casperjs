@@ -4,8 +4,9 @@ casper.start('tests/site/index.html');
 
 var nsteps = casper.steps.length;
 
-casper.then(function(self) {
+casper.then(function(response) {
     this.test.assertTitle('CasperJS test index', 'Casper.then() added a new step');
+    this.test.assert(response === undefined, 'Casper.then() response is undefined in local mode');
 });
 
 casper.test.assertEquals(casper.steps.length, nsteps + 1, 'Casper.then() can add a new step');
