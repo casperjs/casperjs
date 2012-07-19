@@ -28,7 +28,7 @@ casper.echo("Hello", "INFO");
 ```
 
 <span class="label label-info">Note</span>
-That's especially useful if you're using CapserJS on the Windows platform, as there's no support
+That's especially useful if you're using CasperJS on the Windows platform, as there's no support
 for colored output on this platform.
 
 <h3 id="colorizer.styles">Available predefined styles</h3>

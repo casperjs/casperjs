@@ -37,7 +37,7 @@ You are now ready to write your [first script](quickstart.html)!
 
 <span class="label label-info">Note</span>
 The `casperjs` executable is written in [Python](http://python.org/), so please ensure
-that a Python interepreter is available on your platform.
+that a Python interpreter is available on your platform.
 
 ## Ruby version
 

@@ -117,7 +117,7 @@ Merges two objects recursively.
 
 <h3 id="utils.node"><code>utils.node(name, attributes)</code></h3>
 
-Creates an (HT|X)ML element, having opitonal `attributes` added.
+Creates an (HT|X)ML element, having optional `attributes` added.
 
 <h3 id="utils.serialize"><code>utils.serialize(value)</code></h3>
 
