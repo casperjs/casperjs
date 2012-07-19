@@ -755,6 +755,7 @@ Casper.prototype.getCurrentHeader = function getCurrentHeader(name) {
     this.getCurrentHeaders().some(function(header){
         if (header.name === name){
             headerValue = header.value;
+            return true;
         }
     });
 
