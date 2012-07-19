@@ -730,39 +730,6 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
 };
 
 /**
- * Retrieves all the currentResponse headers
- * Each item follows this structure: `{name: 'Header-Name', value: 'Header-Value'}`.
- *
- * @return Array
- */
-Casper.prototype.getCurrentHeaders = function getCurrentHeaders() {
-    "use strict";
-
-    return this.currentResponse === undefined ? [] : this.currentResponse.headers;
-};
-
-/**
- * Retrieves a given header based on its name
- *
- * @param   String  name    A case-sensitive response header name
- * @return  mixed   A header string or `null` if not found
- */
-Casper.prototype.getCurrentHeader = function getCurrentHeader(name) {
-    "use strict";
-
-    var headerValue = null;
-
-    this.getCurrentHeaders().some(function(header){
-        if (header.name === name){
-            headerValue = header.value;
-            return true;
-        }
-    });
-
-    return headerValue;
-};
-
-/**
  * Retrieves the value of an attribute on the first element matching the provided
  * DOM CSS3/XPath selector.
  *
@@ -1616,6 +1583,33 @@ Casper.extend = function(proto) {
 
 exports.Casper = Casper;
 
+/*
+ * Building an Array subclass
+ */
+function responseHeaders(){}
+responseHeaders.prototype = new Array;
+
+/**
+ * Retrieves a given header based on its name
+ *
+ * @param   String  name    A case-sensitive response header name
+ * @return  mixed   A header string or `null` if not found
+ */
+responseHeaders.prototype.get = function get(name){
+    "use strict";
+
+    var headerValue = null;
+
+    this.some(function(header){
+        if (header.name === name){
+            headerValue = header.value;
+            return true;
+        }
+    });
+
+    return headerValue;
+};
+
 /**
  * Creates a new WebPage instance for Casper use.
  *
@@ -1706,6 +1700,8 @@ function createPage(casper) {
         return casper.filter('page.prompt', message, value);
     };
     page.onResourceReceived = function onResourceReceived(resource) {
+        resource.headers.__proto__ = responseHeaders.prototype;
+
         casper.emit('resource.received', resource);
         if (utils.isFunction(casper.options.onResourceReceived)) {
             casper.options.onResourceReceived.call(casper, casper, resource);
