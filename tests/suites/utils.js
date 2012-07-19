@@ -1,4 +1,6 @@
-var utils = require('utils'), t = casper.test, x = require('casper').selectXPath;
+var utils = require('utils'),
+    t = casper.test,
+    x = require('casper').selectXPath;
 
 t.comment('fileExt()');
 (function() {
