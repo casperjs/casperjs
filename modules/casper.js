@@ -1628,34 +1628,6 @@ Casper.extend = function(proto) {
 
 exports.Casper = Casper;
 
-/*
- * Building an Array subclass
- */
-function responseHeaders(){}
-responseHeaders.prototype = new Array;
-
-/**
- * Retrieves a given header based on its name
- *
- * @param   String  name    A case-insensitive response header name
- * @return  mixed   A header string or `null` if not found
- */
-responseHeaders.prototype.get = function get(name){
-    "use strict";
-
-    var headerValue = null;
-    name = name.toLowerCase();
-
-    this.some(function(header){
-        if (header.name.toLowerCase() === name){
-            headerValue = header.value;
-            return true;
-        }
-    });
-
-    return headerValue;
-};
-
 /**
  * Creates a new WebPage instance for Casper use.
  *
@@ -1750,7 +1722,7 @@ function createPage(casper) {
         return casper.filter('page.prompt', message, value);
     };
     page.onResourceReceived = function onResourceReceived(resource) {
-        resource.headers.__proto__ = responseHeaders.prototype;
+        require('http').augmentResponse(resource);
 
         casper.emit('resource.received', resource);
         if (utils.isFunction(casper.options.onResourceReceived)) {
