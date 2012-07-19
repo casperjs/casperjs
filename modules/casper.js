@@ -1100,7 +1100,7 @@ Casper.prototype.runStep = function runStep(step) {
         }, this.options.stepTimeout, this, new Date().getTime(), this.step);
     }
     this.emit('step.start', step);
-    stepResult = step.call(this, this.currentResponse || undefined);
+    stepResult = step.call(this, this.currentResponse);
     if (utils.isFunction(this.options.onStepComplete)) {
         this.options.onStepComplete.call(this, this, stepResult);
     }
