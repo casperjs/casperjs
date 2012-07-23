@@ -495,6 +495,7 @@ var Tester = function Tester(casper, options) {
      *
      */
     this.done = function done() {
+        this.emit('test.done');
         this.running = false;
     };
 
