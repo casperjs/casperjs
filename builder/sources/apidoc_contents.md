@@ -943,6 +943,21 @@ casper.then(function() {
 casper.run();
 ```
 
+To pass nested parameters arrays:
+
+``` javascript
+casper.open('http://some.testserver.com/post.php', {
+       method: 'post',
+       data: {
+            'standard_param': 'foo',
+            'nested_param[]': [       // please note the use of square brackets!
+                'Something',
+                'Something else'
+            ]
+       }
+});
+```
+
 <span class="label label-success">Added in 1.0</span>
 <span class="label label-info">PhantomJS >= 1.6</span>
 You can also set custom request headers to send when performing an outgoing
