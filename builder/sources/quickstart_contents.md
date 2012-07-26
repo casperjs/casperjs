@@ -1,5 +1,5 @@
 In the following example, we'll query google for two terms consecutively,
-_"capserjs"_ and _"phantomjs"_, aggregate the result links in a standard `Array`
+_"casperjs"_ and _"phantomjs"_, aggregate the result links in a standard `Array`
 and output the result to the console.
 
 Fire up your favorite editor and save the javascript code below in a
