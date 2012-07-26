@@ -335,6 +335,20 @@
         };
 
         /**
+         * Retrieves total document height.
+         * http://james.padolsey.com/javascript/get-document-height-cross-browser/
+         *
+         * @return {Number}
+         */
+        this.getDocumentHeight = function getDocumentHeight() {
+            return Math.max(
+                Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
+                Math.max(document.body.offsetHeight, document.documentElement.offsetHeight),
+                Math.max(document.body.clientHeight, document.documentElement.clientHeight)
+            );
+        };
+
+        /**
          * Retrieves bounding rect coordinates of the HTML element matching the
          * provided CSS3 selector
          *
