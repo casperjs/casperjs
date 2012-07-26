@@ -51,7 +51,6 @@ EventEmitter.prototype.emit = function() {
       } else {
         throw new CasperError("Uncaught, unspecified 'error' event.");
       }
-      return false;
     }
   }
 

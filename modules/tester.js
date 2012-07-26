@@ -672,7 +672,7 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
-     * Render tests results, an optionnaly exit phantomjs.
+     * Render tests results, an optionally exit phantomjs.
      *
      * @param  Boolean  exit
      */
@@ -796,7 +796,7 @@ var Tester = function Tester(casper, options) {
      * file.
      *
      * @param  Error|String  error      The error
-     * @param  String        file       Test file where the error occured
+     * @param  String        file       Test file where the error occurred
      * @param  Number        line       Line number (optional)
      */
     this.uncaughtError = function uncaughtError(error, file, line) {

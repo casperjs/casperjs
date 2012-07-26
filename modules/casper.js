@@ -193,7 +193,7 @@ Casper.prototype.back = function back() {
 };
 
 /**
- * Encodes a resource using the base64 algorithm synchroneously using
+ * Encodes a resource using the base64 algorithm synchronously using
  * client-side XMLHttpRequest.
  *
  * NOTE: we cannot use window.btoa() for some strange reasons here.
@@ -851,7 +851,7 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
  *
  * @param  String  message  The message to log
  * @param  String  level    The log message level (from Casper.logLevels property)
- * @param  String  space    Space from where the logged event occured (default: "phantom")
+ * @param  String  space    Space from where the logged event occurred (default: "phantom")
  * @return Casper
  */
 Casper.prototype.log = function log(message, level, space) {
