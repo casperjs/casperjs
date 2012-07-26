@@ -136,6 +136,24 @@ casper.start('http://foo.bar/', function() {
 casper.run();
 ```
 
+<h3 id="clientutils.getDocumentHeight"><code>ClientUtils#getDocumentHeight()</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Retrieves current document height.
+
+```javascript
+var documentHeight;
+
+casper.start('http://google.com/', function() {
+    documentHeight = this.evaluate(function() {
+        return __utils__.getDocumentHeight();
+    });
+    this.echo('Document height is ' + documentHeight + 'px');
+});
+
+casper.run();
+```
+
 <h3 id="clientutils.getElementBounds"><code>Casper#getElementBounds(String <a href="selectors.html">selector</a>)</code></h3>
 
 Retrieves boundaries for a DOM element matching the provided
