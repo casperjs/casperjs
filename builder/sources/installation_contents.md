@@ -72,7 +72,7 @@ var casper = require('casper').create();
 // do stuff
 ```
 
-Then just run your script using the `python.exe` program.
+Then just run your script using the `phantom.exe` program.
 
 <span class="label label-info">Note</span>
 There is no output coloration when running CasperJS on Microsoft platforms.
