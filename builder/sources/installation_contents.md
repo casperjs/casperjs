@@ -47,13 +47,13 @@ available in the `bin/` directory; in order to use the ruby version instead
 of the python one:
 
 ```
-$ ln -sf `pwd`/bin/casperjs_ruby /usr/local/bin/casperjs
+$ ln -sf `pwd`/rubybin/casperjs /usr/local/bin/casperjs
 ```
 
 Or using the ruby interpreter:
 
 ```
-$ ruby /path/to/casperjs/bin/casperjs_ruby
+$ ruby /path/to/casperjs/rubybin/casperjs
 CasperJS version {{version}} at /Users/niko/Sites/casperjs, using PhantomJS version 1.6.0
 ...
 ```
