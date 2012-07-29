@@ -398,6 +398,46 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
+     * Asserts that given text exists in the provided selector.
+     *
+     * @param  String   selector  Selector expression
+     * @param  String   text      Text to be found
+     * @param  String   message   Test description
+     * @return Object             An assertion result object
+     */
+    this.assertSelectorHasText = function assertSelectorHasText(selector, text, message) {
+        var textFound = casper.fetchText(selector).indexOf(text) !== -1;
+        return this.assert(textFound, message, {
+            type: "assertTextInSelector",
+            standard: f('Found %s within the selector %s', this.colorize(text, 'COMMENT'), this.colorize(selector, 'COMMENT')),
+            values: {
+                selector: selector,
+                text: text
+            }
+        });
+    };
+
+    /**
+     * Asserts that given text does not exist in the provided selector.
+     *
+     * @param  String   selector  Selector expression
+     * @param  String   text      Text not to be found
+     * @param  String   message   Test description
+     * @return Object             An assertion result object
+     */
+    this.assertSelectorDoesntHaveText = function assertSelectorDoesntHaveText(selector, text, message) {
+        var textFound = casper.fetchText(selector).indexOf(text) === -1;
+        return this.assert(textFound, message, {
+            type: "assertNoTextInSelector",
+            standard: f('Did not find %s within the selector %s', this.colorize(text, 'COMMENT'), this.colorize(selector, 'COMMENT')),
+            values: {
+                selector: selector,
+                text: text
+            }
+        });
+    };
+
+    /**
      * Asserts that title of the remote page equals to the expected one.
      *
      * @param  String  expected  The expected title string

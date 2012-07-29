@@ -50,6 +50,12 @@ casper.thenOpen('tests/site/index.html', function() {
 
     t.comment('Tester.assertTextExists()');
     t.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
+
+    t.comment('Tester.assertSelectorHasText()');
+    t.assertSelectorHasText('h1', 'Title', 'Tester.assertSelectorHasText() works as expected');
+
+    t.comment('Tester.assertSelectorDoesntHaveText()');
+    t.assertSelectorDoesntHaveText('h1', 'Subtitle', 'Tester.assertSelectorDoesntHaveText() works as expected');
 });
 
 casper.then(function() {
