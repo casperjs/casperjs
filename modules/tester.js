@@ -220,6 +220,30 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
+     * Asserts that a given input field has the provided value.
+     *
+     * @param  String   input_name      The name attribute of the input element
+     * @param  String   expected_value  The expected value of the input element
+     * @param  String   message         Test description
+     * @return Object                   An assertion result object
+     */
+    this.assertField = function assertField(input_name, expected_value, message) {
+        var actual_value = casper.evaluate(function(input_name) {
+            var input = document.querySelector('input[name="' + input_name + '"]');
+            return input ? input.value : null;
+        }, { input_name: input_name });
+        return this.assert(this.testEquals(actual_value, expected_value), message, {
+            type: 'assertField',
+            standard: f('%s input field has the value %s', this.colorize(input_name, 'COMMENT'), this.colorize(expected_value, 'COMMENT')),
+            values:  {
+                input_name: input_name,
+                actual_value: actual_value,
+                expected_value: expected_value
+            }
+        });
+    };
+
+    /**
      * Asserts that an element matching the provided selector expression exists in
      * remote DOM.
      *

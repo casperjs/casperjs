@@ -45,6 +45,9 @@ var expected = [
 t.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
 
 casper.thenOpen('tests/site/index.html', function() {
+    t.comment('Tester.assertField()');
+    t.assertField('dummy_name', 'dummy_value', 'Tester.assertField() works as expected');
+
     t.comment('Tester.assertTextExists()');
     t.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
 });
