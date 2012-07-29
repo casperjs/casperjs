@@ -354,7 +354,7 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
-     * Asserts that given text exits in the document body.
+     * Asserts that given text exists in the document body.
      *
      * @param  String  text     Text to be found
      * @param  String  message  Test description
