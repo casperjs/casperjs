@@ -1087,7 +1087,7 @@ Casper.prototype.runStep = function runStep(step) {
     if (utils.isNumber(this.options.stepTimeout) && this.options.stepTimeout > 0) {
         var stepTimeoutCheckInterval = setInterval(function _check(self, start, stepNum) {
             if (new Date().getTime() - start > self.options.stepTimeout) {
-                if (self.step === stepNum) {
+                if ((self.test.currentSuiteNum + "-" + self.step) === stepNum) {
                     self.emit('step.timeout');
                     if (utils.isFunction(self.options.onStepTimeout)) {
                         self.options.onStepTimeout.call(self, self);
@@ -1097,7 +1097,7 @@ Casper.prototype.runStep = function runStep(step) {
                 }
                 clearInterval(stepTimeoutCheckInterval);
             }
-        }, this.options.stepTimeout, this, new Date().getTime(), this.step);
+        }, this.options.stepTimeout, this, new Date().getTime(), this.test.currentSuiteNum + "-" + this.step);
     }
     this.emit('step.start', step);
     stepResult = step.call(this, this);
