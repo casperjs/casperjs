@@ -117,6 +117,7 @@ var Casper = function Casper(options) {
     this.defaultWaitTimeout = 5000;
     this.history = [];
     this.loadInProgress = false;
+    this.navigationRequested = false;
     this.logFormats = {};
     this.logLevels = ["debug", "info", "warning", "error"];
     this.logStyles = {
@@ -316,7 +317,7 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
-    if (self.pendingWait || self.loadInProgress) {
+    if (self.pendingWait || self.loadInProgress || self.navigationRequested) {
         return;
     }
     var step = self.steps[self.step++];
@@ -1667,6 +1668,9 @@ function createPage(casper) {
     page.onNavigationRequested = function onNavigationRequested(url, navigationType, navigationLocked, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, lock=%s, isMainFrame=%s',
                      url, navigationType, navigationLocked, isMainFrame), "debug");
+        if(isMainFrame) {
+            casper.navigationRequested  = true;
+        }                     
         casper.emit('navigation.requested', url, navigationType, navigationLocked, isMainFrame);
     };
     page.onPrompt = function onPrompt(message, value) {
@@ -1701,6 +1705,7 @@ function createPage(casper) {
     };
     page.onUrlChanged = function onUrlChanged(url) {
         casper.log(f('url changed to "%s"', url), "debug");
+        casper.navigationRequested = false;
         casper.emit('url.changed', url);
     };
     casper.emit('page.created', page);
