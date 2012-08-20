@@ -57,7 +57,7 @@
 
         // public members
         this.options = options || {};
-
+        this.options.scope = this.options.scope || document;
         /**
          * Clicks on the DOM element behind the provided selector.
          *
@@ -243,7 +243,7 @@
          * @return NodeList|undefined
          */
         this.findAll = function findAll(selector, scope) {
-            scope = scope || document;
+            scope = scope || this.options.scope;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
@@ -264,7 +264,7 @@
          * @return HTMLElement|undefined
          */
         this.findOne = function findOne(selector, scope) {
-            scope = scope || document;
+            scope = scope || this.options.scope;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
