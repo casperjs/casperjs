@@ -1639,6 +1639,7 @@ function createPage(casper) {
             }
             message += ': ' + casper.requestUrl;
             casper.log(message, "warning");
+            casper.navigationRequested = false;
             if (utils.isFunction(casper.options.onLoadError)) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
