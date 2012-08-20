@@ -455,7 +455,7 @@ Casper.prototype.die = function die(message, status) {
  */
 Casper.prototype.download = function download(url, targetPath, method, data) {
     "use strict";
-    var cu = require('clientutils').create(this.options);
+    var cu = require('clientutils').create(utils.mergeObjects({}, this.options));
     try {
         fs.write(targetPath, cu.decode(this.base64encode(url, method, data)), 'wb');
         this.emit('downloaded.file', targetPath);
