@@ -3,13 +3,14 @@ if (!phantom.casperLoaded) {
     phantom.exit(1);
 }
 
-var colorizer = require('colorizer');
-var fs = require('fs');
-var utils = require('utils');
-var f = utils.format;
+var fs       = require('fs');
+var utils    = require('utils');
+var f        = utils.format;
 var includes = [];
-var tests = [];
-var casper = require('casper').create({
+var pre      = [];
+var post     = [];
+var tests    = [];
+var casper   = require('casper').create({
     exitOnError: false
 });
 
@@ -63,6 +64,28 @@ if (casper.cli.has('includes')) {
         return utils.isString(include);
     });
     casper.test.includes = utils.unique(includes);
+}
+
+// pre handling
+if (casper.cli.has('pre')) {
+    pre = casper.cli.get('pre').split(',').map(function(unique_pre) {
+        // we can't use filter() directly because of abspath transformation
+        return checkIncludeFile(unique_pre);
+    }).filter(function(unique_pre) {
+        return utils.isString(unique_pre);
+    });
+    casper.test.pre = utils.unique(pre);
+}
+
+// post handling
+if (casper.cli.has('post')) {
+    post = casper.cli.get('post').split(',').map(function(unique_post) {
+        // we can't use filter() directly because of abspath transformation
+        return checkIncludeFile(unique_post);
+    }).filter(function(unique_post) {
+        return utils.isString(unique_post);
+    });
+    casper.test.post = utils.unique(post);
 }
 
 // test suites completion listener

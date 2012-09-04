@@ -56,6 +56,8 @@ var Tester = function Tester(casper, options) {
     this.currentTestFile = null;
     this.exporter = require('xunit').create();
     this.includes = [];
+    this.pre = [];
+    this.post = [];
     this.running = false;
     this.suites = [];
     this.options = utils.mergeObjects({
@@ -729,7 +731,9 @@ var Tester = function Tester(casper, options) {
                 self.bar(f("Path %s doesn't exist", path), "RED_BAR");
             }
             if (fs.isDirectory(path)) {
+                testFiles = testFiles.concat(this.pre);
                 testFiles = testFiles.concat(self.findTestFiles(path));
+                testFiles = testFiles.concat(this.post);
             } else if (fs.isFile(path)) {
                 testFiles.push(path);
             }
