@@ -3,14 +3,12 @@ if (!phantom.casperLoaded) {
     phantom.exit(1);
 }
 
-var fs       = require('fs');
-var utils    = require('utils');
-var f        = utils.format;
-var includes = [];
-var pre      = [];
-var post     = [];
-var tests    = [];
-var casper   = require('casper').create({
+var fs           = require('fs');
+var utils        = require('utils');
+var f            = utils.format;
+var loadIncludes = ['includes', 'pre', 'post'];
+var tests        = [];
+var casper       = require('casper').create({
     exitOnError: false
 });
 
@@ -56,37 +54,18 @@ if (casper.cli.args.length) {
 }
 
 // includes handling
-if (casper.cli.has('includes')) {
-    includes = casper.cli.get('includes').split(',').map(function(include) {
-        // we can't use filter() directly because of abspath transformation
-        return checkIncludeFile(include);
-    }).filter(function(include) {
-        return utils.isString(include);
-    });
-    casper.test.includes = utils.unique(includes);
-}
+this.loadIncludes.forEach(function(include){
+    var container;
+    if (casper.cli.has(include)) {
+        container = casper.cli.get(include).split(',').map(function(file) {
+            return checkIncludeFile(file);
+        }).filter(function(file) {
+            return utils.isString(file);
+        });
 
-// pre handling
-if (casper.cli.has('pre')) {
-    pre = casper.cli.get('pre').split(',').map(function(unique_pre) {
-        // we can't use filter() directly because of abspath transformation
-        return checkIncludeFile(unique_pre);
-    }).filter(function(unique_pre) {
-        return utils.isString(unique_pre);
-    });
-    casper.test.pre = utils.unique(pre);
-}
-
-// post handling
-if (casper.cli.has('post')) {
-    post = casper.cli.get('post').split(',').map(function(unique_post) {
-        // we can't use filter() directly because of abspath transformation
-        return checkIncludeFile(unique_post);
-    }).filter(function(unique_post) {
-        return utils.isString(unique_post);
-    });
-    casper.test.post = utils.unique(post);
-}
+        casper.test.loadIncludes[include] = utils.unique(container);
+    }
+});
 
 // test suites completion listener
 casper.test.on('tests.complete', function() {
