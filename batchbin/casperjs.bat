@@ -1,6 +1,6 @@
 @ECHO OFF
-set CASPER_BIN=%~dp0
 set CASPER_PATH=%~dp0..\
+set CASPER_BIN=%CASPER_PATH%bin\
 
 set PHANTOMJS_NATIVE_ARGS=(--cookies-file --config --debug --disk-cache --ignore-ssl-errors --load-images --load-plugins --local-storage-path --local-storage-quota --local-to-remote-url-access --max-disk-cache-size --output-encoding --proxy --proxy-auth --proxy-type --remote-debugger-port --remote-debugger-autorun --script-encoding --web-security)
 
