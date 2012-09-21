@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom require*/
+/*global CasperError console exports phantom require __utils__*/
 
 var colorizer = require('colorizer');
 var events = require('events');
@@ -587,7 +587,6 @@ Casper.prototype.exit = function exit(status) {
     "use strict";
     this.emit('exit', status);
     phantom.exit(status);
-    return this;
 };
 
 /**
@@ -709,12 +708,14 @@ Casper.prototype.getPageContent = function getPageContent() {
         return this.page.content;
     }
     // for some reason webkit/qtwebkit will always enclose body contents within html tags
-    var match = (new RegExp('^<html><head></head><body><pre.+?>(.*)</pre></body></html>$')).exec(this.page.content);
-    if (!match) {
-        // Non-HTML response
-        return this.page.content;
-    }
-    return match[1];
+    var sanitizedHtml = this.evaluate(function checkHtml() {
+        if (__utils__.findOne('head').childNodes.length === 0 &&
+            __utils__.findOne('body').childNodes.length === 1 &&
+            __utils__.findOne('body pre[style]')) {
+            return __utils__.findOne('body pre').textContent.trim();
+        }
+    });
+    return sanitizedHtml ? sanitizedHtml : this.page.content;
 };
 
 /**
