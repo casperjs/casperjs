@@ -276,16 +276,18 @@ if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
             phantom.casperScript = phantom.casperArgs.get(0);
         }
 
-        if (!fs.isFile(phantom.casperScript)) {
-            console.error('Unable to open file: ' + phantom.casperScript);
-            phantom.exit(1);
+        if (phantom.casperScript) {
+            if (!fs.isFile(phantom.casperScript)) {
+                console.error('Unable to open file: ' + phantom.casperScript);
+                phantom.exit(1);
+            } else {
+                // filter out the called script name from casper args
+                phantom.casperArgs.drop(phantom.casperScript);
+
+                // passed casperjs script execution
+                phantom.injectJs(phantom.casperScript);
+            }
         }
-
-        // filter out the called script name from casper args
-        phantom.casperArgs.drop(phantom.casperScript);
-
-        // passed casperjs script execution
-        phantom.injectJs(phantom.casperScript);
     };
 
     if (!phantom.casperLoaded) {
