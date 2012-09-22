@@ -55,7 +55,11 @@ var Tester = function Tester(casper, options) {
 
     this.currentTestFile = null;
     this.exporter = require('xunit').create();
-    this.includes = [];
+    this.loadIncludes = {
+        includes: [],
+        pre:      [],
+        post:     []
+    };
     this.running = false;
     this.suites = [];
     this.options = utils.mergeObjects({
@@ -721,9 +725,14 @@ var Tester = function Tester(casper, options) {
         if (arguments.length === 0) {
             throw new CasperError("runSuites() needs at least one path argument");
         }
-        this.includes.forEach(function(include) {
+        this.loadIncludes.includes.forEach(function(include) {
             phantom.injectJs(include);
         });
+
+        this.loadIncludes.pre.forEach(function(include) {
+            testFiles = testFiles.concat(include);
+        });
+
         Array.prototype.forEach.call(arguments, function _forEach(path) {
             if (!fs.exists(path)) {
                 self.bar(f("Path %s doesn't exist", path), "RED_BAR");
@@ -734,6 +743,11 @@ var Tester = function Tester(casper, options) {
                 testFiles.push(path);
             }
         });
+
+        this.loadIncludes.post.forEach(function(include) {
+            testFiles = testFiles.concat(include);
+        });
+
         if (testFiles.length === 0) {
             this.bar(f("No test file found in %s, aborting.", Array.prototype.slice.call(arguments)), "RED_BAR");
             casper.exit(1);
