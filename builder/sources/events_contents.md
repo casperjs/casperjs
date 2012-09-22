@@ -54,7 +54,7 @@ parameters passed to their callback:
     <tr>
       <td><code>downloaded.file</code></td>
       <td><code>targetPath</code></td>
-      <td>Emitted when </td>
+      <td>Emitted when a file has been downloaded by <a href="api.html#casper.download"><code>Casper.download()</code></a>; <code>target</code> will contain the path to the downloaded file.</td>
     </tr>
     <tr>
       <td><code>error</code></td>
