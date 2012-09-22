@@ -725,15 +725,15 @@ var Tester = function Tester(casper, options) {
         if (arguments.length === 0) {
             throw new CasperError("runSuites() needs at least one path argument");
         }
-        this.loadIncludes.includes.forEach(function(include) {
+        this.loadIncludes.includes.forEach(function _forEachInclude(include) {
             phantom.injectJs(include);
         });
 
-        this.loadIncludes.pre.forEach(function(include) {
-            testFiles = testFiles.concat(include);
+        this.loadIncludes.pre.forEach(function _forEachPreTest(preTestFile) {
+            testFiles = testFiles.concat(preTestFile);
         });
 
-        Array.prototype.forEach.call(arguments, function _forEach(path) {
+        Array.prototype.forEach.call(arguments, function _forEachArgument(path) {
             if (!fs.exists(path)) {
                 self.bar(f("Path %s doesn't exist", path), "RED_BAR");
             }
@@ -744,8 +744,8 @@ var Tester = function Tester(casper, options) {
             }
         });
 
-        this.loadIncludes.post.forEach(function(include) {
-            testFiles = testFiles.concat(include);
+        this.loadIncludes.post.forEach(function _forEachPostTest(postTestFile) {
+            testFiles = testFiles.concat(postTestFile);
         });
 
         if (testFiles.length === 0) {
