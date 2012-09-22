@@ -1672,7 +1672,7 @@ function createPage(casper) {
                      url, navigationType, navigationLocked, isMainFrame), "debug");
         if(isMainFrame) {
             casper.navigationRequested  = true;
-        }                     
+        }
         casper.emit('navigation.requested', url, navigationType, navigationLocked, isMainFrame);
     };
     page.onPrompt = function onPrompt(message, value) {

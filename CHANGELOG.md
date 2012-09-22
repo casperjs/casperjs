@@ -7,8 +7,9 @@ XXXX-XX-XX, v1.0.0
 - fixed [#178](https://github.com/n1k0/casperjs/issues/178) - added `Casper.getPageContent()` to access raw page body contents on non-html received content-types.
 - fixed [#164](https://github.com/n1k0/casperjs/issues/164) - ability to force CLI parameters as strings (see [related documentation](http://casperjs.org/cli.html#raw)).
 - fixed [#153](https://github.com/n1k0/casperjs/issues/153) - erroneous mouse event results when event.preventDefault() was used.
-- closed [#180](https://github.com/n1k0/casperjs/issues/180) - CasperJS tests are now run against a local HTTP test server. A new `casper selftest` command has been added as well.
+- fixed [#180](https://github.com/n1k0/casperjs/issues/180) - CasperJS tests are now run against a local HTTP test server. A new `casper selftest` command has been added as well.
 - fixed [#204](https://github.com/n1k0/casperjs/pull/204) Fix for when the url is changed via javascript
+- fixed [#236](https://github.com/n1k0/casperjs/issues/236) - Casper.exit return `this` after calling `phantom.exit()` that may caused PhantomJS to hang
 - added [`ClientUtils.getDocumentHeight()`](http://casperjs.org/api.html#clientutils.getDocumentHeight)
 - added a `--no-colors` option to the `casper test` command to skip output coloration
 
