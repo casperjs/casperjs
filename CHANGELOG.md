@@ -10,6 +10,7 @@ XXXX-XX-XX, v1.0.0
 - fixed [#180](https://github.com/n1k0/casperjs/issues/180) - CasperJS tests are now run against a local HTTP test server. A new `casper selftest` command has been added as well.
 - fixed [#204](https://github.com/n1k0/casperjs/pull/204) - Fix for when the url is changed via javascript
 - fixed [#216](https://github.com/n1k0/casperjs/pull/216) - Change clientutils to be able to set a global scope
+- fixed [#219](https://github.com/n1k0/casperjs/issues/219) - ease chaining of `run()` calls ([more explanations](https://groups.google.com/forum/#!topic/casperjs/jdQ-CrgnUd8))
 - fixed [#236](https://github.com/n1k0/casperjs/issues/236) - Casper.exit return `this` after calling `phantom.exit()` that may caused PhantomJS to hang
 - fixed [#231](https://github.com/n1k0/casperjs/pull/231) - added `--pre` and `--post` options to the `casperjs test` command to load test files before and after the execution of testsuite 
 - fixed [#222](https://github.com/n1k0/casperjs/pull/222) & [#211](https://github.com/n1k0/casperjs/issues/211) - Change mouse event to include an X + Y value for click position
