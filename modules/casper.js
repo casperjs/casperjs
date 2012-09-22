@@ -505,7 +505,7 @@ Casper.prototype.echo = function echo(text, style, pad) {
         } catch (e) {
             try {
                 text = utils.serialize(text);
-            } catch (e) {
+            } catch (e2) {
                 text = '';
             }
         }
@@ -843,8 +843,9 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
     }
     // ClientUtils and Casper shares the same options
     // These are not the lines I'm the most proud of in my life, but it works.
+    /*global __options*/
     this.page.evaluate(function() {
-        window.__utils__ = new ClientUtils(__options);
+        window.__utils__ = new window.ClientUtils(__options);
     }.toString().replace('__options', JSON.stringify(this.options)));
 };
 
