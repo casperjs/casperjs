@@ -535,6 +535,23 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
+     * Asserts that a selector expression is currently visible.
+     *
+     * @param  String  expected  selector expression
+     * @param  String  message   Test description
+     * @return Object            An assertion result object
+     */
+    this.assertVisible = function assertType(selector, message) {
+        return this.assert(casper.visible(selector), message, {
+            type: "assertVisible",
+            standard: "Selector is visible",
+            values: {
+                selector: selector
+            }
+        });
+    };
+
+    /**
      * Prints out a colored bar onto the console.
      *
      */
