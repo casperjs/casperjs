@@ -272,7 +272,7 @@ var Tester = function Tester(casper, options) {
     this.assertExists = this.assertExist = this.assertSelectorExists = this.assertSelectorExist = function assertExists(selector, message) {
         return this.assert(casper.exists(selector), message, {
             type: "assertExists",
-            standard: f("Found an element matching %s", this.colorize(selector, 'COMMENT')),
+            standard: f("Found an element matching: %s", selector),
             values: {
                 selector: selector
             }
@@ -290,7 +290,7 @@ var Tester = function Tester(casper, options) {
     this.assertDoesntExist = this.assertNotExists = function assertDoesntExist(selector, message) {
         return this.assert(!casper.exists(selector), message, {
             type: "assertDoesntExist",
-            standard: f("No element matching selector %s is found", this.colorize(selector, 'COMMENT')),
+            standard: f("No element found matching selector: %s", selector),
             values: {
                 selector: selector
             }
@@ -308,7 +308,7 @@ var Tester = function Tester(casper, options) {
         var currentHTTPStatus = casper.currentHTTPStatus;
         return this.assert(this.testEquals(casper.currentHTTPStatus, status), message, {
             type: "assertHttpStatus",
-            standard: f("HTTP status code is %s", this.colorize(status, 'COMMENT')),
+            standard: f("HTTP status code is: %s", status),
             values: {
                 current: currentHTTPStatus,
                 expected: status
@@ -466,7 +466,7 @@ var Tester = function Tester(casper, options) {
         var currentTitle = casper.getTitle();
         return this.assert(this.testEquals(currentTitle, expected), message, {
             type: "assertTitle",
-            standard: f('Page title is "%s"', this.colorize(expected, 'COMMENT')),
+            standard: f('Page title is: "%s"', expected),
             values: {
                 subject: currentTitle,
                 expected: expected
@@ -505,7 +505,7 @@ var Tester = function Tester(casper, options) {
         var actual = utils.betterTypeOf(subject);
         return this.assert(this.testEquals(actual, type), message, {
             type: "assertType",
-            standard: f('Subject type is "%s"', this.colorize(type, 'COMMENT')),
+            standard: f('Subject type is: "%s"', type),
             values: {
                 subject: subject,
                 type: type,
