@@ -190,6 +190,7 @@ Casper.prototype.back = function back() {
         this.evaluate(function _evaluate() {
             history.back();
         });
+        this.currentResponse = this.resources.pop();
     });
 };
 
@@ -1722,8 +1723,11 @@ function createPage(casper) {
         return casper.filter('page.prompt', message, value);
     };
     page.onResourceReceived = function onResourceReceived(resource) {
-        require('http').augmentResponse(resource);
-
+        if (utils.isHTTPResource(resource)) {
+            require('http').augmentResponse(resource);
+        } else {
+            casper.log(f('Non-HTTP resource received from %s', resource.url), "debug");
+        }
         casper.emit('resource.received', resource);
         if (utils.isFunction(casper.options.onResourceReceived)) {
             casper.options.onResourceReceived.call(casper, casper, resource);
@@ -1732,13 +1736,17 @@ function createPage(casper) {
             casper.resources.push(resource);
         }
         if (resource.url === casper.requestUrl && resource.stage === "end") {
-            casper.currentResponse = resource;
-            casper.currentHTTPStatus = /^http/i.test(resource.url) ? resource.status : null;
-            casper.emit('http.status.' + resource.status, resource);
-            if (utils.isObject(casper.options.httpStatusHandlers) &&
-                resource.status in casper.options.httpStatusHandlers &&
-                utils.isFunction(casper.options.httpStatusHandlers[resource.status])) {
-                casper.options.httpStatusHandlers[resource.status].call(casper, casper, resource);
+            casper.currentHTTPStatus = null;
+            casper.currentResponse = undefined;
+            if (utils.isHTTPResource(resource)) {
+                casper.currentResponse = resource;
+                casper.currentHTTPStatus = resource.status;
+                casper.emit('http.status.' + resource.status, resource);
+                if (utils.isObject(casper.options.httpStatusHandlers) &&
+                    resource.status in casper.options.httpStatusHandlers &&
+                    utils.isFunction(casper.options.httpStatusHandlers[resource.status])) {
+                    casper.options.httpStatusHandlers[resource.status].call(casper, casper, resource);
+                }
             }
             casper.currentUrl = resource.url;
             casper.emit('location.changed', resource.url);

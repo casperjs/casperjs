@@ -118,6 +118,22 @@ t.comment('isClipRect()');
     });
 })();
 
+t.comment('isHTTPResource()');
+(function() {
+    testCases = [
+        [{},                              false],
+        [{url: 'file:///var/www/i.html'}, false],
+        [{url: 'mailto:plop@plop.com'},   false],
+        [{url: 'ftp://ftp.plop.com'},     false],
+        [{url: 'HTTP://plop.com/'},       true],
+        [{url: 'https://plop.com/'},      true]
+    ];
+
+    testCases.forEach(function(testCase) {
+        t.assertEquals(utils.isHTTPResource(testCase[0]), testCase[1], 'isHTTPResource() checks for an HTTP resource');
+    });
+})();
+
 t.comment('isObject()');
 (function() {
     t.assertEquals(utils.isObject({}), true, 'isObject() checks for an Object');

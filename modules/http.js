@@ -32,7 +32,7 @@
  * Building an Array subclass
  */
 function responseHeaders(){}
-responseHeaders.prototype = new Array;
+responseHeaders.prototype = [];
 
 /**
  * Retrieves a given header based on its name
@@ -42,17 +42,14 @@ responseHeaders.prototype = new Array;
  */
 responseHeaders.prototype.get = function get(name){
     "use strict";
-
     var headerValue = null;
     name = name.toLowerCase();
-
     this.some(function(header){
         if (header.name.toLowerCase() === name){
             headerValue = header.value;
             return true;
         }
     });
-
     return headerValue;
 };
 
@@ -62,7 +59,8 @@ responseHeaders.prototype.get = function get(name){
  * @param mixed response    Phantom response or undefined (generally with local files)
  */
 exports.augmentResponse = function(response) {
-    if (response === undefined) return;
-
+    if (response === undefined) {
+        return;
+    }
     response.headers.__proto__ = responseHeaders.prototype;
 };

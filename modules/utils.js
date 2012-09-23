@@ -250,6 +250,17 @@
     exports.isFunction = isFunction;
 
     /**
+     * Checks if passed resource involves an HTTP url.
+     *
+     * @param  Object  resource The PhantomJS HTTP resource object
+     * @return Boolean
+     */
+    function isHTTPResource(resource) {
+        return isObject(resource) && /^http/i.test(resource.url);
+    }
+    exports.isHTTPResource = isHTTPResource;
+
+    /**
      * Checks if a file is apparently javascript compatible (.js or .coffee).
      *
      * @param  String  file  Path to the file to test
