@@ -238,6 +238,30 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
+     * Asserts that a given input field has the provided value.
+     *
+     * @param  String   input_name      The name attribute of the input element
+     * @param  String   expected_value  The expected value of the input element
+     * @param  String   message         Test description
+     * @return Object                   An assertion result object
+     */
+    this.assertField = function assertField(input_name, expected_value, message) {
+        var actual_value = casper.evaluate(function(input_name) {
+            var input = document.querySelector('input[name="' + input_name + '"]');
+            return input ? input.value : null;
+        }, { input_name: input_name });
+        return this.assert(this.testEquals(actual_value, expected_value), message, {
+            type: 'assertField',
+            standard: f('%s input field has the value %s', this.colorize(input_name, 'COMMENT'), this.colorize(expected_value, 'COMMENT')),
+            values:  {
+                input_name: input_name,
+                actual_value: actual_value,
+                expected_value: expected_value
+            }
+        });
+    };
+
+    /**
      * Asserts that an element matching the provided selector expression exists in
      * remote DOM.
      *
@@ -372,7 +396,7 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
-     * Asserts that given text exits in the document body.
+     * Asserts that given text exists in the document body.
      *
      * @param  String  text     Text to be found
      * @param  String  message  Test description
@@ -386,6 +410,46 @@ var Tester = function Tester(casper, options) {
             type: "assertTextExists",
             standard: "Found expected text within the document body",
             values: {
+                text: text
+            }
+        });
+    };
+
+    /**
+     * Asserts that given text exists in the provided selector.
+     *
+     * @param  String   selector  Selector expression
+     * @param  String   text      Text to be found
+     * @param  String   message   Test description
+     * @return Object             An assertion result object
+     */
+    this.assertSelectorHasText = function assertSelectorHasText(selector, text, message) {
+        var textFound = casper.fetchText(selector).indexOf(text) !== -1;
+        return this.assert(textFound, message, {
+            type: "assertTextInSelector",
+            standard: f('Found %s within the selector %s', this.colorize(text, 'COMMENT'), this.colorize(selector, 'COMMENT')),
+            values: {
+                selector: selector,
+                text: text
+            }
+        });
+    };
+
+    /**
+     * Asserts that given text does not exist in the provided selector.
+     *
+     * @param  String   selector  Selector expression
+     * @param  String   text      Text not to be found
+     * @param  String   message   Test description
+     * @return Object             An assertion result object
+     */
+    this.assertSelectorDoesntHaveText = function assertSelectorDoesntHaveText(selector, text, message) {
+        var textFound = casper.fetchText(selector).indexOf(text) === -1;
+        return this.assert(textFound, message, {
+            type: "assertNoTextInSelector",
+            standard: f('Did not find %s within the selector %s', this.colorize(text, 'COMMENT'), this.colorize(selector, 'COMMENT')),
+            values: {
+                selector: selector,
                 text: text
             }
         });
