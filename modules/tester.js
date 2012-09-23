@@ -541,7 +541,7 @@ var Tester = function Tester(casper, options) {
      * @param  String  message   Test description
      * @return Object            An assertion result object
      */
-    this.assertVisible = function assertType(selector, message) {
+    this.assertVisible = function assertVisible(selector, message) {
         return this.assert(casper.visible(selector), message, {
             type: "assertVisible",
             standard: "Selector is visible",
