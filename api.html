@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1348331726416">
-    <link rel="stylesheet" href="css/casper.css?1348331726416">
+    <link rel="stylesheet" href="prettify/prettify.css?1348411297562">
+    <link rel="stylesheet" href="css/casper.css?1348411297562">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -2009,6 +2009,16 @@ remote DOM environment.
 casper.start('http://www.google.fr/', function() {
     this.test.assertExists('form[name="gs"]', 'google.fr has a form with name "gs"');
 });</code></pre>
+<h3 id="tester.assertField"><code>Tester#assertField(String input_name, String expected_value[, String message])</code></h3>
+
+<p>Asserts that a given input field has the provided value.
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.fill('form[name="gs"]', { q: 'plop' }, false);
+    this.test.assertField('form[name="gs"] input[name="q"]', 'plop');
+});</code></pre>
 <h3 id="tester.assertHttpStatus"><code>Tester#assertHttpStatus(Number status[, String message])</code></h3>
 
 <p>Asserts that current <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">HTTP status code</a>
@@ -2057,6 +2067,15 @@ casper.test.assertRaises(function(throwIt) {
         throw new Error('thrown');
     }
 }, [false], 'Error has been raised.'); // fails</code></pre>
+<h3 id="tester.assertSelectorDoesntHaveText"><code>Tester#assertSelectorDoesntHaveText(String selector, String text[, String message])</code></h3>
+
+<p>Asserts that given text does not exist in the provided <a href="selectors.html">selector</a>.
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertSelectorDoesntHaveText('title', 'Yahoo!');
+});</code></pre>
 <h3 id="tester.assertSelectorExists"><code>Tester#assertSelectorExists(String selector[, String message])</code></h3>
 
 <p>Asserts that at least an element matching the provided <a href="selectors.html">selector expression</a>
@@ -2066,6 +2085,15 @@ exists in remote DOM.
 <pre><code class="javascript">var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertSelectorExists('form[name="gs"]', 'google.fr provides a form');
+});</code></pre>
+<h3 id="tester.assertSelectorHasText"><code>Tester#assertSelectorHasText(String selector, String text[, String message])</code></h3>
+
+<p>Asserts that given text exists in the provided <a href="selectors.html">selector</a>.
+
+</p>
+<pre><code class="javascript">var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertSelectorHasText('title', 'Google');
 });</code></pre>
 <h3 id="tester.assertResourceExists"><code>Tester#assertResourceExists(Function testFx[, String message])</code></h3>
 
@@ -2269,13 +2297,16 @@ casper.run(function() {
 <li><a href="#tester.assertEval"><code>assertEval()</code></a></li>
 <li><a href="#tester.assertEvalEquals"><code>assertEvalEquals()</code></a></li>
 <li><a href="#tester.assertExists"><code>assertExists()</code></a></li>
+<li><a href="#tester.assertField"><code>assertField()</code></a></li>
 <li><a href="#tester.assertHttpStatus"><code>assertHttpStatus()</code></a></li>
 <li><a href="#tester.assertMatch"><code>assertMatch()</code></a></li>
 <li><a href="#tester.assertNot"><code>assertNot()</code></a></li>
 <li><a href="#tester.assertNotEquals"><code>assertNotEquals()</code></a></li>
 <li><a href="#tester.assertRaises"><code>assertRaises()</code></a></li>
 <li><a href="#tester.assertResourceExists"><code>assertResourceExists()</code></a></li>
+<li><a href="#tester.assertSelectorDoesntHaveText"><code>assertSelectorDoesntHaveText()</code></a></li>
 <li><a href="#tester.assertSelectorExists"><code>assertSelectorExists()</code></a></li>
+<li><a href="#tester.assertSelectorHasText"><code>assertSelectorHasText()</code></a></li>
 <li><a href="#tester.assertTextExists"><code>assertTextExists()</code></a></li>
 <li><a href="#tester.assertTitle"><code>assertTitle()</code></a></li>
 <li><a href="#tester.assertTitleMatch"><code>assertTitleMatch()</code></a></li>
@@ -2500,10 +2531,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=RRQ8vjRTKkw.fr./sv=1/am=!xL2k5pXR5VKYYD8n2w/d=1/rs=AItRSTOeeOd8fvVEblmi9Tys-lRNCczIjQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1348331726416"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1348331726416"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1348331726416"></script>
-    <script type="text/javascript" src="js/application.js?1348331726416"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=RRQ8vjRTKkw.fr./sv=1/am=!xL2k5pXR5VKYYD8n2w/d=1/rs=AItRSTOeeOd8fvVEblmi9Tys-lRNCczIjQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1348411297562"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1348411297562"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1348411297562"></script>
+    <script type="text/javascript" src="js/application.js?1348411297562"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
