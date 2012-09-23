@@ -20,6 +20,7 @@ XXXX-XX-XX, v1.0.0
 - fixed [#231](https://github.com/n1k0/casperjs/pull/231) - added `--pre` and `--post` options to the `casperjs test` command to load test files before and after the execution of testsuite 
 - fixed [#222](https://github.com/n1k0/casperjs/pull/222) & [#211](https://github.com/n1k0/casperjs/issues/211) - Change mouse event to include an X + Y value for click position
 - fixed [#232](https://github.com/n1k0/casperjs/issues/232) - symlink resolution in the ruby version of the `casperjs` executable
+- fixed [#240](https://github.com/n1k0/casperjs/pull/240/) - added new tester methods: `assertVisible` and `assertNotVisible`
 - added [`ClientUtils.getDocumentHeight()`](http://casperjs.org/api.html#clientutils.getDocumentHeight)
 - added a `--no-colors` option to the `casper test` command to skip output coloration
 

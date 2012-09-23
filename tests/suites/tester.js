@@ -113,6 +113,12 @@ casper.then(function() {
 
     t.comment('Tester.assertUrlMatch()');
     t.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
+
+    t.comment('Tester.assertVisible()');
+    t.assertVisible('img', 'Tester.assertVisible() works as expected');
+
+    t.comment('Tester.assertNotVisible()');
+    t.assertNotVisible('p#hidden', 'Tester.assertNotVisible() works as expected');
 });
 
 casper.then(function() {

@@ -353,6 +353,23 @@ var Tester = function Tester(casper, options) {
     };
 
     /**
+     * Asserts that a selector expression is not currently visible.
+     *
+     * @param  String  expected  selector expression
+     * @param  String  message   Test description
+     * @return Object            An assertion result object
+     */
+    this.assertNotVisible = this.assertInvisible = function assertNotVisible(selector, message) {
+        return this.assert(!casper.visible(selector), message, {
+            type: "assertVisible",
+            standard: "Selector is not visible",
+            values: {
+                selector: selector
+            }
+        });
+    };
+
+    /**
      * Asserts that the provided function called with the given parameters
      * will raise an exception.
      *
