@@ -252,7 +252,7 @@ var Tester = function Tester(casper, options) {
         }, { input_name: input_name });
         return this.assert(this.testEquals(actual_value, expected_value), message, {
             type: 'assertField',
-            standard: f('%s input field has the value %s', this.colorize(input_name, 'COMMENT'), this.colorize(expected_value, 'COMMENT')),
+            standard: f('"%s" input field has the value "%s"', input_name, expected_value),
             values:  {
                 input_name: input_name,
                 actual_value: actual_value,
@@ -427,7 +427,7 @@ var Tester = function Tester(casper, options) {
         var textFound = casper.fetchText(selector).indexOf(text) !== -1;
         return this.assert(textFound, message, {
             type: "assertTextInSelector",
-            standard: f('Found %s within the selector %s', this.colorize(text, 'COMMENT'), this.colorize(selector, 'COMMENT')),
+            standard: f('Found "%s" within the selector "%s"', text, selector),
             values: {
                 selector: selector,
                 text: text
@@ -447,7 +447,7 @@ var Tester = function Tester(casper, options) {
         var textFound = casper.fetchText(selector).indexOf(text) === -1;
         return this.assert(textFound, message, {
             type: "assertNoTextInSelector",
-            standard: f('Did not find %s within the selector %s', this.colorize(text, 'COMMENT'), this.colorize(selector, 'COMMENT')),
+            standard: f('Did not find "%s" within the selector "%s"', text, selector),
             values: {
                 selector: selector,
                 text: text
