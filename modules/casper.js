@@ -658,6 +658,28 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
             var form = window.__utils__.findOne(selector);
             var method = (form.getAttribute('method') || "GET").toUpperCase();
             var action = form.getAttribute('action') || "unknown";
+            
+            // Support for onclick on submit buttons
+            // Selectors to match from best to worst
+            var submitSelectors = ['button[type="submit"]', 'input[type="submit"]', 'button', 'input[type="button"]'];
+            for(var i = 0; i < submitSelectors.length; i++) {
+                var submitButton = form.querySelector(submitSelectors[i]);
+                if(submitButton) {
+                    // Doesn't work onclick function takes too long to execute so form is submitted before it finishes
+                    /*var clickEvent = document.createEvent('MouseEvent');
+                    clickEvent.initEvent('click', true, false);
+                    submitButton.dispatchEvent(click);*/
+
+                    // Doesn't work either
+                    //window.__utils__.click(selector + ' ' + submitSelectors[i]);
+
+                    if(submitButton.onclick) {
+                        submitButton.onclick();
+                    }
+                    break;
+                }
+            }
+
             window.__utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
             if (typeof form.submit === "function") {
                 form.submit();
