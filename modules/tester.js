@@ -54,6 +54,7 @@ var Tester = function Tester(casper, options) {
     }
 
     this.currentTestFile = null;
+    this.currentSuiteNum = 0;
     this.exporter = require('xunit').create();
     this.loadIncludes = {
         includes: [],
@@ -752,17 +753,17 @@ var Tester = function Tester(casper, options) {
             this.bar(f("No test file found in %s, aborting.", Array.prototype.slice.call(arguments)), "RED_BAR");
             casper.exit(1);
         }
-        var current = 0;
+        self.currentSuiteNum = 0;
         var interval = setInterval(function _check(self) {
             if (self.running) {
                 return;
             }
-            if (current === testFiles.length) {
+            if (self.currentSuiteNum === testFiles.length) {
                 self.emit('tests.complete');
                 clearInterval(interval);
             } else {
-                self.runTest(testFiles[current]);
-                current++;
+                self.runTest(testFiles[self.currentSuiteNum]);
+                self.currentSuiteNum++;
             }
         }, 100, this);
     };
