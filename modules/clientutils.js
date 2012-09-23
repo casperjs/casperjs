@@ -314,7 +314,7 @@
                     if (typeof data === "object") {
                         var dataList = [];
                         for (var k in data) {
-                            dataList.push(escape(k) + "=" + escape(data[k].toString()));
+                            dataList.push(encodeURIComponent(k) + "=" + encodeURIComponent(data[k].toString()));
                         }
                         dataString = dataList.join('&');
                         this.log("getBinary(): Using request data: '" + dataString + "'", "debug");
