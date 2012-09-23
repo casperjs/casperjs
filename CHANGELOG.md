@@ -8,8 +8,7 @@ XXXX-XX-XX, v1.0.0
 - fixed [#164](https://github.com/n1k0/casperjs/issues/164) - ability to force CLI parameters as strings (see [related documentation](http://casperjs.org/cli.html#raw)).
 - fixed [#153](https://github.com/n1k0/casperjs/issues/153) - erroneous mouse event results when event.preventDefault() was used.
 - fixed [#180](https://github.com/n1k0/casperjs/issues/180) - CasperJS tests are now run against a local HTTP test server. A new `casper selftest` command has been added as well.
-- fixed [#119](https://github.com/n1k0/casperjs/issues/119) - `Casper.currentHTTPStatus` now defaults to `null` when resource are loaded
-using the `file://` protocol
+- fixed [#119](https://github.com/n1k0/casperjs/issues/119) - `Casper.currentHTTPStatus` now defaults to `null` when resource are loaded using the `file://` protocol
 - fixed [#202](https://github.com/n1k0/casperjs/pull/202) - Fix test status timeouts when running multiple suites
 - fixed [#204](https://github.com/n1k0/casperjs/pull/204) - Fix for when the url is changed via javascript
 - fixed [#210](https://github.com/n1k0/casperjs/pull/210) - Changed `escape` to `encodeURIComponent` for downloading binaries via POST
