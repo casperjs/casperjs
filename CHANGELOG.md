@@ -6,21 +6,25 @@ XXXX-XX-XX, v1.0.0
 
 - fixed [#178](https://github.com/n1k0/casperjs/issues/178) - added `Casper.getPageContent()` to access raw page body contents on non-html received content-types.
 - fixed [#164](https://github.com/n1k0/casperjs/issues/164) - ability to force CLI parameters as strings (see [related documentation](http://casperjs.org/cli.html#raw)).
-- fixed [#153](https://github.com/n1k0/casperjs/issues/153) - erroneous mouse event results when event.preventDefault() was used.
+- fixed [#153](https://github.com/n1k0/casperjs/issues/153) - erroneous mouse event results when `event.preventDefault()` was used.
 - fixed [#180](https://github.com/n1k0/casperjs/issues/180) - CasperJS tests are now run against a local HTTP test server. A new `casper selftest` command has been added as well.
 - fixed [#119](https://github.com/n1k0/casperjs/issues/119) - `Casper.currentHTTPStatus` now defaults to `null` when resource are loaded using the `file://` protocol
-- fixed [#197](https://github.com/n1k0/casperjs/pull/197) - Added new tester methods: `assertField`, `assertSelectorHasText` and `assertSelectorDoesntHaveText`
+- fixed [#197](https://github.com/n1k0/casperjs/pull/197) & [#240](https://github.com/n1k0/casperjs/pull/240/) - Added new tester methods:
+  * [`assertField`](http://casperjs.org/api.html#tester.assertField)
+  * [`assertSelectorHasText`](http://casperjs.org/api.html#tester.assertSelectorHasText)
+  * [`assertSelectorDoesntHaveText`](http://casperjs.org/api.html#tester.assertSelectorDoesntHaveText)
+  * [`assertVisible`](http://casperjs.org/api.html#tester.assertVisible)
+  * [`assertNotVisible`](http://casperjs.org/api.html#tester.assertNotVisible)
 - fixed [#189](https://github.com/n1k0/casperjs/issue/189) - fixed invalid XML due to message colorization
 - fixed [#202](https://github.com/n1k0/casperjs/pull/202) - Fix test status timeouts when running multiple suites
 - fixed [#204](https://github.com/n1k0/casperjs/pull/204) - Fix for when the url is changed via javascript
 - fixed [#210](https://github.com/n1k0/casperjs/pull/210) - Changed `escape` to `encodeURIComponent` for downloading binaries via POST
 - fixed [#216](https://github.com/n1k0/casperjs/pull/216) - Change clientutils to be able to set a global scope
 - fixed [#219](https://github.com/n1k0/casperjs/issues/219) - ease chaining of `run()` calls ([more explanations](https://groups.google.com/forum/#!topic/casperjs/jdQ-CrgnUd8))
-- fixed [#236](https://github.com/n1k0/casperjs/issues/236) - Casper.exit return `this` after calling `phantom.exit()` that may caused PhantomJS to hang
-- fixed [#231](https://github.com/n1k0/casperjs/pull/231) - added `--pre` and `--post` options to the `casperjs test` command to load test files before and after the execution of testsuite 
+- fixed [#236](https://github.com/n1k0/casperjs/issues/236) - fixed `Casper.exit` returned `this` after calling `phantom.exit()` which may caused PhantomJS to hang
+- fixed [#231](https://github.com/n1k0/casperjs/pull/231) - added `--pre` and `--post` options to the `casperjs test` command to load test files before and after the execution of testsuite
 - fixed [#222](https://github.com/n1k0/casperjs/pull/222) & [#211](https://github.com/n1k0/casperjs/issues/211) - Change mouse event to include an X + Y value for click position
 - fixed [#232](https://github.com/n1k0/casperjs/issues/232) - symlink resolution in the ruby version of the `casperjs` executable
-- fixed [#240](https://github.com/n1k0/casperjs/pull/240/) - added new tester methods: `assertVisible` and `assertNotVisible`
 - added [`ClientUtils.getDocumentHeight()`](http://casperjs.org/api.html#clientutils.getDocumentHeight)
 - added a `--no-colors` option to the `casper test` command to skip output coloration
 
