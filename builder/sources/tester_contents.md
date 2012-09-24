@@ -137,6 +137,17 @@ Asserts that two values are **not** strictly equals.
 casper.test.assertNotEquals(true, "Truth is out");
 ```
 
+<h3 id="tester.assertNotVisible"><code>Tester#assertNotVisible(String selector[, String message])</code></h3>
+
+Asserts that the element matching the provided [selector expression](selectors.html) is not visible.
+
+```javascript
+var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertNotVisible('h6');
+});
+```
+
 <h3 id="tester.assertRaises"><code>Tester#assertRaises(Function fn, Array args[, String message])</code></h3>
 
 Asserts that the provided function called with the given parameters
@@ -259,6 +270,18 @@ Asserts that a the current page url matches the provided RegExp pattern.
 var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertUrlMatch(/^http:\/\//', 'google.fr is served in http://');
+});
+```
+
+<h3 id="tester.assertVisible"><code>Tester#assertVisible(String selector[, String message])</code></h3>
+
+Asserts that the element matching the provided
+[selector expression](selectors.html) is visible.
+
+```javascript
+var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertVisible('h1');
 });
 ```
 
