@@ -33,9 +33,14 @@
 if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
     console.error('CasperJS needs at least PhantomJS v1.5.0');
     phantom.exit(1);
+} else if (!phantom || phantom.version.major !== 1 || phantom.version.minor === 7) {
+    console.error('CasperJS is currently broken with PhantomJS 1.7, sorry.');
+    phantom.exit(1);
+} else {
+    bootstrap(window);
 }
 
-(function bootstrap(global) {
+function bootstrap(global) {
     "use strict";
     /**
      * Loads and initialize the CasperJS environment.
@@ -302,4 +307,4 @@ if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
     if (true === phantom.casperArgs.get('cli')) {
         phantom.initCasperCli();
     }
-})(window);
+}
