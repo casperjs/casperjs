@@ -4,7 +4,7 @@
 
 def resolve(file_path)
     while File.symlink?(file_path) do
-        file_path = File.dirname(file_path) + '/' + File.readlink(file_path)
+        file_path = File.readlink(file_path)
     end
     file_path
 end
