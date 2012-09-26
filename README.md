@@ -23,7 +23,13 @@ Subscribe to the [project mailing-list](https://groups.google.com/forum/#!forum/
 
 Follow the CasperJS project [on twitter](https://twitter.com/casperjs_org) and [Google+](https://plus.google.com/b/106641872690063476159/).
 
-## Contributing to the docs
+## Contributing
+
+### Contributing code
+
+Please read the [CONTRIBUTING.md](https://github.com/n1k0/casperjs/blob/master/CONTRIBUTING.md) file contents.
+
+### Contributing documentation
 
 CasperJS's documentation is written using the [Markdown format](http://daringfireball.net/projects/markdown/), and hosted on Github thanks to the [Github Pages Feature](http://pages.github.com/).
 
