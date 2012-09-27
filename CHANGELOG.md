@@ -9,6 +9,7 @@ XXXX-XX-XX, v1.0.0
 - fixed [#153](https://github.com/n1k0/casperjs/issues/153) - erroneous mouse event results when `event.preventDefault()` was used.
 - fixed [#180](https://github.com/n1k0/casperjs/issues/180) - CasperJS tests are now run against a local HTTP test server. A new `casper selftest` command has been added as well.
 - fixed [#119](https://github.com/n1k0/casperjs/issues/119) - `Casper.currentHTTPStatus` now defaults to `null` when resource are loaded using the `file://` protocol
+- fixed [#130](https://github.com/n1k0/casperjs/issues/130) - added a `--no-colors` option to the `casper test` command to skip output coloration
 - fixed [#197](https://github.com/n1k0/casperjs/pull/197) & [#240](https://github.com/n1k0/casperjs/pull/240/) - Added new tester methods:
   * [`assertField`](http://casperjs.org/api.html#tester.assertField)
   * [`assertSelectorHasText`](http://casperjs.org/api.html#tester.assertSelectorHasText)
@@ -26,7 +27,6 @@ XXXX-XX-XX, v1.0.0
 - fixed [#222](https://github.com/n1k0/casperjs/pull/222) & [#211](https://github.com/n1k0/casperjs/issues/211) - Change mouse event to include an X + Y value for click position
 - fixed [#232](https://github.com/n1k0/casperjs/issues/232) - symlink resolution in the ruby version of the `casperjs` executable
 - added [`ClientUtils.getDocumentHeight()`](http://casperjs.org/api.html#clientutils.getDocumentHeight)
-- added a `--no-colors` option to the `casper test` command to skip output coloration
 
 2012-06-26, v1.0.0-RC1
 ----------------------
