@@ -40,6 +40,16 @@ if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
     bootstrap(window);
 }
 
+// Polyfills
+if (typeof Function.prototype.bind !== "function") {
+    Function.prototype.bind = function(scope) {
+        var _function = this;
+        return function() {
+            return _function.apply(scope, arguments);
+        };
+    };
+}
+
 function bootstrap(global) {
     "use strict";
     /**

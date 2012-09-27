@@ -27,6 +27,7 @@ XXXX-XX-XX, v1.0.0
 - fixed [#222](https://github.com/n1k0/casperjs/pull/222) & [#211](https://github.com/n1k0/casperjs/issues/211) - Change mouse event to include an X + Y value for click position
 - fixed [#232](https://github.com/n1k0/casperjs/issues/232) - symlink resolution in the ruby version of the `casperjs` executable
 - added [`ClientUtils.getDocumentHeight()`](http://casperjs.org/api.html#clientutils.getDocumentHeight)
+- added [`toString()`](http://casperjs.org/api.html#casper.toString) and [`status()`](http://casperjs.org/api.html#casper.status) methods to `Casper` prototype.
 
 2012-06-26, v1.0.0-RC1
 ----------------------

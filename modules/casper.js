@@ -1304,6 +1304,32 @@ Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn
 };
 
 /**
+ * Returns a string representation of current instance
+ *
+ * @return String
+ */
+Casper.prototype.toString = function toString() {
+    return '[object Casper], currently at ' + this.getCurrentUrl();
+};
+
+/**
+ * Returns the current status of current instance
+ *
+ * @param  Boolean  asString  Export status object as string
+ * @return Object
+ */
+Casper.prototype.status = function status(asString) {
+    var properties = ['currentHTTPStatus', 'defaultWaitTimeout', 'loadInProgress', 'navigationRequested',
+                      'options', 'pendingWait', 'requestUrl', 'started', 'step', 'url'];
+    var currentStatus = {};
+    properties.forEach(function(property) {
+        console.log(this[property]);
+        currentStatus[property] = this[property];
+    }.bind(this));
+    return asString === true ? utils.dump(currentStatus) : currentStatus;
+};
+
+/**
  * Sets the user-agent string currently used when requesting urls.
  *
  * @param  String  userAgent  User agent string
