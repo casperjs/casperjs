@@ -35,7 +35,7 @@ You can find the whole `tester.Tester` API documentation in the [dedicated secti
 Now run the tests suite:
 
 ```
-$ casperjs samples/googletest.js
+$ casperjs samples/googletesting.js
 ```
 
 You'll probably get something like this:
