@@ -1193,6 +1193,22 @@ Casper.prototype.start = function start(location, then) {
 };
 
 /**
+ * Returns the current status of current instance
+ *
+ * @param  Boolean  asString  Export status object as string
+ * @return Object
+ */
+Casper.prototype.status = function status(asString) {
+    var properties = ['currentHTTPStatus', 'defaultWaitTimeout', 'loadInProgress', 'navigationRequested',
+                      'options', 'pendingWait', 'requestUrl', 'started', 'step', 'url'];
+    var currentStatus = {};
+    properties.forEach(function(property) {
+        currentStatus[property] = this[property];
+    }.bind(this));
+    return asString === true ? utils.dump(currentStatus) : currentStatus;
+};
+
+/**
  * Schedules the next step in the navigation process.
  *
  * @param  function  step  A function to be called as a step
@@ -1310,23 +1326,6 @@ Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn
  */
 Casper.prototype.toString = function toString() {
     return '[object Casper], currently at ' + this.getCurrentUrl();
-};
-
-/**
- * Returns the current status of current instance
- *
- * @param  Boolean  asString  Export status object as string
- * @return Object
- */
-Casper.prototype.status = function status(asString) {
-    var properties = ['currentHTTPStatus', 'defaultWaitTimeout', 'loadInProgress', 'navigationRequested',
-                      'options', 'pendingWait', 'requestUrl', 'started', 'step', 'url'];
-    var currentStatus = {};
-    properties.forEach(function(property) {
-        console.log(this[property]);
-        currentStatus[property] = this[property];
-    }.bind(this));
-    return asString === true ? utils.dump(currentStatus) : currentStatus;
 };
 
 /**
