@@ -1162,6 +1162,21 @@ Matter of taste!
 in order to be able to add navigation steps** and run the suite. If you don't
 you'll get an error message inviting you to do so anyway.
 
+<h3 id="casper.status"><code>Casper#status(Boolean asString)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Returns the status of current Casper instance.
+
+**Example:**
+
+```javascript
+casper.start('http://google.fr/', function() {
+    this.echo(this.status(true));
+});
+
+casper.run();
+```
+
 <h3 id="casper.then"><code>Casper#then(Function fn)</code></h3>
 
 This method is the standard way to add a new navigation step to the stack, by
@@ -1276,6 +1291,21 @@ casper.run(function() {
     this.debugPage();
     this.exit();
 });
+```
+
+<h3 id="casper.toString"><code>Casper#toString()</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Returns a string representation of current Casper instance.
+
+**Example:**
+
+```javascript
+casper.start('http://google.fr/', function() {
+    this.echo(this); // [object Casper], currently at http://google.fr/
+});
+
+casper.run();
 ```
 
 <h3 id="casper.userAgent"><code>Casper#userAgent(String agent)</code></h3>
