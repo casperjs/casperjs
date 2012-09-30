@@ -12,5 +12,3 @@ notifications:
   irc:
     channels:
       - "irc.freenode.org#casperjs"
-    use_notice: true
-    skip_join: true
