@@ -30,11 +30,13 @@
 
 /*global console phantom require*/
 
-if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
-    console.error('CasperJS needs at least PhantomJS v1.5.0');
+if (!phantom) {
+    console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
     phantom.exit(1);
-} else if (!phantom || phantom.version.major !== 1 || phantom.version.minor === 7) {
-    console.error('CasperJS is currently broken with PhantomJS 1.7, sorry.');
+}
+
+if (phantom.version.major === 1 && phantom.version.minor < 6) {
+    console.error('CasperJS needs at least PhantomJS v1.6.0 or later.');
     phantom.exit(1);
 } else {
     bootstrap(window);
@@ -43,6 +45,7 @@ if (!phantom || phantom.version.major !== 1 || phantom.version.minor < 5) {
 // Polyfills
 if (typeof Function.prototype.bind !== "function") {
     Function.prototype.bind = function(scope) {
+        "use strict";
         var _function = this;
         return function() {
             return _function.apply(scope, arguments);
@@ -50,8 +53,93 @@ if (typeof Function.prototype.bind !== "function") {
     };
 }
 
+/**
+ * Only for PhantomJS < 1.7: Patching require() to allow loading of other
+ * modules than PhantomJS' builtin ones.
+ *
+ */
+function patchRequire(require, requireDir) {
+    "use strict";
+    var fs = require('fs');
+    var phantomBuiltins = ['fs', 'webpage', 'webserver', 'system'];
+    var phantomRequire = phantom.__orig__require = require;
+    var requireCache = {};
+    return function _require(path) {
+        var i, dir, paths = [],
+            fileGuesses = [],
+            file,
+            module = {
+                exports: {}
+            };
+        if (phantomBuiltins.indexOf(path) !== -1) {
+            return phantomRequire(path);
+        }
+        if (path[0] === '.') {
+            paths.push.apply(paths, [
+                fs.absolute(path),
+                fs.absolute(fs.pathJoin(requireDir, path))
+            ]);
+        } else if (path[0] === '/') {
+            paths.push(path);
+        } else {
+            dir = fs.absolute(requireDir);
+            while (dir !== '' && dir.lastIndexOf(':') !== dir.length - 1) {
+                // nodejs compatibility
+                paths.push(fs.pathJoin(dir, 'node_modules', path));
+                dir = fs.dirname(dir);
+            }
+            paths.push(fs.pathJoin(requireDir, 'lib', path));
+            paths.push(fs.pathJoin(requireDir, 'modules', path));
+        }
+        paths.forEach(function _forEach(testPath) {
+            fileGuesses.push.apply(fileGuesses, [
+                testPath,
+                testPath + '.js',
+                testPath + '.coffee',
+                fs.pathJoin(testPath, 'index.js'),
+                fs.pathJoin(testPath, 'index.coffee'),
+                fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
+                fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
+            ]);
+        });
+        file = null;
+        for (i = 0; i < fileGuesses.length && !file; ++i) {
+            if (fs.isFile(fileGuesses[i])) {
+                file = fileGuesses[i];
+            }
+        }
+        if (!file) {
+            throw new Error("CasperJS couldn't find module " + path);
+        }
+        if (file in requireCache) {
+            return requireCache[file].exports;
+        }
+        var scriptCode = (function getScriptCode(file) {
+            var scriptCode = fs.read(file);
+            if (/\.coffee$/i.test(file)) {
+                /*global CoffeeScript*/
+                scriptCode = CoffeeScript.compile(scriptCode);
+            }
+            return scriptCode;
+        })(file);
+        var fn = new Function('__file__', 'require', 'module', 'exports', scriptCode);
+        try {
+            fn(file, _require, module, module.exports);
+        } catch (e) {
+            var error = new window.CasperError('__mod_error(' + path + '):: ' + e);
+            error.file = file;
+            throw error;
+        }
+        requireCache[file] = module;
+        return module.exports;
+    };
+}
+
 function bootstrap(global) {
     "use strict";
+
+    var phantomArgs = require('system').args;
+
     /**
      * Loads and initialize the CasperJS environment.
      */
@@ -103,7 +191,7 @@ function bootstrap(global) {
         }
 
         // Embedded, up-to-date, validatable & controlable CoffeeScript
-        phantom.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'vendors', 'coffee-script.js'));
+        phantom.injectJs(fs.pathJoin(phantom.casperPath, 'node_modules', 'vendors', 'coffee-script.js'));
 
         // custom global CasperError
         global.CasperError = function CasperError(msg) {
@@ -154,100 +242,13 @@ function bootstrap(global) {
             };
         })(phantom.casperPath);
 
-        /**
-         * Retrieves the javascript source code from a given .js or .coffee file.
-         *
-         * @param  String         file     The path to the file
-         * @param  Function|null  onError  An error callback (optional)
-         */
-        phantom.getScriptCode = function getScriptCode(file, onError) {
-            var scriptCode = fs.read(file);
-            if (/\.coffee$/i.test(file)) {
-                /*global CoffeeScript*/
-                scriptCode = CoffeeScript.compile(scriptCode);
-            }
-            return scriptCode;
-        };
-
-        /**
-         * Patching require() to allow loading of other modules than PhantomJS'
-         * builtin ones.
-         * Inspired by phantomjs-nodify: https://github.com/jgonera/phantomjs-nodify/
-         * TODO: remove when PhantomJS has full module support
-         */
-        require = (function _require(require, requireDir) {
-            var phantomBuiltins = ['fs', 'webpage', 'webserver', 'system'];
-            var phantomRequire = phantom.__orig__require = require;
-            var requireCache = {};
-            return function _require(path) {
-                var i, dir, paths = [],
-                    fileGuesses = [],
-                    file,
-                    module = {
-                        exports: {}
-                    };
-                if (phantomBuiltins.indexOf(path) !== -1) {
-                    return phantomRequire(path);
-                }
-                if (path[0] === '.') {
-                    paths.push.apply(paths, [
-                        fs.absolute(path),
-                        fs.absolute(fs.pathJoin(requireDir, path))
-                    ]);
-                } else if (path[0] === '/') {
-                    paths.push(path);
-                } else {
-                    dir = fs.absolute(requireDir);
-                    while (dir !== '' && dir.lastIndexOf(':') !== dir.length - 1) {
-                        // nodejs compatibility
-                        paths.push(fs.pathJoin(dir, 'node_modules', path));
-                        dir = fs.dirname(dir);
-                    }
-                    paths.push(fs.pathJoin(requireDir, 'lib', path));
-                    paths.push(fs.pathJoin(requireDir, 'modules', path));
-                }
-                paths.forEach(function _forEach(testPath) {
-                    fileGuesses.push.apply(fileGuesses, [
-                        testPath,
-                        testPath + '.js',
-                        testPath + '.coffee',
-                        fs.pathJoin(testPath, 'index.js'),
-                        fs.pathJoin(testPath, 'index.coffee'),
-                        fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
-                        fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
-                    ]);
-                });
-                file = null;
-                for (i = 0; i < fileGuesses.length && !file; ++i) {
-                    if (fs.isFile(fileGuesses[i])) {
-                        file = fileGuesses[i];
-                    }
-                }
-                if (!file) {
-                    throw new Error("CasperJS couldn't find module " + path);
-                }
-                if (file in requireCache) {
-                    return requireCache[file].exports;
-                }
-                var scriptCode = phantom.getScriptCode(file);
-                var fn = new Function('__file__', 'require', 'module', 'exports', scriptCode);
-                try {
-                    fn(file, _require, module, module.exports);
-                } catch (e) {
-                    var error = new global.CasperError('__mod_error(' + path + '):: ' + e);
-                    error.file = file;
-                    throw error;
-                }
-                requireCache[file] = module;
-                return module.exports;
-            };
-        })(require, phantom.casperPath);
-
-        // BC < 0.6
-        phantom.Casper = require('casper').Casper;
+        // patch require
+        if (phantom.version.major === 1 && phantom.version.minor < 7) {
+            global.require = patchRequire(global.require, phantom.casperPath);
+        }
 
         // casper cli args
-        phantom.casperArgs = require('cli').parse(phantom.args);
+        phantom.casperArgs = global.require('cli').parse(phantom.args);
 
         // loaded status
         phantom.casperLoaded = true;
@@ -306,12 +307,7 @@ function bootstrap(global) {
     };
 
     if (!phantom.casperLoaded) {
-        try {
-            phantom.loadCasper();
-        } catch (e) {
-            console.error("Unable to load casper environment: " + e);
-            phantom.exit();
-        }
+        phantom.loadCasper();
     }
 
     if (true === phantom.casperArgs.get('cli')) {
