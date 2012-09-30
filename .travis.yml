@@ -8,3 +8,9 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 script:
   - "DISPLAY=:99.0 ./bin/casperjs selftest"
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#casperjs"
+    use_notice: true
+    skip_join: true
