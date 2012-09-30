@@ -1,8 +1,8 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0
-------------------
+XXXX-XX-XX, v1.0.0 (currently latest master)
+--------------------------------------------
 
 ### Important Changes
 
