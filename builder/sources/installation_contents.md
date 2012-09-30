@@ -1,4 +1,4 @@
-**[PhantomJS](http://phantomjs.org/) >= 1.5 must be installed on your system**.
+**[PhantomJS](http://phantomjs.org/) >= 1.6 must be installed on your system** (1.7 recommended).
 Check out [PhantomJS' installation instructions](http://code.google.com/p/phantomjs/wiki/Installation),
 and:
 
@@ -28,7 +28,7 @@ something like this:
 
 ```
 $ phantomjs --version
-1.5.0
+1.7
 $ casperjs --version
 {{version}}
 ```
