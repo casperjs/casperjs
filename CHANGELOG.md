@@ -1,12 +1,12 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0 (currently latest master)
---------------------------------------------
+2012-10-01, v1.0.0-RC2
+----------------------
 
 ### Important Changes & Caveats
 
-- **PhantomJS 1.6 is now the minimal requirement**
+- **PhantomJS 1.6 is now the minimal requirement**, PhantomJS 1.7 is supported.
 - CasperJS continues to ship with its own implementation of CommonJS' module pattern, due to the way it has to work to offer its own executable. While the implementations are nearly the same, **100% compatibility is not guaranteed**.
 
 ### Bugfixes & enhancements
