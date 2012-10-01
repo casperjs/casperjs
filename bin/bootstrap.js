@@ -54,26 +54,20 @@ if (typeof Function.prototype.bind !== "function") {
 }
 
 /**
- * Only for PhantomJS < 1.7: Patching require() to allow loading of other
- * modules than PhantomJS' builtin ones.
+ * CasperJS ships with its own implementation of CommonJS' require() because
+ * PhantomJS' native one doesn't allow to specify supplementary, alternative
+ * lookup directories to fetch modules from.
  *
  */
-function patchRequire(require, requireDir) {
+function patchRequire(require, requireDirs) {
     "use strict";
+    require('webserver'); // force generation of phantomjs' require.cache for the webserver module
     var fs = require('fs');
-    var phantomBuiltins = ['fs', 'webpage', 'webserver', 'system'];
+    var phantomBuiltins = ['fs', 'webpage', 'system', 'webserver'];
     var phantomRequire = phantom.__orig__require = require;
     var requireCache = {};
-    return function _require(path) {
-        var i, dir, paths = [],
-            fileGuesses = [],
-            file,
-            module = {
-                exports: {}
-            };
-        if (phantomBuiltins.indexOf(path) !== -1) {
-            return phantomRequire(path);
-        }
+    function possiblePaths(path, requireDir) {
+        var dir, paths = [];
         if (path[0] === '.') {
             paths.push.apply(paths, [
                 fs.absolute(path),
@@ -84,6 +78,7 @@ function patchRequire(require, requireDir) {
         } else {
             dir = fs.absolute(requireDir);
             while (dir !== '' && dir.lastIndexOf(':') !== dir.length - 1) {
+                paths.push(fs.pathJoin(dir, 'modules', path));
                 // nodejs compatibility
                 paths.push(fs.pathJoin(dir, 'node_modules', path));
                 dir = fs.dirname(dir);
@@ -91,6 +86,21 @@ function patchRequire(require, requireDir) {
             paths.push(fs.pathJoin(requireDir, 'lib', path));
             paths.push(fs.pathJoin(requireDir, 'modules', path));
         }
+        return paths;
+    }
+    var patchedRequire = function _require(path) {
+        var i, paths = [],
+            fileGuesses = [],
+            file,
+            module = {
+                exports: {}
+            };
+        if (phantomBuiltins.indexOf(path) !== -1) {
+            return phantomRequire(path);
+        }
+        requireDirs.forEach(function(requireDir) {
+            paths = paths.concat(possiblePaths(path, requireDir));
+        });
         paths.forEach(function _forEach(testPath) {
             fileGuesses.push.apply(fileGuesses, [
                 testPath,
@@ -133,6 +143,8 @@ function patchRequire(require, requireDir) {
         requireCache[file] = module;
         return module.exports;
     };
+    patchedRequire.patched = true;
+    return patchedRequire;
 }
 
 function bootstrap(global) {
@@ -243,9 +255,7 @@ function bootstrap(global) {
         })(phantom.casperPath);
 
         // patch require
-        if (phantom.version.major === 1 && phantom.version.minor < 7) {
-            global.require = patchRequire(global.require, phantom.casperPath);
-        }
+        global.require = patchRequire(global.require, [phantom.casperPath, fs.workingDirectory]);
 
         // casper cli args
         phantom.casperArgs = global.require('cli').parse(phantom.args);

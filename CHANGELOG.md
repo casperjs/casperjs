@@ -4,10 +4,10 @@ CasperJS Changelog
 XXXX-XX-XX, v1.0.0 (currently latest master)
 --------------------------------------------
 
-### Important Changes
+### Important Changes & Caveats
 
 - **PhantomJS 1.6 is now the minimal requirement**
-- The `modules` directory has been renamed to `node_modules` for compatibility purpose with PhantomJS 1.7.
+- CasperJS continues to ship with its own implementation of CommonJS' module pattern, due to the way it has to work to offer its own executable. While the implementations are nearly the same, **100% compatibility is not guaranteed**.
 
 ### Bugfixes & enhancements
 
