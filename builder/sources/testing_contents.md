@@ -166,15 +166,21 @@ Some options are available using the `casperjs test` command:
   `--includes=foo.js,bar.js` will includes the `foo.js` and `bar.js` files
   before the whole suite execution
 - <span class="label label-success">Added in 1.0</span>
-  `--pre=pre-test.js` will add the tests contained in `pre-test.js` before executing the test suite
+  `--pre=pre-test.js` will add the tests contained in `pre-test.js`
+  __before__ executing the test suite
 - <span class="label label-success">Added in 1.0</span>
-  `--pre=post-test.js` will add the tests contained in `post-test.js` after having executed the whole test suite
+  `--post=post-test.js` will add the tests contained in `post-test.js`
+  __after__ having executed the whole test suite
 
 Sample custom command:
 
 ```
 $ casperjs test --includes=foo.js,bar.js --pre=pre-test.js --post=post-test.js --direct --log-level=debug test1.js test2.js /path/to/dome/test/dir
 ```
+
+<span class="label label-success">Hint</span>
+A [demo gist](https://gist.github.com/3813361) is also available in order
+to get you started with a sample suite involving some of these options.
 
 * * * * *
 
