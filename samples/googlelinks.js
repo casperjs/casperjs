@@ -4,9 +4,14 @@ var casper = require("casper").create();
 function getLinks() {
     var links = document.querySelectorAll("h3.r a");
     return Array.prototype.map.call(links, function(e) {
-        return e.getAttribute("href");
+        try {
+            // google handles redirects hrefs to some script of theirs
+            return (/url\?q=(.*)&sa=U/).exec(e.getAttribute("href"))[1];
+        } catch (err) {
+            return e.getAttribute("href");
+        }
     });
-};
+}
 
 casper.start("http://google.fr/", function() {
     // search for 'casperjs' from google form
@@ -28,6 +33,6 @@ casper.then(function() {
 casper.run(function() {
     // echo results in some pretty fashion
     this.echo(links.length + " links found:");
-    this.echo(" - " + links.join("\n - "))
+    this.echo(" - " + links.join("\n - "));
     this.exit();
 });

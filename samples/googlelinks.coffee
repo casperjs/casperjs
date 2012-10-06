@@ -4,7 +4,10 @@ casper = require("casper").create()
 getLinks = ->
     links = document.querySelectorAll("h3.r a")
     Array::map.call links, (e) ->
-        e.getAttribute "href"
+        try
+            (/url\?q=(.*)&sa=U/).exec(e.getAttribute("href"))[1]
+        catch e
+            e.getAttribute "href"
 
 casper.start "http://google.fr/", ->
     # search for 'casperjs' from google form
