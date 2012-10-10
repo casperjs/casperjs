@@ -162,6 +162,13 @@ Retrieves boundaries for a DOM element matching the provided
 It returns an Object with four keys: `top`, `left`, `width` and `height`, or
 `null` if the selector doesn't exist.
 
+<h3 id="clientutils.getElementsBounds"><code>Casper#getElementsBounds(String <a href="selectors.html">selector</a>)</code></h3>
+
+Retrieves boundaries for all DOM element matching the provided
+[selector](selectors.html).
+
+It returns an array of objects each having four keys: `top`, `left`, `width` and `height`.
+
 <h3 id="clientutils.getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
 
 Retrieves a single DOM element matching a given [XPath expression](http://www.w3.org/TR/xpath/).

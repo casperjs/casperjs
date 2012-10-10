@@ -10,6 +10,7 @@
 - [`getBinary()`](#clientutils.getBinary)
 - [`getDocumentHeight()`](#clientutils.getDocumentHeight)
 - [`getElementBounds()`](#clientutils.getElementBounds)
+- [`getElementsBounds()`](#clientutils.getElementBounds)
 - [`getElementByXPath()`](#clientutils.getElementByXPath)
 - [`getElementsByXPath()`](#clientutils.getElementsByXPath)
 - [`mouseEvent()`](#clientutils.mouseEvent)
