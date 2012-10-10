@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1349115880065">
-    <link rel="stylesheet" href="css/casper.css?1349115880065">
+    <link rel="stylesheet" href="prettify/prettify.css?1349854088397">
+    <link rel="stylesheet" href="css/casper.css?1349854088397">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -895,6 +895,17 @@ casper.run();</code></pre>
     "top": 16,
     "width": 275
 }</code></pre>
+<h3 id="casper.getElementsBounds"><code>Casper#getElementsBounds(String <a href="selectors.html">selector</a>)</code></h3>
+
+<p><span class="label label-success">Added in 1.0.0</span>
+Retrieves a list of boundaries for all DOM elements matching the provided
+<a href="selectors.html">selector</a>.
+
+</p>
+<p>It returns an array of objects with four keys: <code>top</code>, <code>left</code>, <code>width</code> and
+<code>height</code> (see <a href="#casper.getElementBounds">casper.getElementBounds()</a>).
+
+</p>
 <h3 id="casper.getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 <p>Retrieves a global variable value within the remote DOM environment by
@@ -1588,6 +1599,7 @@ casper.run();</code></pre>
 <li><a href="#casper.getCurrentUrl"><code>getCurrentUrl()</code></a></li>
 <li><a href="#casper.getElementAttribute"><code>getElementAttribute()</code></a></li>
 <li><a href="#casper.getElementBounds"><code>getElementBounds()</code></a></li>
+<li><a href="#casper.getElementsBounds"><code>getElementsBounds()</code></a></li>
 <li><a href="#casper.getGlobal"><code>getGlobal()</code></a></li>
 <li><a href="#casper.getPageContent"><code>getPageContent()</code></a></li>
 <li><a href="#casper.getTitle"><code>getTitle()</code></a></li>
@@ -2582,10 +2594,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=tN1Q9GIIFyc.fr./sv=1/am=!CVDWKorrwvOYBs7wcQ/d=1/rs=AItRSTPcyHk5iwVy_V-gpNDZiSyw9_WJ6g/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1349115880065"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1349115880065"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1349115880065"></script>
-    <script type="text/javascript" src="js/application.js?1349115880065"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=E9wfr4CYQV8.fr./sv=1/am=!8JP2wekq86iInuKCmg/d=1/rs=AItRSTO9p59EvpMfjtf5AcKcGgoq92i2Zw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1349854088397"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1349854088397"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1349854088397"></script>
+    <script type="text/javascript" src="js/application.js?1349854088397"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

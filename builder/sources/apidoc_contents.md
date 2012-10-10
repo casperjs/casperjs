@@ -832,6 +832,15 @@ This will output something like:
 }
 ```
 
+<h3 id="casper.getElementsBounds"><code>Casper#getElementsBounds(String <a href="selectors.html">selector</a>)</code></h3>
+
+<span class="label label-success">Added in 1.0.0</span>
+Retrieves a list of boundaries for all DOM elements matching the provided
+[selector](selectors.html).
+
+It returns an array of objects with four keys: `top`, `left`, `width` and
+`height` (see [casper.getElementBounds()](#casper.getElementBounds)).
+
 <h3 id="casper.getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 Retrieves a global variable value within the remote DOM environment by

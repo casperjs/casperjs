@@ -28,6 +28,7 @@
 - [`getCurrentUrl()`](#casper.getCurrentUrl)
 - [`getElementAttribute()`](#casper.getElementAttribute)
 - [`getElementBounds()`](#casper.getElementBounds)
+- [`getElementsBounds()`](#casper.getElementsBounds)
 - [`getGlobal()`](#casper.getGlobal)
 - [`getPageContent()`](#casper.getPageContent)
 - [`getTitle()`](#casper.getTitle)
