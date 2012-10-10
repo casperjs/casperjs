@@ -62,6 +62,35 @@
     exports.dump = dump;
 
     /**
+     * Tests equality between the two passed arguments.
+     *
+     * @param  Mixed  v1
+     * @param  Mixed  v2
+     * @param  Boolean
+     */
+    function equals(v1, v2) {
+        if (betterTypeOf(v1) !== betterTypeOf(v2)) {
+            return false;
+        }
+        if (isFunction(v1)) {
+            return v1.toString() === v2.toString();
+        }
+        if (v1 instanceof Object) {
+            if (Object.keys(v1).length !== Object.keys(v2).length) {
+                return false;
+            }
+            for (var k in v1) {
+                if (!equals(v1[k], v2[k])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return v1 === v2;
+    }
+    exports.equals = equals;
+
+    /**
      * Returns the file extension in lower case.
      *
      * @param  String  file  File path

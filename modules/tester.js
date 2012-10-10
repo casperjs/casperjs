@@ -884,24 +884,7 @@ var Tester = function Tester(casper, options) {
      * @param  Boolean
      */
     this.testEquals = this.testEqual = function testEquals(v1, v2) {
-        if (utils.betterTypeOf(v1) !== utils.betterTypeOf(v2)) {
-            return false;
-        }
-        if (utils.isFunction(v1)) {
-            return v1.toString() === v2.toString();
-        }
-        if (v1 instanceof Object) {
-            if (Object.keys(v1).length !== Object.keys(v2).length) {
-                return false;
-            }
-            for (var k in v1) {
-                if (!this.testEquals(v1[k], v2[k])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return v1 === v2;
+        return utils.equals(v1, v2);
     };
 
     /**
