@@ -27,6 +27,7 @@ t.assert(t.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:
 t.assertNot(t.testEquals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:27}}), 'Tester.testEquals() complex object inequality');
 t.assert(t.testEquals(function(x){return x;}, function(x){return x;}), 'Tester.testEquals() function equality');
 t.assertNot(t.testEquals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
+t.assert(t.testEquals([{a:1, b:2}, {c:3, d:4}], [{a:1, b:2}, {c:3, d:4}]), 'Tester.testEquals() arrays of objects');
 
 t.comment('Tester.sortFiles()');
 var testDirRoot = fs.pathJoin(phantom.casperPath, 'tests', 'testdir');

@@ -350,7 +350,9 @@
 
         /**
          * Retrieves bounding rect coordinates of the HTML element matching the
-         * provided CSS3 selector
+         * provided CSS3 selector in the following form:
+         *
+         * {top: y, left: x, width: w, height:, h}
          *
          * @param  String  selector
          * @return Object or null
@@ -366,6 +368,35 @@
                 };
             } catch (e) {
                 this.log("Unable to fetch bounds for element " + selector, "warning");
+            }
+        };
+
+        /**
+         * Retrieves the list of bounding rect coordinates for all the HTML elements matching the
+         * provided CSS3 selector, in the following form:
+         *
+         * [{top: y, left: x, width: w, height:, h},
+         *  {top: y, left: x, width: w, height:, h},
+         *  ...]
+         *
+         * @param  String  selector
+         * @return Array
+         */
+        this.getElementsBounds = function getElementsBounds(selector) {
+            var elements = this.findAll(selector);
+            var self = this;
+            try {
+                return Array.prototype.map.call(elements, function(element) {
+                    var clipRect = element.getBoundingClientRect();
+                    return {
+                        top:    clipRect.top,
+                        left:   clipRect.left,
+                        width:  clipRect.width,
+                        height: clipRect.height
+                    };
+                });
+            } catch (e) {
+                this.log("Unable to fetch bounds for elements matching " + selector, "warning");
             }
         };
 

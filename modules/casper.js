@@ -768,6 +768,22 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
 };
 
 /**
+ * Retrieves boundaries for all the DOM elements matching the provided DOM CSS3/XPath selector.
+ *
+ * @param  String  selector  A DOM CSS3/XPath selector
+ * @return Array
+ */
+Casper.prototype.getElementsBounds = function getElementBounds(selector) {
+    "use strict";
+    if (!this.exists(selector)) {
+        throw new CasperError("No element matching selector found: " + selector);
+    }
+    return this.evaluate(function _evaluate(selector) {
+        return window.__utils__.getElementsBounds(selector);
+    }, { selector: selector });
+};
+
+/**
  * Retrieves global variable.
  *
  * @param  String  name  The name of the global variable to retrieve

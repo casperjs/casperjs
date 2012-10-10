@@ -890,7 +890,7 @@ var Tester = function Tester(casper, options) {
         if (utils.isFunction(v1)) {
             return v1.toString() === v2.toString();
         }
-        if (v1 instanceof Object && v2 instanceof Object) {
+        if (v1 instanceof Object) {
             if (Object.keys(v1).length !== Object.keys(v2).length) {
                 return false;
             }

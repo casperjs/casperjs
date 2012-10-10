@@ -1,6 +1,13 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v1.0.0
+------------------
+
+This version is yet to be released.
+
+- closes [#230](https://github.com/n1k0/casperjs/issues/230) - added [`ClientUtils.getElementsBound()`](http://casperjs.org/api.html#clientutils.getElementsBounds) and [`Casper.getElementsBound()`](http://casperjs.org/api.html#casper.getElementsBounds)
+
 2012-10-01, v1.0.0-RC2
 ----------------------
 

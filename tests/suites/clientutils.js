@@ -81,4 +81,31 @@ function fakeDocument(html) {
     casper.test.assertEquals(xpathSelector.path, '//li[text()="blah"]', 'ClientUtils.processSelector() can process a XPath selector');
 })(casper);
 
-casper.test.done();
+(function(casper) {
+    casper.start();
+    // getElementBounds
+    casper.then(function() {
+        this.page.content = '<div id="b1" style="position:fixed;top:10px;left:11px;width:50px;height:60px"></div>';
+        this.test.assertEquals(this.getElementBounds('#b1'),
+            { top: 10, left: 11, width: 50, height: 60 },
+            'ClientUtils.getElementBounds() retrieves element boundaries');
+    });
+    // getElementsBounds
+    casper.start();
+    casper.then(function() {
+        var html  = '<div id="boxes">';
+            html += '  <div style="position:fixed;top:10px;left:11px;width:50px;height:60px"></div>';
+            html += '  <div style="position:fixed;top:20px;left:21px;width:70px;height:80px"></div>';
+            html += '</div>';
+        this.page.content = html;
+        var bounds = this.getElementsBounds('#boxes div');
+        this.test.assertEquals(bounds[0], { top: 10, left: 11, width: 50, height: 60 },
+            'ClientUtils.getElementsBounds() retrieves multiple elements boundaries');
+        this.test.assertEquals(bounds[1], { top: 20, left: 21, width: 70, height: 80 },
+            'ClientUtils.getElementsBounds() retrieves multiple elements boundaries');
+    });
+})(casper);
+
+casper.run(function() {
+    this.test.done();
+});
