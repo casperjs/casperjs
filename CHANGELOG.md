@@ -40,6 +40,7 @@ This version is yet to be released.
 - fixed [#231](https://github.com/n1k0/casperjs/pull/231) - added `--pre` and `--post` options to the `casperjs test` command to load test files before and after the execution of testsuite
 - fixed [#232](https://github.com/n1k0/casperjs/issues/232) - symlink resolution in the ruby version of the `casperjs` executable
 - fixed [#236](https://github.com/n1k0/casperjs/issues/236) - fixed `Casper.exit` returned `this` after calling `phantom.exit()` which may caused PhantomJS to hang
+- fixed [#252](https://github.com/n1k0/casperjs/issues/252) - better form.fill() error handling
 - added [`ClientUtils.getDocumentHeight()`](http://casperjs.org/api.html#clientutils.getDocumentHeight)
 - added [`toString()`](http://casperjs.org/api.html#casper.toString) and [`status()`](http://casperjs.org/api.html#casper.status) methods to `Casper` prototype.
 

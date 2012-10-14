@@ -52,6 +52,13 @@ casper.then(function() {
     this.test.assertUrlMatch(/topic=bar/, 'Casper.fill() select field was submitted');
 });
 
+casper.thenOpen('tests/site/form.html', function() {
+    this.test.comment('Unexistent fields');
+    this.test.assertRaises(this.fill, ['form[action="result.html"]', {
+        unexistent: 42
+    }, true], 'Casper.fill() raises an exception when unable to fill a form');
+});
+
 // multiple forms
 casper.thenOpen('tests/site/multiple-forms.html', function() {
     this.test.comment('Multiple forms');

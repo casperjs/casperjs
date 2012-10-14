@@ -630,19 +630,19 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     } else if (fillResults.errors.length > 0) {
         (function _each(self){
             fillResults.errors.forEach(function _forEach(error) {
-                self.log("form error: " + error, "error");
+                throw new CasperError(error);
             });
         })(this);
         if (submit) {
-            this.log("Errors encountered while filling form; submission aborted", "warning");
+            this.warn("Errors encountered while filling form; submission aborted");
             submit = false;
         }
     }
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
         if (utils.isObject(selector) && selector.type === 'xpath') {
-            this.echo('⚠  Filling file upload fields is currently not supported using', 'COMMENT');
-            this.echo('   XPath selectors; Please use a CSS selector instead.', 'COMMENT');
+            this.warn('Filling file upload fields is currently not supported using ' +
+                      'XPath selectors; Please use a CSS selector instead.');
         } else {
             (function _each(self) {
                 fillResults.files.forEach(function _forEach(file) {

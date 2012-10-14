@@ -226,9 +226,10 @@
                             name: name,
                             path: err.path
                         });
+                    } else if(err.name === "FieldNotFound") {
+                        out.errors.push('Form field named "' + name + '" was not found.');
                     } else {
-                        this.log(err, "error");
-                        throw err;
+                        out.errors.push(err.toString());
                     }
                 }
             }
@@ -541,8 +542,10 @@
                 fields = field;
                 field = fields[0];
             }
-            if (!field instanceof HTMLElement) {
-                this.log("Invalid field type; only HTMLElement and NodeList are supported", "error");
+            if (!(field instanceof HTMLElement)) {
+                var error = new Error('Invalid field type; only HTMLElement and NodeList are supported');
+                error.name = 'FieldNotFound';
+                throw error;
             }
             if (this.options && this.options.safeLogs && field.getAttribute('type') === "password") {
                 // obfuscate password value
