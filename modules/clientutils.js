@@ -214,7 +214,7 @@
                 }
                 var field = this.findAll('[name="' + name + '"]', form);
                 var value = vals[name];
-                if (!field) {
+                if (!field || field.length === 0) {
                     out.errors.push('no field named "' + name + '" in form');
                     continue;
                 }
