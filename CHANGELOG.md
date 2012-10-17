@@ -13,6 +13,7 @@ This version is yet to be released.
 
 ### Important Changes & Caveats
 
+- fixes [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements
 - **PhantomJS 1.6 is now the minimal requirement**, PhantomJS 1.7 is supported.
 - CasperJS continues to ship with its own implementation of CommonJS' module pattern, due to the way it has to work to offer its own executable. While the implementations are nearly the same, **100% compatibility is not guaranteed**.
 
