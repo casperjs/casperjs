@@ -13,11 +13,11 @@ It eases the process of defining a full navigation scenario and provides useful
 high-level functions, methods & syntaxic sugar for doing common tasks."
   s.summary             = "Navigation scripting & testing utility for PhantomJS"
   s.extra_rdoc_files    = ["LICENSE.md", "README.md"]
-  s.files               = Dir["LICENSE.md", "README.md", "CHANGELOG.md", "package.json", "casperjs.gemspec", 
-                            "bin/bootstrap.js", "bin/usage.txt", "bin/casperjs_python", 
+  s.files               = Dir["LICENSE.md", "README.md", "CHANGELOG.md", "package.json", "casperjs.gemspec",
+                            "bin/bootstrap.js", "bin/usage.txt", "bin/casperjs_python",
                             "docs/**/*", "modules/**/*", "samples/**/*", "tests/**/*"]
   s.bindir              = "rubybin"
   s.executables         = [ "casperjs" ]
   s.license             = "MIT"
-  s.requirements        = [ "PhantomJS v1.5" ]
+  s.requirements        = [ "PhantomJS v1.6" ]
 end
