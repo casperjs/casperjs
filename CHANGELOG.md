@@ -6,14 +6,15 @@ XXXX-XX-XX, v1.0.0
 
 This version is yet to be released.
 
+- [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
 - closes [#230](https://github.com/n1k0/casperjs/issues/230) - added [`ClientUtils.getElementsBound()`](http://casperjs.org/api.html#clientutils.getElementsBounds) and [`Casper.getElementsBound()`](http://casperjs.org/api.html#casper.getElementsBounds)
+- fixes [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements
 
 2012-10-01, v1.0.0-RC2
 ----------------------
 
 ### Important Changes & Caveats
 
-- fixes [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements
 - **PhantomJS 1.6 is now the minimal requirement**, PhantomJS 1.7 is supported.
 - CasperJS continues to ship with its own implementation of CommonJS' module pattern, due to the way it has to work to offer its own executable. While the implementations are nearly the same, **100% compatibility is not guaranteed**.
 

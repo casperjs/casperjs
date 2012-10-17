@@ -3,14 +3,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>CasperJS test resource</title>
-        <script>
-          setTimeout(function () {
-            var path = "images/phantom.png?" + new Date();
-            document.querySelector("img").setAttribute("src", path);
-          }, 1000);
-        </script>
     </head>
     <body>
-      <img width="55" height="55" border="1">
+      <script id="loader"></script>
+      <script>
+        setTimeout(function () {
+          document.querySelector("#loader").setAttribute("src", "dummy.js");
+        }, 1000);
+      </script>
     </body>
 </html>

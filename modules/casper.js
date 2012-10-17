@@ -1054,12 +1054,12 @@ Casper.prototype.resourceExists = function resourceExists(test) {
     switch (utils.betterTypeOf(test)) {
         case "string":
             testFn = function _testResourceExists_String(res) {
-                return res.url.search(test) !== -1;
+                return res.url.search(test) !== -1 && res.status !== 404;
             };
             break;
         case "regexp":
             testFn = function _testResourceExists_Regexp(res) {
-                return test.test(res.url);
+                return test.test(res.url) && res.status !== 404;
             };
             break;
         case "function":

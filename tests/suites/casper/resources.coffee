@@ -7,18 +7,18 @@ casper.start "tests/site/resources.html", ->
       "two resources found"
     )
     @test.assertResourceExists(
-      /phantom\.png/i
+      /dummy\.js/i
       "phantom image found via test RegExp"
     )
     @test.assertResourceExists(
-      (res) -> res.url.match "phantom.png"
+      (res) -> res.url.match "dummy.js"
       "phantom image found via test Function"
     )
     @test.assertResourceExists(
-      "phantom.png"
+      "dummy.js"
       "phantom image found via test String"
     )
   onTimeout = -> @test.fail "waitForResource timeout occured"
-  @waitForResource "phantom.png", onTime, onTimeout
+  @waitForResource "dummy.js", onTime, onTimeout
 
 casper.run(-> @test.done())
