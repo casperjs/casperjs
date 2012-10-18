@@ -6,6 +6,46 @@ XXXX-XX-XX, v1.0.0
 
 This version is yet to be released.
 
+### Important Changes & Caveats
+
+**BC BREAK** (for the better): merged [#188](https://github.com/n1k0/casperjs/issues/188) - Easy access to current response object;
+  You can now access the current response object as the first parameter of step callbacks:
+
+```javascript
+require('casper').create().start('http://www.google.fr/', function(response) {
+    require('utils').dump(response);
+}).run();
+```
+
+That gives:
+
+```
+$ casperjs dump-headers.js
+{
+    "contentType": "text/html; charset=UTF-8",
+    "headers": [
+        {
+            "name": "Date",
+            "value": "Thu, 18 Oct 2012 08:17:29 GMT"
+        },
+        {
+            "name": "Expires",
+            "value": "-1"
+        },
+        // ... lots of other headers
+    ],
+    "id": 1,
+    "redirectURL": null,
+    "stage": "end",
+    "status": 200,
+    "statusText": "OK",
+    "time": "2012-10-18T08:17:37.068Z",
+    "url": "http://www.google.fr/"
+}
+```
+
+### Bugfixes & enhancements
+
 - [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
 - closes [#230](https://github.com/n1k0/casperjs/issues/230) - added [`ClientUtils.getElementsBound()`](http://casperjs.org/api.html#clientutils.getElementsBounds) and [`Casper.getElementsBound()`](http://casperjs.org/api.html#casper.getElementsBounds)
 - fixes [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements
