@@ -2,7 +2,8 @@
 
 ```
 $ git shortlog -s -n
-   658  Nicolas Perriault
+   666  Nicolas Perriault
+    14  oncletom
     14  Brikou CARRE
      8  hannyu
      6  Chris Lorenzo
@@ -11,18 +12,16 @@ $ git shortlog -s -n
      3  Andrew Childs
      3  Solomon White
      3  reina.sweet
-     2  Jason Funk
      2  Michael Geers
      2  Julien Moulin
      2  Clochix
      2  Donovan Hutchinson
-     1  Leandro Boscariol
+     2  Jason Funk
      1  Maisons du monde
      1  Marcel Duran
      1  Mathieu Agopian
      1  Mehdi Kabab
      1  Mikko Peltonen
-     1  Harrison Reiser
      1  Pascal Borreli
      1  Rafael
      1  Rafael Garcia
@@ -31,13 +30,14 @@ $ git shortlog -s -n
      1  Tim Bunce
      1  Victor Yap
      1  alfetopito
-     1  Chris Winters
-     1  jean-philippe serafin
-     1  Ben Lowery
      1  Christophe Benz
+     1  jean-philippe serafin
+     1  Chris Winters
+     1  Ben Lowery
      1  Jan Pochyla
+     1  Harrison Reiser
      1  Julian Gruber
      1  Justine Tunney
      1  KaroDidi
+     1  Leandro Boscariol
 ```
-
