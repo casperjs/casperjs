@@ -44,6 +44,23 @@ $ casperjs dump-headers.js
 }
 ```
 
+To fetch a particular header by its name:
+
+```javascript
+require('casper').create().start('http://www.google.fr/', function(response) {
+    this.echo(response.headers.get('Date'));
+}).run();
+```
+
+That gives:
+
+```javascript
+$ casperjs dump-single-header.js
+Thu, 18 Oct 2012 08:26:34 GMT
+```
+
+The documentation has been [updated accordingly](http://casperjs.org/api.html#casper.then.callbacks).
+
 ### Bugfixes & enhancements
 
 - [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
