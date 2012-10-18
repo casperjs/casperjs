@@ -1120,7 +1120,7 @@ Casper.prototype.runStep = function runStep(step) {
         }, this.options.stepTimeout, this, new Date().getTime(), this.test.currentSuiteNum + "-" + this.step);
     }
     this.emit('step.start', step);
-    stepResult = step.call(this, this);
+    stepResult = step.call(this, this.currentResponse);
     if (utils.isFunction(this.options.onStepComplete)) {
         this.options.onStepComplete.call(this, this, stepResult);
     }
@@ -1722,6 +1722,8 @@ function createPage(casper) {
         return casper.filter('page.prompt', message, value);
     };
     page.onResourceReceived = function onResourceReceived(resource) {
+        require('http').augmentResponse(resource);
+
         casper.emit('resource.received', resource);
         if (utils.isFunction(casper.options.onResourceReceived)) {
             casper.options.onResourceReceived.call(casper, casper, resource);
