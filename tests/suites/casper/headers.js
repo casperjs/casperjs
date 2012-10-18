@@ -8,7 +8,7 @@ var service = server.listen(8090, function(request, response) {
         'Content-Type': 'text/html',
         'Date': new Date().toUTCString()
     };
-    response.write("\o/");
+    response.write("ok");
     response.close();
 });
 
@@ -31,12 +31,6 @@ casper.thenOpen('http://localhost:8090/', function thenLocalhost(response) {
     this.test.assertEquals(headers.get('Content-Language'), 'en', 'Checking existing header (case sensitive)');
     this.test.assertEquals(headers.get('content-language'), 'en', 'Checking existing header (case insensitive)');
     this.test.assertEquals(headers.get('X-Is-Troll'), null, 'Checking unexisting header');
-});
-
-casper.back();
-
-casper.then(function(response) {
-    this.test.assertEquals(response, undefined, 'Response should match the one of the previous step');
 });
 
 casper.run(function() {

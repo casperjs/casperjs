@@ -190,7 +190,6 @@ Casper.prototype.back = function back() {
         this.evaluate(function _evaluate() {
             history.back();
         });
-        this.currentResponse = this.resources.pop();
     });
 };
 
