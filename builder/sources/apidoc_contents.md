@@ -1218,6 +1218,60 @@ and voila.
 <span class="label label-info">Note</span> You must [`start()`](#start)
 the casper instance in order to use the `then()` method.
 
+<h4 id="casper.then.callbacks">Accessing the current HTTP response</h4>
+
+<span class="label label-success">Added in 1.0</span>
+You can access the current HTTP response object using the first parameter of your
+step callback:
+
+```javascript
+casper.start('http://www.google.fr/', function(response) {
+    require('utils').dump(response);
+});
+```
+
+That gives:
+
+```
+$ casperjs dump-headers.js
+{
+    "contentType": "text/html; charset=UTF-8",
+    "headers": [
+        {
+            "name": "Date",
+            "value": "Thu, 18 Oct 2012 08:17:29 GMT"
+        },
+        {
+            "name": "Expires",
+            "value": "-1"
+        },
+        // ... lots of other headers
+    ],
+    "id": 1,
+    "redirectURL": null,
+    "stage": "end",
+    "status": 200,
+    "statusText": "OK",
+    "time": "2012-10-18T08:17:37.068Z",
+    "url": "http://www.google.fr/"
+}
+```
+
+So to fetch a particular header by its name:
+
+```javascript
+casper.start('http://www.google.fr/', function(response) {
+    this.echo(response.headers.get('Date'));
+});
+```
+
+That gives:
+
+```javascript
+$ casperjs dump-headers.js
+Thu, 18 Oct 2012 08:26:34 GMT
+```
+
 <h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, Object replacements])</code></h3>
 
 Adds a new navigation step to perform code evaluation within the current
