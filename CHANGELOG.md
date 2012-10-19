@@ -64,6 +64,7 @@ The documentation has been [updated accordingly](http://casperjs.org/api.html#ca
 ### Bugfixes & enhancements
 
 - [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
+- closes [#205](https://github.com/n1k0/casperjs/issues/205) - [`debugHTML()`](http://casperjs.org/api.html#casper.debugHTML) can have a selector passed; added [`getHTML()`](http://casperjs.org/api.html#casper.getHTML)
 - closes [#230](https://github.com/n1k0/casperjs/issues/230) - added [`ClientUtils.getElementsBound()`](http://casperjs.org/api.html#clientutils.getElementsBounds) and [`Casper.getElementsBound()`](http://casperjs.org/api.html#casper.getElementsBounds)
 - fixed [#250](https://github.com/n1k0/casperjs/issues/250) - prevent self tests to be run using the standard `casper test` command
 - fixes [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements

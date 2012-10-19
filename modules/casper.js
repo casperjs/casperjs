@@ -403,12 +403,13 @@ Casper.prototype.createStep = function createStep(fn, options) {
 /**
  * Logs the HTML code of the current page.
  *
+ * @param  String   selector  A DOM CSS3/XPath selector (optional)
+ * @param  Boolean  outer     Whether to fetch outer HTML contents (default: false)
  * @return Casper
  */
-Casper.prototype.debugHTML = function debugHTML() {
+Casper.prototype.debugHTML = function debugHTML(selector, outer) {
     "use strict";
-    this.echo(this.page.content);
-    return this;
+    return this.echo(this.getHTML(selector, outer));
 };
 
 /**
@@ -592,7 +593,7 @@ Casper.prototype.exit = function exit(status) {
 };
 
 /**
- * Fetches innerText within the element(s) matching a given CSS3
+ * Fetches plain text contents contained in the DOM element(s) matching a given CSS3/XPath
  * selector.
  *
  * @param  String  selector  A DOM CSS3/XPath selector
@@ -600,6 +601,9 @@ Casper.prototype.exit = function exit(status) {
  */
 Casper.prototype.fetchText = function fetchText(selector) {
     "use strict";
+    if (!this.started) {
+        throw new CasperError("Casper not started, can't fetchText()");
+    }
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.fetchText(selector);
     }, { selector: selector });
@@ -811,6 +815,31 @@ Casper.prototype.getGlobal = function getGlobal(name) {
     } else {
         return undefined;
     }
+};
+
+/**
+ * Retrieves current HTML code matching the provided CSS3/XPath selector.
+ * Returns the HTML contents for the whole page if no arg is passed.
+ *
+ * @param  String   selector  A DOM CSS3/XPath selector
+ * @param  Boolean  outer     Whether to fetch outer HTML contents (default: false)
+ * @return String
+ */
+Casper.prototype.getHTML = function getHTML(selector, outer) {
+    "use strict";
+    if (!this.started) {
+        throw new CasperError("Casper not started, can't getHTML()");
+    }
+    if (!selector) {
+        return this.page.content;
+    }
+    if (!this.exists(selector)) {
+        throw new CasperError("No element matching selector found: " + selector);
+    }
+    return this.evaluate(function getSelectorHTML(selector, outer) {
+        var element = __utils__.findOne(selector);
+        return outer ? element.outerHTML : element.innerHTML;
+    }, { selector: selector, outer: !!outer });
 };
 
 /**
