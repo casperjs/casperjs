@@ -103,7 +103,8 @@ var Casper = function Casper(options) {
         },
         stepTimeout:         null,
         timeout:             null,
-        verbose:             false
+        verbose:             false,
+        waitTimeout:         5000
     };
     // options
     this.options = utils.mergeObjects(this.defaults, options);
@@ -114,7 +115,6 @@ var Casper = function Casper(options) {
     this.currentResponse = undefined;
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = null;
-    this.defaultWaitTimeout = 5000;
     this.history = [];
     this.loadInProgress = false;
     this.navigationRequested = false;
@@ -1244,7 +1244,7 @@ Casper.prototype.start = function start(location, then) {
  * @return Object
  */
 Casper.prototype.status = function status(asString) {
-    var properties = ['currentHTTPStatus', 'defaultWaitTimeout', 'loadInProgress', 'navigationRequested',
+    var properties = ['currentHTTPStatus', 'loadInProgress', 'navigationRequested',
                       'options', 'pendingWait', 'requestUrl', 'started', 'step', 'url'];
     var currentStatus = {};
     properties.forEach(function(property) {
@@ -1491,7 +1491,7 @@ Casper.prototype.waitDone = function waitDone() {
  */
 Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
     "use strict";
-    timeout = timeout ? timeout : this.defaultWaitTimeout;
+    timeout = timeout ? timeout : this.options.waitTimeout;
     if (!utils.isFunction(testFx)) {
         this.die("waitFor() needs a test function");
     }
@@ -1539,7 +1539,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
  */
 Casper.prototype.waitForResource = function waitForResource(test, then, onTimeout, timeout) {
     "use strict";
-    timeout = timeout ? timeout : this.defaultWaitTimeout;
+    timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.resourceExists(test);
     }, then, onTimeout, timeout);
@@ -1557,7 +1557,7 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
  */
 Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTimeout, timeout) {
     "use strict";
-    timeout = timeout ? timeout : this.defaultWaitTimeout;
+    timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.exists(selector);
     }, then, onTimeout, timeout);
@@ -1575,7 +1575,7 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
  */
 Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, onTimeout, timeout) {
     "use strict";
-    timeout = timeout ? timeout : this.defaultWaitTimeout;
+    timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return !this.exists(selector);
     }, then, onTimeout, timeout);
@@ -1593,7 +1593,7 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
  */
 Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, onTimeout, timeout) {
     "use strict";
-    timeout = timeout ? timeout : this.defaultWaitTimeout;
+    timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.visible(selector);
     }, then, onTimeout, timeout);
@@ -1611,7 +1611,7 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
  */
 Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, onTimeout, timeout) {
     "use strict";
-    timeout = timeout ? timeout : this.defaultWaitTimeout;
+    timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return !this.visible(selector);
     }, then, onTimeout, timeout);
