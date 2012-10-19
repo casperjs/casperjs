@@ -8,6 +8,7 @@ This version is yet to be released.
 
 ### Important Changes & Caveats
 
+- the `injector` module is now deprecated, but kept for backward compatibility purpose.
 - **BC BREAK**: fixes [#220](https://github.com/n1k0/casperjs/issues/220), [#237](https://github.com/n1k0/casperjs/issues/237) - added a `waitTimeout` options, removed `defaultWaitTimeout` option.
 - **BC BREAK** (for the better): fixes [#249](https://github.com/n1k0/casperjs/issues/249) - default timeout functions don't `die()` anymore in tests
 - **BC BREAK** (for the better): merged [#188](https://github.com/n1k0/casperjs/issues/188) - Easy access to current response object;
@@ -69,8 +70,9 @@ The documentation has been [updated accordingly](http://casperjs.org/api.html#ca
 - [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
 - closes [#205](https://github.com/n1k0/casperjs/issues/205) - [`debugHTML()`](http://casperjs.org/api.html#casper.debugHTML) can have a selector passed; added [`getHTML()`](http://casperjs.org/api.html#casper.getHTML)
 - closes [#230](https://github.com/n1k0/casperjs/issues/230) - added [`ClientUtils.getElementsBound()`](http://casperjs.org/api.html#clientutils.getElementsBounds) and [`Casper.getElementsBound()`](http://casperjs.org/api.html#casper.getElementsBounds)
+- fixed [#235](https://github.com/n1k0/casperjs/issues/235) - updated `Casper.evaluate()` to use phantomjs >= 1.6 native one. As a consequence, **the `injector` module is marked as deprecated**.
 - fixed [#250](https://github.com/n1k0/casperjs/issues/250) - prevent self tests to be run using the standard `casper test` command
-- fixes [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements
+- fixed [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements
 
 2012-10-01, v1.0.0-RC2
 ----------------------

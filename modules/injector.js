@@ -30,6 +30,8 @@
 
 /*global CasperError console encodeURIComponent escape exports require*/
 
+// WARNING: this module is deprecated since CasperJS 1.0.0-RC3
+
 var utils = require('utils');
 
 exports.create = function create(fn) {
@@ -44,6 +46,8 @@ exports.create = function create(fn) {
  */
 var FunctionArgsInjector = function FunctionArgsInjector(fn) {
     "use strict";
+    console.error('Warning: the injector module has been deprecated.');
+
     if (!utils.isFunction(fn)) {
         throw new CasperError("FunctionArgsInjector() can only process functions");
     }

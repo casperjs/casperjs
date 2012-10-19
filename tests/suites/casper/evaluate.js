@@ -2,26 +2,32 @@ casper.test.comment('Casper.evaluate()');
 
 casper.start();
 
-var params = {
-    "boolean true":  true,
-    "boolean false": false,
-    "int number":    42,
-    "float number":  1337.42,
-    "string":        "plop! \"Ÿ£$\" 'no'",
-    "array":         [1, 2, 3],
-    "object":        {a: 1, b: 2}
+var context = {
+    "_boolean_true":  true,
+    "_boolean_false": false,
+    "_int_number":    42,
+    "_float_number":  1337.42,
+    "_string":        "plop! \"Ÿ£$\" 'no'",
+    "_array":         [1, 2, 3],
+    "_object":        {a: 1, b: 2},
+    "_function":      function(){console.log('ok');}
 };
 
-var casperParams = casper.evaluate(function() {
-    return __casper_params__;
-}, params);
+var result = casper.evaluate(function(_boolean_true,
+                                      _boolean_false,
+                                      _int_number,
+                                      _float_number,
+                                      _string,
+                                      _array,
+                                      _object,
+                                      _function) {
+    return [].map.call(arguments, function(arg) {
+        return typeof(arg);
+    });
+}, context);
 
-casper.test.assertType(casperParams, "object", 'Casper.evaluate() exposes parameters in a dedicated object');
-casper.test.assertEquals(Object.keys(casperParams).length, 7, 'Casper.evaluate() object containing parameters has the correct length');
-
-for (var param in casperParams) {
-    casper.test.assertEquals(JSON.stringify(casperParams[param]), JSON.stringify(params[param]), 'Casper.evaluate() can pass a ' + param);
-    casper.test.assertEquals(typeof casperParams[param], typeof params[param], 'Casper.evaluate() preserves the ' + param + ' type');
-}
+casper.test.assertEquals(result.toString(),
+                         ['boolean', 'boolean', 'number', 'number', 'string', 'object', 'object', 'function'].toString(),
+                         'Casper.evaluate() handles passed argument context correcly');
 
 casper.test.done();

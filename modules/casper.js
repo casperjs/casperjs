@@ -540,7 +540,6 @@ Casper.prototype.echo = function echo(text, style, pad) {
  *
  * FIXME: waiting for a patch of PhantomJS to allow direct passing of
  * arguments to the function.
- * TODO: don't forget to keep this backward compatible.
  *
  * @param  Function  fn       The function to be evaluated within current page DOM
  * @param  Object    context  Object containing the parameters to inject into the function
@@ -551,10 +550,13 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     "use strict";
     // ensure client utils are always injected
     this.injectClientUtils();
-    // function processing
+    // function context
     context = utils.isObject(context) ? context : {};
-    var newFn = require('injector').create(fn).process(context);
-    return this.page.evaluate(newFn);
+    // the way this works is kept for BC with older casperjs versions
+    var args = Object.keys(context).map(function(arg) {
+        return context[arg];
+    });
+    return this.page.evaluate.apply(this.page, [fn].concat(args));
 };
 
 /**
