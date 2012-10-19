@@ -2,9 +2,22 @@ var utils = require('utils'),
     t = casper.test,
     x = require('casper').selectXPath;
 
+t.comment('cleanUrl()');
+(function() {
+    var testCases = {
+        'http://google.com/': 'http://google.com/',
+        'http://google.com': 'http://google.com/',
+        'http://www.google.com/': 'http://www.google.com/',
+        'http://www.google.com/?plop=2': 'http://www.google.com/?plop=2',
+        'https://google.com/': 'https://google.com/',
+        'https://google.com': 'https://google.com/',
+        'https://www.google.com/': 'https://www.google.com/',
+        'https://www.google.com/?plop=2': 'https://www.google.com/?plop=2'
+    };
+})();
+
 t.comment('equals()');
 (function() {
-    t.comment('Tester.testEquals()');
     t.assert(utils.equals(null, null), 'Tester.testEquals() null equality');
     t.assertNot(utils.equals(null, undefined), 'Tester.testEquals() null vs. undefined inequality');
     t.assert(utils.equals("hi", "hi"), 'Tester.testEquals() string equality');

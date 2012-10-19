@@ -1016,6 +1016,8 @@ Casper.prototype.open = function open(location, settings) {
             throw new CasperError("open(): invalid request settings data value: " + settings.data);
         }
     }
+    // clean location
+    location = utils.cleanUrl(location);
     // current request url
     this.requestUrl = this.filter('open.location', location) || location;
     // http auth

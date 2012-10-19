@@ -51,6 +51,21 @@
     exports.betterTypeOf = betterTypeOf;
 
     /**
+     * Cleans a passed URL if it lacks a slash at the end when a sole domain is used.
+     *
+     * @param  String  url An HTTP URL
+     * @return String
+     */
+    function cleanUrl(url) {
+        var match = /(https?):\/\/(.*)/i.exec(url);
+        if (!match || match.length !== 3) {
+            return url;
+        }
+        return format("%s://%s/", match[1], match[2]); // notice the trailing slash
+    }
+    exports.cleanUrl = cleanUrl;
+
+    /**
      * Dumps a JSON representation of passed value to the console. Used for
      * debugging purpose only.
      *

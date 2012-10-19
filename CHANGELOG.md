@@ -68,6 +68,7 @@ The documentation has been [updated accordingly](http://casperjs.org/api.html#ca
 
 - a new `onWaitTimeout` option has been added, to allow defining a default behavior when a `waitFor*` function times out.
 - [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
+- fixed [#167](https://github.com/n1k0/casperjs/issues/167) - fixed opening truncated/uncomplete root urls may give erroneous HTTP statuses
 - closes [#205](https://github.com/n1k0/casperjs/issues/205) - [`debugHTML()`](http://casperjs.org/api.html#casper.debugHTML) can have a selector passed; added [`getHTML()`](http://casperjs.org/api.html#casper.getHTML)
 - closes [#230](https://github.com/n1k0/casperjs/issues/230) - added [`ClientUtils.getElementsBound()`](http://casperjs.org/api.html#clientutils.getElementsBounds) and [`Casper.getElementsBound()`](http://casperjs.org/api.html#casper.getElementsBounds)
 - fixed [#235](https://github.com/n1k0/casperjs/issues/235) - updated `Casper.evaluate()` to use phantomjs >= 1.6 native one. As a consequence, **the `injector` module is marked as deprecated**.
