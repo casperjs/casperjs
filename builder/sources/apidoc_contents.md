@@ -158,18 +158,38 @@ All the available options are detailed below:
     <tr>
       <td><code>onStepTimeout</code></td>
       <td><code>Function</code></td>
-      <td><code>null</code></td>
-      <td> A function to be executed when a step function
+      <td><code>Function</code></td>
+      <td>
+        <p>A function to be executed when a step function
         execution time exceeds the value of the <code>stepTimeout</code>
-        option, if any has been set. </td>
+        option, if any has been set.</p>
+        <p>By default, on timeout the script will exit displaying an error, except
+          in test environment where it will just add a failure to the suite results.</p>
+      </td>
     </tr>
     <tr>
       <td><code>onTimeout</code></td>
       <td><code>Function</code></td>
-      <td><code>null</code></td>
-      <td> A function to be executed when script execution time
-        exceeds the value of the <code>timeout</code> option, if
-        any has been set. </td>
+      <td><code>Function</code></td>
+      <td>
+        <p>A function to be executed when script execution time
+          exceeds the value of the <code>timeout</code> option, if
+          any has been set.</p>
+        <p>By default, on timeout the script will exit displaying an error, except
+          in test environment where it will just add a failure to the suite results.</p>
+      </td>
+    </tr>
+    <tr>
+      <td><code>onWaitTimeout</code></td>
+      <td><code>Function</code></td>
+      <td><code>Function</code></td>
+      <td>
+        <p>A function to be executed when a <code>waitFor*</code> function
+        execution time exceeds the value of the <code>waitTimeout</code>
+        option, if any has been set.</p>
+        <p>By default, on timeout the script will exit displaying an error, except
+          in test environment where it will just add a failure to the suite results.</p>
+      </td>
     </tr>
     <tr>
       <td><code>page</code></td>

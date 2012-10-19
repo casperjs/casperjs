@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1350648457547">
-    <link rel="stylesheet" href="css/casper.css?1350648457547">
+    <link rel="stylesheet" href="prettify/prettify.css?1350652333806">
+    <link rel="stylesheet" href="css/casper.css?1350652333806">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -244,18 +244,38 @@ single <code>options</code> argument which is a standard javascript object:
     <tr>
       <td><code>onStepTimeout</code></td>
       <td><code>Function</code></td>
-      <td><code>null</code></td>
-      <td> A function to be executed when a step function
+      <td><code>Function</code></td>
+      <td>
+        <p>A function to be executed when a step function
         execution time exceeds the value of the <code>stepTimeout</code>
-        option, if any has been set. </td>
+        option, if any has been set.</p>
+        <p>By default, on timeout the script will exit displaying an error, except
+          in test environment where it will just add a failure to the suite results.</p>
+      </td>
     </tr>
     <tr>
       <td><code>onTimeout</code></td>
       <td><code>Function</code></td>
-      <td><code>null</code></td>
-      <td> A function to be executed when script execution time
-        exceeds the value of the <code>timeout</code> option, if
-        any has been set. </td>
+      <td><code>Function</code></td>
+      <td>
+        <p>A function to be executed when script execution time
+          exceeds the value of the <code>timeout</code> option, if
+          any has been set.</p>
+        <p>By default, on timeout the script will exit displaying an error, except
+          in test environment where it will just add a failure to the suite results.</p>
+      </td>
+    </tr>
+    <tr>
+      <td><code>onWaitTimeout</code></td>
+      <td><code>Function</code></td>
+      <td><code>Function</code></td>
+      <td>
+        <p>A function to be executed when a <code>waitFor<em></em></code><em> function
+        execution time exceeds the value of the <code>waitTimeout</code>
+        option, if any has been set.</em></p><em>
+        <p>By default, on timeout the script will exit displaying an error, except
+          in test environment where it will just add a failure to the suite results.</p>
+      </em></td>
     </tr>
     <tr>
       <td><code>page</code></td>
@@ -354,7 +374,7 @@ single <code>options</code> argument which is a standard javascript object:
       <td><code>waitTimeout</code></td>
       <td><code>Number</code></td>
       <td><code>5000</code></td>
-      <td>Default wait timeout, for <code>wait*</code> family functions.</td>
+      <td>Default wait timeout, for <code>wait</code> family functions.</td>
     </tr>
   </tbody>
 </table>
@@ -2677,10 +2697,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=0mkGkwTtSQw.fr./sv=1/am=!vjVqvImSc8CICbuUGw/d=1/rs=AItRSTPVTbl8QMWhDQm4SEQ0ZrTPKudLnA/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1350648457547"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1350648457547"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1350648457547"></script>
-    <script type="text/javascript" src="js/application.js?1350648457547"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=0mkGkwTtSQw.fr./sv=1/am=!vjVqvImSc8CICbuUGw/d=1/rs=AItRSTPVTbl8QMWhDQm4SEQ0ZrTPKudLnA/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1350652333806"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1350652333806"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1350652333806"></script>
+    <script type="text/javascript" src="js/application.js?1350652333806"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
