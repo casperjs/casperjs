@@ -742,9 +742,14 @@ Casper.prototype.getPageContent = function getPageContent() {
  */
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
-    return decodeURIComponent(this.evaluate(function _evaluate() {
+    var url = this.evaluate(function _evaluate() {
         return document.location.href;
-    }));
+    });
+    try {
+        return decodeURIComponent(url);
+    } catch (e) {
+        return url;
+    }
 };
 
 /**
