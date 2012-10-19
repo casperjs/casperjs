@@ -489,20 +489,9 @@ casper.then(function() {
 casper.run();
 ```
 
-<h3 id="casper.debugHTML"><code>Casper#debugHTML()</code></h3>
+<h3 id="casper.debugHTML"><code>Casper#debugHTML([String <a href="selectors.html">selector</a>, Boolean outer])</code></h3>
 
-Logs the HTML code of the current page directly to the standard output,
-for debugging purpose.
-
-**Example:**
-
-```javascript
-casper.start('http://www.google.fr/', function() {
-    this.debugHTML();
-});
-
-casper.run();
-```
+Outputs the results of [`getHTML()`](#casper.getHTML) directly to the console.
 
 <h3 id="casper.debugPage"><code>Casper#debugPage()</code></h3>
 
@@ -855,6 +844,44 @@ casper.start('http://www.google.fr/', function() {
 });
 
 casper.run();
+```
+
+<h3 id="casper.getHTML"><code>Casper#getHTML([String <a href="selectors.html">selector</a>, Boolean outer])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Retrieves HTML code from the current page. By default, it outputs the whole page HTML contents:
+
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.debugHTML();
+});
+
+casper.run();
+```
+
+<span class="label label-success">Added in 1.0</span>
+`debugHTML()` can also dump HTML contents matching a given [CSS3/XPath selector](selectors.html):
+
+```html
+<html>
+  <body>
+    <h1 id="foobar">Plop</h1>
+  </body>
+</html>
+```
+
+```javascript
+casper.start('http://www.site.tld/', function() {
+    this.debugHTML('h1#foobar'); // => 'Plop'
+});
+```
+
+The `outer` argument allows to retrieve the outer HTML contents of the matching element:
+
+```javascript
+casper.start('http://www.site.tld/', function() {
+    this.debugHTML('h1#foobar', true); // => '<h1 id="foobar">Plop</h1>'
+});
 ```
 
 <h3 id="casper.getPageContent"><code>Casper#getPageContent()</code></h3>

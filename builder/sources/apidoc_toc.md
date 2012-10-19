@@ -30,6 +30,7 @@
 - [`getElementBounds()`](#casper.getElementBounds)
 - [`getElementsBounds()`](#casper.getElementsBounds)
 - [`getGlobal()`](#casper.getGlobal)
+- [`getHTML()`](#casper.getHTML)
 - [`getPageContent()`](#casper.getPageContent)
 - [`getTitle()`](#casper.getTitle)
 - [`mouseEvent()`](#casper.mouseEvent)
