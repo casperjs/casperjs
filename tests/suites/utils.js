@@ -12,7 +12,8 @@ t.comment('cleanUrl()');
         'https://google.com/': 'https://google.com/',
         'https://google.com': 'https://google.com/',
         'https://www.google.com/': 'https://www.google.com/',
-        'https://www.google.com/?plop=2': 'https://www.google.com/?plop=2'
+        'https://www.google.com/?plop=2': 'https://www.google.com/?plop=2',
+        'file:///Users/toto/toto.html': 'file:///Users/toto/toto.html'
     };
 })();
 
