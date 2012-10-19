@@ -1,5 +1,7 @@
 # CasperJS contributors
 
+You can check out the [contribution graphs on github](https://github.com/n1k0/casperjs/graphs/contributors).
+
 ```
 $ git shortlog -s -n
    666  Nicolas Perriault
