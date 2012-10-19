@@ -78,8 +78,8 @@ var Tester = function Tester(casper, options) {
     };
 
     // specific timeout callbacks
-    casper.options.onStepTimeout = function test_onStepTimeout(timeout) {
-        this.test.fail(f("Step timeout occured (%dms)", timeout));
+    casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
+        this.test.fail(f("Step timeout occured at step %d (%dms)", step, timeout));
     };
 
     casper.options.onTimeout = function test_onTimeout(timeout) {
