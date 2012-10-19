@@ -14,6 +14,19 @@ var casper       = require('casper').create({
 });
 
 // local utils
+function checkSelfTest(tests) {
+    var isCasperTest = false;
+    tests.forEach(function(test) {
+        var testDir = fs.absolute(fs.dirname(test));
+        if (fs.isDirectory(testDir)) {
+            if (fs.exists(fs.pathJoin(testDir, '.casper'))) {
+                isCasperTest = true;
+            }
+        }
+    });
+    return isCasperTest;
+}
+
 function checkIncludeFile(include) {
     var absInclude = fs.absolute(include.trim());
     if (!fs.exists(absInclude)) {
@@ -51,6 +64,12 @@ if (casper.cli.args.length) {
     });
 } else {
     casper.echo('No test path passed, exiting.', 'RED_BAR', 80);
+    casper.exit(1);
+}
+
+// check for casper selftests
+if (!phantom.casperSelfTest && checkSelfTest(tests)) {
+    casper.warn('To run casper self tests, use the `selftest` command.');
     casper.exit(1);
 }
 

@@ -278,6 +278,7 @@ function bootstrap(global) {
             phantom.casperArgs.drop("test");
         } else if (phantom.casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
+            phantom.casperSelfTest = true;
             phantom.casperArgs.options.includes = fs.pathJoin(phantom.casperPath, 'tests', 'selftest.js');
             if (phantom.casperArgs.args.length > 1) {
                 // we want a single test file
