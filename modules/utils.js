@@ -57,11 +57,16 @@
      * @return String
      */
     function cleanUrl(url) {
-        var match = /(https?):\/\/(.*)/i.exec(url);
-        if (!match || match.length !== 3) {
+        var parts = /(https?):\/\/(.*)/i.exec(url);
+        if (!parts) {
             return url;
         }
-        return format("%s://%s/", match[1], match[2]); // notice the trailing slash
+        var protocol = parts[1];
+        var subparts = parts[2].split('/');
+        if (subparts.length === 1) {
+            return format("%s://%s/", protocol, subparts[0]);
+        }
+        return url;
     }
     exports.cleanUrl = cleanUrl;
 

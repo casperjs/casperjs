@@ -13,35 +13,39 @@ t.comment('cleanUrl()');
         'https://google.com': 'https://google.com/',
         'https://www.google.com/': 'https://www.google.com/',
         'https://www.google.com/?plop=2': 'https://www.google.com/?plop=2',
-        'file:///Users/toto/toto.html': 'file:///Users/toto/toto.html'
+        'file:///Users/toto/toto.html': 'file:///Users/toto/toto.html',
+        '/100': '/100'
     };
+    for (var testCase in testCases) {
+        t.assertEquals(utils.cleanUrl(testCase), testCases[testCase], 'cleanUrl() cleans an URL');
+    }
 })();
 
 t.comment('equals()');
 (function() {
-    t.assert(utils.equals(null, null), 'Tester.testEquals() null equality');
-    t.assertNot(utils.equals(null, undefined), 'Tester.testEquals() null vs. undefined inequality');
-    t.assert(utils.equals("hi", "hi"), 'Tester.testEquals() string equality');
-    t.assertNot(utils.equals("hi", "ih"), 'Tester.testEquals() string inequality');
-    t.assert(utils.equals(5, 5), 'Tester.testEquals() number equality');
-    t.assertNot(utils.equals("5", 5), 'Tester.testEquals() number equality without implicit cast');
-    t.assert(utils.equals(5, 5.0), 'Tester.testEquals() number equality with cast');
-    t.assertNot(utils.equals(5, 10), 'Tester.testEquals() number inequality');
-    t.assert(utils.equals([], []), 'Tester.testEquals() empty array equality');
-    t.assert(utils.equals([1,2], [1,2]), 'Tester.testEquals() array equality');
-    t.assert(utils.equals([1,2,[1,2,function(){}]], [1,2,[1,2,function(){}]]), 'Tester.testEquals() complex array equality');
-    t.assertNot(utils.equals([1,2,[1,2,function(a){}]], [1,2,[1,2,function(b){}]]), 'Tester.testEquals() complex array inequality');
-    t.assertNot(utils.equals([1,2], [2,1]), 'Tester.testEquals() shuffled array inequality');
-    t.assertNot(utils.equals([1,2], [1,2,3]), 'Tester.testEquals() array length inequality');
-    t.assert(utils.equals({}, {}), 'Tester.testEquals() empty object equality');
-    t.assert(utils.equals({a:1,b:2}, {a:1,b:2}), 'Tester.testEquals() object length equality');
-    t.assert(utils.equals({a:1,b:2}, {b:2,a:1}), 'Tester.testEquals() shuffled object keys equality');
-    t.assertNot(utils.equals({a:1,b:2}, {a:1,b:3}), 'Tester.testEquals() object inequality');
-    t.assert(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:26}}), 'Tester.testEquals() complex object equality');
-    t.assertNot(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:27}}), 'Tester.testEquals() complex object inequality');
-    t.assert(utils.equals(function(x){return x;}, function(x){return x;}), 'Tester.testEquals() function equality');
-    t.assertNot(utils.equals(function(x){return x;}, function(y){return y+2;}), 'Tester.testEquals() function inequality');
-    t.assert(utils.equals([{a:1, b:2}, {c:3, d:4}], [{a:1, b:2}, {c:3, d:4}]), 'Tester.testEquals() arrays of objects');
+    t.assert(utils.equals(null, null), 'equals() null equality');
+    t.assertNot(utils.equals(null, undefined), 'equals() null vs. undefined inequality');
+    t.assert(utils.equals("hi", "hi"), 'equals() string equality');
+    t.assertNot(utils.equals("hi", "ih"), 'equals() string inequality');
+    t.assert(utils.equals(5, 5), 'equals() number equality');
+    t.assertNot(utils.equals("5", 5), 'equals() number equality without implicit cast');
+    t.assert(utils.equals(5, 5.0), 'equals() number equality with cast');
+    t.assertNot(utils.equals(5, 10), 'equals() number inequality');
+    t.assert(utils.equals([], []), 'equals() empty array equality');
+    t.assert(utils.equals([1,2], [1,2]), 'equals() array equality');
+    t.assert(utils.equals([1,2,[1,2,function(){}]], [1,2,[1,2,function(){}]]), 'equals() complex array equality');
+    t.assertNot(utils.equals([1,2,[1,2,function(a){}]], [1,2,[1,2,function(b){}]]), 'equals() complex array inequality');
+    t.assertNot(utils.equals([1,2], [2,1]), 'equals() shuffled array inequality');
+    t.assertNot(utils.equals([1,2], [1,2,3]), 'equals() array length inequality');
+    t.assert(utils.equals({}, {}), 'equals() empty object equality');
+    t.assert(utils.equals({a:1,b:2}, {a:1,b:2}), 'equals() object length equality');
+    t.assert(utils.equals({a:1,b:2}, {b:2,a:1}), 'equals() shuffled object keys equality');
+    t.assertNot(utils.equals({a:1,b:2}, {a:1,b:3}), 'equals() object inequality');
+    t.assert(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:26}}), 'equals() complex object equality');
+    t.assertNot(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:27}}), 'equals() complex object inequality');
+    t.assert(utils.equals(function(x){return x;}, function(x){return x;}), 'equals() function equality');
+    t.assertNot(utils.equals(function(x){return x;}, function(y){return y+2;}), 'equals() function inequality');
+    t.assert(utils.equals([{a:1, b:2}, {c:3, d:4}], [{a:1, b:2}, {c:3, d:4}]), 'equals() arrays of objects');
 })();
 
 t.comment('fileExt()');
