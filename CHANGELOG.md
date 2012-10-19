@@ -8,9 +8,9 @@ This version is yet to be released.
 
 ### Important Changes & Caveats
 
-**BC BREAK**: fixes [#220](https://github.com/n1k0/casperjs/issues/220), [#237](https://github.com/n1k0/casperjs/issues/237) - added a `waitTimeout` options, removed `defaultWaitTimeout` option.
-**BC BREAK** (for the better): fixes [#249](https://github.com/n1k0/casperjs/issues/249) - default timeout functions don't `die()` anymore in tests
-**BC BREAK** (for the better): merged [#188](https://github.com/n1k0/casperjs/issues/188) - Easy access to current response object;
+- **BC BREAK**: fixes [#220](https://github.com/n1k0/casperjs/issues/220), [#237](https://github.com/n1k0/casperjs/issues/237) - added a `waitTimeout` options, removed `defaultWaitTimeout` option.
+- **BC BREAK** (for the better): fixes [#249](https://github.com/n1k0/casperjs/issues/249) - default timeout functions don't `die()` anymore in tests
+- **BC BREAK** (for the better): merged [#188](https://github.com/n1k0/casperjs/issues/188) - Easy access to current response object;
   You can now access the current response object as the first parameter of step callbacks:
 
 ```javascript
