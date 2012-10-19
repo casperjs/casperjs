@@ -8,7 +8,8 @@ This version is yet to be released.
 
 ### Important Changes & Caveats
 
-**BC BREAK**: - fixes [#220](https://github.com/n1k0/casperjs/issues/220), [#237](https://github.com/n1k0/casperjs/issues/237) - added a `waitTimeout` options, removed `defaultWaitTimeout` option.
+**BC BREAK**: fixes [#220](https://github.com/n1k0/casperjs/issues/220), [#237](https://github.com/n1k0/casperjs/issues/237) - added a `waitTimeout` options, removed `defaultWaitTimeout` option.
+**BC BREAK** (for the better): fixes [#249](https://github.com/n1k0/casperjs/issues/249) - default timeout functions don't `die()` anymore in tests
 **BC BREAK** (for the better): merged [#188](https://github.com/n1k0/casperjs/issues/188) - Easy access to current response object;
   You can now access the current response object as the first parameter of step callbacks:
 
@@ -64,6 +65,7 @@ The documentation has been [updated accordingly](http://casperjs.org/api.html#ca
 
 ### Bugfixes & enhancements
 
+- a new `onWaitTimeout` option has been added, to allow defining a default behavior when a `waitFor*` function times out.
 - [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
 - closes [#205](https://github.com/n1k0/casperjs/issues/205) - [`debugHTML()`](http://casperjs.org/api.html#casper.debugHTML) can have a selector passed; added [`getHTML()`](http://casperjs.org/api.html#casper.getHTML)
 - closes [#230](https://github.com/n1k0/casperjs/issues/230) - added [`ClientUtils.getElementsBound()`](http://casperjs.org/api.html#clientutils.getElementsBounds) and [`Casper.getElementsBound()`](http://casperjs.org/api.html#casper.getElementsBounds)

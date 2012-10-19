@@ -94,8 +94,15 @@ var Casper = function Casper(options) {
         onResourceReceived:  null,
         onResourceRequested: null,
         onStepComplete:      null,
-        onStepTimeout:       null,
-        onTimeout:           null,
+        onStepTimeout:       function _onStepTimeout(timeout, stepNum) {
+            this.die("Maximum step execution timeout exceeded for step " + stepNum);
+        },
+        onTimeout:           function _onTimeout(timeout) {
+            this.die(f("Script timeout of %dms reached, exiting.", timeout));
+        },
+        onWaitTimeout:       function _onWaitTimeout(timeout) {
+            this.die(f("Wait timeout of %dms expired, exiting.", timeout));
+        },
         page:                null,
         pageSettings:        {
             localToRemoteUrlAccessEnabled: true,
@@ -556,12 +563,14 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
  *
  * @param  function  fn       The expression to evaluate
  * @param  String    message  The error message to log
+ * @param  Number  status   An optional exit status code (must be > 0)
+ *
  * @return Casper
  */
-Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message) {
+Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message, status) {
     "use strict";
     if (!this.evaluate(fn)) {
-        return this.die(message);
+        return this.die(message, status);
     }
     return this;
 };
@@ -1139,9 +1148,7 @@ Casper.prototype.runStep = function runStep(step) {
                 if ((self.test.currentSuiteNum + "-" + self.step) === stepNum) {
                     self.emit('step.timeout');
                     if (utils.isFunction(self.options.onStepTimeout)) {
-                        self.options.onStepTimeout.call(self, self);
-                    } else {
-                        self.die("Maximum step execution timeout exceeded for step " + stepNum, "error");
+                        self.options.onStepTimeout.call(self, self.options.onStepTimeout, stepNum);
                     }
                 }
                 clearInterval(stepTimeoutCheckInterval);
@@ -1223,9 +1230,7 @@ Casper.prototype.start = function start(location, then) {
         setTimeout(function _check(self) {
             self.emit('timeout');
             if (utils.isFunction(self.options.onTimeout)) {
-                self.options.onTimeout.call(self, self);
-            } else {
-                self.die(f("Timeout of %dms exceeded, exiting.", self.options.timeout));
+                self.options.onTimeout.call(self, self.options.timeout);
             }
         }, this.options.timeout, this);
     }
@@ -1510,11 +1515,11 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
                 if (!condition) {
                     self.log("Casper.waitFor() timeout", "warning");
                     self.emit('waitFor.timeout');
-                    if (utils.isFunction(onTimeout)) {
-                        onTimeout.call(self, self);
-                    } else {
-                        self.die(f("Timeout of %dms expired, exiting.", timeout), "error");
+                    var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
+                    if (!utils.isFunction(onWaitTimeout)) {
+                        throw new CasperError('Invalid timeout function, exiting.');
                     }
+                    onWaitTimeout.call(self, timeout);
                 } else {
                     self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
                     if (then) {
