@@ -74,6 +74,7 @@ The documentation has been [updated accordingly](http://casperjs.org/api.html#ca
 - fixed [#235](https://github.com/n1k0/casperjs/issues/235) - updated `Casper.evaluate()` to use phantomjs >= 1.6 native one. As a consequence, **the `injector` module is marked as deprecated**.
 - fixed [#250](https://github.com/n1k0/casperjs/issues/250) - prevent self tests to be run using the standard `casper test` command
 - fixed [#254](https://github.com/n1k0/casperjs/issues/254) - fix up one use of qsa, hit when filling forms with missing elements
+- [fixed](https://github.com/n1k0/casperjs/commit/ef6c1828c7b64e1cf99b98e27600d0b63308cad3) edge case when current document url couldn't be properly decoded
 
 2012-10-01, v1.0.0-RC2
 ----------------------
