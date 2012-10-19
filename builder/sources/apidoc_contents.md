@@ -264,6 +264,12 @@ All the available options are detailed below:
       <td><code>null</code></td>
       <td>Viewport size, eg. <code>{width: 800, height: 600}</code></td>
     </tr>
+    <tr>
+      <td><code>waitTimeout</code></td>
+      <td><code>Number</code></td>
+      <td><code>5000</code></td>
+      <td>Default wait timeout, for <code>wait*</code> family functions.</td>
+    </tr>
   </tbody>
 </table>
 
