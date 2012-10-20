@@ -208,12 +208,6 @@ function bootstrap(global) {
         // custom global CasperError
         global.CasperError = function CasperError(msg) {
             Error.call(this);
-            try {
-                // let's get where this error has been thrown from, if we can
-                this._from = arguments.callee.caller.name;
-            } catch (e) {
-                this._from = "anonymous";
-            }
             this.message = msg;
             this.name = 'CasperError';
         };

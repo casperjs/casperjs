@@ -28,6 +28,8 @@
  *
  */
 
+var utils = require('utils');
+
 /*
  * Building an Array subclass
  */
@@ -59,7 +61,8 @@ responseHeaders.prototype.get = function get(name){
  * @param mixed response    Phantom response or undefined (generally with local files)
  */
 exports.augmentResponse = function(response) {
-    if (response === undefined) {
+    "use strict";
+    if (!utils.isHTTPResource(response)) {
         return;
     }
     response.headers.__proto__ = responseHeaders.prototype;

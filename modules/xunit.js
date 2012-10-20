@@ -33,6 +33,36 @@
 var utils = require('utils');
 var fs = require('fs');
 
+/**
+ * Generates a value for 'classname' attribute of the JUnit XML report.
+ *
+ * Uses the (relative) file name of the current casper script without file
+ * extension as classname.
+ *
+ * @param  String  classname
+ * @return String
+ */
+function generateClassName(classname) {
+    "use strict";
+    classname = classname.replace(phantom.casperPath, "").trim();
+    var script = classname || phantom.casperScript;
+    if (script.indexOf(fs.workingDirectory) === 0) {
+        script = script.substring(fs.workingDirectory.length + 1);
+    }
+    if (script.indexOf('/') === 0) {
+        script = script.substring(1, script.length);
+    }
+    if (~script.indexOf('.')) {
+        script = script.substring(0, script.lastIndexOf('.'));
+    }
+    return script || "unknown";
+}
+
+/**
+ * Creates a XUnit instance
+ *
+ * @return XUnit
+ */
 exports.create = function create() {
     "use strict";
     return new XUnitExporter();
@@ -86,31 +116,6 @@ XUnitExporter.prototype.addFailure = function addFailure(classname, name, messag
     fnode.appendChild(failure);
     this._xml.appendChild(fnode);
 };
-
-/**
- * Generates a value for 'classname' attribute of the JUnit XML report.
- *
- * Uses the (relative) file name of the current casper script without file
- * extension as classname.
- *
- * @param  String  classname
- * @return String
- */
-function generateClassName(classname) {
-    "use strict";
-    classname = classname.replace(phantom.casperPath, "").trim();
-    var script = classname || phantom.casperScript;
-    if (script.indexOf(fs.workingDirectory) === 0) {
-        script = script.substring(fs.workingDirectory.length + 1);
-    }
-    if (script.indexOf('/') === 0) {
-        script = script.substring(1, script.length);
-    }
-    if (~script.indexOf('.')) {
-        script = script.substring(0, script.lastIndexOf('.'));
-    }
-    return script || "unknown";
-}
 
 /**
  * Retrieves generated XML object - actually an HTMLElement.

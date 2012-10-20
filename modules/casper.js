@@ -33,6 +33,7 @@
 var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');
+var http = require('http');
 var mouse = require('mouse');
 var qs = require('querystring');
 var tester = require('tester');
@@ -192,6 +193,7 @@ utils.inherits(Casper, events.EventEmitter);
  */
 Casper.prototype.back = function back() {
     "use strict";
+    this.checkStarted();
     return this.then(function _step() {
         this.emit('back');
         this.evaluate(function _evaluate() {
@@ -230,9 +232,8 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
  */
 Casper.prototype.capture = function capture(targetFile, clipRect) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started, can't capture()");
-    }
+    /*jshint maxstatements:20*/
+    this.checkStarted();
     var previousClipRect;
     targetFile = fs.absolute(targetFile);
     if (clipRect) {
@@ -270,16 +271,9 @@ Casper.prototype.capture = function capture(targetFile, clipRect) {
  */
 Casper.prototype.captureBase64 = function captureBase64(format, area) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started, can't captureBase64()");
-    }
-    if (!('renderBase64' in this.page)) {
-        this.warn('captureBase64() requires PhantomJS >= 1.6');
-        return;
-    }
-    var base64;
-    var previousClipRect;
-    var formats = ['bmp', 'jpg', 'jpeg', 'png', 'ppm', 'tiff', 'xbm', 'xpm'];
+    /*jshint maxstatements:20*/
+    this.checkStarted();
+    var base64, previousClipRect, formats = ['bmp', 'jpg', 'jpeg', 'png', 'ppm', 'tiff', 'xbm', 'xpm'];
     if (formats.indexOf(format.toLowerCase()) === -1) {
         throw new CasperError(f('Unsupported format "%s"', format));
     }
@@ -346,6 +340,20 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
 };
 
 /**
+ * Checks if this instance is started.
+ *
+ * @return Boolean
+ * @throws CasperError
+ */
+Casper.prototype.checkStarted = function checkStarted() {
+    "use strict";
+    if (!this.started) {
+        throw new CasperError(f("Casper is not started, can't execute `%s()`",
+                                checkStarted.caller.name));
+    }
+};
+
+/**
  * Clears the current page execution environment context. Useful to avoid
  * having previously loaded DOM contents being still active (refs #34).
  *
@@ -356,6 +364,7 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
  */
 Casper.prototype.clear = function clear() {
     "use strict";
+    this.checkStarted();
     this.page.content = '';
     return this;
 };
@@ -371,6 +380,7 @@ Casper.prototype.clear = function clear() {
  */
 Casper.prototype.click = function click(selector) {
     "use strict";
+    this.checkStarted();
     return this.mouseEvent('click', selector);
 };
 
@@ -384,6 +394,7 @@ Casper.prototype.click = function click(selector) {
  */
 Casper.prototype.clickLabel = function clickLabel(label, tag) {
     "use strict";
+    this.checkStarted();
     tag = tag || "*";
     var escapedLabel = label.toString().replace(/"/g, '\\"');
     var selector = selectXPath(f('//%s[text()="%s"]', tag, escapedLabel));
@@ -416,6 +427,7 @@ Casper.prototype.createStep = function createStep(fn, options) {
  */
 Casper.prototype.debugHTML = function debugHTML(selector, outer) {
     "use strict";
+    this.checkStarted();
     return this.echo(this.getHTML(selector, outer));
 };
 
@@ -426,6 +438,7 @@ Casper.prototype.debugHTML = function debugHTML(selector, outer) {
  */
 Casper.prototype.debugPage = function debugPage() {
     "use strict";
+    this.checkStarted();
     this.echo(this.evaluate(function _evaluate() {
         return document.body.textContent || document.body.innerText;
     }));
@@ -441,6 +454,7 @@ Casper.prototype.debugPage = function debugPage() {
  */
 Casper.prototype.die = function die(message, status) {
     "use strict";
+    this.checkStarted();
     this.result.status = "error";
     this.result.time = new Date().getTime() - this.startTime;
     if (!utils.isString(message) || !message.length) {
@@ -465,6 +479,7 @@ Casper.prototype.die = function die(message, status) {
  */
 Casper.prototype.download = function download(url, targetPath, method, data) {
     "use strict";
+    this.checkStarted();
     var cu = require('clientutils').create(utils.mergeObjects({}, this.options));
     try {
         fs.write(targetPath, cu.decode(this.base64encode(url, method, data)), 'wb');
@@ -548,6 +563,7 @@ Casper.prototype.echo = function echo(text, style, pad) {
  */
 Casper.prototype.evaluate = function evaluate(fn, context) {
     "use strict";
+    this.checkStarted();
     // ensure client utils are always injected
     this.injectClientUtils();
     // function context
@@ -571,6 +587,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
  */
 Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message, status) {
     "use strict";
+    this.checkStarted();
     if (!this.evaluate(fn)) {
         return this.die(message, status);
     }
@@ -586,6 +603,7 @@ Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message, status) {
  */
 Casper.prototype.exists = function exists(selector) {
     "use strict";
+    this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.exists(selector);
     }, { selector: selector });
@@ -612,9 +630,7 @@ Casper.prototype.exit = function exit(status) {
  */
 Casper.prototype.fetchText = function fetchText(selector) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started, can't fetchText()");
-    }
+    this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.fetchText(selector);
     }, { selector: selector });
@@ -629,6 +645,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
  */
 Casper.prototype.fill = function fill(selector, vals, submit) {
     "use strict";
+    this.checkStarted();
     submit = submit === true ? submit : false;
     if (!utils.isObject(vals)) {
         throw new CasperError("Form values must be provided as an object");
@@ -643,15 +660,8 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     if (!fillResults) {
         throw new CasperError("Unable to fill form");
     } else if (fillResults.errors.length > 0) {
-        (function _each(self){
-            fillResults.errors.forEach(function _forEach(error) {
-                throw new CasperError(error);
-            });
-        })(this);
-        if (submit) {
-            this.warn("Errors encountered while filling form; submission aborted");
-            submit = false;
-        }
+        throw new CasperError(f('Errors encountered while filling form: %s',
+                              fillResults.errors.join('; ')));
     }
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
@@ -691,6 +701,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
  */
 Casper.prototype.forward = function forward(then) {
     "use strict";
+    this.checkStarted();
     return this.then(function _step() {
         this.emit('forward');
         this.evaluate(function _evaluate() {
@@ -717,9 +728,7 @@ Casper.prototype.getColorizer = function getColorizer() {
  */
 Casper.prototype.getPageContent = function getPageContent() {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started, can't getPageContent()");
-    }
+    this.checkStarted();
     var contentType = utils.getPropertyPath(this, 'currentResponse.contentType');
     if (!utils.isString(contentType)) {
         return this.page.content;
@@ -742,6 +751,7 @@ Casper.prototype.getPageContent = function getPageContent() {
  */
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
+    this.checkStarted();
     var url = this.evaluate(function _evaluate() {
         return document.location.href;
     });
@@ -762,6 +772,7 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
  */
 Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
     "use strict";
+    this.checkStarted();
     return this.evaluate(function _evaluate(selector, attribute) {
         return document.querySelector(selector).getAttribute(attribute);
     }, { selector: selector, attribute: attribute });
@@ -775,6 +786,7 @@ Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = functio
  */
 Casper.prototype.getElementBounds = function getElementBounds(selector) {
     "use strict";
+    this.checkStarted();
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
@@ -795,6 +807,7 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
  */
 Casper.prototype.getElementsBounds = function getElementBounds(selector) {
     "use strict";
+    this.checkStarted();
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
@@ -811,6 +824,7 @@ Casper.prototype.getElementsBounds = function getElementBounds(selector) {
  */
 Casper.prototype.getGlobal = function getGlobal(name) {
     "use strict";
+    this.checkStarted();
     var result = this.evaluate(function _evaluate(name) {
         var result = {};
         try {
@@ -843,9 +857,7 @@ Casper.prototype.getGlobal = function getGlobal(name) {
  */
 Casper.prototype.getHTML = function getHTML(selector, outer) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started, can't getHTML()");
-    }
+    this.checkStarted();
     if (!selector) {
         return this.page.content;
     }
@@ -865,9 +877,40 @@ Casper.prototype.getHTML = function getHTML(selector, outer) {
  */
 Casper.prototype.getTitle = function getTitle() {
     "use strict";
+    this.checkStarted();
     return this.evaluate(function _evaluate() {
         return document.title;
     });
+};
+
+/**
+ * Handles received HTTP resource.
+ *
+ * @param  Object  resource  PhantomJS HTTP resource
+ */
+Casper.prototype.handleReceivedResource = function(resource) {
+    "use strict";
+    if (resource.stage !== "end") {
+        return;
+    }
+    this.resources.push(resource);
+    if (resource.url !== this.requestUrl) {
+        return;
+    }
+    this.currentHTTPStatus = null;
+    this.currentResponse = undefined;
+    if (utils.isHTTPResource(resource)) {
+        this.currentResponse = resource;
+        this.currentHTTPStatus = resource.status;
+        this.emit('http.status.' + resource.status, resource);
+        if (utils.isObject(this.options.httpStatusHandlers) &&
+            resource.status in this.options.httpStatusHandlers &&
+            utils.isFunction(this.options.httpStatusHandlers[resource.status])) {
+            this.options.httpStatusHandlers[resource.status].call(this, this, resource);
+        }
+    }
+    this.currentUrl = resource.url;
+    this.emit('location.changed', resource.url);
 };
 
 /**
@@ -886,11 +929,39 @@ Casper.prototype.initErrorHandler = function initErrorHandler() {
 };
 
 /**
+ * Injects configured client scripts.
+ *
+ * @return Casper
+ */
+Casper.prototype.injectClientScripts = function injectClientScripts() {
+    "use strict";
+    this.checkStarted();
+    if (!this.options.clientScripts) {
+        return;
+    }
+    if (utils.isString(this.options.clientScripts)) {
+        this.options.clientScripts = [this.options.clientScripts];
+    }
+    if (!utils.isArray(this.options.clientScripts)) {
+        throw new CasperError("The clientScripts option must be an array");
+    }
+    this.options.clientScripts.forEach(function _forEach(script) {
+        if (this.page.injectJs(script)) {
+            this.log(f('Automatically injected %s client side', script), "debug");
+        } else {
+            this.warn('Failed injecting %s client side', script);
+        }
+    });
+    return this;
+};
+
+/**
  * Injects Client-side utilities in current page context.
  *
  */
 Casper.prototype.injectClientUtils = function injectClientUtils() {
     "use strict";
+    this.checkStarted();
     var clientUtilsInjected = this.page.evaluate(function() {
         return typeof window.__utils__ === "object";
     });
@@ -938,8 +1009,10 @@ Casper.prototype.log = function log(message, level, space) {
     if (level in this.logFormats && utils.isFunction(this.logFormats[level])) {
         message = this.logFormats[level](message, level, space);
     } else {
-        var levelStr = this.colorizer.colorize(f('[%s]', level), this.logStyles[level]);
-        message = f('%s [%s] %s', levelStr, space, message);
+        message = f('%s [%s] %s',
+                    this.colorizer.colorize(f('[%s]', level), this.logStyles[level]),
+                    space,
+                    message);
     }
     if (this.options.verbose) {
         this.echo(this.filter('log.message', message) || message); // direct output
@@ -961,6 +1034,7 @@ Casper.prototype.log = function log(message, level, space) {
  */
 Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     "use strict";
+    this.checkStarted();
     this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
     if (!this.exists(selector)) {
         throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
@@ -998,6 +1072,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
  */
 Casper.prototype.open = function open(location, settings) {
     "use strict";
+    this.checkStarted();
     // settings validation
     if (!settings) {
         settings = {
@@ -1040,9 +1115,6 @@ Casper.prototype.open = function open(location, settings) {
     }
     this.emit('open', this.requestUrl, settings);
     this.log(f('opening url: %s, HTTP %s', this.requestUrl, settings.method.toUpperCase()), "debug");
-    if ('headers' in settings && phantom.version.minor < 6) {
-        this.warn('Custom headers in outgoing requests are supported in PhantomJS >= 1.6');
-    }
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
         data:      settings.data,
@@ -1060,9 +1132,7 @@ Casper.prototype.open = function open(location, settings) {
  */
 Casper.prototype.reload = function reload(then) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started, can't reload()");
-    }
+    this.checkStarted();
     this.evaluate(function() {
         window.location.reload();
     });
@@ -1097,6 +1167,7 @@ Casper.prototype.repeat = function repeat(times, then) {
  */
 Casper.prototype.resourceExists = function resourceExists(test) {
     "use strict";
+    this.checkStarted();
     var testFn;
     switch (utils.betterTypeOf(test)) {
         case "string":
@@ -1128,6 +1199,7 @@ Casper.prototype.resourceExists = function resourceExists(test) {
  */
 Casper.prototype.run = function run(onComplete, time) {
     "use strict";
+    this.checkStarted();
     if (!this.steps || this.steps.length < 1) {
         this.log("No steps defined, aborting", "error");
         return this;
@@ -1145,6 +1217,7 @@ Casper.prototype.run = function run(onComplete, time) {
  */
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
+    this.checkStarted();
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true;
     var stepInfo = f("Step %d/%d", this.step, this.steps.length);
     var stepResult;
@@ -1184,9 +1257,7 @@ Casper.prototype.runStep = function runStep(step) {
  */
 Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper must be started in order to use the setHttpAuth() method");
-    }
+    this.checkStarted();
     if (!utils.isString(username) || !utils.isString(password)) {
         throw new CasperError("Both username and password must be strings");
     }
@@ -1258,6 +1329,7 @@ Casper.prototype.start = function start(location, then) {
  * @return Object
  */
 Casper.prototype.status = function status(asString) {
+    "use strict";
     var properties = ['currentHTTPStatus', 'loadInProgress', 'navigationRequested',
                       'options', 'pendingWait', 'requestUrl', 'started', 'step', 'url'];
     var currentStatus = {};
@@ -1275,9 +1347,7 @@ Casper.prototype.status = function status(asString) {
  */
 Casper.prototype.then = function then(step) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started; please use Casper#start");
-    }
+    this.checkStarted();
     if (!utils.isFunction(step)) {
         throw new CasperError("You can only define a step as a function");
     }
@@ -1315,6 +1385,7 @@ Casper.prototype.then = function then(step) {
  */
 Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) {
     "use strict";
+    this.checkStarted();
     if (arguments.length > 2) {
         this.emit("deprecated", "The thenClick() method does not process the fallbackToHref argument since 0.6");
     }
@@ -1335,6 +1406,7 @@ Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) 
  */
 Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
     "use strict";
+    this.checkStarted();
     return this.then(function _step() {
         this.evaluate(fn, context);
     });
@@ -1350,6 +1422,7 @@ Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
  */
 Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
     "use strict";
+    this.checkStarted();
     if (!(settings && !utils.isFunction(settings))) {
       then = settings;
       settings = null;
@@ -1375,6 +1448,7 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
  */
 Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn, context) {
     "use strict";
+    this.checkStarted();
     return this.thenOpen(location).thenEvaluate(fn, context);
 };
 
@@ -1384,6 +1458,7 @@ Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn
  * @return String
  */
 Casper.prototype.toString = function toString() {
+    "use strict";
     return '[object Casper], currently at ' + this.getCurrentUrl();
 };
 
@@ -1395,9 +1470,7 @@ Casper.prototype.toString = function toString() {
  */
 Casper.prototype.userAgent = function userAgent(agent) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper not started, can't set userAgent");
-    }
+    this.checkStarted();
     this.options.pageSettings.userAgent = this.page.settings.userAgent = agent;
     return this;
 };
@@ -1411,9 +1484,7 @@ Casper.prototype.userAgent = function userAgent(agent) {
  */
 Casper.prototype.viewport = function viewport(width, height) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper must be started in order to set viewport at runtime");
-    }
+    this.checkStarted();
     if (!utils.isNumber(width) || !utils.isNumber(height) || width <= 0 || height <= 0) {
         throw new CasperError(f("Invalid viewport: %dx%d", width, height));
     }
@@ -1435,6 +1506,7 @@ Casper.prototype.viewport = function viewport(width, height) {
  */
 Casper.prototype.visible = function visible(selector) {
     "use strict";
+    this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.visible(selector);
     }, { selector: selector });
@@ -1463,6 +1535,7 @@ Casper.prototype.warn = function warn(message) {
  */
 Casper.prototype.wait = function wait(timeout, then) {
     "use strict";
+    this.checkStarted();
     timeout = ~~timeout;
     if (timeout < 1) {
         this.die("wait() only accepts a positive integer > 0 as a timeout value");
@@ -1505,6 +1578,7 @@ Casper.prototype.waitDone = function waitDone() {
  */
 Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
     "use strict";
+    this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     if (!utils.isFunction(testFx)) {
         this.die("waitFor() needs a test function");
@@ -1553,6 +1627,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
  */
 Casper.prototype.waitForResource = function waitForResource(test, then, onTimeout, timeout) {
     "use strict";
+    this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.resourceExists(test);
@@ -1571,6 +1646,7 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
  */
 Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTimeout, timeout) {
     "use strict";
+    this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.exists(selector);
@@ -1589,6 +1665,7 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
  */
 Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, onTimeout, timeout) {
     "use strict";
+    this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return !this.exists(selector);
@@ -1607,6 +1684,7 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
  */
 Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, onTimeout, timeout) {
     "use strict";
+    this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.visible(selector);
@@ -1625,6 +1703,7 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
  */
 Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, onTimeout, timeout) {
     "use strict";
+    this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return !this.visible(selector);
@@ -1639,17 +1718,11 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
  */
 Casper.prototype.zoom = function zoom(factor) {
     "use strict";
-    if (!this.started) {
-        throw new CasperError("Casper has not been started, can't set zoom factor");
-    }
+    this.checkStarted();
     if (!utils.isNumber(factor) || factor <= 0) {
         throw new CasperError("Invalid zoom factor: " + factor);
     }
-    if ('zoomFactor' in this.page) {
-        this.page.zoomFactor = factor;
-    } else {
-        this.warn("zoom() requires PhantomJS >= 1.6");
-    }
+    this.page.zoomFactor = factor;
     return this;
 };
 
@@ -1662,7 +1735,7 @@ Casper.prototype.zoom = function zoom(factor) {
  */
 Casper.extend = function(proto) {
     "use strict";
-    this.warn('Casper.extend() has been deprecated since 0.6; check the docs');
+    this.emit("deprecated", "Casper.extend() has been deprecated since 0.6; check the docs")
     if (!utils.isObject(proto)) {
         throw new CasperError("extends() only accept objects as prototypes");
     }
@@ -1731,21 +1804,7 @@ function createPage(casper) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
         }
-        if (casper.options.clientScripts) {
-            if (utils.isString(casper.options.clientScripts)) {
-                casper.options.clientScripts = [casper.options.clientScripts];
-            }
-            if (!utils.isArray(casper.options.clientScripts)) {
-                throw new CasperError("The clientScripts option must be an array");
-            }
-            casper.options.clientScripts.forEach(function _forEach(script) {
-                if (casper.page.injectJs(script)) {
-                    casper.log(f('Automatically injected %s client side', script), "debug");
-                } else {
-                    casper.warn('Failed injecting %s client side', script);
-                }
-            });
-        }
+        casper.injectClientScripts();
         // Client-side utils injection
         casper.injectClientUtils();
         // history
@@ -1765,34 +1824,12 @@ function createPage(casper) {
         return casper.filter('page.prompt', message, value);
     };
     page.onResourceReceived = function onResourceReceived(resource) {
-        if (utils.isHTTPResource(resource)) {
-            require('http').augmentResponse(resource);
-        } else {
-            casper.log(f('Non-HTTP resource received from %s', resource.url), "debug");
-        }
+        http.augmentResponse(resource);
         casper.emit('resource.received', resource);
         if (utils.isFunction(casper.options.onResourceReceived)) {
             casper.options.onResourceReceived.call(casper, casper, resource);
         }
-        if (resource.stage === "end") {
-            casper.resources.push(resource);
-        }
-        if (resource.url === casper.requestUrl && resource.stage === "end") {
-            casper.currentHTTPStatus = null;
-            casper.currentResponse = undefined;
-            if (utils.isHTTPResource(resource)) {
-                casper.currentResponse = resource;
-                casper.currentHTTPStatus = resource.status;
-                casper.emit('http.status.' + resource.status, resource);
-                if (utils.isObject(casper.options.httpStatusHandlers) &&
-                    resource.status in casper.options.httpStatusHandlers &&
-                    utils.isFunction(casper.options.httpStatusHandlers[resource.status])) {
-                    casper.options.httpStatusHandlers[resource.status].call(casper, casper, resource);
-                }
-            }
-            casper.currentUrl = resource.url;
-            casper.emit('location.changed', resource.url);
-        }
+        casper.handleReceivedResource(resource);
     };
     page.onResourceRequested = function onResourceRequested(request) {
         casper.emit('resource.requested', request);

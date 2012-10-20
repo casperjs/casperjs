@@ -1,3 +1,5 @@
+/*global phantom*/
+
 if (!phantom.casperLoaded) {
     console.log('This script must be invoked using the casperjs executable');
     phantom.exit(1);
@@ -15,6 +17,7 @@ var casper       = require('casper').create({
 
 // local utils
 function checkSelfTest(tests) {
+    "use strict";
     var isCasperTest = false;
     tests.forEach(function(test) {
         var testDir = fs.absolute(fs.dirname(test));
@@ -28,6 +31,7 @@ function checkSelfTest(tests) {
 }
 
 function checkIncludeFile(include) {
+    "use strict";
     var absInclude = fs.absolute(include.trim());
     if (!fs.exists(absInclude)) {
         casper.warn("%s file not found, can't be included", absInclude);
@@ -60,6 +64,7 @@ if (casper.cli.get('no-colors') === true) {
 // test paths are passed as args
 if (casper.cli.args.length) {
     tests = casper.cli.args.filter(function(path) {
+        "use strict";
         return fs.isFile(path) || fs.isDirectory(path);
     });
 } else {
@@ -75,6 +80,7 @@ if (!phantom.casperSelfTest && checkSelfTest(tests)) {
 
 // includes handling
 this.loadIncludes.forEach(function(include){
+    "use strict";
     var container;
     if (casper.cli.has(include)) {
         container = casper.cli.get(include).split(',').map(function(file) {
@@ -89,6 +95,7 @@ this.loadIncludes.forEach(function(include){
 
 // test suites completion listener
 casper.test.on('tests.complete', function() {
+    "use strict";
     this.renderResults(true, undefined, casper.cli.get('xunit') || undefined);
 });
 

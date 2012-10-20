@@ -75,6 +75,7 @@
          * @return string
          */
         this.decode = function decode(str) {
+            /*jshint maxstatements:30 maxcomplexity:30 */
             var c1, c2, c3, c4, i = 0, len = str.length, out = "";
             while (i < len) {
                 do {
@@ -123,6 +124,7 @@
          * @return string
          */
         this.encode = function encode(str) {
+            /*jshint maxstatements:30 */
             var out = "", i = 0, len = str.length, c1, c2, c3;
             while (i < len) {
                 c1 = str.charCodeAt(i++) & 0xff;
@@ -183,9 +185,9 @@
         /**
          * Fills a form with provided field values, and optionnaly submits it.
          *
-         * @param  HTMLElement|String  form    A form element, or a CSS3 selector to a form element
-         * @param  Object              vals    Field values
-         * @return Object                      An object containing setting result for each field, including file uploads
+         * @param  HTMLElement|String  form  A form element, or a CSS3 selector to a form element
+         * @param  Object              vals  Field values
+         * @return Object                    An object containing setting result for each field, including file uploads
          */
         this.fill = function fill(form, vals) {
             var out = {
@@ -295,37 +297,14 @@
          * Retrieves string contents from a binary file behind an url. Silently
          * fails but log errors.
          *
-         * @param  String  url
-         * @param  String  method
-         * @param  Object  data
-         * @return string
+         * @param   String   url     Url.
+         * @param   String   method  HTTP method.
+         * @param   Object   data    Request parameters.
+         * @return  String
          */
         this.getBinary = function getBinary(url, method, data) {
             try {
-                var xhr = new XMLHttpRequest(), dataString = "";
-                if (typeof method !== "string" || ["GET", "POST"].indexOf(method.toUpperCase()) === -1) {
-                    method = "GET";
-                } else {
-                    method = method.toUpperCase();
-                }
-                xhr.open(method, url, false);
-                this.log("getBinary(): Using HTTP method: '" + method + "'", "debug");
-                xhr.overrideMimeType("text/plain; charset=x-user-defined");
-                if (method === "POST") {
-                    if (typeof data === "object") {
-                        var dataList = [];
-                        for (var k in data) {
-                            dataList.push(encodeURIComponent(k) + "=" + encodeURIComponent(data[k].toString()));
-                        }
-                        dataString = dataList.join('&');
-                        this.log("getBinary(): Using request data: '" + dataString + "'", "debug");
-                    } else if (typeof data === "string") {
-                        dataString = data;
-                    }
-                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                }
-                xhr.send(method === "POST" ? dataString : null);
-                return xhr.responseText;
+                return this.sendAJAX(url, method, data, false);
             } catch (e) {
                 if (e.name === "NETWORK_ERR" && e.code === 101) {
                     this.log("getBinary(): Unfortunately, casperjs cannot make cross domain ajax requests", "warning");
@@ -526,6 +505,42 @@
             for (var i = 0; i < a.snapshotLength; i++) {
                 a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
             }
+        };
+
+        /**
+         * Performs an AJAX request.
+         *
+         * @param   String   url     Url.
+         * @param   String   method  HTTP method.
+         * @param   Object   data    Request parameters.
+         * @param   Boolean  async   Asynchroneous request? (default: false)
+         * @return  String           Response text.
+         */
+        this.sendAJAX = function sendAJAX(url, method, data, async) {
+            var xhr = new XMLHttpRequest(), dataString = "";
+            if (typeof method !== "string" || ["GET", "POST"].indexOf(method.toUpperCase()) === -1) {
+                method = "GET";
+            } else {
+                method = method.toUpperCase();
+            }
+            xhr.open(method, url, !!async);
+            this.log("getBinary(): Using HTTP method: '" + method + "'", "debug");
+            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+            if (method === "POST") {
+                if (typeof data === "object") {
+                    var dataList = [];
+                    for (var k in data) {
+                        dataList.push(encodeURIComponent(k) + "=" + encodeURIComponent(data[k].toString()));
+                    }
+                    dataString = dataList.join('&');
+                    this.log("sendAJAX(): Using request data: '" + dataString + "'", "debug");
+                } else if (typeof data === "string") {
+                    dataString = data;
+                }
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            }
+            xhr.send(method === "POST" ? dataString : null);
+            return xhr.responseText;
         };
 
         /**
