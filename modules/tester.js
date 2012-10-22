@@ -79,33 +79,7 @@ var Tester = function Tester(casper, options) {
         failures: []
     };
 
-    // specific timeout callbacks
-    casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
-        this.test.fail(f("Step timeout occured at step %d (%dms)", step, timeout));
-    };
-
-    casper.options.onTimeout = function test_onTimeout(timeout) {
-        this.test.fail(f("Timeout occured (%dms)", timeout));
-    };
-
-    casper.options.onWaitTimeout = function test_onWaitTimeout(timeout) {
-        this.test.fail(f("Wait timeout occured (%dms)", timeout));
-    };
-
-    // events
-    casper.on('error', function(msg, backtrace) {
-        var line = 0;
-        try {
-            line = backtrace[0].line;
-        } catch (e) {}
-        this.test.uncaughtError(msg, this.test.currentTestFile, line);
-        this.test.done();
-    });
-
-    casper.on('step.error', function onStepError(e) {
-        this.test.uncaughtError(e, this.test.currentTestFile);
-        this.test.done();
-    });
+    this.configure();
 
     this.on('success', function onSuccess(success) {
         this.testResults.passes.push(success);
@@ -637,6 +611,38 @@ Tester.prototype.comment = function comment(message) {
     this.casper.echo('# ' + message, 'COMMENT');
 };
 
+Tester.prototype.configure = function configure() {
+    "use strict";
+    var tester = this;
+    // specific timeout callbacks
+    this.casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
+        tester.fail(f("Step timeout occured at step %d (%dms)", step, timeout));
+    };
+
+    this.casper.options.onTimeout = function test_onTimeout(timeout) {
+        tester.fail(f("Timeout occured (%dms)", timeout));
+    };
+
+    this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout) {
+        tester.fail(f("Wait timeout occured (%dms)", timeout));
+    };
+
+    // events
+    this.casper.on('error', function(msg, backtrace) {
+        var line = 0;
+        try {
+            line = backtrace[0].line;
+        } catch (e) {}
+        tester.uncaughtError(msg, tester.currentTestFile, line);
+        tester.done();
+    });
+
+    this.casper.on('step.error', function onStepError(e) {
+        tester.uncaughtError(e, tester.currentTestFile);
+        tester.done();
+    });
+};
+
 /**
  * Declares the current test suite done.
  *
@@ -837,7 +843,8 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails(failures) 
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
-    save = utils.isString(save) ? save : this.options.save;
+    /*jshint maxstatements:20*/
+    save = save || this.options.save;
     var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
     var exitStatus = ~~(status || (this.testResults.failed > 0 ? 1 : 0));
     if (total === 0) {
@@ -859,13 +866,8 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     if (this.testResults.failed > 0) {
         this.renderFailureDetails(this.testResults.failures);
     }
-    if (save && utils.isFunction(require)) {
-        try {
-            fs.write(save, this.exporter.getXML(), 'w');
-            this.casper.echo(f('Result log stored in %s', save), 'INFO', 80);
-        } catch (e) {
-            this.casper.echo(f('Unable to write results to %s: %s', save, e), 'ERROR', 80);
-        }
+    if (save) {
+        this.saveResults(save);
     }
     if (exit === true) {
         this.casper.exit(exitStatus);
@@ -933,6 +935,24 @@ Tester.prototype.runTest = function runTest(testFile) {
     this.bar(f('Test file: %s', testFile), 'INFO_BAR');
     this.running = true; // this.running is set back to false with done()
     this.exec(testFile);
+};
+
+/**
+ * Saves results to file.
+ *
+ * @param   String  filename  Target file path.
+ */
+Tester.prototype.saveResults = function saveResults(filepath) {
+    "use strict";
+    if (!fs.isWritable(filepath)) {
+        throw new CasperError(f('Path %s is not writable.', filepath));
+    }
+    try {
+        fs.write(filepath, this.exporter.getXML(), 'w');
+        this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
+    } catch (e) {
+        this.casper.echo(f('Unable to write results to %s: %s', filepath, e), 'ERROR', 80);
+    }
 };
 
 /**
