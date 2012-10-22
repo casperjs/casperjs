@@ -132,3 +132,25 @@ casper.run(function() {
 
 <span class="label label-info">Hint</span>
 Check out all the other cool [events](events-filters.html) you may use as well.
+
+* * * * *
+
+<h2 id="faq-utils">What's this mysterious `__utils__` object?</h2>
+
+The `__utils__` object is actually an instance of the [`ClientUtils`](api.html#client-utils) class which
+have been automatically injected into the page DOM and is therefore always available.
+
+So everytime to perform an [`evaluate()`](api.html#casper.evaluate) call, you have this instance available
+to perform common operations like:
+
+- fetching nodes using CSS3 or XPath selectors,
+- retrieving information about element properties (attributes, size, bounds, etc.),
+- sending AJAX requests,
+- triggering DOM events
+
+Check out the [whole API](api.html#client-utils). You even have
+[a bookmarklet](api.html#bookmarklet) to play around with this `__utils__` instance
+right within your browser console!
+
+<span class="label label-info">Note</span> You're not obliged at all to use the `__utils__`
+instance in your scripts. It's just there because it's used by CasperJS internals.
