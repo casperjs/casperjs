@@ -177,6 +177,20 @@ Retrieves a single DOM element matching a given [XPath expression](http://www.w3
 
 Retrieves all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/), if any.
 
+<h3 id="clientutils.getFieldValue"><code>ClientUtils#getFieldValue(String inputName)</code></h3>
+
+Retrieves the value from the field named against the `inputNamed` argument:
+
+```html
+<form>
+    <input type="text" name="plop" value="42">
+</form>
+```
+
+```javascript
+__utils__.getFieldValue('plop'); // 42
+```
+
 <h3 id="clientutils.mouseEvent"><code>ClientUtils#mouseEvent(String type, String selector)</code></h3>
 
 Dispatches a mouse event to the DOM element behind the provided selector.

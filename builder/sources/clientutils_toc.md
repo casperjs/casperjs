@@ -13,6 +13,7 @@
 - [`getElementsBounds()`](#clientutils.getElementBounds)
 - [`getElementByXPath()`](#clientutils.getElementByXPath)
 - [`getElementsByXPath()`](#clientutils.getElementsByXPath)
+- [`getFieldValue()`](#clientutils.getFieldValue)
 - [`mouseEvent()`](#clientutils.mouseEvent)
 - [`removeElementsByXPath()`](#clientutils.removeElementsByXPath)
 - [`visible()`](#clientutils.visible)

@@ -86,17 +86,20 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
-<h3 id="tester.assertField"><code>Tester#assertField(String input_name, String expected_value[, String message])</code></h3>
+<h3 id="tester.assertField"><code>Tester#assertField(String inputName, String expected[, String message])</code></h3>
 
-Asserts that a given input field has the provided value.
+Asserts that a given form field has the provided value:
 
 ```javascript
 var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.fill('form[name="gs"]', { q: 'plop' }, false);
-    this.test.assertField('form[name="gs"] input[name="q"]', 'plop');
+    this.test.assertField('q', 'plop');
 });
 ```
+
+<span class="label label-success">Added in 1.0.0</span>
+This also works with any input type: `select`, `textarea`, etc.
 
 <h3 id="tester.assertHttpStatus"><code>Tester#assertHttpStatus(Number status[, String message])</code></h3>
 
