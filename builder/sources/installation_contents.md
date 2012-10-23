@@ -68,7 +68,7 @@ this path appropriately if you installed PhantomJS to a different location.
 ### Casperjs installation additions
 
 <span class="label label-success">Added in 1.0</span>
-CasperJS, as of 1.0.0-RC3, ships with a Batch script so you don't need Python not Ruby
+CasperJS, as of 1.0.0-RC3, ships with a Batch script so you don't need Python nor Ruby
 to use it.
 
 Append `";C:\casperjs\batchbin"` to your `PATH` environment variable.
