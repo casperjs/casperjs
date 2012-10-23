@@ -4,7 +4,7 @@ You can check out the [contribution graphs on github](https://github.com/n1k0/ca
 
 ```
 $ git shortlog -s -n
-   666  Nicolas Perriault
+   689  Nicolas Perriault
     14  oncletom
     14  Brikou CARRE
      8  hannyu
@@ -14,12 +14,12 @@ $ git shortlog -s -n
      3  Andrew Childs
      3  Solomon White
      3  reina.sweet
+     2  Reina Sweet
+     2  Jason Funk
      2  Michael Geers
      2  Julien Moulin
-     2  Clochix
      2  Donovan Hutchinson
-     2  Jason Funk
-     1  Maisons du monde
+     2  Clochix
      1  Marcel Duran
      1  Mathieu Agopian
      1  Mehdi Kabab
@@ -42,4 +42,5 @@ $ git shortlog -s -n
      1  Justine Tunney
      1  KaroDidi
      1  Leandro Boscariol
+     1  Maisons du monde
 ```

@@ -66,7 +66,7 @@ The documentation has been [updated accordingly](http://casperjs.org/api.html#ca
 
 ### Bugfixes & enhancements
 
-- merged [#234](https://github.com/n1k0/casperjs/issues/234) - New Windows Loader written in Batch. Python is no more a requirement for using CasperJS on Windows.
+- merged [#234](https://github.com/n1k0/casperjs/issues/234) - New Windows Loader written in Batch. Python is no more a requirement for using CasperJS on Windows. New installation instructions are [available](http://casperjs.org/installation.html#windows).
 - a new `onWaitTimeout` option has been added, to allow defining a default behavior when a `waitFor*` function times out.
 - [Casper.resourceExists()](http://casperjs.org/api.html#casper.resourceExists) and related functions now checks for non HTTP-404 received responses.
 - fixed [#167](https://github.com/n1k0/casperjs/issues/167) - fixed opening truncated/uncomplete root urls may give erroneous HTTP statuses
