@@ -54,7 +54,13 @@ CASPER_COMMAND.extend([
 CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
-    os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
+    if os.name == 'nt':
+        import subprocess
+        proc = subprocess.Popen(CASPER_COMMAND)
+        proc.communicate()
+        sys.exit(proc.returncode)
+    else:
+        os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
 except OSError as err:
-    print(('Fatal: %s; did you install phantomjs?' % err))
+    print(('Fatal: %s; did you install phantomjs? If necessary, set PHANTOMJS_EXECUTABLE.' % err))
     sys.exit(1)
