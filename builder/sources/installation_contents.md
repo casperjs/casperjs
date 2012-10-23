@@ -43,7 +43,7 @@ that a Python interpreter is available on your platform.
 
 <span class="label label-success">Added in 1.0</span>
 A [Ruby](http://ruby-lang.org/) version of the `casperjs` executable is also
-available in the `bin/` directory; in order to use the ruby version instead
+available in the `rubybin/` directory; in order to use the ruby version instead
 of the python one:
 
 ```
@@ -54,17 +54,38 @@ Or using the ruby interpreter:
 
 ```
 $ ruby /path/to/casperjs/rubybin/casperjs
-CasperJS version {{version}} at /Users/niko/Sites/casperjs, using PhantomJS version 1.6.0
+CasperJS version {{version}} at /Users/niko/Sites/casperjs, using PhantomJS version 1.7.0
 ...
 ```
 
-## Help! I don't have Python nor Ruby (Hi, Windows user)
+<h2 id="windows">CasperJS on Windows</h2>
 
-**If you're on Windows**, this is the way you may manage to get casper working
-the most easily:
+### Phantomjs installation additions
+
+Append `";C:\phantomjs"` to your `PATH` environment variable. Modify
+this path appropriately if you installed PhantomJS to a different location.
+
+### Casperjs installation additions
+
+<span class="label label-success">Added in 1.0</span>
+CasperJS, as of 1.0.0-RC3, ships with a Batch script so you don't need Python not Ruby
+to use it.
+
+Append `";C:\casperjs\batchbin"` to your `PATH` environment variable.
+Modify this path appropriately if you installed CasperJS to a different location.
+
+You can now run any regular casper scripts that way:
+
+```
+C:> casperjs.bat myscript.js
+```
+
+### Earlier versions of CasperJS
+
+Before 1.0.0-RC3, you had to setup your casper scripts that way:
 
 ```javascript
-phantom.casperPath = 'C:\\path\\to\\your\\repo\\lib\\casperjs-{{version}}';
+phantom.casperPath = 'C:\\casperjs-{{version}}';
 phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
 
 var casper = require('casper').create();
@@ -72,7 +93,11 @@ var casper = require('casper').create();
 // do stuff
 ```
 
-Then just run your script using the `phantom.exe` program.
+Run the script using the `phantom.exe` program:
+
+```
+C:> phantomjs.exe myscript.js
+```
 
 <span class="label label-info">Note</span>
 There is no output coloration when running CasperJS on Microsoft platforms.
