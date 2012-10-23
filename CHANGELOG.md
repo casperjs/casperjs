@@ -1,10 +1,8 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0
-------------------
-
-This version is yet to be released.
+2012-10-23, v1.0.0-RC3
+----------------------
 
 ### Important Changes & Caveats
 
