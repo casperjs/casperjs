@@ -1,5 +1,6 @@
+/*global casper*/
+/*jshint strict:false maxstatements:99*/
 var fs = require('fs');
-
 var t = casper.test;
 
 casper.start();
@@ -21,9 +22,6 @@ var expected = [
 t.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
 
 casper.thenOpen('tests/site/index.html', function() {
-    t.comment('Tester.assertField()');
-    t.assertField('dummy_name', 'dummy_value', 'Tester.assertField() works as expected');
-
     t.comment('Tester.assertTextExists()');
     t.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
 
@@ -95,6 +93,27 @@ casper.then(function() {
 
     t.comment('Tester.assertNotVisible()');
     t.assertNotVisible('p#hidden', 'Tester.assertNotVisible() works as expected');
+});
+
+casper.thenOpen('tests/site/form.html', function() {
+    t.comment('Tester.assertField()');
+    var fpath = phantom.libraryPath + '/README.md';
+    this.fill('form[action="result.html"]', {
+        'email':       'chuck@norris.com',
+        'content':     'Am watching thou',
+        'check':       'on',
+        'choice':      'no',
+        'topic':       'bar',
+        'file':        fpath,
+        'checklist[]': ['1', '3']
+    });
+    t.assertField('email', 'chuck@norris.com', 'Tester.assertField() works as expected with inputs');
+    t.assertField('content', 'Am watching thou', 'Tester.assertField() works as expected with textarea');
+    t.assertField('check', 'on', 'Tester.assertField() works as expected with checkboxes');
+    t.assertField('choice', 'no', 'Tester.assertField() works as expected with radios');
+    t.assertField('topic', 'bar', 'Tester.assertField() works as expected with selects');
+    t.assertField('file', 'C:\\fakepath\\README.md', 'Tester.assertField() works as expected with file inputs');
+    t.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
 });
 
 casper.then(function() {

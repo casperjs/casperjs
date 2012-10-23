@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError exports phantom require*/
+/*global CasperError exports phantom require __utils__*/
 
 var fs = require('fs');
 var events = require('events');
@@ -238,25 +238,24 @@ Tester.prototype.assertEvalEquals = Tester.prototype.assertEvalEqual = function 
 /**
  * Asserts that a given input field has the provided value.
  *
- * @param  String   input_name      The name attribute of the input element
- * @param  String   expected_value  The expected value of the input element
- * @param  String   message         Test description
- * @return Object                   An assertion result object
+ * @param  String   inputName  The name attribute of the input element
+ * @param  String   expected   The expected value of the input element
+ * @param  String   message    Test description
+ * @return Object              An assertion result object
  */
-Tester.prototype.assertField = function assertField(input_name, expected_value, message) {
+Tester.prototype.assertField = function assertField(inputName, expected,  message) {
     "use strict";
-    var actual_value = this.casper.evaluate(function(input_name) {
-        var input = document.querySelector('input[name="' + input_name + '"]');
-        return input ? input.value : null;
-    }, { input_name: input_name });
-    return this.assert(this.testEquals(actual_value, expected_value), message, {
+    var actual = this.casper.evaluate(function(inputName) {
+        return __utils__.getFieldValue(inputName);
+    }, { inputName: inputName });
+    return this.assert(this.testEquals(actual, expected),  message, {
         type: 'assertField',
-        standard: f('"%s" input field has the value "%s"', input_name, expected_value),
+        standard: f('"%s" input field has the value "%s"', inputName, expected),
         values:  {
-            input_name: input_name,
-            actual_value: actual_value,
-            expected_value: expected_value
-        }
+            inputName: inputName,
+            actual: actual,
+            expected:  expected
+         }
     });
 };
 

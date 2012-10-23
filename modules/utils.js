@@ -90,9 +90,6 @@ exports.dump = dump;
  */
 function equals(v1, v2) {
     "use strict";
-    if (betterTypeOf(v1) !== betterTypeOf(v2)) {
-        return false;
-    }
     if (isFunction(v1)) {
         return v1.toString() === v2.toString();
     }

@@ -408,6 +408,34 @@
             return nodes;
         };
 
+        this.getFieldValue = function getFieldValue(inputName) {
+            var inputs = this.findAll('[name="' + inputName + '"]');
+            switch (inputs.length) {
+                case 0:
+                    return null;
+                case 1:
+                    return inputs[0].value;
+                default:
+                    var type = inputs[0].getAttribute('type').toLowerCase();
+                    if (type === 'radio') {
+                        var value;
+                        [].forEach.call(inputs, function(radio) {
+                            value = radio.checked ? radio.value : undefined;
+                        });
+                        return value;
+                    } else if (type === 'checkbox') {
+                        var values = [];
+                        [].forEach.call(inputs, function(checkbox) {
+                            if (checkbox.checked) {
+                                values.push(checkbox.value);
+                            }
+                        });
+                        return values;
+                    }
+                    break;
+            }
+        };
+
         /**
          * Logs a message. Will format the message a way CasperJS will be able
          * to log phantomjs side.
