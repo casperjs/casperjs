@@ -97,11 +97,12 @@ casper.then(function() {
 
 casper.thenOpen('tests/site/form.html', function() {
     t.comment('Tester.assertField()');
+    t.comment('1. Fill inputs');
     var fpath = phantom.libraryPath + '/README.md';
     this.fill('form[action="result.html"]', {
         'email':       'chuck@norris.com',
         'content':     'Am watching thou',
-        'check':       'on',
+        'check':       true,
         'choice':      'no',
         'topic':       'bar',
         'file':        fpath,
@@ -109,11 +110,31 @@ casper.thenOpen('tests/site/form.html', function() {
     });
     t.assertField('email', 'chuck@norris.com', 'Tester.assertField() works as expected with inputs');
     t.assertField('content', 'Am watching thou', 'Tester.assertField() works as expected with textarea');
-    t.assertField('check', 'on', 'Tester.assertField() works as expected with checkboxes');
+    t.assertField('check', true, 'Tester.assertField() works as expected with checkboxes');
     t.assertField('choice', 'no', 'Tester.assertField() works as expected with radios');
     t.assertField('topic', 'bar', 'Tester.assertField() works as expected with selects');
     t.assertField('file', 'C:\\fakepath\\README.md', 'Tester.assertField() works as expected with file inputs');
     t.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
+});
+
+casper.reload(function() {
+    t.comment('2. Unfill inputs');
+    this.fill('form[action="result.html"]', {
+        'email':       '',
+        'content':     '',
+        'check':       false,
+        'choice':      '',
+        'topic':       '',
+        'file':        '',
+        'checklist[]': []
+    });
+    t.assertField('email', '', 'Tester.assertField() works as expected with inputs');
+    t.assertField('content', '', 'Tester.assertField() works as expected with textarea');
+    t.assertField('check', false, 'Tester.assertField() works as expected with checkboxes');
+    t.assertField('choice', null, 'Tester.assertField() works as expected with radios');
+    t.assertField('topic', 'foo', 'Tester.assertField() works as expected with selects');
+    t.assertField('file', '', 'Tester.assertField() works as expected with file inputs');
+    t.assertField('checklist[]', [], 'Tester.assertField() works as expected with check lists');
 });
 
 casper.then(function() {

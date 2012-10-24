@@ -408,15 +408,37 @@
             return nodes;
         };
 
+        /**
+         * Retrieves the value of a form field.
+         *
+         * @param  String  inputName  The for input name attr value
+         * @return Mixed
+         */
         this.getFieldValue = function getFieldValue(inputName) {
-            var inputs = this.findAll('[name="' + inputName + '"]');
+            var inputs = this.findAll('[name="' + inputName + '"]'), type;
             switch (inputs.length) {
                 case 0:
                     return null;
                 case 1:
-                    return inputs[0].value;
+                    //this.log(inputs[0].nodeName.toLowerCase(), "error");
+                    var input = inputs[0];
+                    try {
+                        type = input.getAttribute('type').toLowerCase();
+                    } catch (e) {
+                        type = 'other';
+                    }
+                    if (['checkbox', 'radio'].indexOf(type) === -1) {
+                        return input.value;
+                    }
+                    // single checkbox or… radio button (weird, I know)
+                    if (input.hasAttribute('value')) {
+                        return input.checked ? input.getAttribute('value') : undefined;
+                    } else {
+                        return input.checked;
+                    }
+                    break;
                 default:
-                    var type = inputs[0].getAttribute('type').toLowerCase();
+                    type = inputs[0].getAttribute('type').toLowerCase();
                     if (type === 'radio') {
                         var value;
                         [].forEach.call(inputs, function(radio) {
