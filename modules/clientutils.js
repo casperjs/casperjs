@@ -415,46 +415,44 @@
          * @return Mixed
          */
         this.getFieldValue = function getFieldValue(inputName) {
+            function getSingleValue(input) {
+                try {
+                    type = input.getAttribute('type').toLowerCase();
+                } catch (e) {
+                    type = 'other';
+                }
+                if (['checkbox', 'radio'].indexOf(type) === -1) {
+                    return input.value;
+                }
+                // single checkbox or… radio button (weird, I know)
+                if (input.hasAttribute('value')) {
+                    return input.checked ? input.getAttribute('value') : undefined;
+                }
+                return input.checked;
+            }
+            function getMultipleValues(inputs) {
+                type = inputs[0].getAttribute('type').toLowerCase();
+                if (type === 'radio') {
+                    var value;
+                    [].forEach.call(inputs, function(radio) {
+                        value = radio.checked ? radio.value : undefined;
+                    });
+                    return value;
+                } else if (type === 'checkbox') {
+                    var values = [];
+                    [].forEach.call(inputs, function(checkbox) {
+                        if (checkbox.checked) {
+                            values.push(checkbox.value);
+                        }
+                    });
+                    return values;
+                }
+            }
             var inputs = this.findAll('[name="' + inputName + '"]'), type;
             switch (inputs.length) {
-                case 0:
-                    return null;
-                case 1:
-                    //this.log(inputs[0].nodeName.toLowerCase(), "error");
-                    var input = inputs[0];
-                    try {
-                        type = input.getAttribute('type').toLowerCase();
-                    } catch (e) {
-                        type = 'other';
-                    }
-                    if (['checkbox', 'radio'].indexOf(type) === -1) {
-                        return input.value;
-                    }
-                    // single checkbox or… radio button (weird, I know)
-                    if (input.hasAttribute('value')) {
-                        return input.checked ? input.getAttribute('value') : undefined;
-                    } else {
-                        return input.checked;
-                    }
-                    break;
-                default:
-                    type = inputs[0].getAttribute('type').toLowerCase();
-                    if (type === 'radio') {
-                        var value;
-                        [].forEach.call(inputs, function(radio) {
-                            value = radio.checked ? radio.value : undefined;
-                        });
-                        return value;
-                    } else if (type === 'checkbox') {
-                        var values = [];
-                        [].forEach.call(inputs, function(checkbox) {
-                            if (checkbox.checked) {
-                                values.push(checkbox.value);
-                            }
-                        });
-                        return values;
-                    }
-                    break;
+                case 0:  return null;
+                case 1:  return getSingleValue(inputs[0]);
+                default: return getMultipleValues(inputs);
             }
         };
 
