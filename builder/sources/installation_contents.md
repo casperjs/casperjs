@@ -102,6 +102,10 @@ C:> phantomjs.exe myscript.js
 <span class="label label-info">Note</span>
 There is no output coloration when running CasperJS on Microsoft platforms.
 
+## Known Bugs & Limitations
+
+**- Due to its asynchronous nature, CasperJS doesn't work <del>well</del> at all with PhantomJS' REPL.**
+
 ## Contribute!
 
 Feel free to play with the code and [report any issue on
