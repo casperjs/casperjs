@@ -1654,6 +1654,24 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
 };
 
 /**
+ * Waits until the page contains given HTML text.
+ *
+ * @param  String    text       Text to wait for
+ * @param  Function  then       The next step to perform (optional)
+ * @param  Function  onTimeout  A callback function to call on timeout (optional)
+ * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForText = function(text, then, onTimeout, timeout) {
+    "use strict";
+    this.checkStarted();
+    timeout = timeout ? timeout : this.options.waitTimeout;
+    return this.waitFor(function _check() {
+        return this.getPageContent().indexOf(text) !== -1;
+    }, then, onTimeout, timeout);
+};
+
+/**
  * Waits until an element matching the provided DOM CSS3/XPath selector does not
  * exist in the remote DOM to process a next step.
  *

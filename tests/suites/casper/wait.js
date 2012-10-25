@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var waitStart;
 
 casper.start('tests/site/index.html', function() {
@@ -20,6 +22,14 @@ casper.wait(1000, function() {
             this.test.fail('Casper.waitFor() can wait for something to happen');
         });
     });
+});
+
+casper.thenOpen('tests/site/waitFor.html').waitForText('<li>four</li>', function() {
+    this.test.comment('Casper.waitForText()');
+    this.test.pass('Casper.waitForText() can wait for text');
+}, function() {
+    this.test.comment('Casper.waitForText()');
+    this.test.fail('Casper.waitForText() can wait for text');
 });
 
 casper.run(function() {

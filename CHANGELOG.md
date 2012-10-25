@@ -7,6 +7,7 @@ XXXX-XX-XX, v1.0.0
 This version is yet to be released.
 
 - fixed [#259](https://github.com/n1k0/casperjs/issues/259) - enhanced `Tester.assertField()` method, which can now tests for other field types than `input`s.
+- added [`Casper.waitForText()`](http://casperjs.org/api.html#casper.waitForText) to wait for a given text to be present in page HTML contents
 - added [`ClientUtils.getFieldValue()`](http://casperjs.org/api.html#clientutils.getFieldValue)
 
 2012-10-23, v1.0.0-RC3
