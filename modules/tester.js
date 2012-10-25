@@ -943,9 +943,10 @@ Tester.prototype.runTest = function runTest(testFile) {
  */
 Tester.prototype.saveResults = function saveResults(filepath) {
     "use strict";
-    if (!fs.isWritable(filepath)) {
-        throw new CasperError(f('Path %s is not writable.', filepath));
-    }
+    // FIXME: looks like phantomjs has a pb with fs.isWritable https://groups.google.com/forum/#!topic/casperjs/hcUdwgGZOrU
+    // if (!fs.isWritable(filepath)) {
+    //     throw new CasperError(f('Path %s is not writable.', filepath));
+    // }
     try {
         fs.write(filepath, this.exporter.getXML(), 'w');
         this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
