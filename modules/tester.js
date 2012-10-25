@@ -610,9 +610,19 @@ Tester.prototype.comment = function comment(message) {
     this.casper.echo('# ' + message, 'COMMENT');
 };
 
+/**
+ * Configure casper callbacks for testing purpose.
+ *
+ */
 Tester.prototype.configure = function configure() {
     "use strict";
     var tester = this;
+
+    // Do not hook casper if we're not testing
+    if (!phantom.casperTest) {
+        return;
+    }
+
     // specific timeout callbacks
     this.casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
         tester.fail(f("Step timeout occured at step %d (%dms)", step, timeout));

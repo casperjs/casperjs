@@ -269,6 +269,7 @@ function bootstrap(global) {
             phantom.exit(0);
         } else if (phantom.casperArgs.get(0) === "test") {
             phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
+            phantom.casperTest = true;
             phantom.casperArgs.drop("test");
         } else if (phantom.casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
