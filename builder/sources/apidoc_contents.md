@@ -1618,6 +1618,22 @@ casper.waitForResource("foobar.png", function() {
 casper.run();
 ```
 
+<h3 id="casper.waitForText"><code>Casper#waitForText(String text[, Function then, Function onTimeout, Number timeout])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Waits until the passed text is present in the page contents before
+processing the immediate next step. Uses [Casper.waitFor()](#casper.waitFor).
+
+**Example:**
+
+```javascript
+casper.start('http://why.univer.se/').waitForText("42", function() {
+    this.echo('Found the answer.');
+});
+
+casper.run();
+```
+
 <h3 id="casper.waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 Waits until an element matching the provided [selector expression](selectors.html) is visible in
