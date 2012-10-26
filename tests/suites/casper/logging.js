@@ -1,3 +1,5 @@
+/*jshint strict:false*/
+/*global casper __utils__*/
 casper.start('tests/site/index.html');
 
 var oldLevel = casper.options.logLevel;
