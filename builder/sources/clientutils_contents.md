@@ -24,6 +24,7 @@ to use this bookmarklet (Chrome, Safari, etc…)
 
 <h3 id="clientutils.echo"><code>ClientUtils#echo(String message)</code></h3>
 
+<span class="label label-success">Added in 1.0</span>
 Print a message out to the casper console from the remote page DOM environment:
 
 ```javascript
