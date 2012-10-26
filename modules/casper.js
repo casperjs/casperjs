@@ -1782,10 +1782,18 @@ function createPage(casper) {
         return casper.filter('page.confirm', message) || true;
     };
     page.onConsoleMessage = function onConsoleMessage(msg) {
-        var level = "info", test = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
-        if (test && test.length === 3) {
-            level = test[1];
-            msg = test[2];
+        // client utils log messages
+        var level = "info", logTest = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
+        if (logTest && logTest.length === 3) {
+            level = logTest[1];
+            msg = logTest[2];
+            return; // don't trigger remote.message event for these
+        }
+        // client utils casper console message
+        var consoleTest = /^\[casper\.echo\]\s?(.*)/.exec(msg);
+        if (consoleTest && consoleTest.length === 2) {
+            casper.echo(consoleTest[1]);
+            return; // don't trigger remote.message event for these
         }
         casper.log(msg, level, "remote");
         casper.emit('remote.message', msg);

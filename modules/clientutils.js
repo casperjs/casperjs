@@ -117,6 +117,16 @@
         };
 
         /**
+         * Echoes something to casper console.
+         *
+         * @param  String  message
+         * @return
+         */
+        this.echo = function echo(message) {
+            console.log("[casper.echo] " + message);
+        };
+
+        /**
          * Base64 encodes a string, even binary ones. Succeeds where
          * window.btoa() fails.
          *
