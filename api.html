@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1351160334231">
-    <link rel="stylesheet" href="css/casper.css?1351160334231">
+    <link rel="stylesheet" href="prettify/prettify.css?1351238892649">
+    <link rel="stylesheet" href="css/casper.css?1351238892649">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1780,6 +1780,14 @@ on Webkit, you're strongly encouraged to use a recent Webkit compatible browser
 to use this bookmarklet (Chrome, Safari, etc…)
 
 </p>
+<h3 id="clientutils.echo"><code>ClientUtils#echo(String message)</code></h3>
+
+<p>Print a message out to the casper console from the remote page DOM environment:
+
+</p>
+<pre><code class="javascript">casper.start('http://foo.ner/').thenEvaluate(function() {
+    __utils__.echo('plop'); // this will be printed to your shell at runtime
+});</code></pre>
 <h3 id="clientutils.encode"><code>ClientUtils#encode(String contents)</code></h3>
 
 <p>Encodes a string using the <a href="http://en.wikipedia.org/wiki/Base64">base64
@@ -1962,6 +1970,7 @@ casper.run();</code></pre>
             <div class="wrapper client-utils-toc"><h3>Quick reference</h3>
 <h4>The <code>ClientUtils</code> class</h4>
 <ul>
+<li><a href="#clientutils.echo"><code>echo()</code></a></li>
 <li><a href="#clientutils.encode"><code>encode()</code></a></li>
 <li><a href="#clientutils.exists"><code>exists()</code></a></li>
 <li><a href="#clientutils.findAll"><code>findAll()</code></a></li>
@@ -2727,10 +2736,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=QqRWc62U-KM.fr./sv=1/am=!4CqUgxoZyYaIj46SFg/d=1/rs=AItRSTNHs1KJDTOJPfAIiRF6wJLIade_cw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1351160334231"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1351160334231"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1351160334231"></script>
-    <script type="text/javascript" src="js/application.js?1351160334231"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=QDjDYbsoxcs.fr./sv=1/am=!6rz0p3va2LWId_D6JA/d=1/rs=AItRSTPAMhwLS1cPFYLFhQ6kebqyJFjajA/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1351238892649"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1351238892649"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1351238892649"></script>
+    <script type="text/javascript" src="js/application.js?1351238892649"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

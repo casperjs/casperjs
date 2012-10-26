@@ -2,6 +2,7 @@
 
 #### The `ClientUtils` class
 
+- [`echo()`](#clientutils.echo)
 - [`encode()`](#clientutils.encode)
 - [`exists()`](#clientutils.exists)
 - [`findAll()`](#clientutils.findAll)

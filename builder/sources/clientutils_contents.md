@@ -22,6 +22,16 @@ be available within the console of your browser.
 on Webkit, you're strongly encouraged to use a recent Webkit compatible browser
 to use this bookmarklet (Chrome, Safari, etc…)
 
+<h3 id="clientutils.echo"><code>ClientUtils#echo(String message)</code></h3>
+
+Print a message out to the casper console from the remote page DOM environment:
+
+```javascript
+casper.start('http://foo.ner/').thenEvaluate(function() {
+    __utils__.echo('plop'); // this will be printed to your shell at runtime
+});
+```
+
 <h3 id="clientutils.encode"><code>ClientUtils#encode(String contents)</code></h3>
 
 Encodes a string using the [base64
