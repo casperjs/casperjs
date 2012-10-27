@@ -203,7 +203,7 @@ function bootstrap(global) {
         }
 
         // Embedded, up-to-date, validatable & controlable CoffeeScript
-        phantom.injectJs(fs.pathJoin(phantom.casperPath, 'node_modules', 'vendors', 'coffee-script.js'));
+        phantom.injectJs(fs.pathJoin(phantom.casperPath, 'modules', 'vendors', 'coffee-script.js'));
 
         // custom global CasperError
         global.CasperError = function CasperError(msg) {
