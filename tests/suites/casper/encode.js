@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var fs = require('fs');
 
 // FIXME: we're using local url scheme until https://github.com/ariya/phantomjs/pull/288 is

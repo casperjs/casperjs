@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var cli = require('cli'), t = casper.test;
 
 t.comment('parse(), get(), has()');

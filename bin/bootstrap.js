@@ -29,6 +29,7 @@
  */
 
 /*global console phantom require*/
+/*jshint maxstatements:30 maxcomplexity:10*/
 
 if (!phantom) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');

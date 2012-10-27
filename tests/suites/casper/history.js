@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 casper.start('tests/site/page1.html');
 casper.thenOpen('tests/site/page2.html');
 casper.thenOpen('tests/site/page3.html');

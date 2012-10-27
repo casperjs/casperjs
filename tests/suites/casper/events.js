@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 // events
 
 casper.test.comment("events");

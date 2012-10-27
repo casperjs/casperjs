@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 casper.start('tests/site/index.html', function() {
     this.click('a[href="test.html"]');
 });

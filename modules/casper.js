@@ -75,6 +75,7 @@ exports.selectXPath = selectXPath;
  */
 var Casper = function Casper(options) {
     "use strict";
+    /*jshint maxstatements:30*/
     // init & checks
     if (!(this instanceof Casper)) {
         return new Casper(options);

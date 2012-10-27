@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 casper.start('tests/site/visible.html', function() {
     this.test.comment('Casper.visible()');
     this.test.assert(this.visible('#img1'), 'Casper.visible() can detect if an element is visible');

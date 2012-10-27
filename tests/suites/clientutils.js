@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var fs = require('fs');
 var x = require('casper').selectXPath;
 

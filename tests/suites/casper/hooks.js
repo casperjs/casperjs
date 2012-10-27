@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 // Dear curious test reader,
 // The on* family of methods is considered deprecated since 0.6.0; please use events instead
 

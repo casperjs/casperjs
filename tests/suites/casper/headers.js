@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 casper.test.comment('Casper.headers.get()');
 
 var server = require('webserver').create();

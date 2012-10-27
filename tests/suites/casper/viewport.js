@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 casper.test.comment('Casper.viewport()');
 
 casper.start();

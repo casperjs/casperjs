@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false maxstatements:99*/
 casper.start('tests/site/mouse-events.html');
 
 casper.then(function() {

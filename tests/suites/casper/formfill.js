@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 casper.start('tests/site/form.html', function() {
     this.test.comment('Casper.fill()');
     this.fill('form[action="result.html"]', {

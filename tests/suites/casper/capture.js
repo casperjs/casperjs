@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var fs = require('fs'), testFile = '/tmp/__casper_test_capture.png';
 
 if (fs.exists(testFile) && fs.isFile(testFile)) {

@@ -1,3 +1,5 @@
+/*global casper __utils__*/
+/*jshint strict:false*/
 var x = require('casper').selectXPath;
 
 casper.test.comment('XPath');

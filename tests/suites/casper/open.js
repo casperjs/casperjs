@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var t = casper.test, current = 0, tests = [
     function(settings) {
         t.assertEquals(settings, {

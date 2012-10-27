@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var fs = require('fs'), t = casper.test;
 
 // Testing added methods

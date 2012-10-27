@@ -5,4 +5,3 @@ modules/querystring.js
 samples
 tests/site
 tests/testdir
-tests/suites

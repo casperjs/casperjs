@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false maxstatements:99*/
 var utils = require('utils'),
     t = casper.test,
     x = require('casper').selectXPath;
@@ -66,7 +68,7 @@ t.comment('fileExt()');
 
 t.comment('fillBlanks()');
 (function() {
-    testCases = {
+    var testCases = {
         'foo':         'foo       ',
         '  foo bar ':  '  foo bar ',
         '  foo bar  ': '  foo bar  '
@@ -79,7 +81,7 @@ t.comment('fillBlanks()');
 
 t.comment('getPropertyPath()');
 (function() {
-    testCases = [
+    var testCases = [
         {
             input:  utils.getPropertyPath({}, 'a.b.c'),
             output: undefined
@@ -123,7 +125,7 @@ t.comment('isArray()');
 
 t.comment('isClipRect()');
 (function() {
-    testCases = [
+    var testCases = [
         [{},                                              false],
         [{top: 2},                                        false],
         [{top: 2, left: 2, width: 2, height: 2},          true],
@@ -138,7 +140,7 @@ t.comment('isClipRect()');
 
 t.comment('isHTTPResource()');
 (function() {
-    testCases = [
+    var testCases = [
         [{},                              false],
         [{url: 'file:///var/www/i.html'}, false],
         [{url: 'mailto:plop@plop.com'},   false],
@@ -201,7 +203,7 @@ t.comment('isWebPage()');
 
 t.comment('isJsFile()');
 (function() {
-    testCases = {
+    var testCases = {
         '':             false,
         'toto.png':     false,
         'plop':         false,
@@ -216,7 +218,7 @@ t.comment('isJsFile()');
 
 t.comment('mergeObjects()');
 (function() {
-    testCases = [
+    var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
         },
@@ -247,7 +249,7 @@ t.comment('mergeObjects()');
 
 t.comment('unique()');
 (function() {
-    testCases = [
+    var testCases = [
         {
             input:  [1,2,3],
             output: [1,2,3]

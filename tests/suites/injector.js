@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var t = casper.test;
 var createInjector = function(fn, values) {
     return require('injector').create(fn, values);
