@@ -758,7 +758,8 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     try {
         return decodeURIComponent(url);
     } catch (e) {
-        return url;
+        /*global unescape*/
+        return unescape(url);
     }
 };
 
