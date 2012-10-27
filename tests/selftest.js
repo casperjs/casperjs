@@ -18,9 +18,14 @@ function info(message) {
 
 service = server.listen(testServerPort, function(request, response) {
     "use strict";
-    var pageFile = fs.pathJoin(phantom.casperPath, request.url);
+    var requestPath = request.url;
+    if (requestPath.indexOf('?') !== -1) {
+        requestPath = request.url.split('?')[0];
+    }
+    var pageFile = fs.pathJoin(phantom.casperPath, requestPath);
     if (!fs.exists(pageFile) || !fs.isFile(pageFile)) {
         response.statusCode = 404;
+        console.log(utils.format('Test server url not found: %s (file: %s)', request.url, pageFile), "warning");
         response.write("404 - NOT FOUND");
     } else {
         response.statusCode = 200;
