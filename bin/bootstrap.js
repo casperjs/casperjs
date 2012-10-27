@@ -275,12 +275,8 @@ function bootstrap(global) {
         } else if (phantom.casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
             phantom.casperSelfTest = true;
-            phantom.casperArgs.options.includes = fs.pathJoin(phantom.casperPath, 'tests', 'selftest.js');
-            if (phantom.casperArgs.args.length > 1) {
-                // we want a single test file
-                phantom.casperArgs.args.push(fs.pathJoin(phantom.casperPath, phantom.casperArgs.get(1)));
-            } else {
-                // run the whole casperjs test suite
+            //phantom.casperArgs.options.includes = fs.pathJoin(phantom.casperPath, 'tests', 'selftest.js');
+            if (phantom.casperArgs.args.length <= 1) {
                 phantom.casperArgs.args.push(fs.pathJoin(phantom.casperPath, 'tests', 'suites'));
             }
             phantom.casperArgs.drop("selftest");
