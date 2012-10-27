@@ -544,17 +544,27 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
 };
 
 /**
- * Asserts that a the current page url matches the provided RegExp
- * pattern.
+ * Asserts that a the current page url matches a given pattern. A pattern may be
+ * either a RegExp object or a String. The method will test if the URL matches
+ * the pattern or contains the String.
  *
- * @param  RegExp   pattern    A RegExp object instance
- * @param  String   message    Test description
- * @return Object              An assertion result object
+ * @param  RegExp|String  pattern  The test pattern
+ * @param  String         message  Test description
+ * @return Object                  An assertion result object
  */
 Tester.prototype.assertUrlMatch = Tester.prototype.assertUrlMatches = function assertUrlMatch(pattern, message) {
     "use strict";
-    var currentUrl = this.casper.getCurrentUrl();
-    return this.assert(pattern.test(currentUrl), message, {
+    var currentUrl = this.casper.getCurrentUrl(),
+        patternType = utils.betterTypeOf(pattern),
+        result;
+    if (patternType === "regexp") {
+        result = pattern.test(currentUrl);
+    } else if (patternType === "string") {
+        result = currentUrl.indexOf(pattern) !== -1;
+    } else {
+        throw new CasperError("assertUrlMatch() only accepts strings or regexps");
+    }
+    return this.assert(result, message, {
         type: "assertUrlMatch",
         standard: "Current url matches the provided pattern",
         values: {
