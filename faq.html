@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1351581127124">
-    <link rel="stylesheet" href="css/casper.css?1351581127124">
+    <link rel="stylesheet" href="prettify/prettify.css?1351582216215">
+    <link rel="stylesheet" href="css/casper.css?1351582216215">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -74,13 +74,37 @@ newcomers.
 </p>
 <h2 id="faq-nodejs">Is CasperJS a nodejs library?</h2>
 
-<p><strong>No.</strong> CasperJS is written on top of PhantomJS, which is a Qt/Webkit based
-library independent from node.
+<p></p><div style="font-size:120%;font-weight:bold">
+    <p>
+        <big>No.</big> CasperJS is written on top of
+        <a href="http://www.phantomjs.org/">PhantomJS</a>, which is a
+        node-independent Qt/Webkit based library. <ins>If you try to run your
+        CasperJS script with <code>node</code> or <code>coffee</code>, it just
+        won't work</ins>
+    </p>
+    <p>
+        <span class="label label-info">Hint</span>
+        If you want to use CasperJS with node, try
+        <a href="https://github.com/WaterfallEngineering/SpookyJS">SpookyJS</a>.
+    </p>
+</div>
+<p></p>
+<hr>
+<h2 id="faq-help">I'm stuck! I think there's a bug! What can I do?</h2>
 
-</p>
-<p>If you want to use CasperJS with node, try <a href="https://github.com/WaterfallEngineering/SpookyJS">SpookyJS</a>.
-
-</p>
+<ol>
+<li>Read the <a href="http://casperjs.org/">docs</a></li>
+<li>Check if an <a href="https://github.com/n1k0/casperjs/issues">issue</a> has been open about your problem already</li>
+<li>Check you're running the <a href="https://github.com/n1k0/casperjs/tags">latest stable tag</a></li>
+<li>Check you're running the <a href="http://code.google.com/p/phantomjs/downloads/list">latest version</a> of PhantomJS</li>
+<li>Ask on the <a href="https://groups.google.com/forum/#!forum/casperjs">project mailing list</a>:<ul>
+<li>try to post a reproducible, minimal test case</li>
+<li>compare casperjs results with native phantomjs ones</li>
+<li>if the problem also occurs with native phantomjs, ask on <a href="https://groups.google.com/forum/#!forum/phantomjs">phantomjs mailing list</a></li>
+</ul>
+</li>
+<li>Eventually, <a href="https://github.com/n1k0/casperjs/issues/new">file an issue</a>.</li>
+</ol>
 <hr>
 <h2 id="faq-versioning">What is the versioning policy of CasperJS?</h2>
 
@@ -98,18 +122,6 @@ will be numbered with the follow format:
 <li>Bug fixes and misc changes bump the patch</li>
 <li>Unstable, special and trunk versions will have a proper identifier</li>
 </ul>
-<hr>
-<h2 id="faq-typeerror">I'm getting <em>TypeError: 'undefined' is not a function</em>; WTF?</h2>
-
-<p>Unfortunately PhantomJS ships with a QtWebKit JS engine which would
-<a href="http://code.google.com/p/phantomjs/issues/detail?id=336">need</a> quite a
-serious upgrade to have more explicit error messages, stack traces,
-location, etc.
-
-</p>
-<p>I cannot do much to make the situation really better, unfortunately :/
-
-</p>
 <hr>
 <h2 id="faq-jquery">Can I use <a href="http://jquery.com/">jQuery</a> with CasperJS?</h2>
 
@@ -228,7 +240,6 @@ instance in your scripts. It's just there because it's used by CasperJS internal
 <li><a href="#faq-nodejs">Is CasperJS a nodejs library?</a></li>
 <li><a href="#faq-help">I'm stuck! What can I do?</a></li>
 <li><a href="#faq-versioning">What is the versioning policy of CasperJS?</a></li>
-<li><a href="#faq-typeerror">I'm getting <em>TypeError: 'undefined' is not a function</em>; WTF?</a></li>
 <li><a href="#faq-jquery">Can I use jQuery with CasperJS?</a></li>
 <li><a href="#faq-executable">Can I use CasperJS without using the casperjs executable?</a></li>
 <li><a href="#faq-httpstatuses">How can I catch HTTP 404 and other status codes?</a></li>
@@ -255,10 +266,10 @@ pull request with your tips and tricks!
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=AJEBHPjn1uc.fr./sv=1/am=!EsUnt3hT0SSIO7F7ug/d=1/rs=AItRSTPpjPzcq4NMnqSz42POuJcu7TSYvg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1351581127124"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1351581127124"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1351581127124"></script>
-    <script type="text/javascript" src="js/application.js?1351581127124"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=AJEBHPjn1uc.fr./sv=1/am=!EsUnt3hT0SSIO7F7ug/d=1/rs=AItRSTPpjPzcq4NMnqSz42POuJcu7TSYvg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1351582216215"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1351582216215"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1351582216215"></script>
+    <script type="text/javascript" src="js/application.js?1351582216215"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

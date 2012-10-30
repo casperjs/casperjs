@@ -3,7 +3,6 @@
 - [Is CasperJS a nodejs library?](#faq-nodejs)
 - [I'm stuck! What can I do?](#faq-help)
 - [What is the versioning policy of CasperJS?](#faq-versioning)
-- [I'm getting *TypeError: 'undefined' is not a function*; WTF?](#faq-typeerror)
 - [Can I use jQuery with CasperJS?](#faq-jquery)
 - [Can I use CasperJS without using the casperjs executable?](#faq-executable)
 - [How can I catch HTTP 404 and other status codes?](#faq-httpstatuses)

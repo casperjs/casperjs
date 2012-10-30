@@ -3,10 +3,33 @@ newcomers.
 
 <h2 id="faq-nodejs">Is CasperJS a nodejs library?</h2>
 
-**No.** CasperJS is written on top of PhantomJS, which is a Qt/Webkit based
-library independent from node.
+<div style="font-size:120%;font-weight:bold">
+    <p>
+        <big>No.</big> CasperJS is written on top of
+        <a href="http://www.phantomjs.org/">PhantomJS</a>, which is a
+        node-independent Qt/Webkit based library. <ins>If you try to run your
+        CasperJS script with <code>node</code> or <code>coffee</code>, it just
+        won't work</ins>
+    </p>
+    <p>
+        <span class="label label-info">Hint</span>
+        If you want to use CasperJS with node, try
+        <a href="https://github.com/WaterfallEngineering/SpookyJS">SpookyJS</a>.
+    </p>
+</div>
+* * * * *
 
-If you want to use CasperJS with node, try [SpookyJS](https://github.com/WaterfallEngineering/SpookyJS).
+<h2 id="faq-help">I'm stuck! I think there's a bug! What can I do?</h2>
+
+1. Read the [docs](http://casperjs.org/)
+2. Check if an [issue](https://github.com/n1k0/casperjs/issues) has been open about your problem already
+3. Check you're running the [latest stable tag](https://github.com/n1k0/casperjs/tags)
+4. Check you're running the [latest version](http://code.google.com/p/phantomjs/downloads/list) of PhantomJS
+5. Ask on the [project mailing list](https://groups.google.com/forum/#!forum/casperjs):
+   - try to post a reproducible, minimal test case
+   - compare casperjs results with native phantomjs ones
+   - if the problem also occurs with native phantomjs, ask on [phantomjs mailing list](https://groups.google.com/forum/#!forum/phantomjs)
+6. Eventually, [file an issue](https://github.com/n1k0/casperjs/issues/new).
 
 * * * * *
 
@@ -25,17 +48,6 @@ And constructed with the following guidelines:
 - New additions without breaking backwards compatibility bumps the minor
 - Bug fixes and misc changes bump the patch
 - Unstable, special and trunk versions will have a proper identifier
-
-* * * * *
-
-<h2 id="faq-typeerror">I'm getting *TypeError: 'undefined' is not a function*; WTF?</h2>
-
-Unfortunately PhantomJS ships with a QtWebKit JS engine which would
-[need](http://code.google.com/p/phantomjs/issues/detail?id=336) quite a
-serious upgrade to have more explicit error messages, stack traces,
-location, etc.
-
-I cannot do much to make the situation really better, unfortunately :/
 
 * * * * *
 
