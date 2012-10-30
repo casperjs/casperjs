@@ -1,5 +1,6 @@
 ### FAQ list
 
+- [Is CasperJS a nodejs library?](#faq-nodejs)
 - [I'm stuck! What can I do?](#faq-help)
 - [What is the versioning policy of CasperJS?](#faq-versioning)
 - [I'm getting *TypeError: 'undefined' is not a function*; WTF?](#faq-typeerror)
