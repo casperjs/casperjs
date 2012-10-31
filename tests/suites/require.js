@@ -1,7 +1,7 @@
 /*global casper*/
 /*jshint strict:false*/
 var fs = require('fs');
-var modroot = fs.pathJoin(phantom.casperPath, 'tests', 'suites', 'modules');
+var modroot = fs.pathJoin(phantom.casperPath, 'tests', 'sample_modules');
 var jsmod, csmod;
 
 casper.test.comment('Javascript module loading')
