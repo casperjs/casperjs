@@ -1,16 +1,19 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0
-------------------
+2012-10-31, v1.0.0-RC4
+----------------------
 
-This version is yet to be released.
+Next version should be 1.0.0 stable.
 
+- fixed [#261](https://github.com/n1k0/casperjs/issues/261) - Impossible to require CoffeeScript modules
+- fixed [#262](https://github.com/n1k0/casperjs/issues/262) - Injecting clientScripts is not working
 - fixed [#259](https://github.com/n1k0/casperjs/issues/259) - enhanced `Tester.assertField()` method, which can now tests for other field types than `input`s.
 - fixed `Casper.getCurrentUrl()` could misbehave with encoded urls
 - added [`Casper.echo()`](http://casperjs.org/api.html#clientutils.echo) to print a message to the casper console from the remote DOM environment
 - added [`Casper.waitForText()`](http://casperjs.org/api.html#casper.waitForText) to wait for a given text to be present in page HTML contents
 - added [`ClientUtils.getFieldValue()`](http://casperjs.org/api.html#clientutils.getFieldValue)
+- Local CoffeeScript version has been upgraded to 1.4.0
 
 2012-10-23, v1.0.0-RC3
 ----------------------
