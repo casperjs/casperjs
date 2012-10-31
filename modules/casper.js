@@ -953,7 +953,7 @@ Casper.prototype.injectClientScripts = function injectClientScripts() {
         } else {
             this.warn('Failed injecting %s client side', script);
         }
-    });
+    }.bind(this));
     return this;
 };
 
