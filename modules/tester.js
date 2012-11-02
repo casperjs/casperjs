@@ -382,7 +382,7 @@ Tester.prototype.assertNotVisible = Tester.prototype.assertInvisible = function 
  * @param  String    message  Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertRaises = Tester.prototype.assertRaise = this.assertThrows = function assertRaises(fn, args, message) {
+Tester.prototype.assertRaises = Tester.prototype.assertRaise = Tester.prototype.assertThrows = function assertRaises(fn, args, message) {
     "use strict";
     var context = {
         type: "assertRaises",
