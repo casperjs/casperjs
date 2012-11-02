@@ -228,7 +228,7 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
  *
  * @param   String|Array   reasons   One or more of: "loadInProgress, navigationRequested, pendingWait"
  */
-Casper.prototype.blockStep = function blockStep(reasons) {
+Casper.prototype.holdOn = function holdOn(reasons) {
     "use strict";
     if(utils.isString(reasons)){
         reasons = [reasons];
@@ -241,6 +241,7 @@ Casper.prototype.blockStep = function blockStep(reasons) {
             switch(blockParam){
                 case 'navigationRequested':
                 case 'loadInProgress':
+                case 'pendingWait':
                     this[blockParam] = true;
                 break;
                 default:
@@ -407,14 +408,34 @@ Casper.prototype.clear = function clear() {
  *
  * In case of success, `true` is returned, `false` otherwise.
  *
- * @param  String         selector           A DOM CSS3 compatible selector
- * @param  String|Array   blockStepReasons   One or more of: "loadInProgress, navigationRequested, pendingWait"; see Casper.blockStep
+ * @param  String   selector   A DOM CSS3 compatible selector
+ * @param  Object   options    Click options
  * @return Boolean
  */
-Casper.prototype.click = function click(selector, blockStepReasons) {
+Casper.prototype.click = function click(selector, options) {
     "use strict";
     this.checkStarted();
-    this.blockStep(blockStepReasons);
+    options = utils.isObject(options) ? options : {};
+    for(var option in options) {
+      var values = options[option];
+      switch(option){
+        case 'holdOn':
+          var funcCall = 'this.' + option + "(values);";
+          eval(funcCall);
+        break;
+        case 'loadInProgress':
+        case 'navigationRequested':
+        case 'pendingWait':
+          if(!utils.isType(values, 'boolean')){
+            throw new CasperError(f("Click option `%s` must be either true or false", option));
+          }
+          this[option] = values;
+        break;
+        default:
+          throw new CasperError(f("Casper does not recognize `%s` as a click option", option));
+        break;
+      }
+    }
     return this.mouseEvent('click', selector);
 };
 
@@ -422,18 +443,18 @@ Casper.prototype.click = function click(selector, blockStepReasons) {
  * Emulates a click on the element having `label` as innerText. The first
  * element matching this label will be selected, so use with caution.
  *
- * @param  String       label              Element innerText value
- * @param  String       tag                An element tag name (eg. `a` or `button`) (optional)
- * @param  String|Array blockStepReasons   One or more of: "loadInProgress, navigationRequested, pendingWait"; see Casper.blockStep
+ * @param  String   label     Element innerText value
+ * @param  String   tag       An element tag name (eg. `a` or `button`) (optional)
+ * @param  Object   options   Click options
  * @return Boolean
  */
-Casper.prototype.clickLabel = function clickLabel(label, tag, blockStepReasons) {
+Casper.prototype.clickLabel = function clickLabel(label, tag, options) {
     "use strict";
     this.checkStarted();
     tag = tag || "*";
     var escapedLabel = label.toString().replace(/"/g, '\\"');
     var selector = selectXPath(f('//%s[text()="%s"]', tag, escapedLabel));
-    return this.click(selector, blockStepReasons);
+    return this.click(selector, options);
 };
 
 /**
