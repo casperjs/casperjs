@@ -267,7 +267,7 @@ Tester.prototype.assertField = function assertField(inputName, expected,  messag
  * @param  String   message   Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertExists = Tester.prototype.assertExist = this.assertSelectorExists = Tester.prototype.assertSelectorExist = function assertExists(selector, message) {
+Tester.prototype.assertExists = Tester.prototype.assertExist = Tester.prototype.assertSelectorExists = Tester.prototype.assertSelectorExist = function assertExists(selector, message) {
     "use strict";
     return this.assert(this.casper.exists(selector), message, {
         type: "assertExists",
