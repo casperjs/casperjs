@@ -58,6 +58,15 @@ casper.then(function() {
     t.comment('Tester.assertExists()');
     t.assertExists('body', 'Tester.assertExists() works as expected');
 
+    t.comment('Tester.assertExist()');
+    t.assertExist('body', 'Tester.assertExist() [alias of assertExists()] works as expected');
+
+    t.comment('Tester.assertSelectorExists()');
+    t.assertSelectorExists('body', 'Tester.assertSelectorExists() [alias of assertExists()] works as expected');
+
+    t.comment('Tester.assertSelectorExists()');
+    t.assertSelectorExist('body', 'Tester.assertSelectorExist() [alias of assertExists()] works as expected');
+
     t.comment('Tester.assertDoesntExist()');
     t.assertDoesntExist('foobar', 'Tester.assertDoesntExist() works as expected');
 
