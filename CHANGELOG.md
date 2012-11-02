@@ -1,6 +1,11 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v1.0.0
+------------------
+
+- fixed [#266](https://github.com/n1k0/casperjs/issues/266) - Fix `tester` module and its self tests
+
 2012-10-31, v1.0.0-RC4
 ----------------------
 
