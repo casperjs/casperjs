@@ -2,6 +2,7 @@
 
 - [Is CasperJS a nodejs library?](#faq-nodejs)
 - [I'm stuck! What can I do?](#faq-help)
+- [I keep copy and pasting stuff in my test scripts, that's boring](#faq-modularization)
 - [What is the versioning policy of CasperJS?](#faq-versioning)
 - [Can I use jQuery with CasperJS?](#faq-jquery)
 - [Can I use CasperJS without using the casperjs executable?](#faq-executable)

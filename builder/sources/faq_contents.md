@@ -17,9 +17,12 @@ newcomers.
         <a href="https://github.com/WaterfallEngineering/SpookyJS">SpookyJS</a>.
     </p>
 </div>
+
 * * * * *
 
 <h2 id="faq-help">I'm stuck! I think there's a bug! What can I do?</h2>
+
+Before rage-tweeting:
 
 1. Read the [docs](http://casperjs.org/)
 2. Check if an [issue](https://github.com/n1k0/casperjs/issues) has been open about your problem already
@@ -30,6 +33,16 @@ newcomers.
    - compare casperjs results with native phantomjs ones
    - if the problem also occurs with native phantomjs, ask on [phantomjs mailing list](https://groups.google.com/forum/#!forum/phantomjs)
 6. Eventually, [file an issue](https://github.com/n1k0/casperjs/issues/new).
+
+* * * * *
+
+<h2 id="faq-modularization">I keep copy and pasting stuff in my test scripts, that's boring</h2>
+
+Have a look at [this gist](https://gist.github.com/3813361), it might help.
+
+Also, don't forget that CasperJS supports a [CommonJS-compliant module pattern](http://wiki.commonjs.org/wiki/Modules/1.1)
+implementation. Note that CasperJS' implementation differs a bit from the one provided by PhantomJS, but
+I personnaly never really encountered any functional difference.
 
 * * * * *
 
