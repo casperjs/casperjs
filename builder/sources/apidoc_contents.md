@@ -596,7 +596,7 @@ sample script for a concrete use case.
 <h3 id="casper.echo"><code>Casper#echo(String message[, String style])</code></h3>
 
 Prints something to stdout, optionally with some fancy color (see the
-[`Colorizer`](#colorizer#) section of this document for more
+[`Colorizer`](#colorizer) section of this document for more
 information).
 
 **Example:**

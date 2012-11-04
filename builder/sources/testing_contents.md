@@ -171,11 +171,19 @@ Some options are available using the `casperjs test` command:
 - <span class="label label-success">Added in 1.0</span>
   `--post=post-test.js` will add the tests contained in `post-test.js`
   __after__ having executed the whole test suite
+- <span class="label label-success">Added in 1.0</span>
+  `--fail-fast` will terminate the current test suite as soon as a first failure is encountered.
 
 Sample custom command:
 
 ```
-$ casperjs test --includes=foo.js,bar.js --pre=pre-test.js --post=post-test.js --direct --log-level=debug test1.js test2.js /path/to/dome/test/dir
+$ casperjs test --includes=foo.js,bar.js \
+                --pre=pre-test.js \
+                --post=post-test.js \
+                --direct \
+                --log-level=debug \
+                --fail-fast \
+                test1.js test2.js /path/to/some/test/dir
 ```
 
 <span class="label label-success">Hint</span>

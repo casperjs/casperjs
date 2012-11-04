@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1351714763599">
-    <link rel="stylesheet" href="css/casper.css?1351714763599">
+    <link rel="stylesheet" href="prettify/prettify.css?1352046335784">
+    <link rel="stylesheet" href="css/casper.css?1352046335784">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -229,11 +229,19 @@ before the whole suite execution</li>
 <li><span class="label label-success">Added in 1.0</span>
 <code>--post=post-test.js</code> will add the tests contained in <code>post-test.js</code>
 <strong>after</strong> having executed the whole test suite</li>
+<li><span class="label label-success">Added in 1.0</span>
+<code>--fail-fast</code> will terminate the current test suite as soon as a first failure is encountered.</li>
 </ul>
 <p>Sample custom command:
 
 </p>
-<pre><code>$ casperjs test --includes=foo.js,bar.js --pre=pre-test.js --post=post-test.js --direct --log-level=debug test1.js test2.js /path/to/dome/test/dir</code></pre>
+<pre><code>$ casperjs test --includes=foo.js,bar.js \
+                --pre=pre-test.js \
+                --post=post-test.js \
+                --direct \
+                --log-level=debug \
+                --fail-fast \
+                test1.js test2.js /path/to/some/test/dir</code></pre>
 <p><span class="label label-success">Hint</span>
 A <a href="https://gist.github.com/3813361">demo gist</a> is also available in order
 to get you started with a sample suite involving some of these options.
@@ -279,10 +287,10 @@ your own runner and extend the casper object instance from there.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=c7vMt80Ay8o.fr./sv=1/am=!-5iK5mLqTdGIwAcTTA/d=1/rs=AItRSTP1L8juXEbqaqyC1HbKFeD0i7WDzQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1351714763599"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1351714763599"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1351714763599"></script>
-    <script type="text/javascript" src="js/application.js?1351714763599"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/apps-static/_/js/gapi/plusone/rt=j/ver=QTCtS4Px620.fr./sv=1/am=!EjuVRaiyNaqIjBsSTg/d=1/rs=AItRSTMeGTs0F8IgKz0BitCXPPFJTsCzHw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1352046335784"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1352046335784"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1352046335784"></script>
+    <script type="text/javascript" src="js/application.js?1352046335784"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
