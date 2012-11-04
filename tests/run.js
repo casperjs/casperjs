@@ -60,6 +60,7 @@ if (casper.cli.get('no-colors') === true) {
     casper.options.colorizerType = cls;
     casper.colorizer = colorizer.create(cls);
 }
+casper.test.options.failFast = casper.cli.get('fail-fast') || false;
 
 // test paths are passed as args
 if (casper.cli.args.length) {
@@ -97,6 +98,9 @@ this.loadIncludes.forEach(function(include){
 casper.test.on('tests.complete', function() {
     "use strict";
     this.renderResults(true, undefined, casper.cli.get('xunit') || undefined);
+    if (this.options.failFast && this.testResults.failures.length > 0) {
+        casper.warn('Test suite failed fast, all tests may not have been executed.');
+    }
 });
 
 // run all the suites

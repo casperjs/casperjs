@@ -154,6 +154,9 @@ var Casper = function Casper(options) {
     this.initErrorHandler();
 
     this.on('error', function(msg, backtrace) {
+        if (msg === this.test.SKIP_MESSAGE) {
+            return this.warn(f('--fail-fast: aborted remaining tests in "%s"', this.test.currentTestFile));
+        }
         var c = this.getColorizer();
         var match = /^(.*): __mod_error(.*):: (.*)/.exec(msg);
         var notices = [];

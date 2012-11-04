@@ -55,6 +55,8 @@ var Tester = function Tester(casper, options) {
 
     this.casper = casper;
 
+    this.SKIP_MESSAGE = '__termination__';
+
     this.currentTestFile = null;
     this.currentSuiteNum = 0;
     this.exporter = require('xunit').create();
@@ -66,6 +68,7 @@ var Tester = function Tester(casper, options) {
     this.running = false;
     this.suites = [];
     this.options = utils.mergeObjects({
+        failFast: false,  // terminates a suite as soon as a test fails?
         failText: "FAIL", // text to use for a successful test
         passText: "PASS", // text to use for a failed test
         pad:      80      // maximum number of chars for a result line
@@ -648,11 +651,13 @@ Tester.prototype.configure = function configure() {
 
     // events
     this.casper.on('error', function(msg, backtrace) {
-        var line = 0;
-        try {
-            line = backtrace[0].line;
-        } catch (e) {}
-        tester.uncaughtError(msg, tester.currentTestFile, line);
+        if (!utils.isString(msg) && msg.indexOf(this.SKIP_MESSAGE) === -1) {
+            var line = 0;
+            try {
+                line = backtrace[0].line;
+            } catch (e) {}
+            tester.uncaughtError(msg, tester.currentTestFile, line);
+        }
         tester.done();
     });
 
@@ -816,21 +821,23 @@ Tester.prototype.pass = function pass(message) {
  */
 Tester.prototype.processAssertionResult = function processAssertionResult(result) {
     "use strict";
-    var eventName, style, status;
-    if (result.success === true) {
-        eventName = 'success';
-        style = 'INFO';
+    var eventName= 'success',
+        message = result.message || result.standard,
+        style = 'INFO',
         status = this.options.passText;
-        this.testResults.passed++;
-    } else {
+    if (!result.success) {
         eventName = 'fail';
         style = 'RED_BAR';
         status = this.options.failText;
         this.testResults.failed++;
+    } else {
+        this.testResults.passed++;
     }
-    var message = result.message || result.standard;
     this.casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
     this.emit(eventName, result);
+    if (this.options.failFast && !result.success) {
+        throw this.SKIP_MESSAGE;
+    }
     return result;
 };
 
