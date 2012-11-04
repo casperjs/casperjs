@@ -344,7 +344,7 @@ Tester.prototype.assertMatch = Tester.prototype.assertMatches = function assertM
  * @param  String   message    Test description
  * @return Object              An assertion result object
  */
-Tester.prototype.assertNot = function assertNot(condition, message) {
+Tester.prototype.assertNot = Tester.prototype.assertFalse = function assertNot(condition, message) {
     "use strict";
     return this.assert(!condition, message, {
         type: "assertNot",
