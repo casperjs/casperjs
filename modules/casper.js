@@ -465,6 +465,7 @@ Casper.prototype.die = function die(message, status) {
         message = "Suite explicitely interrupted without any message given.";
     }
     this.log(message, "error");
+    this.echo(message, "ERROR");
     this.emit('die', message, status);
     if (utils.isFunction(this.options.onDie)) {
         this.options.onDie.call(this, this, message, status);
@@ -568,6 +569,10 @@ Casper.prototype.echo = function echo(text, style, pad) {
 Casper.prototype.evaluate = function evaluate(fn, context) {
     "use strict";
     this.checkStarted();
+    // preliminary checks
+    if (!utils.isFunction(fn) && !utils.isString(fn)) { // phantomjs allows functions defs as string
+        throw new CasperError("evaluate() only accepts functions or strings");
+    }
     // ensure client utils are always injected
     this.injectClientUtils();
     // function context
