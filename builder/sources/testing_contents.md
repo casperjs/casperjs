@@ -164,7 +164,7 @@ Some options are available using the `casperjs test` command:
   [related section](logging.html))
 - <span class="label label-success">Added in 1.0</span>
   `--includes=foo.js,bar.js` will includes the `foo.js` and `bar.js` files
-  before the whole suite execution
+  before each test file execution
 - <span class="label label-success">Added in 1.0</span>
   `--pre=pre-test.js` will add the tests contained in `pre-test.js`
   __before__ executing the test suite
