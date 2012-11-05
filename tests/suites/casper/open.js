@@ -48,7 +48,7 @@ var t = casper.test, current = 0, tests = [
             username: 'bob',
             password: 'sinclar'
         }, "Casper.thenOpen() used the expected HTTP auth settings");
-    },
+    }
 ];
 
 casper.start();

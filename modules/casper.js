@@ -1078,15 +1078,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
 Casper.prototype.open = function open(location, settings) {
     "use strict";
     this.checkStarted();
-    // settings validation
-    if (!settings) {
-        settings = {
-            method: "get"
-        };
-    }
-    if (!utils.isObject(settings)) {
-        throw new CasperError("open(): request settings must be an Object");
-    }
+    settings = utils.isObject(settings) ? settings : { method: "get" };
     // http method
     // taken from https://github.com/ariya/phantomjs/blob/master/src/webpage.cpp#L302
     var methods = ["get", "head", "put", "post", "delete"];
@@ -1235,7 +1227,7 @@ Casper.prototype.runStep = function runStep(step) {
                 if ((self.test.currentSuiteNum + "-" + self.step) === stepNum) {
                     self.emit('step.timeout');
                     if (utils.isFunction(self.options.onStepTimeout)) {
-                        self.options.onStepTimeout.call(self, self.options.onStepTimeout, stepNum);
+                        self.options.onStepTimeout.call(self, self.options.stepTimeout, stepNum);
                     }
                 }
                 clearInterval(stepTimeoutCheckInterval);

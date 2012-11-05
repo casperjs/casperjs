@@ -638,7 +638,7 @@ Tester.prototype.configure = function configure() {
 
     // specific timeout callbacks
     this.casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
-        tester.fail(f("Step timeout occured at step %d (%dms)", step, timeout));
+        tester.fail(f("Step timeout occured at step %s (%dms)", step, timeout));
     };
 
     this.casper.options.onTimeout = function test_onTimeout(timeout) {

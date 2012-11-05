@@ -5,6 +5,7 @@ XXXX-XX-XX, v1.0.0
 ------------------
 
 - fixed [#266](https://github.com/n1k0/casperjs/issues/266) - Fix `tester` module and its self tests
+- fixed [#268](https://github.com/n1k0/casperjs/issues/266) - Wrong message on step timeout
 - fixed [#215](https://github.com/n1k0/casperjs/issues/215) - added a `--fail-fast` option to the `casper test` command, in order to terminate a test suite execution as soon as any failure is encountered
 - added `Tester.assertFalse()` as an alias of `Tester.assertNot()`
 
