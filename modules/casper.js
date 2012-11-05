@@ -406,6 +406,32 @@ Casper.prototype.clickLabel = function clickLabel(label, tag) {
 };
 
 /**
+ * Configures HTTP authentication parameters. Will try parsing auth credentials from
+ * the passed location first, then check for configured settings if any.
+ *
+ * @param  String  location  Requested url
+ * @param  Object  settings  Request settings
+ * @return Casper
+ */
+Casper.prototype.configureHttpAuth = function configureHttpAuth(location, settings) {
+    "use strict";
+    var username, password, httpAuthMatch = location.match(/^https?:\/\/(.+):(.+)@/i);
+    this.checkStarted();
+    if (httpAuthMatch) {
+        this.page.settings.userName = httpAuthMatch[1];
+        this.page.settings.password = httpAuthMatch[2];
+    } else if (utils.isObject(settings) && settings.username) {
+        this.page.settings.userName = settings.username;
+        this.page.settings.password = settings.password;
+    } else {
+        return;
+    }
+    this.emit('http.auth', username, password);
+    this.log("Setting HTTP authentication for user " + username, "info");
+    return this;
+};
+
+/**
  * Creates a step definition.
  *
  * @param  Function  fn       The step function to call
@@ -1101,20 +1127,8 @@ Casper.prototype.open = function open(location, settings) {
     // clean location
     location = utils.cleanUrl(location);
     // current request url
+    this.configureHttpAuth(location, settings);
     this.requestUrl = this.filter('open.location', location) || location;
-    // http auth
-    if (settings.username && settings.password) {
-        this.setHttpAuth(settings.username, settings.password);
-    } else {
-        var httpAuthMatch = location.match(/^https?:\/\/(.+):(.+)@/i);
-        if (httpAuthMatch) {
-            var httpAuth = {
-                username: httpAuthMatch[1],
-                password: httpAuthMatch[2]
-            };
-            this.setHttpAuth(httpAuth.username, httpAuth.password);
-        }
-    }
     this.emit('open', this.requestUrl, settings);
     this.log(f('opening url: %s, HTTP %s', this.requestUrl, settings.method.toUpperCase()), "debug");
     this.page.openUrl(this.requestUrl, {
@@ -1251,22 +1265,17 @@ Casper.prototype.runStep = function runStep(step) {
 };
 
 /**
- * Sets HTTP authentication parameters.
+ * Sets current WebPage instance the credentials for HTTP authentication.
  *
- * @param  String   username  The HTTP_AUTH_USER value
- * @param  String   password  The HTTP_AUTH_PW value
+ * @param  String  username
+ * @param  String  password
  * @return Casper
  */
 Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
     "use strict";
     this.checkStarted();
-    if (!utils.isString(username) || !utils.isString(password)) {
-        throw new CasperError("Both username and password must be strings");
-    }
     this.page.settings.userName = username;
     this.page.settings.password = password;
-    this.emit('http.auth', username, password);
-    this.log("Setting HTTP authentication for user " + username, "info");
     return this;
 };
 
