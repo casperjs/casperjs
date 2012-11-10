@@ -569,24 +569,21 @@
          * Performs an AJAX request.
          *
          * @param   String   url     Url.
-         * @param   String   method  HTTP method.
+         * @param   String   method  HTTP method (default: GET).
          * @param   Object   data    Request parameters.
          * @param   Boolean  async   Asynchroneous request? (default: false)
          * @return  String           Response text.
          */
         this.sendAJAX = function sendAJAX(url, method, data, async) {
-            var xhr = new XMLHttpRequest(), dataString = "";
-            if (typeof method !== "string" || ["GET", "POST"].indexOf(method.toUpperCase()) === -1) {
-                method = "GET";
-            } else {
-                method = method.toUpperCase();
-            }
+            var xhr = new XMLHttpRequest(),
+                dataString = "",
+                dataList = [];
+            method = method && method.toUpperCase() || "GET";
             xhr.open(method, url, !!async);
-            this.log("getBinary(): Using HTTP method: '" + method + "'", "debug");
+            this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
             xhr.overrideMimeType("text/plain; charset=x-user-defined");
             if (method === "POST") {
                 if (typeof data === "object") {
-                    var dataList = [];
                     for (var k in data) {
                         dataList.push(encodeURIComponent(k) + "=" + encodeURIComponent(data[k].toString()));
                     }
