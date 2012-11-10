@@ -11,7 +11,7 @@
 - [`getBinary()`](#clientutils.getBinary)
 - [`getDocumentHeight()`](#clientutils.getDocumentHeight)
 - [`getElementBounds()`](#clientutils.getElementBounds)
-- [`getElementsBounds()`](#clientutils.getElementBounds)
+- [`getElementsBounds()`](#clientutils.getElementsBounds)
 - [`getElementByXPath()`](#clientutils.getElementByXPath)
 - [`getElementsByXPath()`](#clientutils.getElementsByXPath)
 - [`getFieldValue()`](#clientutils.getFieldValue)
