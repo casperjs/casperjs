@@ -17,4 +17,5 @@
 - [`getFieldValue()`](#clientutils.getFieldValue)
 - [`mouseEvent()`](#clientutils.mouseEvent)
 - [`removeElementsByXPath()`](#clientutils.removeElementsByXPath)
+- [`sendAJAX()`](#clientutils.sendAJAX)
 - [`visible()`](#clientutils.visible)

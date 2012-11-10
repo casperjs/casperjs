@@ -212,6 +212,36 @@ Supported events are `mouseup`, `mousedown`, `click`, `mousemove`, `mouseover` a
 
 Removes all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/).
 
+<h3 id="clientutils.sendAJAX"><code>ClientUtils#sendAJAX(String url[, String method, Object data, Boolean async])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Sends an AJAX request, using the following parameters:
+
+- `url`: The url to request.
+- `method`: The HTTP method (default: `GET`).
+- `data`:   Request parameters (default: `null`).
+- `async`:  Flag for an asynchroneous request? (default: `false`)
+
+<span class="label label-warning">Caveat</span>
+Don't forget to pass the `--web-security=no` option in your CLI call in order to
+perform cross-domains requests when needed.
+
+Sample usage:
+
+```javascript
+var data, wsurl = 'http://api.site.com/search.json';
+
+casper.start('http://my.site.com/', function() {
+    data = this.evaluate(function(wsurl) {
+        return JSON.parse(__utils__.sendAJAX(wsurl, 'GET', null, false));
+    }, {wsurl: wsurl});
+});
+
+casper.then(function() {
+    require('utils').dump(data);
+});
+```
+
 <h3 id="clientutils.visible"><code>ClientUtils#visible(String selector)</code></h3>
 
 Checks if an element is visible.
