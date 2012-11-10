@@ -187,3 +187,19 @@ right within your browser console!
 
 <span class="label label-info">Note</span> You're not obliged at all to use the `__utils__`
 instance in your scripts. It's just there because it's used by CasperJS internals.
+
+* * * * *
+
+<h2 id="faq-javascript">Okay, honestly, I'm stuck with Javascript.</h2>
+
+Don't worry, you're not alone. Javascript is a great language, but it's far more
+difficult to master than one might expect at first look.
+
+Here are some great resources to get started efficiently with the language:
+
+- Learn and practice Javascript online at [Code Academy](http://www.codecademy.com/tracks/javascript)
+- [Eloquent Javascript](http://eloquentjavascript.net/contents.html)
+- [JavaScript Enlightenment](http://www.javascriptenlightenment.com/JavaScript_Enlightenment.pdf) (PDF)
+- last, a [great tutorial on Advanced Javascript Techniques](http://ejohn.org/apps/learn/)
+  by John Resig, the author of jQuery. If you master this one, you're almost done with
+  the language.
