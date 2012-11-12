@@ -41,7 +41,7 @@ Available predefined styles are:
 - `PARAMETER`: cyan text
 - `COMMENT`: yellow text
 - `WARNING`: red text
-- `GREEN_BAR`: green text on white background
+- `GREEN_BAR`: white text on green background
 - `RED_BAR`: white text on red background
 - `INFO_BAR`: cyan text
 
