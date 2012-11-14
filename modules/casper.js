@@ -936,6 +936,7 @@ Casper.prototype.handleReceivedResource = function(resource) {
     this.currentHTTPStatus = null;
     this.currentResponse = undefined;
     if (utils.isHTTPResource(resource)) {
+        this.emit('page.resource.received', resource);
         this.currentResponse = resource;
         this.currentHTTPStatus = resource.status;
         this.emit('http.status.' + resource.status, resource);
@@ -1100,7 +1101,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
  *
  * - String  method:   The HTTP method to use
  * - Object  data:     The data to use to perform the request, eg. {foo: 'bar'}
- * - Array   headers:  An array of request headers, eg. [{'Cache-Control': 'max-age=0'}]
+ * - Object  headers:  Custom request headers object, eg. {'Cache-Control': 'max-age=0'}
  *
  * @param  String  location  The url to open
  * @param  Object  settings  The request settings (optional)
@@ -1108,8 +1109,11 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
  */
 Casper.prototype.open = function open(location, settings) {
     "use strict";
+    var baseCustomHeaders = this.page.customHeaders,
+        customHeaders = settings && settings.headers || {};
     this.checkStarted();
-    settings = utils.isObject(settings) ? settings : { method: "get" };
+    settings = utils.isObject(settings) ? settings : {};
+    settings.method = settings.method || "get";
     // http method
     // taken from https://github.com/ariya/phantomjs/blob/master/src/webpage.cpp#L302
     var methods = ["get", "head", "put", "post", "delete"];
@@ -1131,12 +1135,17 @@ Casper.prototype.open = function open(location, settings) {
     this.requestUrl = this.filter('open.location', location) || location;
     this.emit('open', this.requestUrl, settings);
     this.log(f('opening url: %s, HTTP %s', this.requestUrl, settings.method.toUpperCase()), "debug");
+    // reset resources
+    this.resources = [];
+    // custom headers
+    this.page.customHeaders = utils.mergeObjects(utils.clone(baseCustomHeaders), customHeaders);
+    // perfom request
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
-        data:      settings.data,
-        headers:   settings.headers
+        data:      settings.data
     }, this.page.settings);
-    this.resources = [];
+    // revert base custom headers
+    this.page.customHeaders = baseCustomHeaders;
     return this;
 };
 
@@ -1299,13 +1308,8 @@ Casper.prototype.start = function start(location, then) {
         this.log(f("Unknown log level '%d', defaulting to 'warning'", this.options.logLevel), "warning");
         this.options.logLevel = "warning";
     }
-    // WebPage
     if (!utils.isWebPage(this.page)) {
-        if (utils.isWebPage(this.options.page)) {
-            this.page = this.options.page;
-        } else {
-            this.page = createPage(this);
-        }
+        this.page = utils.isWebPage(this.options.page) ? this.options.page : createPage(this);
     }
     this.page.settings = utils.mergeObjects(this.page.settings, this.options.pageSettings);
     if (utils.isClipRect(this.options.clipRect)) {
@@ -1869,6 +1873,9 @@ function createPage(casper) {
     };
     page.onResourceRequested = function onResourceRequested(request) {
         casper.emit('resource.requested', request);
+        if (request.url === casper.requestUrl) {
+            casper.emit('page.resource.requested', request);
+        }
         if (utils.isFunction(casper.options.onResourceRequested)) {
             casper.options.onResourceRequested.call(casper, casper, request);
         }

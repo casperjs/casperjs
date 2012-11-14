@@ -23,6 +23,14 @@ t.comment('cleanUrl()');
     }
 })();
 
+t.comment('clone()');
+(function() {
+    var a = {a: 1, b: 2, c: [1, 2]};
+    t.assertEquals(utils.clone(a), a);
+    var b = [1, 2, 3, a];
+    t.assertEquals(utils.clone(b), b);
+})();
+
 t.comment('equals()');
 (function() {
     t.assert(utils.equals(null, null), 'equals() null equality');

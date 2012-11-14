@@ -70,6 +70,18 @@ function cleanUrl(url) {
 exports.cleanUrl = cleanUrl;
 
 /**
+ * Clones an object.
+ *
+ * @param  Mixed  o
+ * @return Mixed
+ */
+function clone(o) {
+    "use strict";
+    return JSON.parse(JSON.stringify(o));
+}
+exports.clone = clone;
+
+/**
  * Dumps a JSON representation of passed value to the console. Used for
  * debugging purpose only.
  *
@@ -456,7 +468,7 @@ exports.mergeObjects = mergeObjects;
  */
 function node(name, attributes) {
     "use strict";
-    var _node = document.createElement(name);
+    var _node   = document.createElement(name);
     for (var attrName in attributes) {
         var value = attributes[attrName];
         if (attributes.hasOwnProperty(attrName) && isString(attrName)) {
