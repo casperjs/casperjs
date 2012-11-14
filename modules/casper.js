@@ -1798,13 +1798,14 @@ function createPage(casper) {
     };
     page.onConsoleMessage = function onConsoleMessage(msg) {
         // client utils casper console message
-        var consoleTest = /^\[casper\.echo\]\s?(.*)/.exec(msg);
+        var consoleTest = /^\[casper\.echo\]\s?([\s\S]*)/.exec(msg);
         if (consoleTest && consoleTest.length === 2) {
             casper.echo(consoleTest[1]);
             return; // don't trigger remote.message event for these
         }
         // client utils log messages
-        var logLevel = "info", logTest = /^\[casper:(\w+)\]\s?(.*)/.exec(msg);
+        var logLevel = "info",
+            logTest = /^\[casper:(\w+)\]\s?([\s\S]*)/m.exec(msg);
         if (logTest && logTest.length === 3) {
             logLevel = logTest[1];
             msg = logTest[2];
