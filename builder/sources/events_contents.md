@@ -196,6 +196,11 @@ parameters passed to their callback:
       <td>Emitted when PhantomJS' <code>WebPage</code> object used by CasperJS has been initialized.</td>
     </tr>
     <tr>
+      <td><code>page.resource.requested</code></td>
+      <td><code>request</code></td>
+      <td>Emitted when a new HTTP request is performed to open the required url.</td>
+    </tr>
+    <tr>
       <td><code>remote.alert</code></td>
       <td><code>message</code></td>
       <td>Emitted when a remote <code>alert()</code> call has been performed.</td>
