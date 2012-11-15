@@ -11,7 +11,7 @@ XXXX-XX-XX, v1.0.0
 - fixed [#274](https://github.com/n1k0/casperjs/issues/274) - some headers couldn't be set
 - fixed [#277](https://github.com/n1k0/casperjs/issues/277) - multiline support in `ClientUtils.echo()`
 - added `Tester.assertFalse()` as an alias of `Tester.assertNot()`
-- added a `page.resource.requested` event
+- added `page.resource.requested` and `page.resource.received` events
 
 2012-10-31, v1.0.0-RC4
 ----------------------
