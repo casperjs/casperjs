@@ -190,6 +190,13 @@ instance in your scripts. It's just there because it's used by CasperJS internal
 
 * * * * *
 
+<h2 id="faq-parallel">Is it possible to achieve parallel browsing using CasperJS?</h2>
+
+[Officially no](https://groups.google.com/d/topic/casperjs/Scx4Cjqp7hE/discussion),
+but you may want to try.
+
+* * * * *
+
 <h2 id="faq-javascript">Okay, honestly, I'm stuck with Javascript.</h2>
 
 Don't worry, you're not alone. Javascript is a great language, but it's far more
