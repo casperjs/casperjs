@@ -11,6 +11,9 @@ casper.start('tests/site/frames.html', function() {
     this.test.assertTitle('CasperJS frame 2');
     this.test.assertExists("#f2");
     this.test.assertDoesntExist("#f1");
+    this.test.assertEval(function() {
+        return '__utils__' in window && 'getBinary' in __utils__;
+    }, '__utils__ object is available in child frame');
 });
 
 casper.run(function() {
