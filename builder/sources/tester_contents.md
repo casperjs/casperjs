@@ -233,6 +233,18 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
+<h3 id="tester.assertTextDoesntExist"><code>Tester#assertTextDoesntExist(String unexpected[, String message])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Asserts that body **plain text content** doesn't contain the given string.
+
+```javascript
+var casper = require('casper').create();
+casper.start('http://www.google.fr/', function() {
+    this.test.assertTextDoesntExist('bing', 'page body does not contain "bing"');
+});
+```
+
 <h3 id="tester.assertTitle"><code>Tester#assertTitle(String expected[, String message])</code></h3>
 
 Asserts that title of the remote page equals to the expected one.

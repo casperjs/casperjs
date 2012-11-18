@@ -20,6 +20,7 @@
 - [`assertSelectorExists()`](#tester.assertSelectorExists)
 - [`assertSelectorHasText()`](#tester.assertSelectorHasText)
 - [`assertTextExists()`](#tester.assertTextExists)
+- [`assertTextDoesntExist()`](#tester.assertTextDoesntExist)
 - [`assertTitle()`](#tester.assertTitle)
 - [`assertTitleMatch()`](#tester.assertTitleMatch)
 - [`assertType()`](#tester.assertType)
