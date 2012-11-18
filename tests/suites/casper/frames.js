@@ -1,4 +1,4 @@
-/*global casper*/
+/*global casper __utils__*/
 /*jshint strict:false*/
 casper.start('tests/site/frames.html', function() {
     this.test.assertTitle('CasperJS test frames');

@@ -926,6 +926,7 @@ Casper.prototype.getTitle = function getTitle() {
  */
 Casper.prototype.handleReceivedResource = function(resource) {
     "use strict";
+    /*jshint maxstatements:20*/
     if (resource.stage !== "end") {
         return;
     }
@@ -1109,6 +1110,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
  */
 Casper.prototype.open = function open(location, settings) {
     "use strict";
+    /*jshint maxstatements:30*/
     var baseCustomHeaders = this.page.customHeaders,
         customHeaders = settings && settings.headers || {};
     this.checkStarted();
@@ -1297,6 +1299,7 @@ Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
  */
 Casper.prototype.start = function start(location, then) {
     "use strict";
+    /*jshint maxstatements:30*/
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();

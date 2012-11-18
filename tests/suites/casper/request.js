@@ -13,7 +13,7 @@ var t = casper.test, current = 0, tests = [
     },
     function(request) {
         t.assertNot(request.headers.some(testHeader), "Casper.open() custom headers option is not persistent");
-    },
+    }
 ];
 
 casper.on('page.resource.requested', function(request) {

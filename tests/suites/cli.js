@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false*/
+/*jshint strict:false maxstatements:99*/
 var cli = require('cli'), t = casper.test;
 
 t.comment('parse(), get(), has()');

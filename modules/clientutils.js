@@ -41,6 +41,7 @@
      * Casper client-side helpers.
      */
     exports.ClientUtils = function ClientUtils(options) {
+        /*jshint maxstatements:30*/
         // private members
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
@@ -200,6 +201,7 @@
          * @return Object                    An object containing setting result for each field, including file uploads
          */
         this.fill = function fill(form, vals) {
+            /*jshint maxcomplexity:8*/
             var out = {
                 errors: [],
                 fields: [],
@@ -606,6 +608,7 @@
          * @param  mixed                 value  The field value to set
          */
         this.setField = function setField(field, value) {
+            /*jshint maxcomplexity:99 */
             var logValue, fields, out;
             value = logValue = (value || "");
             if (field instanceof NodeList) {
