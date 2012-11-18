@@ -422,6 +422,27 @@ Tester.prototype.assertResourceExists = Tester.prototype.assertResourceExist = f
 };
 
 /**
+ * Asserts that given text doesn't exist in the document body.
+ *
+ * @param  String  text     Text not to be found
+ * @param  String  message  Test description
+ * @return Object           An assertion result object
+ */
+Tester.prototype.assertTextDoesntExist = Tester.prototype.assertTextDoesntExist = function assertTextDoesntExist(text, message) {
+    "use strict";
+    var textFound = (this.casper.evaluate(function _evaluate() {
+        return document.body.textContent || document.body.innerText;
+    }).indexOf(text) === -1);
+    return this.assert(textFound, message, {
+        type: "assertTextDoesntExists",
+        standard: "Text doesn't exist within the document body",
+        values: {
+            text: text
+        }
+    });
+};
+
+/**
  * Asserts that given text exists in the document body.
  *
  * @param  String  text     Text to be found
@@ -450,11 +471,11 @@ Tester.prototype.assertTextExists = Tester.prototype.assertTextExist = function 
  * @param  String   message   Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertSelectorHasText = function assertSelectorHasText(selector, text, message) {
+Tester.prototype.assertSelectorHasText = Tester.prototype.assertSelectorContains = function assertSelectorHasText(selector, text, message) {
     "use strict";
     var textFound = this.casper.fetchText(selector).indexOf(text) !== -1;
     return this.assert(textFound, message, {
-        type: "assertTextInSelector",
+        type: "assertSelectorHasText",
         standard: f('Found "%s" within the selector "%s"', text, selector),
         values: {
             selector: selector,
@@ -471,11 +492,11 @@ Tester.prototype.assertSelectorHasText = function assertSelectorHasText(selector
  * @param  String   message   Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertSelectorDoesntHaveText = function assertSelectorDoesntHaveText(selector, text, message) {
+Tester.prototype.assertSelectorDoesntHaveText = Tester.prototype.assertSelectorDoesntContain = function assertSelectorDoesntHaveText(selector, text, message) {
     "use strict";
     var textFound = this.casper.fetchText(selector).indexOf(text) === -1;
     return this.assert(textFound, message, {
-        type: "assertNoTextInSelector",
+        type: "assertSelectorDoesntHaveText",
         standard: f('Did not find "%s" within the selector "%s"', text, selector),
         values: {
             selector: selector,

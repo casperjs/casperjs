@@ -10,6 +10,7 @@ XXXX-XX-XX, v1.0.0
 - fixed [#215](https://github.com/n1k0/casperjs/issues/215) - added a `--fail-fast` option to the `casper test` command, in order to terminate a test suite execution as soon as any failure is encountered
 - fixed [#274](https://github.com/n1k0/casperjs/issues/274) - some headers couldn't be set
 - fixed [#277](https://github.com/n1k0/casperjs/issues/277) - multiline support in `ClientUtils.echo()`
+- added [`Tester.assertTextDoesntExist()`](http://casperjs.org/api.html#tester.assertTextDoesntExist)
 - added `Tester.assertFalse()` as an alias of `Tester.assertNot()`
 - added `page.resource.requested` and `page.resource.received` events
 
