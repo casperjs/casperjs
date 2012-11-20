@@ -110,6 +110,7 @@ var Casper = function Casper(options) {
             localToRemoteUrlAccessEnabled: true,
             userAgent:                     defaultUserAgent
         },
+        remoteScripts:       [],
         stepTimeout:         null,
         timeout:             null,
         verbose:             false,
@@ -967,7 +968,7 @@ Casper.prototype.initErrorHandler = function initErrorHandler() {
 };
 
 /**
- * Injects configured client scripts.
+ * Injects configured local client scripts.
  *
  * @return Casper
  */
@@ -1018,6 +1019,29 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
     this.page.evaluate(function() {
         window.__utils__ = new window.ClientUtils(__options);
     }.toString().replace('__options', JSON.stringify(this.options)));
+};
+
+/**
+ * Loads and include remote client scripts to current page.
+ *
+ * @return Casper
+ */
+Casper.prototype.includeRemoteScripts = function includeRemoteScripts() {
+    if (this.options.remoteScripts.length === 0) {
+        return this;
+    }
+    this.waitStart();
+    this.options.remoteScripts.forEach(function(scriptUrl, i) {
+        this.log(f("Loading remote script: %s", scriptUrl), "debug");
+        this.page.includeJs(scriptUrl, function() {
+            this.log(f("Remote script %s loaded", scriptUrl), "debug");
+            if (i === this.options.remoteScripts.length - 1) {
+                this.log("All remote scripts loaded.", "debug");
+                this.waitDone();
+            }
+        }.bind(this));
+    }.bind(this));
+    return this;
 };
 
 /**
@@ -1228,8 +1252,7 @@ Casper.prototype.run = function run(onComplete, time) {
     "use strict";
     this.checkStarted();
     if (!this.steps || this.steps.length < 1) {
-        this.log("No steps defined, aborting", "error");
-        return this;
+        throw new CasperError('No steps defined, aborting');
     }
     this.log(f("Running suite: %d step%s", this.steps.length, this.steps.length > 1 ? "s" : ""), "info");
     this.emit('run.start');
@@ -1321,8 +1344,7 @@ Casper.prototype.start = function start(location, then) {
     if (utils.isObject(this.options.viewportSize)) {
         this.page.viewportSize = this.options.viewportSize;
     }
-    this.started = true;
-    this.emit('started');
+    // timeout handling
     if (utils.isNumber(this.options.timeout) && this.options.timeout > 0) {
         this.log(f("Execution timeout set to %dms", this.options.timeout), "info");
         setTimeout(function _check(self) {
@@ -1332,10 +1354,12 @@ Casper.prototype.start = function start(location, then) {
             }
         }, this.options.timeout, this);
     }
+    this.started = true;
+    this.emit('started');
     if (utils.isString(location) && location.length > 0) {
         return this.thenOpen(location, utils.isFunction(then) ? then : this.createStep(function _step() {
             this.log("start page is loaded", "debug");
-        }));
+        }, {skipLog: true}));
     }
     return this;
 };
@@ -1848,7 +1872,10 @@ function createPage(casper) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
         }
+        // local client scripts
         casper.injectClientScripts();
+        // remote client scripts
+        casper.includeRemoteScripts();
         // Client-side utils injection
         casper.injectClientUtils();
         // history
