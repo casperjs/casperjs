@@ -603,12 +603,27 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     // ensure client utils are always injected
     this.injectClientUtils();
     // function context
-    context = utils.isObject(context) ? context : {};
-    // the way this works is kept for BC with older casperjs versions
-    var args = Object.keys(context).map(function(arg) {
-        return context[arg];
-    });
-    return this.page.evaluate.apply(this.page, [fn].concat(args));
+    if (arguments.length === 1) {
+        return this.page.evaluate(fn);
+    } else if (arguments.length === 2) {
+        // check for closure signature if it matches context
+        if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
+            context = Object.keys(context).map(function(arg) {
+                return context[arg];
+            });
+        } else {
+            context = [context];
+        }
+    } else if (arguments.length > 2) {
+        // phantomjs-style signature
+        context = [].slice.call(arguments).slice(1);
+    } else {
+        // old casperjs method signature
+        context = Object.keys(context).map(function(arg) {
+            return context[arg];
+        });
+    }
+    return this.page.evaluate.apply(this.page, [fn].concat(context));
 };
 
 /**

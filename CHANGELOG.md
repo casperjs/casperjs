@@ -4,13 +4,34 @@ CasperJS Changelog
 XXXX-XX-XX, v1.0.0
 ------------------
 
-- fixed `Casper.die()` and `Casper.evaluateOrDie()` were not printing the error onto the console
+### Important Changes & Caveats
+
+`Casper.evaluate()` method signature is now compatible with PhantomJS' one, so you can now write:
+
+```js
+casper.evaluate(function(a, b) {
+    return a === "foo" && b === "bar";
+}, "foo", "bar"); // true
+```
+
+The old way to pass arguments has been kept backward compatible in order not to break your existing scripts though:
+
+```js
+casper.evaluate(function(a, b) {
+    return a === "foo" && b === "bar";
+}, {a: "foo", b: "bar"}); // true
+```
+
+### Bugfixes & enhancements
+
+- fixed [#281](https://github.com/n1k0/casperjs/issues/281) - `Casper.evaluate()` should take an array as context not object
 - fixed [#266](https://github.com/n1k0/casperjs/issues/266) - Fix `tester` module and its self tests
 - fixed [#268](https://github.com/n1k0/casperjs/issues/266) - Wrong message on step timeout
 - fixed [#215](https://github.com/n1k0/casperjs/issues/215) - added a `--fail-fast` option to the `casper test` command, in order to terminate a test suite execution as soon as any failure is encountered
 - fixed [#274](https://github.com/n1k0/casperjs/issues/274) - some headers couldn't be set
 - fixed [#277](https://github.com/n1k0/casperjs/issues/277) - multiline support in `ClientUtils.echo()`
 - fixed [#282](https://github.com/n1k0/casperjs/issues/282) - added support for remote client scripts loading with a new `remoteScripts` casper option
+- fixed `Casper.die()` and `Casper.evaluateOrDie()` were not printing the error onto the console
 - added [`Tester.assertTextDoesntExist()`](http://casperjs.org/api.html#tester.assertTextDoesntExist)
 - added `Tester.assertFalse()` as an alias of `Tester.assertNot()`
 - added `page.resource.requested` and `page.resource.received` events
