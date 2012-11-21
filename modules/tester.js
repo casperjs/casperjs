@@ -440,6 +440,27 @@ Tester.prototype.assertTextExists = Tester.prototype.assertTextExist = function 
 };
 
 /**
+ * Asserts that given text doesn't exist in the document body.
+ *
+ * @param  String  text     Text not to be found
+ * @param  String  message  Test description
+ * @return Object           An assertion result object
+ */
+Tester.prototype.assertTextDoesntExist = Tester.prototype.assertTextExist = function assertTextDoesntExist(text, message) {
+    "use strict";
+    var textNotFound = (this.casper.evaluate(function _evaluate() {
+        return document.body.textContent || document.body.innerText;
+    }).indexOf(text) == -1);
+    return this.assert(textNotFound, message, {
+        type: "assertTextDoesntExist",
+        standard: "Didn't find unexpected text within the document body",
+        values: {
+            text: text
+        }
+    });
+};
+
+/**
  * Asserts that given text exists in the provided selector.
  *
  * @param  String   selector  Selector expression

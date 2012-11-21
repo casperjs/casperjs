@@ -25,6 +25,9 @@ casper.thenOpen('tests/site/index.html', function() {
     t.comment('Tester.assertTextExists()');
     t.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
 
+    t.comment('Tester.assertTextDoesntExist()');
+    t.assertTextDoesntExist('morf', 'Tester.assertTextDoesntExist() checks that page body doesn\'t contain certain text');
+
     t.comment('Tester.assertSelectorHasText()');
     t.assertSelectorHasText('h1', 'Title', 'Tester.assertSelectorHasText() works as expected');
 
