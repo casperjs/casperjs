@@ -495,7 +495,7 @@ Captures the page area containing the provided selector.
 
 ```javascript
 casper.start('http://www.weather.com/', function() {
-    this.captureSelector('weather.png', '.twc-story-block');
+    this.captureSelector('weather.png', '#wx-main');
 });
 
 casper.run();
