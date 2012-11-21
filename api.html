@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1353490563748">
-    <link rel="stylesheet" href="css/casper.css?1353490563748">
+    <link rel="stylesheet" href="prettify/prettify.css?1353496019024">
+    <link rel="stylesheet" href="css/casper.css?1353496019024">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1359,6 +1359,26 @@ step callback:
 </p>
 <pre><code class="javascript">$ casperjs dump-headers.js
 Thu, 18 Oct 2012 08:26:34 GMT</code></pre>
+<h3 id="casper.thenCLick"><code>Casper#thenCLick(String <a href="selectors.html">selector</a>)</code></h3>
+
+<p>Adds a new navigation step to click a given <a href="selectors.html">selector</a>
+and add a new navigation step in a single operation.
+
+</p>
+<p><strong>Example:</strong>
+
+</p>
+<pre><code class="javascript">// Querying for "Chuck Norris" on Google
+casper.start('http://casperjs.org/').thenCLick('a', function() {
+    this.echo("I clicked on first link found, the page is now loaded.");
+});
+
+casper.run();</code></pre>
+<p>This method is basically a convenient a shortcut for chaining a
+<a href="#then"><code>then()</code></a> and an <a href="#evaluate"><code>evaluate()</code></a>
+calls.
+
+</p>
 <h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, Object replacements])</code></h3>
 
 <p>Adds a new navigation step to perform code evaluation within the current
@@ -1730,6 +1750,7 @@ casper.run();</code></pre>
 <li><a href="#casper.start"><code>start()</code></a></li>
 <li><a href="#casper.status"><code>status()</code></a></li>
 <li><a href="#casper.then"><code>then()</code></a></li>
+<li><a href="#casper.thenClick"><code>thenClick()</code></a></li>
 <li><a href="#casper.thenEvaluate"><code>thenEvaluate()</code></a></li>
 <li><a href="#casper.thenOpen"><code>thenOpen()</code></a></li>
 <li><a href="#casper.thenOpenAndEvaluate"><code>thenOpenAndEvaluate()</code></a></li>
@@ -2789,10 +2810,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.FsXfLREY5Eo.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTN7HwNVU5qTAWZQ2ijuTfxtwBN9YQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1353490563748"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1353490563748"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1353490563748"></script>
-    <script type="text/javascript" src="js/application.js?1353490563748"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.FsXfLREY5Eo.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTN7HwNVU5qTAWZQ2ijuTfxtwBN9YQ/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1353496019024"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1353496019024"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1353496019024"></script>
+    <script type="text/javascript" src="js/application.js?1353496019024"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

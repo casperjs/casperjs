@@ -1334,6 +1334,26 @@ $ casperjs dump-headers.js
 Thu, 18 Oct 2012 08:26:34 GMT
 ```
 
+<h3 id="casper.thenCLick"><code>Casper#thenCLick(String <a href="selectors.html">selector</a>)</code></h3>
+
+Adds a new navigation step to click a given <a href="selectors.html">selector</a>
+and add a new navigation step in a single operation.
+
+**Example:**
+
+```javascript
+// Querying for "Chuck Norris" on Google
+casper.start('http://casperjs.org/').thenCLick('a', function() {
+    this.echo("I clicked on first link found, the page is now loaded.");
+});
+
+casper.run();
+```
+
+This method is basically a convenient a shortcut for chaining a
+[`then()`](#then) and an [`evaluate()`](#evaluate)
+calls.
+
 <h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, Object replacements])</code></h3>
 
 Adds a new navigation step to perform code evaluation within the current

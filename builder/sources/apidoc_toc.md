@@ -43,6 +43,7 @@
 - [`start()`](#casper.start)
 - [`status()`](#casper.status)
 - [`then()`](#casper.then)
+- [`thenClick()`](#casper.thenClick)
 - [`thenEvaluate()`](#casper.thenEvaluate)
 - [`thenOpen()`](#casper.thenOpen)
 - [`thenOpenAndEvaluate()`](#casper.thenOpenAndEvaluate)
