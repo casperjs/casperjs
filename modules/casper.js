@@ -1027,15 +1027,18 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
  * @return Casper
  */
 Casper.prototype.includeRemoteScripts = function includeRemoteScripts() {
-    if (this.options.remoteScripts.length === 0) {
+    "use strict";
+    var numScripts = this.options.remoteScripts.length, loaded = 0;
+    if (numScripts === 0) {
         return this;
     }
     this.waitStart();
-    this.options.remoteScripts.forEach(function(scriptUrl, i) {
+    this.options.remoteScripts.forEach(function(scriptUrl) {
         this.log(f("Loading remote script: %s", scriptUrl), "debug");
         this.page.includeJs(scriptUrl, function() {
+            loaded++;
             this.log(f("Remote script %s loaded", scriptUrl), "debug");
-            if (i === this.options.remoteScripts.length - 1) {
+            if (loaded === numScripts) {
                 this.log("All remote scripts loaded.", "debug");
                 this.waitDone();
             }
@@ -1855,6 +1858,7 @@ function createPage(casper) {
         casper.emit('load.started');
     };
     page.onLoadFinished = function onLoadFinished(status) {
+        /*jshint maxstatements:20*/
         if (status !== "success") {
             casper.emit('load.failed', {
                 status:      status,
