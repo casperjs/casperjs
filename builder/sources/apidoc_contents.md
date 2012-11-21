@@ -244,6 +244,15 @@ All the available options are detailed below:
       </td>
     </tr>
     <tr>
+      <td><code>remoteScripts</code></td>
+      <td><code>Array</code></td>
+      <td><code>[]</code></td>
+      <td>
+        <p><span class="label label-success">Added in 1.0</span></p>
+        <p>A collection of remote script urls to include to every page loaded</p>
+      </td>
+    </tr>
+    <tr>
       <td><code>safeLogs</code></td>
       <td><code>Boolean</code></td>
       <td><code>true</code></td>
