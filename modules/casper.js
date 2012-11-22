@@ -612,12 +612,9 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         } else {
             context = [context];
         }
-    } else if (arguments.length > 2) {
+    } else {
         // phantomjs-style signature
         context = [].slice.call(arguments).slice(1);
-    } else {
-        // old casperjs method signature
-        context = utils.objectValues(context);
     }
     return this.page.evaluate.apply(this.page, [fn].concat(context));
 };
