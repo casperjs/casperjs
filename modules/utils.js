@@ -486,6 +486,7 @@ exports.node = node;
  * @return Array
  */
 function objectValues(obj) {
+    "use strict";
     return Object.keys(obj).map(function(arg) {
         return obj[arg];
     });
