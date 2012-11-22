@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false*/
+/*jshint strict:false maxparams:99*/
 casper.test.comment('Casper.evaluate()');
 
 casper.start();
