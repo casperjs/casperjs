@@ -255,6 +255,12 @@ t.comment('mergeObjects()');
     });
 })();
 
+t.comment('objectValues()');
+(function() {
+    t.assertEquals(utils.objectValues({}), [], 'objectValues() can extract object values');
+    t.assertEquals(utils.objectValues({a: 1, b: 2}), [1, 2], 'objectValues() can extract object values');
+})();
+
 t.comment('unique()');
 (function() {
     var testCases = [

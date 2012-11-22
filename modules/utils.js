@@ -480,6 +480,19 @@ function node(name, attributes) {
 exports.node = node;
 
 /**
+ * Maps an object to an array made from its values.
+ *
+ * @param  Object  obj
+ * @return Array
+ */
+function objectValues(obj) {
+    return Object.keys(obj).map(function(arg) {
+        return obj[arg];
+    });
+}
+exports.objectValues = objectValues;
+
+/**
  * Serializes a value using JSON.
  *
  * @param  Mixed  value

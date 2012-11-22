@@ -608,9 +608,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     } else if (arguments.length === 2) {
         // check for closure signature if it matches context
         if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
-            context = Object.keys(context).map(function(arg) {
-                return context[arg];
-            });
+            context = utils.objectValues(context);
         } else {
             context = [context];
         }
@@ -619,9 +617,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         context = [].slice.call(arguments).slice(1);
     } else {
         // old casperjs method signature
-        context = Object.keys(context).map(function(arg) {
-            return context[arg];
-        });
+        context = utils.objectValues(context);
     }
     return this.page.evaluate.apply(this.page, [fn].concat(context));
 };
