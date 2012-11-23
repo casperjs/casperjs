@@ -485,7 +485,6 @@ Casper.prototype.debugPage = function debugPage() {
  */
 Casper.prototype.die = function die(message, status) {
     "use strict";
-    this.checkStarted();
     this.result.status = "error";
     this.result.time = new Date().getTime() - this.startTime;
     if (!utils.isString(message) || !message.length) {
