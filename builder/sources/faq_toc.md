@@ -9,6 +9,7 @@
 - [Can I use CasperJS without using the casperjs executable?](#faq-executable)
 - [How can I catch HTTP 404 and other status codes?](#faq-httpstatuses)
 - [What's this mysterious *\__utils__* object?](#faq-utils)
+- [How does *then()* and the step stack work?](#faq-step-stack)
 - [Is it possible to achieve parallel browsing using CasperJS?](#faq-parallel)
 - [Okay, honestly, I'm stuck with Javascript.](#faq-javascript)
 

@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1353576369319">
-    <link rel="stylesheet" href="css/casper.css?1353576369319">
+    <link rel="stylesheet" href="prettify/prettify.css?1353664566135">
+    <link rel="stylesheet" href="css/casper.css?1353664566135">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -255,6 +255,69 @@ instance in your scripts. It's just there because it's used by CasperJS internal
 
 </p>
 <hr>
+<h2 id="faq-step-stack">How does <code>then()</code> and the step stack work?</h2>
+
+<p><span class="label label-info">Disclaimer</span> This entry is based on an
+<a href="http://stackoverflow.com/a/11957919/330911">answer I made on Stack Overflow</a>.
+
+</p>
+<p>The <code>then()</code> method basically adds a new navigation step in a stack. A step is a
+javascript function which can do two different things:
+
+</p>
+<ol>
+<li>waiting for the previous step - if any - being executed</li>
+<li>waiting for a requested url and related page to load</li>
+</ol>
+<p>Let's take a simple navigation scenario:
+
+</p>
+<pre><code class="js">var casper = require('casper').create();
+
+casper.start();
+
+casper.then(function step1() {
+    this.echo('this is step one');
+});
+
+casper.then(function step2() {
+    this.echo('this is step two');
+});
+
+casper.thenOpen('http://google.com/', function step3() {
+    this.echo('this is step 3 (google.com is loaded)');
+});</code></pre>
+<p>You can print out all the created steps within the stack like this:
+
+</p>
+<pre><code class="js">require('utils').dump(casper.steps.map(function(step) {
+    return step.toString();
+}));</code></pre>
+<p>That gives:
+
+</p>
+<pre><code class="js">$ casperjs test-steps.js
+[
+    "function step1() { this.echo('this is step one'); }",
+    "function step2() { this.echo('this is step two'); }",
+    "function _step() { this.open(location, settings); }",
+    "function step3() { this.echo('this is step 3 (google.com is loaded)'); }"
+]</code></pre>
+<p>Notice the <code>_step()</code> function which has been added automatically by CasperJS to
+load the url for us; when the url is loaded, the next step available in the
+stack — which is <code>step3()</code> — is <em>then</em> called.
+
+</p>
+<p>When you have defined your navigation steps, <code>run()</code> executes them one by one
+sequentially:
+
+</p>
+<pre><code class="js">casper.run();</code></pre>
+<p><span class="label label-info">Note</span> The callback/listener stuff is an
+implementation of the <a href="http://blog.thepete.net/blog/2011/07/02/javascript-promises/">Promise pattern</a>.
+
+</p>
+<hr>
 <h2 id="faq-parallel">Is it possible to achieve parallel browsing using CasperJS?</h2>
 
 <p><a href="https://groups.google.com/d/topic/casperjs/Scx4Cjqp7hE/discussion">Officially no</a>,
@@ -292,6 +355,7 @@ the language.</li>
 <li><a href="#faq-executable">Can I use CasperJS without using the casperjs executable?</a></li>
 <li><a href="#faq-httpstatuses">How can I catch HTTP 404 and other status codes?</a></li>
 <li><a href="#faq-utils">What's this mysterious <em>_<em>utils_</em></em> object?</a></li>
+<li><a href="#faq-step-stack">How does <em>then()</em> and the step stack work?</a></li>
 <li><a href="#faq-parallel">Is it possible to achieve parallel browsing using CasperJS?</a></li>
 <li><a href="#faq-javascript">Okay, honestly, I'm stuck with Javascript.</a></li>
 </ul>
@@ -316,10 +380,10 @@ pull request with your tips and tricks!
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.ypIN39ZtJS8.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTOajMEulOqtsKvyCC92MZNTQA_T1w/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1353576369319"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1353576369319"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1353576369319"></script>
-    <script type="text/javascript" src="js/application.js?1353576369319"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.ypIN39ZtJS8.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTOajMEulOqtsKvyCC92MZNTQA_T1w/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1353664566135"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1353664566135"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1353664566135"></script>
+    <script type="text/javascript" src="js/application.js?1353664566135"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

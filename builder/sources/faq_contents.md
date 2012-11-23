@@ -190,6 +190,73 @@ instance in your scripts. It's just there because it's used by CasperJS internal
 
 * * * * *
 
+<h2 id="faq-step-stack">How does `then()` and the step stack work?</h2>
+
+<span class="label label-info">Disclaimer</span> This entry is based on an
+[answer I made on Stack Overflow](http://stackoverflow.com/a/11957919/330911).
+
+The `then()` method basically adds a new navigation step in a stack. A step is a
+javascript function which can do two different things:
+
+1. waiting for the previous step - if any - being executed
+2. waiting for a requested url and related page to load
+
+Let's take a simple navigation scenario:
+
+```js
+var casper = require('casper').create();
+
+casper.start();
+
+casper.then(function step1() {
+    this.echo('this is step one');
+});
+
+casper.then(function step2() {
+    this.echo('this is step two');
+});
+
+casper.thenOpen('http://google.com/', function step3() {
+    this.echo('this is step 3 (google.com is loaded)');
+});
+```
+
+You can print out all the created steps within the stack like this:
+
+```js
+require('utils').dump(casper.steps.map(function(step) {
+    return step.toString();
+}));
+```
+
+That gives:
+
+```js
+$ casperjs test-steps.js
+[
+    "function step1() { this.echo('this is step one'); }",
+    "function step2() { this.echo('this is step two'); }",
+    "function _step() { this.open(location, settings); }",
+    "function step3() { this.echo('this is step 3 (google.com is loaded)'); }"
+]
+```
+
+Notice the `_step()` function which has been added automatically by CasperJS to
+load the url for us; when the url is loaded, the next step available in the
+stack — which is `step3()` — is *then* called.
+
+When you have defined your navigation steps, `run()` executes them one by one
+sequentially:
+
+```js
+casper.run();
+```
+
+<span class="label label-info">Note</span> The callback/listener stuff is an
+implementation of the [Promise pattern](http://blog.thepete.net/blog/2011/07/02/javascript-promises/).
+
+* * * * *
+
 <h2 id="faq-parallel">Is it possible to achieve parallel browsing using CasperJS?</h2>
 
 [Officially no](https://groups.google.com/d/topic/casperjs/Scx4Cjqp7hE/discussion),
