@@ -35,6 +35,7 @@ casper.evaluate(function(a, b) {
 - added [`Tester.assertTextDoesntExist()`](http://casperjs.org/api.html#tester.assertTextDoesntExist)
 - added `Tester.assertFalse()` as an alias of `Tester.assertNot()`
 - added `page.resource.requested` and `page.resource.received` events
+- added [`translate.js`](https://github.com/n1k0/casperjs/tree/master/samples/translate.js) and [`translate.coffee`](https://github.com/n1k0/casperjs/tree/master/samples/translate.coffee) samples
 
 2012-10-31, v1.0.0-RC4
 ----------------------
