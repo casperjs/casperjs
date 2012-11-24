@@ -17,5 +17,6 @@ casper.start('tests/site/frames.html', function() {
 });
 
 casper.run(function() {
+    this.page.switchToMainFrame();
     this.test.done();
 });
