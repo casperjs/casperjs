@@ -198,7 +198,7 @@ Tester.prototype.assertNotEquals = function assertNotEquals(subject, shouldnt, m
  *
  * @param  Function  fn       A function to be evaluated in remote DOM
  * @param  String    message  Test description
- * @param  Object    params   Object containing the parameters to inject into the function (optional)
+ * @param  Object    params   Object/Array containing the parameters to inject into the function (optional)
  * @return Object             An assertion result object
  */
 Tester.prototype.assertEval = Tester.prototype.assertEvaluate = function assertEval(fn, message, params) {
@@ -250,7 +250,7 @@ Tester.prototype.assertField = function assertField(inputName, expected,  messag
     "use strict";
     var actual = this.casper.evaluate(function(inputName) {
         return __utils__.getFieldValue(inputName);
-    }, { inputName: inputName });
+    }, inputName);
     return this.assert(this.testEquals(actual, expected),  message, {
         type: 'assertField',
         standard: f('"%s" input field has the value "%s"', inputName, expected),

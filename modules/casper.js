@@ -222,7 +222,7 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
     "use strict";
     return this.evaluate(function _evaluate(url, method, data) {
         return window.__utils__.getBase64(url, method, data);
-    }, { url: url, method: method, data: data });
+    }, url, method, data);
 };
 
 /**
@@ -579,13 +579,7 @@ Casper.prototype.echo = function echo(text, style, pad) {
  *         document.querySelector('#username').value = username;
  *         document.querySelector('#password').value = password;
  *         document.querySelector('#submit').click();
- *     }, {
- *         username: 'Bazoonga',
- *         password: 'baz00nga'
- *     })
- *
- * FIXME: waiting for a patch of PhantomJS to allow direct passing of
- * arguments to the function.
+ *     }, 'Bazoonga', 'baz00nga');
  *
  * @param  Function  fn       The function to be evaluated within current page DOM
  * @param  Object    context  Object containing the parameters to inject into the function
@@ -649,7 +643,7 @@ Casper.prototype.exists = function exists(selector) {
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.exists(selector);
-    }, { selector: selector });
+    }, selector);
 };
 
 /**
@@ -676,7 +670,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.fetchText(selector);
-    }, { selector: selector });
+    }, selector);
 };
 
 /**
@@ -696,10 +690,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     this.emit('fill', selector, vals, submit);
     var fillResults = this.evaluate(function _evaluate(selector, values) {
        return window.__utils__.fill(selector, values);
-    }, {
-        selector: selector,
-        values:   vals
-    });
+    }, selector, vals);
     if (!fillResults) {
         throw new CasperError("Unable to fill form");
     } else if (fillResults.errors.length > 0) {
@@ -733,7 +724,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
                 // http://www.spiration.co.uk/post/1232/Submit-is-not-a-function
                 form.submit.click();
             }
-        }, { selector: selector });
+        }, selector);
     }
 };
 
@@ -819,7 +810,7 @@ Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = functio
     this.checkStarted();
     return this.evaluate(function _evaluate(selector, attribute) {
         return document.querySelector(selector).getAttribute(attribute);
-    }, { selector: selector, attribute: attribute });
+    }, selector, attribute);
 };
 
 /**
@@ -836,7 +827,7 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
     }
     var clipRect = this.evaluate(function _evaluate(selector) {
         return window.__utils__.getElementBounds(selector);
-    }, { selector: selector });
+    }, selector);
     if (!utils.isClipRect(clipRect)) {
         throw new CasperError('Could not fetch boundaries for element matching selector: ' + selector);
     }
@@ -857,7 +848,7 @@ Casper.prototype.getElementsBounds = function getElementBounds(selector) {
     }
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.getElementsBounds(selector);
-    }, { selector: selector });
+    }, selector);
 };
 
 /**
@@ -879,16 +870,15 @@ Casper.prototype.getGlobal = function getGlobal(name) {
             result.error = message;
         }
         return result;
-    }, {'name': name});
+    }, name);
     if (typeof result !== "object") {
         throw new CasperError(f('Could not retrieve global value for "%s"', name));
     } else if ('error' in result) {
         throw new CasperError(result.error);
     } else if (utils.isString(result.value)) {
         return JSON.parse(result.value);
-    } else {
-        return undefined;
     }
+    return undefined;
 };
 
 /**
@@ -911,7 +901,7 @@ Casper.prototype.getHTML = function getHTML(selector, outer) {
     return this.evaluate(function getSelectorHTML(selector, outer) {
         var element = __utils__.findOne(selector);
         return outer ? element.outerHTML : element.innerHTML;
-    }, { selector: selector, outer: !!outer });
+    }, selector, !!outer);
 };
 
 /**
@@ -1113,10 +1103,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     }
     var eventSuccess = this.evaluate(function(type, selector) {
         return window.__utils__.mouseEvent(type, selector);
-    }, {
-        type: type,
-        selector: selector
-    });
+    }, type, selector);
     if (!eventSuccess) {
         // fallback onto native QtWebKit mouse events
         try {
@@ -1561,7 +1548,7 @@ Casper.prototype.visible = function visible(selector) {
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
         return window.__utils__.visible(selector);
-    }, { selector: selector });
+    }, selector);
 };
 
 /**
