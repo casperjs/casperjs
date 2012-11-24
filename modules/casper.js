@@ -871,14 +871,13 @@ Casper.prototype.getGlobal = function getGlobal(name) {
         }
         return result;
     }, name);
-    if (typeof result !== "object") {
+    if (!utils.isObject(result)) {
         throw new CasperError(f('Could not retrieve global value for "%s"', name));
     } else if ('error' in result) {
         throw new CasperError(result.error);
     } else if (utils.isString(result.value)) {
         return JSON.parse(result.value);
     }
-    return undefined;
 };
 
 /**
