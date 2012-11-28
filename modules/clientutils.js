@@ -475,7 +475,7 @@
          * @return Object
          */
         this.getFormValues = function getFormValues(selector) {
-            var form = __utils__.findOne(selector);
+            var form = this.findOne(selector);
             var values = {};
             var self = this;
             [].forEach.call(form.elements, function(element) {
