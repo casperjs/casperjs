@@ -15,6 +15,7 @@
 - [`getElementByXPath()`](#clientutils.getElementByXPath)
 - [`getElementsByXPath()`](#clientutils.getElementsByXPath)
 - [`getFieldValue()`](#clientutils.getFieldValue)
+- [`getFormValues()`](#clientutils.getFormValues)
 - [`mouseEvent()`](#clientutils.mouseEvent)
 - [`removeElementsByXPath()`](#clientutils.removeElementsByXPath)
 - [`sendAJAX()`](#clientutils.sendAJAX)

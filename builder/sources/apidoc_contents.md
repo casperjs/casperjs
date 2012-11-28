@@ -866,6 +866,22 @@ Retrieves a list of boundaries for all DOM elements matching the provided
 It returns an array of objects with four keys: `top`, `left`, `width` and
 `height` (see [casper.getElementBounds()](#casper.getElementBounds)).
 
+<h3 id="casper.getFormValues"><code>Casper#getFormValues(String <a href="selectors.html">selector</a>)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Retrieves a given form all of its field values.
+
+**Example:**
+
+```javascript
+casper.start('http://www.google.fr/', function() {
+    this.fill('form', {q: 'plop'}, false);
+    this.echo(this.getFormValues('form').q); // 'plop'
+});
+
+casper.run();
+```
+
 <h3 id="casper.getGlobal"><code>Casper#getGlobal(String name)</code></h3>
 
 Retrieves a global variable value within the remote DOM environment by

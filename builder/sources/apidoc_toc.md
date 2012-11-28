@@ -29,6 +29,7 @@
 - [`getElementAttribute()`](#casper.getElementAttribute)
 - [`getElementBounds()`](#casper.getElementBounds)
 - [`getElementsBounds()`](#casper.getElementsBounds)
+- [`getFormValues()`](#casper.getFormValues)
 - [`getGlobal()`](#casper.getGlobal)
 - [`getHTML()`](#casper.getHTML)
 - [`getPageContent()`](#casper.getPageContent)

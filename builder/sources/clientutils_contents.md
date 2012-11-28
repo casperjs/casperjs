@@ -190,7 +190,10 @@ Retrieves all DOM elements matching a given [XPath expression](http://www.w3.org
 
 <h3 id="clientutils.getFieldValue"><code>ClientUtils#getFieldValue(String inputName)</code></h3>
 
+<span class="label label-success">Added in 1.0</span>
 Retrieves the value from the field named against the `inputNamed` argument:
+
+**Example:**
 
 ```html
 <form>
@@ -200,6 +203,25 @@ Retrieves the value from the field named against the `inputNamed` argument:
 
 ```javascript
 __utils__.getFieldValue('plop'); // 42
+```
+
+<h3 id="clienutils.getFormValues"><code>ClientUtils#getFormValues(String <a href="selectors.html">selector</a>)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Retrieves a given form all of its field values.
+
+**Example:**
+
+```html
+<form id="login" action="/login">
+    <input type="text" name="username" value="foo">
+    <input type="text" name="password" value="bar">
+    <input type="submit">
+</form>
+```
+
+```javascript
+__utils__.getFormValues('form#login'); // {username: 'foo', password: 'bar'}
 ```
 
 <h3 id="clientutils.mouseEvent"><code>ClientUtils#mouseEvent(String type, String selector)</code></h3>
