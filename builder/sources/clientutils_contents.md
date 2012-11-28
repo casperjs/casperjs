@@ -205,7 +205,7 @@ Retrieves the value from the field named against the `inputNamed` argument:
 __utils__.getFieldValue('plop'); // 42
 ```
 
-<h3 id="clienutils.getFormValues"><code>ClientUtils#getFormValues(String <a href="selectors.html">selector</a>)</code></h3>
+<h3 id="clientutils.getFormValues"><code>ClientUtils#getFormValues(String <a href="selectors.html">selector</a>)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
 Retrieves a given form all of its field values.
