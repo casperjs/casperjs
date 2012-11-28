@@ -41,6 +41,23 @@ casper.start('tests/site/form.html', function() {
                !document.querySelector('input[name="checklist[]"][value="2"]').checked &&
                 document.querySelector('input[name="checklist[]"][value="3"]').checked);
     }, true, 'Casper.fill() can fill a list of checkboxes');
+
+});
+
+casper.then(function() {
+    this.test.comment('Casper.getFormValues()');
+    this.test.assertEquals(this.getFormValues('form'), {
+        "check": true,
+        "checklist[]": ["1", "3"],
+        "choice": "no",
+        "content": "Am watching thou",
+        "email": "chuck@norris.com",
+        "file": "C:\\fakepath\\README.md",
+        "password": "chuck",
+        "submit": "submit",
+        "topic": "bar"
+    }, 'Casper.getFormValues() retrieves filled values');
+    this.test.comment('submitting form');
     this.click('input[type="submit"]');
 });
 

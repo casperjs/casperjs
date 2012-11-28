@@ -852,6 +852,23 @@ Casper.prototype.getElementsBounds = function getElementBounds(selector) {
 };
 
 /**
+ * Retrieves a given form all of its field values.
+ *
+ * @param  String  selector  A DOM CSS3/XPath selector
+ * @return Object
+ */
+Casper.prototype.getFormValues = function(selector) {
+    "use strict";
+    this.checkStarted();
+    if (!this.exists(selector)) {
+        throw new CasperError(f('Form matching selector "%s" not found', selector));
+    }
+    return this.evaluate(function(selector) {
+        return __utils__.getFormValues(selector);
+    }, selector);
+};
+
+/**
  * Retrieves global variable.
  *
  * @param  String  name  The name of the global variable to retrieve

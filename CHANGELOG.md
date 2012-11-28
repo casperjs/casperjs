@@ -33,6 +33,7 @@ casper.evaluate(function(a, b) {
 - fixed [#282](https://github.com/n1k0/casperjs/issues/282) - added support for remote client scripts loading with a new `remoteScripts` casper option
 - merged [#290](https://github.com/n1k0/casperjs/issues/#290) - add a simplistic RPM spec file to make it easier to (un)install casperjs
 - fixed `Casper.die()` and `Casper.evaluateOrDie()` were not printing the error onto the console
+- added [`Casper.getFormValues()`](http://casperjs.org/api.html#casper.getFormValues) to check for the field values of a given form
 - added [`Tester.assertTextDoesntExist()`](http://casperjs.org/api.html#tester.assertTextDoesntExist)
 - added `Tester.assertFalse()` as an alias of `Tester.assertNot()`
 - added `page.resource.requested` and `page.resource.received` events

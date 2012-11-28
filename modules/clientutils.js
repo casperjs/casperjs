@@ -469,6 +469,25 @@
         };
 
         /**
+         * Retrieves a given form all of its field values.
+         *
+         * @param  String  selector  A DOM CSS3/XPath selector
+         * @return Object
+         */
+        this.getFormValues = function getFormValues(selector) {
+            var form = __utils__.findOne(selector);
+            var values = {};
+            var self = this;
+            [].forEach.call(form.elements, function(element) {
+                var name = element.getAttribute('name');
+                if (name) {
+                    values[name] = self.getFieldValue(name);
+                }
+            });
+            return values;
+        };
+
+        /**
          * Logs a message. Will format the message a way CasperJS will be able
          * to log phantomjs side.
          *
