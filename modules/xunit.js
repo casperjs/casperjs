@@ -55,6 +55,12 @@ function generateClassName(classname) {
     if (~script.indexOf('.')) {
         script = script.substring(0, script.lastIndexOf('.'));
     }
+
+    // If we have trimmed our string down to nothing, default to script name
+    if (!script && phantom.casperScript) {
+      script = phantom.casperScript;
+    }
+
     return script || "unknown";
 }
 
