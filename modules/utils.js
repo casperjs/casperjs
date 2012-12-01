@@ -34,16 +34,26 @@
  * Provides a better typeof operator equivalent, able to retrieve the array
  * type.
  *
+ * CAVEAT: this function does not necessarilly map to classical js "type" names,
+ * notably a `null` will map to "null" instead of "object".
+ *
  * @param  mixed  input
  * @return String
  * @see    http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
  */
 function betterTypeOf(input) {
     "use strict";
-    try {
-        return Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
-    } catch (e) {
-        return typeof input;
+    switch (input) {
+        case undefined:
+            return 'undefined';
+        case null:
+            return 'null';
+        default:
+        try {
+            return Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+        } catch (e) {
+            return typeof input;
+        }
     }
 }
 exports.betterTypeOf = betterTypeOf;

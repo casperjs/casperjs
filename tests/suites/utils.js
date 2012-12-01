@@ -4,6 +4,26 @@ var utils = require('utils'),
     t = casper.test,
     x = require('casper').selectXPath;
 
+t.comment('betterTypeOf()');
+(function() {
+    var testCases = [
+        {subject: 1, expected: 'number'},
+        {subject: '1', expected: 'string'},
+        {subject: {}, expected: 'object'},
+        {subject: [], expected: 'array'},
+        {subject: undefined, expected: 'undefined'},
+        {subject: null, expected: 'null'},
+        {subject: function(){}, expected: 'function'},
+        {subject: window, expected: 'domwindow'},
+        {subject: new Date(), expected: 'date'},
+        {subject: new RegExp(), expected: 'regexp'}
+    ];
+    testCases.forEach(function(testCase) {
+        t.assertEquals(utils.betterTypeOf(testCase.subject), testCase.expected,
+            require('utils').format('betterTypeOf() detects expected type "%s"', testCase.subject));
+    });
+})();
+
 t.comment('cleanUrl()');
 (function() {
     var testCases = {
