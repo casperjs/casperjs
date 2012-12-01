@@ -15,4 +15,4 @@ casper.test.assertMatch(xunit.getXML(), /<testcase classname="(.*)plop" name="It
 xunit.addSuccess(require('fs').workingDirectory + '/plip.js', 'Failure');
 casper.test.assertMatch(xunit.getXML(), /<testcase classname="(.*)plip" name="Failure"/, 'XUnitExporter.addFailure() handles class name');
 
-casper.test.done();
+casper.test.done(4);

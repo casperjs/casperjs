@@ -13,5 +13,5 @@ casper.start('tests/site/confirm.html', function() {
 
 casper.run(function() {
     this.test.assertEquals(received, 'are you sure?', 'confirmation message is ok');
-    this.test.done();
+    this.test.done(2);
 });

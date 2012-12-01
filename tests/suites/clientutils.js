@@ -109,5 +109,5 @@ function fakeDocument(html) {
 })(casper);
 
 casper.run(function() {
-    this.test.done();
+    this.test.done(28);
 });

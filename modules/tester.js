@@ -48,6 +48,7 @@ exports.create = function create(casper, options) {
  */
 var Tester = function Tester(casper, options) {
     "use strict";
+    /*jshint maxstatements:20*/
 
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
@@ -57,6 +58,7 @@ var Tester = function Tester(casper, options) {
 
     this.SKIP_MESSAGE = '__termination__';
 
+    this.executed = 0;
     this.currentTestFile = null;
     this.currentSuiteNum = 0;
     this.exporter = require('xunit').create();
@@ -141,6 +143,7 @@ exports.Tester = Tester;
  */
 Tester.prototype.assert = Tester.prototype.assertTrue = function assert(subject, message, context) {
     "use strict";
+    this.executed++;
     return this.processAssertionResult(utils.mergeObjects({
         success:  subject === true,
         type:     "assert",
@@ -691,9 +694,14 @@ Tester.prototype.configure = function configure() {
 /**
  * Declares the current test suite done.
  *
+ * @param  Number  planned  Number of planned tests
  */
-Tester.prototype.done = function done() {
+Tester.prototype.done = function done(planned) {
     "use strict";
+    if (planned > 0 && planned !== this.executed) {
+        this.fail(f('%s: %d tests planned, %d tests executed',
+            this.currentTestFile, planned, this.executed));
+    }
     this.emit('test.done');
     this.running = false;
 };
@@ -981,6 +989,7 @@ Tester.prototype.runTest = function runTest(testFile) {
     "use strict";
     this.bar(f('Test file: %s', testFile), 'INFO_BAR');
     this.running = true; // this.running is set back to false with done()
+    this.executed = 0;
     this.exec(testFile);
 };
 

@@ -59,5 +59,5 @@ casper.then(function() {
 });
 
 casper.run(function() {
-    this.test.done();
+    this.test.done(21);
 });

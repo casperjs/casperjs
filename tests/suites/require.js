@@ -20,4 +20,4 @@ try {
     casper.test.fail('require() patched version can load a coffeescript module');
 }
 
-casper.test.done();
+casper.test.done(2);

@@ -32,5 +32,5 @@ casper.thenOpen('tests/site/index.html');
 
 casper.run(function() {
     this.removeAllListeners('page.resource.requested');
-    t.done();
+    t.done(3);
 });

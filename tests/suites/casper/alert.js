@@ -9,5 +9,6 @@ casper.on('remote.alert', function(message) {
 
 casper.start('tests/site/alert.html').run(function() {
     this.test.assert(ok, 'alert event has been intercepted');
-    this.test.done();
+    this.removeAllListeners('remote.alert');
+    this.test.done(1);
 });

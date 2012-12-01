@@ -40,5 +40,5 @@ casper.each(codes, function(self, code) {
 
 casper.run(function() {
     server.close();
-    this.test.done();
+    this.test.done(109);
 });

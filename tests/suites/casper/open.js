@@ -131,5 +131,5 @@ casper.thenOpen('tests/site/index.html', {
 
 casper.run(function() {
     this.removeAllListeners('open');
-    t.done();
+    t.done(16);
 });

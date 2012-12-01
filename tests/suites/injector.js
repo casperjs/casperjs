@@ -63,4 +63,4 @@ t.assertEquals(processed(), 3, 'FunctionArgsInjector.process() processed the fun
 var fnIssue129 = createInjector(issue129).process({term: 'fixed'});
 t.assertEquals(fnIssue129('fixed'), 'fixed', 'FunctionArgsInjector.process() has issue #129 fixed');
 
-t.done();
+t.done(12);

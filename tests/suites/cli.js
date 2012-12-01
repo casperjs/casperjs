@@ -124,4 +124,4 @@ t.comment('parse(), get(), has()');
     }, 'drop() did not affect other raw options');
 })(cli.parse(['foo & bar', 'baz & boz', '--universe=42', '--lap=13.37', '--chucknorris', '--oops=false']));
 
-t.done();
+t.done(76);

@@ -9,5 +9,5 @@ casper.start('tests/site/prompt.html', function() {
 });
 
 casper.run(function() {
-    this.test.done();
+    this.test.done(1);
 });

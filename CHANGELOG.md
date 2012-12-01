@@ -6,6 +6,8 @@ XXXX-XX-XX, v1.0.0
 
 ### Important Changes & Caveats
 
+#### Casper.evaluate() signature compatibility with PhantomJS
+
 `Casper.evaluate()` method signature is now compatible with PhantomJS' one, so you can now write:
 
 ```js
@@ -21,6 +23,27 @@ casper.evaluate(function(a, b) {
     return a === "foo" && b === "bar";
 }, {a: "foo", b: "bar"}); // true
 ```
+
+#### Specification of planned tests ####
+
+In order to check that every planned test has actuall been executed, a new optional `planned` parameter has been added to `Tester.done()`:
+
+```js
+casper.test.assert(true);
+casper.test.assert(true);
+casper.test.assert(true);
+casper.test.done(4);
+```
+
+Will trigger a failure:
+
+```
+fail: 4 tests planned, 3 tests executed.
+```
+
+That's especially useful in case a given test script is abruptly interrupted leaving you with no obvious way to know it and an erroneous success status.
+
+The whole [CapserJS test suite](https://github.com/n1k0/casperjs/tree/master/tests/) has been migrated to use this new feature.
 
 ### Bugfixes & enhancements
 

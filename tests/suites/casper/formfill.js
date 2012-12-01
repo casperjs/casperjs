@@ -100,5 +100,5 @@ casper.thenOpen('tests/site/field-array.html', function() {
 });
 
 casper.run(function() {
-    this.test.done();
+    this.test.done(19);
 });

@@ -28,5 +28,5 @@ casper.thenOpen('tests/site/form.html', function() {
 
 casper.run(function() {
     this.options.remoteScripts = [];
-    this.test.done();
+    this.test.done(6);
 });

@@ -20,5 +20,5 @@ casper.test.assertEquals(casper.page.settings.userName, 'niko');
 casper.test.assertEquals(casper.page.settings.password, 'plop');
 
 casper.run(function() {
-    this.test.done();
+    this.test.done(8);
 });

@@ -7,5 +7,5 @@ casper.start('tests/site/global.html', function() {
 });
 
 casper.run(function() {
-    this.test.done();
+    this.test.done(2);
 });

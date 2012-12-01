@@ -205,5 +205,5 @@ casper.then(function() {
 });
 
 casper.run(function() {
-    t.done();
+    t.done(56);
 });

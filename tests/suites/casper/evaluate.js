@@ -70,4 +70,4 @@ casper.test.assertEquals(casper.evaluate(function(a, b, c) {
     return [a, b, c];
 }, "foo", "bar", "baz"), ["foo", "bar", "baz"], 'Casper.evaluate() accepts natural arguments context');
 
-casper.test.done();
+casper.test.done(11);
