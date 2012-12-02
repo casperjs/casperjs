@@ -52,6 +52,7 @@ function fakeDocument(html) {
     // scoped
     var scope = clientutils.findOne('ul');
     casper.test.assertType(clientutils.findAll('li', scope), 'nodelist', 'ClientUtils.findAll() can find matching DOM elements within a given scope');
+    casper.test.assertType(clientutils.findAll(x('//li'), scope), 'array', 'ClientUtils.findAll() can find matching DOM elements using XPath within a given scope');
     fakeDocument(null);
 })(casper);
 
@@ -65,6 +66,7 @@ function fakeDocument(html) {
     var scope = clientutils.findOne('ul');
     casper.test.assertType(clientutils.findAll('li', scope), 'nodelist', 'ClientUtils.findAll() can find matching DOM elements within a given scope');
     casper.test.assertEquals(clientutils.findAll('li', scope).length, 2, 'ClientUtils.findAll() can find matching DOM elements within a given scope');
+    casper.test.assertType(clientutils.findOne(x('//li'), scope), 'htmllielement', 'ClientUtils.findOne() can find a matching DOM element using XPath within a given scope');
     fakeDocument(null);
 })(casper);
 
@@ -109,5 +111,5 @@ function fakeDocument(html) {
 })(casper);
 
 casper.run(function() {
-    this.test.done(28);
+    this.test.done(30);
 });
