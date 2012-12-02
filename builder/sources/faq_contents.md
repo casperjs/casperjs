@@ -64,12 +64,6 @@ And constructed with the following guidelines:
 
 * * * * *
 
-<h2 id="#faq-steps">What does then() really mean in CasperJS?</h2>
-
-I took the time to properly answer [this question on Stack Overflow](http://stackoverflow.com/a/11957919/330911).
-
-* * * * *
-
 <h2 id="faq-jquery">Can I use [jQuery](http://jquery.com/) with CasperJS?</h2>
 
 Sure, as every single other javascript library on Earth.
