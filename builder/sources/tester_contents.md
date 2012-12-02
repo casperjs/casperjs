@@ -45,32 +45,36 @@ casper.start(url, function() {
 });
 ```
 
-<h3 id="tester.assertEval"><code>Tester#assertEval(Function fn[, String message])</code></h3>
+<h3 id="tester.assertEval"><code>Tester#assertEval(Function fn[, String message, Mixed arguments])</code></h3>
 
 Asserts that a [code evaluation in remote DOM](api.html#casper.evaluate)
-resolves to a boolean `true`.
+strictly resolves to a boolean `true`.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEval(function() {
         return document.querySelectorAll('form').length > 0;
     }, 'google.fr has at least one form');
+    this.test.assertEval(function(title) {
+        return document.title === title;
+    }, 'google.fr title is "Google"', 'Google');
 });
 ```
 
-<h3 id="tester.assertEvalEquals"><code>Tester#assertEvalEquals(Function fn, mixed expected[, String message])</code></h3>
+<h3 id="tester.assertEvalEquals"><code>Tester#assertEvalEquals(Function fn, mixed expected[, String message, Mixed arguments])</code></h3>
 
 Asserts that the result of a
-[code evaluation in remote DOM](api.html#casper.evaluate) equals to the
+[code evaluation in remote DOM](api.html#casper.evaluate) strictly equals to the
 expected value.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertEvalEquals(function() {
         return document.querySelectorAll('form').length;
     }, 1, 'google.fr provides a single form tag');
+    this.test.assertEval(function(title) {
+        return document.title;
+    }, 'Google', 'google.fr title is "Google"');
 });
 ```
 
@@ -80,7 +84,6 @@ Asserts that an element matching the provided [selector expression](selectors.ht
 remote DOM environment.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertExists('form[name="gs"]', 'google.fr has a form with name "gs"');
 });
@@ -91,7 +94,6 @@ casper.start('http://www.google.fr/', function() {
 Asserts that a given form field has the provided value:
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.fill('form[name="gs"]', { q: 'plop' }, false);
     this.test.assertField('q', 'plop');
@@ -107,7 +109,6 @@ Asserts that current [HTTP status code](http://www.w3.org/Protocols/rfc2616/rfc2
 is the same as the one passed as argument.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertHttpStatus(200, 'google.fr is up');
 });
@@ -145,7 +146,6 @@ casper.test.assertNotEquals(true, "Truth is out");
 Asserts that the element matching the provided [selector expression](selectors.html) is not visible.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertNotVisible('h6');
 });
@@ -175,7 +175,6 @@ casper.test.assertRaises(function(throwIt) {
 Asserts that given text does not exist in the provided [selector](selectors.html).
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertSelectorDoesntHaveText('title', 'Yahoo!');
 });
@@ -187,7 +186,6 @@ Asserts that at least an element matching the provided [selector expression](sel
 exists in remote DOM.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertSelectorExists('form[name="gs"]', 'google.fr provides a form');
 });
@@ -198,7 +196,6 @@ casper.start('http://www.google.fr/', function() {
 Asserts that given text exists in the provided [selector](selectors.html).
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertSelectorHasText('title', 'Google');
 });
@@ -210,7 +207,6 @@ The `testFx` function is executed against all loaded assets and the test passes
 when at least one resource matches.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertResourceExists(function (resource) {
       return resource.url.match('logo3w.png');
@@ -227,7 +223,6 @@ Check the documentation for [`Casper.resourceExists()`](api.html#casper.resource
 Asserts that body **plain text content** contains the given string.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertTextExists('google', 'page body contains "google"');
 });
@@ -239,7 +234,6 @@ casper.start('http://www.google.fr/', function() {
 Asserts that body **plain text content** doesn't contain the given string.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertTextDoesntExist('bing', 'page body does not contain "bing"');
 });
@@ -250,7 +244,6 @@ casper.start('http://www.google.fr/', function() {
 Asserts that title of the remote page equals to the expected one.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertTitle('Google', 'google.fr has the correct title');
 });
@@ -261,7 +254,6 @@ casper.start('http://www.google.fr/', function() {
 Asserts that title of the remote page matches the provided RegExp pattern.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertTitleMatch(/Google/, 'google.fr has a quite predictable title');
 });
@@ -272,7 +264,6 @@ casper.start('http://www.google.fr/', function() {
 Asserts that the provided input is of the given type.
 
 ```javascript
-var casper = require('casper').create();
 casper.test.assertType(42, "number", "Okay, 42 is a number");
 casper.test.assertType([1, 2, 3], "array", "Yeah, we can test for arrays too =)");
 ```
@@ -282,7 +273,6 @@ casper.test.assertType([1, 2, 3], "array", "Yeah, we can test for arrays too =)"
 Asserts that a the current page url matches the provided RegExp pattern.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertUrlMatch(/^http:\/\//', 'google.fr is served in http://');
 });
@@ -294,7 +284,6 @@ Asserts that the element matching the provided
 [selector expression](selectors.html) is visible.
 
 ```javascript
-var casper = require('casper').create();
 casper.start('http://www.google.fr/', function() {
     this.test.assertVisible('h1');
 });
@@ -310,7 +299,6 @@ Render a colorized output. Basically a proxy method for
 Writes a comment-style formatted message to stdout.
 
 ```javascript
-var casper = require('casper').create();
 casper.test.comment("Hi, I'm a comment");
 ```
 
@@ -364,7 +352,6 @@ That's especially useful in case a given test script is abruptly interrupted lea
 Writes an error-style formatted message to stdout.
 
 ```javascript
-var casper = require('casper').create();
 casper.test.error("Hi, I'm an error");
 ```
 
@@ -373,7 +360,6 @@ casper.test.error("Hi, I'm an error");
 Adds a failed test entry to the stack.
 
 ```javascript
-var casper = require('casper').create();
 casper.test.fail("Georges W. Bush");
 ```
 
@@ -465,7 +451,6 @@ PASS 1 tests executed, 1 passed, 0 failed.
 Writes an info-style formatted message to stdout.
 
 ```javascript
-var casper = require('casper').create();
 casper.test.info("Hi, I'm an informative message.");
 ```
 
@@ -474,7 +459,6 @@ casper.test.info("Hi, I'm an informative message.");
 Adds a successful test entry to the stack.
 
 ```javascript
-var casper = require('casper').create();
 casper.test.pass("Barrack Obama");
 ```
 
@@ -492,3 +476,8 @@ casper.run(function() {
     this.test.renderResults(true, 0, 'test-results.xml');
 });
 ```
+
+<span class="label label-info">Note</span>
+This method is not to be called when using the 
+[`casperjs test` command](testing.html#casper-test-command), where it's done 
+automatically for you.
