@@ -47,6 +47,7 @@ The whole [CapserJS test suite](https://github.com/n1k0/casperjs/tree/master/tes
 
 ### Bugfixes & enhancements
 
+- fixed [#294](https://github.com/n1k0/casperjs/issues/294) - Automatically fail test on any runtime error or timeout
 - fixed [#281](https://github.com/n1k0/casperjs/issues/281) - `Casper.evaluate()` should take an array as context not object
 - fixed [#266](https://github.com/n1k0/casperjs/issues/266) - Fix `tester` module and its self tests
 - fixed [#268](https://github.com/n1k0/casperjs/issues/266) - Wrong message on step timeout

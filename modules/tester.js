@@ -121,6 +121,23 @@ var Tester = function Tester(casper, options) {
             }
         }
     });
+
+    // casper events
+    this.casper.on('error', function onCasperError(msg, backtrace) {
+        var line = 0;
+        if (!utils.isString(msg) && msg.indexOf(this.SKIP_MESSAGE) === -1) {
+            try {
+                line = backtrace[0].line;
+            } catch (e) {}
+        }
+        this.test.uncaughtError(msg, this.test.currentTestFile, line);
+        this.test.done();
+    });
+
+    this.casper.on('step.error', function onStepError(e) {
+        this.test.uncaughtError(e, this.test.currentTestFile);
+        this.test.done();
+    });
 };
 
 // Tester class is an EventEmitter
@@ -672,23 +689,6 @@ Tester.prototype.configure = function configure() {
     this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout) {
         tester.fail(f("Wait timeout occured (%dms)", timeout));
     };
-
-    // events
-    this.casper.on('error', function(msg, backtrace) {
-        if (!utils.isString(msg) && msg.indexOf(this.SKIP_MESSAGE) === -1) {
-            var line = 0;
-            try {
-                line = backtrace[0].line;
-            } catch (e) {}
-            tester.uncaughtError(msg, tester.currentTestFile, line);
-        }
-        tester.done();
-    });
-
-    this.casper.on('step.error', function onStepError(e) {
-        tester.uncaughtError(e, tester.currentTestFile);
-        tester.done();
-    });
 };
 
 /**
