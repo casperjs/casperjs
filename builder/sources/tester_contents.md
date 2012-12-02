@@ -314,7 +314,7 @@ var casper = require('casper').create();
 casper.test.comment("Hi, I'm a comment");
 ```
 
-<h3 id="tester.error"><code>Tester#done([Number expected])</code></h3>
+<h3 id="tester.done"><code>Tester#done([Number expected])</code></h3>
 
 Flag a test file execution as being finished:
 
