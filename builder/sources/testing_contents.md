@@ -22,6 +22,7 @@ casper.then(function() {
 });
 
 casper.run(function() {
+    this.test.done(5); // checks that 5 assertions have been executed
     this.test.renderResults(true);
 });
 ```
@@ -84,7 +85,7 @@ $ casperjs test.js --save=log.xml
 
 <h1 id="casper-test-command">The <code>casperjs test</code> command</h1>
 
-**Writing all your tests in a single file would be painful, to say the least. That's where the
+Writing all your tests in a single file may be painful, to say the least. That's where the
 `casperjs test` command comes to the rescue, as it allows to split your tests across different
 files among other handy little things.
 
@@ -95,7 +96,9 @@ Let's take this first test file as an example:
 
 casper.test.comment('My first test file');
 casper.test.assert(true, "true is so true");
-casper.test.done(); // I must be called!
+casper.test.assertNot(false, "false is wrong");
+casper.test.done(2); // I must be called, and I'll check that
+                     // two assertions have been executed
 ```
 
 And this second one:
@@ -110,9 +113,13 @@ casper.start('http://my.location.tld/', function() {
 });
 
 casper.run(function() {
-    this.test.done(); // I must be called once all the async stuff has been executed
+    this.test.done(1); // I must be called once all the async stuff 
+                       // has been executed. I'll also check that a
+                       // single assertions has been performed.
 });
 ```
+
+<span class="label label-success">Note</span> The `expected` parameter of `Tester.done()` has been added in 1.0.
 
 Now let's run our test suite using `casperjs test`:
 

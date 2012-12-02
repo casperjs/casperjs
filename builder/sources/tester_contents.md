@@ -314,6 +314,51 @@ var casper = require('casper').create();
 casper.test.comment("Hi, I'm a comment");
 ```
 
+<h3 id="tester.error"><code>Tester#done([Number expected])</code></h3>
+
+Flag a test file execution as being finished:
+
+```javascript
+casper.test.assert(true);
+casper.test.assertNot(false);
+casper.test.done();
+```
+
+More asynchronously:
+
+```js
+casper.start('http://mydomain.tld/', function() {
+    this.test.assertTitle('myTitle');
+});
+
+casper.thenClick('#logo', function() {
+    this.test.assertUrlMatches(/mydomain/);
+});
+
+casper.run(function() {
+    this.test.done(); 
+});
+```
+
+<span class="label label-success">Added in 1.0</span>
+The `expected` parameter checks for an expected number of performed assertions:
+
+```
+casper.start('http://mydomain.tld/', function() {
+    this.test.assertTitle('myTitle');
+});
+
+casper.thenClick('#logo', function() {
+    this.test.assertUrlMatches(/mydomain/);
+});
+
+casper.run(function() {
+    this.test.done(2); 
+});
+```
+
+That's especially useful in case a given test script is abruptly interrupted leaving you with no obvious way to know it and an erroneously successful status.
+
 <h3 id="tester.error"><code>Tester#error(String message)</code></h3>
 
 Writes an error-style formatted message to stdout.

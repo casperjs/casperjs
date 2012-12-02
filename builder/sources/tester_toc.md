@@ -28,6 +28,7 @@
 - [`assertVisible()`](#tester.assertVisible)
 - [`colorize()`](#tester.colorize)
 - [`comment()`](#tester.comment)
+- [`done()`](#tester.done)
 - [`error()`](#tester.error)
 - [`fail()`](#tester.fail)
 - [`formatMessage()`](#tester.formatMessage)
