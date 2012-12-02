@@ -21,10 +21,8 @@ function checkSelfTest(tests) {
     var isCasperTest = false;
     tests.forEach(function(test) {
         var testDir = fs.absolute(fs.dirname(test));
-        if (fs.isDirectory(testDir)) {
-            if (fs.exists(fs.pathJoin(testDir, '.casper'))) {
-                isCasperTest = true;
-            }
+        if (fs.isDirectory(testDir) && fs.exists(fs.pathJoin(testDir, '.casper'))) {
+            isCasperTest = true;
         }
     });
     return isCasperTest;
@@ -89,7 +87,6 @@ this.loadIncludes.forEach(function(include){
         }).filter(function(file) {
             return utils.isString(file);
         });
-
         casper.test.loadIncludes[include] = utils.unique(container);
     }
 });
