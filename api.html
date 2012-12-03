@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1354489536773">
-    <link rel="stylesheet" href="css/casper.css?1354489536773">
+    <link rel="stylesheet" href="prettify/prettify.css?1354527978116">
+    <link rel="stylesheet" href="css/casper.css?1354527978116">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1972,14 +1972,27 @@ casper.run();</code></pre>
 <p>It returns an array of objects each having four keys: <code>top</code>, <code>left</code>, <code>width</code> and <code>height</code>.
 
 </p>
-<h3 id="clientutils.getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
+<h3 id="clientutils.getElementByXPath"><code>ClientUtils#getElementByXPath(String expression [, HTMLElement scope])</code></h3>
 
 <p>Retrieves a single DOM element matching a given <a href="http://www.w3.org/TR/xpath/">XPath expression</a>.
 
 </p>
-<h3 id="clientutils.getElementsByXPath"><code>ClientUtils#getElementsByXPath(String expression)</code></h3>
+<p><span class="label label-success">Added in 1.0</span> 
+The <code>scope</code> argument allow to set the context for executing the XPath query:
+
+</p>
+<pre><code class="js">// will be performed against the whole document
+__utils__.getElementByXPath('.//a');
+
+// will be performed against a given DOM element
+__utils__.getElementByXPath('.//a', __utils__.findOne('div.main'));</code></pre>
+<h3 id="clientutils.getElementsByXPath"><code>ClientUtils#getElementsByXPath(String expression [, HTMLElement scope])</code></h3>
 
 <p>Retrieves all DOM elements matching a given <a href="http://www.w3.org/TR/xpath/">XPath expression</a>, if any.
+
+</p>
+<p><span class="label label-success">Added in 1.0</span> 
+The <code>scope</code> argument allow to set the context for executing the XPath query.
 
 </p>
 <h3 id="clientutils.getFieldValue"><code>ClientUtils#getFieldValue(String inputName)</code></h3>
@@ -2876,10 +2889,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.LXP7HkTOZj8.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTOKnIWI_EBuVo6fJcWHYpW0z7kofg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1354489536773"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1354489536773"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1354489536773"></script>
-    <script type="text/javascript" src="js/application.js?1354489536773"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.LXP7HkTOZj8.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTOKnIWI_EBuVo6fJcWHYpW0z7kofg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1354527978116"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1354527978116"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1354527978116"></script>
+    <script type="text/javascript" src="js/application.js?1354527978116"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

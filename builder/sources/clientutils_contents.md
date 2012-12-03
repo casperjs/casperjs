@@ -180,13 +180,27 @@ Retrieves boundaries for all DOM element matching the provided
 
 It returns an array of objects each having four keys: `top`, `left`, `width` and `height`.
 
-<h3 id="clientutils.getElementByXPath"><code>ClientUtils#getElementByXPath(String expression)</code></h3>
+<h3 id="clientutils.getElementByXPath"><code>ClientUtils#getElementByXPath(String expression [, HTMLElement scope])</code></h3>
 
 Retrieves a single DOM element matching a given [XPath expression](http://www.w3.org/TR/xpath/).
 
-<h3 id="clientutils.getElementsByXPath"><code>ClientUtils#getElementsByXPath(String expression)</code></h3>
+<span class="label label-success">Added in 1.0</span> 
+The `scope` argument allow to set the context for executing the XPath query:
+
+```js
+// will be performed against the whole document
+__utils__.getElementByXPath('.//a');
+
+// will be performed against a given DOM element
+__utils__.getElementByXPath('.//a', __utils__.findOne('div.main'));
+```
+
+<h3 id="clientutils.getElementsByXPath"><code>ClientUtils#getElementsByXPath(String expression [, HTMLElement scope])</code></h3>
 
 Retrieves all DOM elements matching a given [XPath expression](http://www.w3.org/TR/xpath/), if any.
+
+<span class="label label-success">Added in 1.0</span> 
+The `scope` argument allow to set the context for executing the XPath query.
 
 <h3 id="clientutils.getFieldValue"><code>ClientUtils#getFieldValue(String inputName)</code></h3>
 
