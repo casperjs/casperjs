@@ -226,6 +226,38 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
 };
 
 /**
+ * Preemptively block progression of the next step for some reason(s).
+ * Typically "navigationRequested" or "loadInProgress".
+ * Multiple reasons may be offered in an array.
+ *
+ * @param   String|Array   reasons   One or more of: "loadInProgress, navigationRequested, pendingWait"
+ */
+Casper.prototype.holdOn = function holdOn(reasons) {
+    "use strict";
+    if(utils.isString(reasons)){
+        reasons = [reasons];
+    }
+    if(utils.isArray(reasons)){
+        var i;
+        var blockParam;
+        for(i = 0; i < reasons.length; ++i){
+            blockParam = reasons[i];
+            switch(blockParam){
+                case 'navigationRequested':
+                case 'loadInProgress':
+                case 'pendingWait':
+                    this[blockParam] = true;
+                break;
+                default:
+                    throw new CasperError(f("Casper steps do not wait on `%s`", blockParam));
+                break;
+            }
+        }
+    }
+    return this;
+}
+
+/**
  * Proxy method for WebPage#render. Adds a clipRect parameter for
  * automatically set page clipRect setting values and sets it back once
  * done. If the cliprect parameter is omitted, the full page viewport
@@ -380,12 +412,34 @@ Casper.prototype.clear = function clear() {
  *
  * In case of success, `true` is returned, `false` otherwise.
  *
- * @param  String   selector  A DOM CSS3 compatible selector
+ * @param  String   selector   A DOM CSS3 compatible selector
+ * @param  Object   options    Click options
  * @return Boolean
  */
-Casper.prototype.click = function click(selector) {
+Casper.prototype.click = function click(selector, options) {
     "use strict";
     this.checkStarted();
+    options = utils.isObject(options) ? options : {};
+    for(var option in options) {
+      var values = options[option];
+      switch(option){
+        case 'holdOn':
+          var funcCall = 'this.' + option + "(values);";
+          eval(funcCall);
+        break;
+        case 'loadInProgress':
+        case 'navigationRequested':
+        case 'pendingWait':
+          if(!utils.isType(values, 'boolean')){
+            throw new CasperError(f("Click option `%s` must be either true or false", option));
+          }
+          this[option] = values;
+        break;
+        default:
+          throw new CasperError(f("Casper does not recognize `%s` as a click option", option));
+        break;
+      }
+    }
     return this.mouseEvent('click', selector);
 };
 
@@ -393,17 +447,18 @@ Casper.prototype.click = function click(selector) {
  * Emulates a click on the element having `label` as innerText. The first
  * element matching this label will be selected, so use with caution.
  *
- * @param  String   label  Element innerText value
- * @param  String   tag    An element tag name (eg. `a` or `button`) (optional)
+ * @param  String   label     Element innerText value
+ * @param  String   tag       An element tag name (eg. `a` or `button`) (optional)
+ * @param  Object   options   Click options
  * @return Boolean
  */
-Casper.prototype.clickLabel = function clickLabel(label, tag) {
+Casper.prototype.clickLabel = function clickLabel(label, tag, options) {
     "use strict";
     this.checkStarted();
     tag = tag || "*";
     var escapedLabel = label.toString().replace(/"/g, '\\"');
     var selector = selectXPath(f('//%s[text()="%s"]', tag, escapedLabel));
-    return this.click(selector);
+    return this.click(selector, options);
 };
 
 /**
