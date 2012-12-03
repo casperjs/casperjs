@@ -47,6 +47,7 @@ The whole [CapserJS test suite](https://github.com/n1k0/casperjs/tree/master/tes
 
 ### Bugfixes & enhancements
 
+- fixed [#300](https://github.com/n1k0/casperjs/issues/300) - Ensure that `findOne()` and `findAll()` observe the scope for XPath expressions, not just when passed CSS selectors
 - fixed [#294](https://github.com/n1k0/casperjs/issues/294) - Automatically fail test on any runtime error or timeout
 - fixed [#281](https://github.com/n1k0/casperjs/issues/281) - `Casper.evaluate()` should take an array as context not object
 - fixed [#266](https://github.com/n1k0/casperjs/issues/266) - Fix `tester` module and its self tests
