@@ -65,7 +65,7 @@ function fakeDocument(html) {
     casper.test.assertNot(clientutils.findOne('ol'), 'ClientUtils.findOne() can find a matching DOM element');
     // scoped
     var scope = clientutils.findOne('ul');
-    casper.test.assertType(clientutils.findAll('li', scope), 'nodelist', 'ClientUtils.findAll() can find matching DOM elements within a given scope');
+    casper.test.assertType(clientutils.findOne('li', scope), 'htmllielement', 'ClientUtils.findOne() can find a matching DOM element within a given scope');
     casper.test.assertType(clientutils.findOne(x('//li'), scope), 'htmllielement', 'ClientUtils.findOne() can find a matching DOM element using XPath within a given scope');
     fakeDocument(null);
 })(casper);
