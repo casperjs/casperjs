@@ -1050,7 +1050,7 @@ casper.run();</code></pre>
 <h3 id="casper.open"><code>Casper#open(String location, Object Settings)</code></h3>
 
 <p>Performs an HTTP request for opening a given location. You can forge
-<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> and <code>HEAD</code> requests.
+<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> and <code>HEAD</code> requests. Can also be pased a directory path.
 
 </p>
 <p><strong>Example for a standard <code>GET</code> request:</strong>
@@ -1094,6 +1094,28 @@ casper.run();</code></pre>
             ]
        }
 });</code></pre>
+
+<p><strong>Example using a directory path</strong>
+
+</p>
+<pre><code class="javascript">
+var received;
+
+casper.setFilter('page.confirm', function(message) {
+    received = message;
+    return true;
+});
+
+casper.start('tests/site/confirm.html', function() {
+    this.test.assert(this.getGlobal('confirmed'), 'confirmation received');
+});
+
+casper.run(function() {
+    this.test.assertEquals(received, 'are you sure?', 'confirmation message is ok');
+    this.test.done(2);
+});
+</code></code></pre>
+
 <p><span class="label label-success">Added in 1.0</span>
 <span class="label label-info">PhantomJS &gt;= 1.6</span>
 You can also set custom request headers to send when performing an outgoing
