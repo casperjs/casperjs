@@ -1098,8 +1098,7 @@ casper.run();</code></pre>
 <p><strong>Example using a directory path</strong>
 
 </p>
-<pre><code class="javascript">
-var received;
+<pre><code class="javascript">var received;
 
 casper.setFilter('page.confirm', function(message) {
     received = message;
@@ -1113,8 +1112,7 @@ casper.start('tests/site/confirm.html', function() {
 casper.run(function() {
     this.test.assertEquals(received, 'are you sure?', 'confirmation message is ok');
     this.test.done(2);
-});
-</code></code></pre>
+});</code></code></pre>
 
 <p><span class="label label-success">Added in 1.0</span>
 <span class="label label-info">PhantomJS &gt;= 1.6</span>
