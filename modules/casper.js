@@ -221,7 +221,7 @@ Casper.prototype.back = function back() {
 Casper.prototype.base64encode = function base64encode(url, method, data) {
     "use strict";
     return this.evaluate(function _evaluate(url, method, data) {
-        return window.__utils__.getBase64(url, method, data);
+        return __utils__.getBase64(url, method, data);
     }, url, method, data);
 };
 
@@ -386,7 +386,11 @@ Casper.prototype.clear = function clear() {
 Casper.prototype.click = function click(selector) {
     "use strict";
     this.checkStarted();
-    return this.mouseEvent('click', selector);
+    var success = this.mouseEvent('click', selector);
+    this.evaluate(function(selector) {
+        document.querySelector(selector).focus();
+    }, selector);
+    return success;
 };
 
 /**
@@ -642,7 +646,7 @@ Casper.prototype.exists = function exists(selector) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
-        return window.__utils__.exists(selector);
+        return __utils__.exists(selector);
     }, selector);
 };
 
@@ -669,7 +673,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
-        return window.__utils__.fetchText(selector);
+        return __utils__.fetchText(selector);
     }, selector);
 };
 
@@ -689,7 +693,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     }
     this.emit('fill', selector, vals, submit);
     var fillResults = this.evaluate(function _evaluate(selector, values) {
-       return window.__utils__.fill(selector, values);
+       return __utils__.fill(selector, values);
     }, selector, vals);
     if (!fillResults) {
         throw new CasperError("Unable to fill form");
@@ -714,10 +718,10 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     // Form submission?
     if (submit) {
         this.evaluate(function _evaluate(selector) {
-            var form = window.__utils__.findOne(selector);
+            var form = __utils__.findOne(selector);
             var method = (form.getAttribute('method') || "GET").toUpperCase();
             var action = form.getAttribute('action') || "unknown";
-            window.__utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
+            __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
             if (typeof form.submit === "function") {
                 form.submit();
             } else {
@@ -826,12 +830,29 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
         throw new CasperError("No element matching selector found: " + selector);
     }
     var clipRect = this.evaluate(function _evaluate(selector) {
-        return window.__utils__.getElementBounds(selector);
+        return __utils__.getElementBounds(selector);
     }, selector);
     if (!utils.isClipRect(clipRect)) {
         throw new CasperError('Could not fetch boundaries for element matching selector: ' + selector);
     }
     return clipRect;
+};
+
+/**
+ * Retrieves information about the node matching the provided selector.
+ *
+ * @param  String|Objects  selector  CSS3/XPath selector
+ * @return Object
+ */
+Casper.prototype.getElementInfo = function getElementInfo(selector) {
+    "use strict";
+    this.checkStarted();
+    if (!this.exists(selector)) {
+        throw new CasperError(f("Cannot get informations from %s: element not found.", selector));
+    }
+    return this.evaluate(function(selector) {
+        return __utils__.getElementInfo(selector);
+    }, selector);
 };
 
 /**
@@ -847,7 +868,7 @@ Casper.prototype.getElementsBounds = function getElementBounds(selector) {
         throw new CasperError("No element matching selector found: " + selector);
     }
     return this.evaluate(function _evaluate(selector) {
-        return window.__utils__.getElementsBounds(selector);
+        return __utils__.getElementsBounds(selector);
     }, selector);
 };
 
@@ -883,7 +904,7 @@ Casper.prototype.getGlobal = function getGlobal(name) {
             result.value = JSON.stringify(window[name]);
         } catch (e) {
             var message = f("Unable to JSON encode window.%s: %s", name, e);
-            window.__utils__.log(message, "error");
+            __utils__.log(message, "error");
             result.error = message;
         }
         return result;
@@ -1015,7 +1036,7 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
     "use strict";
     this.checkStarted();
     var clientUtilsInjected = this.page.evaluate(function() {
-        return typeof window.__utils__ === "object";
+        return typeof __utils__ === "object";
     });
     if (true === clientUtilsInjected) {
         return;
@@ -1120,7 +1141,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     // PhantomJS doesn't provide native events for mouseover & mouseout
     if (type === "mouseover" || type === "mouseout") {
         return this.evaluate(function(type, selector) {
-            return window.__utils__.mouseEvent(type, selector);
+            return __utils__.mouseEvent(type, selector);
         }, type, selector);
     }
     this.mouse.processEvent(type, selector);
@@ -1304,6 +1325,45 @@ Casper.prototype.runStep = function runStep(step) {
         this.emit('step.complete', stepResult);
         this.log(stepInfo + f(": done in %dms.", new Date().getTime() - this.startTime), "info");
     }
+};
+
+/**
+ * Sends keys to given element.
+ *
+ * @param  String  selector  A DOM CSS3 compatible selector
+ * @param  String  keys      A string representing the sequence of char codes to send
+ * @param  Object  options   Options
+ * @return Casper
+ */
+Casper.prototype.sendKeys = function(selector, keys, options) {
+    "use strict";
+    if (phantom.version.major === 1 && phantom.version.minor < 7) {
+        throw new CasperError('sendKeys() requires PhantomJS >= 1.7');
+    }
+    this.checkStarted();
+    options = utils.mergeObjects({
+        eventType: 'keypress'
+    }, options || {});
+    var elemInfos = this.getElementInfo(selector),
+        tag = elemInfos.nodeName.toLowerCase(),
+        type = utils.getPropertyPath(elemInfos, 'attributes.type'),
+        supported = ["color", "date", "datetime", "datetime-local", "email",
+                     "hidden", "month", "number", "password", "range", "search",
+                     "tel", "text", "time", "url", "week"];
+    var isTextInput = false;
+    if (tag === 'textarea' || (tag === 'input' && supported.indexOf(type) !== -1)) {
+        // clicking on the input element brings it focus
+        isTextInput = true;
+        this.click(selector);
+    }
+    this.page.sendEvent(options.eventType, keys);
+    if (isTextInput) {
+        // remove the focus
+        this.evaluate(function(selector) {
+            __utils__.findOne(selector).blur();
+        }, selector);
+    }
+    return this;
 };
 
 /**
@@ -1558,7 +1618,7 @@ Casper.prototype.visible = function visible(selector) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
-        return window.__utils__.visible(selector);
+        return __utils__.visible(selector);
     }, selector);
 };
 

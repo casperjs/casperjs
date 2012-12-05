@@ -97,6 +97,7 @@ function fakeDocument(html) {
     // getElementsBounds
     casper.start();
     casper.then(function() {
+        this.test.comment('Casper.getElementsBounds()');
         var html  = '<div id="boxes">';
             html += '  <div style="position:fixed;top:10px;left:11px;width:50px;height:60px"></div>';
             html += '  <div style="position:fixed;top:20px;left:21px;width:70px;height:80px"></div>';
@@ -110,6 +111,28 @@ function fakeDocument(html) {
     });
 })(casper);
 
+(function(casper) {
+    // element information
+    casper.test.comment('ClientUtils.getElementInfo()');
+    casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a>';
+    var info = casper.getElementInfo('a.plip');
+    casper.test.assertEquals(info.nodeName, 'a', 'ClientUtils.getElementInfo() retrieves element name');
+    casper.test.assertEquals(info.attributes, {
+        'href': 'plop',
+        'class': 'plip plup'
+    }, 'ClientUtils.getElementInfo() retrieves element attributes');
+    casper.test.assertEquals(info.html, '<i>paf</i>', 'ClientUtils.getElementInfo() retrieves element html content');
+    casper.test.assertEquals(info.text, 'paf', 'ClientUtils.getElementInfo() retrieves element text');
+    casper.test.assert(info.x > 0, 'ClientUtils.getElementInfo() retrieves element x pos');
+    casper.test.assert(info.y > 0, 'ClientUtils.getElementInfo() retrieves element y pos');
+    casper.test.assert(info.width > 0, 'ClientUtils.getElementInfo() retrieves element width');
+    casper.test.assert(info.height > 0, 'ClientUtils.getElementInfo() retrieves element height');
+    casper.test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility');
+    casper.test.assertEquals(info.tag, '<a href="plop" class="plip plup"><i>paf</i></a>',
+        'ClientUtils.getElementInfo() retrieves element whole tag contents');
+
+})(casper);
+
 casper.run(function() {
-    this.test.done(30);
+    this.test.done(40);
 });

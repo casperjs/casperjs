@@ -41,7 +41,7 @@
      * Casper client-side helpers.
      */
     exports.ClientUtils = function ClientUtils(options) {
-        /*jshint maxstatements:30*/
+        /*jshint maxstatements:40*/
         // private members
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
@@ -390,6 +390,33 @@
             } catch (e) {
                 this.log("Unable to fetch bounds for elements matching " + selector, "warning");
             }
+        };
+
+        /**
+         * Retrieves information about the node matching the provided selector.
+         *
+         * @param  String|Object  selector  CSS3/XPath selector
+         * @return Object
+         */
+        this.getElementInfo = function getElementInfo(selector) {
+            var element = this.findOne(selector);
+            var bounds = this.getElementBounds(selector);
+            var attributes = {};
+            [].forEach.call(element.attributes, function(attr) {
+                attributes[attr.name.toLowerCase()] = attr.value;
+            });
+            return {
+                nodeName: element.nodeName.toLowerCase(),
+                attributes: attributes,
+                tag: element.outerHTML,
+                html: element.innerHTML,
+                text: element.innerText,
+                x: bounds.left,
+                y: bounds.top,
+                width: bounds.width,
+                height: bounds.height,
+                visible: this.visible(selector)
+            };
         };
 
         /**
