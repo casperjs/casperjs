@@ -49,6 +49,8 @@ The whole [CapserJS test suite](https://github.com/n1k0/casperjs/tree/master/tes
 
 Native mouse events from PhantomJS bring a far more accurate behavior.
 
+Also, `Casper.mouseEvent()` will now directly trigger an error on failure instead of just logging an `error` event.
+
 ### Bugfixes & enhancements
 
 - fixed [#300](https://github.com/n1k0/casperjs/issues/300) - Ensure that `findOne()` and `findAll()` observe the scope for XPath expressions, not just when passed CSS selectors

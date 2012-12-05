@@ -72,8 +72,7 @@ var Mouse = function Mouse(casper) {
                 throw new CasperError('Mouse.processEvent(): Too few arguments');
             case 1:
                 // selector
-                var selector = args[0];
-                casper.page.sendEvent.apply(casper.page, [type].concat(computeCenter(selector)));
+                casper.page.sendEvent.apply(casper.page, [type].concat(computeCenter(args[0])));
                 break;
             case 2:
                 // coordinates
