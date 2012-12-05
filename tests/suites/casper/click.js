@@ -58,6 +58,14 @@ casper.then(function() {
     this.test.assertEquals(results.testmove, [200, 100], 'Mouse.move() has moved to the specified position');
 });
 
+// element focus on click
+casper.then(function() {
+    this.page.content = '<form><input type="text" name="foo"></form>'
+    this.click('form input[name=foo]')
+    this.page.sendEvent('keypress', 'bar');
+    this.test.assertEquals(this.getFormValues('form')['foo'], 'bar', 'Casper.click() sets the focus on clicked element');
+});
+
 casper.run(function() {
-    this.test.done(21);
+    this.test.done(22);
 });

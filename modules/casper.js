@@ -1117,17 +1117,17 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     if (!this.exists(selector)) {
         throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
     }
-    var eventSuccess = this.evaluate(function(type, selector) {
-        return window.__utils__.mouseEvent(type, selector);
-    }, type, selector);
-    if (!eventSuccess) {
-        // fallback onto native QtWebKit mouse events
-        try {
-            this.mouse.processEvent(type, selector);
-        } catch (e) {
-            this.log(f("Couldn't emulate '%s' event on %s: %s", type, selector, e), "error");
-            return false;
-        }
+    // PhantomJS doesn't provide native events for mouseover & mouseout
+    if (type === "mouseover" || type === "mouseout") {
+        return this.evaluate(function(type, selector) {
+            return window.__utils__.mouseEvent(type, selector);
+        }, type, selector);
+    }
+    try {
+        this.mouse.processEvent(type, selector);
+    } catch (e) {
+        this.log(f("Couldn't emulate '%s' event on %s: %s", type, selector, e), "error");
+        return false;
     }
     return true;
 };
