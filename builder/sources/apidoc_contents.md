@@ -881,7 +881,7 @@ casper.start('http://google.com/', function() {
 Gives something like:
 
 ```json
-"{
+{
     "nodeName": "div",
     "attributes": {
         "dir": "ltr",
@@ -899,7 +899,7 @@ Gives something like:
     "width": 275,
     "height": 95,
     "visible": true
-}"
+}
 ```
 
 <h3 id="casper.getFormValues"><code>Casper#getFormValues(String <a href="selectors.html">selector</a>)</code></h3>
