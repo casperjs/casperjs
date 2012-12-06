@@ -75,7 +75,7 @@ exports.selectXPath = selectXPath;
  */
 var Casper = function Casper(options) {
     "use strict";
-    /*jshint maxstatements:30*/
+    /*jshint maxstatements:40*/
     // init & checks
     if (!(this instanceof Casper)) {
         return new Casper(options);
@@ -1935,6 +1935,7 @@ exports.Casper = Casper;
  * @return WebPage
  */
 function createPage(casper) {
+    /*jshint maxstatements:20*/
     "use strict";
     var page = require('webpage').create();
     page.onAlert = function onAlert(message) {
