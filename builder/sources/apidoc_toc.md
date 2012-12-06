@@ -56,6 +56,7 @@
 - [`visible()`](#casper.visible)
 - [`wait()`](#casper.wait)
 - [`waitFor()`](#casper.waitFor)
+- [`waitForPage()`](#casper.waitForPage)
 - [`waitForSelector()`](#casper.waitForSelector)
 - [`waitForResource()`](#casper.waitForResource)
 - [`waitForText()`](#casper.waitForText)
@@ -63,4 +64,5 @@
 - [`waitWhileSelector()`](#casper.waitWhileSelector)
 - [`waitWhileVisible()`](#casper.waitWhileVisible)
 - [`warn()`](#casper.warn)
+- [`withChildPage()`](#casper.withChildPage)
 - [`zoom()`](#casper.zoom)
