@@ -45,6 +45,29 @@ That's especially useful in case a given test script is abruptly interrupted lea
 
 The whole [CapserJS test suite](https://github.com/n1k0/casperjs/tree/master/tests/) has been migrated to use this new feature.
 
+#### Support for child pages (frames & popups)
+
+PhantomJS 1.7 ships with support for child pages (say popups and frames). CasperJS can now wait for a child being opened and loaded to react accordingly using the new [`Casper.waitForPage()`](http://casperjs.org/api.html#casper.waitForPage) and [`Casper.withChildPage()`](http://casperjs.org/api.html#casper.withChildPage) methods:
+
+```js
+casper.start('http://foo.bar/').then(function() {
+    this.test.assertTitle('Main page title');
+    this.clickLabel('Open me a popup');
+});
+
+casper.waitForPage(/popup\.html$/, function() {
+    this.withChildPage(this.childPages[0], function() {
+        this.test.assertTitle('Popup title');
+    });
+});
+
+casper.then(function() {
+    this.test.assertTitle('Main page title');
+});
+```
+
+**Note:** Support for this is highly experimental though, your [feedback is warmly welcome](https://github.com/n1k0/casperjs/issues/279).
+
 #### `Casper.mouseEvent()` now uses native events for most operations
 
 Native mouse events from PhantomJS bring a far more accurate behavior.

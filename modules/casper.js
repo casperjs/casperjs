@@ -138,6 +138,7 @@ var Casper = function Casper(options) {
     };
     this.mouse = mouse.create(this);
     this.page = null;
+    this.childPages = [];
     this.pendingWait = false;
     this.requestUrl = 'about:blank';
     this.resources = [];
@@ -1403,7 +1404,7 @@ Casper.prototype.start = function start(location, then) {
         this.options.logLevel = "warning";
     }
     if (!utils.isWebPage(this.page)) {
-        this.page = utils.isWebPage(this.options.page) ? this.options.page : createPage(this);
+        this.page = this.mainPage = utils.isWebPage(this.options.page) ? this.options.page : createPage(this);
     }
     this.page.settings = utils.mergeObjects(this.page.settings, this.options.pageSettings);
     if (utils.isClipRect(this.options.clipRect)) {
@@ -1726,6 +1727,28 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
 };
 
 /**
+ * Waits for a child page having its url matching the provided pattern to be opened
+ * and loaded.
+ *
+ * @param  String|RegExp  urlPattern  The child page url pattern
+ * @param  Function       then        The next step function (optional)
+ * @param  Function       onTimeout   Function to call on operation timeout (optional)
+ * @param  Number         timeout     Timeout in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForPage = function(urlPattern, then, onTimeout, timeout) {
+    "use strict";
+    return this.waitFor(function() {
+        return this.childPages.some(function(page) {
+            if (utils.betterTypeOf(urlPattern) === 'regexp') {
+                return urlPattern.test(page.url);
+            }
+            return page.url.indexOf(urlPattern) !== -1;
+        });
+    }, then, onTimeout, timeout);
+};
+
+/**
  * Waits until a given resource is loaded
  *
  * @param  String/Function  test       A function to test if the resource exists.
@@ -1836,6 +1859,39 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
     return this.waitFor(function _check() {
         return !this.visible(selector);
     }, then, onTimeout, timeout);
+};
+
+/**
+ * Makes the provided child page as the currently active one. Note that the
+ * active page will be reverted when finished.
+ *
+ * @param  WebPage   childPage  A child page instance
+ * @param  Function  then       Next step function
+ * @return Casper
+ */
+Casper.prototype.withChildPage = function withChildPage(childPage, then) {
+    "use strict";
+    if (!utils.isWebPage(childPage) || !this.childPages.some(function(activePage) {
+        return activePage.id === childPage.id;
+    })) {
+        throw new CasperError("withChildPage() invalid or missing child page.");
+    }
+    if (!utils.isFunction(then)) {
+        throw new CasperError("withChildPage() requires a step function.");
+    }
+    // make the childPage the currently active one
+    this.page = childPage;
+    try {
+        this.then(then);
+    } catch (e) {
+        // revert to main page on error
+        this.page = this.mainPage;
+        throw e;
+    }
+    return this.then(function _step() {
+        // revert to main page
+        this.page = this.mainPage;
+    });
 };
 
 /**
@@ -1959,6 +2015,19 @@ function createPage(casper) {
             casper.navigationRequested  = true;
         }
         casper.emit('navigation.requested', url, navigationType, navigationLocked, isMainFrame);
+    };
+    page.onPageCreated = function onPageCreated(newPage) {
+        casper.emit('child.page.created', newPage);
+        newPage.onLoadFinished = function onLoadFinished() {
+            casper.childPages.push(newPage);
+            casper.emit('child.page.loaded', newPage);
+        };
+        newPage.onClosing = function onClosing(closedPage) {
+            casper.childPages = casper.childPages.filter(function(childPages) {
+                return childPages.id !== closedPage.id;
+            });
+            casper.emit('child.page.closed', closedPage);
+        };
     };
     page.onPrompt = function onPrompt(message, value) {
         return casper.filter('page.prompt', message, value);
