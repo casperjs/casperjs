@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1354527978116">
-    <link rel="stylesheet" href="css/casper.css?1354527978116">
+    <link rel="stylesheet" href="prettify/prettify.css?1354752077157">
+    <link rel="stylesheet" href="css/casper.css?1354752077157">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -933,6 +933,39 @@ Retrieves a list of boundaries for all DOM elements matching the provided
 <code>height</code> (see <a href="#casper.getElementBounds">casper.getElementBounds()</a>).
 
 </p>
+<h3 id="casper.getElementInfo"><code>Casper#getElementInfo(String <a href="selectors.html">selector</a>)</code></h3>
+
+<p>Retrieves information about the first element matching the provided
+<a href="selectors.html">selector</a>.
+
+</p>
+<p><span class="label label-success">Added in 1.0</span>
+</p>
+<pre><code class="js">casper.start('http://google.com/', function() {
+    require('utils').dump(this.getElementInfo('#hplogo'));
+});</code></pre>
+<p>Gives something like:
+
+</p>
+<pre><code class="json">"{
+    "nodeName": "div",
+    "attributes": {
+        "dir": "ltr",
+        "title": "Google",
+        "align": "left",
+        "id": "hplogo",
+        "onload": "window.lol&amp;&amp;lol()",
+        "style": "background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px"
+    },
+    "tag": "&lt;div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;amp;&amp;amp;lol()\" style=\"background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px\"&gt;&lt;div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\"&gt;France&lt;/div&gt;&lt;/div&gt;",
+    "html": "&lt;div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\"&gt;France&lt;/div&gt;",
+    "text": "France\n",
+    "x": 582.5,
+    "y": 192,
+    "width": 275,
+    "height": 95,
+    "visible": true
+}"</code></pre>
 <h3 id="casper.getFormValues"><code>Casper#getFormValues(String <a href="selectors.html">selector</a>)</code></h3>
 
 <p><span class="label label-success">Added in 1.0</span>
@@ -1201,6 +1234,17 @@ casper.then(function() {
 casper.run(function() {
     this.echo('So the whole suite ended.');
     this.exit(); // &lt;--- don't forget me!
+});</code></pre>
+<h3 id="casper.sendKeys"><code>Casper#sendKeys(Selector <a href="selectors.html">selector</a>, String keys[, Object options])</code></h3>
+
+<p><span class="label label-success">Added in 1.0</span>
+Sends native keyboard events to the element matching the provided <a href="selectors.html">selector</a>:
+
+</p>
+<pre><code class="js">casper.then(function() {
+    this.sendKeys('form.contact input#name', 'Duke');
+    this.sendKeys('form.contact textarea#message', "Damn, I'm looking good.");
+    this.click('form.contact input[type="submit"]');
 });</code></pre>
 <h3 id="casper.setHttpAuth"><code>Casper#setHttpAuth(String username, String password)</code></h3>
 
@@ -1751,6 +1795,7 @@ casper.run();</code></pre>
 <li><a href="#casper.getElementAttribute"><code>getElementAttribute()</code></a></li>
 <li><a href="#casper.getElementBounds"><code>getElementBounds()</code></a></li>
 <li><a href="#casper.getElementsBounds"><code>getElementsBounds()</code></a></li>
+<li><a href="#casper.getElementInfo"><code>getElementInfo()</code></a></li>
 <li><a href="#casper.getFormValues"><code>getFormValues()</code></a></li>
 <li><a href="#casper.getGlobal"><code>getGlobal()</code></a></li>
 <li><a href="#casper.getHTML"><code>getHTML()</code></a></li>
@@ -1762,6 +1807,7 @@ casper.run();</code></pre>
 <li><a href="#casper.repeat"><code>repeat()</code></a></li>
 <li><a href="#casper.resourceExists"><code>resourceExists()</code></a></li>
 <li><a href="#casper.run"><code>run()</code></a></li>
+<li><a href="#casper.sendKeys"><code>sendKeys()</code></a></li>
 <li><a href="#casper.setHttpAuth"><code>setHttpAuth()</code></a></li>
 <li><a href="#casper.start"><code>start()</code></a></li>
 <li><a href="#casper.status"><code>status()</code></a></li>
@@ -2889,10 +2935,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.LXP7HkTOZj8.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTOKnIWI_EBuVo6fJcWHYpW0z7kofg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1354527978116"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1354527978116"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1354527978116"></script>
-    <script type="text/javascript" src="js/application.js?1354527978116"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr._IQfzlliMTo.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTMGqOjKveOLJUWjjAhL7YuD07ClBg/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1354752077157"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1354752077157"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1354752077157"></script>
+    <script type="text/javascript" src="js/application.js?1354752077157"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

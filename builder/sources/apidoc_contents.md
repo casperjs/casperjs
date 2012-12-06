@@ -866,6 +866,42 @@ Retrieves a list of boundaries for all DOM elements matching the provided
 It returns an array of objects with four keys: `top`, `left`, `width` and
 `height` (see [casper.getElementBounds()](#casper.getElementBounds)).
 
+<h3 id="casper.getElementInfo"><code>Casper#getElementInfo(String <a href="selectors.html">selector</a>)</code></h3>
+
+Retrieves information about the first element matching the provided
+[selector](selectors.html).
+
+<span class="label label-success">Added in 1.0</span>
+```js
+casper.start('http://google.com/', function() {
+    require('utils').dump(this.getElementInfo('#hplogo'));
+});
+```
+
+Gives something like:
+
+```json
+"{
+    "nodeName": "div",
+    "attributes": {
+        "dir": "ltr",
+        "title": "Google",
+        "align": "left",
+        "id": "hplogo",
+        "onload": "window.lol&&lol()",
+        "style": "background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px"
+    },
+    "tag": "<div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;&amp;lol()\" style=\"background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px\"><div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div></div>",
+    "html": "<div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div>",
+    "text": "France\n",
+    "x": 582.5,
+    "y": 192,
+    "width": 275,
+    "height": 95,
+    "visible": true
+}"
+```
+
 <h3 id="casper.getFormValues"><code>Casper#getFormValues(String <a href="selectors.html">selector</a>)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
@@ -1159,6 +1195,19 @@ casper.then(function() {
 casper.run(function() {
     this.echo('So the whole suite ended.');
     this.exit(); // <--- don't forget me!
+});
+```
+
+<h3 id="casper.sendKeys"><code>Casper#sendKeys(Selector <a href="selectors.html">selector</a>, String keys[, Object options])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Sends native keyboard events to the element matching the provided [selector](selectors.html):
+
+```js
+casper.then(function() {
+    this.sendKeys('form.contact input#name', 'Duke');
+    this.sendKeys('form.contact textarea#message', "Damn, I'm looking good.");
+    this.click('form.contact input[type="submit"]');
 });
 ```
 
