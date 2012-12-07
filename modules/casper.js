@@ -35,6 +35,7 @@ var events = require('events');
 var fs = require('fs');
 var http = require('http');
 var mouse = require('mouse');
+var casperpage = require('page');
 var qs = require('querystring');
 var tester = require('tester');
 var utils = require('utils');
@@ -120,6 +121,7 @@ var Casper = function Casper(options) {
     this.options = utils.mergeObjects(this.defaults, options);
     // properties
     this.checker = null;
+    this.childPages = new casperpage.ChildPages();
     this.cli = phantom.casperArgs;
     this.colorizer = this.getColorizer();
     this.currentResponse = undefined;
@@ -138,7 +140,6 @@ var Casper = function Casper(options) {
     };
     this.mouse = mouse.create(this);
     this.page = null;
-    this.childPages = [];
     this.pendingWait = false;
     this.requestUrl = 'about:blank';
     this.resources = [];
@@ -1865,17 +1866,13 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
  * Makes the provided child page as the currently active one. Note that the
  * active page will be reverted when finished.
  *
- * @param  WebPage   childPage  A child page instance
- * @param  Function  then       Next step function
+ * @param  String|RegExp|WebPage  childPageInfo  Target child page information
+ * @param  Function               then           Next step function
  * @return Casper
  */
-Casper.prototype.withChildPage = function withChildPage(childPage, then) {
+Casper.prototype.withChildPage = function withChildPage(childPageInfo, then) {
     "use strict";
-    if (!utils.isWebPage(childPage) || !this.childPages.some(function(activePage) {
-        return activePage.id === childPage.id;
-    })) {
-        throw new CasperError("withChildPage() invalid or missing child page.");
-    }
+    var childPage = this.childPages.find(childPageInfo);
     if (!utils.isFunction(then)) {
         throw new CasperError("withChildPage() requires a step function.");
     }
