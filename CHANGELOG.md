@@ -45,9 +45,9 @@ That's especially useful in case a given test script is abruptly interrupted lea
 
 The whole [CapserJS test suite](https://github.com/n1k0/casperjs/tree/master/tests/) has been migrated to use this new feature.
 
-#### Support for child pages (frames & popups)
+#### Support for popups
 
-PhantomJS 1.7 ships with support for child pages (say popups and frames). CasperJS can now wait for a child being opened and loaded to react accordingly using the new [`Casper.waitForPage()`](http://casperjs.org/api.html#casper.waitForPage) and [`Casper.withChildPage()`](http://casperjs.org/api.html#casper.withChildPage) methods:
+PhantomJS 1.7 ships with support for new opened pages — aka popups. CasperJS can now wait for a popup to be opened and loaded to react accordingly using the new [`Casper.waitForPopup()`](http://casperjs.org/api.html#casper.waitForPopup) and [`Casper.withPopup()`](http://casperjs.org/api.html#casper.withPopup) methods:
 
 ```js
 casper.start('http://foo.bar/').then(function() {
@@ -55,18 +55,22 @@ casper.start('http://foo.bar/').then(function() {
     this.clickLabel('Open me a popup');
 });
 
-casper.waitForPage(/popup\.html$/, function() {
-    this.withChildPage(this.childPages[0], function() {
-        this.test.assertTitle('Popup title');
-    });
+// this will wait for the popup to be opened and loaded
+casper.waitForPopup(/popup\.html$/, function() {
+    this.test.assertEquals(this.popups.length, 1);
 });
 
+// this will set the popup DOM as the main active one only for time the
+// step closure being executed
+casper.withPopup(/popup\.html$/, function() {
+    this.test.assertTitle('Popup title');
+});
+
+// next step will automatically revert the current page to the initial one
 casper.then(function() {
     this.test.assertTitle('Main page title');
 });
 ```
-
-**Note:** Support for this is highly experimental though, your [feedback is warmly welcome](https://github.com/n1k0/casperjs/issues/279).
 
 #### `Casper.mouseEvent()` now uses native events for most operations
 

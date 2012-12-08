@@ -35,7 +35,7 @@ var events = require('events');
 var fs = require('fs');
 var http = require('http');
 var mouse = require('mouse');
-var casperpage = require('page');
+var popup = require('popup');
 var qs = require('querystring');
 var tester = require('tester');
 var utils = require('utils');
@@ -121,7 +121,6 @@ var Casper = function Casper(options) {
     this.options = utils.mergeObjects(this.defaults, options);
     // properties
     this.checker = null;
-    this.childPages = new casperpage.ChildPages();
     this.cli = phantom.casperArgs;
     this.colorizer = this.getColorizer();
     this.currentResponse = undefined;
@@ -141,6 +140,7 @@ var Casper = function Casper(options) {
     this.mouse = mouse.create(this);
     this.page = null;
     this.pendingWait = false;
+    this.popups = popup.createStack();
     this.requestUrl = 'about:blank';
     this.resources = [];
     this.result = {
@@ -1737,15 +1737,15 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
  * @param  Number         timeout     Timeout in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitForPage = function(urlPattern, then, onTimeout, timeout) {
+Casper.prototype.waitForPopup = function waitForPopup(urlPattern, then, onTimeout, timeout) {
     "use strict";
     return this.waitFor(function() {
-        return this.childPages.some(function(page) {
-            if (utils.betterTypeOf(urlPattern) === 'regexp') {
-                return urlPattern.test(page.url);
-            }
-            return page.url.indexOf(urlPattern) !== -1;
-        });
+        try {
+            this.popups.find(urlPattern);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }, then, onTimeout, timeout);
 };
 
@@ -1866,22 +1866,25 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
  * Makes the provided child page as the currently active one. Note that the
  * active page will be reverted when finished.
  *
- * @param  String|RegExp|WebPage  childPageInfo  Target child page information
+ * @param  String|RegExp|WebPage  popup  Target child page information
  * @param  Function               then           Next step function
  * @return Casper
  */
-Casper.prototype.withChildPage = function withChildPage(childPageInfo, then) {
+Casper.prototype.withPopup = function withPopup(popupInfo, then) {
     "use strict";
-    var childPage = this.childPages.find(childPageInfo);
-    if (!utils.isFunction(then)) {
-        throw new CasperError("withChildPage() requires a step function.");
-    }
-    // make the childPage the currently active one
-    this.page = childPage;
+    this.then(function _step() {
+        var popupPage = this.popups.find(popupInfo);
+        if (!utils.isFunction(then)) {
+            throw new CasperError("withPopup() requires a step function.");
+        }
+        // make the popup page the currently active one
+        this.page = popupPage;
+    });
     try {
         this.then(then);
     } catch (e) {
         // revert to main page on error
+        this.log("error while processing popup step: " + e, "error");
         this.page = this.mainPage;
         throw e;
     }
@@ -2014,17 +2017,15 @@ function createPage(casper) {
         }
         casper.emit('navigation.requested', url, navigationType, navigationLocked, isMainFrame);
     };
-    page.onPageCreated = function onPageCreated(newPage) {
-        casper.emit('child.page.created', newPage);
-        newPage.onLoadFinished = function onLoadFinished() {
-            casper.childPages.push(newPage);
-            casper.emit('child.page.loaded', newPage);
+    page.onPageCreated = function onPageCreated(popupPage) {
+        casper.emit('popup.created', popupPage);
+        popupPage.onLoadFinished = function onLoadFinished() {
+            casper.popups.push(popupPage);
+            casper.emit('popup.loaded', popupPage);
         };
-        newPage.onClosing = function onClosing(closedPage) {
-            casper.childPages = casper.childPages.filter(function(childPages) {
-                return childPages.id !== closedPage.id;
-            });
-            casper.emit('child.page.closed', closedPage);
+        popupPage.onClosing = function onClosing(closedPopup) {
+            casper.popups.clean(closedPopup);
+            casper.emit('popup.closed', closedPopup);
         };
     };
     page.onPrompt = function onPrompt(message, value) {
