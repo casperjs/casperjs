@@ -45,7 +45,7 @@ That's especially useful in case a given test script is abruptly interrupted lea
 
 The whole [CapserJS test suite](https://github.com/n1k0/casperjs/tree/master/tests/) has been migrated to use this new feature.
 
-#### Support for popups
+#### Experimental support for popups
 
 PhantomJS 1.7 ships with support for new opened pages — aka popups. CasperJS can now wait for a popup to be opened and loaded to react accordingly using the new [`Casper.waitForPopup()`](http://casperjs.org/api.html#casper.waitForPopup) and [`Casper.withPopup()`](http://casperjs.org/api.html#casper.withPopup) methods:
 
