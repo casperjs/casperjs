@@ -35,7 +35,7 @@ var events = require('events');
 var fs = require('fs');
 var http = require('http');
 var mouse = require('mouse');
-var popup = require('popup');
+var pagestack = require('pagestack');
 var qs = require('querystring');
 var tester = require('tester');
 var utils = require('utils');
@@ -140,7 +140,7 @@ var Casper = function Casper(options) {
     this.mouse = mouse.create(this);
     this.page = null;
     this.pendingWait = false;
-    this.popups = popup.createStack();
+    this.popups = pagestack.create();
     this.requestUrl = 'about:blank';
     this.resources = [];
     this.result = {
@@ -1397,7 +1397,7 @@ Casper.prototype.start = function start(location, then) {
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
     this.history = [];
-    this.popups = popup.createStack();
+    this.popups = pagestack.create();
     this.steps = [];
     this.step = 0;
     // Option checks

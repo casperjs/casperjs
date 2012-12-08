@@ -1,10 +1,10 @@
 /*jshint strict:false*/
 /*global CasperError casper console phantom require*/
-var popup = require('popup');
+var pagestack = require('pagestack');
 var utils = require('utils');
 var webpage = require('webpage');
 var t = casper.test;
-var stack = popup.createStack();
+var stack = pagestack.create();
 
 
 var page1 = webpage.create();
