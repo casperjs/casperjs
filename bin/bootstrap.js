@@ -290,12 +290,9 @@ function bootstrap(global) {
             phantom.exit(0);
         }
 
-
         if (!phantom.casperScript) {
             phantom.casperScript = phantom.casperArgs.get(0);
-        }
-
-        if (phantom.casperScript) {
+        } else {
             if (!fs.isFile(phantom.casperScript)) {
                 console.error('Unable to open file: ' + phantom.casperScript);
                 phantom.exit(1);
