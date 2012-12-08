@@ -1,7 +1,10 @@
+/*global jQuery prettyPrint*/
+
 /**
  * CasperJS website js code. Steal if you care, enjoy if you dare.
  */
-$(document).ready(function() {
+jQuery(function($) {
+    "use strict";
     // pretty printing, only when needed
     $('pre').each(function() {
         if ($(this).find('code[class]').length === 1) {
@@ -109,5 +112,14 @@ $(document).ready(function() {
         } else {
             subnav.removeClass('subnav-fixed');
         }
+    });
+
+    // title anchors
+    $('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').each(function(i, elem) {
+        var $title = $(elem);
+        var $anchor = $('<a/>').attr('href', '#' + $title.attr('id'))
+                              .addClass('anchor')
+                              .text(' ¶')
+        $title.append($anchor);
     });
 });
