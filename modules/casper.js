@@ -1397,6 +1397,7 @@ Casper.prototype.start = function start(location, then) {
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
     this.history = [];
+    this.popups = popup.createStack();
     this.steps = [];
     this.step = 0;
     // Option checks
