@@ -1645,14 +1645,13 @@ casper.waitFor(function check() {
 casper.run();
 ```
 
-<h3 id="casper.waitForPage"><code>Casper#waitForPage(String|RegExp urlPattern[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitForPopup"><code>Casper#waitForPopup(String|RegExp urlPattern[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
-Waits for a child page having its url matching the provided pattern to be opened
+Waits for a popup having its url matching the provided pattern to be opened
 and loaded.
 
-The currently loaded child pages are available in the `Casper.childPages` array
-property.
+The currently loaded popups are available in the `Casper.popups` array-like property.
 
 ```js
 casper.start('http://foo.bar/').then(function() {
@@ -1660,12 +1659,18 @@ casper.start('http://foo.bar/').then(function() {
     this.clickLabel('Open me a popup');
 });
 
-casper.waitForPage(/popup\.html$/, function() {
-    this.withChildPage(this.childPages[0], function() {
-        this.test.assertTitle('Popup title');
-    });
+// this will wait for the popup to be opened and loaded
+casper.waitForPopup(/popup\.html$/, function() {
+    this.test.assertEquals(this.popups.length, 1);
 });
 
+// this will set the popup DOM as the main active one only for time the
+// step closure being executed
+casper.withPopup(/popup\.html$/, function() {
+    this.test.assertTitle('Popup title');
+});
+
+// next step will automatically revert the current page to the initial one
 casper.then(function() {
     this.test.assertTitle('Main page title');
 });
@@ -1774,23 +1779,38 @@ Logs and prints a warning message to the standard output.
 casper.warn("I'm a warning message.");
 ```
 
-<h3 id="casper.withChildPage"><code>Casper#withChildPage(WebPage page, Function step)</code></h3>
+<h3 id="casper.withPopup"><code>Casper#withPopup(Mixed popupInfo, Function step)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
-Switches the main page to the one provided in argument and processes a step. The
-switch only lasts until the step execution is finished:
+Switches the main page to a popup  matching the information passed as argument,
+and processes a step. The page context switch only lasts until the step execution
+is finished:
 
 ```js
-casper.waitForPage(/popup\.html$/, function() {
-    var popup = this.childPages[0];
-    this.withChildPage(popup, function() {
-        this.test.assertTitle('Popup title');
-    });
+casper.start('http://foo.bar/').then(function() {
+    this.test.assertTitle('Main page title');
+    this.clickLabel('Open me a popup');
+});
+
+// this will wait for the popup to be opened and loaded
+casper.waitForPopup(/popup\.html$/, function() {
+    this.test.assertEquals(this.popups.length, 1);
+});
+
+// this will set the popup DOM as the main active one only for time the
+// step closure being executed
+casper.withPopup(/popup\.html$/, function() {
+    this.test.assertTitle('Popup title');
+});
+
+// next step will automatically revert the current page to the initial one
+casper.then(function() {
+    this.test.assertTitle('Main page title');
 });
 ```
 
-**Note:** The currently loaded child pages are available in the
-`Casper.childPages` array property.
+**Note:** The currently loaded popups are available in the `Casper.popups`
+array-like property.
 
 <h3 id="casper.zoom"><code>Casper#zoom(Number factor)</code></h3>
 

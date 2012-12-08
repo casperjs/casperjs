@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1354793877091">
-    <link rel="stylesheet" href="css/casper.css?1354793877091">
+    <link rel="stylesheet" href="prettify/prettify.css?1354974939194">
+    <link rel="stylesheet" href="css/casper.css?1354974939194">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1652,15 +1652,14 @@ casper.waitFor(function check() {
 });
 
 casper.run();</code></pre>
-<h3 id="casper.waitForPage"><code>Casper#waitForPage(String|RegExp urlPattern[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitForPopup"><code>Casper#waitForPopup(String|RegExp urlPattern[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p><span class="label label-success">Added in 1.0</span>
-Waits for a child page having its url matching the provided pattern to be opened
+Waits for a popup having its url matching the provided pattern to be opened
 and loaded.
 
 </p>
-<p>The currently loaded child pages are available in the <code>Casper.childPages</code> array
-property.
+<p>The currently loaded popups are available in the <code>Casper.popups</code> array-like property.
 
 </p>
 <pre><code class="js">casper.start('http://foo.bar/').then(function() {
@@ -1668,12 +1667,18 @@ property.
     this.clickLabel('Open me a popup');
 });
 
-casper.waitForPage(/popup\.html$/, function() {
-    this.withChildPage(this.childPages[0], function() {
-        this.test.assertTitle('Popup title');
-    });
+// this will wait for the popup to be opened and loaded
+casper.waitForPopup(/popup\.html$/, function() {
+    this.test.assertEquals(this.popups.length, 1);
 });
 
+// this will set the popup DOM as the main active one only for time the
+// step closure being executed
+casper.withPopup(/popup\.html$/, function() {
+    this.test.assertTitle('Popup title');
+});
+
+// next step will automatically revert the current page to the initial one
 casper.then(function() {
     this.test.assertTitle('Main page title');
 });</code></pre>
@@ -1774,21 +1779,36 @@ visible in remote DOM to process a next step. Uses
 
 </p>
 <pre><code class="javascript">casper.warn("I'm a warning message.");</code></pre>
-<h3 id="casper.withChildPage"><code>Casper#withChildPage(WebPage page, Function step)</code></h3>
+<h3 id="casper.withPopup"><code>Casper#withPopup(Mixed popupInfo, Function step)</code></h3>
 
 <p><span class="label label-success">Added in 1.0</span>
-Switches the main page to the one provided in argument and processes a step. The
-switch only lasts until the step execution is finished:
+Switches the main page to a popup  matching the information passed as argument,
+and processes a step. The page context switch only lasts until the step execution
+is finished:
 
 </p>
-<pre><code class="js">casper.waitForPage(/popup\.html$/, function() {
-    var popup = this.childPages[0];
-    this.withChildPage(popup, function() {
-        this.test.assertTitle('Popup title');
-    });
+<pre><code class="js">casper.start('http://foo.bar/').then(function() {
+    this.test.assertTitle('Main page title');
+    this.clickLabel('Open me a popup');
+});
+
+// this will wait for the popup to be opened and loaded
+casper.waitForPopup(/popup\.html$/, function() {
+    this.test.assertEquals(this.popups.length, 1);
+});
+
+// this will set the popup DOM as the main active one only for time the
+// step closure being executed
+casper.withPopup(/popup\.html$/, function() {
+    this.test.assertTitle('Popup title');
+});
+
+// next step will automatically revert the current page to the initial one
+casper.then(function() {
+    this.test.assertTitle('Main page title');
 });</code></pre>
-<p><strong>Note:</strong> The currently loaded child pages are available in the
-<code>Casper.childPages</code> array property.
+<p><strong>Note:</strong> The currently loaded popups are available in the <code>Casper.popups</code>
+array-like property.
 
 </p>
 <h3 id="casper.zoom"><code>Casper#zoom(Number factor)</code></h3>
@@ -1864,7 +1884,7 @@ casper.run();</code></pre>
 <li><a href="#casper.visible"><code>visible()</code></a></li>
 <li><a href="#casper.wait"><code>wait()</code></a></li>
 <li><a href="#casper.waitFor"><code>waitFor()</code></a></li>
-<li><a href="#casper.waitForPage"><code>waitForPage()</code></a></li>
+<li><a href="#casper.waitForPopup"><code>waitForPopup()</code></a></li>
 <li><a href="#casper.waitForSelector"><code>waitForSelector()</code></a></li>
 <li><a href="#casper.waitForResource"><code>waitForResource()</code></a></li>
 <li><a href="#casper.waitForText"><code>waitForText()</code></a></li>
@@ -1872,7 +1892,7 @@ casper.run();</code></pre>
 <li><a href="#casper.waitWhileSelector"><code>waitWhileSelector()</code></a></li>
 <li><a href="#casper.waitWhileVisible"><code>waitWhileVisible()</code></a></li>
 <li><a href="#casper.warn"><code>warn()</code></a></li>
-<li><a href="#casper.withChildPage"><code>withChildPage()</code></a></li>
+<li><a href="#casper.withPopup"><code>withPopup()</code></a></li>
 <li><a href="#casper.zoom"><code>zoom()</code></a></li>
 </ul>
 </div>
@@ -2979,10 +2999,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.lzRNpi8drNQ.O/m=plusone/am=AQ/rt=j/d=1/rs=AItRSTPGLbH7iFDIAzA_6KVujdYCi0vcTw/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1354793877091"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1354793877091"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1354793877091"></script>
-    <script type="text/javascript" src="js/application.js?1354793877091"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.6fGyaOOE_Bs.O/m=plusone/am=IQ/rt=j/d=1/rs=AItRSTNO15GHjajIx6hXHPp3l0QzovrBMA/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1354974939194"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1354974939194"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1354974939194"></script>
+    <script type="text/javascript" src="js/application.js?1354974939194"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
