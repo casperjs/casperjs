@@ -17,7 +17,7 @@ t.assertEquals(stack.list().length, 1);
 t.assertEquals(stack.list()[0], page1.url);
 
 var page2 = webpage.create();
-page1.url = 'page2.html';
+page2.url = 'page2.html';
 stack.push(page2);
 t.assertEquals(stack.length, 2);
 t.assert(utils.isWebPage(stack[1]));
