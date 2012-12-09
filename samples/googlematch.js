@@ -1,4 +1,7 @@
-/*
+/*jshint strict:false*/
+/*global CasperError console phantom require*/
+
+/**
  * Takes provided terms passed as arguments and query google for the number of
  * estimated results each have.
  *

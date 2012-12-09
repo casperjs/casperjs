@@ -1,7 +1,9 @@
-/*
+/*jshint strict:false*/
+/*global CasperError console phantom require*/
+
+/**
  * Create a mosaic image from all headline photos on BBC homepage
  */
-
 var casper = require("casper").create();
 var nbLinks = 0;
 var currentLink = 1;

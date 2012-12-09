@@ -1,4 +1,7 @@
-/*
+/*jshint strict:false*/
+/*global CasperError console phantom require*/
+
+/**
  * A basic custom logging implementation. The idea is to (extremely) verbosely
  * log every received resource.
  */
