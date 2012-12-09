@@ -292,18 +292,18 @@ function bootstrap(global) {
 
         if (!phantom.casperScript) {
             phantom.casperScript = phantom.casperArgs.get(0);
-        } else {
-            if (!fs.isFile(phantom.casperScript)) {
-                console.error('Unable to open file: ' + phantom.casperScript);
-                phantom.exit(1);
-            } else {
-                // filter out the called script name from casper args
-                phantom.casperArgs.drop(phantom.casperScript);
-
-                // passed casperjs script execution
-                phantom.injectJs(phantom.casperScript);
-            }
         }
+
+        if (!fs.isFile(phantom.casperScript)) {
+            console.error('Unable to open file: ' + phantom.casperScript);
+            phantom.exit(1);
+        }
+
+        // filter out the called script name from casper args
+        phantom.casperArgs.drop(phantom.casperScript);
+
+        // passed casperjs script execution
+        phantom.injectJs(phantom.casperScript);
     };
 
     if (!phantom.casperLoaded) {
