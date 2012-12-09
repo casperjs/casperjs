@@ -124,6 +124,9 @@ var Tester = function Tester(casper, options) {
 
     // casper events
     this.casper.on('error', function onCasperError(msg, backtrace) {
+        if (!phantom.casperTest) {
+            return;
+        }
         var line = 0;
         if (!utils.isString(msg) && msg.indexOf(this.SKIP_MESSAGE) === -1) {
             try {

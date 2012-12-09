@@ -80,6 +80,7 @@ Also, `Casper.mouseEvent()` will now directly trigger an error on failure instea
 
 ### Bugfixes & enhancements
 
+- fixed [#308](https://github.com/n1k0/casperjs/issues/308) & [#309](https://github.com/n1k0/casperjs/issues/309) - proper module error backtraces
 - fixed [#306](https://github.com/n1k0/casperjs/issues/306) - Raise an explicit error on invalid test path
 - fixed [#300](https://github.com/n1k0/casperjs/issues/300) - Ensure that `findOne()` and `findAll()` observe the scope for XPath expressions, not just when passed CSS selectors
 - fixed [#294](https://github.com/n1k0/casperjs/issues/294) - Automatically fail test on any runtime error or timeout

@@ -120,7 +120,7 @@ function patchRequire(require, requireDirs) {
             }
         }
         if (!file) {
-            throw new Error("CasperJS couldn't find module " + path);
+            throw new window.CasperError("CasperJS couldn't find module " + path);
         }
         if (file in requireCache) {
             return requireCache[file].exports;
@@ -137,8 +137,14 @@ function patchRequire(require, requireDirs) {
         try {
             fn(file, _require, module, module.exports);
         } catch (e) {
-            var error = new window.CasperError('__mod_error(' + path + '):: ' + e);
+            var error = new window.CasperError('__mod_error(' + path + ':' + e.line + '):: ' + e);
             error.file = file;
+            error.line = e.line;
+            error.stack = e.stack;
+            error.stackArray = JSON.parse(JSON.stringify(e.stackArray));
+            if (error.stackArray.length > 0) {
+                error.stackArray[0].sourceURL = file;
+            }
             throw error;
         }
         requireCache[file] = module;
@@ -264,20 +270,21 @@ function bootstrap(global) {
      */
     phantom.initCasperCli = function initCasperCli() {
         var fs = require("fs");
+        var baseTestsPath = fs.pathJoin(phantom.casperPath, 'tests');
 
         if (!!phantom.casperArgs.options.version) {
             console.log(phantom.casperVersion.toString());
             phantom.exit(0);
         } else if (phantom.casperArgs.get(0) === "test") {
-            phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
+            phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;
             phantom.casperArgs.drop("test");
         } else if (phantom.casperArgs.get(0) === "selftest") {
-            phantom.casperScript = fs.absolute(fs.pathJoin(phantom.casperPath, 'tests', 'run.js'));
-            phantom.casperSelfTest = true;
-            phantom.casperArgs.options.includes = fs.pathJoin(phantom.casperPath, 'tests', 'selftest.js');
+            phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
+            phantom.casperSelfTest = phantom.casperTest = true;
+            phantom.casperArgs.options.includes = fs.pathJoin(baseTestsPath, 'selftest.js');
             if (phantom.casperArgs.args.length <= 1) {
-                phantom.casperArgs.args.push(fs.pathJoin(phantom.casperPath, 'tests', 'suites'));
+                phantom.casperArgs.args.push(fs.pathJoin(baseTestsPath, 'suites'));
             }
             phantom.casperArgs.drop("selftest");
         } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
