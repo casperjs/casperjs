@@ -95,6 +95,7 @@ Also, `Casper.mouseEvent()` will now directly trigger an error on failure instea
 - fixed [`utils.betterTypeOf()`](http://casperjs.org/api.html#casper.betterTypeOf) to properly handle `undefined` and `null` values
 - fixed `Casper.die()` and `Casper.evaluateOrDie()` were not printing the error onto the console
 - added JSON support to `require()`
+- added [`Tester.assertTruthy()`](http://casperjs.org/api.html#tester.assertTruthy) and [`Tester.assertFalsy()`](http://casperjs.org/api.html#tester.assertFalsy)
 - added [`Casper.sendKeys()`](http://casperjs.org/api.html#casper.sendKeys) to send native keyboard events to the element matching a given selector
 - added [`Casper.getFormValues()`](http://casperjs.org/api.html#casper.getFormValues) to check for the field values of a given form
 - added [`Tester.assertTextDoesntExist()`](http://casperjs.org/api.html#tester.assertTextDoesntExist)

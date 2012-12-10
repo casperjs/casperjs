@@ -287,6 +287,18 @@ function isClipRect(value) {
 exports.isClipRect = isClipRect;
 
 /**
+ * Checks that the subject is falsy.
+ *
+ * @param  Mixed  subject  Test subject
+ * @return Boolean
+ */
+function isFalsy(subject) {
+    "use strict";
+    /*jshint eqeqeq:false*/
+    return subject == new Function('return false;')();
+}
+exports.isFalsy = isFalsy;
+/**
  * Checks if value is a javascript Function
  *
  * @param  mixed  value
@@ -370,6 +382,19 @@ function isString(value) {
     return isType(value, "string");
 }
 exports.isString = isString;
+
+/**
+ * Checks that the subject is truthy.
+ *
+ * @param  Mixed  subject  Test subject
+ * @return Boolean
+ */
+function isTruthy(subject) {
+    "use strict";
+    /*jshint eqeqeq:false*/
+    return subject == new Function('return true;')();
+}
+exports.isTruthy = isTruthy;
 
 /**
  * Shorthands for checking if a value is of the given type. Can check for

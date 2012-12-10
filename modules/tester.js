@@ -487,6 +487,44 @@ Tester.prototype.assertTextExists = Tester.prototype.assertTextExist = function 
 };
 
 /**
+ * Asserts a subject is truthy.
+ *
+ * @param  Mixed   subject  Test subject
+ * @param  String  message  Test description
+ * @return Object           An assertion result object
+ */
+Tester.prototype.assertTruthy = function assertTruthy(subject, message) {
+    "use strict";
+    /*jshint eqeqeq:false*/
+    return this.assert(utils.isTruthy(subject), message, {
+        type:     "assertTruthy",
+        standard: "Subject is truthy",
+        values:  {
+            subject: subject
+        }
+    });
+};
+
+/**
+ * Asserts a subject is falsy.
+ *
+ * @param  Mixed   subject  Test subject
+ * @param  String  message  Test description
+ * @return Object           An assertion result object
+ */
+Tester.prototype.assertFalsy = function assertFalsy(subject, message) {
+    "use strict";
+    /*jshint eqeqeq:false*/
+    return this.assert(utils.isFalsy(subject), message, {
+        type:     "assertFalsy",
+        standard: "Subject is falsy",
+        values:  {
+            subject: subject
+        }
+    });
+};
+
+/**
  * Asserts that given text exists in the provided selector.
  *
  * @param  String   selector  Selector expression
