@@ -1,8 +1,10 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0
-------------------
+2012-12-10, v1.0.0-RC5
+----------------------
+
+I told you there won't be an 1.0.0-RC5? I lied. Expect 1.0 stable for Christmas, probably.
 
 ### Important Changes & Caveats
 
