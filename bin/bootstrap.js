@@ -106,10 +106,13 @@ function patchRequire(require, requireDirs) {
             fileGuesses.push.apply(fileGuesses, [
                 testPath,
                 testPath + '.js',
+                testPath + '.json',
                 testPath + '.coffee',
                 fs.pathJoin(testPath, 'index.js'),
+                fs.pathJoin(testPath, 'index.json'),
                 fs.pathJoin(testPath, 'index.coffee'),
                 fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
+                fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.json'),
                 fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
             ]);
         });
@@ -124,6 +127,11 @@ function patchRequire(require, requireDirs) {
         }
         if (file in requireCache) {
             return requireCache[file].exports;
+        }
+        if (/\.json/i.test(file)) {
+            var parsed = JSON.parse(fs.read(file));
+            requireCache[file] = parsed;
+            return parsed;
         }
         var scriptCode = (function getScriptCode(file) {
             var scriptCode = fs.read(file);
