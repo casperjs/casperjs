@@ -1728,10 +1728,28 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
 };
 
 /**
- * Waits for a child page having its url matching the provided pattern to be opened
+ * Waits for a child frame page to be loaded.
+ *
+ * @param  String    frameName   The frame name
+ * @param  Function  then        The next step function (optional)
+ * @param  Function  onTimeout   Function to call on operation timeout (optional)
+ * @param  Number    timeout     Timeout in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForFrame = function waitForFrame(frameName, then, onTimeout, timeout) {
+    "use strict";
+    return this.waitFor(function() {
+        return this.page.childFramesName().some(function(name) {
+            return name === frameName;
+        });
+    }, then, onTimeout, timeout);
+};
+
+/**
+ * Waits for a popup page having its url matching the provided pattern to be opened
  * and loaded.
  *
- * @param  String|RegExp  urlPattern  The child page url pattern
+ * @param  String|RegExp  urlPattern  The popup url pattern
  * @param  Function       then        The next step function (optional)
  * @param  Function       onTimeout   Function to call on operation timeout (optional)
  * @param  Number         timeout     Timeout in milliseconds (optional)
@@ -1863,11 +1881,39 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
 };
 
 /**
- * Makes the provided child page as the currently active one. Note that the
+ * Makes the provided frame page as the currently active one. Note that the
  * active page will be reverted when finished.
  *
- * @param  String|RegExp|WebPage  popup  Target child page information
- * @param  Function               then           Next step function
+ * @param  String    frameName  Target frame name
+ * @param  Function  then       Next step function
+ * @return Casper
+ */
+Casper.prototype.withFrame = function withFrame(frameName, then) {
+    "use strict";
+    this.then(function _step() {
+        // make the frame page the currently active one
+        this.page.switchToChildFrame(frameName);
+    });
+    try {
+        this.then(then);
+    } catch (e) {
+        // revert to main page on error
+        this.log("error while processing frame step: " + e, "error");
+        this.page.switchToMainFrame();
+        throw e;
+    }
+    return this.then(function _step() {
+        // revert to main page
+        this.page.switchToMainFrame();
+    });
+};
+
+/**
+ * Makes the provided frame page as the currently active one. Note that the
+ * active page will be reverted when finished.
+ *
+ * @param  String|RegExp|WebPage  popup  Target frame page information
+ * @param  Function               then   Next step function
  * @return Casper
  */
 Casper.prototype.withPopup = function withPopup(popupInfo, then) {
