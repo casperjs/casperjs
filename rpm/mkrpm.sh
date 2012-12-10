@@ -13,7 +13,7 @@ buildroot="${topdir}/BUILD/${name}-${version}-root"
 mkdir -p ${topdir}/RPMS ${topdir}/SRPMS ${topdir}/SOURCES ${topdir}/BUILD
 mkdir -p ${buildroot} ${builddir}
 echo "=> Copying sources..."
-( cd .. && tar cf - ./[A-Z]* ./package.json ./bin ./samples ./modules | tar xf - -C ${builddir} )
+( cd .. && tar cf - ./[A-Z]* ./package.json ./bin ./samples ./tests ./modules | tar xf - -C ${builddir} )
 echo "=> Creating source tarball under ${sourcedir}..."
 ( cd ${builddir}/.. && tar zcf ${sourcedir}/${name}-${version}.tar.gz ${name}-${version} )
 echo "=> Building RPM..."
