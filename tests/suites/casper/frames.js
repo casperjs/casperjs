@@ -14,13 +14,23 @@ casper.waitForFrame('frame2', function() {
 
 casper.withFrame('frame1', function() {
     this.test.assertTitle('CasperJS frame 1');
+    this.test.assertExists("#f1");
+    this.test.assertDoesntExist("#f2");
+    this.test.assertEval(function() {
+        return '__utils__' in window && 'getBinary' in __utils__;
+    }, '__utils__ object is available in child frame');
 });
 
 casper.withFrame('frame2', function() {
     this.test.assertTitle('CasperJS frame 2');
+    this.test.assertExists("#f2");
+    this.test.assertDoesntExist("#f1");
+    this.test.assertEval(function() {
+        return '__utils__' in window && 'getBinary' in __utils__;
+    }, '__utils__ object is available in other child frame');
 });
 
 casper.run(function() {
     this.test.assertTitle('CasperJS test frames');
-    this.test.done(7);
+    this.test.done(13);
 });
