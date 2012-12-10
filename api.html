@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1354980514074">
-    <link rel="stylesheet" href="css/casper.css?1354980514074">
+    <link rel="stylesheet" href="prettify/prettify.css?1355134517710">
+    <link rel="stylesheet" href="css/casper.css?1355134517710">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -2414,6 +2414,12 @@ remote DOM environment.
 <pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.test.assertExists('form[name="gs"]', 'google.fr has a form with name "gs"');
 });</code></pre>
+<h3 id="tester.assertFalsy"><code>Tester#assertFalsy(Mixed subject[, String message])</code></h3>
+
+<p><span class="label label-success">Added in 1.0</span>
+Asserts that a given subject is <a href="http://11heavens.com/falsy-and-truthy-in-javascript">falsy</a>.
+
+</p>
 <h3 id="tester.assertField"><code>Tester#assertField(String inputName, String expected[, String message])</code></h3>
 
 <p>Asserts that a given form field has the provided value:
@@ -2556,6 +2562,12 @@ Asserts that body <strong>plain text content</strong> doesn't contain the given 
 <pre><code class="javascript">casper.start('http://www.google.fr/', function() {
     this.test.assertTitleMatch(/Google/, 'google.fr has a quite predictable title');
 });</code></pre>
+<h3 id="tester.assertTruthy"><code>Tester#assertTruthy(Mixed subject[, String message])</code></h3>
+
+<p><span class="label label-success">Added in 1.0</span>
+Asserts that a given subject is <a href="http://11heavens.com/falsy-and-truthy-in-javascript">truthy</a>.
+
+</p>
 <h3 id="tester.assertType"><code>Tester#assertType(mixed input, String type[, String message])</code></h3>
 
 <p>Asserts that the provided input is of the given type.
@@ -2612,7 +2624,7 @@ casper.thenClick('#logo', function() {
 });
 
 casper.run(function() {
-    this.test.done(); 
+    this.test.done();
 });</code></pre>
 <p><span class="label label-success">Added in 1.0</span>
 The <code>expected</code> parameter checks for an expected number of performed assertions:
@@ -2627,7 +2639,7 @@ casper.thenClick('#logo', function() {
 });
 
 casper.run(function() {
-    this.test.done(2); 
+    this.test.done(2);
 });</code></pre>
 <p>That's especially useful in case a given test script is abruptly interrupted leaving you with no obvious way to know it and an erroneously successful status.
 
@@ -2746,8 +2758,8 @@ casper.run(function() {
     this.test.renderResults(true, 0, 'test-results.xml');
 });</code></pre>
 <p><span class="label label-info">Note</span>
-This method is not to be called when using the 
-<a href="testing.html#casper-test-command"><code>casperjs test</code> command</a>, where it's done 
+This method is not to be called when using the
+<a href="testing.html#casper-test-command"><code>casperjs test</code> command</a>, where it's done
 automatically for you.
 </p>
 </div>
@@ -2761,6 +2773,7 @@ automatically for you.
 <li><a href="#tester.assertEval"><code>assertEval()</code></a></li>
 <li><a href="#tester.assertEvalEquals"><code>assertEvalEquals()</code></a></li>
 <li><a href="#tester.assertExists"><code>assertExists()</code></a></li>
+<li><a href="#tester.assertFalsy"><code>assertFalsy()</code></a></li>
 <li><a href="#tester.assertField"><code>assertField()</code></a></li>
 <li><a href="#tester.assertHttpStatus"><code>assertHttpStatus()</code></a></li>
 <li><a href="#tester.assertMatch"><code>assertMatch()</code></a></li>
@@ -2776,6 +2789,7 @@ automatically for you.
 <li><a href="#tester.assertTextDoesntExist"><code>assertTextDoesntExist()</code></a></li>
 <li><a href="#tester.assertTitle"><code>assertTitle()</code></a></li>
 <li><a href="#tester.assertTitleMatch"><code>assertTitleMatch()</code></a></li>
+<li><a href="#tester.assertTruthy"><code>assertTruthy()</code></a></li>
 <li><a href="#tester.assertType"><code>assertType()</code></a></li>
 <li><a href="#tester.assertUrlMatch"><code>assertUrlMatch()</code></a></li>
 <li><a href="#tester.assertVisible"><code>assertVisible()</code></a></li>
@@ -2888,6 +2902,12 @@ This is a port of nodejs <code>util.inherits()</code>.
 <p>Checks if passed argument is a <code>cliprect</code> object.
 
 </p>
+<h3 id="utils.isFalsy"><code>utils.isFalsy(subject)</code></h3>
+
+<p><span class="label label-success">Added in 1.0</span>
+Returns subject <a href="http://11heavens.com/falsy-and-truthy-in-javascript">falsiness</a>.
+
+</p>
 <h3 id="utils.isFunction"><code>utils.isFunction(value)</code></h3>
 
 <p>Checks if passed argument is a function.
@@ -2917,6 +2937,12 @@ This is a port of nodejs <code>util.inherits()</code>.
 <h3 id="utils.isString"><code>utils.isString(value)</code></h3>
 
 <p>Checks if passed argument is an instance of <code>String</code>.
+
+</p>
+<h3 id="utils.isTruthy"><code>utils.isTruthy(subject)</code></h3>
+
+<p><span class="label label-success">Added in 1.0</span>
+Returns subject <a href="http://11heavens.com/falsy-and-truthy-in-javascript">truthiness</a>.
 
 </p>
 <h3 id="utils.isType"><code>utils.isType(what, type)</code></h3>
@@ -2969,12 +2995,14 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
 <li><a href="#utils.isArray"><code>isArray()</code></a></li>
 <li><a href="#utils.isCasperObject"><code>isCasperObject()</code></a></li>
 <li><a href="#utils.isClipRect"><code>isClipRect()</code></a></li>
+<li><a href="#utils.isFalsy"><code>isFalsy()</code></a></li>
 <li><a href="#utils.isFunction"><code>isFunction()</code></a></li>
 <li><a href="#utils.isJsFile"><code>isJsFile()</code></a></li>
 <li><a href="#utils.isNull"><code>isNull()</code></a></li>
 <li><a href="#utils.isNumber"><code>isNumber()</code></a></li>
 <li><a href="#utils.isObject"><code>isObject()</code></a></li>
 <li><a href="#utils.isString"><code>isString()</code></a></li>
+<li><a href="#utils.isTruthy"><code>isTruthy()</code></a></li>
 <li><a href="#utils.isType"><code>isType()</code></a></li>
 <li><a href="#utils.isUndefined"><code>isUndefined()</code></a></li>
 <li><a href="#utils.isWebPage"><code>isWebPage()</code></a></li>
@@ -2999,10 +3027,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.6fGyaOOE_Bs.O/m=plusone/am=IQ/rt=j/d=1/rs=AItRSTNO15GHjajIx6hXHPp3l0QzovrBMA/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1354980514074"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1354980514074"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1354980514074"></script>
-    <script type="text/javascript" src="js/application.js?1354980514074"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.fr.6fGyaOOE_Bs.O/m=plusone/am=IQ/rt=j/d=1/rs=AItRSTNO15GHjajIx6hXHPp3l0QzovrBMA/cb=gapi.loaded_0" async=""></script><script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script type="text/javascript" async="" src="https://apis.google.com/js/plusone.js" gapi_processed="true"></script><script type="text/javascript" src="js/jquery.min.js?1355134517710"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1355134517710"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1355134517710"></script>
+    <script type="text/javascript" src="js/application.js?1355134517710"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

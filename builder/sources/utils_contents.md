@@ -74,6 +74,11 @@ Checks if passed argument is an instance of `Casper`.
 
 Checks if passed argument is a `cliprect` object.
 
+<h3 id="utils.isFalsy"><code>utils.isFalsy(subject)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Returns subject [falsiness](http://11heavens.com/falsy-and-truthy-in-javascript).
+
 <h3 id="utils.isFunction"><code>utils.isFunction(value)</code></h3>
 
 Checks if passed argument is a function.
@@ -98,6 +103,11 @@ Checks if passed argument is an object.
 <h3 id="utils.isString"><code>utils.isString(value)</code></h3>
 
 Checks if passed argument is an instance of `String`.
+
+<h3 id="utils.isTruthy"><code>utils.isTruthy(subject)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Returns subject [truthiness](http://11heavens.com/falsy-and-truthy-in-javascript).
 
 <h3 id="utils.isType"><code>utils.isType(what, type)</code></h3>
 

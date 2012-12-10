@@ -89,6 +89,11 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
+<h3 id="tester.assertFalsy"><code>Tester#assertFalsy(Mixed subject[, String message])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Asserts that a given subject is [falsy](http://11heavens.com/falsy-and-truthy-in-javascript).
+
 <h3 id="tester.assertField"><code>Tester#assertField(String inputName, String expected[, String message])</code></h3>
 
 Asserts that a given form field has the provided value:
@@ -259,6 +264,11 @@ casper.start('http://www.google.fr/', function() {
 });
 ```
 
+<h3 id="tester.assertTruthy"><code>Tester#assertTruthy(Mixed subject[, String message])</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Asserts that a given subject is [truthy](http://11heavens.com/falsy-and-truthy-in-javascript).
+
 <h3 id="tester.assertType"><code>Tester#assertType(mixed input, String type[, String message])</code></h3>
 
 Asserts that the provided input is of the given type.
@@ -324,7 +334,7 @@ casper.thenClick('#logo', function() {
 });
 
 casper.run(function() {
-    this.test.done(); 
+    this.test.done();
 });
 ```
 
@@ -341,7 +351,7 @@ casper.thenClick('#logo', function() {
 });
 
 casper.run(function() {
-    this.test.done(2); 
+    this.test.done(2);
 });
 ```
 
@@ -478,6 +488,6 @@ casper.run(function() {
 ```
 
 <span class="label label-info">Note</span>
-This method is not to be called when using the 
-[`casperjs test` command](testing.html#casper-test-command), where it's done 
+This method is not to be called when using the
+[`casperjs test` command](testing.html#casper-test-command), where it's done
 automatically for you.
