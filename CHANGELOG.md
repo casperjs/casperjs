@@ -1,6 +1,31 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v1.0.0
+------------------
+
+### Important Changes & Caveats
+
+#### Added support for frames
+
+Short excerpt of related tests:
+
+```js
+casper.start('tests/site/frames.html');
+
+casper.waitForFrame('frame1', function() {
+    this.test.assertTitle('CasperJS test frames');
+});
+
+casper.withFrame('frame1', function() {
+    this.test.assertTitle('CasperJS frame 1');
+});
+```
+
+### Bugfixes & enhancements
+
+- merged [#269](https://github.com/n1k0/casperjs/issues/269) - Windows Batch script: fixed unsupported spaces in path and argument splitting
+
 2012-12-10, v1.0.0-RC5
 ----------------------
 
