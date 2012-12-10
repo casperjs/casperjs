@@ -206,6 +206,26 @@ parameters passed to their callback:
       <td>Emitted when a new HTTP request is performed to open the required url.</td>
     </tr>
     <tr>
+      <td><code>popup.created</code></td>
+      <td><code>WebPage</code></td>
+      <td>Emitted when a new window has been opened.</td>
+    </tr>
+    <tr>
+      <td><code>popup.loaded</code></td>
+      <td><code>WebPage</code></td>
+      <td>Emitted when a new window has been loaded.</td>
+    </tr>
+    <tr>
+      <td><code>popup.closed</code></td>
+      <td><code>WebPage</code></td>
+      <td>Emitted when a new opened window has been closed.</td>
+    </tr>
+    <tr>
+      <td><code>popup.created</code></td>
+      <td><code>WebPage</code></td>
+      <td>Emitted when a new window has been opened.</td>
+    </tr>
+    <tr>
       <td><code>remote.alert</code></td>
       <td><code>message</code></td>
       <td>Emitted when a remote <code>alert()</code> call has been performed.</td>
