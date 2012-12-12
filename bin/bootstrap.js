@@ -282,7 +282,7 @@ function bootstrap(global) {
 
         if (!!phantom.casperArgs.options.version) {
             console.log(phantom.casperVersion.toString());
-            phantom.exit(0);
+            return phantom.exit();
         } else if (phantom.casperArgs.get(0) === "test") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;
@@ -302,7 +302,7 @@ function bootstrap(global) {
                         phantom.casperVersion.toString(),
                         phantom.casperPath, phantomVersion));
             console.log(fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt')));
-            phantom.exit(0);
+            return phantom.exit(0);
         }
 
         if (!phantom.casperScript) {
@@ -311,7 +311,7 @@ function bootstrap(global) {
 
         if (!fs.isFile(phantom.casperScript)) {
             console.error('Unable to open file: ' + phantom.casperScript);
-            phantom.exit(1);
+            return phantom.exit(1);
         }
 
         // filter out the called script name from casper args
