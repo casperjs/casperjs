@@ -6,6 +6,12 @@ XXXX-XX-XX, v1.0.0
 
 ### Important Changes & Caveats
 
+#### Reverted to emulated mouse events
+
+For some (weird) reason, emulated mouse events are actually more accurate than native ones.
+
+Weird, I said.
+
 #### Added support for frames
 
 Short excerpt of related tests:

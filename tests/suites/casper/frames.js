@@ -28,9 +28,14 @@ casper.withFrame('frame2', function() {
     this.test.assertEval(function() {
         return '__utils__' in window && 'getBinary' in __utils__;
     }, '__utils__ object is available in other child frame');
+    this.clickLabel('frame 3');
+});
+
+casper.withFrame('frame2', function() {
+    this.test.assertTitle('CasperJS frame 3');
 });
 
 casper.run(function() {
     this.test.assertTitle('CasperJS test frames');
-    this.test.done(13);
+    this.test.done(14);
 });

@@ -1135,18 +1135,22 @@ Casper.prototype.log = function log(message, level, space) {
 Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     "use strict";
     this.checkStarted();
-    this.log(f("Mouse event '%s' on selector: %s", type, selector), "debug");
+    this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
     if (!this.exists(selector)) {
-        throw new CasperError(f("Cannot dispatch '%s' event on nonexistent selector: %s", type, selector));
+        throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
     }
-    // PhantomJS doesn't provide native events for mouseover & mouseout
-    if (type === "mouseover" || type === "mouseout") {
-        return this.evaluate(function(type, selector) {
-            return __utils__.mouseEvent(type, selector);
-        }, type, selector);
+    if (this.evaluate(function(type, selector) {
+        return window.__utils__.mouseEvent(type, selector);
+    }, type, selector)) {
+        return true;
     }
-    this.mouse.processEvent(type, selector);
-    return true;
+    // fallback onto native QtWebKit mouse events
+    try {
+        return this.mouse.processEvent(type, selector);
+    } catch (e) {
+        this.log(f("Couldn't emulate '%s' event on %s: %s", type, selector, e), "error");
+    }
+    return false;
 };
 
 /**
@@ -1891,6 +1895,9 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
 Casper.prototype.withFrame = function withFrame(frameName, then) {
     "use strict";
     this.then(function _step() {
+        if (this.page.childFramesName().indexOf(frameName) === -1) {
+            throw new CasperError(f('No frame named "%s" was found.', frameName));
+        }
         // make the frame page the currently active one
         this.page.switchToChildFrame(frameName);
     });
@@ -1898,7 +1905,7 @@ Casper.prototype.withFrame = function withFrame(frameName, then) {
         this.then(then);
     } catch (e) {
         // revert to main page on error
-        this.log("error while processing frame step: " + e, "error");
+        this.warn("Error while processing frame step: " + e);
         this.page.switchToMainFrame();
         throw e;
     }
