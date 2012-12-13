@@ -1,6 +1,6 @@
 %define name	casperjs
 %define version	1.0.0
-%define release RC4
+%define release RC4_1
 %define prefix	/usr
 
 %define mybuilddir %{_builddir}/%{name}-%{version}-root
@@ -31,6 +31,7 @@ mkdir -p %{mybuilddir}%{prefix}/bin
 mkdir -p %{mybuilddir}%{prefix}/share/%{name}/bin
 mkdir -p %{mybuilddir}%{prefix}/share/%{name}/modules
 mkdir -p %{mybuilddir}%{prefix}/share/%{name}/samples
+mkdir -p %{mybuilddir}%{prefix}/share/%{name}/tests
 
 %install
 cp bin/%{name} %{mybuilddir}%{prefix}/share/%{name}/bin/
@@ -46,6 +47,7 @@ cp README.md %{mybuilddir}%{prefix}/share/%{name}/
 cp package.json %{mybuilddir}%{prefix}/share/%{name}/
 cp -R modules/* %{mybuilddir}%{prefix}/share/%{name}/modules/
 cp -R samples/* %{mybuilddir}%{prefix}/share/%{name}/samples/
+cp -R tests/* %{mybuilddir}%{prefix}/share/%{name}/tests/
 
 %files
 %defattr(0444,root,root)
@@ -112,7 +114,89 @@ cp -R samples/* %{mybuilddir}%{prefix}/share/%{name}/samples/
 %{prefix}/share/%{name}/samples/steptimeout.js
 %{prefix}/share/%{name}/samples/timeout.coffee
 %{prefix}/share/%{name}/samples/timeout.js
+%{prefix}/share/%{name}/tests/site/field-array.html
+%{prefix}/share/%{name}/tests/site/images/phantom.png
+%{prefix}/share/%{name}/tests/site/result.html
+%{prefix}/share/%{name}/tests/site/multiple-forms.html
+%{prefix}/share/%{name}/tests/site/global.html
+%{prefix}/share/%{name}/tests/site/elementattribute.html
+%{prefix}/share/%{name}/tests/site/urls.html
+%{prefix}/share/%{name}/tests/site/mouse-events.html
+%{prefix}/share/%{name}/tests/site/index.html
+%{prefix}/share/%{name}/tests/site/click.html
+%{prefix}/share/%{name}/tests/site/page1.html
+%{prefix}/share/%{name}/tests/site/prompt.html
+%{prefix}/share/%{name}/tests/site/error.html
+%{prefix}/share/%{name}/tests/site/dummy.js
+%{prefix}/share/%{name}/tests/site/page2.html
+%{prefix}/share/%{name}/tests/site/alert.html
+%{prefix}/share/%{name}/tests/site/form.html
+%{prefix}/share/%{name}/tests/site/confirm.html
+%{prefix}/share/%{name}/tests/site/resources.html
+%{prefix}/share/%{name}/tests/site/test.html
+%{prefix}/share/%{name}/tests/site/page3.html
+%{prefix}/share/%{name}/tests/site/visible.html
+%{prefix}/share/%{name}/tests/site/waitFor.html
+%{prefix}/share/%{name}/tests/sample_modules/csmodule.coffee
+%{prefix}/share/%{name}/tests/sample_modules/jsmodule.js
+%{prefix}/share/%{name}/tests/testdir/03_a.js
+%{prefix}/share/%{name}/tests/testdir/02_b/abc.js
+%{prefix}/share/%{name}/tests/testdir/04/02_do.js
+%{prefix}/share/%{name}/tests/testdir/04/01_init.js
+%{prefix}/share/%{name}/tests/testdir/01_a/abc.js
+%{prefix}/share/%{name}/tests/testdir/01_a/def.js
+%{prefix}/share/%{name}/tests/testdir/03_b.js
+%{prefix}/share/%{name}/tests/suites/casper/capture.js
+%{prefix}/share/%{name}/tests/suites/casper/prompt.js
+%{prefix}/share/%{name}/tests/suites/casper/resources.coffee
+%{prefix}/share/%{name}/tests/suites/casper/auth.js
+%{prefix}/share/%{name}/tests/suites/casper/alert.js
+%{prefix}/share/%{name}/tests/suites/casper/wait.js
+%{prefix}/share/%{name}/tests/suites/casper/flow.coffee
+%{prefix}/share/%{name}/tests/suites/casper/events.js
+%{prefix}/share/%{name}/tests/suites/casper/evaluate.js
+%{prefix}/share/%{name}/tests/suites/casper/logging.js
+%{prefix}/share/%{name}/tests/suites/casper/xpath.js
+%{prefix}/share/%{name}/tests/suites/casper/elementattribute.js
+%{prefix}/share/%{name}/tests/suites/casper/viewport.js
+%{prefix}/share/%{name}/tests/suites/casper/.casper
+%{prefix}/share/%{name}/tests/suites/casper/steps.js
+%{prefix}/share/%{name}/tests/suites/casper/exists.js
+%{prefix}/share/%{name}/tests/suites/casper/click.js
+%{prefix}/share/%{name}/tests/suites/casper/mouseevents.js
+%{prefix}/share/%{name}/tests/suites/casper/fetchtext.js
+%{prefix}/share/%{name}/tests/suites/casper/urls.js
+%{prefix}/share/%{name}/tests/suites/casper/open.js
+%{prefix}/share/%{name}/tests/suites/casper/agent.js
+%{prefix}/share/%{name}/tests/suites/casper/formfill.js
+%{prefix}/share/%{name}/tests/suites/casper/request.js
+%{prefix}/share/%{name}/tests/suites/casper/confirm.js
+%{prefix}/share/%{name}/tests/suites/casper/history.js
+%{prefix}/share/%{name}/tests/suites/casper/debug.js
+%{prefix}/share/%{name}/tests/suites/casper/global.js
+%{prefix}/share/%{name}/tests/suites/casper/encode.js
+%{prefix}/share/%{name}/tests/suites/casper/onerror.js
+%{prefix}/share/%{name}/tests/suites/casper/start.js
+%{prefix}/share/%{name}/tests/suites/casper/hooks.js
+%{prefix}/share/%{name}/tests/suites/casper/headers.js
+%{prefix}/share/%{name}/tests/suites/casper/visible.js
+%{prefix}/share/%{name}/tests/suites/coffee.coffee
+%{prefix}/share/%{name}/tests/suites/require.js
+%{prefix}/share/%{name}/tests/suites/cli.js
+%{prefix}/share/%{name}/tests/suites/fs.js
+%{prefix}/share/%{name}/tests/suites/.casper
+%{prefix}/share/%{name}/tests/suites/tester.js
+%{prefix}/share/%{name}/tests/suites/injector.js
+%{prefix}/share/%{name}/tests/suites/clientutils.js
+%{prefix}/share/%{name}/tests/suites/http_status.js
+%{prefix}/share/%{name}/tests/suites/xunit.js
+%{prefix}/share/%{name}/tests/suites/utils.js
+%{prefix}/share/%{name}/tests/selftest.js
+%{prefix}/share/%{name}/tests/run.js
 
 %changelog
+* Mon Dec 10 2012 Jan Schaumann <jschauma@etsy.com>
+- include 'tests'
+
 * Mon Nov 26 2012 Jan Schaumann <jschauma@etsy.com>
 - first rpm version
