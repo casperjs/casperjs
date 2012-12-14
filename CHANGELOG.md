@@ -13,14 +13,16 @@ I'm still expecting a 1.0 stable for Christmas. Feedback: bring it on.
 A minimal convenient API has been added to Casper in order to ease the switch of current page context:
 
 ```js
-casper.start('tests/site/frames.html');
-
-casper.waitForFrame('frame1', function() {
-    this.test.assertTitle('CasperJS test frames');
+casper.start('tests/site/frames.html', function() {
+    this.test.assertTitle('CasperJS frameset');
 });
 
 casper.withFrame('frame1', function() {
     this.test.assertTitle('CasperJS frame 1');
+});
+
+casper.then(function() {
+    this.test.assertTitle('CasperJS frameset');
 });
 ```
 
