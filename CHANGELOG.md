@@ -1,20 +1,16 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0
-------------------
+2012-12-14, v1.0.0-RC6
+----------------------
+
+I'm still expecting a 1.0 stable for Christmas. Feedback: bring it on.
 
 ### Important Changes & Caveats
 
-#### Reverted to emulated mouse events
+#### Added experimental support for frames
 
-For some (weird) reason, emulated mouse events are actually more accurate than native ones.
-
-Weird, I said.
-
-#### Added support for frames
-
-Short excerpt of related tests:
+A minimal convenient API has been added to Casper in order to ease the switch of current page context:
 
 ```js
 casper.start('tests/site/frames.html');
