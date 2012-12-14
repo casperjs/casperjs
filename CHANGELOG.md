@@ -28,6 +28,12 @@ casper.withFrame('frame1', function() {
 });
 ```
 
+#### Reverted to emulated mouse events
+
+Native mouse events didn't play well with (i)frames, because the computed element coordinates of the clicked element were erroneous.
+
+So programmatic mouse events are reintroduced back into this corrective RC until a better solution is found.
+
 ### Bugfixes & enhancements
 
 - merged [#269](https://github.com/n1k0/casperjs/issues/269) - Windows Batch script: fixed unsupported spaces in path and argument splitting
