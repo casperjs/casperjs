@@ -1732,24 +1732,6 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
 };
 
 /**
- * Waits for a child frame page to be loaded.
- *
- * @param  String    frameName   The frame name
- * @param  Function  then        The next step function (optional)
- * @param  Function  onTimeout   Function to call on operation timeout (optional)
- * @param  Number    timeout     Timeout in milliseconds (optional)
- * @return Casper
- */
-Casper.prototype.waitForFrame = function waitForFrame(frameName, then, onTimeout, timeout) {
-    "use strict";
-    return this.waitFor(function() {
-        return this.page.childFramesName().some(function(name) {
-            return name === frameName;
-        });
-    }, then, onTimeout, timeout);
-};
-
-/**
  * Waits for a popup page having its url matching the provided pattern to be opened
  * and loaded.
  *
