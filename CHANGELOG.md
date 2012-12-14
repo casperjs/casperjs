@@ -1,6 +1,11 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v1.0.0
+------------------
+
+- merged PR [#319](https://github.com/n1k0/casperjs/pull/319), fixed [#209](https://github.com/n1k0/casperjs/issues/209) - test duration has been added to XUnit XML result file.
+
 2012-12-14, v1.0.0-RC6
 ----------------------
 

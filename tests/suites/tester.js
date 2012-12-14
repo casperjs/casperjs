@@ -210,6 +210,17 @@ casper.then(function() {
     t.assertEquals(t.getPasses().length, passCount + 1, "Tester.getPasses() works as expected");
 });
 
+casper.then(function() {
+    t.comment('Tester.calculateSuiteDuration()');
+    function add(a, b) {
+        return a + b;
+    }
+    var passedTime = t.getPassesTime().reduce(add, 0),
+        failedTime = t.getFailuresTime().reduce(add, 0),
+        calculatedSum = t.calculateSuiteDuration();
+    t.assertEquals(calculatedSum, passedTime + failedTime, "Tester.calculateSuiteDuration() works as expected")
+});
+
 casper.run(function() {
-    t.done(58);
+    t.done(59);
 });

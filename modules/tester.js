@@ -81,25 +81,39 @@ var Tester = function Tester(casper, options) {
         passed: 0,
         failed: 0,
         passes: [],
-        failures: []
+        failures: [],
+        passesTime: [],
+        failuresTime: []
     };
+
+    // measuring test duration
+    this.currentTestStartTime = null;
+    this.lastAssertTime = 0;
 
     this.configure();
 
     this.on('success', function onSuccess(success) {
         this.testResults.passes.push(success);
-        this.exporter.addSuccess(fs.absolute(success.file), success.message || success.standard);
+        var timeElapsed = new Date() - this.currentTestStartTime;
+        this.testResults.passesTime.push(timeElapsed - this.lastAssertTime);
+        this.exporter.addSuccess(fs.absolute(success.file), success.message || success.standard, timeElapsed - this.lastAssertTime);
+        this.lastAssertTime = timeElapsed;
     });
 
     this.on('fail', function onFail(failure) {
         // export
+        var timeElapsed = new Date() - this.currentTestStartTime;
+        this.testResults.failuresTime.push(timeElapsed - this.lastAssertTime);
         this.exporter.addFailure(
-            fs.absolute(failure.file),
-            failure.message  || failure.standard,
-            failure.standard || "test failed",
-            failure.type     || "unknown"
-        );
+                fs.absolute(failure.file),
+                failure.message  || failure.standard,
+                failure.standard || "test failed",
+                failure.type     || "unknown",
+                (timeElapsed - this.lastAssertTime)
+            );
+        this.lastAssertTime = timeElapsed;
         this.testResults.failures.push(failure);
+
         // special printing
         if (failure.type) {
             this.comment('   type: ' + failure.type);
@@ -687,6 +701,19 @@ Tester.prototype.bar = function bar(text, style) {
 };
 
 /**
+ * Retrieves the sum of all durations of the tests which were
+ * executed in the current suite
+ *
+ * @return Number duration of all tests executed until now (in the current suite)
+ */
+Tester.prototype.calculateSuiteDuration = function calculateSuiteDuration() {
+    "use strict";
+    return this.testResults.passesTime.concat(this.testResults.failuresTime).reduce(function add(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
  * Render a colorized output. Basically a proxy method for
  * Casper.Colorizer#colorize()
  */
@@ -860,6 +887,27 @@ Tester.prototype.getPasses = function getPasses() {
 };
 
 /**
+ * Retrieves the array where all the durations of failed tests are stored
+ *
+ * @return Array durations of failed tests
+ */
+Tester.prototype.getFailuresTime = function getFailuresTime() {
+    "use strict";
+    return this.testResults.failuresTime;
+}
+
+/**
+ * Retrieves the array where all the durations of passed tests are stored
+ *
+ * @return Array durations of passed tests
+ */
+Tester.prototype.getPassesTime = function getPassesTime() {
+    "use strict";
+    return this.testResults.passesTime;
+}
+
+
+/**
  * Writes an info-style formatted message to stdout.
  *
  * @param  String  message
@@ -1008,6 +1056,8 @@ Tester.prototype.runSuites = function runSuites() {
         this.casper.exit(1);
     }
     self.currentSuiteNum = 0;
+    self.currentTestStartTime = new Date();
+    self.lastAssertTime = 0;
     var interval = setInterval(function _check(self) {
         if (self.running) {
             return;
@@ -1015,9 +1065,13 @@ Tester.prototype.runSuites = function runSuites() {
         if (self.currentSuiteNum === testFiles.length) {
             self.emit('tests.complete');
             clearInterval(interval);
+            self.exporter.setSuiteDuration(self.calculateSuiteDuration());
         } else {
             self.runTest(testFiles[self.currentSuiteNum]);
+            self.exporter.setSuiteDuration(self.calculateSuiteDuration());
             self.currentSuiteNum++;
+            self.passesTime = [];
+            self.failuresTime = [];
         }
     }, 100, this);
 };

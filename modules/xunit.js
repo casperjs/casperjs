@@ -34,6 +34,17 @@ var utils = require('utils');
 var fs = require('fs');
 
 /**
+ * Returns duration in seconds, matching XUnit "standard".
+ *
+ * @param  Number  duration  Duration in milliseconds
+ * @return String
+ */
+function format_duration(duration) {
+    "use strict";
+    return (duration / 1000).toString();
+}
+
+/**
  * Generates a value for 'classname' attribute of the JUnit XML report.
  *
  * Uses the (relative) file name of the current casper script without file
@@ -92,13 +103,18 @@ exports.XUnitExporter = XUnitExporter;
  *
  * @param  String  classname
  * @param  String  name
+ * @param  Number  duration  Test duration in milliseconds
  */
-XUnitExporter.prototype.addSuccess = function addSuccess(classname, name) {
+XUnitExporter.prototype.addSuccess = function addSuccess(classname, name, duration) {
     "use strict";
-    this._xml.appendChild(utils.node('testcase', {
+    var snode = utils.node('testcase', {
         classname: generateClassName(classname),
-        name:      name
-    }));
+        name: name
+    });
+    if (duration !== undefined) {
+        snode.setAttribute('time', format_duration(duration));
+    }
+    this._xml.appendChild(snode);
 };
 
 /**
@@ -108,19 +124,35 @@ XUnitExporter.prototype.addSuccess = function addSuccess(classname, name) {
  * @param  String  name
  * @param  String  message
  * @param  String  type
+ * @param  Number  duration  Test duration in milliseconds
  */
-XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type) {
+XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type, duration) {
     "use strict";
     var fnode = utils.node('testcase', {
         classname: generateClassName(classname),
         name:      name
     });
+    if (duration !== undefined) {
+        fnode.setAttribute('time', format_duration(duration));
+    }
     var failure = utils.node('failure', {
         type: type || "unknown"
     });
     failure.appendChild(document.createTextNode(message || "no message left"));
     fnode.appendChild(failure);
     this._xml.appendChild(fnode);
+};
+
+/**
+ * Adds test suite duration
+ *
+ * @param  Number  duration  Test duration in milliseconds
+ */
+XUnitExporter.prototype.setSuiteDuration = function setSuiteDuration(duration) {
+    "use strict";
+    if (!isNaN(duration)) {
+        this._xml.setAttribute("time", format_duration(duration));
+    }
 };
 
 /**
