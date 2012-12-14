@@ -1779,6 +1779,27 @@ Logs and prints a warning message to the standard output.
 casper.warn("I'm a warning message.");
 ```
 
+<h3 id="casper.withFrame"><code>Casper#withFrame(String frameName, Function then)</code></h3>
+
+<span class="label label-success">Added in 1.0</span>
+Switches the main page to the frame having the name matching the passed argument,
+and processes a step. The page context switch only lasts until the step execution
+is finished:
+
+```js
+casper.start('tests/site/frames.html', function() {
+    this.test.assertTitle('FRAMESET TITLE');
+});
+
+casper.withFrame('frame1', function() {
+    this.test.assertTitle('FRAME TITLE');
+});
+
+casper.then(function() {
+    this.test.assertTitle('FRAMESET TITLE');
+});
+```
+
 <h3 id="casper.withPopup"><code>Casper#withPopup(Mixed popupInfo, Function step)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>

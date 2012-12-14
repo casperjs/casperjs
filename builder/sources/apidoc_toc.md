@@ -64,5 +64,6 @@
 - [`waitWhileSelector()`](#casper.waitWhileSelector)
 - [`waitWhileVisible()`](#casper.waitWhileVisible)
 - [`warn()`](#casper.warn)
+- [`withFrame()`](#casper.withFrame)
 - [`withPopup()`](#casper.withPopup)
 - [`zoom()`](#casper.zoom)
