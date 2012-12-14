@@ -15,4 +15,18 @@ casper.test.assertMatch(xunit.getXML(), /<testcase classname="(.*)plop" name="It
 xunit.addSuccess(require('fs').workingDirectory + '/plip.js', 'Failure');
 casper.test.assertMatch(xunit.getXML(), /<testcase classname="(.*)plip" name="Failure"/, 'XUnitExporter.addFailure() handles class name');
 
-casper.test.done(4);
+// named with time
+xunit = require('xunit').create();
+xunit.addSuccess('foo', 'It worked', 1024);
+casper.test.assertMatch(xunit.getXML(), /<testcase classname="foo" name="It worked" time="(.*)"/, 'XUnitExporter.addSuccess() writes duration of test');
+xunit.addFailure('bar', 'baz', 'wrong', 'chucknorriz', 1024);
+casper.test.assertMatch(xunit.getXML(), /<testcase classname="bar" name="baz" time="(.*)"><failure type="chucknorriz">wrong/, 'XUnitExporter.addFailure() adds a failed testcase with duration');
+
+
+//named with time
+xunit = require('xunit').create();
+casper.test.assertMatch(xunit.getXML(), /<testsuite>/, 'XUnitExporter.create() created <testsuite> without time');
+xunit.setSuiteDuration(1024);
+casper.test.assertMatch(xunit.getXML(), /<testsuite time="1024">/, 'XUnitExporter.setSuiteDuration() set time');
+
+casper.test.done(8);

@@ -92,13 +92,22 @@ exports.XUnitExporter = XUnitExporter;
  *
  * @param  String  classname
  * @param  String  name
+ * @param  Number duration
  */
-XUnitExporter.prototype.addSuccess = function addSuccess(classname, name) {
+XUnitExporter.prototype.addSuccess = function addSuccess(classname, name, duration) {
     "use strict";
-    this._xml.appendChild(utils.node('testcase', {
-        classname: generateClassName(classname),
-        name:      name
-    }));
+    if(duration !== undefined) {
+        this._xml.appendChild(utils.node('testcase', {
+            classname: generateClassName(classname),
+            name: name,
+            time: duration
+        }));    	
+    } else { 
+        this._xml.appendChild(utils.node('testcase', {
+            classname: generateClassName(classname),
+            name:      name
+        }));
+    }
 };
 
 /**
@@ -108,19 +117,43 @@ XUnitExporter.prototype.addSuccess = function addSuccess(classname, name) {
  * @param  String  name
  * @param  String  message
  * @param  String  type
+ * @param  Number duration
  */
-XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type) {
+XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type, duration) {
     "use strict";
-    var fnode = utils.node('testcase', {
-        classname: generateClassName(classname),
-        name:      name
-    });
+    if(duration !== undefined) { 
+        var fnode = utils.node('testcase', {
+            classname: generateClassName(classname),
+            name:      name,
+            time: duration
+        });
+    } else {
+	    var fnode = utils.node('testcase', {
+	        classname: generateClassName(classname),
+	        name:      name
+	    });
+    	
+    }
     var failure = utils.node('failure', {
         type: type || "unknown"
     });
     failure.appendChild(document.createTextNode(message || "no message left"));
     fnode.appendChild(failure);
     this._xml.appendChild(fnode);
+};
+
+/**
+ * Adds a successful test result.
+ *
+ * @param  String  classname
+ * @param  String  name
+ * @param  Number duration
+ */
+XUnitExporter.prototype.setSuiteDuration = function setSuiteDuration(duration) {
+    "use strict";
+    if(!isNaN(duration)) {
+    	this._xml.setAttribute("time", duration);
+    }
 };
 
 /**
