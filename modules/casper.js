@@ -1870,18 +1870,22 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
  * Makes the provided frame page as the currently active one. Note that the
  * active page will be reverted when finished.
  *
- * @param  String    frameName  Target frame name
+ * @param  String|Number    frameNameOrNumber  Target frame name or number
  * @param  Function  then       Next step function
  * @return Casper
  */
-Casper.prototype.withFrame = function withFrame(frameName, then) {
+Casper.prototype.withFrame = function withFrame(frameNameOrNumber, then) {
     "use strict";
     this.then(function _step() {
-        if (this.page.childFramesName().indexOf(frameName) === -1) {
-            throw new CasperError(f('No frame named "%s" was found.', frameName));
+        if (utils.isNumber(frameNameOrNumber)) {
+            if (frameNameOrNumber > this.page.childFramesCount() - 1) {
+                throw new CasperError(f('Frame number "%d" is out of bounds.', frameNameOrNumber));
+            }
+        } else if (this.page.childFramesName().indexOf(frameNameOrNumber) === -1) {
+            throw new CasperError(f('No frame named "%s" was found.', frameNameOrNumber));
         }
         // make the frame page the currently active one
-        this.page.switchToChildFrame(frameName);
+        this.page.switchToChildFrame(frameNameOrNumber);
     });
     try {
         this.then(then);
