@@ -200,6 +200,43 @@ function format(f) {
 exports.format = format;
 
 /**
+ * Formats a test value.
+ *
+ * @param  Mixed  value
+ * @return String
+ */
+function formatTestValue(value, name) {
+    "use strict";
+    var formatted = '';
+    if (value instanceof Error) {
+        formatted += value.message + '\n';
+        if (value.stack) {
+            formatted += indent(value.stack, 12, '#');
+        }
+    } else if (name === 'stack') {
+        if (isArray(value)) {
+            formatted += value.map(function(entry) {
+                return format('in %s() in %s:%d', (entry.function || "anonymous"), entry.file, entry.line);
+            }).join('\n');
+        } else {
+            formatted += 'not provided';
+        }
+    } else {
+        try {
+            formatted += serialize(value);
+        } catch (e) {
+            try {
+                formatted += serialize(value.toString());
+            } catch (e2) {
+                formatted += '(unserializable value)';
+            }
+        }
+    }
+    return formatted;
+}
+exports.formatTestValue = formatTestValue;
+
+/**
  * Retrieves the value of an Object foreign property using a dot-separated
  * path string.
  *
@@ -224,6 +261,22 @@ function getPropertyPath(obj, path) {
     return value;
 }
 exports.getPropertyPath = getPropertyPath;
+
+/**
+ * Indents a string.
+ *
+ * @param  String  string
+ * @param  Number  nchars
+ * @param  String  prefix
+ * @return String
+ */
+function indent(string, nchars, prefix) {
+    "use strict";
+    return string.split('\n').map(function(line) {
+        return (prefix || '') + new Array(nchars).join(' ') + line;
+    }).join('\n');
+}
+exports.indent = indent;
 
 /**
  * Inherit the prototype methods from one constructor into another.
@@ -295,7 +348,7 @@ exports.isClipRect = isClipRect;
 function isFalsy(subject) {
     "use strict";
     /*jshint eqeqeq:false*/
-    return subject == new Function('return false;')();
+    return !subject;
 }
 exports.isFalsy = isFalsy;
 /**
@@ -392,7 +445,7 @@ exports.isString = isString;
 function isTruthy(subject) {
     "use strict";
     /*jshint eqeqeq:false*/
-    return subject == new Function('return true;')();
+    return !!subject;
 }
 exports.isTruthy = isTruthy;
 
