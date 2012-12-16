@@ -495,6 +495,18 @@ function mergeObjects(origin, add) {
 exports.mergeObjects = mergeObjects;
 
 /**
+ * Converts milliseconds to seconds and rounds the results to 3 digits accuracy.
+ *
+ * @param  Number  milliseconds
+ * @return Number  seconds
+ */
+function ms2seconds(milliseconds) {
+    "use strict";
+    return Math.round(milliseconds / 1000 * 1000) / 1000;
+}
+exports.ms2seconds = ms2seconds;
+
+/**
  * Creates an (SG|X)ML node element.
  *
  * @param  String  name        The node name

@@ -34,17 +34,6 @@ var utils = require('utils');
 var fs = require('fs');
 
 /**
- * Returns duration in seconds, matching XUnit "standard".
- *
- * @param  Number  duration  Duration in milliseconds
- * @return String
- */
-function format_duration(duration) {
-    "use strict";
-    return (duration / 1000).toString();
-}
-
-/**
  * Generates a value for 'classname' attribute of the JUnit XML report.
  *
  * Uses the (relative) file name of the current casper script without file
@@ -112,7 +101,7 @@ XUnitExporter.prototype.addSuccess = function addSuccess(classname, name, durati
         name: name
     });
     if (duration !== undefined) {
-        snode.setAttribute('time', format_duration(duration));
+        snode.setAttribute('time', utils.ms2seconds(duration));
     }
     this._xml.appendChild(snode);
 };
@@ -133,7 +122,7 @@ XUnitExporter.prototype.addFailure = function addFailure(classname, name, messag
         name:      name
     });
     if (duration !== undefined) {
-        fnode.setAttribute('time', format_duration(duration));
+        fnode.setAttribute('time', utils.ms2seconds(duration));
     }
     var failure = utils.node('failure', {
         type: type || "unknown"
@@ -151,7 +140,7 @@ XUnitExporter.prototype.addFailure = function addFailure(classname, name, messag
 XUnitExporter.prototype.setSuiteDuration = function setSuiteDuration(duration) {
     "use strict";
     if (!isNaN(duration)) {
-        this._xml.setAttribute("time", format_duration(duration));
+        this._xml.setAttribute("time", utils.ms2seconds(duration));
     }
 };
 

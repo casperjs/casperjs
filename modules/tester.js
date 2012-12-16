@@ -1003,8 +1003,9 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
             statusText = this.options.passText;
             style = 'GREEN_BAR';
         }
-        result = f('%s %s tests executed, %d passed, %d failed.',
-                   statusText, total, this.testResults.passed, this.testResults.failed);
+        result = f('%s %s tests executed in %ss, %d passed, %d failed.',
+                   statusText, total, utils.ms2seconds(this.calculateSuiteDuration()),
+                   this.testResults.passed, this.testResults.failed);
     }
     this.casper.echo(result, style, this.options.pad);
     if (this.testResults.failed > 0) {
