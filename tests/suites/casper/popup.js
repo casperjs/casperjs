@@ -65,12 +65,22 @@ casper.thenClick('.close', function() {
     this.test.assertUrlMatches(/popup\.html$/,
         'Casper.withPopup() has reverted to main page after using the popup');
     this.test.assertEquals(this.popups.length, 0, 'Popup is removed when closed');
+    this.removeAllListeners('popup.created');
+    this.removeAllListeners('popup.loaded');
+    this.removeAllListeners('popup.closed');
+});
+
+casper.thenClick('a[target="_blank"]');
+
+casper.waitForPopup('form.html', function() {
+    this.test.pass('Casper.waitForPopup() waits when clicked on a link with target=_blank');
+});
+
+casper.withPopup('form.html', function() {
+    this.test.assertTitle('CasperJS test form');
 });
 
 casper.run(function() {
     // removes event listeners as they've now been tested already
-    this.removeAllListeners('popup.created');
-    this.removeAllListeners('popup.loaded');
-    this.removeAllListeners('popup.closed');
-    this.test.done(23);
+    this.test.done(25);
 });
