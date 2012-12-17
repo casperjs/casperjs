@@ -1586,7 +1586,6 @@ Casper.prototype.toString = function toString() {
  */
 Casper.prototype.userAgent = function userAgent(agent) {
     "use strict";
-    this.checkStarted();
     this.options.pageSettings.userAgent = this.page.settings.userAgent = agent;
     return this;
 };
