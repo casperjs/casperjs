@@ -70,4 +70,18 @@ casper.test.assertEquals(casper.evaluate(function(a, b, c) {
     return [a, b, c];
 }, "foo", "bar", "baz"), ["foo", "bar", "baz"], 'Casper.evaluate() accepts natural arguments context');
 
-casper.test.done(11);
+casper.start().thenEvaluate(function(a, b) {
+    window.a = a
+    window.b = b;
+}, "foo", "bar");
+
+casper.then(function() {
+    this.test.comment('Casper.thenEvaluate()');
+    this.test.assertEquals(this.getGlobal('a'), "foo", "Casper.thenEvaluate() sets args");
+    this.test.assertEquals(this.getGlobal('b'), "bar",
+        "Casper.thenEvaluate() sets args the same way evaluate() does");
+});
+
+casper.run(function() {
+    this.test.done(13);
+});

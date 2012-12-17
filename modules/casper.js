@@ -1523,8 +1523,9 @@ Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) 
 Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
     "use strict";
     this.checkStarted();
+    var args = [fn].concat([].slice.call(arguments, 1));
     return this.then(function _step() {
-        this.evaluate(fn, context);
+        this.evaluate.apply(this, args);
     });
 };
 
