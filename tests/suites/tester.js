@@ -47,7 +47,7 @@ casper.thenOpen('tests/site/index.html', function() {
     t.assertTruthy('1', 'Tester.assertTruthy() works as expected');
 
     t.comment('Tester.assertFalsy()');
-    t.assertFalsy('0', 'Tester.assertFalsy() works as expected');
+    t.assertFalsy('', 'Tester.assertFalsy() works as expected');
 
     t.comment('Tester.assertNot()');
     t.assertNot(false, 'Tester.assertNot() works as expected');
