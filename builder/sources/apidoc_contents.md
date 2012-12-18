@@ -1782,9 +1782,9 @@ casper.warn("I'm a warning message.");
 <h3 id="casper.withFrame"><code>Casper#withFrame(String|Number frameInfo, Function then)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
-Switches the main page to the frame having the name or frame number matching the passed argument,
-and processes a step. The page context switch only lasts until the step execution
-is finished:
+Switches the main page to the frame having the name or frame index number matching
+the passed argument, and processes a step. The page context switch only lasts until
+the step execution is finished:
 
 ```js
 casper.start('tests/site/frames.html', function() {
@@ -1792,6 +1792,10 @@ casper.start('tests/site/frames.html', function() {
 });
 
 casper.withFrame('frame1', function() {
+    this.test.assertTitle('FRAME TITLE');
+});
+
+casper.withFrame(0, function() {
     this.test.assertTitle('FRAME TITLE');
 });
 
