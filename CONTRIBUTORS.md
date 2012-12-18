@@ -5,17 +5,18 @@ You can check out the [contribution graphs on github](https://github.com/n1k0/ca
 ```
 $ git shortlog -s -n | cut -c8-
 Nicolas Perriault
-oncletom
 Brikou CARRE
+oncletom
 hannyu
 Chris Lorenzo
 Victor Yap
 nrabinowitz
 pborreli
-Dave Lee
+Rob Barreca
+Andrew Childs
 Solomon White
 reina.sweet
-Andrew Childs
+Dave Lee
 Reina Sweet
 Elmar Langholz
 Jason Funk
@@ -24,7 +25,6 @@ Julien Moulin
 Michael Geers
 Jan Schaumann
 Clochix
-Rafael Garcia
 Raphaël Benitte
 Tim Bunce
 alfetopito
@@ -49,4 +49,5 @@ Mehdi Kabab
 Mikko Peltonen
 Pascal Borreli
 Rafael
+Rafael Garcia
 ```
