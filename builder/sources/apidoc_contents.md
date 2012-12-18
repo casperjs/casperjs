@@ -1779,10 +1779,10 @@ Logs and prints a warning message to the standard output.
 casper.warn("I'm a warning message.");
 ```
 
-<h3 id="casper.withFrame"><code>Casper#withFrame(String frameName, Function then)</code></h3>
+<h3 id="casper.withFrame"><code>Casper#withFrame(String|Number frameInfo, Function then)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
-Switches the main page to the frame having the name matching the passed argument,
+Switches the main page to the frame having the name or frame number matching the passed argument,
 and processes a step. The page context switch only lasts until the step execution
 is finished:
 
