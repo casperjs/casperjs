@@ -1988,7 +1988,7 @@ function createPage(casper) {
         }
     };
     page.onConfirm = function onConfirm(message) {
-        var listener_exists = typeof capser._filters['page.confirm'] !== 'undefined';
+        var listener_exists = typeof casper._filters['page.confirm'] !== 'undefined';
 	return listener_exists ? casper.filter('page.confirm', message) : true;
     };
     page.onConsoleMessage = function onConsoleMessage(msg) {
