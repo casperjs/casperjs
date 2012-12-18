@@ -295,7 +295,7 @@ exports.isClipRect = isClipRect;
 function isFalsy(subject) {
     "use strict";
     /*jshint eqeqeq:false*/
-    return subject == new Function('return false;')();
+    return !subject;
 }
 exports.isFalsy = isFalsy;
 /**
@@ -392,7 +392,7 @@ exports.isString = isString;
 function isTruthy(subject) {
     "use strict";
     /*jshint eqeqeq:false*/
-    return subject == new Function('return true;')();
+    return !!subject;
 }
 exports.isTruthy = isTruthy;
 
