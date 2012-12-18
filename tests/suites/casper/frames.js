@@ -25,7 +25,17 @@ casper.withFrame('frame2', function() {
     this.test.assertTitle('CasperJS frame 3');
 });
 
+casper.withFrame(0, function() {
+    this.test.assertTitle('CasperJS frame 1');
+    this.test.assertExists("#f1");
+    this.test.assertDoesntExist("#f2");
+});
+
+casper.withFrame(1, function() {
+    this.test.assertTitle('CasperJS frame 3');
+});
+
 casper.run(function() {
     this.test.assertTitle('CasperJS test frames');
-    this.test.done(10);
+    this.test.done(14);
 });
