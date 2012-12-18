@@ -709,13 +709,14 @@ Tester.prototype.begin = function begin(description, suiteFn) {
     "use strict";
     description = description || "Untitled suite in " + this.currentTestFile;
     this.comment(description);
-    this.executed = 0;
     this.currentSuite = new TestSuiteResult({
         name: description,
         file: this.currentTestFile
     });
+    this.executed = 0;
+    this.running = true;
     try {
-        suiteFn.call(this, this.casper);
+        suiteFn.call(this, this, this.casper);
     } catch (e) {
         this.uncaughtError(e, this.currentTestFile, e.line);
         this.done();
