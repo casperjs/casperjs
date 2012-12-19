@@ -45,7 +45,7 @@ CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '
 PHANTOMJS_ARGS = []
 SYS_ARGS = sys.argv[1:]
 
-if SYS_ARGS[0] == '__selfcommandtest':
+if len(SYS_ARGS) and SYS_ARGS[0] == '__selfcommandtest':
     print('Starting Python executable tests...')
     pkg_version = json.loads(open('package.json').read()).get('version')
     scripts_path = os.path.join(CASPER_PATH, 'tests', 'commands')

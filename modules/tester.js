@@ -61,10 +61,13 @@ var Tester = function Tester(casper, options) {
         throw new CasperError("Tester needs a Casper instance");
     }
 
+    var self = this;
+
     this.casper = casper;
 
     this.SKIP_MESSAGE = '__termination__';
 
+    this.aborted = false;
     this.executed = 0;
     this.currentTestFile = null;
     this.currentSuite = undefined;
@@ -118,19 +121,26 @@ var Tester = function Tester(casper, options) {
         if (!phantom.casperTest) {
             return;
         }
+        if (msg === self.SKIP_MESSAGE) {
+            this.warn(f('--fail-fast: aborted remaining tests in "%s"', self.currentTestFile));
+            self.aborted = true;
+            return self.done();
+        }
         var line = 0;
-        if (!utils.isString(msg) && msg.indexOf(this.SKIP_MESSAGE) === -1) {
+        if (!utils.isString(msg)) {
             try {
                 line = backtrace[0].line;
             } catch (e) {}
         }
-        this.test.uncaughtError(msg, this.test.currentTestFile, line, backtrace);
-        this.test.done();
+        self.uncaughtError(msg, self.currentTestFile, line, backtrace);
+        self.done();
     });
 
     this.casper.on('step.error', function onStepError(e) {
-        this.test.uncaughtError(e, this.test.currentTestFile);
-        this.test.done();
+        if (e.message !== self.SKIP_MESSAGE) {
+            self.uncaughtError(e, self.currentTestFile);
+        }
+        self.done();
     });
 };
 
@@ -1064,9 +1074,10 @@ Tester.prototype.runSuites = function runSuites() {
         if (self.running) {
             return;
         }
-        if (self.currentSuiteNum === testFiles.length) {
+        if (self.currentSuiteNum === testFiles.length || self.aborted) {
             self.emit('tests.complete');
             clearInterval(interval);
+            self.aborted = false;
         } else {
             self.runTest(testFiles[self.currentSuiteNum]);
             self.currentSuiteNum++;

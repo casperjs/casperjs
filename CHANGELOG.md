@@ -4,6 +4,7 @@ CasperJS Changelog
 XXXX-XX-XX, v1.0.0
 ------------------
 
+- fixed [#215](https://github.com/n1k0/casperjs/issues/215)  - fixed broken `--fail-fast` option creating an endless loop on error
 - fixed `Tester.renderFailureDetails()` which couldn't print failure details correctly in certain circumstances
 - fixed `Casper.getHTML()` wasn't retrieving active frame contents when using `Casper.withFrame()`
 - merged PR [#322](https://github.com/n1k0/casperjs/pull/322) - Support number in `Casper.withFrame()`

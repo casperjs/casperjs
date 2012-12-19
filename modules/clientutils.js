@@ -644,7 +644,7 @@
                 } else if (typeof data === "string") {
                     dataString = data;
                 }
-                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             }
             xhr.send(method === "POST" ? dataString : null);
             return xhr.responseText;
