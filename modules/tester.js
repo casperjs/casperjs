@@ -983,7 +983,7 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails(failures) 
         message = failure.message;
         this.casper.echo(f('In %s:%s', failure.file, line));
         this.casper.echo(f('   %s: %s', type, message || failure.standard || "(no message was entered)"), "COMMENT");
-    });
+    }.bind(this));
 };
 
 /**
