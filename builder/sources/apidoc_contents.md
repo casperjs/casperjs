@@ -1399,7 +1399,7 @@ $ casperjs dump-headers.js
 Thu, 18 Oct 2012 08:26:34 GMT
 ```
 
-<h3 id="casper.thenCLick"><code>Casper#thenCLick(String <a href="selectors.html">selector</a>)</code></h3>
+<h3 id="casper.thenClick"><code>Casper#thenClick(String <a href="selectors.html">selector</a>)</code></h3>
 
 Adds a new navigation step to click a given <a href="selectors.html">selector</a>
 and add a new navigation step in a single operation.
@@ -1408,7 +1408,7 @@ and add a new navigation step in a single operation.
 
 ```javascript
 // Querying for "Chuck Norris" on Google
-casper.start('http://casperjs.org/').thenCLick('a', function() {
+casper.start('http://casperjs.org/').thenClick('a', function() {
     this.echo("I clicked on first link found, the page is now loaded.");
 });
 
