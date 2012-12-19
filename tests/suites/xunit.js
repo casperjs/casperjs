@@ -32,7 +32,6 @@ casper.test.begin('XUnitReporter() can hold test suites', function suite() {
     this.assertExists('testsuites[duration]');
     this.assertExists('testsuite[name="foo"][package="foo"]');
     this.assertExists('testsuite[name="bar"][package="bar"]');
-    throw new Error('plop')
     this.done(4);
 });
 
