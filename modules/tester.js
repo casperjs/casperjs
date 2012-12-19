@@ -1126,6 +1126,7 @@ Tester.prototype.testEquals = Tester.prototype.testEqual = function testEquals(v
  */
 Tester.prototype.uncaughtError = function uncaughtError(error, file, line, backtrace) {
     "use strict";
+    // XXX: this is NOT an assertion scratch that
     return this.processAssertionResult({
         success: false,
         type: "uncaughtError",

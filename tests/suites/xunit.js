@@ -32,6 +32,7 @@ casper.test.begin('XUnitReporter() can hold test suites', function suite() {
     this.assertExists('testsuites[duration]');
     this.assertExists('testsuite[name="foo"][package="foo"]');
     this.assertExists('testsuite[name="bar"][package="bar"]');
+    throw new Error('plop')
     this.done(4);
 });
 
@@ -72,6 +73,6 @@ casper.test.begin('XUnitReporter() can handle a failed test', function suite() {
     xunit.setResults(results);
     casper.start().setContent(xunit.getXML());
     this.assertExists('testsuite[name="foo"][package="foo"][tests="1"][failures="1"] testcase[name="footext"] failure[type="footype"]');
-    casper.test.done(1);
+    this.assertEquals(casper.getElementInfo('failure[type="footype"]').text, 'footext');
+    casper.test.done(2);
 });
-
