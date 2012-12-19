@@ -1,6 +1,7 @@
 branches:
   only:
     - master
+    - testcase
 before_script:
   - "npm install -g jshint"
   - "phantomjs --version"
