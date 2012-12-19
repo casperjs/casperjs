@@ -970,7 +970,7 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
         }
         this.casper.echo(f('    %s: %s', failure.type || "unknown",
             failure.message || failure.standard || "(no message was entered)"), "COMMENT");
-    });
+    }.bind(this));
 };
 
 /**
