@@ -1,6 +1,6 @@
 /*global casper __utils__*/
 /*jshint strict:false*/
-casper.start('tests/site/frames.html').wait(1000);
+casper.start('tests/site/frames.html');
 
 casper.withFrame('frame1', function() {
     this.test.assertTitle('CasperJS frame 1');
