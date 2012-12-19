@@ -141,8 +141,13 @@ var Tester = function Tester(casper, options) {
         if (!phantom.casperTest) {
             return;
         }
+        if (msg === this.test.SKIP_MESSAGE) {
+            this.warn(f('--fail-fast: aborted remaining tests in "%s"', this.test.currentTestFile));
+            this.test.currentSuiteNum++;
+            return this.test.done();
+        }
         var line = 0;
-        if (!utils.isString(msg) && msg.indexOf(this.SKIP_MESSAGE) === -1) {
+        if (!utils.isString(msg)) {
             try {
                 line = backtrace[0].line;
             } catch (e) {}
@@ -152,7 +157,9 @@ var Tester = function Tester(casper, options) {
     });
 
     this.casper.on('step.error', function onStepError(e) {
-        this.test.uncaughtError(e, this.test.currentTestFile);
+        if (e.message !== this.test.SKIP_MESSAGE) {
+            this.test.uncaughtError(e, this.test.currentTestFile);
+        }
         this.test.done();
     });
 };
