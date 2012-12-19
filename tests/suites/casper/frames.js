@@ -1,6 +1,6 @@
 /*global casper __utils__*/
 /*jshint strict:false*/
-casper.start('tests/site/frames.html');
+casper.start('tests/site/frames.html').wait(1000);
 
 casper.withFrame('frame1', function() {
     this.test.assertTitle('CasperJS frame 1');
@@ -9,6 +9,8 @@ casper.withFrame('frame1', function() {
     this.test.assertEval(function() {
         return '__utils__' in window && 'getBinary' in __utils__;
     }, '__utils__ object is available in child frame');
+    this.test.assertMatches(this.page.frameContent, /This is frame 1/);
+    this.test.assertMatches(this.getHTML(), /This is frame 1/);
 });
 
 casper.withFrame('frame2', function() {
@@ -37,5 +39,5 @@ casper.withFrame(1, function() {
 
 casper.run(function() {
     this.test.assertTitle('CasperJS test frames');
-    this.test.done(14);
+    this.test.done(16);
 });

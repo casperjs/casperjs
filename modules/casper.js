@@ -770,7 +770,7 @@ Casper.prototype.getPageContent = function getPageContent() {
     this.checkStarted();
     var contentType = utils.getPropertyPath(this, 'currentResponse.contentType');
     if (!utils.isString(contentType)) {
-        return this.page.content;
+        return this.page.frameContent;
     }
     // for some reason webkit/qtwebkit will always enclose body contents within html tags
     var sanitizedHtml = this.evaluate(function checkHtml() {
@@ -780,7 +780,7 @@ Casper.prototype.getPageContent = function getPageContent() {
             return __utils__.findOne('body pre').textContent.trim();
         }
     });
-    return sanitizedHtml ? sanitizedHtml : this.page.content;
+    return sanitizedHtml ? sanitizedHtml : this.page.frameContent;
 };
 
 /**
@@ -931,7 +931,7 @@ Casper.prototype.getHTML = function getHTML(selector, outer) {
     "use strict";
     this.checkStarted();
     if (!selector) {
-        return this.page.content;
+        return this.page.frameContent;
     }
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
