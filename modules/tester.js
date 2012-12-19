@@ -48,16 +48,19 @@ exports.create = function create(casper, options) {
  */
 var Tester = function Tester(casper, options) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*jshint maxstatements:30*/
 
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
     }
 
+    var self = this;
+
     this.casper = casper;
 
     this.SKIP_MESSAGE = '__termination__';
 
+    this.aborted = false;
     this.executed = 0;
     this.currentTestFile = null;
     this.currentSuiteNum = 0;
@@ -141,10 +144,10 @@ var Tester = function Tester(casper, options) {
         if (!phantom.casperTest) {
             return;
         }
-        if (msg === this.test.SKIP_MESSAGE) {
-            this.warn(f('--fail-fast: aborted remaining tests in "%s"', this.test.currentTestFile));
-            this.test.currentSuiteNum++;
-            return this.test.done();
+        if (msg === self.SKIP_MESSAGE) {
+            this.warn(f('--fail-fast: aborted remaining tests in "%s"', self.currentTestFile));
+            self.aborted = true;
+            return self.done();
         }
         var line = 0;
         if (!utils.isString(msg)) {
@@ -152,15 +155,15 @@ var Tester = function Tester(casper, options) {
                 line = backtrace[0].line;
             } catch (e) {}
         }
-        this.test.uncaughtError(msg, this.test.currentTestFile, line);
-        this.test.done();
+        self.uncaughtError(msg, self.currentTestFile, line);
+        self.done();
     });
 
     this.casper.on('step.error', function onStepError(e) {
-        if (e.message !== this.test.SKIP_MESSAGE) {
-            this.test.uncaughtError(e, this.test.currentTestFile);
+        if (e.message !== self.SKIP_MESSAGE) {
+            self.uncaughtError(e, self.currentTestFile);
         }
-        this.test.done();
+        self.done();
     });
 };
 
@@ -1076,10 +1079,11 @@ Tester.prototype.runSuites = function runSuites() {
         if (self.running) {
             return;
         }
-        if (self.currentSuiteNum === testFiles.length) {
+        if (self.currentSuiteNum === testFiles.length || self.aborted) {
             self.emit('tests.complete');
             clearInterval(interval);
             self.exporter.setSuiteDuration(self.calculateSuiteDuration());
+            self.aborted = false;
         } else {
             self.runTest(testFiles[self.currentSuiteNum]);
             self.exporter.setSuiteDuration(self.calculateSuiteDuration());
