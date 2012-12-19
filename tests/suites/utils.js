@@ -4,7 +4,7 @@ var utils = require('utils'),
     t = casper.test,
     x = require('casper').selectXPath;
 
-casper.test.begin('utils.betterTypeOf() tests', function(casper) {
+casper.test.begin('utils.betterTypeOf() tests', function() {
     var testCases = [
         {subject: 1, expected: 'number'},
         {subject: '1', expected: 'string'},
@@ -24,7 +24,7 @@ casper.test.begin('utils.betterTypeOf() tests', function(casper) {
     this.done(testCases.length);
 });
 
-casper.test.begin('utils.cleanUrl() tests', function(casper) {
+casper.test.begin('utils.cleanUrl() tests', function() {
     var testCases = {
         'http://google.com/': 'http://google.com/',
         'http://google.com': 'http://google.com/',
@@ -43,7 +43,7 @@ casper.test.begin('utils.cleanUrl() tests', function(casper) {
     this.done(Object.keys(testCases).length);
 });
 
-casper.test.begin('utils.clone() tests', function(casper) {
+casper.test.begin('utils.clone() tests', function() {
     var a = {a: 1, b: 2, c: [1, 2]};
     this.assertEquals(utils.clone(a), a);
     var b = [1, 2, 3, a];
@@ -51,7 +51,7 @@ casper.test.begin('utils.clone() tests', function(casper) {
     this.done(2);
 });
 
-casper.test.begin('equals() tests', function(casper) {
+casper.test.begin('equals() tests', function() {
     this.assert(utils.equals(null, null), 'equals() null equality');
     this.assertNot(utils.equals(null, undefined), 'equals() null vs. undefined inequality');
     this.assert(utils.equals("hi", "hi"), 'equals() string equality');
