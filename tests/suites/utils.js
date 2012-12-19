@@ -272,6 +272,7 @@ casper.test.begin('mergeObjects() tests', function() {
 casper.test.begin('objectValues() tests', function() {
     this.assertEquals(utils.objectValues({}), [], 'objectValues() can extract object values');
     this.assertEquals(utils.objectValues({a: 1, b: 2}), [1, 2], 'objectValues() can extract object values');
+    this.done(2);
 });
 
 casper.test.begin('unique() tests', function() {

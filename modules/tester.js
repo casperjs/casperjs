@@ -70,14 +70,18 @@ var Tester = function Tester(casper, options) {
     this.aborted = false;
     this.executed = 0;
     this.currentTestFile = null;
+    this.currentTestStartTime = null;
     this.currentSuite = undefined;
     this.currentSuiteNum = 0;
+    this.lastAssertTime = 0;
     this.loadIncludes = {
         includes: [],
         pre:      [],
         post:     []
     };
+    this.queue = [];
     this.running = false;
+    this.started = false;
     this.suites = new TestSuite();
     this.options = utils.mergeObjects({
         failFast: false,  // terminates a suite as soon as a test fails?
@@ -85,10 +89,6 @@ var Tester = function Tester(casper, options) {
         passText: "PASS", // text to use for a failed test
         pad:      80      // maximum number of chars for a result line
     }, options);
-
-    // measuring test duration
-    this.currentTestStartTime = null;
-    this.lastAssertTime = 0;
 
     this.configure();
 
@@ -723,6 +723,9 @@ Tester.prototype.bar = function bar(text, style) {
  */
 Tester.prototype.begin = function begin(description, suiteFn) {
     "use strict";
+    if (this.started && this.running) {
+        return this.queue.push(arguments);
+    }
     description = description || "Untitled suite in " + this.currentTestFile;
     this.comment(description);
     this.currentSuite = new TestSuiteResult({
@@ -730,7 +733,7 @@ Tester.prototype.begin = function begin(description, suiteFn) {
         file: this.currentTestFile
     });
     this.executed = 0;
-    this.running = true;
+    this.running = this.started = true;
     try {
         suiteFn.call(this, this, this.casper);
     } catch (e) {
@@ -801,7 +804,11 @@ Tester.prototype.done = function done(planned) {
         this.executed = 0;
     }
     this.emit('test.done');
-    this.running = false;
+    this.running = this.started = false;
+    var nextTest = this.queue.shift();
+    if (nextTest) {
+        this.begin.apply(this, nextTest);
+    }
 };
 
 /**
