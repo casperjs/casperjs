@@ -367,6 +367,9 @@ Tester.prototype.assertHttpStatus = function assertHttpStatus(status, message) {
  */
 Tester.prototype.assertMatch = Tester.prototype.assertMatches = function assertMatch(subject, pattern, message) {
     "use strict";
+    if (utils.betterTypeOf(pattern) !== "regexp") {
+        throw new CasperError('Invalid regexp.');
+    }
     return this.assert(pattern.test(subject), message, {
         type: "assertMatch",
         standard: "Subject matches the provided pattern",
@@ -609,6 +612,9 @@ Tester.prototype.assertTitle = function assertTitle(expected, message) {
  */
 Tester.prototype.assertTitleMatch = Tester.prototype.assertTitleMatches = function assertTitleMatch(pattern, message) {
     "use strict";
+    if (utils.betterTypeOf(pattern) !== "regexp") {
+        throw new CasperError('Invalid regexp.');
+    }
     var currentTitle = this.casper.getTitle();
     return this.assert(pattern.test(currentTitle), message, {
         type: "assertTitle",
