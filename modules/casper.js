@@ -1989,7 +1989,7 @@ function createPage(casper) {
     };
     page.onConfirm = function onConfirm(message) {
         var listener_exists = typeof casper._filters['page.confirm'] !== 'undefined';
-	return listener_exists ? casper.filter('page.confirm', message) : true;
+        return listener_exists ? casper.filter('page.confirm', message) : true;
     };
     page.onConsoleMessage = function onConsoleMessage(msg) {
         // client utils casper console message
