@@ -8,10 +8,22 @@ casper.setFilter('page.confirm', function(message) {
 });
 
 casper.start('tests/site/confirm.html', function() {
-    this.test.assert(this.getGlobal('confirmed'), 'confirmation received');
+    this.test.assert(this.getGlobal('confirmed'), 'confirmation dialog accepted');
+});
+
+casper.then(function() {
+    //remove the page.confirm event filter so we can add a new one
+    delete casper._filters['page.confirm'];
+    casper.setFilter('page.confirm', function(message) {
+        return false;
+    });
+});
+
+casper.thenOpen('/tests/site/confirm.html', function() {
+    this.test.assertNot(this.getGlobal('confirmed'), 'confirmation dialog canceled');
 });
 
 casper.run(function() {
     this.test.assertEquals(received, 'are you sure?', 'confirmation message is ok');
-    this.test.done(2);
+    this.test.done(3);
 });
