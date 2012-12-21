@@ -28,16 +28,17 @@ casper.start("http://www.bbc.co.uk/", function() {
     this.hide(".nav_left");
     this.hide(".nav_right");
     this.mouse.move("#promo2_carousel");
-    this.waitUntilVisible(".autoplay.nav_pause", function() {
-        this.echo("Moving over pause button");
-        this.mouse.move(".autoplay.nav_pause");
-        this.click(".autoplay.nav_pause");
-        this.echo("Clicked on pause button");
-        this.waitUntilVisible(".autoplay.nav_play", function() {
-            this.echo("Carousel has been paused");
-            // hide play button
-            this.hide(".autoplay");
-        });
+});
+
+casper.waitUntilVisible(".autoplay.nav_pause", function() {
+    this.echo("Moving over pause button");
+    this.mouse.move(".autoplay.nav_pause");
+    this.click(".autoplay.nav_pause");
+    this.echo("Clicked on pause button");
+    this.waitUntilVisible(".autoplay.nav_play", function() {
+        this.echo("Carousel has been paused");
+        // hide play button
+        this.hide(".autoplay");
     });
 });
 
