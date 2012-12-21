@@ -2001,7 +2001,10 @@ function createPage(casper) {
         }
     };
     page.onConfirm = function onConfirm(message) {
-        return casper.filter('page.confirm', message) || true;
+        if ('page.confirm' in casper._filters) {
+            return casper.filter('page.confirm', message);
+        }
+        return true;
     };
     page.onConsoleMessage = function onConsoleMessage(msg) {
         // client utils casper console message
