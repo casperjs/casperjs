@@ -13,7 +13,7 @@ casper.start('tests/site/confirm.html', function() {
 
 casper.then(function() {
     //remove the page.confirm event filter so we can add a new one
-    delete casper._filters['page.confirm'];
+    casper.removeAllFilters('page.confirm')
     casper.setFilter('page.confirm', function(message) {
         return false;
     });
