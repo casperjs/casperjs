@@ -14,9 +14,7 @@ var buildPage, next;
 casper.hide = function(selector) {
     this.evaluate(function(selector) {
         document.querySelector(selector).style.display = "none";
-    }, {
-        selector: selector
-    });
+    }, selector);
 };
 
 casper.start("http://www.bbc.co.uk/", function() {

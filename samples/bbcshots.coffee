@@ -11,7 +11,7 @@ images = []
 casper.hide = (selector) ->
     @evaluate (selector) ->
         document.querySelector(selector).style.display = "none"
-    , selector: selector
+    , selector
 
 casper.start "http://www.bbc.co.uk/", ->
     nbLinks = @evaluate ->
