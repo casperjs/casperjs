@@ -2016,7 +2016,7 @@ function createPage(casper) {
     page.onInitialized = function onInitialized() {
         casper.emit('page.initialized', this);
         if (utils.isFunction(casper.options.onPageInitialized)) {
-            this.log("Post-configuring WebPage instance", "debug");
+            casper.log("Post-configuring WebPage instance", "debug");
             casper.options.onPageInitialized.call(casper, page);
         }
     };
