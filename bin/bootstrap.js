@@ -164,8 +164,19 @@ function patchRequire(require, requireDirs) {
 
 function bootstrap(global) {
     "use strict";
-
     var phantomArgs = require('system').args;
+
+    /**
+     * Hooks in default phantomjs error handler to print a hint when a possible
+     * casperjs command misuse is detected.
+     *
+     */
+    phantom.onError = function onPhantomError(msg, trace) {
+        phantom.defaultErrorHandler.apply(phantom, arguments);
+        if (msg.indexOf("ReferenceError: Can't find variable: casper") === 0) {
+            console.error('Hint: you may want to use the `casperjs test` command.');
+        }
+    };
 
     /**
      * Loads and initialize the CasperJS environment.
