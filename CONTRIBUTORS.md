@@ -10,26 +10,26 @@ oncletom
 hannyu
 Chris Lorenzo
 Victor Yap
+Rob Barreca
+Tyler Ritchie
 nrabinowitz
 pborreli
-Rob Barreca
+Dave Lee
 Andrew Childs
 Solomon White
 reina.sweet
-Dave Lee
 Reina Sweet
+Jan Schaumann
 Elmar Langholz
-Jason Funk
+Clochix
 Donovan Hutchinson
 Julien Moulin
 Michael Geers
-Jan Schaumann
-Clochix
-Raphaël Benitte
-Tim Bunce
-alfetopito
+Jason Funk
+Vladimir Chizhov
 jean-philippe serafin
 snkashis
+Rafael
 Andrew de Andrade
 Ben Lowery
 Chris Winters
@@ -48,6 +48,8 @@ Mathieu Agopian
 Mehdi Kabab
 Mikko Peltonen
 Pascal Borreli
-Rafael
 Rafael Garcia
+Raphaël Benitte
+Tim Bunce
+alfetopito
 ```
