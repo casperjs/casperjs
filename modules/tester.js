@@ -1187,7 +1187,7 @@ TestSuite.prototype.countFailed = function countFailed() {
         return result.failed;
     }).reduce(function(a, b) {
         return a + b;
-    });
+    }, 0);
 };
 
 /**
@@ -1201,7 +1201,7 @@ TestSuite.prototype.countPassed = function countPassed() {
         return result.passed;
     }).reduce(function(a, b) {
         return a + b;
-    });
+    }, 0);
 };
 
 /**
