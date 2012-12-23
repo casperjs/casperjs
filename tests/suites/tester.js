@@ -200,27 +200,6 @@ casper.reload(function() {
     t.assertField('checklist[]', [], 'Tester.assertField() works as expected with check lists');
 });
 
-casper.then(function() {
-    t.comment('Tester.getFailures()');
-    t.assertEquals(typeof t.getFailures().length, "number", "Tester.getFailures() works as expected");
-
-    var passCount = t.getPasses().length;
-    t.comment('Tester.getPasses()');
-    t.assertEquals(1, 1, "Rogue assertEquals pass case");
-    t.assertEquals(t.getPasses().length, passCount + 1, "Tester.getPasses() works as expected");
-});
-
-casper.then(function() {
-    t.comment('Tester.calculateSuiteDuration()');
-    function add(a, b) {
-        return a + b;
-    }
-    var passedTime = t.getPassesTime().reduce(add, 0),
-        failedTime = t.getFailuresTime().reduce(add, 0),
-        calculatedSum = t.calculateSuiteDuration();
-    t.assertEquals(calculatedSum, passedTime + failedTime, "Tester.calculateSuiteDuration() works as expected")
-});
-
 casper.run(function() {
-    t.done(59);
+    t.done(55);
 });

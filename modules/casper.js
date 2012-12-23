@@ -1373,6 +1373,19 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
 };
 
 /**
+ * Sets current page content.
+ *
+ * @param  String  content  Desired page content
+ * @return Casper
+ */
+Casper.prototype.setContent = function setContent(content) {
+    "use strict";
+    this.checkStarted();
+    this.page.content = content;
+    return this;
+};
+
+/**
  * Sets current WebPage instance the credentials for HTTP authentication.
  *
  * @param  String  username

@@ -1,47 +1,77 @@
 /*global casper*/
 /*jshint strict:false*/
-casper.test.comment('phantom.Casper.XUnitExporter');
+var tester = require('tester');
+var testpage = require('webpage').create();
 
-var xunit = require('xunit').create();
-xunit.addSuccess('foo', 'bar');
-casper.test.assertMatch(xunit.getXML(),
-    /<testcase classname="foo" name="bar"/,
-    'XUnitExporter.addSuccess() adds a successful testcase');
-xunit.addFailure('bar', 'baz', 'wrong', 'chucknorriz');
-casper.test.assertMatch(xunit.getXML(),
-    /<testcase classname="bar" name="baz"><failure type="chucknorriz">wrong/,
-    'XUnitExporter.addFailure() adds a failed testcase');
+casper.test.begin('XUnitReporter() initialization', function suite() {
+    var xunit = require('xunit').create();
+    var results = new tester.TestSuite();
+    xunit.setResults(results);
+    this.assertTruthy(xunit.getXML());
+    this.done(1);
+});
 
-// named classname
-xunit = require('xunit').create();
-xunit.addSuccess(require('fs').workingDirectory + '/plop.js', 'It worked');
-casper.test.assertMatch(xunit.getXML(),
-    /<testcase classname="(.*)plop" name="It worked"/,
-    'XUnitExporter.addSuccess() handles class name');
-xunit.addSuccess(require('fs').workingDirectory + '/plip.js', 'Failure');
-casper.test.assertMatch(xunit.getXML(),
-    /<testcase classname="(.*)plip" name="Failure"/,
-    'XUnitExporter.addFailure() handles class name');
+casper.test.begin('XUnitReporter() can hold test suites', function suite() {
+    var xunit = require('xunit').create();
+    var results = new tester.TestSuite();
+    var suite1 = new tester.TestSuiteResult({
+        name: 'foo',
+        file: '/foo'
+    });
+    results.push(suite1);
+    var suite2 = new tester.TestSuiteResult({
+        name: 'bar',
+        file: '/bar'
+    });
+    results.push(suite2);
+    xunit.setResults(results);
+    casper.start().setContent(xunit.getXML());
+    this.assertEvalEquals(function() {
+        return __utils__.findAll('testsuite').length;
+    }, 2);
+    this.assertExists('testsuites[duration]');
+    this.assertExists('testsuite[name="foo"][package="foo"]');
+    this.assertExists('testsuite[name="bar"][package="bar"]');
+    this.done(4);
+});
 
-// named with time
-xunit = require('xunit').create();
-xunit.addSuccess('foo', 'It worked', 1024);
-casper.test.assertMatch(xunit.getXML(),
-    /<testcase classname="foo" name="It worked" time="(.*)"/,
-    'XUnitExporter.addSuccess() writes duration of test');
-xunit.addFailure('bar', 'baz', 'wrong', 'chucknorriz', 1024);
-casper.test.assertMatch(xunit.getXML(),
-    /<testcase classname="bar" name="baz" time="(.*)"><failure type="chucknorriz">wrong/,
-    'XUnitExporter.addFailure() adds a failed testcase with duration');
+casper.test.begin('XUnitReporter() can hold a suite with a succesful test', function suite() {
+    var xunit = require('xunit').create();
+    var results = new tester.TestSuite();
+    var suite1 = new tester.TestSuiteResult({
+        name: 'foo',
+        file: '/foo'
+    });
+    suite1.addSuccess({
+        success: true,
+        type: "footype",
+        message: "footext",
+        file: "/foo"
+    });
+    results.push(suite1);
+    xunit.setResults(results);
+    casper.start().setContent(xunit.getXML());
+    this.assertExists('testsuite[name="foo"][package="foo"][tests="1"][failures="0"] testcase[name="footext"]');
+    casper.test.done(1);
+});
 
-// named with time
-xunit = require('xunit').create();
-casper.test.assertMatch(xunit.getXML(),
-    /<testsuite>/,
-    'XUnitExporter.create() created <testsuite> without time');
-xunit.setSuiteDuration(1024);
-casper.test.assertMatch(xunit.getXML(),
-    /<testsuite time="1.024">/,
-    'XUnitExporter.setSuiteDuration() sets time in seconds');
-
-casper.test.done(8);
+casper.test.begin('XUnitReporter() can handle a failed test', function suite() {
+    var xunit = require('xunit').create();
+    var results = new tester.TestSuite();
+    var suite1 = new tester.TestSuiteResult({
+        name: 'foo',
+        file: '/foo'
+    });
+    suite1.addFailure({
+        success: false,
+        type: "footype",
+        message: "footext",
+        file: "/foo"
+    });
+    results.push(suite1);
+    xunit.setResults(results);
+    casper.start().setContent(xunit.getXML());
+    this.assertExists('testsuite[name="foo"][package="foo"][tests="1"][failures="1"] testcase[name="footext"] failure[type="footype"]');
+    this.assertEquals(casper.getElementInfo('failure[type="footype"]').text, 'footext');
+    casper.test.done(2);
+});
