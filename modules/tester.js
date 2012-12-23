@@ -76,7 +76,8 @@ var Tester = function Tester(casper, options) {
         failFast: false,  // terminates a suite as soon as a test fails?
         failText: "FAIL", // text to use for a successful test
         passText: "PASS", // text to use for a failed test
-        pad:      80      // maximum number of chars for a result line
+        pad:      80    , // maximum number of chars for a result line
+        warnText: "WARN"  // text to use for a dubious test
     }, options);
 
     // properties
@@ -1008,8 +1009,8 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
     var exitStatus = ~~(status || (this.testResults.failed > 0 ? 1 : 0));
     if (total === 0) {
-        statusText = this.options.failText;
-        style = 'RED_BAR';
+        statusText = this.options.warnText;
+        style = 'WARN_BAR';
         result = f("%s Looks like you didn't run any test.", statusText);
     } else {
         if (this.testResults.failed > 0) {
