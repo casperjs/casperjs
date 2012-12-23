@@ -36,8 +36,8 @@ if (!phantom) {
     phantom.exit(1);
 }
 
-if (phantom.version.major === 1 && phantom.version.minor < 6) {
-    console.error('CasperJS needs at least PhantomJS v1.6.0 or later.');
+if (phantom.version.major === 1 && phantom.version.minor < 7) {
+    console.error('CasperJS needs at least PhantomJS v1.7 or later.');
     phantom.exit(1);
 } else {
     bootstrap(window);

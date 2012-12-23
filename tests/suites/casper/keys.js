@@ -1,10 +1,5 @@
 /*jshint strict:false*/
 /*global CasperError casper console phantom require*/
-if (phantom.version.major === 1 && phantom.version.minor < 7) {
-    casper.test.pass('Skipping tests for PhantomJS < 1.7');
-    casper.test.done(1);
-}
-
 casper.start('tests/site/form.html', function() {
     this.sendKeys('input[name="email"]', 'duke@nuk.em');
     this.sendKeys('textarea', "Damn, I’m looking good.");

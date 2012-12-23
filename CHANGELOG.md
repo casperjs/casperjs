@@ -4,6 +4,12 @@ CasperJS Changelog
 XXXX-XX-XX, v1.0.0
 ------------------
 
+### Important Changes & Caveats
+
+- PhantomJS 1.6.x support has been dropped. Both PhantomJS 1.7 & 1.8 will be supported.
+
+### Bugfixes & enhancements
+
 - fixed `page.initialized` event didn't get the initialized `WebPage` instance
 - fixed a bug preventing `Casper.options.onPageInitialized()` from being called
 - fixed [#215](https://github.com/n1k0/casperjs/issues/215) - fixed broken `--fail-fast` option creating an endless loop on error

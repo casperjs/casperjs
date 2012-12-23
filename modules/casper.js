@@ -1343,9 +1343,6 @@ Casper.prototype.runStep = function runStep(step) {
  */
 Casper.prototype.sendKeys = function(selector, keys, options) {
     "use strict";
-    if (phantom.version.major === 1 && phantom.version.minor < 7) {
-        throw new CasperError('sendKeys() requires PhantomJS >= 1.7');
-    }
     this.checkStarted();
     options = utils.mergeObjects({
         eventType: 'keypress'
