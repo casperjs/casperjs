@@ -4,9 +4,12 @@ CasperJS Changelog
 XXXX-XX-XX, v1.0.0
 ------------------
 
-- fixed [#215](https://github.com/n1k0/casperjs/issues/215)  - fixed broken `--fail-fast` option creating an endless loop on error
+- fixed `page.initialized` event didn't get the initialized `WebPage` instance
+- fixed a bug preventing `Casper.options.onPageInitialized()` from being called
+- fixed [#215](https://github.com/n1k0/casperjs/issues/215) - fixed broken `--fail-fast` option creating an endless loop on error
 - fixed `Tester.renderFailureDetails()` which couldn't print failure details correctly in certain circumstances
 - fixed `Casper.getHTML()` wasn't retrieving active frame contents when using `Casper.withFrame()`
+- fixed [#327](https://github.com/n1k0/casperjs/issues/327) - event handler for `page.confirm` always returns true
 - merged PR [#322](https://github.com/n1k0/casperjs/pull/322) - Support number in `Casper.withFrame()`
 - fixed [#323](https://github.com/n1k0/casperjs/issues/323) - `thenEvaluate()` should be updated to take the same parameters as `evaluate()`, while maintaining backwards compatibility.
 - merged PR [#319](https://github.com/n1k0/casperjs/pull/319), fixed [#209](https://github.com/n1k0/casperjs/issues/209) - test duration has been added to XUnit XML result file.

@@ -810,7 +810,8 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
  * @param  String  attribute  The attribute name to lookup
  * @return String  The requested DOM element attribute value
  */
-Casper.prototype.getElementAttribute = Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
+Casper.prototype.getElementAttribute =
+Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector, attribute) {
@@ -2027,9 +2028,9 @@ function createPage(casper) {
         casper.emit('page.error', msg, trace);
     };
     page.onInitialized = function onInitialized() {
-        casper.emit('page.initialized', this);
+        casper.emit('page.initialized', page);
         if (utils.isFunction(casper.options.onPageInitialized)) {
-            this.log("Post-configuring WebPage instance", "debug");
+            casper.log("Post-configuring WebPage instance", "debug");
             casper.options.onPageInitialized.call(casper, page);
         }
     };
