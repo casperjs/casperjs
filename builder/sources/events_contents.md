@@ -156,7 +156,6 @@ parameters passed to their callback:
       <td>
         <p>
           <span class="label label-success">Added in 1.0</span>
-          <span class="label label-info">PhantomJS >= 1.6</span>
           Emitted each time a navigation operation has been requested.
           Available navigation types are: `LinkClicked`, `FormSubmitted`,
           `BackOrForward`, `Reload`, `FormResubmitted` and `Other`.
@@ -304,7 +303,6 @@ parameters passed to their callback:
       <td>
         <p>
           <span class="label label-success">Added in 1.0</span>
-          <span class="label label-info">PhantomJS >= 1.6</span>
           Emitted each time the current page url changes.
         </p>
       </td>
@@ -421,7 +419,6 @@ value:
       <td>
         <p>
           <span class="label label-success">Added in 1.0</span>
-          <span class="label label-info">PhantomJS >= 1.6</span>
           Allows to react on a javascript <code>confirm()</code> call:</p>
         <pre class="prettyprint">casper.setFilter("page.confirm", function(msg) {
     return msg === "Do you like vbscript?" ? false : true;
@@ -434,7 +431,6 @@ value:
       <td>
         <p>
           <span class="label label-success">Added in 1.0</span>
-          <span class="label label-info">PhantomJS >= 1.6</span>
           Allows to react on a javascript <code>prompt()</code> call:
         </p>
         <pre class="prettyprint">casper.setFilter("page.prompt", function(msg, value) {

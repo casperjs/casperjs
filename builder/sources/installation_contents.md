@@ -1,4 +1,4 @@
-**[PhantomJS](http://phantomjs.org/) >= 1.6 must be installed on your system** (1.7 recommended).
+**[PhantomJS](http://phantomjs.org/) >= 1.7 must be installed on your system**.
 Check out [PhantomJS' installation instructions](http://code.google.com/p/phantomjs/wiki/Installation),
 and:
 

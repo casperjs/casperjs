@@ -453,7 +453,6 @@ casper.run();
 <h3 id="casper.captureBase64"><code>Casper#captureBase64(String format[, Mixed area])</code></h3>
 
 <span class="label label-success">Added in 0.6.5</span>
-<span class="label label-info">PhantomJS >= 1.6</span>
 Computes the [Base64](http://en.wikipedia.org/wiki/Base64) representation of a
 binary image capture of the current page, or an area within the page, in a
 given format.
@@ -1082,7 +1081,6 @@ casper.open('http://some.testserver.com/post.php', {
 ```
 
 <span class="label label-success">Added in 1.0</span>
-<span class="label label-info">PhantomJS >= 1.6</span>
 You can also set custom request headers to send when performing an outgoing
 request, passing the `headers` option:
 
@@ -1840,7 +1838,6 @@ array-like property.
 <h3 id="casper.zoom"><code>Casper#zoom(Number factor)</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
-<span class="label label-info">PhantomJS >= 1.6</span>
 Sets the current page zoom factor.
 
 ```javascript
