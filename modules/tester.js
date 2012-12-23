@@ -952,7 +952,7 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
             file: this.currentTestFile
         });
     }
-    var eventName= 'success',
+    var eventName = 'success',
         message = result.message || result.standard,
         style = 'INFO',
         status = this.options.passText;
@@ -961,6 +961,7 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         style = 'RED_BAR';
         status = this.options.failText;
     }
+    style = result.type === "dubious" ? "WARN_BAR" : style;
     this.casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
     this.emit(eventName, result);
     if (this.options.failFast && !result.success) {
