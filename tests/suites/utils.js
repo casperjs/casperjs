@@ -4,8 +4,7 @@ var utils = require('utils'),
     t = casper.test,
     x = require('casper').selectXPath;
 
-t.comment('betterTypeOf()');
-(function() {
+casper.test.begin('utils.betterTypeOf() tests', function() {
     var testCases = [
         {subject: 1, expected: 'number'},
         {subject: '1', expected: 'string'},
@@ -19,13 +18,13 @@ t.comment('betterTypeOf()');
         {subject: new RegExp(), expected: 'regexp'}
     ];
     testCases.forEach(function(testCase) {
-        t.assertEquals(utils.betterTypeOf(testCase.subject), testCase.expected,
-            require('utils').format('betterTypeOf() detects expected type "%s"', testCase.subject));
-    });
-})();
+        this.assertEquals(utils.betterTypeOf(testCase.subject), testCase.expected,
+            utils.format('betterTypeOf() detects expected type "%s"', testCase.expected));
+    }.bind(this));
+    this.done(testCases.length);
+});
 
-t.comment('cleanUrl()');
-(function() {
+casper.test.begin('utils.cleanUrl() tests', function() {
     var testCases = {
         'http://google.com/': 'http://google.com/',
         'http://google.com': 'http://google.com/',
@@ -39,47 +38,47 @@ t.comment('cleanUrl()');
         '/100': '/100'
     };
     for (var testCase in testCases) {
-        t.assertEquals(utils.cleanUrl(testCase), testCases[testCase], 'cleanUrl() cleans an URL');
+        this.assertEquals(utils.cleanUrl(testCase), testCases[testCase], 'cleanUrl() cleans an URL');
     }
-})();
+    this.done(Object.keys(testCases).length);
+});
 
-t.comment('clone()');
-(function() {
+casper.test.begin('utils.clone() tests', function() {
     var a = {a: 1, b: 2, c: [1, 2]};
-    t.assertEquals(utils.clone(a), a);
+    this.assertEquals(utils.clone(a), a);
     var b = [1, 2, 3, a];
-    t.assertEquals(utils.clone(b), b);
-})();
+    this.assertEquals(utils.clone(b), b);
+    this.done(2);
+});
 
-t.comment('equals()');
-(function() {
-    t.assert(utils.equals(null, null), 'equals() null equality');
-    t.assertNot(utils.equals(null, undefined), 'equals() null vs. undefined inequality');
-    t.assert(utils.equals("hi", "hi"), 'equals() string equality');
-    t.assertNot(utils.equals("hi", "ih"), 'equals() string inequality');
-    t.assert(utils.equals(5, 5), 'equals() number equality');
-    t.assertNot(utils.equals("5", 5), 'equals() number equality without implicit cast');
-    t.assert(utils.equals(5, 5.0), 'equals() number equality with cast');
-    t.assertNot(utils.equals(5, 10), 'equals() number inequality');
-    t.assert(utils.equals([], []), 'equals() empty array equality');
-    t.assert(utils.equals([1,2], [1,2]), 'equals() array equality');
-    t.assert(utils.equals([1,2,[1,2,function(){}]], [1,2,[1,2,function(){}]]), 'equals() complex array equality');
-    t.assertNot(utils.equals([1,2,[1,2,function(a){}]], [1,2,[1,2,function(b){}]]), 'equals() complex array inequality');
-    t.assertNot(utils.equals([1,2], [2,1]), 'equals() shuffled array inequality');
-    t.assertNot(utils.equals([1,2], [1,2,3]), 'equals() array length inequality');
-    t.assert(utils.equals({}, {}), 'equals() empty object equality');
-    t.assert(utils.equals({a:1,b:2}, {a:1,b:2}), 'equals() object length equality');
-    t.assert(utils.equals({a:1,b:2}, {b:2,a:1}), 'equals() shuffled object keys equality');
-    t.assertNot(utils.equals({a:1,b:2}, {a:1,b:3}), 'equals() object inequality');
-    t.assert(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:26}}), 'equals() complex object equality');
-    t.assertNot(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:27}}), 'equals() complex object inequality');
-    t.assert(utils.equals(function(x){return x;}, function(x){return x;}), 'equals() function equality');
-    t.assertNot(utils.equals(function(x){return x;}, function(y){return y+2;}), 'equals() function inequality');
-    t.assert(utils.equals([{a:1, b:2}, {c:3, d:4}], [{a:1, b:2}, {c:3, d:4}]), 'equals() arrays of objects');
-})();
+casper.test.begin('equals() tests', function() {
+    this.assert(utils.equals(null, null), 'equals() null equality');
+    this.assertNot(utils.equals(null, undefined), 'equals() null vs. undefined inequality');
+    this.assert(utils.equals("hi", "hi"), 'equals() string equality');
+    this.assertNot(utils.equals("hi", "ih"), 'equals() string inequality');
+    this.assert(utils.equals(5, 5), 'equals() number equality');
+    this.assertNot(utils.equals("5", 5), 'equals() number equality without implicit cast');
+    this.assert(utils.equals(5, 5.0), 'equals() number equality with cast');
+    this.assertNot(utils.equals(5, 10), 'equals() number inequality');
+    this.assert(utils.equals([], []), 'equals() empty array equality');
+    this.assert(utils.equals([1,2], [1,2]), 'equals() array equality');
+    this.assert(utils.equals([1,2,[1,2,function(){}]], [1,2,[1,2,function(){}]]), 'equals() complex array equality');
+    this.assertNot(utils.equals([1,2,[1,2,function(a){}]], [1,2,[1,2,function(b){}]]), 'equals() complex array inequality');
+    this.assertNot(utils.equals([1,2], [2,1]), 'equals() shuffled array inequality');
+    this.assertNot(utils.equals([1,2], [1,2,3]), 'equals() array length inequality');
+    this.assert(utils.equals({}, {}), 'equals() empty object equality');
+    this.assert(utils.equals({a:1,b:2}, {a:1,b:2}), 'equals() object length equality');
+    this.assert(utils.equals({a:1,b:2}, {b:2,a:1}), 'equals() shuffled object keys equality');
+    this.assertNot(utils.equals({a:1,b:2}, {a:1,b:3}), 'equals() object inequality');
+    this.assert(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:26}}), 'equals() complex object equality');
+    this.assertNot(utils.equals({1:{name:"bob",age:28}, 2:{name:"john",age:26}}, {1:{name:"bob",age:28}, 2:{name:"john",age:27}}), 'equals() complex object inequality');
+    this.assert(utils.equals(function(x){return x;}, function(x){return x;}), 'equals() function equality');
+    this.assertNot(utils.equals(function(x){return x;}, function(y){return y+2;}), 'equals() function inequality');
+    this.assert(utils.equals([{a:1, b:2}, {c:3, d:4}], [{a:1, b:2}, {c:3, d:4}]), 'equals() arrays of objects');
+    this.done(23);
+});
 
-t.comment('fileExt()');
-(function() {
+casper.test.begin('fileExt() tests', function() {
     var testCases = {
         'foo.ext':    'ext',
         'FOO.EXT':    'ext',
@@ -88,27 +87,25 @@ t.comment('fileExt()');
         'toto.':      '',
         ' plop.ext ': 'ext'
     };
-
     for (var testCase in testCases) {
-        t.assertEquals(utils.fileExt(testCase), testCases[testCase], 'fileExt() extract file extension');
+        this.assertEquals(utils.fileExt(testCase), testCases[testCase], 'fileExt() extract file extension');
     }
-})();
+    this.done(Object.keys(testCases).length);
+});
 
-t.comment('fillBlanks()');
-(function() {
+casper.test.begin('fillBlanks() tests', function() {
     var testCases = {
         'foo':         'foo       ',
         '  foo bar ':  '  foo bar ',
         '  foo bar  ': '  foo bar  '
     };
-
     for (var testCase in testCases) {
-        t.assertEquals(utils.fillBlanks(testCase, 10), testCases[testCase], 'fillBlanks() fills blanks');
+        this.assertEquals(utils.fillBlanks(testCase, 10), testCases[testCase], 'fillBlanks() fills blanks');
     }
-})();
+    this.done(Object.keys(testCases).length);
+});
 
-t.comment('getPropertyPath()');
-(function() {
+casper.test.begin('getPropertyPath() tests', function() {
     var testCases = [
         {
             input:  utils.getPropertyPath({}, 'a.b.c'),
@@ -140,19 +137,19 @@ t.comment('getPropertyPath()');
         }
     ];
     testCases.forEach(function(testCase) {
-        t.assertEquals(testCase.input, testCase.output, 'getPropertyPath() gets a property using a path');
-    });
-})();
+        this.assertEquals(testCase.input, testCase.output, 'getPropertyPath() gets a property using a path');
+    }.bind(this));
+    this.done(testCases.length);
+});
 
-t.comment('isArray()');
-(function() {
-    t.assertEquals(utils.isArray([]), true, 'isArray() checks for an Array');
-    t.assertEquals(utils.isArray({}), false, 'isArray() checks for an Array');
-    t.assertEquals(utils.isArray("foo"), false, 'isArray() checks for an Array');
-})();
+casper.test.begin('isArray() tests', function() {
+    this.assertEquals(utils.isArray([]), true, 'isArray() checks for an Array');
+    this.assertEquals(utils.isArray({}), false, 'isArray() checks for an Array');
+    this.assertEquals(utils.isArray("foo"), false, 'isArray() checks for an Array');
+    this.done(3);
+});
 
-t.comment('isClipRect()');
-(function() {
+casper.test.begin('isClipRect() tests', function() {
     var testCases = [
         [{},                                              false],
         [{top: 2},                                        false],
@@ -160,14 +157,13 @@ t.comment('isClipRect()');
         [{top: 2, left: 2, height: 2, width: 2},          true],
         [{top: 2, left: 2, width: 2, height: new Date()}, false]
     ];
-
     testCases.forEach(function(testCase) {
-        t.assertEquals(utils.isClipRect(testCase[0]), testCase[1], 'isClipRect() checks for a ClipRect');
-    });
-})();
+        this.assertEquals(utils.isClipRect(testCase[0]), testCase[1], 'isClipRect() checks for a ClipRect');
+    }.bind(this));
+    this.done(testCases.length);
+});
 
-t.comment('isHTTPResource()');
-(function() {
+casper.test.begin('isHTTPResource() tests', function() {
     var testCases = [
         [{},                              false],
         [{url: 'file:///var/www/i.html'}, false],
@@ -176,26 +172,25 @@ t.comment('isHTTPResource()');
         [{url: 'HTTP://plop.com/'},       true],
         [{url: 'https://plop.com/'},      true]
     ];
-
     testCases.forEach(function(testCase) {
-        t.assertEquals(utils.isHTTPResource(testCase[0]), testCase[1], 'isHTTPResource() checks for an HTTP resource');
-    });
-})();
+        this.assertEquals(utils.isHTTPResource(testCase[0]), testCase[1], 'isHTTPResource() checks for an HTTP resource');
+    }.bind(this));
+    this.done(Object.keys(testCases).length);
+});
 
-t.comment('isObject()');
-(function() {
-    t.assertEquals(utils.isObject({}), true, 'isObject() checks for an Object');
-    t.assertEquals(utils.isObject([]), true, 'isObject() checks for an Object');
-    t.assertEquals(utils.isObject(1), false, 'isObject() checks for an Object');
-    t.assertEquals(utils.isObject("1"), false, 'isObject() checks for an Object');
-    t.assertEquals(utils.isObject(function(){}), false, 'isObject() checks for an Object');
-    t.assertEquals(utils.isObject(new Function('return {};')()), true, 'isObject() checks for an Object');
-    t.assertEquals(utils.isObject(require('webpage').create()), true, 'isObject() checks for an Object');
-    t.assertEquals(utils.isObject(null), false, 'isObject() checks for an Object');
-})();
+casper.test.begin('isObject() tests', function() {
+    this.assertEquals(utils.isObject({}), true, 'isObject() checks for an Object');
+    this.assertEquals(utils.isObject([]), true, 'isObject() checks for an Object');
+    this.assertEquals(utils.isObject(1), false, 'isObject() checks for an Object');
+    this.assertEquals(utils.isObject("1"), false, 'isObject() checks for an Object');
+    this.assertEquals(utils.isObject(function(){}), false, 'isObject() checks for an Object');
+    this.assertEquals(utils.isObject(new Function('return {};')()), true, 'isObject() checks for an Object');
+    this.assertEquals(utils.isObject(require('webpage').create()), true, 'isObject() checks for an Object');
+    this.assertEquals(utils.isObject(null), false, 'isObject() checks for an Object');
+    this.done(8);
+});
 
-t.comment('isValidSelector()');
-(function() {
+casper.test.begin('isValidSelector() tests', function() {
     t.assertEquals(utils.isValidSelector({}), false, 'isValidSelector() checks for a valid selector');
     t.assertEquals(utils.isValidSelector(""), false, 'isValidSelector() checks for a valid selector');
     t.assertEquals(utils.isValidSelector("a"), true, 'isValidSelector() checks for a valid selector');
@@ -219,18 +214,18 @@ t.comment('isValidSelector()');
         type: "css3",
         path: "a"
     }), false, 'isValidSelector() checks for a valid selector');
-})();
+    this.done(10);
+});
 
-t.comment('isWebPage()');
-(function() {
+casper.test.begin('isWebPage() tests', function() {
     var pageModule = require('webpage');
-    t.assertEquals(utils.isWebPage(pageModule), false, 'isWebPage() checks for a WebPage instance');
-    t.assertEquals(utils.isWebPage(pageModule.create()), true, 'isWebPage() checks for a WebPage instance');
-    t.assertEquals(utils.isWebPage(null), false, 'isWebPage() checks for a WebPage instance');
-})();
+    this.assertEquals(utils.isWebPage(pageModule), false, 'isWebPage() checks for a WebPage instance');
+    this.assertEquals(utils.isWebPage(pageModule.create()), true, 'isWebPage() checks for a WebPage instance');
+    this.assertEquals(utils.isWebPage(null), false, 'isWebPage() checks for a WebPage instance');
+    this.done(3);
+});
 
-t.comment('isJsFile()');
-(function() {
+casper.test.begin('isJsFile() tests', function() {
     var testCases = {
         '':             false,
         'toto.png':     false,
@@ -238,14 +233,13 @@ t.comment('isJsFile()');
         'gniii.coffee': true,
         'script.js':    true
     };
-
     for (var testCase in testCases) {
-        t.assertEquals(utils.isJsFile(testCase), testCases[testCase], 'isJsFile() checks for js file');
+        this.assertEquals(utils.isJsFile(testCase), testCases[testCase], 'isJsFile() checks for js file');
     }
-})();
+    this.done(Object.keys(testCases).length);
+});
 
-t.comment('mergeObjects()');
-(function() {
+casper.test.begin('mergeObjects() tests', function() {
     var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
@@ -269,20 +263,19 @@ t.comment('mergeObjects()');
             }
         }
     ];
-
     testCases.forEach(function(testCase) {
-        t.assertEquals(utils.mergeObjects(testCase.obj1, testCase.obj2), testCase.merged, 'mergeObjects() can merge objects');
-    });
-})();
+        this.assertEquals(utils.mergeObjects(testCase.obj1, testCase.obj2), testCase.merged, 'mergeObjects() can merge objects');
+    }.bind(this));
+    this.done(testCases.length);
+});
 
-t.comment('objectValues()');
-(function() {
-    t.assertEquals(utils.objectValues({}), [], 'objectValues() can extract object values');
-    t.assertEquals(utils.objectValues({a: 1, b: 2}), [1, 2], 'objectValues() can extract object values');
-})();
+casper.test.begin('objectValues() tests', function() {
+    this.assertEquals(utils.objectValues({}), [], 'objectValues() can extract object values');
+    this.assertEquals(utils.objectValues({a: 1, b: 2}), [1, 2], 'objectValues() can extract object values');
+    this.done(2);
+});
 
-t.comment('unique()');
-(function() {
+casper.test.begin('unique() tests', function() {
     var testCases = [
         {
             input:  [1,2,3],
@@ -302,8 +295,7 @@ t.comment('unique()');
         }
     ];
     testCases.forEach(function(testCase) {
-        t.assertEquals(utils.unique(testCase.input), testCase.output, 'unique() computes unique values of an array');
-    });
-})();
-
-t.done(112);
+        this.assertEquals(utils.unique(testCase.input), testCase.output, 'unique() computes unique values of an array');
+    }.bind(this));
+    this.done(testCases.length);
+});

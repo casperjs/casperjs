@@ -35,6 +35,13 @@ var events = require('events');
 var utils = require('utils');
 var f = utils.format;
 
+/**
+ * Creates a tester instance.
+ *
+ * @param  Casper  casper   A Casper instance
+ * @param  Object  options  Tester options
+ * @return Tester
+ */
 exports.create = function create(casper, options) {
     "use strict";
     return new Tester(casper, options);
@@ -63,81 +70,51 @@ var Tester = function Tester(casper, options) {
     this.aborted = false;
     this.executed = 0;
     this.currentTestFile = null;
+    this.currentTestStartTime = null;
+    this.currentSuite = undefined;
     this.currentSuiteNum = 0;
-    this.exporter = require('xunit').create();
+    this.lastAssertTime = 0;
     this.loadIncludes = {
         includes: [],
         pre:      [],
         post:     []
     };
+    this.queue = [];
     this.running = false;
-    this.suites = [];
+    this.started = false;
+    this.suites = new TestSuite();
     this.options = utils.mergeObjects({
         failFast: false,  // terminates a suite as soon as a test fails?
-        failText: "FAIL", // text to use for a successful test
+        failText: "FAIL", // text to use for a succesful test
         passText: "PASS", // text to use for a failed test
         pad:      80    , // maximum number of chars for a result line
         warnText: "WARN"  // text to use for a dubious test
     }, options);
 
-    // properties
-    this.testResults = {
-        passed: 0,
-        failed: 0,
-        passes: [],
-        failures: [],
-        passesTime: [],
-        failuresTime: []
-    };
-
-    // measuring test duration
-    this.currentTestStartTime = null;
-    this.lastAssertTime = 0;
-
     this.configure();
 
     this.on('success', function onSuccess(success) {
-        this.testResults.passes.push(success);
         var timeElapsed = new Date() - this.currentTestStartTime;
-        this.testResults.passesTime.push(timeElapsed - this.lastAssertTime);
-        this.exporter.addSuccess(fs.absolute(success.file), success.message || success.standard, timeElapsed - this.lastAssertTime);
+        this.currentSuite.addSuccess(success, timeElapsed - this.lastAssertTime);
         this.lastAssertTime = timeElapsed;
     });
 
     this.on('fail', function onFail(failure) {
         // export
-        var timeElapsed = new Date() - this.currentTestStartTime;
-        this.testResults.failuresTime.push(timeElapsed - this.lastAssertTime);
-        this.exporter.addFailure(
-            fs.absolute(failure.file),
-            failure.message  || failure.standard,
-            failure.standard || "test failed",
-            failure.type     || "unknown",
-            (timeElapsed - this.lastAssertTime)
-        );
+        var valueKeys = Object.keys(failure.values),
+            timeElapsed = new Date() - this.currentTestStartTime;
+        this.currentSuite.addFailure(failure, timeElapsed - this.lastAssertTime);
         this.lastAssertTime = timeElapsed;
-        this.testResults.failures.push(failure);
-
         // special printing
         if (failure.type) {
             this.comment('   type: ' + failure.type);
         }
-        if (failure.values && Object.keys(failure.values).length > 0) {
-            for (var name in failure.values) {
-                var comment = '   ' + name + ': ';
-                var value = failure.values[name];
-                try {
-                    comment += utils.serialize(failure.values[name]);
-                } catch (e) {
-                    try {
-                        comment += utils.serialize(failure.values[name].toString());
-                    } catch (e2) {
-                        comment += '(unserializable value)';
-                    }
-                }
-                this.comment(comment);
-            }
+        if (!failure.values || valueKeys.length === 0) {
+            return;
         }
+        valueKeys.forEach(function(name) {
+            this.comment(f('   %s: %s', name, utils.formatTestValue(failure.values[name], name)));
+        }.bind(this));
     });
 
     // casper events
@@ -156,7 +133,7 @@ var Tester = function Tester(casper, options) {
                 line = backtrace[0].line;
             } catch (e) {}
         }
-        self.uncaughtError(msg, self.currentTestFile, line);
+        self.uncaughtError(msg, self.currentTestFile, line, backtrace);
         self.done();
     });
 
@@ -186,16 +163,17 @@ exports.Tester = Tester;
  * @param  Object|null  context  Assertion context object (Optional)
  * @return Object                An assertion result object
  */
-Tester.prototype.assert = Tester.prototype.assertTrue = function assert(subject, message, context) {
+Tester.prototype.assert =
+Tester.prototype.assertTrue = function assert(subject, message, context) {
     "use strict";
     this.executed++;
     return this.processAssertionResult(utils.mergeObjects({
-        success:  subject === true,
-        type:     "assert",
+        success: subject === true,
+        type: "assert",
         standard: "Subject is strictly true",
-        message:  message,
-        file:     this.currentTestFile,
-        values:  {
+        message: message,
+        file: this.currentTestFile,
+        values: {
             subject: utils.getPropertyPath(context, 'values.subject') || subject
         }
     }, context || {}));
@@ -209,12 +187,13 @@ Tester.prototype.assert = Tester.prototype.assertTrue = function assert(subject,
  * @param  String  message   Test description (Optional)
  * @return Object            An assertion result object
  */
-Tester.prototype.assertEquals = Tester.prototype.assertEqual = function assertEquals(subject, expected, message) {
+Tester.prototype.assertEquals =
+Tester.prototype.assertEqual = function assertEquals(subject, expected, message) {
     "use strict";
-    return this.assert(this.testEquals(subject, expected), message, {
-        type:     "assertEquals",
+    return this.assert(utils.equals(subject, expected), message, {
+        type: "assertEquals",
         standard: "Subject equals the expected value",
-        values:  {
+        values: {
             subject:  subject,
             expected: expected
         }
@@ -232,9 +211,9 @@ Tester.prototype.assertEquals = Tester.prototype.assertEqual = function assertEq
 Tester.prototype.assertNotEquals = function assertNotEquals(subject, shouldnt, message) {
     "use strict";
     return this.assert(!this.testEquals(subject, shouldnt), message, {
-        type:    "assertNotEquals",
+        type: "assertNotEquals",
         standard: "Subject doesn't equal what it shouldn't be",
-        values:  {
+        values: {
             subject:  subject,
             shouldnt: shouldnt
         }
@@ -246,13 +225,15 @@ Tester.prototype.assertNotEquals = function assertNotEquals(subject, shouldnt, m
  *
  * @param  Function  fn       A function to be evaluated in remote DOM
  * @param  String    message  Test description
- * @param  Object    params   Object/Array containing the parameters to inject into the function (optional)
+ * @param  Object    params   Object/Array containing the parameters to inject into
+ *                            the function (optional)
  * @return Object             An assertion result object
  */
-Tester.prototype.assertEval = Tester.prototype.assertEvaluate = function assertEval(fn, message, params) {
+Tester.prototype.assertEval =
+Tester.prototype.assertEvaluate = function assertEval(fn, message, params) {
     "use strict";
     return this.assert(this.casper.evaluate(fn, params), message, {
-        type:    "assertEval",
+        type: "assertEval",
         standard: "Evaluated function returns true",
         values: {
             fn: fn,
@@ -268,16 +249,18 @@ Tester.prototype.assertEval = Tester.prototype.assertEvaluate = function assertE
  * @param  Function     fn        The function to be evaluated in remote DOM
  * @param  Boolean      expected  The expected value
  * @param  String|null  message   Test description
- * @param  Object|null  params    Object containing the parameters to inject into the function (optional)
+ * @param  Object|null  params    Object containing the parameters to inject into the
+ *                                function (optional)
  * @return Object                 An assertion result object
  */
-Tester.prototype.assertEvalEquals = Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, message, params) {
+Tester.prototype.assertEvalEquals =
+Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, message, params) {
     "use strict";
     var subject = this.casper.evaluate(fn, params);
-    return this.assert(this.testEquals(subject, expected), message, {
-        type:    "assertEvalEquals",
+    return this.assert(utils.equals(subject, expected), message, {
+        type: "assertEvalEquals",
         standard: "Evaluated function returns the expected value",
-        values:  {
+        values: {
             fn: fn,
             params: params,
             subject:  subject,
@@ -299,13 +282,13 @@ Tester.prototype.assertField = function assertField(inputName, expected,  messag
     var actual = this.casper.evaluate(function(inputName) {
         return __utils__.getFieldValue(inputName);
     }, inputName);
-    return this.assert(this.testEquals(actual, expected),  message, {
+    return this.assert(utils.equals(actual, expected),  message, {
         type: 'assertField',
         standard: f('"%s" input field has the value "%s"', inputName, expected),
-        values:  {
+        values: {
             inputName: inputName,
             actual: actual,
-            expected:  expected
+            expected: expected
          }
     });
 };
@@ -318,7 +301,10 @@ Tester.prototype.assertField = function assertField(inputName, expected,  messag
  * @param  String   message   Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertExists = Tester.prototype.assertExist = Tester.prototype.assertSelectorExists = Tester.prototype.assertSelectorExist = function assertExists(selector, message) {
+Tester.prototype.assertExists =
+Tester.prototype.assertExist =
+Tester.prototype.assertSelectorExists =
+Tester.prototype.assertSelectorExist = function assertExists(selector, message) {
     "use strict";
     return this.assert(this.casper.exists(selector), message, {
         type: "assertExists",
@@ -337,7 +323,8 @@ Tester.prototype.assertExists = Tester.prototype.assertExist = Tester.prototype.
  * @param  String   message   Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertDoesntExist = Tester.prototype.assertNotExists = function assertDoesntExist(selector, message) {
+Tester.prototype.assertDoesntExist =
+Tester.prototype.assertNotExists = function assertDoesntExist(selector, message) {
     "use strict";
     return this.assert(!this.casper.exists(selector), message, {
         type: "assertDoesntExist",
@@ -358,7 +345,7 @@ Tester.prototype.assertDoesntExist = Tester.prototype.assertNotExists = function
 Tester.prototype.assertHttpStatus = function assertHttpStatus(status, message) {
     "use strict";
     var currentHTTPStatus = this.casper.currentHTTPStatus;
-    return this.assert(this.testEquals(this.casper.currentHTTPStatus, status), message, {
+    return this.assert(utils.equals(this.casper.currentHTTPStatus, status), message, {
         type: "assertHttpStatus",
         standard: f("HTTP status code is: %s", status),
         values: {
@@ -376,7 +363,8 @@ Tester.prototype.assertHttpStatus = function assertHttpStatus(status, message) {
  * @param  String   message  Test description
  * @return Object            An assertion result object
  */
-Tester.prototype.assertMatch = Tester.prototype.assertMatches = function assertMatch(subject, pattern, message) {
+Tester.prototype.assertMatch =
+Tester.prototype.assertMatches = function assertMatch(subject, pattern, message) {
     "use strict";
     if (utils.betterTypeOf(pattern) !== "regexp") {
         throw new CasperError('Invalid regexp.');
@@ -398,7 +386,8 @@ Tester.prototype.assertMatch = Tester.prototype.assertMatches = function assertM
  * @param  String   message    Test description
  * @return Object              An assertion result object
  */
-Tester.prototype.assertNot = Tester.prototype.assertFalse = function assertNot(condition, message) {
+Tester.prototype.assertNot =
+Tester.prototype.assertFalse = function assertNot(condition, message) {
     "use strict";
     return this.assert(!condition, message, {
         type: "assertNot",
@@ -416,7 +405,8 @@ Tester.prototype.assertNot = Tester.prototype.assertFalse = function assertNot(c
  * @param  String  message   Test description
  * @return Object            An assertion result object
  */
-Tester.prototype.assertNotVisible = Tester.prototype.assertInvisible = function assertNotVisible(selector, message) {
+Tester.prototype.assertNotVisible =
+Tester.prototype.assertInvisible = function assertNotVisible(selector, message) {
     "use strict";
     return this.assert(!this.casper.visible(selector), message, {
         type: "assertVisible",
@@ -436,7 +426,9 @@ Tester.prototype.assertNotVisible = Tester.prototype.assertInvisible = function 
  * @param  String    message  Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertRaises = Tester.prototype.assertRaise = Tester.prototype.assertThrows = function assertRaises(fn, args, message) {
+Tester.prototype.assertRaises =
+Tester.prototype.assertRaise =
+Tester.prototype.assertThrows = function assertRaises(fn, args, message) {
     "use strict";
     var context = {
         type: "assertRaises",
@@ -461,7 +453,8 @@ Tester.prototype.assertRaises = Tester.prototype.assertRaise = Tester.prototype.
  * @param  String           message  Test description
  * @return Object                    An assertion result object
  */
-Tester.prototype.assertResourceExists = Tester.prototype.assertResourceExist = function assertResourceExists(test, message) {
+Tester.prototype.assertResourceExists =
+Tester.prototype.assertResourceExist = function assertResourceExists(test, message) {
     "use strict";
     return this.assert(this.casper.resourceExists(test), message, {
         type: "assertResourceExists",
@@ -479,7 +472,8 @@ Tester.prototype.assertResourceExists = Tester.prototype.assertResourceExist = f
  * @param  String  message  Test description
  * @return Object           An assertion result object
  */
-Tester.prototype.assertTextDoesntExist = Tester.prototype.assertTextDoesntExist = function assertTextDoesntExist(text, message) {
+Tester.prototype.assertTextDoesntExist =
+Tester.prototype.assertTextDoesntExist = function assertTextDoesntExist(text, message) {
     "use strict";
     var textFound = (this.casper.evaluate(function _evaluate() {
         return document.body.textContent || document.body.innerText;
@@ -500,7 +494,8 @@ Tester.prototype.assertTextDoesntExist = Tester.prototype.assertTextDoesntExist 
  * @param  String  message  Test description
  * @return Object           An assertion result object
  */
-Tester.prototype.assertTextExists = Tester.prototype.assertTextExist = function assertTextExists(text, message) {
+Tester.prototype.assertTextExists =
+Tester.prototype.assertTextExist = function assertTextExists(text, message) {
     "use strict";
     var textFound = (this.casper.evaluate(function _evaluate() {
         return document.body.textContent || document.body.innerText;
@@ -525,9 +520,9 @@ Tester.prototype.assertTruthy = function assertTruthy(subject, message) {
     "use strict";
     /*jshint eqeqeq:false*/
     return this.assert(utils.isTruthy(subject), message, {
-        type:     "assertTruthy",
+        type: "assertTruthy",
         standard: "Subject is truthy",
-        values:  {
+        values: {
             subject: subject
         }
     });
@@ -544,9 +539,9 @@ Tester.prototype.assertFalsy = function assertFalsy(subject, message) {
     "use strict";
     /*jshint eqeqeq:false*/
     return this.assert(utils.isFalsy(subject), message, {
-        type:     "assertFalsy",
+        type: "assertFalsy",
         standard: "Subject is falsy",
-        values:  {
+        values: {
             subject: subject
         }
     });
@@ -560,7 +555,8 @@ Tester.prototype.assertFalsy = function assertFalsy(subject, message) {
  * @param  String   message   Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertSelectorHasText = Tester.prototype.assertSelectorContains = function assertSelectorHasText(selector, text, message) {
+Tester.prototype.assertSelectorHasText =
+Tester.prototype.assertSelectorContains = function assertSelectorHasText(selector, text, message) {
     "use strict";
     var textFound = this.casper.fetchText(selector).indexOf(text) !== -1;
     return this.assert(textFound, message, {
@@ -581,7 +577,8 @@ Tester.prototype.assertSelectorHasText = Tester.prototype.assertSelectorContains
  * @param  String   message   Test description
  * @return Object             An assertion result object
  */
-Tester.prototype.assertSelectorDoesntHaveText = Tester.prototype.assertSelectorDoesntContain = function assertSelectorDoesntHaveText(selector, text, message) {
+Tester.prototype.assertSelectorDoesntHaveText =
+Tester.prototype.assertSelectorDoesntContain = function assertSelectorDoesntHaveText(selector, text, message) {
     "use strict";
     var textFound = this.casper.fetchText(selector).indexOf(text) === -1;
     return this.assert(textFound, message, {
@@ -604,7 +601,7 @@ Tester.prototype.assertSelectorDoesntHaveText = Tester.prototype.assertSelectorD
 Tester.prototype.assertTitle = function assertTitle(expected, message) {
     "use strict";
     var currentTitle = this.casper.getTitle();
-    return this.assert(this.testEquals(currentTitle, expected), message, {
+    return this.assert(utils.equals(currentTitle, expected), message, {
         type: "assertTitle",
         standard: f('Page title is: "%s"', expected),
         values: {
@@ -621,7 +618,8 @@ Tester.prototype.assertTitle = function assertTitle(expected, message) {
  * @param  String  message  Test description
  * @return Object           An assertion result object
  */
-Tester.prototype.assertTitleMatch = Tester.prototype.assertTitleMatches = function assertTitleMatch(pattern, message) {
+Tester.prototype.assertTitleMatch =
+Tester.prototype.assertTitleMatches = function assertTitleMatch(pattern, message) {
     "use strict";
     if (utils.betterTypeOf(pattern) !== "regexp") {
         throw new CasperError('Invalid regexp.');
@@ -648,7 +646,7 @@ Tester.prototype.assertTitleMatch = Tester.prototype.assertTitleMatches = functi
 Tester.prototype.assertType = function assertType(subject, type, message) {
     "use strict";
     var actual = utils.betterTypeOf(subject);
-    return this.assert(this.testEquals(actual, type), message, {
+    return this.assert(utils.equals(actual, type), message, {
         type: "assertType",
         standard: f('Subject type is: "%s"', type),
         values: {
@@ -668,7 +666,8 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
  * @param  String         message  Test description
  * @return Object                  An assertion result object
  */
-Tester.prototype.assertUrlMatch = Tester.prototype.assertUrlMatches = function assertUrlMatch(pattern, message) {
+Tester.prototype.assertUrlMatch =
+Tester.prototype.assertUrlMatches = function assertUrlMatch(pattern, message) {
     "use strict";
     var currentUrl = this.casper.getCurrentUrl(),
         patternType = utils.betterTypeOf(pattern),
@@ -718,16 +717,30 @@ Tester.prototype.bar = function bar(text, style) {
 };
 
 /**
- * Retrieves the sum of all durations of the tests which were
- * executed in the current suite
+ * Starts a suite.
  *
- * @return Number duration of all tests executed until now (in the current suite)
+ * @param  String    description  Test suite description
+ * @param  Function  suiteFn      Suite function
  */
-Tester.prototype.calculateSuiteDuration = function calculateSuiteDuration() {
+Tester.prototype.begin = function begin(description, suiteFn) {
     "use strict";
-    return this.testResults.passesTime.concat(this.testResults.failuresTime).reduce(function add(a, b) {
-        return a + b;
-    }, 0);
+    if (this.started && this.running) {
+        return this.queue.push(arguments);
+    }
+    description = description || "Untitled suite in " + this.currentTestFile;
+    this.comment(description);
+    this.currentSuite = new TestSuiteResult({
+        name: description,
+        file: this.currentTestFile
+    });
+    this.executed = 0;
+    this.running = this.started = true;
+    try {
+        suiteFn.call(this, this, this.casper);
+    } catch (e) {
+        this.uncaughtError(e, this.currentTestFile, e.line);
+        this.done();
+    }
 };
 
 /**
@@ -784,11 +797,39 @@ Tester.prototype.configure = function configure() {
 Tester.prototype.done = function done(planned) {
     "use strict";
     if (planned > 0 && planned !== this.executed) {
-        this.fail(f('%s: %d tests planned, %d tests executed',
-            this.currentTestFile, planned, this.executed));
+        this.dubious(planned, this.executed);
+    }
+    if (this.currentSuite) {
+        this.suites.push(this.currentSuite);
+        this.currentSuite = undefined;
+        this.executed = 0;
     }
     this.emit('test.done');
-    this.running = false;
+    this.running = this.started = false;
+    var nextTest = this.queue.shift();
+    if (nextTest) {
+        this.begin.apply(this, nextTest);
+    }
+};
+
+/**
+ * Marks a test as dubious, when the number of planned tests doesn't match the
+ * number of actually executed one.
+ *
+ * @param  String  message
+ */
+Tester.prototype.dubious = function dubious(planned, executed) {
+    "use strict";
+    var message = f('%d tests planned, %d tests executed', planned, executed);
+    return this.assert(false, message, {
+        type:    "dubious",
+        standard: message,
+        message:  message,
+        values:  {
+            planned: planned,
+            executed: executed
+        }
+    });
 };
 
 /**
@@ -874,57 +915,6 @@ Tester.prototype.formatMessage = function formatMessage(message, style) {
 };
 
 /**
- * Retrieves current failure data and all failed cases.
- *
- * @return Object casedata An object containg information about cases
- * @return Number casedata.length The number of failed cases
- * @return Array  casedata.cases An array of all the failed case objects
- */
-Tester.prototype.getFailures = function getFailures() {
-    "use strict";
-    return {
-        length: this.testResults.failed,
-        cases: this.testResults.failures
-    };
-};
-
-/**
- * Retrieves current passed data and all passed cases.
- *
- * @return Object casedata An object containg information about cases
- * @return Number casedata.length The number of passed cases
- * @return Array  casedata.cases An array of all the passed case objects
- */
-Tester.prototype.getPasses = function getPasses() {
-    "use strict";
-    return {
-        length: this.testResults.passed,
-        cases: this.testResults.passes
-    };
-};
-
-/**
- * Retrieves the array where all the durations of failed tests are stored
- *
- * @return Array durations of failed tests
- */
-Tester.prototype.getFailuresTime = function getFailuresTime() {
-    "use strict";
-    return this.testResults.failuresTime;
-}
-
-/**
- * Retrieves the array where all the durations of passed tests are stored
- *
- * @return Array durations of passed tests
- */
-Tester.prototype.getPassesTime = function getPassesTime() {
-    "use strict";
-    return this.testResults.passesTime;
-}
-
-
-/**
  * Writes an info-style formatted message to stdout.
  *
  * @param  String  message
@@ -935,7 +925,7 @@ Tester.prototype.info = function info(message) {
 };
 
 /**
- * Adds a successful test entry to the stack.
+ * Adds a succesful test entry to the stack.
  *
  * @param  String  message
  */
@@ -956,7 +946,13 @@ Tester.prototype.pass = function pass(message) {
  */
 Tester.prototype.processAssertionResult = function processAssertionResult(result) {
     "use strict";
-    var eventName= 'success',
+    if (!this.currentSuite) {
+        this.currentSuite = new TestSuiteResult({
+            name: "Untitled suite in " + this.currentTestFile,
+            file: this.currentTestFile
+        });
+    }
+    var eventName = 'success',
         message = result.message || result.standard,
         style = 'INFO',
         status = this.options.passText;
@@ -964,10 +960,8 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         eventName = 'fail';
         style = 'RED_BAR';
         status = this.options.failText;
-        this.testResults.failed++;
-    } else {
-        this.testResults.passed++;
     }
+    style = result.type === "dubious" ? "WARN_BAR" : style;
     this.casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
     this.emit(eventName, result);
     if (this.options.failFast && !result.success) {
@@ -979,21 +973,22 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
 /**
  * Renders a detailed report for each failed test.
  *
- * @param  Array  failures
  */
-Tester.prototype.renderFailureDetails = function renderFailureDetails(failures) {
+Tester.prototype.renderFailureDetails = function renderFailureDetails() {
     "use strict";
+    var failures = this.suites.getAllFailures();
     if (failures.length === 0) {
         return;
     }
-    this.casper.echo(f("\nDetails for the %d failed test%s:\n", failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
+    this.casper.echo(f("\nDetails for the %d failed test%s:\n",
+                       failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
     failures.forEach(function _forEach(failure) {
-        var type, message, line;
-        type = failure.type || "unknown";
-        line = ~~failure.line;
-        message = failure.message;
-        this.casper.echo(f('In %s:%s', failure.file, line));
-        this.casper.echo(f('   %s: %s', type, message || failure.standard || "(no message was entered)"), "COMMENT");
+        this.casper.echo(f('In %s%s', failure.file, ~~failure.line ? ':' + ~~failure.line : ''));
+        if (failure.suite) {
+            this.casper.echo(f('  %s', failure.suite), "PARAMETER");
+        }
+        this.casper.echo(f('    %s: %s', failure.type || "unknown",
+            failure.message || failure.standard || "(no message was entered)"), "COMMENT");
     }.bind(this));
 };
 
@@ -1006,14 +1001,19 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
     /*jshint maxstatements:20*/
     save = save || this.options.save;
-    var total = this.testResults.passed + this.testResults.failed, statusText, style, result;
-    var exitStatus = ~~(status || (this.testResults.failed > 0 ? 1 : 0));
+    var failed = this.suites.countFailed(),
+        passed = this.suites.countPassed(),
+        total = this.suites.countTotal(),
+        statusText,
+        style,
+        result,
+        exitStatus = ~~(status || (failed > 0 ? 1 : 0));
     if (total === 0) {
         statusText = this.options.warnText;
         style = 'WARN_BAR';
         result = f("%s Looks like you didn't run any test.", statusText);
     } else {
-        if (this.testResults.failed > 0) {
+        if (failed > 0) {
             statusText = this.options.failText;
             style = 'RED_BAR';
         } else {
@@ -1021,12 +1021,12 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
             style = 'GREEN_BAR';
         }
         result = f('%s %s tests executed in %ss, %d passed, %d failed.',
-                   statusText, total, utils.ms2seconds(this.calculateSuiteDuration()),
-                   this.testResults.passed, this.testResults.failed);
+                   statusText, total, utils.ms2seconds(this.suites.calculateDuration()),
+                   passed, failed);
     }
     this.casper.echo(result, style, this.options.pad);
-    if (this.testResults.failed > 0) {
-        this.renderFailureDetails(this.testResults.failures);
+    if (failed > 0) {
+        this.renderFailureDetails();
     }
     if (save) {
         this.saveResults(save);
@@ -1070,12 +1070,15 @@ Tester.prototype.runSuites = function runSuites() {
     });
 
     if (testFiles.length === 0) {
-        this.bar(f("No test file found in %s, aborting.", Array.prototype.slice.call(arguments)), "RED_BAR");
+        this.bar(f("No test file found in %s, aborting.",
+                   Array.prototype.slice.call(arguments)), "RED_BAR");
         this.casper.exit(1);
     }
+
     self.currentSuiteNum = 0;
     self.currentTestStartTime = new Date();
     self.lastAssertTime = 0;
+
     var interval = setInterval(function _check(self) {
         if (self.running) {
             return;
@@ -1083,14 +1086,10 @@ Tester.prototype.runSuites = function runSuites() {
         if (self.currentSuiteNum === testFiles.length || self.aborted) {
             self.emit('tests.complete');
             clearInterval(interval);
-            self.exporter.setSuiteDuration(self.calculateSuiteDuration());
             self.aborted = false;
         } else {
             self.runTest(testFiles[self.currentSuiteNum]);
-            self.exporter.setSuiteDuration(self.calculateSuiteDuration());
             self.currentSuiteNum++;
-            self.passesTime = [];
-            self.failuresTime = [];
         }
     }, 100, this);
 };
@@ -1110,16 +1109,14 @@ Tester.prototype.runTest = function runTest(testFile) {
 /**
  * Saves results to file.
  *
- * @param   String  filename  Target file path.
+ * @param  String  filename  Target file path.
  */
 Tester.prototype.saveResults = function saveResults(filepath) {
     "use strict";
-    // FIXME: looks like phantomjs has a pb with fs.isWritable https://groups.google.com/forum/#!topic/casperjs/hcUdwgGZOrU
-    // if (!fs.isWritable(filepath)) {
-    //     throw new CasperError(f('Path %s is not writable.', filepath));
-    // }
+    var exporter = require('xunit').create();
+    exporter.setResults(this.suites);
     try {
-        fs.write(filepath, this.exporter.getXML(), 'w');
+        fs.write(filepath, exporter.getXML(), 'w');
         this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
     } catch (e) {
         this.casper.echo(f('Unable to write results to %s: %s', filepath, e), 'ERROR', 80);
@@ -1145,17 +1142,185 @@ Tester.prototype.testEquals = Tester.prototype.testEqual = function testEquals(v
  * @param  Error|String  error      The error
  * @param  String        file       Test file where the error occurred
  * @param  Number        line       Line number (optional)
+ * @param  Array         backtrace  Error stack trace (optional)
  */
-Tester.prototype.uncaughtError = function uncaughtError(error, file, line) {
+Tester.prototype.uncaughtError = function uncaughtError(error, file, line, backtrace) {
     "use strict";
+    // XXX: this is NOT an assertion scratch that
     return this.processAssertionResult({
         success: false,
         type: "uncaughtError",
         file: file,
-        line: ~~line || "unknown",
+        line: ~~line,
         message: utils.isObject(error) ? error.message : error,
         values: {
-            error: error
+            error: error,
+            stack: backtrace
         }
     });
+};
+
+/**
+ * Test suites array.
+ *
+ */
+function TestSuite() {}
+TestSuite.prototype = [];
+exports.TestSuite = TestSuite;
+
+/**
+ * Returns the number of tests.
+ *
+ * @return Number
+ */
+TestSuite.prototype.countTotal = function countTotal() {
+    "use strict";
+    return this.countPassed() + this.countFailed();
+};
+
+/**
+ * Returns the number of failed tests.
+ *
+ * @return Number
+ */
+TestSuite.prototype.countFailed = function countFailed() {
+    "use strict";
+    return this.map(function(result) {
+        return result.failed;
+    }).reduce(function(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
+ * Returns the number of succesful tests.
+ *
+ * @return Number
+ */
+TestSuite.prototype.countPassed = function countPassed() {
+    "use strict";
+    return this.map(function(result) {
+        return result.passed;
+    }).reduce(function(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
+ * Returns all failures from this suite.
+ *
+ * @return Array
+ */
+TestSuite.prototype.getAllFailures = function getAllFailures() {
+    "use strict";
+    var failures = [];
+    this.forEach(function(result) {
+        failures = failures.concat(result.failures);
+    });
+    return failures;
+};
+
+/**
+ * Returns all succesful tests from this suite.
+ *
+ * @return Array
+ */
+TestSuite.prototype.getAllPasses = function getAllPasses() {
+    "use strict";
+    var passes = [];
+    this.forEach(function(result) {
+        passes = passes.concat(result.passes);
+    });
+    return passes;
+};
+
+/**
+ * Returns all results from this suite.
+ *
+ * @return Array
+ */
+TestSuite.prototype.getAllResults = function getAllResults() {
+    "use strict";
+    return this.getAllPasses().concat(this.getAllFailures());
+};
+
+/**
+ * Computes the sum of all durations of the tests which were executed in the
+ * current suite.
+ *
+ * @return Number
+ */
+TestSuite.prototype.calculateDuration = function calculateDuration() {
+    "use strict";
+    return this.getAllResults().map(function(result) {
+        return result.time;
+    }).reduce(function add(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
+ * Test suite results object.
+ *
+ * @param Object  options
+ */
+function TestSuiteResult(options) {
+    "use strict";
+    this.name = options && options.name;
+    this.file = options && options.file;
+    this.assertions = 0;
+    this.passed = 0;
+    this.failed = 0;
+    this.passes = [];
+    this.failures = [];
+}
+exports.TestSuiteResult = TestSuiteResult;
+
+/**
+ * Adds a success record and its execution time to their associated stacks.
+ *
+ * @param Object  success
+ * @param Number  time
+ */
+TestSuiteResult.prototype.addSuccess = function addSuccess(success, time) {
+    "use strict";
+    success.suite = this.name;
+    success.time = time;
+    this.passes.push(success);
+    this.assertions++;
+    this.passed++;
+};
+
+/**
+ * Adds a failure record and its execution time to their associated stacks.
+ *
+ * @param Object  failure
+ * @param Number  time
+ */
+TestSuiteResult.prototype.addFailure = function addFailure(failure, time) {
+    "use strict";
+    failure.suite = this.name;
+    failure.time = time;
+    this.failures.push(failure);
+    this.assertions++;
+    this.failed++;
+};
+
+/**
+ * Computes total duration for this suite.
+ *
+ * @return  Number
+ */
+TestSuiteResult.prototype.calculateDuration = function calculateDuration() {
+    "use strict";
+    function add(a, b) {
+        return a + b;
+    }
+    var passedTimes = this.passes.map(function(success) {
+        return ~~success.time;
+    }).reduce(add, 0);
+    var failedTimes = this.failures.map(function(failure) {
+        return ~~failure.time;
+    }).reduce(add, 0);
+    return passedTimes + failedTimes;
 };
