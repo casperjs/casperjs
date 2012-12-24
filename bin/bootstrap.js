@@ -255,7 +255,7 @@ function bootstrap(global) {
                 throw new global.CasperError('Cannot read package file contents: ' + e);
             }
             parts  = pkg.version.trim().split(".");
-            if (parts < 3) {
+            if (parts.length < 3) {
                 throw new global.CasperError("Invalid version number");
             }
             patchPart = parts[2].split('-');
