@@ -110,6 +110,15 @@ casper.updateMenu = function updateMenu(path) {
     }
 };
 
+casper.cleanContent = function cleanContent() {
+    this.evaluate(function() {
+        var scripts = __utils__.findAll('script[async]');
+        [].forEach.call(scripts, function(script) {
+            script.parentNode.removeChild(script);
+        });
+    });
+};
+
 casper.start();
 
 casper.each(config.pages, function(self, page) {
@@ -134,6 +143,8 @@ casper.each(config.pages, function(self, page) {
         var file = fs.pathJoin(docsRoot, page.file);
         // update menu
         this.updateMenu(file);
+        // clean page
+        this.cleanContent();
         // write contents into destination file
         fs.write(file, this.page.content, 'w');
         console.log('written ' + file);

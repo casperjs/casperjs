@@ -11,7 +11,7 @@ element exists in a page, you can use:
 
 ```javascript
 casper.start('http://domain.tld/page.html', function() {
-    casper.test.assertExists('#plop', 'the element exists');
+    this.test.assertExists('#plop', 'the element exists');
 });
 ```
 

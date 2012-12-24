@@ -1,3 +1,6 @@
+<span class="label label-info">Hint</span>
+If you intend to write large test suites, check out the [`casperjs test` command](#casper-test-command).
+
 CasperJS ships with a handful set of tools to be used as a functional
 testing framework. For example, let's test write a tests suite for
 testing google search (yes, you read it well):
@@ -27,8 +30,9 @@ casper.run(function() {
 });
 ```
 
-As you can see, `casper.test` is a reference to a [`tester.Tester`](api.html#tester) object
-instance, which is used to make the assertions and render the results.
+As you can see, the `test` propery of the `casper` object is a reference to
+a [`tester.Tester`](api.html#tester) object, which is used to execute the
+assertions and renders the results.
 
 <span class="label label-info">Note</span>
 You can find the whole `tester.Tester` API documentation in the [dedicated section](api.html#tester).
@@ -47,9 +51,6 @@ In case any assertion fails, you'd rather get something like the
 following:
 
 ![capture](images/testsuitefail.png)
-
-<span class="label label-info">Note</span> If you intend to write large test suites, check out the
-[`casperjs test` command](#casper-test-command).
 
 * * * * *
 
@@ -113,7 +114,7 @@ casper.start('http://my.location.tld/', function() {
 });
 
 casper.run(function() {
-    this.test.done(1); // I must be called once all the async stuff 
+    this.test.done(1); // I must be called once all the async stuff
                        // has been executed. I'll also check that a
                        // single assertions has been performed.
 });
