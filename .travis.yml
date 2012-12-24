@@ -1,7 +1,7 @@
 branches:
   only:
     - master
-    - 1.1-dev
+    - 1.0
 before_script:
   - "npm install -g jshint"
   - "phantomjs --version"
