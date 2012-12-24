@@ -1,12 +1,15 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.0
+2012-12-24, v1.0.0
 ------------------
 
 ### Important Changes & Caveats
 
-- PhantomJS 1.6.x support has been dropped. Both PhantomJS 1.7 & 1.8 will be supported.
+- PhantomJS 1.6.x support has been dropped. Both PhantomJS [1.7](http://phantomjs.org/release-1.7.html) & [1.8](http://phantomjs.org/release-1.8.html) will be supported.
+- the deprecated `injector` module has been removed from the codebase (RIP dude)
+- a [`1.0` maintenance branch](https://github.com/n1k0/casperjs/tree/1.0) has been created
+- CasperJS 1.1 development is now taking place on the `master` branch
 
 ### Bugfixes & enhancements
 

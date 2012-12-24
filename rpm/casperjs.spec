@@ -1,6 +1,6 @@
 %define name	casperjs
 %define version	1.0.0
-%define release RC4_1
+%define release 1_1
 %define prefix	/usr
 
 %define mybuilddir %{_builddir}/%{name}-%{version}-root
@@ -67,7 +67,6 @@ cp -R tests/* %{mybuilddir}%{prefix}/share/%{name}/tests/
 %{prefix}/share/%{name}/modules/colorizer.js
 %{prefix}/share/%{name}/modules/events.js
 %{prefix}/share/%{name}/modules/http.js
-%{prefix}/share/%{name}/modules/injector.js
 %{prefix}/share/%{name}/modules/mouse.js
 %{prefix}/share/%{name}/modules/querystring.js
 %{prefix}/share/%{name}/modules/tester.js
@@ -186,7 +185,6 @@ cp -R tests/* %{mybuilddir}%{prefix}/share/%{name}/tests/
 %{prefix}/share/%{name}/tests/suites/fs.js
 %{prefix}/share/%{name}/tests/suites/.casper
 %{prefix}/share/%{name}/tests/suites/tester.js
-%{prefix}/share/%{name}/tests/suites/injector.js
 %{prefix}/share/%{name}/tests/suites/clientutils.js
 %{prefix}/share/%{name}/tests/suites/http_status.js
 %{prefix}/share/%{name}/tests/suites/xunit.js
@@ -195,6 +193,9 @@ cp -R tests/* %{mybuilddir}%{prefix}/share/%{name}/tests/
 %{prefix}/share/%{name}/tests/run.js
 
 %changelog
+* Mon Dec 24 2012 Nicolas Perriault <nicolas@perriault.net>
+- removed 'injector.js' module
+
 * Mon Dec 10 2012 Jan Schaumann <jschauma@etsy.com>
 - include 'tests'
 
