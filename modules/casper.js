@@ -151,13 +151,18 @@ var Casper = function Casper(options) {
     this.started = false;
     this.step = -1;
     this.steps = [];
-    this.test = tester.create(this);
+    if (phantom.casperTest) {
+        this.test = tester.create(this);
+    }
 
     // init phantomjs error handler
     this.initErrorHandler();
 
     this.on('error', function(msg, backtrace) {
-        if (msg === this.test.SKIP_MESSAGE) {
+        if (msg === this.test.SKIP_MESSAGE) { // FIXME: decouple testing
+            return;
+        }
+        if (msg.indexOf('AssertionError') === 0) { // FIXME: decouple testing
             return;
         }
         var c = this.getColorizer();
@@ -1303,16 +1308,23 @@ Casper.prototype.run = function run(onComplete, time) {
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
     this.checkStarted();
-    var skipLog = utils.isObject(step.options) && step.options.skipLog === true;
-    var stepInfo = f("Step %d/%d", this.step, this.steps.length);
-    var stepResult;
+    var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
+        stepInfo = f("Step %d/%d", this.step, this.steps.length),
+        stepResult;
+    function getCurrentSuiteNum(casper) {
+        if (casper.test) {
+            return casper.test.currentSuiteNum + "-" + casper.step;
+        } else {
+            return casper.step;
+        }
+    }
     if (!skipLog && /^http/.test(this.getCurrentUrl())) {
         this.log(stepInfo + f(' %s (HTTP %d)', this.getCurrentUrl(), this.currentHTTPStatus), "info");
     }
     if (utils.isNumber(this.options.stepTimeout) && this.options.stepTimeout > 0) {
         var stepTimeoutCheckInterval = setInterval(function _check(self, start, stepNum) {
             if (new Date().getTime() - start > self.options.stepTimeout) {
-                if ((self.test.currentSuiteNum + "-" + self.step) === stepNum) {
+                if (getCurrentSuiteNum(self) === stepNum) {
                     self.emit('step.timeout');
                     if (utils.isFunction(self.options.onStepTimeout)) {
                         self.options.onStepTimeout.call(self, self.options.stepTimeout, stepNum);
@@ -1320,10 +1332,15 @@ Casper.prototype.runStep = function runStep(step) {
                 }
                 clearInterval(stepTimeoutCheckInterval);
             }
-        }, this.options.stepTimeout, this, new Date().getTime(), this.test.currentSuiteNum + "-" + this.step);
+        }, this.options.stepTimeout, this, new Date().getTime(), getCurrentSuiteNum(this));
     }
     this.emit('step.start', step);
-    stepResult = step.call(this, this.currentResponse);
+    try {
+        stepResult = step.call(this, this.currentResponse);
+    } catch (err) {
+        this.emit('step.error', err);
+        throw err;
+    }
     if (utils.isFunction(this.options.onStepComplete)) {
         this.options.onStepComplete.call(this, this, stepResult);
     }
@@ -1643,7 +1660,8 @@ Casper.prototype.visible = function visible(selector) {
 };
 
 /**
- * Displays a warning message onto the console and logs the event.
+ * Displays a warning message onto the console and logs the event. Also emits a
+ * `warn` event with the message passed.
  *
  * @param  String  message
  * @return Casper
@@ -1652,6 +1670,7 @@ Casper.prototype.warn = function warn(message) {
     "use strict";
     this.log(message, "warning", "phantom");
     var formatted = f.apply(null, ["⚠  " + message].concat([].slice.call(arguments, 1)));
+    this.emit('warn', message);
     return this.echo(formatted, 'COMMENT');
 };
 

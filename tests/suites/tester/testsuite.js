@@ -18,7 +18,7 @@ function generateCaseResult(options) {
     return caseResult;
 }
 
-casper.test.begin('TestSuiteResult() basic tests', function(test) {
+casper.test.begin('TestSuiteResult() basic tests', 8, function(test) {
     var suiteResult = new TestSuiteResult();
     test.assertEquals(suiteResult.constructor.name, 'Array', 'TestSuiteResult() is derived from Array');
     test.assertEquals(suiteResult.countTotal(), 0);
@@ -31,7 +31,7 @@ casper.test.begin('TestSuiteResult() basic tests', function(test) {
     test.done();
 });
 
-casper.test.begin('TestSuiteResult() accumulation tests', function(test) {
+casper.test.begin('TestSuiteResult() accumulation tests', 7, function(test) {
     var suiteResult = new TestSuiteResult();
     suiteResult.push(generateCaseResult({
         name: 'foo',

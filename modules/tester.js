@@ -35,6 +35,15 @@ var events = require('events');
 var utils = require('utils');
 var f = utils.format;
 
+function AssertionError(msg, result) {
+    Error.call(this);
+    this.message = msg;
+    this.name = 'AssertionError';
+    this.result = result;
+}
+AssertionError.prototype = new Error();
+exports.AssertionError = AssertionError;
+
 /**
  * Creates a tester instance.
  *
@@ -79,10 +88,6 @@ var Tester = function Tester(casper, options) {
         pre:      [],
         post:     []
     };
-    this.queue = [];
-    this.running = false;
-    this.started = false;
-    this.suiteResults = new TestSuiteResult();
     this.options = utils.mergeObjects({
         failFast: false,  // terminates a suite as soon as a test fails?
         failText: "FAIL", // text to use for a succesful test
@@ -90,6 +95,10 @@ var Tester = function Tester(casper, options) {
         pad:      80    , // maximum number of chars for a result line
         warnText: "WARN"  // text to use for a dubious test
     }, options);
+    this.queue = [];
+    this.running = false;
+    this.started = false;
+    this.suiteResults = new TestSuiteResult();
 
     this.configure();
 
@@ -109,6 +118,12 @@ var Tester = function Tester(casper, options) {
         if (failure.type) {
             this.comment('   type: ' + failure.type);
         }
+        if (failure.file) {
+            this.comment('   file: ' + failure.file + (failure.line ? ':' + failure.line : ''));
+        }
+        if (failure.lineContents) {
+            this.comment('   code: ' + failure.lineContents);
+        }
         if (!failure.values || valueKeys.length === 0) {
             return;
         }
@@ -119,7 +134,8 @@ var Tester = function Tester(casper, options) {
 
     // casper events
     this.casper.on('error', function onCasperError(msg, backtrace) {
-        if (!phantom.casperTest) {
+        var line = 0;
+        if (msg.indexOf('AssertionError') === 0) {
             return;
         }
         if (msg === self.SKIP_MESSAGE) {
@@ -127,19 +143,20 @@ var Tester = function Tester(casper, options) {
             self.aborted = true;
             return self.done();
         }
-        var line = 0;
-        if (!utils.isString(msg)) {
-            try {
-                line = backtrace[0].line;
-            } catch (e) {}
-        }
+        try {
+            line = backtrace.filter(function(entry) {
+                return self.currentTestFile === entry.file;
+            })[0].line;
+        } catch (e) {}
         self.uncaughtError(msg, self.currentTestFile, line, backtrace);
         self.done();
     });
 
-    this.casper.on('step.error', function onStepError(e) {
-        if (e.message !== self.SKIP_MESSAGE) {
-            self.uncaughtError(e, self.currentTestFile);
+    this.casper.on('step.error', function onStepError(error) {
+        if (error instanceof AssertionError) {
+            self.processAssertionError(error);
+        } else if (error.message !== self.SKIP_MESSAGE) {
+            self.uncaughtError(error, self.currentTestFile);
         }
         self.done();
     });
@@ -158,16 +175,19 @@ exports.Tester = Tester;
  * family methods; supplementary informations are then passed using the
  * `context` argument.
  *
+ * Note: an AssertionError is thrown if the assertion fails.
+ *
  * @param  Boolean      subject  The condition to test
  * @param  String       message  Test description
  * @param  Object|null  context  Assertion context object (Optional)
- * @return Object                An assertion result object
+ * @return Object                An assertion result object if test passed
+ * @throws AssertionError in case the test failed
  */
 Tester.prototype.assert =
 Tester.prototype.assertTrue = function assert(subject, message, context) {
     "use strict";
     this.executed++;
-    return this.processAssertionResult(utils.mergeObjects({
+    var result = utils.mergeObjects({
         success: subject === true,
         type: "assert",
         standard: "Subject is strictly true",
@@ -176,7 +196,11 @@ Tester.prototype.assertTrue = function assert(subject, message, context) {
         values: {
             subject: utils.getPropertyPath(context, 'values.subject') || subject
         }
-    }, context || {}));
+    }, context || {});
+    if (!result.success) {
+        throw new AssertionError(message, result);
+    }
+    return this.processAssertionResult(result);
 };
 
 /**
@@ -720,9 +744,10 @@ Tester.prototype.bar = function bar(text, style) {
  * Starts a suite.
  *
  * @param  String    description  Test suite description
+ * @param  Number    planned      Number of planned tests in this suite
  * @param  Function  suiteFn      Suite function
  */
-Tester.prototype.begin = function begin(description, suiteFn) {
+Tester.prototype.begin = function begin(description, planned, suiteFn) {
     "use strict";
     if (this.started && this.running) {
         return this.queue.push(arguments);
@@ -731,14 +756,19 @@ Tester.prototype.begin = function begin(description, suiteFn) {
     this.comment(description);
     this.currentSuite = new TestCaseResult({
         name: description,
-        file: this.currentTestFile
+        file: this.currentTestFile,
+        planned: Math.abs(~~planned) || undefined
     });
     this.executed = 0;
     this.running = this.started = true;
     try {
         suiteFn.call(this, this, this.casper);
-    } catch (e) {
-        this.uncaughtError(e, this.currentTestFile, e.line);
+    } catch (err) {
+        if (err instanceof AssertionError) {
+            this.processAssertionError(err);
+        } else {
+            this.uncaughtError(err, this.currentTestFile, err.line);
+        }
         this.done();
     }
 };
@@ -796,7 +826,12 @@ Tester.prototype.configure = function configure() {
  */
 Tester.prototype.done = function done(planned) {
     "use strict";
-    if (planned > 0 && planned !== this.executed) {
+    if (arguments.length > 0) {
+        this.casper.warn('done() `planned` arg is deprecated as of 1.1');
+    }
+    if (this.currentSuite.planned && this.currentSuite.planned !== this.executed) {
+        this.dubious(this.currentSuite.planned, this.executed);
+    } else if (planned && planned !== this.executed) {
         this.dubious(planned, this.executed);
     }
     if (this.currentSuite) {
@@ -821,15 +856,15 @@ Tester.prototype.done = function done(planned) {
 Tester.prototype.dubious = function dubious(planned, executed) {
     "use strict";
     var message = f('%d tests planned, %d tests executed', planned, executed);
-    return this.assert(false, message, {
-        type:    "dubious",
-        standard: message,
-        message:  message,
+    this.currentSuite.addWarning({
+        message: message,
+        file: this.currentTestFile,
         values:  {
             planned: planned,
             executed: executed
         }
     });
+    this.casper.warn(message);
 };
 
 /**
@@ -938,6 +973,31 @@ Tester.prototype.pass = function pass(message) {
 };
 
 /**
+ * Processes an assertion error.
+ *
+ * @param  AssertionError  error
+ */
+Tester.prototype.processAssertionError = function(error) {
+    "use strict";
+    var result = error && error.result,
+        testFile = this.currentTestFile,
+        stackEntry;
+    try {
+        stackEntry = error.stackArray.filter(function(entry) {
+            return testFile === entry.sourceURL;
+        })[0];
+    } catch (e) {}
+    if (stackEntry) {
+        result.line = stackEntry.line;
+        try {
+            result.lineContents = fs.read(this.currentTestFile).split('\n')[result.line - 1].trim();
+        } catch (e) {
+        }
+    }
+    return this.processAssertionResult(result);
+};
+
+/**
  * Processes an assertion result by emitting the appropriate event and
  * printing result onto the console.
  *
@@ -947,9 +1007,11 @@ Tester.prototype.pass = function pass(message) {
 Tester.prototype.processAssertionResult = function processAssertionResult(result) {
     "use strict";
     if (!this.currentSuite) {
+        // this is for BC when begin() didn't exist
         this.currentSuite = new TestCaseResult({
             name: "Untitled suite in " + this.currentTestFile,
-            file: this.currentTestFile
+            file: this.currentTestFile,
+            planned: undefined
         });
     }
     var eventName = 'success',
@@ -1001,7 +1063,6 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
     /*jshint maxstatements:20*/
     save = save || this.options.save;
-    this.done(); // never too sure
     var failed = this.suiteResults.countFailed(),
         passed = this.suiteResults.countPassed(),
         total = this.suiteResults.countTotal(),
@@ -1269,31 +1330,28 @@ function TestCaseResult(options) {
     "use strict";
     this.name = options && options.name;
     this.file = options && options.file;
-    this.assertions = 0;
-    this.passed = 0;
-    this.failed = 0;
-    this.passes = [];
+    this.planned = ~~(options && options.planned) || undefined;
+    this.errors = [];
     this.failures = [];
+    this.passes = [];
+    this.warnings = [];
+    this.__defineGetter__("assertions", function() {
+        return this.passed + this.failed;
+    });
+    this.__defineGetter__("crashed", function() {
+        return this.errors.length;
+    });
+    this.__defineGetter__("failed", function() {
+        return this.failures.length;
+    });
+    this.__defineGetter__("passed", function() {
+        return this.passes.length;
+    });
 }
 exports.TestCaseResult = TestCaseResult;
 
 /**
- * Adds a success record and its execution time to their associated stacks.
- *
- * @param Object  success
- * @param Number  time
- */
-TestCaseResult.prototype.addSuccess = function addSuccess(success, time) {
-    "use strict";
-    success.suite = this.name;
-    success.time = time;
-    this.passes.push(success);
-    this.assertions++;
-    this.passed++;
-};
-
-/**
- * Adds a failure record and its execution time to their associated stacks.
+ * Adds a failure record and its execution time.
  *
  * @param Object  failure
  * @param Number  time
@@ -1303,8 +1361,40 @@ TestCaseResult.prototype.addFailure = function addFailure(failure, time) {
     failure.suite = this.name;
     failure.time = time;
     this.failures.push(failure);
-    this.assertions++;
-    this.failed++;
+};
+
+/**
+ * Adds an error record.
+ *
+ * @param Object  failure
+ */
+TestCaseResult.prototype.addError = function addFailure(error) {
+    "use strict";
+    error.suite = this.name;
+    this.errors.push(error);
+};
+
+/**
+ * Adds a success record and its execution time.
+ *
+ * @param Object  success
+ * @param Number  time
+ */
+TestCaseResult.prototype.addSuccess = function addSuccess(success, time) {
+    "use strict";
+    success.suite = this.name;
+    success.time = time;
+    this.passes.push(success);
+};
+
+/**
+ * Adds a warning record.
+ *
+ * @param Object  warning
+ */
+TestCaseResult.prototype.addWarning = function addWarning(warning) {
+    warning.suite = this.name;
+    this.warnings.push(warning);
 };
 
 /**

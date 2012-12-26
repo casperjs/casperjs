@@ -2,7 +2,7 @@
 /*global CasperError casper console phantom require*/
 var fs = require('fs');
 
-casper.test.begin('Tester.sortFiles()', function suite(test) {
+casper.test.begin('Tester.sortFiles()', 1, function suite(test) {
     var testDirRoot = fs.pathJoin(phantom.casperPath, 'tests', 'testdir');
     var files = test.findTestFiles(testDirRoot);
     var expected = [
@@ -17,5 +17,5 @@ casper.test.begin('Tester.sortFiles()', function suite(test) {
         return fs.pathJoin.apply(fs, [testDirRoot].concat(entry.split('/')));
     });
     test.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
-    test.done(1);
+    test.done();
 });

@@ -45,8 +45,7 @@ var TestSuiteResult = require('tester').TestSuiteResult;
  */
 function generateClassName(classname) {
     "use strict";
-    classname = classname.replace(phantom.casperPath, "").trim();
-    var script = classname || phantom.casperScript;
+    var script = classname.replace(phantom.casperPath, "").trim() || phantom.casperScript;
     if (script.indexOf(fs.workingDirectory) === 0) {
         script = script.substring(fs.workingDirectory.length + 1);
     }
@@ -56,12 +55,10 @@ function generateClassName(classname) {
     if (~script.indexOf('.')) {
         script = script.substring(0, script.lastIndexOf('.'));
     }
-
     // If we have trimmed our string down to nothing, default to script name
     if (!script && phantom.casperScript) {
-      script = phantom.casperScript;
+        script = phantom.casperScript;
     }
-
     return script || "unknown";
 }
 
@@ -103,7 +100,7 @@ XUnitExporter.prototype.getXML = function getXML() {
         var suiteNode = utils.node('testsuite', {
             name: result.name,
             tests: result.assertions,
-            failures: result.failed,
+            failures: result.failures.length,
             time: utils.ms2seconds(result.calculateDuration()),
             'package': generateClassName(result.file),
         });

@@ -1,6 +1,33 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v1.1
+----------------
+
+This version is yet to be released.
+
+### Important Changes & Caveats
+
+#### Tester refactor
+
+Scraping and testing are now betterly separated in CasperJS, and bad code is now a bit less bad. That involves breaking up BC on some points though:
+
+- The Casper object won't be created with a `test` reference if not invoked using the [`casperjs test` command](http://casperjs.org/testing.html#casper-test-command), therefore the ability to run any test without calling it has been dropped. I know, get over it.
+- Passing the planned number of tests to `casper.done()` has been dropped as well, because `done()` may be never called at all when big troubles happen; rather use the new `begin()` method and provide the expected number of tests using the second argument:
+
+```js
+casper.test.begin("Planning 4 tests", 4, function(test) {
+    [1, 2, 3, 4].forEach(function() {
+        test.assert(true);
+    });
+    test.done();
+});
+```
+
+### Bugfixes & enhancements
+
+None yet.
+
 XXXX-XX-XX, v1.0.1
 ------------------
 
