@@ -830,9 +830,10 @@ Tester.prototype.done = function done(planned) {
     if (arguments.length > 0) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
     }
-    if (this.currentSuite && this.currentSuite.planned !== this.executed) {
+    if (this.currentSuite && this.currentSuite.planned && this.currentSuite.planned !== this.executed) {
         this.dubious(this.currentSuite.planned, this.executed);
     } else if (planned && planned !== this.executed) {
+        // BC
         this.dubious(planned, this.executed);
     }
     if (this.currentSuite) {
