@@ -91,7 +91,7 @@ var Tester = function Tester(casper, options) {
     };
 
     // measuring test duration
-    this.currentTestStartTime = null;
+    this.currentTestStartTime = new Date();
     this.lastAssertTime = 0;
 
     this.configure();
