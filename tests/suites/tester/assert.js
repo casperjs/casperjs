@@ -3,25 +3,7 @@
 var fs = require('fs');
 var t = casper.test;
 
-casper.start();
-
-t.comment('Tester.sortFiles()');
-var testDirRoot = fs.pathJoin(phantom.casperPath, 'tests', 'testdir');
-var files = t.findTestFiles(testDirRoot);
-var expected = [
-    "01_a/abc.js",
-    "01_a/def.js",
-    "02_b/abc.js",
-    "03_a.js",
-    "03_b.js",
-    "04/01_init.js",
-    "04/02_do.js"
-].map(function(entry) {
-    return fs.pathJoin.apply(fs, [testDirRoot].concat(entry.split('/')));
-});
-t.assertEquals(files, expected, 'findTestFiles() find test files and sort them');
-
-casper.thenOpen('tests/site/index.html', function() {
+casper.start('tests/site/index.html', function() {
     t.comment('Tester.assertTextExists()');
     t.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
 
@@ -201,5 +183,5 @@ casper.reload(function() {
 });
 
 casper.run(function() {
-    t.done(55);
+    t.done(54);
 });

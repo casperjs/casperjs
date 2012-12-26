@@ -82,7 +82,7 @@ var Tester = function Tester(casper, options) {
     this.queue = [];
     this.running = false;
     this.started = false;
-    this.suites = new TestSuite();
+    this.suiteResults = new TestSuiteResult();
     this.options = utils.mergeObjects({
         failFast: false,  // terminates a suite as soon as a test fails?
         failText: "FAIL", // text to use for a succesful test
@@ -729,7 +729,7 @@ Tester.prototype.begin = function begin(description, suiteFn) {
     }
     description = description || "Untitled suite in " + this.currentTestFile;
     this.comment(description);
-    this.currentSuite = new TestSuiteResult({
+    this.currentSuite = new TestCaseResult({
         name: description,
         file: this.currentTestFile
     });
@@ -800,7 +800,7 @@ Tester.prototype.done = function done(planned) {
         this.dubious(planned, this.executed);
     }
     if (this.currentSuite) {
-        this.suites.push(this.currentSuite);
+        this.suiteResults.push(this.currentSuite);
         this.currentSuite = undefined;
         this.executed = 0;
     }
@@ -947,7 +947,7 @@ Tester.prototype.pass = function pass(message) {
 Tester.prototype.processAssertionResult = function processAssertionResult(result) {
     "use strict";
     if (!this.currentSuite) {
-        this.currentSuite = new TestSuiteResult({
+        this.currentSuite = new TestCaseResult({
             name: "Untitled suite in " + this.currentTestFile,
             file: this.currentTestFile
         });
@@ -976,7 +976,7 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
  */
 Tester.prototype.renderFailureDetails = function renderFailureDetails() {
     "use strict";
-    var failures = this.suites.getAllFailures();
+    var failures = this.suiteResults.getAllFailures();
     if (failures.length === 0) {
         return;
     }
@@ -1001,9 +1001,9 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
     /*jshint maxstatements:20*/
     save = save || this.options.save;
-    var failed = this.suites.countFailed(),
-        passed = this.suites.countPassed(),
-        total = this.suites.countTotal(),
+    var failed = this.suiteResults.countFailed(),
+        passed = this.suiteResults.countPassed(),
+        total = this.suiteResults.countTotal(),
         statusText,
         style,
         result,
@@ -1021,7 +1021,7 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
             style = 'GREEN_BAR';
         }
         result = f('%s %s tests executed in %ss, %d passed, %d failed.',
-                   statusText, total, utils.ms2seconds(this.suites.calculateDuration()),
+                   statusText, total, utils.ms2seconds(this.suiteResults.calculateDuration()),
                    passed, failed);
     }
     this.casper.echo(result, style, this.options.pad);
@@ -1114,7 +1114,7 @@ Tester.prototype.runTest = function runTest(testFile) {
 Tester.prototype.saveResults = function saveResults(filepath) {
     "use strict";
     var exporter = require('xunit').create();
-    exporter.setResults(this.suites);
+    exporter.setResults(this.suiteResults);
     try {
         fs.write(filepath, exporter.getXML(), 'w');
         this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
@@ -1164,16 +1164,16 @@ Tester.prototype.uncaughtError = function uncaughtError(error, file, line, backt
  * Test suites array.
  *
  */
-function TestSuite() {}
-TestSuite.prototype = [];
-exports.TestSuite = TestSuite;
+function TestSuiteResult() {}
+TestSuiteResult.prototype = [];
+exports.TestSuiteResult = TestSuiteResult;
 
 /**
  * Returns the number of tests.
  *
  * @return Number
  */
-TestSuite.prototype.countTotal = function countTotal() {
+TestSuiteResult.prototype.countTotal = function countTotal() {
     "use strict";
     return this.countPassed() + this.countFailed();
 };
@@ -1183,7 +1183,7 @@ TestSuite.prototype.countTotal = function countTotal() {
  *
  * @return Number
  */
-TestSuite.prototype.countFailed = function countFailed() {
+TestSuiteResult.prototype.countFailed = function countFailed() {
     "use strict";
     return this.map(function(result) {
         return result.failed;
@@ -1197,7 +1197,7 @@ TestSuite.prototype.countFailed = function countFailed() {
  *
  * @return Number
  */
-TestSuite.prototype.countPassed = function countPassed() {
+TestSuiteResult.prototype.countPassed = function countPassed() {
     "use strict";
     return this.map(function(result) {
         return result.passed;
@@ -1211,7 +1211,7 @@ TestSuite.prototype.countPassed = function countPassed() {
  *
  * @return Array
  */
-TestSuite.prototype.getAllFailures = function getAllFailures() {
+TestSuiteResult.prototype.getAllFailures = function getAllFailures() {
     "use strict";
     var failures = [];
     this.forEach(function(result) {
@@ -1225,7 +1225,7 @@ TestSuite.prototype.getAllFailures = function getAllFailures() {
  *
  * @return Array
  */
-TestSuite.prototype.getAllPasses = function getAllPasses() {
+TestSuiteResult.prototype.getAllPasses = function getAllPasses() {
     "use strict";
     var passes = [];
     this.forEach(function(result) {
@@ -1239,7 +1239,7 @@ TestSuite.prototype.getAllPasses = function getAllPasses() {
  *
  * @return Array
  */
-TestSuite.prototype.getAllResults = function getAllResults() {
+TestSuiteResult.prototype.getAllResults = function getAllResults() {
     "use strict";
     return this.getAllPasses().concat(this.getAllFailures());
 };
@@ -1250,7 +1250,7 @@ TestSuite.prototype.getAllResults = function getAllResults() {
  *
  * @return Number
  */
-TestSuite.prototype.calculateDuration = function calculateDuration() {
+TestSuiteResult.prototype.calculateDuration = function calculateDuration() {
     "use strict";
     return this.getAllResults().map(function(result) {
         return result.time;
@@ -1264,7 +1264,7 @@ TestSuite.prototype.calculateDuration = function calculateDuration() {
  *
  * @param Object  options
  */
-function TestSuiteResult(options) {
+function TestCaseResult(options) {
     "use strict";
     this.name = options && options.name;
     this.file = options && options.file;
@@ -1274,7 +1274,7 @@ function TestSuiteResult(options) {
     this.passes = [];
     this.failures = [];
 }
-exports.TestSuiteResult = TestSuiteResult;
+exports.TestCaseResult = TestCaseResult;
 
 /**
  * Adds a success record and its execution time to their associated stacks.
@@ -1282,7 +1282,7 @@ exports.TestSuiteResult = TestSuiteResult;
  * @param Object  success
  * @param Number  time
  */
-TestSuiteResult.prototype.addSuccess = function addSuccess(success, time) {
+TestCaseResult.prototype.addSuccess = function addSuccess(success, time) {
     "use strict";
     success.suite = this.name;
     success.time = time;
@@ -1297,7 +1297,7 @@ TestSuiteResult.prototype.addSuccess = function addSuccess(success, time) {
  * @param Object  failure
  * @param Number  time
  */
-TestSuiteResult.prototype.addFailure = function addFailure(failure, time) {
+TestCaseResult.prototype.addFailure = function addFailure(failure, time) {
     "use strict";
     failure.suite = this.name;
     failure.time = time;
@@ -1311,7 +1311,7 @@ TestSuiteResult.prototype.addFailure = function addFailure(failure, time) {
  *
  * @return  Number
  */
-TestSuiteResult.prototype.calculateDuration = function calculateDuration() {
+TestCaseResult.prototype.calculateDuration = function calculateDuration() {
     "use strict";
     function add(a, b) {
         return a + b;

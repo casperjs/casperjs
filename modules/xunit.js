@@ -32,6 +32,7 @@
 
 var utils = require('utils');
 var fs = require('fs');
+var TestSuiteResult = require('tester').TestSuiteResult;
 
 /**
  * Generates a value for 'classname' attribute of the JUnit XML report.
@@ -95,7 +96,7 @@ exports.XUnitExporter = XUnitExporter;
  */
 XUnitExporter.prototype.getXML = function getXML() {
     "use strict";
-    if (!(this.results instanceof require('tester').TestSuite)) {
+    if (!(this.results instanceof TestSuiteResult)) {
         throw new CasperError('Results not set, cannot get XML.');
     }
     this.results.forEach(function(result) {
@@ -147,7 +148,7 @@ XUnitExporter.prototype.getXML = function getXML() {
  */
 XUnitExporter.prototype.setResults = function setResults(results) {
     "use strict";
-    if (!(results instanceof require('tester').TestSuite)) {
+    if (!(results instanceof TestSuiteResult)) {
         throw new CasperError('Invalid results type.');
     }
     return this.results = results;

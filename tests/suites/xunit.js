@@ -5,7 +5,7 @@ var testpage = require('webpage').create();
 
 casper.test.begin('XUnitReporter() initialization', function suite() {
     var xunit = require('xunit').create();
-    var results = new tester.TestSuite();
+    var results = new tester.TestSuiteResult();
     xunit.setResults(results);
     this.assertTruthy(xunit.getXML());
     this.done(1);
@@ -13,13 +13,13 @@ casper.test.begin('XUnitReporter() initialization', function suite() {
 
 casper.test.begin('XUnitReporter() can hold test suites', function suite() {
     var xunit = require('xunit').create();
-    var results = new tester.TestSuite();
-    var suite1 = new tester.TestSuiteResult({
+    var results = new tester.TestSuiteResult();
+    var suite1 = new tester.TestCaseResult({
         name: 'foo',
         file: '/foo'
     });
     results.push(suite1);
-    var suite2 = new tester.TestSuiteResult({
+    var suite2 = new tester.TestCaseResult({
         name: 'bar',
         file: '/bar'
     });
@@ -37,8 +37,8 @@ casper.test.begin('XUnitReporter() can hold test suites', function suite() {
 
 casper.test.begin('XUnitReporter() can hold a suite with a succesful test', function suite() {
     var xunit = require('xunit').create();
-    var results = new tester.TestSuite();
-    var suite1 = new tester.TestSuiteResult({
+    var results = new tester.TestSuiteResult();
+    var suite1 = new tester.TestCaseResult({
         name: 'foo',
         file: '/foo'
     });
@@ -57,8 +57,8 @@ casper.test.begin('XUnitReporter() can hold a suite with a succesful test', func
 
 casper.test.begin('XUnitReporter() can handle a failed test', function suite() {
     var xunit = require('xunit').create();
-    var results = new tester.TestSuite();
-    var suite1 = new tester.TestSuiteResult({
+    var results = new tester.TestSuiteResult();
+    var suite1 = new tester.TestCaseResult({
         name: 'foo',
         file: '/foo'
     });
