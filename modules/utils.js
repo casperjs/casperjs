@@ -216,7 +216,7 @@ function formatTestValue(value, name) {
     } else if (name === 'stack') {
         if (isArray(value)) {
             formatted += value.map(function(entry) {
-                return format('in %s() in %s:%d', (entry.function || "anonymous"), entry.file, entry.line);
+                return format('in %s() in %s:%d', (entry['function'] || "anonymous"), entry.file, entry.line);
             }).join('\n');
         } else {
             formatted += 'not provided';

@@ -5,3 +5,4 @@ modules/querystring.js
 samples
 tests/site
 tests/testdir
+tmp

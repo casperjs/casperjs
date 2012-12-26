@@ -36,6 +36,7 @@ var utils = require('utils');
 var f = utils.format;
 
 function AssertionError(msg, result) {
+    "use strict";
     Error.call(this);
     this.message = msg;
     this.name = 'AssertionError';
@@ -829,7 +830,7 @@ Tester.prototype.done = function done(planned) {
     if (arguments.length > 0) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
     }
-    if (this.currentSuite.planned && this.currentSuite.planned !== this.executed) {
+    if (this.currentSuite && this.currentSuite.planned !== this.executed) {
         this.dubious(this.currentSuite.planned, this.executed);
     } else if (planned && planned !== this.executed) {
         this.dubious(planned, this.executed);
@@ -1393,6 +1394,7 @@ TestCaseResult.prototype.addSuccess = function addSuccess(success, time) {
  * @param Object  warning
  */
 TestCaseResult.prototype.addWarning = function addWarning(warning) {
+    "use strict";
     warning.suite = this.name;
     this.warnings.push(warning);
 };

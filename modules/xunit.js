@@ -102,7 +102,7 @@ XUnitExporter.prototype.getXML = function getXML() {
             tests: result.assertions,
             failures: result.failures.length,
             time: utils.ms2seconds(result.calculateDuration()),
-            'package': generateClassName(result.file),
+            'package': generateClassName(result.file)
         });
         result.passes.forEach(function(success) {
             var testCase = utils.node('testcase', {
