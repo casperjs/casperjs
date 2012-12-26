@@ -1001,6 +1001,7 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
     /*jshint maxstatements:20*/
     save = save || this.options.save;
+    this.done(); // never too sure
     var failed = this.suiteResults.countFailed(),
         passed = this.suiteResults.countPassed(),
         total = this.suiteResults.countTotal(),
