@@ -161,6 +161,12 @@ var Tester = function Tester(casper, options) {
         }
         self.done();
     });
+
+    this.casper.on('warn', function(warning) {
+        if (self.currentSuite) {
+            self.currentSuite.addWarning(warning);
+        }
+    });
 };
 
 // Tester class is an EventEmitter
@@ -857,16 +863,7 @@ Tester.prototype.done = function done(planned) {
  */
 Tester.prototype.dubious = function dubious(planned, executed) {
     "use strict";
-    var message = f('%d tests planned, %d tests executed', planned, executed);
-    this.currentSuite.addWarning({
-        message: message,
-        file: this.currentTestFile,
-        values:  {
-            planned: planned,
-            executed: executed
-        }
-    });
-    this.casper.warn(message);
+    this.casper.warn(f('%d tests planned, %d tests executed', planned, executed));
 };
 
 /**
@@ -1025,7 +1022,6 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         style = 'RED_BAR';
         status = this.options.failText;
     }
-    style = result.type === "dubious" ? "WARN_BAR" : style;
     this.casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
     this.emit(eventName, result);
     if (this.options.failFast && !result.success) {
@@ -1040,10 +1036,10 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
  */
 Tester.prototype.renderFailureDetails = function renderFailureDetails() {
     "use strict";
-    var failures = this.suiteResults.getAllFailures();
-    if (failures.length === 0) {
+    if (!this.suiteResults.isFailed()) {
         return;
     }
+    var failures = this.suiteResults.getAllFailures();
     this.casper.echo(f("\nDetails for the %d failed test%s:\n",
                        failures.length, failures.length > 1 ? "s" : ""), "PARAMETER");
     failures.forEach(function _forEach(failure) {
@@ -1113,11 +1109,9 @@ Tester.prototype.runSuites = function runSuites() {
     this.loadIncludes.includes.forEach(function _forEachInclude(include) {
         phantom.injectJs(include);
     });
-
     this.loadIncludes.pre.forEach(function _forEachPreTest(preTestFile) {
         testFiles = testFiles.concat(preTestFile);
     });
-
     Array.prototype.forEach.call(arguments, function _forEachArgument(path) {
         if (!fs.exists(path)) {
             self.bar(f("Path %s doesn't exist", path), "RED_BAR");
@@ -1128,21 +1122,17 @@ Tester.prototype.runSuites = function runSuites() {
             testFiles.push(path);
         }
     });
-
     this.loadIncludes.post.forEach(function _forEachPostTest(postTestFile) {
         testFiles = testFiles.concat(postTestFile);
     });
-
     if (testFiles.length === 0) {
         this.bar(f("No test file found in %s, aborting.",
                    Array.prototype.slice.call(arguments)), "RED_BAR");
         this.casper.exit(1);
     }
-
     self.currentSuiteNum = 0;
     self.currentTestStartTime = new Date();
     self.lastAssertTime = 0;
-
     var interval = setInterval(function _check(self) {
         if (self.running) {
             return;
@@ -1243,6 +1233,20 @@ TestSuiteResult.prototype.countTotal = function countTotal() {
 };
 
 /**
+ * Returns the number of errors.
+ *
+ * @return Number
+ */
+TestSuiteResult.prototype.countErrors = function countErrors() {
+    "use strict";
+    return this.map(function(result) {
+        return result.crashed;
+    }).reduce(function(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
  * Returns the number of failed tests.
  *
  * @return Number
@@ -1268,6 +1272,30 @@ TestSuiteResult.prototype.countPassed = function countPassed() {
     }).reduce(function(a, b) {
         return a + b;
     }, 0);
+};
+
+/**
+ * Returns the number of warnings.
+ *
+ * @return Number
+ */
+TestSuiteResult.prototype.countWarnings = function countWarnings() {
+    "use strict";
+    return this.map(function(result) {
+        return result.warned;
+    }).reduce(function(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
+ * Checks if the suite has failed.
+ *
+ * @return Number
+ */
+TestSuiteResult.prototype.isFailed = function isFailed() {
+    "use strict";
+    return this.countErrors() + this.countFailed() > 0;
 };
 
 /**

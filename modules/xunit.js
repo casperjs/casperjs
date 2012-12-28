@@ -100,10 +100,13 @@ XUnitExporter.prototype.getXML = function getXML() {
         var suiteNode = utils.node('testsuite', {
             name: result.name,
             tests: result.assertions,
-            failures: result.failures.length,
+            failures: result.failed,
+            errors: result.crashed,
             time: utils.ms2seconds(result.calculateDuration()),
+            timestamp: (new Date()).toISOString(),
             'package': generateClassName(result.file)
         });
+        // succesful test cases
         result.passes.forEach(function(success) {
             var testCase = utils.node('testcase', {
                 name: success.message || success.standard,
@@ -112,6 +115,7 @@ XUnitExporter.prototype.getXML = function getXML() {
             });
             suiteNode.appendChild(testCase);
         });
+        // failed test cases
         result.failures.forEach(function(failure) {
             var testCase = utils.node('testcase', {
                 name: failure.message || failure.standard,
@@ -132,6 +136,18 @@ XUnitExporter.prototype.getXML = function getXML() {
             testCase.appendChild(failureNode);
             suiteNode.appendChild(testCase);
         });
+        // errors
+        result.errors.forEach(function(error) {
+            var errorNode = utils.node('error', {
+                type: error.name
+            });
+            errorNode.appendChild(document.createTextNode(error.stack ? error.stack : error.message));
+            suiteNode.appendChild(errorNode);
+        });
+        // warnings
+        var warningNode = utils.node('system-out');
+        warningNode.appendChild(document.createTextNode(result.warnings.join('\n')));
+        suiteNode.appendChild(warningNode);
         this._xml.appendChild(suiteNode);
     }.bind(this));
     this._xml.setAttribute('duration', utils.ms2seconds(this.results.calculateDuration()));
