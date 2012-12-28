@@ -1,10 +1,8 @@
 /*global casper*/
 /*jshint strict:false*/
-var fs = require('fs'), t = casper.test;
+var fs = require('fs');
 
-// Testing added methods
-(function() {
-    t.comment('fs.dirname()');
+casper.test.begin('fs.dirname() tests', 8, function(test) {
     var tests = {
         '/local/plop/foo.js':      '/local/plop',
         'local/plop/foo.js':       'local/plop',
@@ -16,12 +14,12 @@ var fs = require('fs'), t = casper.test;
         'c:':                      'c:'
     };
     for (var testCase in tests) {
-        t.assertEquals(fs.dirname(testCase), tests[testCase], 'fs.dirname() does its job for ' + testCase);
+        test.assertEquals(fs.dirname(testCase), tests[testCase], 'fs.dirname() does its job for ' + testCase);
     }
-})();
+    test.done();
+});
 
-(function() {
-    t.comment('fs.dirname()');
+casper.test.begin('fs.isWindows() tests', 6, function(test) {
     var tests = {
         '/':                       false,
         '/local/plop/foo.js':      false,
@@ -31,8 +29,7 @@ var fs = require('fs'), t = casper.test;
         '\\\\Server\\Plop':        true
     };
     for (var testCase in tests) {
-        t.assertEquals(fs.isWindows(testCase), tests[testCase], 'fs.isWindows() does its job for ' + testCase);
+        test.assertEquals(fs.isWindows(testCase), tests[testCase], 'fs.isWindows() does its job for ' + testCase);
     }
-})();
-
-t.done(14);
+    test.done();
+});
