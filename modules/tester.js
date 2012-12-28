@@ -837,7 +837,7 @@ Tester.prototype.done = function done(planned) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
     }
     if (this.currentSuite && this.currentSuite.planned && this.currentSuite.planned !== this.executed) {
-        this.dubious(this.currentSuite.planned, this.executed);
+        this.dubious(this.currentSuite.planned, this.executed, this.currentSuite.name);
     } else if (planned && planned !== this.executed) {
         // BC
         this.dubious(planned, this.executed);
@@ -861,9 +861,9 @@ Tester.prototype.done = function done(planned) {
  *
  * @param  String  message
  */
-Tester.prototype.dubious = function dubious(planned, executed) {
+Tester.prototype.dubious = function dubious(planned, executed, suite) {
     "use strict";
-    this.casper.warn(f('%d tests planned, %d tests executed', planned, executed));
+    this.casper.warn(f('%s: %d tests planned, %d tests executed', suite || 'global', planned, executed));
 };
 
 /**
