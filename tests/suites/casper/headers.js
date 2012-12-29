@@ -1,7 +1,5 @@
 /*global casper*/
 /*jshint strict:false*/
-casper.test.comment('Casper.headers.get()');
-
 var server = require('webserver').create();
 var service = server.listen(8090, function(request, response) {
     response.statusCode = 200;
@@ -14,28 +12,22 @@ var service = server.listen(8090, function(request, response) {
     response.close();
 });
 
-function dumpHeaders() {
-    casper.test.comment('Dumping current response headers');
-
-    casper.currentResponse.headers.forEach(function(header) {
-        casper.test.comment('- ' + header.name + ': ' + header.value);
-    });
-}
-
-// local file:// url
-casper.start('file://' + phantom.casperPath + 'tests/site/index.html', function thenLocalPage(response) {
-    this.test.assertEquals(response, undefined, 'No response available on local page');
+casper.test.begin('Casper.headers.get() using file protocol', 1, function(test) {
+    casper.start('file://' + phantom.casperPath + 'tests/site/index.html', function(response) {
+        test.assertEquals(response, undefined, 'No response available on local page');
+    }).run(function() {
+        test.done();
+    })
 });
 
-casper.thenOpen('http://localhost:8090/', function thenLocalhost(response) {
-    var headers = response.headers;
-
-    this.test.assertEquals(headers.get('Content-Language'), 'en', 'Checking existing header (case sensitive)');
-    this.test.assertEquals(headers.get('content-language'), 'en', 'Checking existing header (case insensitive)');
-    this.test.assertEquals(headers.get('X-Is-Troll'), null, 'Checking unexisting header');
-});
-
-casper.run(function() {
-    server.close();
-    this.test.done(4);
+casper.test.begin('Casper.headers.get() using http protocol', 3, function(test) {
+    casper.start('http://localhost:8090/', function(response) {
+        var headers = response.headers;
+        test.assertEquals(headers.get('Content-Language'), 'en', 'Checking existing header (case sensitive)');
+        test.assertEquals(headers.get('content-language'), 'en', 'Checking existing header (case insensitive)');
+        test.assertEquals(headers.get('X-Is-Troll'), null, 'Checking unexisting header');
+    }).run(function() {
+        server.close();
+        test.done();
+    })
 });
