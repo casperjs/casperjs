@@ -1337,12 +1337,12 @@ Casper.prototype.runStep = function runStep(step) {
     this.emit('step.start', step);
     try {
         stepResult = step.call(this, this.currentResponse);
+        if (utils.isFunction(this.options.onStepComplete)) {
+            this.options.onStepComplete.call(this, this, stepResult);
+        }
     } catch (err) {
         this.emit('step.error', err);
         throw err;
-    }
-    if (utils.isFunction(this.options.onStepComplete)) {
-        this.options.onStepComplete.call(this, this, stepResult);
     }
     if (!skipLog) {
         this.emit('step.complete', stepResult);
