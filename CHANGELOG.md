@@ -4,13 +4,49 @@ CasperJS Changelog
 XXXX-XX-XX, v1.1
 ----------------
 
-This version is yet to be released.
+This version is yet to be released, and will possibly be tagged as 2.0 as not-so-backward-compatible refactoring occured on the `master` branch. I don't know yet.
 
 ### Important Changes & Caveats
 
-#### Tester refactor
+#### Testing framework refactoring
 
-Scraping and testing are now betterly separated in CasperJS, and bad code is now a bit less bad. That involves breaking up BC on some points though:
+A new `Tester.begin()` method has been introduced to help organizing tests better:
+
+```js
+function Cow() {
+    this.mowed = false;
+    this.moo = function moo() {
+        this.mowed = true; // mootable state: don't do that
+        return 'moo!';
+    };
+}
+
+// unit style synchronous test case
+casper.test.begin('Cow can moo', 2, function suite(test) {
+    var cow = new Cow();
+    test.assertEquals(cow.moo(), 'moo!');
+    test.assert(cow.mowed);
+    test.done();
+});
+
+// asynchronous test case
+casper.test.begin('Casperjs.org is navigable', 2, function suite(test) {
+    casper.start('http://casperjs.org/', function() {
+        test.assertTitleMatches(/casperjs/i);
+        this.clickLabel('Testing');
+    });
+
+    casper.then(function() {
+        test.assertUrlMatches(/testing\.html$/);
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+```
+
+Also, scraping and testing are now betterly separated in CasperJS, and bad code is now a bit less bad. That involves breaking up BC on some points though:
 
 - The Casper object won't be created with a `test` reference if not invoked using the [`casperjs test` command](http://casperjs.org/testing.html#casper-test-command), therefore the ability to run any test without calling it has been dropped. I know, get over it.
 - Passing the planned number of tests to `casper.done()` has been dropped as well, because `done()` may be never called at all when big troubles happen; rather use the new `begin()` method and provide the expected number of tests using the second argument:
@@ -23,6 +59,8 @@ casper.test.begin("Planning 4 tests", 4, function(test) {
     test.done();
 });
 ```
+
+Last, all the casper test suites have been upgraded to use the new testing features, you may want to have a look at the changes.
 
 ### Bugfixes & enhancements
 
