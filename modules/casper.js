@@ -1687,10 +1687,10 @@ Casper.prototype.wait = function wait(timeout, then) {
     this.checkStarted();
     timeout = ~~timeout;
     if (timeout < 1) {
-        this.die("wait() only accepts a positive integer > 0 as a timeout value");
+        throw new CasperError("wait() only accepts a positive integer > 0 as a timeout value");
     }
     if (then && !utils.isFunction(then)) {
-        this.die("wait() a step definition must be a function");
+        throw new CasperError("wait() a step definition must be a function");
     }
     return this.then(function _step() {
         this.waitStart();
@@ -1730,10 +1730,10 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
     this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     if (!utils.isFunction(testFx)) {
-        this.die("waitFor() needs a test function");
+        throw new CasperError("waitFor() needs a test function");
     }
     if (then && !utils.isFunction(then)) {
-        this.die("waitFor() next step definition must be a function");
+        throw new CasperError("waitFor() next step definition must be a function");
     }
     return this.then(function _step() {
         this.waitStart();
@@ -1742,24 +1742,24 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
         var interval = setInterval(function _check(self, testFx, timeout, onTimeout) {
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
-            } else {
-                self.waitDone();
-                if (!condition) {
-                    self.log("Casper.waitFor() timeout", "warning");
-                    self.emit('waitFor.timeout');
-                    var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
-                    if (!utils.isFunction(onWaitTimeout)) {
-                        throw new CasperError('Invalid timeout function, exiting.');
-                    }
-                    onWaitTimeout.call(self, timeout);
-                } else {
-                    self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
-                    if (then) {
-                        self.then(then);
-                    }
-                }
-                clearInterval(interval);
+                return;
             }
+            self.waitDone();
+            if (!condition) {
+                self.log("Casper.waitFor() timeout", "warning");
+                self.emit('waitFor.timeout');
+                var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
+                if (!utils.isFunction(onWaitTimeout)) {
+                    throw new CasperError('Invalid timeout function, exiting.');
+                }
+                onWaitTimeout.call(self, timeout);
+            } else {
+                self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
+                if (then) {
+                    self.then(then);
+                }
+            }
+            clearInterval(interval);
         }, 100, this, testFx, timeout, onTimeout);
     });
 };
