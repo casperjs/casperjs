@@ -96,6 +96,9 @@ var Casper = function Casper(options) {
         onPageInitialized:   null,
         onResourceReceived:  null,
         onResourceRequested: null,
+        onRunComplete:       function _onRunComplete() {
+            this.exit();
+        },
         onStepComplete:      null,
         onStepTimeout:       function _onStepTimeout(timeout, stepNum) {
             this.die("Maximum step execution timeout exceeded for step " + stepNum);
@@ -343,9 +346,8 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         self.emit('run.complete');
         if (utils.isFunction(onComplete)) {
             onComplete.call(self, self);
-        } else {
-            // default behavior is to exit
-            self.exit();
+        } else if (utils.isFunction(self.options.onRunComplete)) {
+            self.options.onRunComplete.call(self, self);
         }
     }
 };
