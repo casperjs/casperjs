@@ -45,6 +45,15 @@ function AssertionError(msg, result) {
 AssertionError.prototype = new Error();
 exports.AssertionError = AssertionError;
 
+function TimedOutError(msg) {
+    "use strict";
+    Error.call(this);
+    this.message = msg;
+    this.name = 'TimedOutError';
+}
+TimedOutError.prototype = new Error();
+exports.TimedOutError = TimedOutError;
+
 /**
  * Creates a tester instance.
  *
@@ -100,8 +109,6 @@ var Tester = function Tester(casper, options) {
     this.running = false;
     this.started = false;
     this.suiteResults = new TestSuiteResult();
-
-    this.configure();
 
     this.on('success', function onSuccess(success) {
         var timeElapsed = new Date() - this.currentTestStartTime;
@@ -167,6 +174,28 @@ var Tester = function Tester(casper, options) {
             self.currentSuite.addWarning(warning);
         }
     });
+
+    // Do not hook casper if we're not testing
+    if (!phantom.casperTest) {
+        return;
+    }
+
+    // onRunComplete
+    this.casper.options.onRunComplete = function test_onRunComplete(casper) {
+    };
+
+    // specific timeout callbacks
+    this.casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
+        throw new TimedOutError(f("Step timeout occured at step %s (%dms)", step, timeout));
+    };
+
+    this.casper.options.onTimeout = function test_onTimeout(timeout) {
+        throw new TimedOutError(f("Timeout occured (%dms)", timeout));
+    };
+
+    this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout) {
+        throw new TimedOutError(f("Wait timeout occured (%dms)", timeout));
+    };
 };
 
 // Tester class is an EventEmitter
@@ -797,33 +826,6 @@ Tester.prototype.colorize = function colorize(message, style) {
 Tester.prototype.comment = function comment(message) {
     "use strict";
     this.casper.echo('# ' + message, 'COMMENT');
-};
-
-/**
- * Configure casper callbacks for testing purpose.
- *
- */
-Tester.prototype.configure = function configure() {
-    "use strict";
-    var tester = this;
-
-    // Do not hook casper if we're not testing
-    if (!phantom.casperTest) {
-        return;
-    }
-
-    // specific timeout callbacks
-    this.casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
-        tester.fail(f("Step timeout occured at step %s (%dms)", step, timeout));
-    };
-
-    this.casper.options.onTimeout = function test_onTimeout(timeout) {
-        tester.fail(f("Timeout occured (%dms)", timeout));
-    };
-
-    this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout) {
-        tester.fail(f("Wait timeout occured (%dms)", timeout));
-    };
 };
 
 /**
