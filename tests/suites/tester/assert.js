@@ -2,7 +2,7 @@
 /*jshint strict:false maxstatements:99*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 40, function(test) {
+casper.test.begin('Common assertions tests', 43, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
@@ -29,6 +29,9 @@ casper.test.begin('Common assertions tests', 40, function(test) {
         test.assertEvalEqual(function() {
             return 42;
         }, 42, 'Tester.assertEvalEqual() works as expected [alias]');
+        test.assertElementCount('ul', 1, 'Tester.assertElementCount() works as expected');
+        test.assertElementCount('li', 3, 'Tester.assertElementCount() works as expected');
+        test.assertElementCount('address', 0, 'Tester.assertElementCount() works as expected');
         test.assertExists('body', 'Tester.assertExists() works as expected');
         test.assertExist('body', 'Tester.assertExist() works as expected [alias]');
         test.assertSelectorExists('body', 'Tester.assertSelectorExists() works as expected [alias]');

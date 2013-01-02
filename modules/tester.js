@@ -281,6 +281,35 @@ Tester.prototype.assertNotEquals = function assertNotEquals(subject, shouldnt, m
 };
 
 /**
+ * Asserts that a selector expression matches n elements.
+ *
+ * @param  Mixed   selector  A selector expression
+ * @param  Number  count     Expected number of matching elements
+ * @param  String  message   Test description (Optional)
+ * @return Object            An assertion result object
+ */
+Tester.prototype.assertElementCount = function assertElementCount(selector, count, message) {
+    "use strict";
+    if (!utils.isNumber(count) || count < 0) {
+        throw new CasperError('assertElementCount() needs a positive integer count');
+    }
+    return this.assert(this.casper.evaluate(function(selector) {
+        try {
+            return __utils__.findAll(selector).length;
+        } catch (e) {
+            return -1;
+        }
+    }, selector) === count, message, {
+        type: "assertElementCount",
+        standard: f("%d matching element(s) found", count),
+        values: {
+            selector: selector,
+            count:    count
+        }
+    });
+};
+
+/**
  * Asserts that a code evaluation in remote DOM resolves to true.
  *
  * @param  Function  fn       A function to be evaluated in remote DOM
