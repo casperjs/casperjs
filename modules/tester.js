@@ -894,7 +894,12 @@ Tester.prototype.done = function done(planned) {
  */
 Tester.prototype.dubious = function dubious(planned, executed, suite) {
     "use strict";
-    this.casper.warn(f('%s: %d tests planned, %d tests executed', suite || 'global', planned, executed));
+    var message = f('%s: %d tests planned, %d tests executed', suite || 'global', planned, executed);
+    this.casper.warn(message);
+    return this.assert(false, message, {
+        type:     "dubious",
+        standard: message
+    });
 };
 
 /**
