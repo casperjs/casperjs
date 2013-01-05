@@ -896,8 +896,10 @@ Tester.prototype.dubious = function dubious(planned, executed, suite) {
     "use strict";
     var message = f('%s: %d tests planned, %d tests executed', suite || 'global', planned, executed);
     this.casper.warn(message);
-    return this.assert(false, message, {
+    if (!this.currentSuite) return;
+    this.currentSuite.addFailure({
         type:     "dubious",
+        file:     this.currentTestFile,
         standard: message
     });
 };

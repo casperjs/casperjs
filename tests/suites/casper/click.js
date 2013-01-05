@@ -1,5 +1,7 @@
 /*global casper*/
 /*jshint strict:false*/
+var utils = require('utils');
+
 casper.test.begin('click() tests', 2, function(test) {
     casper.start('tests/site/index.html', function() {
         this.click('a[href="test.html"]');
@@ -66,7 +68,7 @@ casper.test.begin('casper.mouse tests', 4, function(test) {
         results = this.getGlobal('results');
         test.assertEquals(results.testmove, [200, 100],
             'Mouse.move() has moved to the specified position');
-        if (phantom.version.major >= 1 && phantom.version.minor >= 8) {
+        if (utils.gteVersion(phantom.version, '1.8.0')) {
             this.mouse.doubleclick(200, 100);
             results = this.getGlobal('results');
             this.test.assertEquals(results.testdoubleclick, [200, 100],

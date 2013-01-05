@@ -632,3 +632,59 @@ function unique(array) {
     return r;
 }
 exports.unique = unique;
+
+/**
+ * Compare two version numbers represented as strings.
+ *
+ * @param  String  a  Version a
+ * @param  String  b  Version b
+ * @return Number
+ */
+function cmpVersion(a, b) {
+    var i, cmp, len, re = /(\.0)+[^\.]*$/;
+    function versionToString(version) {
+        if (isObject(version)) {
+            try {
+                return [version.major, version.minor, version.patch].join('.');
+            } catch (e) {}
+        }
+        return version;
+    }
+    a = versionToString(a);
+    b = versionToString(b);
+    a = (a + '').replace(re, '').split('.');
+    b = (b + '').replace(re, '').split('.');
+    len = Math.min(a.length, b.length);
+    for (i = 0; i < len; i++) {
+        cmp = parseInt(a[i], 10) - parseInt(b[i], 10);
+        if (cmp !== 0) {
+            return cmp;
+        }
+    }
+    return a.length - b.length;
+}
+exports.cmpVersion = cmpVersion;
+
+/**
+ * Checks if a version number string is greater or equals another.
+ *
+ * @param  String  a  Version a
+ * @param  String  b  Version b
+ * @return Boolean
+ */
+function gteVersion(a, b) {
+    return cmpVersion(a, b) >= 0;
+}
+exports.gteVersion = gteVersion;
+
+/**
+ * Checks if a version number string is less than another.
+ *
+ * @param  String  a  Version a
+ * @param  String  b  Version b
+ * @return Boolean
+ */
+function ltVersion(a, b) {
+    return cmpVersion(a, b) < 0;
+}
+exports.ltVersion = ltVersion;
