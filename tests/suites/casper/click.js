@@ -52,7 +52,7 @@ casper.test.begin('clickLabel tests tests', 8, function(test) {
     });
 });
 
-casper.test.begin('casper.mouse tests', 3, function(test) {
+casper.test.begin('casper.mouse tests', 4, function(test) {
     casper.start('tests/site/click.html', function() {
         this.mouse.down(200, 100);
         var results = this.getGlobal('results');
@@ -66,6 +66,14 @@ casper.test.begin('casper.mouse tests', 3, function(test) {
         results = this.getGlobal('results');
         test.assertEquals(results.testmove, [200, 100],
             'Mouse.move() has moved to the specified position');
+        if (phantom.version.major >= 1 && phantom.version.minor >= 8) {
+            this.mouse.doubleclick(200, 100);
+            results = this.getGlobal('results');
+            this.test.assertEquals(results.testdoubleclick, [200, 100],
+                'Mouse.doubleclick() double-clicked the specified position');
+        } else {
+            this.test.pass("Mouse.doubleclick() requires PhantomJS >= 1.8");
+        }
     }).run(function() {
         test.done();
     });
