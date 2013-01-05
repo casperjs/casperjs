@@ -306,4 +306,63 @@ t.comment('unique()');
     });
 })();
 
-t.done(112);
+t.comment('cmpVersion() tests');
+(function() {
+    t.assertEquals(utils.cmpVersion('1.0.0', '2.0.0'), -1,
+        'cmpVersion() can compare version strings');
+    t.assertEquals(utils.cmpVersion('1.0.0-DEV', '2.0.0-BOOM'), -1,
+        'cmpVersion() can compare version strings');
+    t.assertEquals(utils.cmpVersion('1.0.0', '1.1.0'), -1,
+        'cmpVersion() can compare version strings');
+    t.assertEquals(utils.cmpVersion('1.1.0', '1.0.0'), 1,
+        'cmpVersion() can compare version strings');
+    t.assertEquals(utils.cmpVersion('0.0.3', '0.0.4'), -1,
+        'cmpVersion() can compare version strings');
+    t.assertEquals(utils.cmpVersion('0.0.3', '1.0.3'), -1,
+        'cmpVersion() can compare version strings');
+    t.assertEquals(utils.cmpVersion('0.1', '1.0.3.8'), -1,
+        'cmpVersion() can compare version strings');
+    t.assertEquals(utils.cmpVersion({major: 1, minor: 2, patch: 3},
+                                       {major: 1, minor: 2, patch: 4}), -1,
+        'cmpVersion() can compare version objects');
+    t.assertEquals(utils.cmpVersion({major: 2, minor: 0, patch: 3},
+                                       {major: 1, minor: 0, patch: 4}), 1,
+        'cmpVersion() can compare version objects');
+    t.assertEquals(utils.cmpVersion({major: 0, minor: 0, patch: 3},
+                                       {major: 1, minor: 0, patch: 3}), -1,
+        'cmpVersion() can compare version objects');
+    t.done();
+})();
+
+t.comment('gteVersion() tests');
+(function() {
+    t.assert(utils.gteVersion('1.1.0', '1.0.0'),
+        'gteVersion() checks for a greater or equal version');
+    t.assertNot(utils.gteVersion('1.0.0', '1.1.0'),
+        'gteVersion() checks for a greater or equal version');
+    t.assert(utils.gteVersion({major: 1, minor: 1, patch: 0},
+                                 {major: 1, minor: 0, patch: 0}),
+        'gteVersion() checks for a greater or equal version');
+    t.assertNot(utils.gteVersion({major: 1, minor: 0, patch: 0},
+                                    {major: 1, minor: 1, patch: 0}),
+        'gteVersion() checks for a greater or equal version');
+    t.done();
+})();
+
+t.comment('ltVersion() tests');
+(function() {
+    t.assert(utils.ltVersion('1.0.0', '1.1.0'),
+        'ltVersion() checks for a lesser version');
+    t.assertNot(utils.ltVersion('1.1.0', '1.0.0'),
+        'ltVersion() checks for a lesser version');
+    t.assert(utils.ltVersion({major: 1, minor: 0, patch: 0},
+                                {major: 1, minor: 1, patch: 0}),
+        'ltVersion() checks for a lesser version');
+    t.assertNot(utils.ltVersion({major: 1, minor: 1, patch: 0},
+                                   {major: 1, minor: 0, patch: 0}),
+        'ltVersion() checks for a lesser version');
+    t.done();
+})();
+
+
+t.done(130);
