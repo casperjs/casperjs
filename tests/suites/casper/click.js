@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false*/
+/*jshint strict:false maxstatements: 99*/
 casper.start('tests/site/index.html', function() {
     this.click('a[href="test.html"]');
 });
@@ -56,6 +56,16 @@ casper.then(function() {
     this.mouse.move(200, 100);
     results = this.getGlobal('results');
     this.test.assertEquals(results.testmove, [200, 100], 'Mouse.move() has moved to the specified position');
+
+    if (phantom.version.major >= 1 && phantom.version.minor >= 8) {
+        this.test.comment('Mouse.doubleclick()');
+        this.mouse.doubleclick(200, 100);
+        results = this.getGlobal('results');
+        this.test.assertEquals(results.testdoubleclick, [200, 100],
+            'Mouse.doubleclick() double-clicked the specified position');
+    } else {
+        this.test.pass("Mouse.doubleclick() requires PhantomJS >= 1.8");
+    }
 });
 
 // element focus on click
@@ -67,5 +77,5 @@ casper.then(function() {
 });
 
 casper.run(function() {
-    this.test.done(22);
+    this.test.done(23);
 });
