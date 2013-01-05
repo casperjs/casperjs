@@ -45,7 +45,7 @@ var Mouse = function Mouse(casper) {
 
     var slice = Array.prototype.slice,
         nativeEvents = ['mouseup', 'mousedown', 'click', 'mousemove'];
-    if (phantom.version.major >= 1 && phantom.version.minor >= 8) {
+    if (utils.gteVersion(phantom.version, '1.8.0')) {
         nativeEvents.push('doubleclick');
     }
     var emulatedEvents = ['mouseover', 'mouseout'],

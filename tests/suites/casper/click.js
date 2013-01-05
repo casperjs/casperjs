@@ -1,5 +1,7 @@
 /*global casper*/
 /*jshint strict:false maxstatements: 99*/
+var utils = require('utils');
+
 casper.start('tests/site/index.html', function() {
     this.click('a[href="test.html"]');
 });
@@ -57,7 +59,7 @@ casper.then(function() {
     results = this.getGlobal('results');
     this.test.assertEquals(results.testmove, [200, 100], 'Mouse.move() has moved to the specified position');
 
-    if (phantom.version.major >= 1 && phantom.version.minor >= 8) {
+    if (utils.gteVersion(phantom.version, '1.8.0')) {
         this.test.comment('Mouse.doubleclick()');
         this.mouse.doubleclick(200, 100);
         results = this.getGlobal('results');
