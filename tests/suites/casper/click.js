@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false*/
+/*jshint strict:false maxstatements: 99*/
 var utils = require('utils');
 
 casper.test.begin('click() tests', 2, function(test) {
