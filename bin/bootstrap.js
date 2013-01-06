@@ -33,7 +33,6 @@
 
 if (!phantom) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
-    phantom.exit(1);
 }
 
 if (phantom.version.major === 1 && phantom.version.minor < 7) {
