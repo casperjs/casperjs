@@ -39,7 +39,15 @@ if (phantom.version.major === 1 && phantom.version.minor < 7) {
     console.error('CasperJS needs at least PhantomJS v1.7 or later.');
     phantom.exit(1);
 } else {
-    bootstrap(window);
+    try {
+        bootstrap(window);
+    } catch (e) {
+        console.error(e);
+        (e.stackArray || []).forEach(function(entry) {
+            console.error('  In ' + entry.sourceURL + ':' + entry.line);
+        });
+        phantom.exit(1);
+    }
 }
 
 // Polyfills
@@ -136,7 +144,11 @@ function patchRequire(require, requireDirs) {
             var scriptCode = fs.read(file);
             if (/\.coffee$/i.test(file)) {
                 /*global CoffeeScript*/
-                scriptCode = CoffeeScript.compile(scriptCode);
+                try {
+                    scriptCode = CoffeeScript.compile(scriptCode);
+                } catch (e) {
+                    throw new Error('Unable to compile coffeescript:' + e);
+                }
             }
             return scriptCode;
         })(file);
@@ -328,7 +340,15 @@ function bootstrap(global) {
         phantom.casperArgs.drop(phantom.casperScript);
 
         // passed casperjs script execution
-        phantom.injectJs(phantom.casperScript);
+        var injected = false;
+        try {
+            injected = phantom.injectJs(phantom.casperScript);
+        } catch (e) {
+            throw new global.CasperError('Error loading script ' + phantom.casperScript + ': ' + e);
+        }
+        if (!injected) {
+            throw new global.CasperError('Unable to load script ' + phantom.casperScript + '; check file syntax');
+        }
     };
 
     if (!phantom.casperLoaded) {
