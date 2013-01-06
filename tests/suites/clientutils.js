@@ -120,7 +120,6 @@ casper.test.begin('ClientUtils.getElementBounds() tests', 3, function(test) {
         );
     });
     casper.then(function() {
-        test.comment('Casper.getElementsBounds()');
         var html  = '<div id="boxes">';
             html += '  <div style="position:fixed;top:10px;left:11px;width:50px;height:60px"></div>';
             html += '  <div style="position:fixed;top:20px;left:21px;width:70px;height:80px"></div>';

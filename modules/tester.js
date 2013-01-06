@@ -99,6 +99,7 @@ var Tester = function Tester(casper, options) {
         post:     []
     };
     this.options = utils.mergeObjects({
+        concise:  false,  // concise output?
         failFast: false,  // terminates a suite as soon as a test fails?
         failText: "FAIL", // text to use for a succesful test
         passText: "PASS", // text to use for a failed test
@@ -818,7 +819,9 @@ Tester.prototype.begin = function begin(description, planned, suiteFn) {
         return this.queue.push(arguments);
     }
     description = description || "Untitled suite in " + this.currentTestFile;
-    this.comment(description);
+    if (!this.options.concise) {
+        this.comment(description);
+    }
     this.currentSuite = new TestCaseResult({
         name: description,
         file: this.currentTestFile,
@@ -835,6 +838,13 @@ Tester.prototype.begin = function begin(description, planned, suiteFn) {
             this.uncaughtError(err, this.currentTestFile, err.line);
         }
         this.done();
+    }
+    if (this.options.concise) {
+        this.casper.echo([
+            this.colorize('PASS', 'INFO'),
+            this.formatMessage(description),
+            this.colorize(f('(%d test%s)', planned, planned > 1 ? 's' : ''), 'INFO')
+        ].join(' '));
     }
 };
 
@@ -1060,7 +1070,9 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         style = 'RED_BAR';
         status = this.options.failText;
     }
-    this.casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
+    if (!this.options.concise) {
+        this.casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
+    }
     this.emit(eventName, result);
     if (this.options.failFast && !result.success) {
         throw this.SKIP_MESSAGE;

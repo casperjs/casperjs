@@ -60,6 +60,7 @@ function checkArgs() {
         casper.options.colorizerType = cls;
         casper.colorizer = colorizer.create(cls);
     }
+    casper.test.options.concise = casper.cli.get('concise') || false;
     casper.test.options.failFast = casper.cli.get('fail-fast') || false;
 
     // test paths are passed as args
