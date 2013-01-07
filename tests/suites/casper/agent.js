@@ -12,12 +12,12 @@ function fetchUA(request) {
     }).pop().value, /plop/);
 }
 
-casper.test.begin('userAgent() tests', 3, function(test) {
+casper.test.begin('userAgent() tests', 2, function(test) {
     testUA(casper.options.pageSettings.userAgent, /CasperJS/);
     casper.start();
-    casper.userAgent('plop').on('resource.requested', fetchUA);
-    casper.thenOpen('tests/site/index.html').run(function() {
-        this.removeListener('resource.requested', fetchUA);
+    casper.userAgent('plop').once('resource.requested', fetchUA);
+    casper.thenOpen('tests/site/index.html');
+    casper.run(function() {
         test.done();
     });
 });

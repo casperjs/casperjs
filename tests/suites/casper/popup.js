@@ -3,14 +3,14 @@
 var utils = require('utils');
 var x = require('casper').selectXPath;
 
-casper.test.begin('popup tests', 25, function(test) {
-    casper.on('popup.created', function(popup) {
+casper.test.begin('popup tests', 20, function(test) {
+    casper.once('popup.created', function(popup) {
         test.pass('"popup.created" event is fired');
         test.assert(utils.isWebPage(popup),
             '"popup.created" event callback get a popup page instance');
     });
 
-    casper.on('popup.loaded', function(popup) {
+    casper.once('popup.loaded', function(popup) {
         test.pass('"popup.loaded" event is fired');
         test.assertEquals(popup.evaluate(function() {
             return document.title;
@@ -18,7 +18,7 @@ casper.test.begin('popup tests', 25, function(test) {
             '"popup.loaded" is triggered when popup content is actually loaded');
     });
 
-    casper.on('popup.closed', function(popup) {
+    casper.once('popup.closed', function(popup) {
         test.assertEquals(this.popups.length, 0, '"popup.closed" event is fired');
     });
 

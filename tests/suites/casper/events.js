@@ -2,7 +2,7 @@
 /*jshint strict:false*/
 casper.test.begin('events', 2, function(test) {
     casper.plopped = false;
-    casper.on("plop", function() {
+    casper.once("plop", function() {
         this.plopped = true;
     });
     test.assert(Object.keys(casper._events).some(function(i) {

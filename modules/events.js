@@ -1,23 +1,32 @@
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*!
+ * Casper is a navigation utility for PhantomJS.
+ *
+ * Documentation: http://casperjs.org/
+ * Repository:    http://github.com/n1k0/casperjs
+ *
+ * Copyright (c) 2011-2012 Nicolas Perriault
+ *
+ * Part of source code is Copyright Joyent, Inc. and other Node contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 /*global CasperError*/
 
@@ -41,7 +50,7 @@ EventEmitter.prototype.setMaxListeners = function(n) {
 };
 
 
-EventEmitter.prototype.emit = function() {
+EventEmitter.prototype.emit = function emit() {
   var type = arguments[0];
   // If there is no 'error' event listener then throw.
   if (type === 'error') {
@@ -60,24 +69,28 @@ EventEmitter.prototype.emit = function() {
   var handler = this._events[type];
   if (!handler) return false;
 
-  if (typeof handler == 'function') {
-    switch (arguments.length) {
-      // fast cases
-      case 1:
-        handler.call(this);
-        break;
-      case 2:
-        handler.call(this, arguments[1]);
-        break;
-      case 3:
-        handler.call(this, arguments[1], arguments[2]);
-        break;
-      // slower
-      default:
-        var l = arguments.length;
-        var args = new Array(l - 1);
-        for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
-        handler.apply(this, args);
+  if (typeof handler === 'function') {
+    try {
+      switch (arguments.length) {
+        // fast cases
+        case 1:
+          handler.call(this);
+          break;
+        case 2:
+          handler.call(this, arguments[1]);
+          break;
+        case 3:
+          handler.call(this, arguments[1], arguments[2]);
+          break;
+        // slower
+        default:
+          var l = arguments.length;
+          var args = new Array(l - 1);
+          for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+          handler.apply(this, args);
+      }
+    } catch (err) {
+      this.emit('event.error', err);
     }
     return true;
 
@@ -99,7 +112,7 @@ EventEmitter.prototype.emit = function() {
 
 // EventEmitter is defined in src/node_events.cc
 // EventEmitter.prototype.emit() is also defined there.
-EventEmitter.prototype.addListener = function(type, listener) {
+EventEmitter.prototype.addListener = function addListener(type, listener) {
   if ('function' !== typeof listener) {
     throw new CasperError('addListener only takes instances of Function');
   }
@@ -146,7 +159,7 @@ EventEmitter.prototype.addListener = function(type, listener) {
 
 EventEmitter.prototype.on = EventEmitter.prototype.addListener;
 
-EventEmitter.prototype.once = function(type, listener) {
+EventEmitter.prototype.once = function once(type, listener) {
   if ('function' !== typeof listener) {
     throw new CasperError('.once only takes instances of Function');
   }
@@ -155,7 +168,7 @@ EventEmitter.prototype.once = function(type, listener) {
   function g() {
     self.removeListener(type, g);
     listener.apply(this, arguments);
-  };
+  }
 
   g.listener = listener;
   self.on(type, g);
@@ -163,7 +176,7 @@ EventEmitter.prototype.once = function(type, listener) {
   return this;
 };
 
-EventEmitter.prototype.removeListener = function(type, listener) {
+EventEmitter.prototype.removeListener = function removeListener(type, listener) {
   if ('function' !== typeof listener) {
     throw new CasperError('removeListener only takes instances of Function');
   }
@@ -186,7 +199,7 @@ EventEmitter.prototype.removeListener = function(type, listener) {
 
     if (position < 0) return this;
     list.splice(position, 1);
-    if (list.length == 0)
+    if (list.length === 0)
       delete this._events[type];
   } else if (list === listener ||
              (list.listener && list.listener === listener))
@@ -197,7 +210,7 @@ EventEmitter.prototype.removeListener = function(type, listener) {
   return this;
 };
 
-EventEmitter.prototype.removeAllListeners = function(type) {
+EventEmitter.prototype.removeAllListeners = function removeAllListeners(type) {
   if (arguments.length === 0) {
     this._events = {};
     return this;
@@ -208,7 +221,7 @@ EventEmitter.prototype.removeAllListeners = function(type) {
   return this;
 };
 
-EventEmitter.prototype.listeners = function(type) {
+EventEmitter.prototype.listeners = function listeners(type) {
   if (!this._events) this._events = {};
   if (!this._events[type]) this._events[type] = [];
   if (!isArray(this._events[type])) {
@@ -218,21 +231,21 @@ EventEmitter.prototype.listeners = function(type) {
 };
 
 // Added for CasperJS: filters a value attached to an event
-EventEmitter.prototype.filter = function() {
+EventEmitter.prototype.filter = function filter() {
   var type = arguments[0];
   if (!this._filters) {
     this._filters = {};
     return;
   }
 
-  var filter = this._filters[type];
-  if (typeof filter !== 'function') {
+  var _filter = this._filters[type];
+  if (typeof _filter !== 'function') {
     return;
   }
-  return filter.apply(this, Array.prototype.splice.call(arguments, 1));
+  return _filter.apply(this, Array.prototype.splice.call(arguments, 1));
 };
 
-EventEmitter.prototype.removeAllFilters = function(type) {
+EventEmitter.prototype.removeAllFilters = function removeAllFilters(type) {
   if (arguments.length === 0) {
     this._filters = {};
     return this;
@@ -243,7 +256,7 @@ EventEmitter.prototype.removeAllFilters = function(type) {
   return this;
 };
 
-EventEmitter.prototype.setFilter = function(type, filterFn) {
+EventEmitter.prototype.setFilter = function setFilter(type, filterFn) {
   if (!this._filters) {
     this._filters = {};
   }

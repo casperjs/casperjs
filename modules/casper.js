@@ -2086,13 +2086,13 @@ function createPage(casper) {
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
-    page.onNavigationRequested = function onNavigationRequested(url, navigationType, navigationLocked, isMainFrame) {
+    page.onNavigationRequested = function onNavigationRequested(url, type, lock, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, lock=%s, isMainFrame=%s',
-                     url, navigationType, navigationLocked, isMainFrame), "debug");
-        if(isMainFrame) {
+                     url, type, lock, isMainFrame), "debug");
+        if (isMainFrame) {
             casper.navigationRequested  = true;
         }
-        casper.emit('navigation.requested', url, navigationType, navigationLocked, isMainFrame);
+        casper.emit('navigation.requested', url, type, lock, isMainFrame);
     };
     page.onPageCreated = function onPageCreated(popupPage) {
         casper.emit('popup.created', popupPage);

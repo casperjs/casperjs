@@ -74,7 +74,7 @@ exports.create = function create(casper, options) {
  */
 var Tester = function Tester(casper, options) {
     "use strict";
-    /*jshint maxstatements:30*/
+    /*jshint maxstatements:99*/
 
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
@@ -143,32 +143,37 @@ var Tester = function Tester(casper, options) {
 
     // casper events
     this.casper.on('error', function onCasperError(msg, backtrace) {
-        var line = 0;
-        if (msg.indexOf('AssertionError') === 0) {
+
+    });
+
+    function errorHandler(error, backtrace) {
+        if (error instanceof Error) {
+            if (error instanceof AssertionError) {
+                self.processAssertionError(error);
+            } else if (error.message !== self.SKIP_MESSAGE) {
+                self.uncaughtError(error, self.currentTestFile, error.line);
+            }
+            return self.done();
+        }
+        if (error.indexOf('AssertionError') === 0) {
             return;
         }
-        if (msg === self.SKIP_MESSAGE) {
-            this.warn(f('--fail-fast: aborted remaining tests in "%s"', self.currentTestFile));
+        if (error === self.SKIP_MESSAGE) {
+            casper.warn(f('--fail-fast: aborted remaining tests in "%s"', self.currentTestFile));
             self.aborted = true;
             return self.done();
         }
+        var line = 0;
         try {
-            line = backtrace.filter(function(entry) {
+            line = (backtrace || []).filter(function(entry) {
                 return self.currentTestFile === entry.file;
             })[0].line;
         } catch (e) {}
-        self.uncaughtError(msg, self.currentTestFile, line, backtrace);
+        self.uncaughtError(error, self.currentTestFile, line, backtrace);
         self.done();
-    });
-
-    this.casper.on('step.error', function onStepError(error) {
-        if (error instanceof AssertionError) {
-            self.processAssertionError(error);
-        } else if (error.message !== self.SKIP_MESSAGE) {
-            self.uncaughtError(error, self.currentTestFile);
-        }
-        self.done();
-    });
+    }
+    this.casper.on('event.error', errorHandler);
+    this.casper.on('step.error', errorHandler);
 
     this.casper.on('warn', function(warning) {
         if (self.currentSuite) {
@@ -935,7 +940,7 @@ Tester.prototype.exec = function exec(file) {
     file = this.filter('exec.file', file) || file;
     if (!fs.isFile(file) || !utils.isJsFile(file)) {
         var e = new CasperError(f("Cannot exec %s: can only exec() files with .js or .coffee extensions", file));
-        e.fileName = file;
+        e.fileName = e.file = e.sourceURL = file;
         throw e;
     }
     this.currentTestFile = file;
@@ -1038,8 +1043,7 @@ Tester.prototype.processAssertionError = function(error) {
         result.line = stackEntry.line;
         try {
             result.lineContents = fs.read(this.currentTestFile).split('\n')[result.line - 1].trim();
-        } catch (e) {
-        }
+        } catch (e) {}
     }
     return this.processAssertionResult(result);
 };
@@ -1049,7 +1053,7 @@ Tester.prototype.processAssertionError = function(error) {
  * printing result onto the console.
  *
  * @param  Object  result  An assertion result object
- * @return Object  The passed assertion result Object
+ * @return Object          The passed assertion result Object
  */
 Tester.prototype.processAssertionResult = function processAssertionResult(result) {
     "use strict";

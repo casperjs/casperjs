@@ -2,7 +2,7 @@
 /*jshint strict:false*/
 casper.test.begin('page.error event tests', 2, function(test) {
     var error = {};
-    casper.on("page.error", function onError(msg, trace) {
+    casper.once("page.error", function onError(msg, trace) {
         error.msg = msg;
         error.trace = trace;
     });
