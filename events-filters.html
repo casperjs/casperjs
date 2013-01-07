@@ -251,7 +251,7 @@ parameters passed to their callback:
       <td><code>page.error</code></td>
       <td><code>message, trace</code></td>
       <td>
-        Emitted when retrieved page leaved a Javascript error uncaught:
+        Emitted when retrieved page leaves a Javascript error uncaught:
         <pre class="prettyprint">casper.on("page.error", function(msg, trace) {
     this.echo("Error: " + msg, "ERROR");
 });</pre>
