@@ -987,6 +987,16 @@ Tester.prototype.findTestFiles = function findTestFiles(dir) {
 };
 
 /**
+ * Computes current suite identifier.
+ *
+ * @return String
+ */
+Tester.prototype.getCurrentSuiteId = function getCurrentSuiteId() {
+    "use strict";
+    return casper.test.currentSuiteNum + "-" + casper.step;
+};
+
+/**
  * Formats a message to highlight some parts of it.
  *
  * @param  String  message

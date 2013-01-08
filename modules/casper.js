@@ -154,18 +154,30 @@ var Casper = function Casper(options) {
     this.started = false;
     this.step = -1;
     this.steps = [];
-    if (phantom.casperTest) {
-        this.test = tester.create(this);
-    }
+    this._test = undefined;
+    this.__defineGetter__('test', function() {
+        if (!phantom.casperTest) {
+            this.emit('tester.called');
+            return;
+        }
+        if (!utils.isObject(this._test)) {
+            this._test = tester.create(this);
+        }
+        return this._test;
+    });
+
+    this.once('tester.called', function() {
+        this.warn('please use `casperjs test` command');
+    });
 
     // init phantomjs error handler
     this.initErrorHandler();
 
     this.on('error', function(msg, backtrace) {
-        if (msg === this.test.SKIP_MESSAGE) { // FIXME: decouple testing
+        if (msg === '__termination__') {
             return;
         }
-        if (msg.indexOf('AssertionError') === 0) { // FIXME: decouple testing
+        if (msg.indexOf('AssertionError') === 0) {
             return;
         }
         var c = this.getColorizer();
@@ -1313,10 +1325,10 @@ Casper.prototype.runStep = function runStep(step) {
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
         stepInfo = f("Step %d/%d", this.step, this.steps.length),
         stepResult;
-    function getCurrentSuiteNum(casper) {
-        if (casper.test) {
-            return casper.test.currentSuiteNum + "-" + casper.step;
-        } else {
+    function getCurrentSuiteId(casper) {
+        try {
+            return casper.test.getCurrentSuiteId();
+        } catch (e) {
             return casper.step;
         }
     }
@@ -1326,7 +1338,7 @@ Casper.prototype.runStep = function runStep(step) {
     if (utils.isNumber(this.options.stepTimeout) && this.options.stepTimeout > 0) {
         var stepTimeoutCheckInterval = setInterval(function _check(self, start, stepNum) {
             if (new Date().getTime() - start > self.options.stepTimeout) {
-                if (getCurrentSuiteNum(self) === stepNum) {
+                if (getCurrentSuiteId(self) === stepNum) {
                     self.emit('step.timeout');
                     if (utils.isFunction(self.options.onStepTimeout)) {
                         self.options.onStepTimeout.call(self, self.options.stepTimeout, stepNum);
@@ -1334,7 +1346,7 @@ Casper.prototype.runStep = function runStep(step) {
                 }
                 clearInterval(stepTimeoutCheckInterval);
             }
-        }, this.options.stepTimeout, this, new Date().getTime(), getCurrentSuiteNum(this));
+        }, this.options.stepTimeout, this, new Date().getTime(), getCurrentSuiteId(this));
     }
     this.emit('step.start', step);
     try {
