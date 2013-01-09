@@ -157,17 +157,12 @@ var Casper = function Casper(options) {
     this._test = undefined;
     this.__defineGetter__('test', function() {
         if (!phantom.casperTest) {
-            this.emit('tester.called');
-            return;
+            this.die('casper.test property is only available using the `casperjs test` command');
         }
         if (!utils.isObject(this._test)) {
             this._test = tester.create(this);
         }
         return this._test;
-    });
-
-    this.once('tester.called', function() {
-        this.warn('please use `casperjs test` command');
     });
 
     // init phantomjs error handler
