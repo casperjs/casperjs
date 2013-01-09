@@ -22,7 +22,6 @@
 // Query String Utilities
 
 var QueryString = exports;
-//var urlDecode = process.binding('http_parser').urlDecode; // phantomjs incompatible
 
 
 // If obj.hasOwnProperty has been overridden, then calling
@@ -134,33 +133,31 @@ var stringifyPrimitive = function(v) {
 QueryString.stringify = QueryString.encode = function(obj, sep, eq, name) {
   sep = sep || '&';
   eq = eq || '=';
-  obj = (obj === null) ? undefined : obj;
-
-  switch (typeof obj) {
-    case 'object':
-      return Object.keys(obj).map(function(k) {
-        if (Array.isArray(obj[k])) {
-          return obj[k].map(function(v) {
-            return QueryString.escape(stringifyPrimitive(k)) +
-                   eq +
-                   QueryString.escape(stringifyPrimitive(v));
-          }).join(sep);
-        } else {
-          return QueryString.escape(stringifyPrimitive(k)) +
-                 eq +
-                 QueryString.escape(stringifyPrimitive(obj[k]));
-        }
-      }).join(sep);
-
-    default:
-      if (!name) return '';
-      return QueryString.escape(stringifyPrimitive(name)) + eq +
-             QueryString.escape(stringifyPrimitive(obj));
+  if (obj === null) {
+    obj = undefined;
   }
+
+  if (typeof obj === 'object') {
+    return Object.keys(obj).map(function(k) {
+      var ks = QueryString.escape(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + QueryString.escape(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + QueryString.escape(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return '';
+  return QueryString.escape(stringifyPrimitive(name)) + eq +
+         QueryString.escape(stringifyPrimitive(obj));
 };
 
 // Parse a key=val string.
-QueryString.parse = QueryString.decode = function(qs, sep, eq) {
+QueryString.parse = QueryString.decode = function(qs, sep, eq, options) {
   sep = sep || '&';
   eq = eq || '=';
   var obj = {};
@@ -169,19 +166,49 @@ QueryString.parse = QueryString.decode = function(qs, sep, eq) {
     return obj;
   }
 
-  qs.split(sep).forEach(function(kvp) {
-    var x = kvp.split(eq);
-    var k = QueryString.unescape(x[0], true);
-    var v = QueryString.unescape(x.slice(1).join(eq), true);
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options && typeof options.maxKeys === 'number') {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys <= 0 means that we should not limit keys count
+  if (maxKeys > 0 && len > maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i < len; ++i) {
+    var x = qs[i].replace(regexp, '%20'),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx >= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = '';
+    }
+
+    try {
+      k = decodeURIComponent(kstr);
+      v = decodeURIComponent(vstr);
+    } catch (e) {
+      k = QueryString.unescape(kstr, true);
+      v = QueryString.unescape(vstr, true);
+    }
 
     if (!hasOwnProperty(obj, k)) {
       obj[k] = v;
-    } else if (!Array.isArray(obj[k])) {
-      obj[k] = [obj[k], v];
-    } else {
+    } else if (Array.isArray(obj[k])) {
       obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
     }
-  });
+  }
 
   return obj;
 };
