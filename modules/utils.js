@@ -588,6 +588,7 @@ exports.unique = unique;
  * @return Number
  */
 function cmpVersion(a, b) {
+    "use strict";
     var i, cmp, len, re = /(\.0)+[^\.]*$/;
     function versionToString(version) {
         if (isObject(version)) {
@@ -620,6 +621,7 @@ exports.cmpVersion = cmpVersion;
  * @return Boolean
  */
 function gteVersion(a, b) {
+    "use strict";
     return cmpVersion(a, b) >= 0;
 }
 exports.gteVersion = gteVersion;
@@ -632,6 +634,7 @@ exports.gteVersion = gteVersion;
  * @return Boolean
  */
 function ltVersion(a, b) {
+    "use strict";
     return cmpVersion(a, b) < 0;
 }
 exports.ltVersion = ltVersion;
