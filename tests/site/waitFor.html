@@ -11,11 +11,15 @@
             <li>two</li>
             <li>three</li>
         </ul>
+        <div id="textChange" >
+            Loading...
+        </div>
         <script>
         setTimeout(function() {
             var li = document.createElement('li')
             li.appendChild(document.createTextNode('four'));
             document.querySelector('ul').appendChild(li);
+            document.getElementById('textChange').innerHTML = 'Done';
         }, 500);
         </script>
     </body>
