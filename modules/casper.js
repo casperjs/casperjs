@@ -157,7 +157,7 @@ var Casper = function Casper(options) {
     this._test = undefined;
     this.__defineGetter__('test', function() {
         if (!phantom.casperTest) {
-            this.die('casper.test property is only available using the `casperjs test` command');
+            throw new CasperError('casper.test property is only available using the `casperjs test` command');
         }
         if (!utils.isObject(this._test)) {
             this._test = tester.create(this);
