@@ -1,6 +1,6 @@
 /*global casper*/
 /*jshint strict:false*/
-casper.test.begin('wait*() tests', 3, function(test) {
+casper.test.begin('wait*() tests', 4, function(test) {
     var waitStart;
 
     casper.start('tests/site/index.html', function() {
@@ -29,6 +29,12 @@ casper.test.begin('wait*() tests', 3, function(test) {
     }, function() {
         test.fail('Casper.waitForText() can wait for text');
     });
+
+    casper.thenOpen('tests/site/waitFor.html').waitForSelectorTextChange('#textChange', function() {
+        test.pass('Casper.waitForSelectorTextChange() can wait for text on a selector to change');
+    }, function() {
+        test.fail('Casper.waitForSelectorTextChange() can wait for text on a selector to change');
+    })
 
     casper.run(function() {
         test.done();
