@@ -619,11 +619,10 @@ casper.start('http://www.google.fr/', function() {
 casper.run();
 ```
 
-<h3 id="casper.evaluate"><code>Casper#evaluate(Function fn[, Object replacements])</code></h3>
+<h3 id="casper.evaluate"><code>Casper#evaluate(Function fn[, arg1[, arg2[, …]])</code></h3>
 
-Evaluates an expression **in the remote page context**, a bit like what PhantomJS'
-`WebPage#evaluate` does, but can also handle passed arguments if you
-define their context:
+Basically PhantomJS' [`WebPage#evaluate`](https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-webpage-evaluate)
+equivalent. Evaluates an expression **in the current page DOM context**.
 
 **Example:**
 
@@ -632,11 +631,13 @@ casper.evaluate(function(username, password) {
     document.querySelector('#username').value = username;
     document.querySelector('#password').value = password;
     document.querySelector('#submit').click();
-}, {
-    username: 'sheldon.cooper',
-    password: 'b4z1ng4'
-});
+}, 'sheldon.cooper', 'b4z1ng4');
 ```
+
+<span class="label label-warning">Warning</span>
+The pre-1.0 way of passing arguments using an object has been kept for BC purpose, though
+it may [not work in some case](https://github.com/n1k0/casperjs/issues/349); so you're
+encouraged to use the method described above.
 
 <span class="label label-info">Note</span> For filling and submitting forms, rather use the
 [`Casper#fill()`](#casper.fill) method.

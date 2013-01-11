@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1356731246865">
-    <link rel="stylesheet" href="css/casper.css?1356731246865">
+    <link rel="stylesheet" href="prettify/prettify.css?1357892184722">
+    <link rel="stylesheet" href="css/casper.css?1357892184722">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -692,11 +692,10 @@ information).
 });
 
 casper.run();</code></pre>
-<h3 id="casper.evaluate"><code>Casper#evaluate(Function fn[, Object replacements])</code></h3>
+<h3 id="casper.evaluate"><code>Casper#evaluate(Function fn[, arg1[, arg2[, …]])</code></h3>
 
-<p>Evaluates an expression <strong>in the remote page context</strong>, a bit like what PhantomJS'
-<code>WebPage#evaluate</code> does, but can also handle passed arguments if you
-define their context:
+<p>Basically PhantomJS' <a href="https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-webpage-evaluate"><code>WebPage#evaluate</code></a>
+equivalent. Evaluates an expression <strong>in the current page DOM context</strong>.
 
 </p>
 <p><strong>Example:</strong>
@@ -706,10 +705,13 @@ define their context:
     document.querySelector('#username').value = username;
     document.querySelector('#password').value = password;
     document.querySelector('#submit').click();
-}, {
-    username: 'sheldon.cooper',
-    password: 'b4z1ng4'
-});</code></pre>
+}, 'sheldon.cooper', 'b4z1ng4');</code></pre>
+<p><span class="label label-warning">Warning</span>
+The pre-1.0 way of passing arguments using an object has been kept for BC purpose, though
+it may <a href="https://github.com/n1k0/casperjs/issues/349">not work in some case</a>; so you're
+encouraged to use the method described above.
+
+</p>
 <p><span class="label label-info">Note</span> For filling and submitting forms, rather use the
 <a href="#casper.fill"><code>Casper#fill()</code></a> method.
 
@@ -3040,7 +3042,7 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
         <footer>
             <hr>
             <p>
-                © 2011-2012 <a href="https://nicolas.perriault.net/">Nicolas Perriault</a> — get
+                © 2011-2013 <a href="https://nicolas.perriault.net/">Nicolas Perriault</a> — get
                 the source code on GitHub: <a href="http://github.com/n1k0/casperjs">n1k0/casperjs</a> —
                 logo by <a href="http://www.forveillejeremy.com/">Jeremy Forveille</a> -
                 <a href="https://plus.google.com/106641872690063476159" rel="publisher">Google+</a> -
@@ -3048,10 +3050,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" src="js/jquery.min.js?1356731246865"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1356731246865"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1356731246865"></script>
-    <script type="text/javascript" src="js/application.js?1356731246865"></script>
+    <script type="text/javascript" src="js/jquery.min.js?1357892184722"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1357892184722"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1357892184722"></script>
+    <script type="text/javascript" src="js/application.js?1357892184722"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
