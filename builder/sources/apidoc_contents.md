@@ -397,7 +397,7 @@ casper.start('http://google.fr/');
 casper.thenEvaluate(function(term) {
     document.querySelector('input[name="q"]').setAttribute('value', term);
     document.querySelector('form[name="f"]').submit();
-}, { term: 'CasperJS' });
+}, 'CasperJS');
 
 casper.then(function() {
     // Click on 1st result link
@@ -1418,7 +1418,7 @@ This method is basically a convenient a shortcut for chaining a
 [`then()`](#then) and an [`evaluate()`](#evaluate)
 calls.
 
-<h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, Object replacements])</code></h3>
+<h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, arg1[, arg2[, …]])</code></h3>
 
 Adds a new navigation step to perform code evaluation within the current
 retrieved page DOM.
@@ -1430,9 +1430,7 @@ retrieved page DOM.
 casper.start('http://google.fr/').thenEvaluate(function(term) {
     document.querySelector('input[name="q"]').setAttribute('value', term);
     document.querySelector('form[name="f"]').submit();
-}, {
-    term: 'Chuck Norris'
-});
+}, 'Chuck Norris');
 
 casper.run();
 ```
@@ -1478,7 +1476,7 @@ casper.start().thenOpen('http://url.to/some/uri', {
 casper.run();
 ```
 
-<h3 id="casper.thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then, Object replacements])</code></h3>
+<h3 id="casper.thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then[, arg1[, arg2[, …]])</code></h3>
 
 Basically a shortcut for opening an url and evaluate code against remote
 DOM environment.
