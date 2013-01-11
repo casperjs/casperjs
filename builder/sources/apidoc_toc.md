@@ -60,6 +60,7 @@
 - [`waitForSelector()`](#casper.waitForSelector)
 - [`waitForResource()`](#casper.waitForResource)
 - [`waitForText()`](#casper.waitForText)
+- [`waitForSelectorTextChange()`]($casper.waitForSelectorTextChange)
 - [`waitUntilVisible()`](#casper.waitUntilVisible)
 - [`waitWhileSelector()`](#casper.waitWhileSelector)
 - [`waitWhileVisible()`](#casper.waitWhileVisible)
