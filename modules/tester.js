@@ -993,7 +993,7 @@ Tester.prototype.findTestFiles = function findTestFiles(dir) {
  */
 Tester.prototype.getCurrentSuiteId = function getCurrentSuiteId() {
     "use strict";
-    return casper.test.currentSuiteNum + "-" + casper.step;
+    return this.casper.test.currentSuiteNum + "-" + this.casper.step;
 };
 
 /**
