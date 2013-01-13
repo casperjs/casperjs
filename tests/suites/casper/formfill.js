@@ -1,4 +1,4 @@
-/*global casper*/
+/*global casper __utils__*/
 /*jshint strict:false*/
 casper.test.begin('fill() tests', 15, function(test) {
     casper.start('tests/site/form.html', function() {
