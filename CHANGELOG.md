@@ -66,7 +66,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 
 None yet.
 
-XXXX-XX-XX, v1.0.1
+2013-01-17, v1.0.1
 ------------------
 
 - fixed [#336](https://github.com/n1k0/casperjs/issues/336) - Test result duration may have an exotic value
