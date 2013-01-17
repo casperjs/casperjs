@@ -45,7 +45,8 @@ var TestSuiteResult = require('tester').TestSuiteResult;
  */
 function generateClassName(classname) {
     "use strict";
-    var script = classname.replace(phantom.casperPath, "").trim() || phantom.casperScript;
+    classname = (classname || "").replace(phantom.casperPath, "").trim();
+    var script = classname || phantom.casperScript || "";
     if (script.indexOf(fs.workingDirectory) === 0) {
         script = script.substring(fs.workingDirectory.length + 1);
     }
