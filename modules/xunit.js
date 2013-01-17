@@ -45,7 +45,7 @@ var fs = require('fs');
 function generateClassName(classname) {
     "use strict";
     classname = classname.replace(phantom.casperPath, "").trim();
-    var script = classname || phantom.casperScript;
+    var script = classname || phantom.casperScript || "";
     if (script.indexOf(fs.workingDirectory) === 0) {
         script = script.substring(fs.workingDirectory.length + 1);
     }
