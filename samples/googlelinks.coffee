@@ -1,5 +1,5 @@
 links = []
-casper = require("casper").create()
+kasper = require("kasper").create()
 
 getLinks = ->
     links = document.querySelectorAll("h3.r a")
@@ -9,21 +9,21 @@ getLinks = ->
         catch e
             e.getAttribute "href"
 
-casper.start "http://google.fr/", ->
-    # search for 'casperjs' from google form
-    @fill "form[action=\"/search\"]", q: "casperjs", true
+kasper.start "http://google.fr/", ->
+    # search for 'kasperjs' from google form
+    @fill "form[action=\"/search\"]", q: "kasperjs", true
 
-casper.then ->
-    # aggregate results for the 'casperjs' search
+kasper.then ->
+    # aggregate results for the 'kasperjs' search
     links = @evaluate(getLinks)
     # now search for 'phantomjs' by fillin the form again
     @fill "form[action=\"/search\"]", q: "phantomjs", true
 
-casper.then ->
+kasper.then ->
     # aggregate results for the 'phantomjs' search
     links = links.concat(@evaluate(getLinks))
 
-casper.run ->
+kasper.run ->
     # echo results in some pretty fashion
     @echo links.length + " links found:"
     @echo " - " + links.join("\n - ")

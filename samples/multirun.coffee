@@ -1,4 +1,4 @@
-casper = require("casper").create verbose: true
+kasper = require("kasper").create verbose: true
 
 countLinks = ->
     document.querySelectorAll('a').length
@@ -18,9 +18,9 @@ suites = [
         @then -> @echo "#{@evaluate(countLinks)} links"
 ]
 
-casper.start()
+kasper.start()
 
-casper.then ->
+kasper.then ->
     @echo("Starting")
 
 currentSuite = 0;
@@ -29,9 +29,9 @@ check = ->
     if suites[currentSuite]
         suites[currentSuite].call @
         currentSuite++;
-        casper.run check
+        kasper.run check
     else
         @echo "All done."
         @exit()
 
-casper.run check
+kasper.run check

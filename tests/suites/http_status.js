@@ -1,4 +1,4 @@
-/*global casper*/
+/*global kasper*/
 /*jshint strict:false*/
 /**
  * Special test server to test for HTTP status codes
@@ -14,11 +14,11 @@ var service = server.listen(8090, function (request, response) {
     response.close();
 });
 
-casper.test.begin("HTTP status code handling", 109, function(test) {
-    casper.start();
+kasper.test.begin("HTTP status code handling", 109, function(test) {
+    kasper.start();
 
     // file protocol
-    casper.thenOpen('file://' + phantom.casperPath + '/tests/site/index.html', function() {
+    kasper.thenOpen('file://' + phantom.kasperPath + '/tests/site/index.html', function() {
         this.test.assertHttpStatus(null, 'file:// protocol does not set a HTTP status');
     });
 
@@ -29,19 +29,19 @@ casper.test.begin("HTTP status code handling", 109, function(test) {
                       414, 415, 416, 417, 418, 422, 423, 424, 425, 426, 449, 450,
                  500, 501, 502, 503, 504, 505, 507, 509];
 
-    casper.each(codes, function(self, code) {
+    kasper.each(codes, function(self, code) {
         if (code === 100) {
             // HTTP 100 is CONTINUE, so don't expect a terminated response
             return;
         }
         this.thenOpen('http://localhost:8090/' + code, function() {
             this.test.assertEquals(this.currentHTTPStatus, code,
-                utils.format('Status is stored in casper.currentHTTPStatus' , code));
+                utils.format('Status is stored in kasper.currentHTTPStatus' , code));
             this.test.assertHttpStatus(code, utils.format('HTTP %d handled' , code));
         });
     });
 
-    casper.run(function() {
+    kasper.run(function() {
         server.close();
         this.test.done();
     });

@@ -1,30 +1,30 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
 /**
  * Translation using the Google Translate Service.
  *
  * Usage:
  *
- *     $ casperjs translate.js --target=fr "hello world"
+ *     $ kasperjs translate.js --target=fr "hello world"
  *     bonjour tout le monde
  */
 var system = require('system'),
-    casper = require('casper').create(),
+    kasper = require('kasper').create(),
     format = require('utils').format,
-    source = casper.cli.get('source') || 'auto',
-    target = casper.cli.get('target'),
-    text   = casper.cli.get(0),
+    source = kasper.cli.get('source') || 'auto',
+    target = kasper.cli.get('target'),
+    text   = kasper.cli.get(0),
     result;
 
 if (!target) {
-    casper.warn('The --target option is mandatory.').exit(1);
+    kasper.warn('The --target option is mandatory.').exit(1);
 }
 
-casper.start(format('http://translate.google.com/#%s/%s/%s', source, target, text), function() {
+kasper.start(format('http://translate.google.com/#%s/%s/%s', source, target, text), function() {
     this.fill('form#gt-form', {text: text});
 }).waitForSelector('span.hps', function() {
     this.echo(this.fetchText("#result_box"));
 });
 
-casper.run();
+kasper.run();

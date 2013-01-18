@@ -1,14 +1,14 @@
 /*jshint strict:false*/
-/*global CasperError casper console phantom require*/
-casper.start('about:blank', function() {
+/*global kasperError kasper console phantom require*/
+kasper.start('about:blank', function() {
     this.test.pass('ok1');
 });
 
-casper.then(function() {
+kasper.then(function() {
     this.test.pass('ok2');
 });
 
-casper.run(function() {
+kasper.run(function() {
     this.test.pass('ok3');
     this.test.done();
 });

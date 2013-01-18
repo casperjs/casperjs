@@ -1,4 +1,4 @@
-casper = require("casper").create
+kasper = require("kasper").create
     loadImages: false
     logLevel:   "debug"
     verbose:    true
@@ -9,7 +9,7 @@ links =
     "http://www.bbc.co.uk/": 0
     "http://www.guardian.co.uk/": 0
 
-fantomas = Object.create(casper)
+fantomas = Object.create(kasper)
 
 fantomas.countLinks = ->
     @evaluate ->

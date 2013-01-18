@@ -1,3 +1,3 @@
-var casper = require('casper').create();
-casper.echo('it works');
-casper.exit();
+var kasper = require('kasper').create();
+kasper.echo('it works');
+kasper.exit();

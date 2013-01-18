@@ -1,10 +1,10 @@
-casper = require("casper").create
+kasper = require("kasper").create
     verbose: true
     logLevel: "debug"
 
-casper.log "this is a debug message", "debug"
-casper.log "and an informative one", "info"
-casper.log "and a warning", "warning"
-casper.log "and an error", "error"
+kasper.log "this is a debug message", "debug"
+kasper.log "and an informative one", "info"
+kasper.log "and a warning", "warning"
+kasper.log "and an error", "error"
 
-casper.exit()
+kasper.exit()

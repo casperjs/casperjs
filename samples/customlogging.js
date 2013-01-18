@@ -1,11 +1,11 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
 /**
  * A basic custom logging implementation. The idea is to (extremely) verbosely
  * log every received resource.
  */
-var casper = require("casper").create({
+var kasper = require("kasper").create({
     verbose: true,
     logLevel: "verbose"
 });
@@ -14,7 +14,7 @@ var casper = require("casper").create({
  * Every time a resource is received, a new log entry is added to the stack at
  * the 'verbose' level.
  */
-casper.on('resource.received', function(resource) {
+kasper.on('resource.received', function(resource) {
     var infos = [];
     var props = [
         "url",
@@ -33,9 +33,9 @@ casper.on('resource.received', function(resource) {
 });
 
 // add a new 'verbose' logging level at the lowest priority
-casper.logLevels = ["verbose"].concat(casper.logLevels);
+kasper.logLevels = ["verbose"].concat(kasper.logLevels);
 
 // test our new logger with google
-casper.start("http://www.google.com/").run(function() {
+kasper.start("http://www.google.com/").run(function() {
     this.exit();
 });

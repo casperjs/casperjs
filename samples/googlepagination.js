@@ -1,20 +1,20 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
 /**
  * Capture multiple pages of google search results
  *
- * Usage: $ casperjs googlepagination.coffee my search terms
+ * Usage: $ kasperjs googlepagination.coffee my search terms
  *
  * (all arguments will be used as the query)
  */
 
-var casper = require("casper").create();
+var kasper = require("kasper").create();
 var currentPage = 1;
 
-if (casper.cli.args.length === 0) {
-    casper
-        .echo("Usage: $ casperjs googlepagination.js my search terms")
+if (kasper.cli.args.length === 0) {
+    kasper
+        .echo("Usage: $ kasperjs googlepagination.js my search terms")
         .exit(1)
     ;
 }
@@ -43,12 +43,12 @@ var processPage = function() {
     }
 };
 
-casper.start("http://google.fr/", function() {
+kasper.start("http://google.fr/", function() {
     this.fill('form[action="/search"]', {
-        q: casper.cli.args.join(" ")
+        q: kasper.cli.args.join(" ")
     }, true);
 });
 
-casper.then(processPage);
+kasper.then(processPage);
 
-casper.run();
+kasper.run();

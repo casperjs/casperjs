@@ -1,10 +1,10 @@
-/*global casper*/
+/*global kasper*/
 /*jshint strict:false maxstatements:99*/
 var utils = require('utils'),
-    t = casper.test,
-    x = require('casper').selectXPath;
+    t = kasper.test,
+    x = require('kasper').selectXPath;
 
-casper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
+kasper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
     var testCases = [
         {subject: 1, expected: 'number'},
         {subject: '1', expected: 'string'},
@@ -24,7 +24,7 @@ casper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
     test.done();
 });
 
-casper.test.begin('utils.cleanUrl() tests', 10, function(test) {
+kasper.test.begin('utils.cleanUrl() tests', 10, function(test) {
     var testCases = {
         'http://google.com/': 'http://google.com/',
         'http://google.com': 'http://google.com/',
@@ -43,7 +43,7 @@ casper.test.begin('utils.cleanUrl() tests', 10, function(test) {
     test.done();
 });
 
-casper.test.begin('utils.clone() tests', 2, function(test) {
+kasper.test.begin('utils.clone() tests', 2, function(test) {
     var a = {a: 1, b: 2, c: [1, 2]};
     test.assertEquals(utils.clone(a), a);
     var b = [1, 2, 3, a];
@@ -51,7 +51,7 @@ casper.test.begin('utils.clone() tests', 2, function(test) {
     test.done();
 });
 
-casper.test.begin('equals() tests', 23, function(test) {
+kasper.test.begin('equals() tests', 23, function(test) {
     test.assert(utils.equals(null, null), 'equals() null equality');
     test.assertNot(utils.equals(null, undefined), 'equals() null vs. undefined inequality');
     test.assert(utils.equals("hi", "hi"), 'equals() string equality');
@@ -87,7 +87,7 @@ casper.test.begin('equals() tests', 23, function(test) {
     test.done();
 });
 
-casper.test.begin('fileExt() tests', 6, function(test) {
+kasper.test.begin('fileExt() tests', 6, function(test) {
     var testCases = {
         'foo.ext':    'ext',
         'FOO.EXT':    'ext',
@@ -103,7 +103,7 @@ casper.test.begin('fileExt() tests', 6, function(test) {
     test.done();
 });
 
-casper.test.begin('fillBlanks() tests', 3, function(test) {
+kasper.test.begin('fillBlanks() tests', 3, function(test) {
     var testCases = {
         'foo':         'foo       ',
         '  foo bar ':  '  foo bar ',
@@ -116,7 +116,7 @@ casper.test.begin('fillBlanks() tests', 3, function(test) {
     test.done();
 });
 
-casper.test.begin('getPropertyPath() tests', 7, function(test) {
+kasper.test.begin('getPropertyPath() tests', 7, function(test) {
     var testCases = [
         {
             input:  utils.getPropertyPath({}, 'a.b.c'),
@@ -154,14 +154,14 @@ casper.test.begin('getPropertyPath() tests', 7, function(test) {
     test.done();
 });
 
-casper.test.begin('isArray() tests', 3, function(test) {
+kasper.test.begin('isArray() tests', 3, function(test) {
     test.assertEquals(utils.isArray([]), true, 'isArray() checks for an Array');
     test.assertEquals(utils.isArray({}), false, 'isArray() checks for an Array');
     test.assertEquals(utils.isArray("foo"), false, 'isArray() checks for an Array');
     test.done();
 });
 
-casper.test.begin('isClipRect() tests', 5, function(test) {
+kasper.test.begin('isClipRect() tests', 5, function(test) {
     var testCases = [
         [{},                                              false],
         [{top: 2},                                        false],
@@ -176,7 +176,7 @@ casper.test.begin('isClipRect() tests', 5, function(test) {
     test.done();
 });
 
-casper.test.begin('isHTTPResource() tests', 6, function(test) {
+kasper.test.begin('isHTTPResource() tests', 6, function(test) {
     var testCases = [
         [{},                              false],
         [{url: 'file:///var/www/i.html'}, false],
@@ -192,7 +192,7 @@ casper.test.begin('isHTTPResource() tests', 6, function(test) {
     test.done();
 });
 
-casper.test.begin('isObject() tests', 8, function(test) {
+kasper.test.begin('isObject() tests', 8, function(test) {
     test.assertEquals(utils.isObject({}), true, 'isObject() checks for an Object');
     test.assertEquals(utils.isObject([]), true, 'isObject() checks for an Object');
     test.assertEquals(utils.isObject(1), false, 'isObject() checks for an Object');
@@ -204,7 +204,7 @@ casper.test.begin('isObject() tests', 8, function(test) {
     test.done();
 });
 
-casper.test.begin('isValidSelector() tests', 10, function(test) {
+kasper.test.begin('isValidSelector() tests', 10, function(test) {
     t.assertEquals(utils.isValidSelector({}), false,
         'isValidSelector() checks for a valid selector');
     t.assertEquals(utils.isValidSelector(""), false,
@@ -238,7 +238,7 @@ casper.test.begin('isValidSelector() tests', 10, function(test) {
     test.done();
 });
 
-casper.test.begin('isWebPage() tests', 3, function(test) {
+kasper.test.begin('isWebPage() tests', 3, function(test) {
     var pageModule = require('webpage');
     test.assertEquals(utils.isWebPage(pageModule), false,
         'isWebPage() checks for a WebPage instance');
@@ -249,7 +249,7 @@ casper.test.begin('isWebPage() tests', 3, function(test) {
     test.done();
 });
 
-casper.test.begin('isJsFile() tests', 5, function(test) {
+kasper.test.begin('isJsFile() tests', 5, function(test) {
     var testCases = {
         '':             false,
         'toto.png':     false,
@@ -264,7 +264,7 @@ casper.test.begin('isJsFile() tests', 5, function(test) {
     test.done();
 });
 
-casper.test.begin('mergeObjects() tests', 5, function(test) {
+kasper.test.begin('mergeObjects() tests', 5, function(test) {
     var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
@@ -298,7 +298,7 @@ casper.test.begin('mergeObjects() tests', 5, function(test) {
     test.done();
 });
 
-casper.test.begin('objectValues() tests', 2, function(test) {
+kasper.test.begin('objectValues() tests', 2, function(test) {
     test.assertEquals(utils.objectValues({}), [],
         'objectValues() can extract object values');
     test.assertEquals(utils.objectValues({a: 1, b: 2}), [1, 2],
@@ -306,7 +306,7 @@ casper.test.begin('objectValues() tests', 2, function(test) {
     test.done();
 });
 
-casper.test.begin('unique() tests', 4, function(test) {
+kasper.test.begin('unique() tests', 4, function(test) {
     var testCases = [
         {
             input:  [1,2,3],
@@ -332,7 +332,7 @@ casper.test.begin('unique() tests', 4, function(test) {
     test.done();
 });
 
-casper.test.begin('cmpVersion() tests', 10, function suite(test) {
+kasper.test.begin('cmpVersion() tests', 10, function suite(test) {
     test.assertEquals(utils.cmpVersion('1.0.0', '2.0.0'), -1,
         'cmpVersion() can compare version strings');
     test.assertEquals(utils.cmpVersion('1.0.0-DEV', '2.0.0-BOOM'), -1,
@@ -359,7 +359,7 @@ casper.test.begin('cmpVersion() tests', 10, function suite(test) {
     test.done();
 });
 
-casper.test.begin('gteVersion() tests', 4, function suite(test) {
+kasper.test.begin('gteVersion() tests', 4, function suite(test) {
     test.assert(utils.gteVersion('1.1.0', '1.0.0'),
         'gteVersion() checks for a greater or equal version');
     test.assertNot(utils.gteVersion('1.0.0', '1.1.0'),
@@ -373,7 +373,7 @@ casper.test.begin('gteVersion() tests', 4, function suite(test) {
     test.done();
 });
 
-casper.test.begin('ltVersion() tests', 4, function suite(test) {
+kasper.test.begin('ltVersion() tests', 4, function suite(test) {
     test.assert(utils.ltVersion('1.0.0', '1.1.0'),
         'ltVersion() checks for a lesser version');
     test.assertNot(utils.ltVersion('1.1.0', '1.0.0'),

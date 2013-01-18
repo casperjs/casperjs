@@ -1,7 +1,7 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
-var casper = require("casper").create();
+var kasper = require("kasper").create();
 
 var links = [
     "http://google.com/",
@@ -9,12 +9,12 @@ var links = [
     "http://bing.com/"
 ];
 
-casper.start();
+kasper.start();
 
-casper.each(links, function(self, link) {
+kasper.each(links, function(self, link) {
     this.thenOpen(link, function() {
         this.echo(this.getTitle() + " - " + link);
     });
 });
 
-casper.run();
+kasper.run();

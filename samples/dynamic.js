@@ -1,7 +1,7 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
-var casper = require("casper").create({
+var kasper = require("kasper").create({
     verbose: true
 });
 
@@ -13,7 +13,7 @@ var links = [
 ];
 
 // If we don't set a limit, it could go on forever
-var upTo = ~~casper.cli.get(0) || 10;
+var upTo = ~~kasper.cli.get(0) || 10;
 
 var currentLink = 0;
 
@@ -61,8 +61,8 @@ function check() {
     }
 }
 
-casper.start().then(function() {
+kasper.start().then(function() {
     this.echo("Starting");
 });
 
-casper.run(check);
+kasper.run(check);

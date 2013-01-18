@@ -1,19 +1,19 @@
-casper = require("casper").create()
+kasper = require("kasper").create()
 dump = require("utils").dump
 
 # removing default options passed by the Python executable
-casper.cli.drop "cli"
-casper.cli.drop "casper-path"
+kasper.cli.drop "cli"
+kasper.cli.drop "kasper-path"
 
-if casper.cli.args.length is 0 and Object.keys(casper.cli.options).length is 0
-    casper
-        .echo("Pass some args and options to see how they are handled by CasperJS")
+if kasper.cli.args.length is 0 and Object.keys(kasper.cli.options).length is 0
+    kasper
+        .echo("Pass some args and options to see how they are handled by kasperJS")
         .exit(1)
 
-casper.echo "Casper CLI passed args:"
-dump casper.cli.args
+kasper.echo "kasper CLI passed args:"
+dump kasper.cli.args
 
-casper.echo "Casper CLI passed options:"
-dump casper.cli.options
+kasper.echo "kasper CLI passed options:"
+dump kasper.cli.options
 
-casper.exit()
+kasper.exit()

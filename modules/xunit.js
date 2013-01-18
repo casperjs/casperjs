@@ -1,8 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS.
+ * kasper is a navigation utility for PhantomJS.
  *
- * Documentation: http://casperjs.org/
- * Repository:    http://github.com/n1k0/casperjs
+ * Documentation: http://kasperjs.org/
+ * Repository:    http://github.com/n1k0/kasperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault
  *
@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom require*/
+/*global kasperError console exports phantom require*/
 
 var utils = require('utils');
 var fs = require('fs');
@@ -37,7 +37,7 @@ var TestSuiteResult = require('tester').TestSuiteResult;
 /**
  * Generates a value for 'classname' attribute of the JUnit XML report.
  *
- * Uses the (relative) file name of the current casper script without file
+ * Uses the (relative) file name of the current kasper script without file
  * extension as classname.
  *
  * @param  String  classname
@@ -45,8 +45,8 @@ var TestSuiteResult = require('tester').TestSuiteResult;
  */
 function generateClassName(classname) {
     "use strict";
-    classname = (classname || "").replace(phantom.casperPath, "").trim();
-    var script = classname || phantom.casperScript || "";
+    classname = (classname || "").replace(phantom.kasperPath, "").trim();
+    var script = classname || phantom.kasperScript || "";
     if (script.indexOf(fs.workingDirectory) === 0) {
         script = script.substring(fs.workingDirectory.length + 1);
     }
@@ -57,8 +57,8 @@ function generateClassName(classname) {
         script = script.substring(0, script.lastIndexOf('.'));
     }
     // If we have trimmed our string down to nothing, default to script name
-    if (!script && phantom.casperScript) {
-        script = phantom.casperScript;
+    if (!script && phantom.kasperScript) {
+        script = phantom.kasperScript;
     }
     return script || "unknown";
 }
@@ -95,7 +95,7 @@ exports.XUnitExporter = XUnitExporter;
 XUnitExporter.prototype.getXML = function getXML() {
     "use strict";
     if (!(this.results instanceof TestSuiteResult)) {
-        throw new CasperError('Results not set, cannot get XML.');
+        throw new kasperError('Results not set, cannot get XML.');
     }
     this.results.forEach(function(result) {
         var suiteNode = utils.node('testsuite', {
@@ -163,7 +163,7 @@ XUnitExporter.prototype.getXML = function getXML() {
 XUnitExporter.prototype.setResults = function setResults(results) {
     "use strict";
     if (!(results instanceof TestSuiteResult)) {
-        throw new CasperError('Invalid results type.');
+        throw new kasperError('Invalid results type.');
     }
     return this.results = results;
 };

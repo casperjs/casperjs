@@ -1,7 +1,7 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
-var casper = require("casper").create({
+var kasper = require("kasper").create({
     verbose: true
 });
 
@@ -37,9 +37,9 @@ var suites = [
     }
 ];
 
-casper.start();
+kasper.start();
 
-casper.then(function() {
+kasper.then(function() {
     this.echo("Starting");
 });
 
@@ -49,11 +49,11 @@ var check = function() {
     if (suites[currentSuite]) {
         suites[currentSuite].call(this);
         currentSuite++;
-        casper.run(check);
+        kasper.run(check);
     } else {
         this.echo("All done.");
         this.exit();
     }
 };
 
-casper.run(check);
+kasper.run(check);
