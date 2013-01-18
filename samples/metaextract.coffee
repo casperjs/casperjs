@@ -1,13 +1,13 @@
-casper = require("casper").create()
-url = casper.cli.get 0
+kasper = require("kasper").create()
+url = kasper.cli.get 0
 metas = []
 
 if not url
-    casper
-        .echo("Usage: $ casperjs metaextract.coffee <url>")
+    kasper
+        .echo("Usage: $ kasperjs metaextract.coffee <url>")
         .exit 1
 
-casper.start url, ->
+kasper.start url, ->
     metas = @evaluate ->
         metas = []
         castarray = (arr) -> [].slice.call(arr)
@@ -18,6 +18,6 @@ casper.start url, ->
             metas.push meta
         metas
 
-casper.run ->
+kasper.run ->
     require("utils").dump metas
     this.exit()

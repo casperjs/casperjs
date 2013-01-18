@@ -1,8 +1,8 @@
 /**
- * CasperJS local HTTP test server
+ * kasperJS local HTTP test server
  */
 
-/*global phantom casper require*/
+/*global phantom kasper require*/
 
 var colorizer = require('colorizer').create('Colorizer');
 var fs = require('fs');
@@ -22,7 +22,7 @@ service = server.listen(testServerPort, function(request, response) {
     if (requestPath.indexOf('?') !== -1) {
         requestPath = request.url.split('?')[0];
     }
-    var pageFile = fs.pathJoin(phantom.casperPath, requestPath);
+    var pageFile = fs.pathJoin(phantom.kasperPath, requestPath);
     if (!fs.exists(pageFile) || !fs.isFile(pageFile)) {
         response.statusCode = 404;
         console.log(utils.format('Test server url not found: %s (file: %s)', request.url, pageFile), "warning");
@@ -38,8 +38,8 @@ service = server.listen(testServerPort, function(request, response) {
     response.close();
 });
 
-// overriding Casper.open to prefix all test urls
-casper.setFilter('open.location', function(location) {
+// overriding kasper.open to prefix all test urls
+kasper.setFilter('open.location', function(location) {
     "use strict";
     if (/^file/.test(location)) {
         return location;
@@ -51,7 +51,7 @@ casper.setFilter('open.location', function(location) {
 });
 
 // test suites completion listener
-casper.test.on('tests.complete', function() {
+kasper.test.on('tests.complete', function() {
     "use strict";
     server.close();
 });

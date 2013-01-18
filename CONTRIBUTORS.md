@@ -1,6 +1,6 @@
-# CasperJS contributors
+# kasperJS contributors
 
-You can check out the [contribution graphs on github](https://github.com/n1k0/casperjs/graphs/contributors).
+You can check out the [contribution graphs on github](https://github.com/n1k0/kasperjs/graphs/contributors).
 
 ```
 $ git shortlog -s -n | cut -c8-

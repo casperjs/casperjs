@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+# Ruby Wrapper for kasperJs
+# by hannyu
+
+def resolve(file_path)
+    while File.symlink?(file_path) do
+        file_path = File.readlink(file_path)
+    end
+    file_path
+end
+
+kasper_PATH = File.dirname(File.dirname(File.expand_path(resolve(__FILE__))))
+
+PHANTOMJS_NATIVE_ARGS = [
+    '--cookies-file',
+    '--config',
+    '--debug',
+    '--disk-cache',
+    '--ignore-ssl-errors',
+    '--load-images',
+    '--load-plugins',
+    '--local-storage-path',
+    '--local-storage-quota',
+    '--local-to-remote-url-access',
+    '--max-disk-cache-size',
+    '--output-encoding',
+    '--proxy',
+    '--proxy-auth',
+    '--proxy-type',
+    '--remote-debugger-port',
+    '--remote-debugger-autorun',
+    '--script-encoding',
+    '--web-security',
+]
+
+kasper_ARGS = []
+PHANTOMJS_ARGS = []
+ARGV.each do |arg|
+    is_found = false
+    PHANTOMJS_NATIVE_ARGS.each do |pna|
+        if arg.start_with? pna
+            PHANTOMJS_ARGS << arg
+            is_found = true
+            break
+        end
+    end
+    kasper_ARGS << arg if not is_found
+end
+
+kasper_COMMAND = []
+kasper_COMMAND << (ENV["PHANTOMJS_EXECUTABLE"] || "phantomjs")
+kasper_COMMAND.concat PHANTOMJS_ARGS
+kasper_COMMAND << File.join(kasper_PATH, "bin", "bootstrap.js")
+kasper_COMMAND << "--kasper-path=#{kasper_PATH}"
+kasper_COMMAND << "--cli"
+kasper_COMMAND.concat kasper_ARGS
+
+if system(kasper_COMMAND.join(" ")).nil?
+    puts "Fatal: Did you install phantomjs?"
+end
+
+exit $?.exitstatus || 1

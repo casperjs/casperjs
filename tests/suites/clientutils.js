@@ -1,13 +1,13 @@
-/*global casper*/
+/*global kasper*/
 /*jshint strict:false*/
 var fs = require('fs');
-var x = require('casper').selectXPath;
+var x = require('kasper').selectXPath;
 
 function fakeDocument(html) {
     window.document.body.innerHTML = html;
 }
 
-casper.test.begin('ClientUtils.encode() tests', 6, function(test) {
+kasper.test.begin('ClientUtils.encode() tests', 6, function(test) {
     var clientutils = require('clientutils').create(),
         testCases = {
             'an empty string': '',
@@ -18,7 +18,7 @@ casper.test.begin('ClientUtils.encode() tests', 6, function(test) {
                                 "Les nuages filent et le ciel s'éclaircit\n" +
                                 "Et dans ma tête qui bourdonnent?\n" +
                                 "Les abeilles!"),
-            'a file contents': fs.read(phantom.casperPath + '/tests/site/alert.html')
+            'a file contents': fs.read(phantom.kasperPath + '/tests/site/alert.html')
         };
     for (var what in testCases) {
         test.assertEquals(
@@ -30,7 +30,7 @@ casper.test.begin('ClientUtils.encode() tests', 6, function(test) {
     test.done();
 });
 
-casper.test.begin('ClientUtils.exists() tests', 5, function(test) {
+kasper.test.begin('ClientUtils.exists() tests', 5, function(test) {
     var clientutils = require('clientutils').create();
     fakeDocument('<ul class="foo"><li>bar</li><li>baz</li></ul>');
     test.assert(clientutils.exists('ul'),
@@ -48,7 +48,7 @@ casper.test.begin('ClientUtils.exists() tests', 5, function(test) {
     test.done();
 });
 
-casper.test.begin('ClientUtils.findAll() tests', 7, function(test) {
+kasper.test.begin('ClientUtils.findAll() tests', 7, function(test) {
     var clientutils = require('clientutils').create();
     fakeDocument('<ul class="foo"><li>bar</li><li>baz</li></ul>');
     test.assertType(clientutils.findAll('li'), 'nodelist',
@@ -71,7 +71,7 @@ casper.test.begin('ClientUtils.findAll() tests', 7, function(test) {
     test.done();
 });
 
-casper.test.begin('ClientUtils.findOne() tests', 4, function(test) {
+kasper.test.begin('ClientUtils.findOne() tests', 4, function(test) {
     var clientutils = require('clientutils').create();
     fakeDocument('<ul class="foo"><li>bar</li><li>baz</li></ul>');
     test.assertType(clientutils.findOne('ul'), 'htmlulistelement',
@@ -89,7 +89,7 @@ casper.test.begin('ClientUtils.findOne() tests', 4, function(test) {
 });
 
 
-casper.test.begin('ClientUtils.processSelector() tests', 6, function(test) {
+kasper.test.begin('ClientUtils.processSelector() tests', 6, function(test) {
     var clientutils = require('clientutils').create();
     // CSS3 selector
     var cssSelector = clientutils.processSelector('html body > ul.foo li');
@@ -110,8 +110,8 @@ casper.test.begin('ClientUtils.processSelector() tests', 6, function(test) {
     test.done();
 });
 
-casper.test.begin('ClientUtils.getElementBounds() tests', 3, function(test) {
-    casper.start().then(function() {
+kasper.test.begin('ClientUtils.getElementBounds() tests', 3, function(test) {
+    kasper.start().then(function() {
         this.page.content = '<div id="b1" style="position:fixed;top:10px;left:11px;width:50px;height:60px"></div>';
         test.assertEquals(
             this.getElementBounds('#b1'),
@@ -119,7 +119,7 @@ casper.test.begin('ClientUtils.getElementBounds() tests', 3, function(test) {
             'ClientUtils.getElementBounds() retrieves element boundaries'
         );
     });
-    casper.then(function() {
+    kasper.then(function() {
         var html  = '<div id="boxes">';
             html += '  <div style="position:fixed;top:10px;left:11px;width:50px;height:60px"></div>';
             html += '  <div style="position:fixed;top:20px;left:21px;width:70px;height:80px"></div>';
@@ -137,14 +137,14 @@ casper.test.begin('ClientUtils.getElementBounds() tests', 3, function(test) {
             'ClientUtils.getElementsBounds() retrieves multiple elements boundaries'
         );
     });
-    casper.run(function() {
+    kasper.run(function() {
         test.done();
     });
 });
 
-casper.test.begin('ClientUtils.getElementInfo() tests', 10, function(test) {
-    casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a>';
-    var info = casper.getElementInfo('a.plip');
+kasper.test.begin('ClientUtils.getElementInfo() tests', 10, function(test) {
+    kasper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a>';
+    var info = kasper.getElementInfo('a.plip');
     test.assertEquals(info.nodeName, 'a', 'ClientUtils.getElementInfo() retrieves element name');
     test.assertEquals(info.attributes, {
         'href': 'plop',

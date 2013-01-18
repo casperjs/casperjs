@@ -1,9 +1,9 @@
 /*jshint strict:false maxstatements:99 maxcomplexity:99 */
-/*global CasperError casper console phantom require*/
+/*global kasperError kasper console phantom require*/
 
 var TestCaseResult = require('tester').TestCaseResult;
 
-casper.test.begin('TestCaseResult.constructor() tests', 4, function(test) {
+kasper.test.begin('TestCaseResult.constructor() tests', 4, function(test) {
     var caseResult1 = new TestCaseResult();
     test.assertType(caseResult1.name, "undefined", 'TestCaseResult.constructor() name is undefined by default');
     test.assertType(caseResult1.file, "undefined", 'TestCaseResult.constructor() file is undefined by default');
@@ -13,7 +13,7 @@ casper.test.begin('TestCaseResult.constructor() tests', 4, function(test) {
     test.done();
 });
 
-casper.test.begin('TestCaseResult.addSuccess() and TestCaseResult.addFailure() tests', 22, function(test) {
+kasper.test.begin('TestCaseResult.addSuccess() and TestCaseResult.addFailure() tests', 22, function(test) {
     var caseResult = new TestCaseResult({name: 'foo', file: '/tmp/foo'});
     test.assertEquals(caseResult.assertions, 0, 'test case result counts no assertion by default');
     test.assertEquals(caseResult.passed, 0, 'test case result counts no success by default');

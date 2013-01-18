@@ -1,8 +1,8 @@
-/*global casper*/
+/*global kasper*/
 /*jshint strict:false*/
 var fs = require('fs');
 
-casper.test.begin('fs.dirname() tests', 8, function(test) {
+kasper.test.begin('fs.dirname() tests', 8, function(test) {
     var tests = {
         '/local/plop/foo.js':      '/local/plop',
         'local/plop/foo.js':       'local/plop',
@@ -19,7 +19,7 @@ casper.test.begin('fs.dirname() tests', 8, function(test) {
     test.done();
 });
 
-casper.test.begin('fs.isWindows() tests', 6, function(test) {
+kasper.test.begin('fs.isWindows() tests', 6, function(test) {
     var tests = {
         '/':                       false,
         '/local/plop/foo.js':      false,

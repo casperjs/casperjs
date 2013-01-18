@@ -1,8 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS.
+ * kasper is a navigation utility for PhantomJS.
  *
- * Documentation: http://casperjs.org/
- * Repository:    http://github.com/n1k0/casperjs
+ * Documentation: http://kasperjs.org/
+ * Repository:    http://github.com/n1k0/kasperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault
  *
@@ -38,7 +38,7 @@
     };
 
     /**
-     * Casper client-side helpers.
+     * kasper client-side helpers.
      */
     exports.ClientUtils = function ClientUtils(options) {
         /*jshint maxstatements:40*/
@@ -118,13 +118,13 @@
         };
 
         /**
-         * Echoes something to casper console.
+         * Echoes something to kasper console.
          *
          * @param  String  message
          * @return
          */
         this.echo = function echo(message) {
-            console.log("[casper.echo] " + message);
+            console.log("[kasper.echo] " + message);
         };
 
         /**
@@ -319,7 +319,7 @@
                 return this.sendAJAX(url, method, data, false);
             } catch (e) {
                 if (e.name === "NETWORK_ERR" && e.code === 101) {
-                    this.log("getBinary(): Unfortunately, casperjs cannot make cross domain ajax requests", "warning");
+                    this.log("getBinary(): Unfortunately, kasperjs cannot make cross domain ajax requests", "warning");
                 }
                 this.log("getBinary(): Error while fetching " + url + ": " + e, "error");
                 return "";
@@ -519,14 +519,14 @@
         };
 
         /**
-         * Logs a message. Will format the message a way CasperJS will be able
+         * Logs a message. Will format the message a way kasperJS will be able
          * to log phantomjs side.
          *
          * @param  String  message  The message to log
          * @param  String  level    The log level
          */
         this.log = function log(message, level) {
-            console.log("[casper:" + (level || "debug") + "] " + message);
+            console.log("[kasper:" + (level || "debug") + "] " + message);
         };
 
         /**

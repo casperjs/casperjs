@@ -1,5 +1,5 @@
 {
-  "name": "casperjs",
+  "name": "kasperjs",
   "description": "Navigation scripting & testing utility for PhantomJS",
   "version": "1.1.0-DEV",
   "keywords": [
@@ -17,12 +17,12 @@
     "http://www.phantomjs.org/": "1.7"
   },
   "bugs": {
-    "url": "https://github.com/n1k0/casperjs/issues"
+    "url": "https://github.com/n1k0/kasperjs/issues"
   },
   "repositories": [
     {
       "type": "git",
-      "url": "git://github.com/n1k0/casperjs.git"
+      "url": "git://github.com/n1k0/kasperjs.git"
     }
   ],
   "licenses": [
@@ -31,5 +31,5 @@
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
   ],
-  "homepage": "http://casperjs.org"
+  "homepage": "http://kasperjs.org"
 }

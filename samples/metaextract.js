@@ -1,18 +1,18 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
-var casper = require("casper").create();
-var url = casper.cli.get(0);
+var kasper = require("kasper").create();
+var url = kasper.cli.get(0);
 var metas = [];
 
 if (!url) {
-    casper
-        .echo("Usage: $ casperjs metaextract.js <url>")
+    kasper
+        .echo("Usage: $ kasperjs metaextract.js <url>")
         .exit(1)
     ;
 }
 
-casper.start(url, function() {
+kasper.start(url, function() {
     metas = this.evaluate(function() {
         var metas = [];
         [].forEach.call(document.querySelectorAll("meta"), function(elem) {
@@ -26,7 +26,7 @@ casper.start(url, function() {
     });
 });
 
-casper.run(function() {
+kasper.run(function() {
     require("utils").dump(metas);
     this.exit();
 });

@@ -1,7 +1,7 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 var links = [];
-var casper = require("casper").create();
+var kasper = require("kasper").create();
 
 function getLinks() {
     var links = document.querySelectorAll("h3.r a");
@@ -15,24 +15,24 @@ function getLinks() {
     });
 }
 
-casper.start("http://google.fr/", function() {
-    // search for 'casperjs' from google form
-    this.fill('form[action="/search"]', { q: "casperjs" }, true);
+kasper.start("http://google.fr/", function() {
+    // search for 'kasperjs' from google form
+    this.fill('form[action="/search"]', { q: "kasperjs" }, true);
 });
 
-casper.then(function() {
-    // aggregate results for the 'casperjs' search
+kasper.then(function() {
+    // aggregate results for the 'kasperjs' search
     links = this.evaluate(getLinks);
     // now search for 'phantomjs' by fillin the form again
     this.fill('form[action="/search"]', { q: "phantomjs" }, true);
 });
 
-casper.then(function() {
+kasper.then(function() {
     // aggregate results for the 'phantomjs' search
     links = links.concat(this.evaluate(getLinks));
 });
 
-casper.run(function() {
+kasper.run(function() {
     // echo results in some pretty fashion
     this.echo(links.length + " links found:");
     this.echo(" - " + links.join("\n - "));

@@ -1,7 +1,7 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
-var casper = require("casper").create({
+var kasper = require("kasper").create({
     loadImages: false,
     logLevel:   "debug",
     verbose:    true
@@ -14,7 +14,7 @@ var links = {
     "http://www.guardian.co.uk/": 0
 };
 
-var fantomas = Object.create(casper);
+var fantomas = Object.create(kasper);
 
 fantomas.countLinks = function() {
     return this.evaluate(function() {

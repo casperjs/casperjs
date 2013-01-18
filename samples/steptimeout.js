@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
 var failed = [];
 var start = null;
@@ -11,25 +11,25 @@ var links = [
     "http://cdiscount.fr/"
 ];
 
-var casper = require("casper").create({
+var kasper = require("kasper").create({
     onStepTimeout: function() {
         failed.push(this.requestUrl);
         this.test.fail(this.requestUrl + " loads in less than " + timeout + "ms.");
     }
 });
 
-casper.on("load.finished", function() {
+kasper.on("load.finished", function() {
     this.echo(this.requestUrl + " loaded in " + (new Date() - start) + "ms", "PARAMETER");
 });
 
-var timeout = ~~casper.cli.get(0);
-casper.options.stepTimeout = timeout > 0 ? timeout : 1000;
+var timeout = ~~kasper.cli.get(0);
+kasper.options.stepTimeout = timeout > 0 ? timeout : 1000;
 
-casper.echo("Testing with timeout=" + casper.options.stepTimeout + "ms, please be patient.");
+kasper.echo("Testing with timeout=" + kasper.options.stepTimeout + "ms, please be patient.");
 
-casper.start();
+kasper.start();
 
-casper.each(links, function(casper, link) {
+kasper.each(links, function(kasper, link) {
     this.then(function() {
         this.test.comment("Loading " + link);
         start = new Date();
@@ -43,6 +43,6 @@ casper.each(links, function(casper, link) {
     });
 });
 
-casper.run(function() {
+kasper.run(function() {
     this.test.renderResults(true);
 });

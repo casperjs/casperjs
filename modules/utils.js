@@ -1,8 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS.
+ * kasper is a navigation utility for PhantomJS.
  *
- * Documentation: http://casperjs.org/
- * Repository:    http://github.com/n1k0/casperjs
+ * Documentation: http://kasperjs.org/
+ * Repository:    http://github.com/n1k0/kasperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault
  *
@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom require*/
+/*global kasperError console exports phantom require*/
 
 /**
  * Provides a better typeof operator equivalent, able to retrieve the array
@@ -317,11 +317,11 @@ exports.isArray = isArray;
  * @param  mixed  value
  * @return Boolean
  */
-function isCasperObject(value) {
+function iskasperObject(value) {
     "use strict";
-    return value instanceof require('casper').Casper;
+    return value instanceof require('kasper').kasper;
 }
-exports.isCasperObject = isCasperObject;
+exports.iskasperObject = iskasperObject;
 
 /**
  * Checks if value is a phantomjs clipRect-compatible object
@@ -460,7 +460,7 @@ exports.isTruthy = isTruthy;
 function isType(what, typeName) {
     "use strict";
     if (typeof typeName !== "string" || !typeName) {
-        throw new CasperError("You must pass isType() a typeName string");
+        throw new kasperError("You must pass isType() a typeName string");
     }
     return betterTypeOf(what).toLowerCase() === typeName.toLowerCase();
 }

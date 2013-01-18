@@ -1,24 +1,24 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
-var casper = require("casper").create();
+var kasper = require("kasper").create();
 var dump = require("utils").dump;
 
 // removing default options passed by the Python executable
-casper.cli.drop("cli");
-casper.cli.drop("casper-path");
+kasper.cli.drop("cli");
+kasper.cli.drop("kasper-path");
 
-if (casper.cli.args.length === 0 && Object.keys(casper.cli.options).length === 0) {
-    casper
-        .echo("Pass some args and options to see how they are handled by CasperJS")
+if (kasper.cli.args.length === 0 && Object.keys(kasper.cli.options).length === 0) {
+    kasper
+        .echo("Pass some args and options to see how they are handled by kasperJS")
         .exit(1)
     ;
 }
 
-casper.echo("Casper CLI passed args:");
-dump(casper.cli.args);
+kasper.echo("kasper CLI passed args:");
+dump(kasper.cli.args);
 
-casper.echo("Casper CLI passed options:");
-dump(casper.cli.options);
+kasper.echo("kasper CLI passed options:");
+dump(kasper.cli.options);
 
-casper.exit();
+kasper.exit();

@@ -1,9 +1,9 @@
 /*jshint strict:false*/
-/*global CasperError casper console phantom require*/
+/*global kasperError kasper console phantom require*/
 var fs = require('fs');
 
-casper.test.begin('Tester.sortFiles()', 1, function suite(test) {
-    var testDirRoot = fs.pathJoin(phantom.casperPath, 'tests', 'testdir');
+kasper.test.begin('Tester.sortFiles()', 1, function suite(test) {
+    var testDirRoot = fs.pathJoin(phantom.kasperPath, 'tests', 'testdir');
     var files = test.findTestFiles(testDirRoot);
     var expected = [
         "01_a/abc.js",

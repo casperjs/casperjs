@@ -1,8 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS.
+ * kasper is a navigation utility for PhantomJS.
  *
- * Documentation: http://casperjs.org/
- * Repository:    http://github.com/n1k0/casperjs
+ * Documentation: http://kasperjs.org/
+ * Repository:    http://github.com/n1k0/kasperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault
  *
@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom require*/
+/*global kasperError console exports phantom require*/
 
 var system = require('system');
 var utils = require('utils');
@@ -68,7 +68,7 @@ exports.parse = function parse(phantomArgs) {
                     }
                 });
             } else {
-                throw new CasperError("cannot drop argument of type " + typeof what);
+                throw new kasperError("cannot drop argument of type " + typeof what);
             }
         },
         has: function has(what) {
@@ -77,7 +77,7 @@ exports.parse = function parse(phantomArgs) {
             } else if (utils.isString(what)) {
                 return what in this.options;
             } else {
-                throw new CasperError("Unsupported cli arg tester " + typeof what);
+                throw new kasperError("Unsupported cli arg tester " + typeof what);
             }
         },
         get: function get(what) {
@@ -86,7 +86,7 @@ exports.parse = function parse(phantomArgs) {
             } else if (utils.isString(what)) {
                 return this.options[what];
             } else {
-                throw new CasperError("Unsupported cli arg getter " + typeof what);
+                throw new kasperError("Unsupported cli arg getter " + typeof what);
             }
         }
     };

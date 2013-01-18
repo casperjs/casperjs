@@ -1,27 +1,27 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
 /**
  * Just a silly game.
  *
- * $ casperjs samples/timeout.js 500
+ * $ kasperjs samples/timeout.js 500
  * Will google.com load in less than 500ms?
  * NOPE.
  *
- * $ casperjs samples/timeout.js 1000
+ * $ kasperjs samples/timeout.js 1000
  * Will google.com load in less than 1000ms?
  * NOPE.
  *
- * $ casperjs samples/timeout.js 1500
+ * $ kasperjs samples/timeout.js 1500
  * Will google.com load in less than 1500ms?
  * NOPE.
  *
- * $ casperjs samples/timeout.js 2000
+ * $ kasperjs samples/timeout.js 2000
  * Will google.com load in less than 2000ms?
  * YES!
  */
 
-var casper = require("casper").create({
+var kasper = require("kasper").create({
     onTimeout: function() {
         this
             .echo("NOPE.", "RED_BAR")
@@ -30,21 +30,21 @@ var casper = require("casper").create({
     }
 });
 
-var timeout = ~~casper.cli.get(0);
+var timeout = ~~kasper.cli.get(0);
 
 if (timeout < 1) {
-    casper
+    kasper
         .echo("You must pass a valid timeout value")
         .exit(1)
     ;
 }
 
-casper.echo("Will google.com load in less than " + timeout + "ms?");
-casper.options.timeout = timeout;
+kasper.echo("Will google.com load in less than " + timeout + "ms?");
+kasper.options.timeout = timeout;
 
-casper.start("http://www.google.com/", function() {
+kasper.start("http://www.google.com/", function() {
     this.echo("YES!", "GREEN_BAR");
     this.exit();
 });
 
-casper.run();
+kasper.run();

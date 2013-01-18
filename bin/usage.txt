@@ -1,11 +1,11 @@
 
-Usage: casperjs [options] script.[js|coffee] [script argument [script argument ...]]
-       casperjs [options] test [test path [test path ...]]
-       casperjs [options] selftest
+Usage: kasperjs [options] script.[js|coffee] [script argument [script argument ...]]
+       kasperjs [options] test [test path [test path ...]]
+       kasperjs [options] selftest
 
 Options:
 
 --help      Prints this help
---version   Prints out CasperJS version
+--version   Prints out kasperJS version
 
-Read the docs http://casperjs.org/
+Read the docs http://kasperjs.org/

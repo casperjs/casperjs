@@ -1,10 +1,10 @@
-/*global casper*/
+/*global kasper*/
 /*jshint strict:false maxstatements:99*/
 var pagestack = require('pagestack');
 var utils = require('utils');
 var webpage = require('webpage');
 
-casper.test.begin('pagestack module tests', 14, function(test) {
+kasper.test.begin('pagestack module tests', 14, function(test) {
     var stack = pagestack.create();
     var page1 = webpage.create();
     page1.url = 'page1.html';

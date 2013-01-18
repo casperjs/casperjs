@@ -1,8 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS.
+ * kasper is a navigation utility for PhantomJS.
  *
- * Documentation: http://casperjs.org/
- * Repository:    http://github.com/n1k0/casperjs
+ * Documentation: http://kasperjs.org/
+ * Repository:    http://github.com/n1k0/kasperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault
  *
@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom require*/
+/*global kasperError console exports phantom require*/
 
 var utils = require('utils');
 var f = utils.format;
@@ -96,11 +96,11 @@ Stack.prototype.find = function find(popupInfo) {
                 }
                 return popupPage.url === popup.url;
             })) {
-                throw new CasperError("Invalid or missing popup.");
+                throw new kasperError("Invalid or missing popup.");
             }
             break;
         default:
-            throw new CasperError(f("Invalid popupInfo type: %s.", type));
+            throw new kasperError(f("Invalid popupInfo type: %s.", type));
     }
     return popup;
 };
@@ -117,7 +117,7 @@ Stack.prototype.findByRegExp = function findByRegExp(regexp) {
         return regexp.test(popupPage.url);
     })[0];
     if (!popup) {
-        throw new CasperError(f("Couldn't find popup with url matching pattern %s", regexp));
+        throw new kasperError(f("Couldn't find popup with url matching pattern %s", regexp));
     }
     return popup;
 };
@@ -134,7 +134,7 @@ Stack.prototype.findByURL = function findByURL(string) {
         return popupPage.url.indexOf(string) !== -1;
     })[0];
     if (!popup) {
-        throw new CasperError(f("Couldn't find popup with url containing '%s'", string));
+        throw new kasperError(f("Couldn't find popup with url containing '%s'", string));
     }
     return popup;
 };

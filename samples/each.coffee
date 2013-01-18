@@ -1,4 +1,4 @@
-casper = require("casper").create()
+kasper = require("kasper").create()
 
 links = [
     "http://google.com/"
@@ -6,9 +6,9 @@ links = [
     "http://bing.com/"
 ]
 
-casper.start()
+kasper.start()
 
-casper.each links, (self, link) ->
+kasper.each links, (self, link) ->
     @thenOpen link, -> @echo "#{@getTitle()} - #{link}"
 
-casper.run()
+kasper.run()

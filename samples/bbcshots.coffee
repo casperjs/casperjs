@@ -2,18 +2,18 @@
 Create a mosaic image from all headline photos on BBC homepage
 ###
 
-casper = require("casper").create()
+kasper = require("kasper").create()
 nbLinks = 0
 currentLink = 1
 images = []
 
 # helper to hide some element from remote DOM
-casper.hide = (selector) ->
+kasper.hide = (selector) ->
     @evaluate (selector) ->
         document.querySelector(selector).style.display = "none"
     , selector
 
-casper.start "http://www.bbc.co.uk/", ->
+kasper.start "http://www.bbc.co.uk/", ->
     nbLinks = @evaluate ->
         return __utils__.findAll('#promo2_carousel_items_items li').length
     @echo "#{nbLinks} items founds"
@@ -22,7 +22,7 @@ casper.start "http://www.bbc.co.uk/", ->
     @hide ".nav_right"
     @mouse.move "#promo2_carousel"
 
-casper.waitUntilVisible ".autoplay.nav_pause", ->
+kasper.waitUntilVisible ".autoplay.nav_pause", ->
     @echo "Moving over pause button"
     @mouse.move ".autoplay.nav_pause"
     @click ".autoplay.nav_pause"
@@ -60,6 +60,6 @@ buildPage = ->
         @echo "Resulting image saved to result.png"
         @capture "result.png"
 
-casper.then next
+kasper.then next
 
-casper.run()
+kasper.run()

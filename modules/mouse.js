@@ -1,8 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS.
+ * kasper is a navigation utility for PhantomJS.
  *
- * Documentation: http://casperjs.org/
- * Repository:    http://github.com/n1k0/casperjs
+ * Documentation: http://kasperjs.org/
+ * Repository:    http://github.com/n1k0/kasperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault
  *
@@ -28,19 +28,19 @@
  *
  */
 
-/*global CasperError exports require*/
+/*global kasperError exports require*/
 
 var utils = require('utils');
 
-exports.create = function create(casper) {
+exports.create = function create(kasper) {
     "use strict";
-    return new Mouse(casper);
+    return new Mouse(kasper);
 };
 
-var Mouse = function Mouse(casper) {
+var Mouse = function Mouse(kasper) {
     "use strict";
-    if (!utils.isCasperObject(casper)) {
-        throw new CasperError('Mouse() needs a Casper instance');
+    if (!utils.iskasperObject(kasper)) {
+        throw new kasperError('Mouse() needs a kasper instance');
     }
 
     var slice = Array.prototype.slice,
@@ -52,7 +52,7 @@ var Mouse = function Mouse(casper) {
         supportedEvents = nativeEvents.concat(emulatedEvents);
 
     function computeCenter(selector) {
-        var bounds = casper.getElementBounds(selector);
+        var bounds = kasper.getElementBounds(selector);
         if (utils.isClipRect(bounds)) {
             var x = Math.round(bounds.left + bounds.width / 2);
             var y = Math.round(bounds.top  + bounds.height / 2);
@@ -62,29 +62,29 @@ var Mouse = function Mouse(casper) {
 
     function processEvent(type, args) {
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
-            throw new CasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
+            throw new kasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }
         if (emulatedEvents.indexOf(type) > -1) {
-            casper.log("Mouse.processEvent(): no native fallback for type " + type, "warning");
+            kasper.log("Mouse.processEvent(): no native fallback for type " + type, "warning");
         }
         args = slice.call(args); // cast Arguments -> Array
-        casper.emit('mouse.' + type.replace('mouse', ''), args);
+        kasper.emit('mouse.' + type.replace('mouse', ''), args);
         switch (args.length) {
             case 0:
-                throw new CasperError('Mouse.processEvent(): Too few arguments');
+                throw new kasperError('Mouse.processEvent(): Too few arguments');
             case 1:
                 // selector
-                casper.page.sendEvent.apply(casper.page, [type].concat(computeCenter(args[0])));
+                kasper.page.sendEvent.apply(kasper.page, [type].concat(computeCenter(args[0])));
                 break;
             case 2:
                 // coordinates
                 if (!utils.isNumber(args[0]) || !utils.isNumber(args[1])) {
-                    throw new CasperError('Mouse.processEvent(): No valid coordinates passed: ' + args);
+                    throw new kasperError('Mouse.processEvent(): No valid coordinates passed: ' + args);
                 }
-                casper.page.sendEvent(type, args[0], args[1]);
+                kasper.page.sendEvent(type, args[0], args[1]);
                 break;
             default:
-                throw new CasperError('Mouse.processEvent(): Too many arguments');
+                throw new kasperError('Mouse.processEvent(): Too many arguments');
         }
     }
 

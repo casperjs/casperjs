@@ -1,4 +1,4 @@
-casper = require("casper").create
+kasper = require("kasper").create
     verbose: true
 
 # The base links array
@@ -11,7 +11,7 @@ links = [
 currentLink = 0;
 
 # If we don't set a limit, it could go on forever
-upTo = ~~casper.cli.get(0) || 10
+upTo = ~~kasper.cli.get(0) || 10
 
 ###
 Get the links, and add them to the links array
@@ -52,9 +52,9 @@ check = ->
         @echo "All done."
         @exit()
 
-casper.start()
+kasper.start()
 
-casper.then ->
+kasper.then ->
     @echo "Starting"
 
-casper.run check
+kasper.run check

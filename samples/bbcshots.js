@@ -1,23 +1,23 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global kasperError console phantom require*/
 
 /**
  * Create a mosaic image from all headline photos on BBC homepage
  */
-var casper = require("casper").create();
+var kasper = require("kasper").create();
 var nbLinks = 0;
 var currentLink = 1;
 var images = [];
 var buildPage, next;
 
 // helper to hide some element from remote DOM
-casper.hide = function(selector) {
+kasper.hide = function(selector) {
     this.evaluate(function(selector) {
         document.querySelector(selector).style.display = "none";
     }, selector);
 };
 
-casper.start("http://www.bbc.co.uk/", function() {
+kasper.start("http://www.bbc.co.uk/", function() {
     nbLinks = this.evaluate(function() {
         return __utils__.findAll('#promo2_carousel_items_items li').length;
     });
@@ -28,7 +28,7 @@ casper.start("http://www.bbc.co.uk/", function() {
     this.mouse.move("#promo2_carousel");
 });
 
-casper.waitUntilVisible(".autoplay.nav_pause", function() {
+kasper.waitUntilVisible(".autoplay.nav_pause", function() {
     this.echo("Moving over pause button");
     this.mouse.move(".autoplay.nav_pause");
     this.click(".autoplay.nav_pause");
@@ -76,6 +76,6 @@ buildPage = function() {
     });
 };
 
-casper.then(next);
+kasper.then(next);
 
-casper.run();
+kasper.run();

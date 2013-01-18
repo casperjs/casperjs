@@ -1,9 +1,9 @@
-/*global casper*/
+/*global kasper*/
 /*jshint strict:false maxstatements:99*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 43, function(test) {
-    casper.start('tests/site/index.html', function() {
+kasper.test.begin('Common assertions tests', 43, function(test) {
+    kasper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
         test.assertTextDoesntExist('blah', "Tester.assertTextDoesntExist() checks that page body doesn't contain provided text");
@@ -53,7 +53,7 @@ casper.test.begin('Common assertions tests', 43, function(test) {
         }, [], 'Tester.assertThrows() works as expected [alias]');
         test.assertResourceExists(/index\.html/, 'Tester.assertResourceExists() works as expected');
         test.assertResourceExist(/index\.html/, 'Tester.assertResourceExist() works as expected [alias]');
-        test.assertTitle('CasperJS test index', 'Tester.assertTitle() works as expected');
+        test.assertTitle('kasperJS test index', 'Tester.assertTitle() works as expected');
         test.assertTitleMatch(/test index/, 'Tester.assertTitleMatch() works as expected');
         test.assertTitleMatches(/test index/, 'Tester.assertTitleMatches() works as expected [alias]');
         test.assertType("plop", "string", "Tester.assertType() works as expected");
@@ -67,8 +67,8 @@ casper.test.begin('Common assertions tests', 43, function(test) {
     });
 });
 
-casper.test.begin('filled inputs', 7, function(test) {
-    casper.start('tests/site/form.html', function() {
+kasper.test.begin('filled inputs', 7, function(test) {
+    kasper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             'email':       '',
             'content':     '',
@@ -90,9 +90,9 @@ casper.test.begin('filled inputs', 7, function(test) {
     });
 });
 
-casper.test.begin('unfilled inputs', 7, function(test) {
+kasper.test.begin('unfilled inputs', 7, function(test) {
     var fpath = phantom.libraryPath + '/README.md';
-    casper.start('tests/site/form.html', function() {
+    kasper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             'email':       'chuck@norris.com',
             'content':     'Am watching thou',

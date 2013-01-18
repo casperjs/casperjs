@@ -1,8 +1,8 @@
 /*!
- * Casper is a navigation utility for PhantomJS.
+ * kasper is a navigation utility for PhantomJS.
  *
- * Documentation: http://casperjs.org/
- * Repository:    http://github.com/n1k0/casperjs
+ * Documentation: http://kasperjs.org/
+ * Repository:    http://github.com/n1k0/kasperjs
  *
  * Copyright (c) 2011-2012 Nicolas Perriault
  *
@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError*/
+/*global kasperError*/
 
 var isArray = Array.isArray;
 
@@ -60,7 +60,7 @@ EventEmitter.prototype.emit = function emit() {
       if (arguments[1] instanceof Error) {
         throw arguments[1]; // Unhandled 'error' event
       } else {
-        throw new CasperError("Uncaught, unspecified 'error' event.");
+        throw new kasperError("Uncaught, unspecified 'error' event.");
       }
     }
   }
@@ -114,7 +114,7 @@ EventEmitter.prototype.emit = function emit() {
 // EventEmitter.prototype.emit() is also defined there.
 EventEmitter.prototype.addListener = function addListener(type, listener) {
   if ('function' !== typeof listener) {
-    throw new CasperError('addListener only takes instances of Function');
+    throw new kasperError('addListener only takes instances of Function');
   }
 
   if (!this._events) this._events = {};
@@ -161,7 +161,7 @@ EventEmitter.prototype.on = EventEmitter.prototype.addListener;
 
 EventEmitter.prototype.once = function once(type, listener) {
   if ('function' !== typeof listener) {
-    throw new CasperError('.once only takes instances of Function');
+    throw new kasperError('.once only takes instances of Function');
   }
 
   var self = this;
@@ -178,7 +178,7 @@ EventEmitter.prototype.once = function once(type, listener) {
 
 EventEmitter.prototype.removeListener = function removeListener(type, listener) {
   if ('function' !== typeof listener) {
-    throw new CasperError('removeListener only takes instances of Function');
+    throw new kasperError('removeListener only takes instances of Function');
   }
 
   // does not use listeners(), so no side effect of creating _events[type]
@@ -230,7 +230,7 @@ EventEmitter.prototype.listeners = function listeners(type) {
   return this._events[type];
 };
 
-// Added for CasperJS: filters a value attached to an event
+// Added for kasperJS: filters a value attached to an event
 EventEmitter.prototype.filter = function filter() {
   var type = arguments[0];
   if (!this._filters) {
@@ -261,7 +261,7 @@ EventEmitter.prototype.setFilter = function setFilter(type, filterFn) {
     this._filters = {};
   }
   if ('function' !== typeof filterFn) {
-    throw new CasperError('setFilter only takes instances of Function');
+    throw new kasperError('setFilter only takes instances of Function');
   }
   if (!this._filters[type]) {
     this._filters[type] = filterFn;

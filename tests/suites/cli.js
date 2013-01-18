@@ -1,8 +1,8 @@
-/*global casper*/
+/*global kasper*/
 /*jshint strict:false maxstatements:99*/
 var cli = require('cli');
 
-casper.test.begin('parsing an empty argument list', 12, function(test) {
+kasper.test.begin('parsing an empty argument list', 12, function(test) {
     var parsed = cli.parse([]);
     // clean
     test.assertEquals(parsed.args, [], 'parse() returns expected positional args array');
@@ -21,7 +21,7 @@ casper.test.begin('parsing an empty argument list', 12, function(test) {
     test.done();
 });
 
-casper.test.begin('parsing an basic argument list', 14, function(test) {
+kasper.test.begin('parsing an basic argument list', 14, function(test) {
     var parsed = cli.parse(['foo', 'bar']);
     // clean
     test.assertEquals(parsed.args, ['foo', 'bar'], 'parse() returns expected positional args array');
@@ -42,7 +42,7 @@ casper.test.begin('parsing an basic argument list', 14, function(test) {
     test.done();
 });
 
-casper.test.begin('parsing some options', 12, function(test) {
+kasper.test.begin('parsing some options', 12, function(test) {
     var parsed = cli.parse(['--foo=bar', '--baz']);
     // clean
     test.assertEquals(parsed.args, [], 'parse() returns expected positional args array');
@@ -61,7 +61,7 @@ casper.test.begin('parsing some options', 12, function(test) {
     test.done();
 });
 
-casper.test.begin('parsing an empty argument list', 8, function(test) {
+kasper.test.begin('parsing an empty argument list', 8, function(test) {
     var parsed = cli.parse(['--&é"à=42===42']);
     // clean
     test.assertEquals(parsed.args, [], 'parse() returns expected positional args array');
@@ -76,7 +76,7 @@ casper.test.begin('parsing an empty argument list', 8, function(test) {
     test.done();
 });
 
-casper.test.begin('parsing commands containing args and options', 30, function(test) {
+kasper.test.begin('parsing commands containing args and options', 30, function(test) {
     var parsed = cli.parse(['foo & bar', 'baz & boz', '--universe=42',
                             '--lap=13.37', '--chucknorris', '--oops=false']);
     // clean
