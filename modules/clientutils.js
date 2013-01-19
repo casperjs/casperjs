@@ -694,10 +694,17 @@
                     out = 'Unsupported field type: ' + nodeName;
                     break;
             }
+
             // firing the `change` event
             var changeEvent = document.createEvent("HTMLEvents");
             changeEvent.initEvent('change', true, true);
             field.dispatchEvent(changeEvent);
+
+            // firing the `input` event
+            var inputEvent = document.createEvent("HTMLEvents");
+            inputEvent.initEvent('input', true, true);
+            field.dispatchEvent(inputEvent);
+
             // blur the field
             try {
                 field.blur();
