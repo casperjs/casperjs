@@ -695,15 +695,12 @@
                     break;
             }
 
-            // firing the `change` event
-            var changeEvent = document.createEvent("HTMLEvents");
-            changeEvent.initEvent('change', true, true);
-            field.dispatchEvent(changeEvent);
-
-            // firing the `input` event
-            var inputEvent = document.createEvent("HTMLEvents");
-            inputEvent.initEvent('input', true, true);
-            field.dispatchEvent(inputEvent);
+            // firing the `change` and `input` events
+            ['change', 'input'].forEach(function(name) {
+                var event = document.createEvent("HTMLEvents");
+                event.initEvent(name, true, true);
+                field.dispatchEvent(event);
+            });
 
             // blur the field
             try {
