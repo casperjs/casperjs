@@ -1,6 +1,11 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v1.0.2
+------------------
+
+- merged PR [#357](https://github.com/n1k0/casperjs/pull/357) - fire the `input` event after setting input value (required to support [angular.js](http://angularjs.org/) apps)
+
 2013-01-17, v1.0.1
 ------------------
 
