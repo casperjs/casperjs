@@ -1,4 +1,16 @@
-# CasperJS [![Build Status](https://secure.travis-ci.org/n1k0/casperjs.png)](http://travis-ci.org/n1k0/casperjs)
+# CasperJS
+
+>**Important note:** the `master` branch hosts the development version of CasperJS, and may be rather instable from time to time. Use the [`1.0` branch](https://github.com/n1k0/casperjs/tree/1.0) if you want to keep in sync with the stable version, or [use tagged versions](https://github.com/n1k0/casperjs/tags).
+>
+>Currently, available documentation is:
+>
+>- hosted on [casperjs.org](http://casperjs.org/) for the 1.0 branch
+>- hosted on [docs.casperjs.org](http://docs.casperjs.org/) for the development branch
+>
+>[Travis-CI](http://travis-ci.org/n1k0/casperjs) build statuses:
+>
+>- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=1.0) `1.0` branch
+>- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master) `master` branch
 
 CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/).
 It eases the process of defining a full navigation scenario and provides useful
@@ -28,22 +40,22 @@ Follow the CasperJS project [on twitter](https://twitter.com/casperjs_org) and [
 Sample test to see if some dropdown can be opened:
 
 ```javascript
-casper.start('http://twitter.github.com/bootstrap/javascript.html#dropdowns', function() {
-    this.test.assertExists('#navbar-example');
-    this.click('#dropdowns .nav-pills .dropdown:last-of-type a.dropdown-toggle');
-    this.waitUntilVisible('#dropdowns .nav-pills .open', function() {
-        this.test.pass('Dropdown is open');
+casper.test.begin('a twitter bootsrap dropdown can be opened', 2, function(test) {
+    casper.start('http://twitter.github.com/bootstrap/javascript.html#dropdowns', function() {
+        test.assertExists('#navbar-example');
+        this.click('#dropdowns .nav-pills .dropdown:last-of-type a.dropdown-toggle');
+        this.waitUntilVisible('#dropdowns .nav-pills .open', function() {
+            test.pass('Dropdown is open');
+        });
+    }).run(function() {
+        test.done();
     });
-});
-
-casper.run(function() {
-    this.test.done();
 });
 ```
 
 Run the script:
 
-![](http://cl.ly/image/112m0F2n162i/Capture%20d%E2%80%99%C3%A9cran%202012-10-19%20%C3%A0%2016.37.15.png)
+![](http://cl.ly/image/271e2i403A0F/Capture%20d%E2%80%99%C3%A9cran%202013-01-20%20%C3%A0%2009.26.15.png)
 
 ## Contributing
 
