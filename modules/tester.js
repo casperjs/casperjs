@@ -412,7 +412,7 @@ Tester.prototype.assertSelectorExist = function assertExists(selector, message) 
 
 /**
  * Asserts that an element matching the provided selector expression does not
- * exists in remote DOM.
+ * exist in remote DOM.
  *
  * @param  String   selector  Selector expression
  * @param  String   message   Test description
