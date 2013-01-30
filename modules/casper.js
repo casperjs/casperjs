@@ -389,7 +389,10 @@ Casper.prototype.click = function click(selector) {
     this.checkStarted();
     var success = this.mouseEvent('click', selector);
     this.evaluate(function(selector) {
-        document.querySelector(selector).focus();
+        var element = __utils__.findOne(selector);
+        if (element) {
+            element.focus();
+        }
     }, selector);
     return success;
 };
