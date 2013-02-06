@@ -533,8 +533,8 @@ exports.isWebPage = isWebPage;
 function mergeObjects(origin, add) {
     "use strict";
     for (var p in add) {
-        if (add[p].constructor === Object) {
-            if (origin.hasOwnProperty(p) && origin[p].constructor === Object) {
+        if (add[p] && add[p].constructor === Object) {
+            if (origin[p] && origin[p].constructor === Object) {
                 origin[p] = mergeObjects(origin[p], add[p]);
             } else {
                 origin[p] = clone(add[p]);
