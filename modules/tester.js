@@ -113,7 +113,8 @@ var Tester = function Tester(casper, options) {
             failure.message  || failure.standard,
             failure.standard || "test failed",
             failure.type     || "unknown",
-            (timeElapsed - this.lastAssertTime)
+            (timeElapsed - this.lastAssertTime),
+            failure.values || {}
         );
         this.lastAssertTime = timeElapsed;
         this.testResults.failures.push(failure);
