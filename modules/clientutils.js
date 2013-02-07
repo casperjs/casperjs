@@ -478,7 +478,7 @@
                 if (type === 'radio') {
                     var value;
                     [].forEach.call(inputs, function(radio) {
-                        value = radio.checked ? radio.value : undefined;
+                        value = radio.checked ? radio.value : value;
                     });
                     return value;
                 } else if (type === 'checkbox') {
@@ -511,7 +511,7 @@
             var self = this;
             [].forEach.call(form.elements, function(element) {
                 var name = element.getAttribute('name');
-                if (name) {
+                if (name && !values[name]) {
                     values[name] = self.getFieldValue(name);
                 }
             });
