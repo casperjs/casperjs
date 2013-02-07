@@ -92,7 +92,7 @@ casper.test.begin('field array', 1, function(test) {
     });
 });
 
-casper.test.begin('getFormValues() tests', 1, function(test) {
+casper.test.begin('getFormValues() tests', 2, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             email:         'chuck@norris.com',
@@ -117,6 +117,31 @@ casper.test.begin('getFormValues() tests', 1, function(test) {
             "submit": "submit",
             "topic": "bar"
         }, 'Casper.getFormValues() retrieves filled values');
+    });
+    casper.then(function() {
+        this.fill('form[action="result.html"]', {
+            email:         'chuck@norris.com',
+            password:      'chuck',
+            content:       'Am watching thou',
+            check:         true,
+            choice:        'yes',
+            topic:         'bar',
+            file:          phantom.libraryPath + '/README.md',
+            'checklist[]': ['1', '3']
+        });
+    });
+    casper.then(function() {
+        test.assertEquals(this.getFormValues('form'), {
+            "check": true,
+            "checklist[]": ["1", "3"],
+            "choice": "yes",
+            "content": "Am watching thou",
+            "email": "chuck@norris.com",
+            "file": "C:\\fakepath\\README.md",
+            "password": "chuck",
+            "submit": "submit",
+            "topic": "bar"
+        }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
     });
     casper.run(function() {
         test.done();
