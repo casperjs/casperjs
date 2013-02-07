@@ -254,6 +254,9 @@ t.comment('mergeObjects()');
             obj1: {}, obj2: {a: 1}, merged: {a: 1}
         },
         {
+            obj1: {}, obj2: {a: {b: 2}}, merged: {a: {b: 2}}
+        },
+        {
             obj1: {a: 1}, obj2: {}, merged: {a: 1}
         },
         {
@@ -273,6 +276,12 @@ t.comment('mergeObjects()');
     testCases.forEach(function(testCase) {
         t.assertEquals(utils.mergeObjects(testCase.obj1, testCase.obj2), testCase.merged, 'mergeObjects() can merge objects');
     });
+    var obj = {x: 1};
+    var merged1 = utils.mergeObjects({}, {a: obj});
+    var merged2 = utils.mergeObjects({a: {}}, {a: obj});
+    merged1.a.x = 2;
+    merged2.a.x = 2;
+    t.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones');
 })();
 
 t.comment('objectValues()');
@@ -365,4 +374,4 @@ t.comment('ltVersion() tests');
 })();
 
 
-t.done(130);
+t.done(132);
