@@ -72,6 +72,33 @@ casper.then(function() {
 });
 
 casper.thenOpen('tests/site/form.html', function() {
+    this.fill('form[action="result.html"]', {
+        email:         'chuck@norris.com',
+        password:      'chuck',
+        content:       'Am watching thou',
+        check:         true,
+        choice:        'yes',
+        topic:         'bar',
+        file:          phantom.libraryPath + '/README.md',
+        'checklist[]': ['1', '3']
+    });
+});
+
+casper.then(function() {
+    this.test.assertEquals(this.getFormValues('form'), {
+        "check": true,
+        "checklist[]": ["1", "3"],
+        "choice": "yes",
+        "content": "Am watching thou",
+        "email": "chuck@norris.com",
+        "file": "C:\\fakepath\\README.md",
+        "password": "chuck",
+        "submit": "submit",
+        "topic": "bar"
+    }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
+});
+
+casper.thenOpen('tests/site/form.html', function() {
     this.test.comment('Unexistent fields');
     this.test.assertRaises(this.fill, ['form[action="result.html"]', {
         unexistent: 42
@@ -100,5 +127,5 @@ casper.thenOpen('tests/site/field-array.html', function() {
 });
 
 casper.run(function() {
-    this.test.done(19);
+    this.test.done(20);
 });
