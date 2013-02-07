@@ -3,14 +3,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="http://casperjs.org/">
-    <title>API documentation | CasperJS 1.0.1</title>
+    <title>API documentation | CasperJS 1.0.2-DEV</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1358931020457">
-    <link rel="stylesheet" href="css/casper.css?1358931020457">
+    <link rel="stylesheet" href="prettify/prettify.css?1360225572449">
+    <link rel="stylesheet" href="css/casper.css?1360225572449">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1742,11 +1742,15 @@ casper.waitForResource("foobar.png", function() {
 });
 
 casper.run();</code></pre>
-<h3 id="casper.waitForText"><code>Casper#waitForText(String text[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitForText"><code>Casper#waitForText(String|RegExp pattern[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <p><span class="label label-success">Added in 1.0</span>
 Waits until the passed text is present in the page contents before
 processing the immediate next step. Uses <a href="#casper.waitFor">Casper.waitFor()</a>.
+
+</p>
+<p><span class="label label-success">Added in 1.0.2</span>
+Added support for RegExp.
 
 </p>
 <p><strong>Example:</strong>
@@ -1754,6 +1758,11 @@ processing the immediate next step. Uses <a href="#casper.waitFor">Casper.waitFo
 </p>
 <pre><code class="javascript">casper.start('http://why.univer.se/').waitForText("42", function() {
     this.echo('Found the answer.');
+});
+
+// new in 1.0.2
+casper.thenOpen('http://why.univer.se/foo.html').waitForText(/\d+/, function() {
+    this.echo('Found an answer.');
 });
 
 casper.run();</code></pre>
@@ -2955,6 +2964,11 @@ Returns subject <a href="http://11heavens.com/falsy-and-truthy-in-javascript">fa
 <p>Checks if passed argument is an object.
 
 </p>
+<h3 id="utils.isRegExp"><code>utils.isRegExp(value)</code></h3>
+
+<p>Checks if passed argument is an instance of <code>RegExp</code>.
+
+</p>
 <h3 id="utils.isString"><code>utils.isString(value)</code></h3>
 
 <p>Checks if passed argument is an instance of <code>String</code>.
@@ -3022,6 +3036,7 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
 <li><a href="#utils.isNull"><code>isNull()</code></a></li>
 <li><a href="#utils.isNumber"><code>isNumber()</code></a></li>
 <li><a href="#utils.isObject"><code>isObject()</code></a></li>
+<li><a href="#utils.isRegExp"><code>isRegExp()</code></a></li>
 <li><a href="#utils.isString"><code>isString()</code></a></li>
 <li><a href="#utils.isTruthy"><code>isTruthy()</code></a></li>
 <li><a href="#utils.isType"><code>isType()</code></a></li>
@@ -3048,10 +3063,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" src="js/jquery.min.js?1358931020457"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1358931020457"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1358931020457"></script>
-    <script type="text/javascript" src="js/application.js?1358931020457"></script>
+    <script type="text/javascript" src="js/jquery.min.js?1360225572449"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1360225572449"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1360225572449"></script>
+    <script type="text/javascript" src="js/application.js?1360225572449"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

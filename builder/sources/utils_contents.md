@@ -100,6 +100,10 @@ Checks if passed argument is an instance of `Number`.
 
 Checks if passed argument is an object.
 
+<h3 id="utils.isRegExp"><code>utils.isRegExp(value)</code></h3>
+
+Checks if passed argument is an instance of `RegExp`.
+
 <h3 id="utils.isString"><code>utils.isString(value)</code></h3>
 
 Checks if passed argument is an instance of `String`.

@@ -1740,17 +1740,25 @@ casper.waitForResource("foobar.png", function() {
 casper.run();
 ```
 
-<h3 id="casper.waitForText"><code>Casper#waitForText(String text[, Function then, Function onTimeout, Number timeout])</code></h3>
+<h3 id="casper.waitForText"><code>Casper#waitForText(String|RegExp pattern[, Function then, Function onTimeout, Number timeout])</code></h3>
 
 <span class="label label-success">Added in 1.0</span>
 Waits until the passed text is present in the page contents before
 processing the immediate next step. Uses [Casper.waitFor()](#casper.waitFor).
+
+<span class="label label-success">Added in 1.0.2</span>
+Added support for RegExp.
 
 **Example:**
 
 ```javascript
 casper.start('http://why.univer.se/').waitForText("42", function() {
     this.echo('Found the answer.');
+});
+
+// new in 1.0.2
+casper.thenOpen('http://why.univer.se/foo.html').waitForText(/\d+/, function() {
+    this.echo('Found an answer.');
 });
 
 casper.run();

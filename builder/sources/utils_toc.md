@@ -18,6 +18,7 @@
 - [`isNull()`](#utils.isNull)
 - [`isNumber()`](#utils.isNumber)
 - [`isObject()`](#utils.isObject)
+- [`isRegExp()`](#utils.isRegExp)
 - [`isString()`](#utils.isString)
 - [`isTruthy()`](#utils.isTruthy)
 - [`isType()`](#utils.isType)
