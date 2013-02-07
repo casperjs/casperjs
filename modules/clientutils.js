@@ -511,7 +511,7 @@
             var self = this;
             [].forEach.call(form.elements, function(element) {
                 var name = element.getAttribute('name');
-                if (name) {
+                if (name && !values[name]) {
                     values[name] = self.getFieldValue(name);
                 }
             });
