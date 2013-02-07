@@ -1,6 +1,6 @@
 /*global casper*/
 /*jshint strict:false*/
-casper.test.begin('wait*() tests', 3, function(test) {
+casper.test.begin('wait*() tests', 4, function(test) {
     var waitStart;
 
     casper.start('tests/site/index.html', function() {
@@ -28,6 +28,12 @@ casper.test.begin('wait*() tests', 3, function(test) {
         test.pass('Casper.waitForText() can wait for text');
     }, function() {
         test.fail('Casper.waitForText() can wait for text');
+    });
+
+    casper.thenOpen('tests/site/waitFor.html').waitForText(/four/i, function() {
+        this.test.pass('Casper.waitForText() can wait for regexp');
+    }, function() {
+        this.test.fail('Casper.waitForText() can wait for regexp');
     });
 
     casper.run(function() {

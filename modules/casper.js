@@ -1837,20 +1837,24 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
 };
 
 /**
- * Waits until the page contains given HTML text.
+ * Waits until the page contains given HTML text or matches a given RegExp.
  *
- * @param  String    text       Text to wait for
- * @param  Function  then       The next step to perform (optional)
- * @param  Function  onTimeout  A callback function to call on timeout (optional)
- * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+ * @param  String|RegExp  pattern    Text or RegExp to wait for
+ * @param  Function       then       The next step to perform (optional)
+ * @param  Function       onTimeout  A callback function to call on timeout (optional)
+ * @param  Number         timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
-Casper.prototype.waitForText = function(text, then, onTimeout, timeout) {
+Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
-        return this.getPageContent().indexOf(text) !== -1;
+        var content = this.getPageContent();
+        if (utils.isRegExp(pattern)) {
+            return pattern.test(content);
+        }
+        return content.indexOf(pattern) !== -1;
     }, then, onTimeout, timeout);
 };
 

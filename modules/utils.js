@@ -425,6 +425,18 @@ function isObject(value) {
 exports.isObject = isObject;
 
 /**
+ * Checks if value is a RegExp
+ *
+ * @param  mixed  value
+ * @return Boolean
+ */
+function isRegExp(value) {
+    "use strict";
+    return isType(value, "regexp");
+}
+exports.isRegExp = isRegExp;
+
+/**
  * Checks if value is a javascript String
  *
  * @param  mixed  value
