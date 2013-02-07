@@ -4,6 +4,7 @@ CasperJS Changelog
 XXXX-XX-XX, v1.0.2
 ------------------
 
+- closed [#373](https://github.com/n1k0/casperjs/issues/373) - added RegExp support to `Casper.waitForText()`
 - fixed [#368](https://github.com/n1k0/casperjs/issues/368) - Remote JS error is thrown when a click target is missing after `click()`
 - merged PR [#357](https://github.com/n1k0/casperjs/pull/357) - fire the `input` event after setting input value (required to support [angular.js](http://angularjs.org/) apps)
 

@@ -32,6 +32,14 @@ casper.thenOpen('tests/site/waitFor.html').waitForText('<li>four</li>', function
     this.test.fail('Casper.waitForText() can wait for text');
 });
 
+casper.thenOpen('tests/site/waitFor.html').waitForText(/four/i, function() {
+    this.test.comment('Casper.waitForText()');
+    this.test.pass('Casper.waitForText() can wait for regexp');
+}, function() {
+    this.test.comment('Casper.waitForText()');
+    this.test.fail('Casper.waitForText() can wait for regexp');
+});
+
 casper.run(function() {
-    this.test.done(3);
+    this.test.done(4);
 });
