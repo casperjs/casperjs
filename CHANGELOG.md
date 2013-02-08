@@ -1,7 +1,7 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.2
+2013-02-08, v1.0.2
 ------------------
 
 - fixed [#375](https://github.com/n1k0/casperjs/pull/375) - Fixes a bug with getting form values for radio inputs, and introduces a minor optimization to avoid processing the same form fields more than once.
