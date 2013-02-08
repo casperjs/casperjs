@@ -66,7 +66,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 
 None yet.
 
-XXXX-XX-XX, v1.0.2
+2013-02-08, v1.0.2
 ------------------
 
 - fixed [#370](https://github.com/n1k0/casperjs/pull/370) - mergeObjects failed to deep-clone when the target object did not contain the corresponding key
