@@ -307,7 +307,10 @@ Tester.prototype.assertElementCount = function assertElementCount(selector, coun
         }
     }, selector) === count, message, {
         type: "assertElementCount",
-        standard: f("%d matching element(s) found", count),
+        standard: f('%d element%s matching selector "%s" found',
+                    count,
+                    count > 1 ? 's' : '',
+                    selector),
         values: {
             selector: selector,
             count:    count
