@@ -47,7 +47,8 @@ SYS_ARGS = sys.argv[1:]
 
 if len(SYS_ARGS) and SYS_ARGS[0] == '__selfcommandtest':
     print('Starting Python executable tests...')
-    pkg_version = json.loads(open('package.json').read()).get('version')
+    with open('package.json') as f:
+        pkg_version = json.load(f).get('version')
     scripts_path = os.path.join(CASPER_PATH, 'tests', 'commands')
     assert(test_cmd('--help').find(pkg_version) > -1)
     assert(test_cmd('--version').strip() == pkg_version)
