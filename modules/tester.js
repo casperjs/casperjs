@@ -817,16 +817,32 @@ Tester.prototype.bar = function bar(text, style) {
 /**
  * Starts a suite.
  *
- * @param  String    description  Test suite description
- * @param  Number    planned      Number of planned tests in this suite
- * @param  Function  suiteFn      Suite function
+ * Can be invoked two different ways:
+ *
+ *     casper.test.begin("suite description", plannedTests, function(test){})
+ *
+ * Or:
+ *
+ *     casper.test.begin("suite description", function(test){})
+ *
  */
-Tester.prototype.begin = function begin(description, planned, suiteFn) {
+Tester.prototype.begin = function begin() {
     "use strict";
+    /*jshint maxstatements:20*/
     if (this.started && this.running) {
         return this.queue.push(arguments);
     }
-    description = description || "Untitled suite in " + this.currentTestFile;
+    var description = arguments[0] || f("Untitled suite in %s", this.currentTestFile),
+        planned,
+        suiteFn;
+    if (utils.isFunction(arguments[1])) {
+        suiteFn = arguments[1];
+    } else if (utils.isNumber(arguments[1]) && utils.isFunction(arguments[2])) {
+        planned = arguments[1];
+        suiteFn = arguments[2];
+    } else {
+        throw new CasperError('Invalid call');
+    }
     if (!this.options.concise) {
         this.comment(description);
     }
