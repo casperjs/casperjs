@@ -143,8 +143,16 @@ var Tester = function Tester(casper, options) {
 
     // casper events
     this.casper.on('error', function onCasperError(msg, backtrace) {
-        this.test.fail(msg, {
-            type: 'error',
+        var type = 'error', message = msg, match = /^(\w+)Error: (.*)/.exec(msg);
+        if (match) {
+            type = match[1].toLowerCase();
+            message = match[2];
+        }
+        if (type !== 'assertion') {
+            return this.test.uncaughtError(msg, this.currentTestFile, null, backtrace);
+        }
+        this.test.fail(message, {
+            type: type,
             doThrow: false,
             values: {
                 stack: backtrace
@@ -1173,8 +1181,11 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
             style = 'GREEN_BAR';
         }
         result = f('%s %s tests executed in %ss, %d passed, %d failed.',
-                   statusText, total, utils.ms2seconds(this.suiteResults.calculateDuration()),
-                   passed, failed);
+                   statusText,
+                   total,
+                   utils.ms2seconds(this.suiteResults.calculateDuration()),
+                   passed,
+                   failed);
     }
     this.casper.echo(result, style, this.options.pad);
     if (failed > 0) {
@@ -1437,7 +1448,7 @@ TestSuiteResult.prototype.getAllResults = function getAllResults() {
 TestSuiteResult.prototype.calculateDuration = function calculateDuration() {
     "use strict";
     return this.getAllResults().map(function(result) {
-        return result.time;
+        return ~~result.time;
     }).reduce(function add(a, b) {
         return a + b;
     }, 0);

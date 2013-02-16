@@ -1249,6 +1249,7 @@ Casper.prototype.reload = function reload(then) {
     if (utils.isFunction(then)) {
         this.then(this.createStep(then));
     }
+    return this;
 };
 
 /**
@@ -1758,6 +1759,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function _check(self, testFx, timeout, onTimeout) {
+            /*jshint maxstatements:20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
                 return;
@@ -1767,17 +1769,17 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
                 self.log("Casper.waitFor() timeout", "warning");
                 var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
                 self.emit('waitFor.timeout', timeout, onWaitTimeout);
+                clearInterval(interval); // refs #383
                 if (!utils.isFunction(onWaitTimeout)) {
-                    throw new CasperError('Invalid timeout function, exiting.');
+                    throw new CasperError('Invalid timeout function');
                 }
-                onWaitTimeout.call(self, timeout);
-            } else {
-                self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
-                if (then) {
-                    self.then(then);
-                }
+                return onWaitTimeout.call(self, timeout);
             }
+            self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
             clearInterval(interval);
+            if (then) {
+                self.then(then);
+            }
         }, 100, this, testFx, timeout, onTimeout);
     });
 };
