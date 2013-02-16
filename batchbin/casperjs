@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export CASPER_PATH=$(dirname $0)/..
+export CASPER_BIN=$CASPER_PATH/bin
+phantomjs $CASPER_BIN/bootstrap.js --casper-path=$CASPER_PATH --cli $1
