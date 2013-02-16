@@ -1765,8 +1765,8 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
             self.waitDone();
             if (!condition) {
                 self.log("Casper.waitFor() timeout", "warning");
-                self.emit('waitFor.timeout');
                 var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
+                self.emit('waitFor.timeout', timeout, onWaitTimeout);
                 if (!utils.isFunction(onWaitTimeout)) {
                     throw new CasperError('Invalid timeout function, exiting.');
                 }

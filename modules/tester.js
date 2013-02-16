@@ -143,7 +143,17 @@ var Tester = function Tester(casper, options) {
 
     // casper events
     this.casper.on('error', function onCasperError(msg, backtrace) {
+        this.test.fail(msg, {
+            type: 'error',
+            doThrow: false,
+            values: {
+                stack: backtrace
+            }
+        });
+    });
 
+    this.casper.on('waitFor.timeout', function onWaitForTimeout(timeout) {
+        this.warn(f('wait timeout of %dms reached', timeout));
     });
 
     function errorHandler(error, backtrace) {
@@ -185,10 +195,6 @@ var Tester = function Tester(casper, options) {
     if (!phantom.casperTest) {
         return;
     }
-
-    // onRunComplete
-    this.casper.options.onRunComplete = function test_onRunComplete(casper) {
-    };
 
     // specific timeout callbacks
     this.casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
@@ -235,11 +241,12 @@ Tester.prototype.assertTrue = function assert(subject, message, context) {
         standard: "Subject is strictly true",
         message: message,
         file: this.currentTestFile,
+        doThrow: true,
         values: {
             subject: utils.getPropertyPath(context, 'values.subject') || subject
         }
     }, context || {});
-    if (!result.success) {
+    if (!result.success && result.doThrow) {
         throw new AssertionError(message, result);
     }
     return this.processAssertionResult(result);
@@ -970,13 +977,15 @@ Tester.prototype.exec = function exec(file) {
  * Adds a failed test entry to the stack.
  *
  * @param  String  message
+ * @param  Object  Failure context (optional)
  */
-Tester.prototype.fail = function fail(message) {
+Tester.prototype.fail = function fail(message, context) {
     "use strict";
-    return this.assert(false, message, {
+    context = context || {};
+    return this.assert(false, message, utils.mergeObjects({
         type:    "fail",
         standard: "explicit call to fail()"
-    });
+    }, context));
 };
 
 /**
