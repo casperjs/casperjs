@@ -7,9 +7,11 @@ function testUA(ua, match) {
 }
 
 function fetchUA(request) {
-    testUA(request.headers.filter(function(header) {
+    var headers = request.headers.filter(function(header) {
         return header.name === "User-Agent";
-    }).pop().value, /plop/);
+    });
+    casper.test.assert(headers.length > 0);
+    testUA(headers.pop().value, /plop/);
 }
 
 casper.test.begin('userAgent() tests', 2, function(test) {
