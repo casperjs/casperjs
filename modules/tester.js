@@ -143,16 +143,11 @@ var Tester = function Tester(casper, options) {
 
     // casper events
     this.casper.on('error', function onCasperError(msg, backtrace) {
-        var type = 'error', message = msg, match = /^(\w+)Error: (.*)/.exec(msg);
-        if (match) {
-            type = match[1].toLowerCase();
-            message = match[2];
+        if (/^AssertionError/.test(msg)) {
+            return;
         }
-        if (type !== 'assertion') {
-            return this.test.uncaughtError(msg, this.currentTestFile, null, backtrace);
-        }
-        this.test.fail(message, {
-            type: type,
+        this.test.fail(msg, {
+            type: "error",
             doThrow: false,
             values: {
                 stack: backtrace
