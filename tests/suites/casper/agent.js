@@ -14,7 +14,7 @@ function fetchUA(request) {
     testUA(headers.pop().value, /plop/);
 }
 
-casper.test.begin('userAgent() tests', 2, function(test) {
+casper.test.begin('userAgent() tests', 3, function(test) {
     testUA(casper.options.pageSettings.userAgent, /CasperJS/);
     casper.start();
     casper.userAgent('plop').once('resource.requested', fetchUA);
