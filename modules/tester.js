@@ -309,13 +309,14 @@ Tester.prototype.assertElementCount = function assertElementCount(selector, coun
     if (!utils.isNumber(count) || count < 0) {
         throw new CasperError('assertElementCount() needs a positive integer count');
     }
-    return this.assert(this.casper.evaluate(function(selector) {
+    var elementCount = this.casper.evaluate(function(selector) {
         try {
             return __utils__.findAll(selector).length;
         } catch (e) {
             return -1;
         }
-    }, selector) === count, message, {
+    }, selector);
+    return this.assert(elementCount === count, message, {
         type: "assertElementCount",
         standard: f('%d element%s matching selector "%s" found',
                     count,
@@ -323,7 +324,8 @@ Tester.prototype.assertElementCount = function assertElementCount(selector, coun
                     selector),
         values: {
             selector: selector,
-            count:    count
+            expected: count,
+            obtained: elementCount
         }
     });
 };
