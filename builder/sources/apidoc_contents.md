@@ -1414,9 +1414,7 @@ casper.start('http://casperjs.org/').thenClick('a', function() {
 casper.run();
 ```
 
-This method is basically a convenient a shortcut for chaining a
-[`then()`](#then) and an [`evaluate()`](#evaluate)
-calls.
+Shortcut for chaining [`then()`](#then) and [`click()`](#click) calls.
 
 <h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, arg1[, arg2[, …]])</code></h3>
 
@@ -1435,9 +1433,7 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
 casper.run();
 ```
 
-This method is basically a convenient a shortcut for chaining a
-[`then()`](#then) and an [`evaluate()`](#evaluate)
-calls.
+Shortcut for chaining [`then()`](#then) and [`evaluate()`](#evaluate) calls.
 
 <h3 id="casper.thenOpen"><code>Casper#thenOpen(String location[, mixed options])</code></h3>
 
@@ -1478,8 +1474,7 @@ casper.run();
 
 <h3 id="casper.thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then[, arg1[, arg2[, …]])</code></h3>
 
-Basically a shortcut for opening an url and evaluate code against remote
-DOM environment.
+Shortcut for chaining [`thenOpen()`](#thenOpen) and [`thenEvaluate()`](#thenEvaluate) calls.
 
 **Example:**
 
