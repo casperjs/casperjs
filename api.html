@@ -9,8 +9,8 @@
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1360317085234">
-    <link rel="stylesheet" href="css/casper.css?1360317085234">
+    <link rel="stylesheet" href="prettify/prettify.css?1361378270029">
+    <link rel="stylesheet" href="css/casper.css?1361378270029">
     <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
@@ -1433,9 +1433,7 @@ casper.start('http://casperjs.org/').thenClick('a', function() {
 });
 
 casper.run();</code></pre>
-<p>This method is basically a convenient a shortcut for chaining a
-<a href="#then"><code>then()</code></a> and an <a href="#evaluate"><code>evaluate()</code></a>
-calls.
+<p>Shortcut for chaining <a href="#then"><code>then()</code></a> and <a href="#click"><code>click()</code></a> calls.
 
 </p>
 <h3 id="casper.thenEvaluate"><code>Casper#thenEvaluate(Function fn[, arg1[, arg2[, …]])</code></h3>
@@ -1454,9 +1452,7 @@ casper.start('http://google.fr/').thenEvaluate(function(term) {
 }, 'Chuck Norris');
 
 casper.run();</code></pre>
-<p>This method is basically a convenient a shortcut for chaining a
-<a href="#then"><code>then()</code></a> and an <a href="#evaluate"><code>evaluate()</code></a>
-calls.
+<p>Shortcut for chaining <a href="#then"><code>then()</code></a> and <a href="#evaluate"><code>evaluate()</code></a> calls.
 
 </p>
 <h3 id="casper.thenOpen"><code>Casper#thenOpen(String location[, mixed options])</code></h3>
@@ -1495,8 +1491,7 @@ argument:
 casper.run();</code></pre>
 <h3 id="casper.thenOpenAndEvaluate"><code>Casper#thenOpenAndEvaluate(String location[, function then[, arg1[, arg2[, …]])</code></h3>
 
-<p>Basically a shortcut for opening an url and evaluate code against remote
-DOM environment.
+<p>Shortcut for chaining <a href="#thenOpen"><code>thenOpen()</code></a> and <a href="#thenEvaluate"><code>thenEvaluate()</code></a> calls.
 
 </p>
 <p><strong>Example:</strong>
@@ -3063,10 +3058,10 @@ Useful for <a href="debugging.html">debugging</a> and comparing objects.
             </p>
         </footer>
     </div>
-    <script type="text/javascript" src="js/jquery.min.js?1360317085234"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1360317085234"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1360317085234"></script>
-    <script type="text/javascript" src="js/application.js?1360317085234"></script>
+    <script type="text/javascript" src="js/jquery.min.js?1361378270029"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1361378270029"></script>
+    <script type="text/javascript" src="prettify/prettify.js?1361378270029"></script>
+    <script type="text/javascript" src="js/application.js?1361378270029"></script>
     <script type="text/javascript">
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
