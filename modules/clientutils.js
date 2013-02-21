@@ -455,10 +455,12 @@
          * Retrieves the value of a form field.
          *
          * @param  String  inputName  The for input name attr value
+         * @param  Object  options    Object with formSelector, optional
          * @return Mixed
          */
-        this.getFieldValue = function getFieldValue(inputName) {
+        this.getFieldValue = function getFieldValue(inputName, options) {
             function getSingleValue(input) {
+                var type;
                 try {
                     type = input.getAttribute('type').toLowerCase();
                 } catch (e) {
@@ -474,6 +476,7 @@
                 return input.checked;
             }
             function getMultipleValues(inputs) {
+                var type;
                 type = inputs[0].getAttribute('type').toLowerCase();
                 if (type === 'radio') {
                     var value;
@@ -491,7 +494,11 @@
                     return values;
                 }
             }
-            var inputs = this.findAll('[name="' + inputName + '"]'), type;
+            var formSelector = '';
+            if (options && options.formSelector) {
+              formSelector = options.formSelector + ' ';
+            }
+            var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
             switch (inputs.length) {
                 case 0:  return null;
                 case 1:  return getSingleValue(inputs[0]);
@@ -512,7 +519,7 @@
             [].forEach.call(form.elements, function(element) {
                 var name = element.getAttribute('name');
                 if (name && !values[name]) {
-                    values[name] = self.getFieldValue(name);
+                    values[name] = self.getFieldValue(name, {formSelector: selector});
                 }
             });
             return values;
