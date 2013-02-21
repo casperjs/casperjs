@@ -65,6 +65,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 ### Bugfixes & enhancements
 
 - closed [#392](https://github.com/n1k0/casperjs/issues/392) - `--direct` & `--log-level` options available for the `casperjs` executable
+- closed [#350](https://github.com/n1k0/casperjs/issues/350) - Add a Casper.waitForSelectorTextChange() method
 
 2013-02-08, v1.0.2
 ------------------

@@ -459,6 +459,7 @@
          * @return Mixed
          */
         this.getFieldValue = function getFieldValue(inputName, options) {
+            options = options || {};
             function getSingleValue(input) {
                 var type;
                 try {
@@ -496,7 +497,7 @@
             }
             var formSelector = '';
             if (options && options.formSelector) {
-              formSelector = options.formSelector + ' ';
+                formSelector = options.formSelector + ' ';
             }
             var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
             switch (inputs.length) {
