@@ -65,13 +65,21 @@ casper.test.begin('unexistent fields', 1, function(test) {
     });
 });
 
-casper.test.begin('multiple forms', 1, function(test) {
+casper.test.begin('multiple forms', 2, function(test) {
     casper.start('tests/site/multiple-forms.html', function() {
         this.fill('form[name="f2"]', {
             yo: "ok"
         }, true);
     }).then(function() {
         test.assertUrlMatch(/\?f=f2&yo=ok$/, 'Casper.fill() handles multiple forms');
+    }).then(function() {
+        this.fill('form[name="f2"]', {
+            yo: "ok"
+        });
+        test.assertEquals(this.getFormValues('form[name="f2"]'), {
+            f: "f2",
+            yo: "ok"
+        }, 'Casper.getFormValues() retrieves filled values when multiple forms have same field names');
     }).run(function() {
         test.done();
     });
