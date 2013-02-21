@@ -5,7 +5,9 @@ Usage: casperjs [options] script.[js|coffee] [script argument [script argument .
 
 Options:
 
+--direct    Prints log messages to the console
+--log-level Sets logging level
 --help      Prints this help
 --version   Prints out CasperJS version
 
-Read the docs http://casperjs.org/
+Read the docs http://docs.casperjs.org/

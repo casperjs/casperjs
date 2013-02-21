@@ -53,8 +53,6 @@ function checkIncludeFile(include) {
 function checkArgs() {
     "use strict";
     // parse some options from cli
-    casper.options.verbose = casper.cli.get('direct') || false;
-    casper.options.logLevel = casper.cli.get('log-level') || "error";
     if (casper.cli.get('no-colors') === true) {
         var cls = 'Dummy';
         casper.options.colorizerType = cls;

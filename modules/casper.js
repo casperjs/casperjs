@@ -122,10 +122,15 @@ var Casper = function Casper(options) {
     };
     // options
     this.options = utils.mergeObjects(this.defaults, options);
+    // factories
+    this.cli = phantom.casperArgs;
+    this.options.logLevel = this.cli.get('log-level') || this.options.logLevel;
+    this.options.verbose = this.cli.get('direct') || this.options.verbose;
+    this.colorizer = this.getColorizer();
+    this.mouse = mouse.create(this);
+    this.popups = pagestack.create();
     // properties
     this.checker = null;
-    this.cli = phantom.casperArgs;
-    this.colorizer = this.getColorizer();
     this.currentResponse = undefined;
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = null;
@@ -140,10 +145,8 @@ var Casper = function Casper(options) {
         warning: 'COMMENT',
         error:   'ERROR'
     };
-    this.mouse = mouse.create(this);
     this.page = null;
     this.pendingWait = false;
-    this.popups = pagestack.create();
     this.requestUrl = 'about:blank';
     this.resources = [];
     this.result = {
