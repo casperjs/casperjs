@@ -1758,6 +1758,22 @@ casper.thenOpen('http://why.univer.se/foo.html').waitForText(/\d+/, function() {
 
 casper.run();
 ```
+<h3 id="casper.waitForSelectorTextChange"><code>Casper#waitForSelectorTextChange(String <a href="selectors.html">selectors</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
+
+Waits until the text on an element matching the provided [selector expression](selectors.html)
+is changed to a different value before processing the next step. Uses [Casper.waitFor()](#casper.waitFor).
+
+**Example:**
+
+```javascript
+casper.start('http://foo.bar/');
+
+casper.waitForSelectorTextChange('.selector', function() {
+    this.echo('The text on .selector has been changed.);
+});
+
+casper.run();
+```
 
 <h3 id="casper.waitUntilVisible"><code>Casper#waitUntilVisible(String <a href="selectors.html">selector</a>[, Function then, Function onTimeout, Number timeout])</code></h3>
 
