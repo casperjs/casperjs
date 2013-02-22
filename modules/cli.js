@@ -31,8 +31,8 @@
 /*global CasperError console exports phantom patchRequire*/
 
 var require = patchRequire(require);
-var system = require('system');
 var utils = require('utils');
+var system = require('system');
 
 /**
  * Extracts, normalize ad organize PhantomJS CLI arguments in a dedicated
