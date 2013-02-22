@@ -67,26 +67,19 @@ if (typeof Function.prototype.bind !== "function") {
  * lookup directories to fetch modules from.
  *
  */
-function patchRequire(require, requireDirs) {
+function patchRequire(require) {
     "use strict";
     if (require.patched) {
         return require;
     }
     var patchedRequire = function _require(path) {
         var fs = require('fs'), moduleFilePath;
-        var modulesPath = fs.pathJoin(phantom.casperPath, 'modules');
-        var casperModules = fs.list(modulesPath).filter(function(entry) {
-            var absPath = fs.absolute(fs.pathJoin(modulesPath, entry));
-            return entry !== "." && entry !== ".." && !fs.isDirectory(absPath);
-        }).map(function(moduleFile) {
-            return moduleFile.replace(/\.js$/, '');
-        });
-        try {
-            if (casperModules.indexOf(path) > -1) {
-                moduleFilePath = fs.pathJoin(modulesPath, path + '.js');
-                return require(moduleFilePath);
-            }
+        if (phantom.casperBuiltIns.indexOf(path) === -1) {
             return require(path);
+        }
+        try {
+            moduleFilePath = fs.pathJoin(phantom.casperModulesPath, path + '.js');
+            return require(moduleFilePath);
         } catch (e) {
             if (moduleFilePath) {
                 var error = new window.CasperError('__mod_error(' + path + ':' + e.line + '):: ' + e);
@@ -186,6 +179,20 @@ function bootstrap(global) {
         // standard Error prototype inheritance
         global.CasperError.prototype = Object.getPrototypeOf(new Error());
 
+        // path to standard casperjs modules directory
+        phantom.casperModulesPath = fs.pathJoin(phantom.casperPath, 'modules');
+
+        // computing casperjs builtin modules list once for all
+        phantom.casperBuiltIns = (function getBuiltins() {
+            var fs = require('fs');
+            return fs.list(phantom.casperModulesPath).filter(function(entry) {
+                var absPath = fs.absolute(fs.pathJoin(phantom.casperModulesPath, entry));
+                return entry !== "." && entry !== ".." && !fs.isDirectory(absPath);
+            }).map(function(moduleFile) {
+                return moduleFile.replace(/\.js$/, '');
+            });
+        })();
+
         // CasperJS version, extracted from package.json - see http://semver.org/
         phantom.casperVersion = (function getVersion(path) {
             var parts, patchPart, pkg, pkgFile;
@@ -219,8 +226,8 @@ function bootstrap(global) {
             };
         })(phantom.casperPath);
 
-        // patch require
-        global.require = patchRequire(global.require, [phantom.casperPath, fs.workingDirectory]);
+        // patch require (must be called in every casperjs module as of 1.1)
+        global.require = patchRequire(global.require);
 
         // casper cli args
         phantom.casperArgs = global.require('cli').parse(phantom.args);
