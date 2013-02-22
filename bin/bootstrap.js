@@ -69,30 +69,28 @@ if (typeof Function.prototype.bind !== "function") {
  */
 function patchRequire(require) {
     "use strict";
+    require = require || window.require;
     if (require.patched) {
         return require;
     }
     var patchedRequire = function _require(path) {
-        var fs = require('fs'), moduleFilePath;
-        if (phantom.casperBuiltIns.indexOf(path) === -1) {
-            return require(path);
+        var fs = require('fs');
+        var moduleFilePath = fs.pathJoin(phantom.casperPath, 'modules', path + '.js');
+        if (!fs.exists(moduleFilePath)) {
+            return require(path); // native phantomjs' require() behavior
         }
         try {
-            moduleFilePath = fs.pathJoin(phantom.casperModulesPath, path + '.js');
             return require(moduleFilePath);
         } catch (e) {
-            if (moduleFilePath) {
-                var error = new window.CasperError('__mod_error(' + path + ':' + e.line + '):: ' + e);
-                error.file = moduleFilePath;
-                error.line = e.line;
-                error.stack = e.stack;
-                error.stackArray = JSON.parse(JSON.stringify(e.stackArray));
-                if (error.stackArray.length > 0) {
-                    error.stackArray[0].sourceURL = moduleFilePath;
-                }
-                throw error;
+            var error = new window.CasperError('__mod_error(' + path + ':' + e.line + '):: ' + e);
+            error.file = moduleFilePath;
+            error.line = e.line;
+            error.stack = e.stack;
+            error.stackArray = JSON.parse(JSON.stringify(e.stackArray));
+            if (error.stackArray.length > 0) {
+                error.stackArray[0].sourceURL = moduleFilePath;
             }
-            throw e;
+            throw error;
         }
     };
     patchedRequire.cache = require.cache;
@@ -178,20 +176,6 @@ function bootstrap(global) {
 
         // standard Error prototype inheritance
         global.CasperError.prototype = Object.getPrototypeOf(new Error());
-
-        // path to standard casperjs modules directory
-        phantom.casperModulesPath = fs.pathJoin(phantom.casperPath, 'modules');
-
-        // computing casperjs builtin modules list once for all
-        phantom.casperBuiltIns = (function getBuiltins() {
-            var fs = require('fs');
-            return fs.list(phantom.casperModulesPath).filter(function(entry) {
-                var absPath = fs.absolute(fs.pathJoin(phantom.casperModulesPath, entry));
-                return entry !== "." && entry !== ".." && !fs.isDirectory(absPath);
-            }).map(function(moduleFile) {
-                return moduleFile.replace(/\.js$/, '');
-            });
-        })();
 
         // CasperJS version, extracted from package.json - see http://semver.org/
         phantom.casperVersion = (function getVersion(path) {
