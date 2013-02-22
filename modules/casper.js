@@ -1645,13 +1645,15 @@ Casper.prototype.userAgent = function userAgent(agent) {
 };
 
 /**
- * Changes the current viewport size.
+ * Changes the current viewport size. That operation is asynchronous as the page
+ * has to reflow its contents accordingly.
  *
- * @param  Number  width   The viewport width, in pixels
- * @param  Number  height  The viewport height, in pixels
+ * @param  Number    width   The viewport width, in pixels
+ * @param  Number    height  The viewport height, in pixels
+ * @param  Function  then    Next step to process (optional)
  * @return Casper
  */
-Casper.prototype.viewport = function viewport(width, height) {
+Casper.prototype.viewport = function viewport(width, height, then) {
     "use strict";
     this.checkStarted();
     if (!utils.isNumber(width) || !utils.isNumber(height) || width <= 0 || height <= 0) {
@@ -1662,7 +1664,7 @@ Casper.prototype.viewport = function viewport(width, height) {
         height: height
     };
     this.emit('viewport.changed', [width, height]);
-    return this;
+    return utils.isFunction(then) ? this.then(then) : this;
 };
 
 /**

@@ -1,5 +1,7 @@
 /*global casper*/
 /*jshint strict:false*/
+var utils = require('utils');
+
 casper.test.begin('viewport() tests', 3, function(test) {
     casper.start();
     casper.viewport(1337, 999);
@@ -10,4 +12,23 @@ casper.test.begin('viewport() tests', 3, function(test) {
     test.assertRaises(casper.viewport, ['a', 'b'],
         'Casper.viewport() validates viewport size data');
     test.done();
+});
+
+casper.test.begin('viewport() asynchronous tests', 2, function(test) {
+    var screenshotData;
+
+    casper.start('tests/site/index.html').viewport(800, 600, function() {
+        this.setContent(utils.format('<img src="data:image/png;base64,%s">',
+                                     this.captureBase64('png')));
+    });
+
+    casper.then(function() {
+        var imgInfo = this.getElementInfo('img');
+        test.assertEquals(imgInfo.width, 800, 'Casper.viewport() changes width asynchronously');
+        test.assertEquals(imgInfo.height, 600, 'Casper.viewport() changes height asynchronously');
+    });
+
+    casper.run(function() {
+        test.done();
+    });
 });
