@@ -28,8 +28,9 @@
  *
  */
 
-/*global CasperError exports phantom require __utils__*/
+/*global CasperError exports phantom __utils__ patchRequire*/
 
+var require = patchRequire(require);
 var fs = require('fs');
 var events = require('events');
 var utils = require('utils');

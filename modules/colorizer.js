@@ -28,8 +28,9 @@
  *
  */
 
-/*global exports console require*/
+/*global exports console patchRequire*/
 
+var require = patchRequire(require);
 var fs = require('fs');
 var utils = require('utils');
 

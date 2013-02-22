@@ -28,7 +28,9 @@
  *
  */
 
-/*global CasperError console exports phantom require*/
+/*global CasperError console exports phantom patchRequire*/
+
+var require = patchRequire(require);
 
 /**
  * Provides a better typeof operator equivalent, able to retrieve the array

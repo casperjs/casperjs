@@ -1,10 +1,11 @@
-/*global phantom CasperError*/
+/*global phantom CasperError patchRequire*/
 
 if (!phantom.casperLoaded) {
     console.log('This script must be invoked using the casperjs executable');
     phantom.exit(1);
 }
 
+var require      = patchRequire(require);
 var fs           = require('fs');
 var colorizer    = require('colorizer');
 var utils        = require('utils');

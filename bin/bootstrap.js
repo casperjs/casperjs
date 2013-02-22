@@ -69,106 +69,40 @@ if (typeof Function.prototype.bind !== "function") {
  */
 function patchRequire(require, requireDirs) {
     "use strict";
-    require('webserver'); // force generation of phantomjs' require.cache for the webserver module
-    var fs = require('fs');
-    var phantomBuiltins = ['fs', 'webpage', 'system', 'webserver'];
-    var phantomRequire = phantom.__orig__require = require;
-    var requireCache = {};
-    function possiblePaths(path, requireDir) {
-        var dir, paths = [];
-        if (path[0] === '.') {
-            paths.push.apply(paths, [
-                fs.absolute(path),
-                fs.absolute(fs.pathJoin(requireDir, path))
-            ]);
-        } else if (path[0] === '/') {
-            paths.push(path);
-        } else {
-            dir = fs.absolute(requireDir);
-            while (dir !== '' && dir.lastIndexOf(':') !== dir.length - 1) {
-                paths.push(fs.pathJoin(dir, 'modules', path));
-                // nodejs compatibility
-                paths.push(fs.pathJoin(dir, 'node_modules', path));
-                dir = fs.dirname(dir);
-            }
-            paths.push(fs.pathJoin(requireDir, 'lib', path));
-            paths.push(fs.pathJoin(requireDir, 'modules', path));
-        }
-        return paths;
+    if (require.patched) {
+        return require;
     }
     var patchedRequire = function _require(path) {
-        var i, paths = [],
-            fileGuesses = [],
-            file,
-            module = {
-                exports: {}
-            };
-        if (phantomBuiltins.indexOf(path) !== -1) {
-            return phantomRequire(path);
-        }
-        requireDirs.forEach(function(requireDir) {
-            paths = paths.concat(possiblePaths(path, requireDir));
+        var fs = require('fs'), moduleFilePath;
+        var modulesPath = fs.pathJoin(phantom.casperPath, 'modules');
+        var casperModules = fs.list(modulesPath).filter(function(entry) {
+            var absPath = fs.absolute(fs.pathJoin(modulesPath, entry));
+            return entry !== "." && entry !== ".." && !fs.isDirectory(absPath);
+        }).map(function(moduleFile) {
+            return moduleFile.replace(/\.js$/, '');
         });
-        paths.forEach(function _forEach(testPath) {
-            fileGuesses.push.apply(fileGuesses, [
-                testPath,
-                testPath + '.js',
-                testPath + '.json',
-                testPath + '.coffee',
-                fs.pathJoin(testPath, 'index.js'),
-                fs.pathJoin(testPath, 'index.json'),
-                fs.pathJoin(testPath, 'index.coffee'),
-                fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.js'),
-                fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.json'),
-                fs.pathJoin(testPath, 'lib', fs.basename(testPath) + '.coffee')
-            ]);
-        });
-        file = null;
-        for (i = 0; i < fileGuesses.length && !file; ++i) {
-            if (fs.isFile(fileGuesses[i])) {
-                file = fileGuesses[i];
-            }
-        }
-        if (!file) {
-            throw new window.CasperError("CasperJS couldn't find module " + path);
-        }
-        if (file in requireCache) {
-            return requireCache[file].exports;
-        }
-        if (/\.json/i.test(file)) {
-            var parsed = JSON.parse(fs.read(file));
-            requireCache[file] = parsed;
-            return parsed;
-        }
-        var scriptCode = (function getScriptCode(file) {
-            var scriptCode = fs.read(file);
-            if (/\.coffee$/i.test(file)) {
-                /*global CoffeeScript*/
-                try {
-                    scriptCode = CoffeeScript.compile(scriptCode);
-                } catch (e) {
-                    throw new Error('Unable to compile coffeescript:' + e);
-                }
-            }
-            return scriptCode;
-        })(file);
-        var fn = new Function('__file__', 'require', 'module', 'exports', scriptCode);
         try {
-            fn(file, _require, module, module.exports);
-        } catch (e) {
-            var error = new window.CasperError('__mod_error(' + path + ':' + e.line + '):: ' + e);
-            error.file = file;
-            error.line = e.line;
-            error.stack = e.stack;
-            error.stackArray = JSON.parse(JSON.stringify(e.stackArray));
-            if (error.stackArray.length > 0) {
-                error.stackArray[0].sourceURL = file;
+            if (casperModules.indexOf(path) > -1) {
+                moduleFilePath = fs.pathJoin(modulesPath, path + '.js');
+                return require(moduleFilePath);
             }
-            throw error;
+            return require(path);
+        } catch (e) {
+            if (moduleFilePath) {
+                var error = new window.CasperError('__mod_error(' + path + ':' + e.line + '):: ' + e);
+                error.file = moduleFilePath;
+                error.line = e.line;
+                error.stack = e.stack;
+                error.stackArray = JSON.parse(JSON.stringify(e.stackArray));
+                if (error.stackArray.length > 0) {
+                    error.stackArray[0].sourceURL = moduleFilePath;
+                }
+                throw error;
+            }
+            throw e;
         }
-        requireCache[file] = module;
-        return module.exports;
     };
+    patchedRequire.cache = require.cache;
     patchedRequire.patched = true;
     return patchedRequire;
 }

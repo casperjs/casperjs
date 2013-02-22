@@ -28,8 +28,9 @@
  *
  */
 
-/*global CasperError console exports phantom require*/
+/*global CasperError console exports phantom patchRequire*/
 
+var require = patchRequire(require);
 var system = require('system');
 var utils = require('utils');
 
