@@ -1,20 +1,7 @@
 #!/usr/bin/env python
 
-import json
 import os
-import subprocess
 import sys
-
-def test_cmd(cmd):
-    try:
-        return subprocess.check_output([__file__] + cmd.split(' ')).strip()
-    except subprocess.CalledProcessError as err:
-        sys.stderr.write('FAIL: %s\n' % err)
-        sys.stderr.write('  return code: %d\n' % err.returncode)
-        sys.stderr.write('  args:        %s\n' % ','.join(err.args))
-        sys.stderr.write('  cmd:         %s\n' % ' '.join(err.cmd))
-        sys.stderr.write('  output:      %s\n' % err.output)
-        sys.exit(1)
 
 def resolve(path):
     if os.path.islink(path):
@@ -47,23 +34,6 @@ CASPER_ARGS = []
 CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
 PHANTOMJS_ARGS = []
 SYS_ARGS = sys.argv[1:]
-
-if len(SYS_ARGS) and SYS_ARGS[0] == '__selfcommandtest':
-    print('Starting Python executable tests...')
-    with open('package.json') as f:
-        pkg_version = json.load(f).get('version')
-    scripts_path = os.path.join(CASPER_PATH, 'tests', 'commands')
-    assert(test_cmd('--help').find(pkg_version) > -1)
-    assert(test_cmd('--version').strip() == pkg_version)
-    assert(test_cmd(os.path.join(scripts_path, 'script.js')) == 'it works')
-    test_output = test_cmd('test --no-colors ' + os.path.join(scripts_path, 'mytest.js'))
-    assert('PASS ok1' in test_output)
-    assert('PASS ok2' in test_output)
-    assert('PASS ok3' in test_output)
-    module_test = test_cmd(os.path.join(CASPER_PATH, 'tests', 'clitests', 'modules', 'test.js'))
-    assert(module_test == 'hello, world')
-    print('Python executable tests passed.')
-    sys.exit(0)
 
 for arg in SYS_ARGS:
     found = False
