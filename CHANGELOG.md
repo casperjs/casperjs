@@ -8,6 +8,10 @@ This version is yet to be released, and will possibly be tagged as 2.0 as not-so
 
 ### Important Changes & Caveats
 
+#### Minimum PhantomJS version
+
+**PhantomJS 1.8.1 or later is required for 1.1.**
+
 #### Testing framework refactoring
 
 A new `Tester.begin()` method has been introduced to help organizing tests better:
@@ -64,6 +68,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 
 ### Bugfixes & enhancements
 
+- heavy lifint of casperjs bootstrap script
 - closed [#392](https://github.com/n1k0/casperjs/issues/392) - `--direct` & `--log-level` options available for the `casperjs` executable
 - closed [#350](https://github.com/n1k0/casperjs/issues/350) - Add a Casper.waitForSelectorTextChange() method
 - fixed [#387](https://github.com/n1k0/casperjs/issues/387) - Setting viewport isn't quite synchronous

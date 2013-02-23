@@ -34,13 +34,6 @@
 // phantom check
 if (!phantom) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
-    phantom.exit(1);
-}
-
-// required version check
-if (phantom.version.major === 1 && phantom.version.minor < 7) {
-    console.error('CasperJS needs at least PhantomJS v1.7 or later.');
-    phantom.exit(1);
 }
 
 // Common polyfills
@@ -74,6 +67,29 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     if (phantom.casperLoaded) {
         return;
     }
+
+    function __die(message) {
+        console.error(message);
+        phantom.exit(1);
+    }
+
+    function __terminate(message) {
+        console.log(message);
+        phantom.exit();
+    }
+
+    (function(version) {
+        // required version check
+        if (version.major !== 1) {
+            return __die('CasperJS needs PhantomJS v1.x');
+        }
+        if (version.minor < 8) {
+            return __die('CasperJS needs at least PhantomJS v1.8 or later.');
+        }
+        if (version.patch < 1) {
+            return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
+        }
+    })(phantom.version);
 
     // Hooks in default phantomjs error handler to print a hint when a possible
     // casperjs command misuse is detected.
@@ -124,17 +140,19 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
                 return fs.isDirectory(path);
             }).pop();
         } catch (e) {
-            console.error("Couldn't find nor compute phantom.casperPath, exiting.");
-            phantom.exit(1);
+            return __die("Couldn't find nor compute phantom.casperPath, exiting.");
         }
     }
 
-    // Patched require to allow loading of native casperjs modules.
-    // Every casperjs native module have to first call this function in order to
-    // load a native casperjs module:
-    //
-    //     var require = patchRequire(require);
-    //     var utils = require('utils');
+    /**
+     * Patched require to allow loading of native casperjs modules.
+     * Every casperjs native module have to first call this function in order to
+     * load a native casperjs module:
+     *
+     *     var require = patchRequire(require);
+     *     var utils = require('utils');
+     *
+     */
     function patchRequire(require) {
         if (require.patched) {
             return require;
@@ -168,6 +186,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     /**
      * Initializes the CasperJS Command Line Interface.
+     *
      */
     function initCasperCli() {
         var baseTestsPath = fs.pathJoin(phantom.casperPath, 'tests');
@@ -190,11 +209,13 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
             var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
             var f = require("utils").format;
-            console.log(f('CasperJS version %s at %s, using PhantomJS version %s',
-                        phantom.casperVersion.toString(),
-                        phantom.casperPath, phantomVersion));
-            console.log(fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt')));
-            return phantom.exit(0);
+            return __terminate([
+                f('CasperJS version %s at %s, using PhantomJS version %s',
+                  phantom.casperVersion.toString(),
+                  phantom.casperPath,
+                  phantomVersion)
+              , fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt'))
+            ].join('\n'));
         }
 
         if (!phantom.casperScript) {
@@ -202,8 +223,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
 
         if (!fs.isFile(phantom.casperScript)) {
-            console.error('Unable to open file: ' + phantom.casperScript);
-            return phantom.exit(1);
+            return __die('Unable to open file: ' + phantom.casperScript);
         }
 
         // filter out the called script name from casper args
@@ -255,10 +275,11 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         initCasperCli();
     }
 
+    // casper loading status flag
     phantom.casperLoaded = true;
 
     // passed casperjs script execution
-    if (!phantom.injectJs(phantom.casperScript)) {
-        throw new CasperError('Unable to load script ' + phantom.casperScript + '; check file syntax');
+    if (phantom.casperScript && !phantom.injectJs(phantom.casperScript)) {
+        return __die('Unable to load script ' + phantom.casperScript + '; check file syntax');
     }
 })(window, phantom);

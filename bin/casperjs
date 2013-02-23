@@ -9,8 +9,11 @@ def test_cmd(cmd):
     try:
         return subprocess.check_output([__file__] + cmd.split(' '))
     except subprocess.CalledProcessError as err:
-        sys.stderr.write('FAIL: %s\n' % ' '.join(err.cmd))
-        sys.stderr.write('      %s\n' % err.output)
+        sys.stderr.write('FAIL: %s\n' % err)
+        sys.stderr.write('  return code: %d\n' % err.returncode)
+        sys.stderr.write('  args:        %s\n' % ','.join(err.args))
+        sys.stderr.write('  cmd:         %s\n' % ' '.join(err.cmd))
+        sys.stderr.write('  output:      %s\n' % err.output)
         sys.exit(1)
 
 def resolve(path):
