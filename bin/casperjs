@@ -7,7 +7,7 @@ import sys
 
 def test_cmd(cmd):
     try:
-        return subprocess.check_output([__file__] + cmd.split(' '))
+        return subprocess.check_output([__file__] + cmd.split(' ')).strip()
     except subprocess.CalledProcessError as err:
         sys.stderr.write('FAIL: %s\n' % err)
         sys.stderr.write('  return code: %d\n' % err.returncode)
@@ -55,11 +55,13 @@ if len(SYS_ARGS) and SYS_ARGS[0] == '__selfcommandtest':
     scripts_path = os.path.join(CASPER_PATH, 'tests', 'commands')
     assert(test_cmd('--help').find(pkg_version) > -1)
     assert(test_cmd('--version').strip() == pkg_version)
-    assert(test_cmd(os.path.join(scripts_path, 'script.js')) == 'it works\n')
+    assert(test_cmd(os.path.join(scripts_path, 'script.js')) == 'it works')
     test_output = test_cmd('test --no-colors ' + os.path.join(scripts_path, 'mytest.js'))
     assert('PASS ok1' in test_output)
     assert('PASS ok2' in test_output)
     assert('PASS ok3' in test_output)
+    module_test = test_cmd(os.path.join(CASPER_PATH, 'tests', 'clitests', 'modules', 'test.js'))
+    assert(module_test == 'hello, world')
     print('Python executable tests passed.')
     sys.exit(0)
 
