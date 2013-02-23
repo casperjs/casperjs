@@ -3,7 +3,7 @@ branches:
     - "master"
     - "1.0"
 before_script:
-  - "npm install -g jshint"
+  - "npm install -g jshint@0.9.1"
   - "phantomjs --version"
   - "export PHANTOMJS_EXECUTABLE='phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes'"
 script:
