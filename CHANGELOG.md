@@ -12,6 +12,22 @@ This version is yet to be released, and will possibly be tagged as 2.0 as not-so
 
 **PhantomJS 1.8.1 or later is required for 1.1.**
 
+#### `require()` in custom modules
+
+CasperJS 1.1 now internally uses PhantomJS' native `require()` function, but it has side effect if you write your own casperjs modules; in any casperjs module, you now have to use the new global `patchRequire()` function first:
+
+```js
+// casperjs module code
+var require = patchRequire(require);
+// now you can require casperjs builtins
+var utils = require('utils');
+exports = {
+    // ...
+};
+```
+
+**Note:** you don't have to use `patchRequire()` in a standard casperjs script.
+
 #### Testing framework refactoring
 
 A new `Tester.begin()` method has been introduced to help organizing tests better:
