@@ -5,7 +5,7 @@ default: all
 all: selftest clitest jshint
 
 selftest:
-	casperjs selftest
+	bin/casperjs selftest
 
 clitest:
 	python tests/clitests/runtests.py
