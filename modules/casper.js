@@ -30,7 +30,7 @@
 
 /*global CasperError console exports phantom __utils__ patchRequire*/
 
-//var require = patchRequire(require);
+var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');
