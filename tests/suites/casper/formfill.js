@@ -9,7 +9,7 @@ casper.test.begin('fill() tests', 15, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
-            file:          phantom.libraryPath + '/README.md',
+            file:          phantom.casperPath + '/README.md',
             'checklist[]': ['1', '3']
         });
         test.assertEvalEquals(function() {
@@ -109,7 +109,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
-            file:          phantom.libraryPath + '/README.md',
+            file:          phantom.casperPath + '/README.md',
             'checklist[]': ['1', '3']
         });
     });
@@ -134,7 +134,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'yes',
             topic:         'bar',
-            file:          phantom.libraryPath + '/README.md',
+            file:          phantom.casperPath + '/README.md',
             'checklist[]': ['1', '3']
         });
     });
