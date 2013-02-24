@@ -67,7 +67,7 @@ casper.test.begin('Common assertions tests', 43, function(test) {
     });
 });
 
-casper.test.begin('filled inputs', 7, function(test) {
+casper.test.begin('Tester.assertField(): filled inputs', 7, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             'email':       '',
@@ -90,8 +90,8 @@ casper.test.begin('filled inputs', 7, function(test) {
     });
 });
 
-casper.test.begin('unfilled inputs', 7, function(test) {
-    var fpath = phantom.libraryPath + '/README.md';
+casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             'email':       'chuck@norris.com',
@@ -107,7 +107,7 @@ casper.test.begin('unfilled inputs', 7, function(test) {
         test.assertField('check', true, 'Tester.assertField() works as expected with checkboxes');
         test.assertField('choice', 'no', 'Tester.assertField() works as expected with radios');
         test.assertField('topic', 'bar', 'Tester.assertField() works as expected with selects');
-        test.assertField('file', 'C:\\fakepath\\README.md', 'Tester.assertField() works as expected with file inputs');
+        test.assertField('file', fpath, 'Tester.assertField() works as expected with file inputs');
         test.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
     }).run(function() {
         test.done();
