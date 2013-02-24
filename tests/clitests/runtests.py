@@ -36,20 +36,27 @@ class CasperExecTest(unittest.TestCase):
         with open(os.path.join(CASPERJS_ROOT, 'package.json')) as f:
             self.pkg_version = json.load(f).get('version')
 
-    def runCommand(self, cmd):
+    def runCommand(self, cmd, **kwargs):
+        failing = kwargs.get('failing', False)
         cmd_args = [CASPER_EXEC, '--no-colors'] + cmd.split(' ')
         try:
             return subprocess.check_output(cmd_args).strip()
+            if failing:
+                raise AssertionError('Command %s has not failed' % cmd)
         except subprocess.CalledProcessError as err:
-            raise IOError('Command %s exited with status %s' % (cmd, err.status))
+            if failing:
+                return err.output
+            else:
+                raise IOError('Command %s exited with status %s'
+                              % (cmd, err.errorcode))
 
-    def assertCommandOutputEquals(self, cmd, result):
+    def assertCommandOutputEquals(self, cmd, result, **kwargs):
         self.assertEquals(self.runCommand(cmd), result)
 
-    def assertCommandOutputContains(self, cmd, what):
+    def assertCommandOutputContains(self, cmd, what, **kwargs):
         if isinstance(what, (list, tuple)):
             for entry in what:
-                self.assertIn(entry, self.runCommand(cmd))
+                self.assertIn(entry, self.runCommand(cmd, **kwargs))
         else:
             self.assertIn(what, self.runCommand(cmd))
 
@@ -96,6 +103,23 @@ class CasperExecTest(unittest.TestCase):
             '1 passed',
             '0 failed',
         ])
+
+    @timeout(20)
+    def test_new_failing_test(self):
+        # using begin()
+        script_path = os.path.join(TEST_ROOT, 'tester', 'failing.js')
+        self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            '# true',
+            'FAIL Subject is strictly true',
+            '#    type: assert',
+            '#    file: %s:3' % script_path,
+            '#    code: test.assert(false);',
+            '#    subject: false',
+            'FAIL 1 tests executed',
+            '0 passed',
+            '1 failed.',
+        ], failing=True)
 
 if __name__ == '__main__':
     unittest.main()
