@@ -108,8 +108,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
         if (!fs.hasOwnProperty('dirname')) {
             fs.dirname = function dirname(path) {
-                var dir = path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
-                return dir === path ? '.' : dir;
+                return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
             };
         }
         if (!fs.hasOwnProperty('isWindows')) {
@@ -239,7 +238,11 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
 
         if (!phantom.casperScriptBaseDir) {
-            phantom.casperScriptBaseDir = fs.absolute(fs.dirname(phantom.casperScript));
+            var scriptDir = fs.dirname(phantom.casperScript);
+            if (scriptDir === phantom.casperScript) {
+                scriptDir = '.';
+            }
+            phantom.casperScriptBaseDir = fs.absolute(scriptDir);
         }
 
         // filter out the called script name from casper args
