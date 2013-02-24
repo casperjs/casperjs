@@ -11,7 +11,7 @@ casper.test.begin('XPath tests', 6, function(test) {
         test.assertDoesntExist({
             type: 'xpath',
             path: '/html/body/ol/li[2]'
-        }, 'XPath selector does not retrieve an unexistent element');
+        }, 'XPath selector does not retrieve an nonexistent element');
         test.assertExists(x('/html/body/ul/li[2]'), 'selectXPath() shortcut can find an element as well');
         test.assertEvalEquals(function() {
             return __utils__.findAll({type: 'xpath', path: '/html/body/ul/li'}).length;
