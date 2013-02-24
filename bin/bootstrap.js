@@ -82,11 +82,10 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         // required version check
         if (version.major !== 1) {
             return __die('CasperJS needs PhantomJS v1.x');
-        }
-        if (version.minor < 8) {
+        } if (version.minor < 8) {
             return __die('CasperJS needs at least PhantomJS v1.8 or later.');
         }
-        if (version.patch < 1) {
+        if (version.minor === 8 && version.patch < 1) {
             return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
         }
     })(phantom.version);
