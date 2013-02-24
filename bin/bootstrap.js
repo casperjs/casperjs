@@ -216,7 +216,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;
             phantom.casperArgs.drop("test");
-            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(0));
+            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(1));
         } else if (phantom.casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperSelfTest = phantom.casperTest = true;
@@ -225,7 +225,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
                 phantom.casperArgs.args.push(fs.pathJoin(baseTestsPath, 'suites'));
             }
             phantom.casperArgs.drop("selftest");
-            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(0) || fs.dirname(phantom.casperScript));
+            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(1) || fs.dirname(phantom.casperScript));
         } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
             return printHelp();
         }
