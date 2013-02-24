@@ -121,5 +121,33 @@ class CasperExecTest(unittest.TestCase):
             '1 failed.',
         ], failing=True)
 
+    @timeout(60)
+    def test_full_suite(self):
+        folder_path = os.path.join(TEST_ROOT, 'tester')
+        failing_script = os.path.join(folder_path, 'failing.js')
+        passsing_script = os.path.join(folder_path, 'passing.js')
+        mytest_script = os.path.join(folder_path, 'mytest.js')
+        self.assertCommandOutputContains('test ' + folder_path, [
+            'Test file: %s' % failing_script,
+            '# true',
+            'FAIL Subject is strictly true',
+            '#    type: assert',
+            '#    file: %s:3' % failing_script,
+            '#    code: test.assert(false);',
+            '#    subject: false',
+            'Test file: %s' % mytest_script,
+            'PASS ok1',
+            'PASS ok2',
+            'PASS ok3',
+            'Test file: %s' % passsing_script,
+            '# true',
+            'PASS Subject is strictly true',
+            'FAIL 5 tests executed',
+            '4 passed',
+            '1 failed',
+            'Details for the 1 failed test:',
+            'assert: Subject is strictly true',
+        ], failing=True)
+
 if __name__ == '__main__':
     unittest.main()
