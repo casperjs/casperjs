@@ -66,6 +66,25 @@ casper.test.begin('Casperjs.org is navigable', 2, function suite(test) {
 });
 ```
 
+`Tester#begin()` has also `setUp()` and `tearDown()` capabilities:
+
+```js
+var range;
+
+casper.test.begin('range tests', 1, {
+    setUp: function() {
+        range = [1, 2, 3];
+    },
+    tearDown: function() {
+        range = undefined;
+    },
+    test: function(test) {
+        test.assertEquals(range.length, 3);
+        test.done();
+    }
+});
+```
+
 Also, scraping and testing are now betterly separated in CasperJS, and bad code is now a bit less bad. That involves breaking up BC on some points though:
 
 - The Casper object won't be created with a `test` reference if not invoked using the [`casperjs test` command](http://casperjs.org/testing.html#casper-test-command), therefore the ability to run any test without calling it has been dropped. I know, get over it.

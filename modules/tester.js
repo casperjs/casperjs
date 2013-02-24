@@ -841,18 +841,29 @@ Tester.prototype.bar = function bar(text, style) {
  */
 Tester.prototype.begin = function begin() {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*jshint maxstatements:40 maxcomplexity:20*/
     if (this.started && this.running) {
         return this.queue.push(arguments);
     }
     var description = arguments[0] || f("Untitled suite in %s", this.currentTestFile),
         planned,
-        suiteFn;
+        suiteFn,
+        setUp,
+        tearDown;
     if (utils.isFunction(arguments[1])) {
         suiteFn = arguments[1];
+    } else if (utils.isObject(arguments[1])) {
+        suiteFn = arguments[1].test;
+        setUp = arguments[1].setUp;
+        tearDown = arguments[1].tearDown;
     } else if (utils.isNumber(arguments[1]) && utils.isFunction(arguments[2])) {
         planned = arguments[1];
         suiteFn = arguments[2];
+    } else if (utils.isNumber(arguments[1]) && utils.isObject(arguments[2])) {
+        planned = arguments[1];
+        suiteFn = arguments[2].test;
+        setUp = arguments[2].setUp;
+        tearDown = arguments[2].tearDown;
     } else {
         throw new CasperError('Invalid call');
     }
@@ -867,6 +878,9 @@ Tester.prototype.begin = function begin() {
     this.executed = 0;
     this.running = this.started = true;
     try {
+        if (utils.isFunction(setUp)) {
+            setUp.call(this, this, this.casper);
+        }
         suiteFn.call(this, this, this.casper);
     } catch (err) {
         if (err instanceof AssertionError) {
@@ -874,7 +888,7 @@ Tester.prototype.begin = function begin() {
         } else {
             this.uncaughtError(err, this.currentTestFile, err.line);
         }
-        this.done();
+        this.done(tearDown);
     }
     if (this.options.concise) {
         this.casper.echo([
@@ -907,18 +921,25 @@ Tester.prototype.comment = function comment(message) {
 /**
  * Declares the current test suite done.
  *
- * @param  Number  planned  Number of planned tests
+ * @param  Function  tearDown  Function to call when done
  */
-Tester.prototype.done = function done(planned) {
+Tester.prototype.done = function done() {
     "use strict";
-    if (arguments.length > 0) {
+    /*jshint maxstatements:20 maxcomplexity:20*/
+    var planned, tearDown;
+    if (utils.isNumber(arguments[0])) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
+        planned = arguments[0];
+    } else if (utils.isFunction(arguments[0])) {
+        tearDown = arguments[0];
     }
     if (this.currentSuite && this.currentSuite.planned && this.currentSuite.planned !== this.executed) {
         this.dubious(this.currentSuite.planned, this.executed, this.currentSuite.name);
     } else if (planned && planned !== this.executed) {
         // BC
         this.dubious(planned, this.executed);
+    } else if (tearDown) {
+        tearDown.call(this, this, this.casper);
     }
     if (this.currentSuite) {
         this.suiteResults.push(this.currentSuite);
@@ -1066,6 +1087,16 @@ Tester.prototype.pass = function pass(message) {
         type:    "pass",
         standard: "explicit call to pass()"
     });
+};
+
+Tester.prototype.prepare = function prepare(config) {
+    "use strict";
+    if (!utils.isObject(config)) {
+        throw new CasperError('prepare() needs a config object');
+    }
+    if ('setUp' in config) {
+
+    }
 };
 
 /**
