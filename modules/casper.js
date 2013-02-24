@@ -731,6 +731,9 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
         } else {
             (function _each(self) {
                 fillResults.files.forEach(function _forEach(file) {
+                    if (!fs.exists(file.path)) {
+                        throw new CasperError('Cannot upload unexistent file: ' + file.path);
+                    }
                     var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
                     self.page.uploadFile(fileFieldSelector, file.path);
                 });
