@@ -108,7 +108,8 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
         if (!fs.hasOwnProperty('dirname')) {
             fs.dirname = function dirname(path) {
-                return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+                var dir = path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+                return dir === path ? '.' : dir;
             };
         }
         if (!fs.hasOwnProperty('isWindows')) {
