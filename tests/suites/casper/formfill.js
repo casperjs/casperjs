@@ -3,6 +3,8 @@
 var fs = require('fs');
 
 casper.test.begin('fill() tests', 15, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             email:         'chuck@norris.com',
@@ -11,7 +13,7 @@ casper.test.begin('fill() tests', 15, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
-            file:          phantom.casperPath + '/README.md',
+            file:          fpath,
             'checklist[]': ['1', '3']
         });
         test.assertEvalEquals(function() {
