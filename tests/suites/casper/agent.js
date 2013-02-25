@@ -14,12 +14,19 @@ function fetchUA(request) {
     testUA(headers.pop().value, /plop/);
 }
 
-casper.test.begin('userAgent() tests', 3, function(test) {
-    testUA(casper.options.pageSettings.userAgent, /CasperJS/);
-    casper.start();
-    casper.userAgent('plop').once('resource.requested', fetchUA);
-    casper.thenOpen('tests/site/index.html');
-    casper.run(function() {
-        test.done();
-    });
+casper.test.begin('userAgent() tests', 3, {
+    originalUA: casper.options.pageSettings.userAgent,
+
+    tearDown: function(test) {
+        casper.userAgent(this.originalUA);
+    },
+
+    test: function(test) {
+        testUA(casper.options.pageSettings.userAgent, /CasperJS/);
+        casper.start().userAgent('plop').once('resource.requested', fetchUA);
+        casper.thenOpen('tests/site/index.html').run(function() {
+            test.done();
+        });
+    }
 });
+
