@@ -126,7 +126,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "no",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            "file": fpath,
+            "file": "C:\\fakepath\\README.md", // phantomjs/webkit sets that
             "password": "chuck",
             "submit": "submit",
             "topic": "bar"
@@ -151,7 +151,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "yes",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            "file": fpath,
+            "file": "C:\\fakepath\\README.md", // phantomjs/webkit sets that
             "password": "chuck",
             "submit": "submit",
             "topic": "bar"
