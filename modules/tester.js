@@ -162,11 +162,7 @@ var Tester = function Tester(casper, options) {
 
     function errorHandler(error, backtrace) {
         if (error instanceof Error) {
-            if (error instanceof AssertionError) {
-                self.processAssertionError(error);
-            } else if (error.message !== self.SKIP_MESSAGE) {
-                self.uncaughtError(error, self.currentTestFile, error.line);
-            }
+            self.processError(error);
             return self.done();
         }
         if (error.indexOf('AssertionError') === 0) {
@@ -841,60 +837,61 @@ Tester.prototype.bar = function bar(text, style) {
  */
 Tester.prototype.begin = function begin() {
     "use strict";
-    /*jshint maxstatements:40 maxcomplexity:20*/
     if (this.started && this.running) {
         return this.queue.push(arguments);
     }
-    var description = arguments[0] || f("Untitled suite in %s", this.currentTestFile),
-        planned,
-        suiteFn,
-        setUp,
-        tearDown;
-    if (utils.isFunction(arguments[1])) {
-        suiteFn = arguments[1];
-    } else if (utils.isObject(arguments[1])) {
-        suiteFn = arguments[1].test;
-        setUp = arguments[1].setUp;
-        tearDown = arguments[1].tearDown;
-    } else if (utils.isNumber(arguments[1]) && utils.isFunction(arguments[2])) {
-        planned = arguments[1];
-        suiteFn = arguments[2];
-    } else if (utils.isNumber(arguments[1]) && utils.isObject(arguments[2])) {
-        planned = arguments[1];
-        suiteFn = arguments[2].test;
-        setUp = arguments[2].setUp;
-        tearDown = arguments[2].tearDown;
-    } else {
-        throw new CasperError('Invalid call');
+    function getConfig(args) {
+        var config = {
+            setUp: function(){},
+            tearDown: function(){}
+        };
+        if (utils.isFunction(args[1])) {
+            config.test = args[1];
+        } else if (utils.isObject(args[1])) {
+            config = utils.mergeObjects(config, args[1]);
+        } else if (utils.isNumber(args[1]) && utils.isFunction(args[2])) {
+            config.planned = ~~args[1] || undefined;
+            config.test = args[2];
+        } else if (utils.isNumber(args[1]) && utils.isObject(args[2])) {
+            config.config = utils.mergeObjects(config, args[2]);
+            config.planned = ~~args[1] || undefined;
+        } else {
+            throw new CasperError('Invalid call');
+        }
+        if (!utils.isFunction(config.test)) {
+            throw new CasperError('begin() is missing a mandatory test function');
+        }
+        return config;
     }
+    var description = arguments[0] || f("Untitled suite in %s", this.currentTestFile),
+        config = getConfig([].slice.call(arguments));
     if (!this.options.concise) {
         this.comment(description);
     }
     this.currentSuite = new TestCaseResult({
         name: description,
         file: this.currentTestFile,
-        planned: Math.abs(~~planned) || undefined
+        config: config,
+        planned: config.planned || undefined
     });
     this.executed = 0;
     this.running = this.started = true;
     try {
-        if (utils.isFunction(setUp)) {
-            setUp.call(this, this, this.casper);
+        if (config.setUp) {
+            config.setUp(this, this.casper);
         }
-        suiteFn.call(this, this, this.casper);
+        config.test(this, this.casper);
     } catch (err) {
-        if (err instanceof AssertionError) {
-            this.processAssertionError(err);
-        } else {
-            this.uncaughtError(err, this.currentTestFile, err.line);
-        }
-        this.done(tearDown);
+        this.processError(err);
+        this.done();
     }
     if (this.options.concise) {
         this.casper.echo([
             this.colorize('PASS', 'INFO'),
             this.formatMessage(description),
-            this.colorize(f('(%d test%s)', planned, planned > 1 ? 's' : ''), 'INFO')
+            this.colorize(f('(%d test%s)',
+                            config.planned,
+                            config.planned > 1 ? 's' : ''), 'INFO')
         ].join(' '));
     }
 };
@@ -921,25 +918,27 @@ Tester.prototype.comment = function comment(message) {
 /**
  * Declares the current test suite done.
  *
- * @param  Function  tearDown  Function to call when done
  */
 Tester.prototype.done = function done() {
     "use strict";
     /*jshint maxstatements:20 maxcomplexity:20*/
-    var planned, tearDown;
+    var planned, config = this.currentSuite.config;
     if (utils.isNumber(arguments[0])) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
         planned = arguments[0];
-    } else if (utils.isFunction(arguments[0])) {
-        tearDown = arguments[0];
+    }
+    if (config && config.tearDown && utils.isFunction(config.tearDown)) {
+        try {
+            config.tearDown(this, this.casper);
+        } catch (error) {
+            this.processError(error);
+        }
     }
     if (this.currentSuite && this.currentSuite.planned && this.currentSuite.planned !== this.executed) {
         this.dubious(this.currentSuite.planned, this.executed, this.currentSuite.name);
     } else if (planned && planned !== this.executed) {
         // BC
         this.dubious(planned, this.executed);
-    } else if (tearDown) {
-        tearDown.call(this, this, this.casper);
     }
     if (this.currentSuite) {
         this.suiteResults.push(this.currentSuite);
@@ -1157,6 +1156,19 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         throw this.SKIP_MESSAGE;
     }
     return result;
+};
+
+/**
+ * Processes an error.
+ *
+ * @param  {Error} error
+ */
+Tester.prototype.processError = function processError(error) {
+    "use strict";
+    if (error instanceof AssertionError) {
+        return this.processAssertionError(error);
+    }
+    return this.uncaughtError(error, this.currentTestFile, error.line);
 };
 
 /**
@@ -1497,6 +1509,7 @@ function TestCaseResult(options) {
     this.failures = [];
     this.passes = [];
     this.warnings = [];
+    this.config = options && options.config;
     this.__defineGetter__("assertions", function() {
         return this.passed + this.failed;
     });

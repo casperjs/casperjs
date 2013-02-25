@@ -5,10 +5,10 @@ default: all
 all: selftest clitest jshint
 
 selftest:
-	bin/casperjs selftest
+	-bin/casperjs selftest
 
 clitest:
-	python tests/clitests/runtests.py
+	-python tests/clitests/runtests.py
 
 jshint:
-	jshint --config=.jshintconfig .
+	-jshint --config=.jshintconfig .
