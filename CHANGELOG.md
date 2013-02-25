@@ -66,17 +66,17 @@ casper.test.begin('Casperjs.org is navigable', 2, function suite(test) {
 });
 ```
 
-`Tester#begin()` has also `setUp()` and `tearDown()` capabilities:
+`Tester#begin()` has also `setUp()` and `tearDown()` capabilities if you pass it a configuration object instead of a function:
 
 ```js
-var range;
-
 casper.test.begin('range tests', 1, {
-    setUp: function() {
-        range = [1, 2, 3];
+    range: [1, 2],
+
+    setUp: function(test) {
+        this.range.push(3);
     },
-    tearDown: function() {
-        range = undefined;
+    tearDown: function(test) {
+        range = [];
     },
     test: function(test) {
         test.assertEquals(range.length, 3);
