@@ -108,7 +108,8 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
         if (!fs.hasOwnProperty('dirname')) {
             fs.dirname = function dirname(path) {
-                return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
+                if (!path) return undefined;
+                return path.toString().replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
             };
         }
         if (!fs.hasOwnProperty('isWindows')) {
@@ -215,7 +216,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;
             phantom.casperArgs.drop("test");
-            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(1));
+            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(0));
         } else if (phantom.casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperSelfTest = phantom.casperTest = true;
