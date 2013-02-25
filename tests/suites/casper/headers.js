@@ -25,7 +25,7 @@ casper.test.begin('Casper.headers.get() using http protocol', 3, function(test) 
         var headers = response.headers;
         test.assertEquals(headers.get('Content-Language'), 'en', 'Checking existing header (case sensitive)');
         test.assertEquals(headers.get('content-language'), 'en', 'Checking existing header (case insensitive)');
-        test.assertEquals(headers.get('X-Is-Troll'), null, 'Checking unexisting header');
+        test.assertEquals(headers.get('X-Is-Troll'), null, 'Checking nonexisting header');
     }).run(function() {
         server.close();
         test.done();
