@@ -184,6 +184,7 @@ var Tester = function Tester(casper, options) {
     }
     this.casper.on('event.error', errorHandler);
     this.casper.on('step.error', errorHandler);
+    this.casper.on('complete.error', errorHandler);
 
     this.casper.on('warn', function(warning) {
         if (self.currentSuite) {

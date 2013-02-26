@@ -348,18 +348,22 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
     }
     var step = self.steps[self.step++];
     if (utils.isFunction(step)) {
-        self.runStep(step);
-    } else {
-        self.result.time = new Date().getTime() - self.startTime;
-        self.log(f("Done %s steps in %dms", self.steps.length, self.result.time), "info");
-        clearInterval(self.checker);
-        self.step -= 1;
-        self.emit('run.complete');
+        return self.runStep(step);
+    }
+    self.result.time = new Date().getTime() - self.startTime;
+    self.log(f("Done %s steps in %dms", self.steps.length, self.result.time), "info");
+    clearInterval(self.checker);
+    self.step -= 1;
+    self.emit('run.complete');
+    try {
         if (utils.isFunction(onComplete)) {
             onComplete.call(self, self);
         } else if (utils.isFunction(self.options.onRunComplete)) {
             self.options.onRunComplete.call(self, self);
         }
+    } catch (error) {
+        self.emit('complete.error', error);
+        throw error;
     }
 };
 
