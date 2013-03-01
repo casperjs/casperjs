@@ -1893,12 +1893,12 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
  * @return Casper
  */
 Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout, timeout) {
-    "user strict";
+    "use strict";
     this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     var currentSelectorText = this.fetchText(selector);
     return this.waitFor(function _check() {
-        return currentSelectorText != this.fetchText(selector);
+        return currentSelectorText !== this.fetchText(selector);
     }, then, onTimeout, timeout);
 };
 
