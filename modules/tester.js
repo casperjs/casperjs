@@ -666,13 +666,15 @@ Tester.prototype.assertFalsy = function assertFalsy(subject, message) {
 Tester.prototype.assertSelectorHasText =
 Tester.prototype.assertSelectorContains = function assertSelectorHasText(selector, text, message) {
     "use strict";
-    var textFound = this.casper.fetchText(selector).indexOf(text) !== -1;
+    var got = this.casper.fetchText(selector);
+    var textFound = got.indexOf(text) !== -1;
     return this.assert(textFound, message, {
         type: "assertSelectorHasText",
         standard: f('Found "%s" within the selector "%s"', text, selector),
         values: {
             selector: selector,
-            text: text
+            text: text,
+            actualContent: got
         }
     });
 };
