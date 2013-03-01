@@ -87,9 +87,23 @@ casper.test.begin('waitForText() tests', 2, function(test) {
     });
 
     casper.reload().waitForText(/four/i, function() {
-        this.test.pass('Casper.waitForText() can wait for regexp');
+        test.pass('Casper.waitForText() can wait for regexp');
     }, function() {
-        this.test.fail('Casper.waitForText() can wait for regexp');
+        test.fail('Casper.waitForText() can wait for regexp');
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('waitForSelectorTextChange() tests', 1, function(test) {
+    casper.start('tests/site/waitFor.html');
+
+    casper.waitForSelectorTextChange('#textChange', function() {
+        test.pass('Casper.waitForSelectorTextChange() can wait for text on a selector to change');
+    }, function() {
+        test.fail('Casper.waitForSelectorTextChange() can wait for text on a selector to change');
     });
 
     casper.run(function() {
