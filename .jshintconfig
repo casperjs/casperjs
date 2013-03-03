@@ -19,7 +19,6 @@
     "predef"     : [
         "exports",
         "phantom",
-        "require",
         "window"
     ]
 }

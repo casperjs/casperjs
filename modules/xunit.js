@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom patchRequire*/
+/*global CasperError, console, exports, phantom, patchRequire*/
 
 var require = patchRequire(require);
 var utils = require('utils');
@@ -166,5 +166,6 @@ XUnitExporter.prototype.setResults = function setResults(results) {
     if (!(results instanceof TestSuiteResult)) {
         throw new CasperError('Invalid results type.');
     }
-    return this.results = results;
+    this.results = results;
+    return results;
 };

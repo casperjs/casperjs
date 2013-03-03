@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom __utils__ patchRequire*/
+/*global CasperError, console, exports, phantom, __utils__, patchRequire*/
 
 var require = patchRequire(require);
 var colorizer = require('colorizer');

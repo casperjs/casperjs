@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError exports phantom __utils__ patchRequire*/
+/*global CasperError, exports, phantom, __utils__, patchRequire*/
 
 var require = patchRequire(require);
 var fs = require('fs');
@@ -924,7 +924,7 @@ Tester.prototype.comment = function comment(message) {
  */
 Tester.prototype.done = function done() {
     "use strict";
-    /*jshint maxstatements:20 maxcomplexity:20*/
+    /*jshint maxstatements:20, maxcomplexity:20*/
     var planned, config = this.currentSuite.config;
     if (utils.isNumber(arguments[0])) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
