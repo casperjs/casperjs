@@ -28,8 +28,8 @@
  *
  */
 
-/*global console phantom require*/
-/*jshint maxstatements:30 maxcomplexity:10*/
+/*global console, phantom, require:true*/
+/*jshint maxstatements:30, maxcomplexity:10*/
 
 // phantom check
 if (!phantom) {

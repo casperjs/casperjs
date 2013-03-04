@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom __utils__ patchRequire*/
+/*global CasperError, console, exports, phantom, __utils__, patchRequire*/
 
 var require = patchRequire(require);
 var colorizer = require('colorizer');
@@ -1879,6 +1879,26 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
             return pattern.test(content);
         }
         return content.indexOf(pattern) !== -1;
+    }, then, onTimeout, timeout);
+};
+
+/**
+ * Waits until the text on an element matching the provided DOM CSS3/XPath selector
+ * is changed to a different value.
+ *
+ * @param String    selector    A DOM CSS3/XPath selector
+ * @param Function  then        The next step to preform (optional)
+ * @param Function  onTimeout   A callback function to call on timeout (optional)
+ * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout, timeout) {
+    "use strict";
+    this.checkStarted();
+    timeout = timeout ? timeout : this.options.waitTimeout;
+    var currentSelectorText = this.fetchText(selector);
+    return this.waitFor(function _check() {
+        return currentSelectorText !== this.fetchText(selector);
     }, then, onTimeout, timeout);
 };
 

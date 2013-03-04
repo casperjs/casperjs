@@ -28,7 +28,7 @@
  *
  */
 
-/*global console escape exports NodeList window*/
+/*global console, escape, exports, NodeList, window*/
 
 (function(exports) {
     "use strict";
@@ -76,7 +76,7 @@
          * @return string
          */
         this.decode = function decode(str) {
-            /*jshint maxstatements:30 maxcomplexity:30 */
+            /*jshint maxstatements:30, maxcomplexity:30 */
             var c1, c2, c3, c4, i = 0, len = str.length, out = "";
             while (i < len) {
                 do {

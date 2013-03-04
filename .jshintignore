@@ -2,8 +2,6 @@ docs
 modules/vendors
 modules/events.js
 modules/querystring.js
-samples
-tests/clitests/tester/
-tests/site
-tests/testdir
+samples/**
+tests/**
 tmp
