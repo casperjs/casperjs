@@ -2175,7 +2175,7 @@ function createPage(casper) {
         casper.handleReceivedResource(resource);
     };
     page.onResourceRequested = function onResourceRequested(requestData, request) {
-        casper.emit('resource.requested', request);
+        casper.emit('resource.requested', requestData, request);
         if (request.url === casper.requestUrl) {
             casper.emit('page.resource.requested', request);
         }
