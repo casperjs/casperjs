@@ -11,22 +11,26 @@ setToTrueOnResourceReceived = false
 requestURLRequested = ''
 requestURLReceived = ''
 
-onResourceRequested = (casper, request) ->
-	if request.url == (SERVER + ORIGINAL_URL)
+onResourceRequested = (casper, requestData, request) ->
+	if requestData.url == (SERVER + ORIGINAL_URL)
 		setToTrueOnResourceRequested = true
-		requestURLRequested = request.url
+		requestURLRequested = requestData.url
 
-onResourceRequestedWithAbort = (casper, request) ->
-	if request.url == (SERVER + ORIGINAL_URL)
+onResourceRequestedWithAbort = (casper, requestData, request) ->
+	if requestData.url == (SERVER + ORIGINAL_URL)
 		request.abort()
 
-onResourceRequestedWithChangeURL = (casper, request) ->
-	if request.url == (SERVER + ORIGINAL_URL)
-		request.changeUrl CHANGED_URL
+onResourceRequestedWithChangeURL = (casper, requestData, request) ->
+	if requestData.url == (SERVER + ORIGINAL_URL)
+		request.changeUrl(SERVER + CHANGED_URL)
 
 onResourceReceived = (casper, response) ->
 	if response.url == (SERVER + ORIGINAL_URL)
 		setToTrueOnResourceReceived = true
+		requestURLReceived = response.url
+
+onResourceReceivedWithChangeURL = (casper, response) ->
+	if response.url == (SERVER + CHANGED_URL)
 		requestURLReceived = response.url
 
 setUp = (test) ->
@@ -40,14 +44,16 @@ setUpWithAbort = (test) ->
 	casper.start()
 
 setUpWithChangeURL = (test) ->
-	casper.options.onResourceRequested = onResourceRequested
-	casper.options.onResourceReceived = onResourceReceived
+	casper.options.onResourceRequested = onResourceRequestedWithChangeURL
+	casper.options.onResourceReceived = onResourceReceivedWithChangeURL
 	casper.start()
 
 tearDown = (test) ->
 	setToTrueOnResourceRequested = false
 	setToTrueOnResourceReceived = false
 	casper.options.onResourceRequested = null
+	casper.options.onResourceReceived = null
+
 
 casper.test.begin "onResourceRequested tests without abort/override", 4,
 	setUp: setUp
@@ -77,6 +83,7 @@ casper.test.begin "onResourceRequested tests with request.abort()", 1,
 		casper.run ->
 			test.done()
 
+
 casper.test.begin "onResourceRequested tests with request.changeUrl()", 1,
 	setUp: setUpWithChangeURL
 	tearDown: tearDown
@@ -84,9 +91,9 @@ casper.test.begin "onResourceRequested tests with request.changeUrl()", 1,
 		casper.open(ORIGINAL_URL).then ->
 
 		casper.wait 3000, ->
+			casper.echo "now running tests"
 			test.assertEquals requestURLReceived, SERVER+CHANGED_URL, "response url successfully changed"
 
 		casper.run ->
 			test.done()
-
 
