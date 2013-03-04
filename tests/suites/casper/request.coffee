@@ -91,7 +91,6 @@ casper.test.begin "onResourceRequested tests with request.changeUrl()", 1,
 		casper.open(ORIGINAL_URL).then ->
 
 		casper.wait 3000, ->
-			casper.echo "now running tests"
 			test.assertEquals requestURLReceived, SERVER+CHANGED_URL, "response url successfully changed"
 
 		casper.run ->
