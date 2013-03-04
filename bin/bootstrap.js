@@ -207,31 +207,31 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     /**
      * Initializes the CasperJS Command Line Interface.
      */
-    function initCasperCli() {
+    function initCasperCli(casperArgs) {
         var baseTestsPath = fs.pathJoin(phantom.casperPath, 'tests');
 
-        if (!!phantom.casperArgs.options.version) {
+        if (!!casperArgs.options.version) {
             return __terminate(phantom.casperVersion.toString())
-        } else if (phantom.casperArgs.get(0) === "test") {
+        } else if (casperArgs.get(0) === "test") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;
-            phantom.casperArgs.drop("test");
-            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(0));
-        } else if (phantom.casperArgs.get(0) === "selftest") {
+            casperArgs.drop("test");
+            phantom.casperScriptBaseDir = fs.dirname(casperArgs.get(0));
+        } else if (casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperSelfTest = phantom.casperTest = true;
-            phantom.casperArgs.options.includes = fs.pathJoin(baseTestsPath, 'selftest.js');
-            if (phantom.casperArgs.args.length <= 1) {
-                phantom.casperArgs.args.push(fs.pathJoin(baseTestsPath, 'suites'));
+            casperArgs.options.includes = fs.pathJoin(baseTestsPath, 'selftest.js');
+            if (casperArgs.args.length <= 1) {
+                casperArgs.args.push(fs.pathJoin(baseTestsPath, 'suites'));
             }
-            phantom.casperArgs.drop("selftest");
-            phantom.casperScriptBaseDir = fs.dirname(phantom.casperArgs.get(1) || fs.dirname(phantom.casperScript));
-        } else if (phantom.casperArgs.args.length === 0 || !!phantom.casperArgs.options.help) {
+            casperArgs.drop("selftest");
+            phantom.casperScriptBaseDir = fs.dirname(casperArgs.get(1) || fs.dirname(phantom.casperScript));
+        } else if (casperArgs.args.length === 0 || !!casperArgs.options.help) {
             return printHelp();
         }
 
         if (!phantom.casperScript) {
-            phantom.casperScript = phantom.casperArgs.get(0);
+            phantom.casperScript = casperArgs.get(0);
         }
 
         if (!fs.isFile(phantom.casperScript)) {
@@ -247,7 +247,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
 
         // filter out the called script name from casper args
-        phantom.casperArgs.drop(phantom.casperScript);
+        casperArgs.drop(phantom.casperScript);
     }
 
     // CasperJS version, extracted from package.json - see http://semver.org/
@@ -291,7 +291,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     phantom.casperArgs = require('cli').parse(phantomArgs);
 
     if (true === phantom.casperArgs.get('cli')) {
-        initCasperCli();
+        initCasperCli(phantom.casperArgs);
     }
 
     // casper loading status flag
