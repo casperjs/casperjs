@@ -1,6 +1,6 @@
 /*global casper*/
 /*jshint strict:false*/
-casper.test.begin('Skip tests', 1, function(test) {
+casper.test.begin('Skip tests', 2, function(test) {
     casper.start('tests/site/index.html');
 
     casper.
@@ -19,7 +19,7 @@ casper.test.begin('Skip tests', 1, function(test) {
     });
 });
 
-casper.test.begin('Skip multiple', 1, function(test) {
+casper.test.begin('Skip multiple', 3, function(test) {
     casper.
         then(function () {
             test.skip(2);
@@ -50,7 +50,7 @@ casper.test.begin('Skip more than there is', 0, function(test) {
     });
 });
 
-casper.test.begin('Next suite should be executed', 1, function(test) {
+casper.test.begin('Skip does not polluate next suite', 1, function(test) {
     casper.
         then(function () {
             test.pass("This test should be executed.");
