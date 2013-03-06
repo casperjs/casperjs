@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError, console, exports, phantom, patchRequire*/
+/*global CasperError, console, exports, phantom, patchRequire, require:true*/
 
 var require = patchRequire(require);
 

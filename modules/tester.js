@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError, exports, phantom, __utils__, patchRequire*/
+/*global CasperError, exports, phantom, __utils__, patchRequire, require:true*/
 
 var require = patchRequire(require);
 var fs = require('fs');
@@ -1005,7 +1005,8 @@ Tester.prototype.exec = function exec(file) {
     "use strict";
     file = this.filter('exec.file', file) || file;
     if (!fs.isFile(file) || !utils.isJsFile(file)) {
-        var e = new CasperError(f("Cannot exec %s: can only exec() files with .js or .coffee extensions", file));
+        var e = new CasperError(f("Cannot exec %s: can only exec() files with .js or .coffee extensions",
+                                  file));
         e.fileName = e.file = e.sourceURL = file;
         throw e;
     }

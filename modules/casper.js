@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError, console, exports, phantom, __utils__, patchRequire*/
+/*global CasperError, console, exports, phantom, __utils__, patchRequire, require:true*/
 
 var require = patchRequire(require);
 var colorizer = require('colorizer');
@@ -1557,12 +1557,9 @@ Casper.prototype.then = function then(step) {
  * @see    Casper#click
  * @see    Casper#then
  */
-Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) {
+Casper.prototype.thenClick = function thenClick(selector, then) {
     "use strict";
     this.checkStarted();
-    if (arguments.length > 2) {
-        this.emit("deprecated", "The thenClick() method does not process the fallbackToHref argument since 0.6");
-    }
     this.then(function _step() {
         this.click(selector);
     });
