@@ -926,7 +926,7 @@ Tester.prototype.comment = function comment(message) {
 Tester.prototype.done = function done() {
     "use strict";
     /*jshint maxstatements:20, maxcomplexity:20*/
-    var planned, config = this.currentSuite.config;
+    var planned, config = this.currentSuite && this.currentSuite.config || {};
     if (utils.isNumber(arguments[0])) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
         planned = arguments[0];
