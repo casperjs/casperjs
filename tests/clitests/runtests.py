@@ -153,7 +153,7 @@ class CasperExecTest(unittest.TestCase):
 
     @timeout(60)
     def test_fail_fast(self):
-        folder_path = os.path.join(TEST_ROOT, 'fail-fast')
+        folder_path = os.path.join(TEST_ROOT, 'fail-fast', 'standard')
         self.assertCommandOutputContains('test %s --fail-fast' % folder_path, [
             '# test 1',
             '# test 2',
@@ -161,6 +161,16 @@ class CasperExecTest(unittest.TestCase):
             'FAIL 2 tests executed',
             '1 passed',
             '1 failed',
+        ], failing=True)
+
+    @timeout(60)
+    def test_manual_abort(self):
+        folder_path = os.path.join(TEST_ROOT, 'fail-fast', 'manual-abort')
+        self.assertCommandOutputContains('test %s --fail-fast' % folder_path, [
+            '# test abort()',
+            'PASS test 1',
+            'PASS test 5',
+            'this is my abort message',
         ], failing=True)
 
 if __name__ == '__main__':

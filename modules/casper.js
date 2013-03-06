@@ -173,10 +173,7 @@ var Casper = function Casper(options) {
     this.initErrorHandler();
 
     this.on('error', function(msg, backtrace) {
-        if (msg === '__termination__') {
-            return;
-        }
-        if (msg.indexOf('AssertionError') === 0) {
+        if (/^(Assertion|Termination|TimedOut)Error/.test(msg)) {
             return;
         }
         var c = this.getColorizer();

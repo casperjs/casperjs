@@ -46,6 +46,15 @@ function AssertionError(msg, result) {
 AssertionError.prototype = new Error();
 exports.AssertionError = AssertionError;
 
+function TerminationError(msg) {
+    "use strict";
+    Error.call(this);
+    this.message = msg;
+    this.name = 'TerminationError';
+}
+TerminationError.prototype = new Error();
+exports.TerminationError = TerminationError;
+
 function TimedOutError(msg) {
     "use strict";
     Error.call(this);
@@ -76,17 +85,17 @@ exports.create = function create(casper, options) {
 var Tester = function Tester(casper, options) {
     "use strict";
     /*jshint maxstatements:99*/
-
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
     }
 
+    // self reference
     var self = this;
 
+    // casper reference
     this.casper = casper;
 
-    this.SKIP_MESSAGE = '__termination__';
-
+    // public properties
     this.aborted = false;
     this.executed = 0;
     this.currentTestFile = null;
@@ -160,11 +169,10 @@ var Tester = function Tester(casper, options) {
             self.processError(error);
             return self.done();
         }
-        if (utils.isString(error) && error.indexOf('AssertionError') === 0) {
-            return;
-        }
-        if (error === self.SKIP_MESSAGE) {
-            return self.terminate('--fail-fast: aborted all remaining tests');
+        if (utils.isString(error)) {
+            if (/^(Assertion|Termination|TimedOut)Error/.test(error)) {
+                return;
+            }
         }
         var line = 0;
         try {
@@ -215,10 +223,7 @@ exports.Tester = Tester;
  */
 Tester.prototype.abort = function abort(message) {
     "use strict";
-    if (message) {
-        this.casper.warn('test suite aborted: ' + message);
-    }
-    throw this.SKIP_MESSAGE;
+    throw new TerminationError(message || 'test suite aborted');
 };
 
 /**
@@ -1164,8 +1169,8 @@ Tester.prototype.processError = function processError(error) {
     if (error instanceof AssertionError) {
         return this.processAssertionError(error);
     }
-    if (error === this.SKIP_MESSAGE) {
-        return this.terminate();
+    if (error instanceof TerminationError) {
+        return this.terminate(error.message);
     }
     return this.uncaughtError(error, this.currentTestFile, error.line);
 };
@@ -1181,8 +1186,9 @@ Tester.prototype.processPhantomError = function processPhantomError(msg, backtra
     if (/^AssertionError/.test(msg)) {
         this.casper.warn('looks you did not use begin() which is mandatory since 1.1');
     }
-    if (msg === this.SKIP_MESSAGE) {
-        var message = 'test suite aborted';
+    var termination = /^TerminationError:?\s?(.*)/.exec(msg);
+    if (termination) {
+        var message = termination[1];
         if (backtrace && backtrace[0]) {
             message += ' at ' + backtrace[0].file + backtrace[0].line;
         }
