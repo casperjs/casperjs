@@ -1237,9 +1237,10 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
     /*jshint maxstatements:20*/
     save = save || this.options.save;
-    var failed = this.suiteResults.countFailed(),
+    var dubious = this.suiteResults.countDubious(),
+        failed = this.suiteResults.countFailed(),
         passed = this.suiteResults.countPassed(),
-        total = this.suiteResults.countTotal(),
+        total = this.suiteResults.countExecuted(),
         statusText,
         style,
         result,
@@ -1256,12 +1257,13 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
             statusText = this.options.passText;
             style = 'GREEN_BAR';
         }
-        result = f('%s %s tests executed in %ss, %d passed, %d failed.',
+        result = f('%s %s tests executed in %ss, %d passed, %d failed%s.',
                    statusText,
                    total,
                    utils.ms2seconds(this.suiteResults.calculateDuration()),
                    passed,
-                   failed);
+                   failed,
+                   dubious ? f(' (%d dubious)', dubious) : '');
     }
     this.casper.echo(result, style, this.options.pad);
     if (failed > 0) {
@@ -1426,6 +1428,30 @@ TestSuiteResult.prototype.countTotal = function countTotal() {
 };
 
 /**
+ * Returns the number of dubious results.
+ *
+ * @return Number
+ */
+TestSuiteResult.prototype.countDubious = function countDubious() {
+    "use strict";
+    return this.map(function(result) {
+        return result.dubious;
+    }).reduce(function(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
+ * Returns the number of executed tests.
+ *
+ * @return Number
+ */
+TestSuiteResult.prototype.countExecuted = function countTotal() {
+    "use strict";
+    return this.countTotal() - this.countDubious();
+};
+
+/**
  * Returns the number of errors.
  *
  * @return Number
@@ -1567,6 +1593,11 @@ function TestCaseResult(options) {
     });
     this.__defineGetter__("failed", function() {
         return this.failures.length;
+    });
+    this.__defineGetter__("dubious", function() {
+        return this.failures.filter(function(failure) {
+            return failure.type === "dubious";
+        }).length;
     });
     this.__defineGetter__("passed", function() {
         return this.passes.length;
