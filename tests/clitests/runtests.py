@@ -54,6 +54,8 @@ class CasperExecTest(unittest.TestCase):
         self.assertEquals(self.runCommand(cmd), result)
 
     def assertCommandOutputContains(self, cmd, what, **kwargs):
+        if not what:
+            raise AssertionError('Empty lookup')
         if isinstance(what, (list, tuple)):
             for entry in what:
                 self.assertIn(entry, self.runCommand(cmd, **kwargs))
@@ -147,6 +149,18 @@ class CasperExecTest(unittest.TestCase):
             '1 failed',
             'Details for the 1 failed test:',
             'assert: Subject is strictly true',
+        ], failing=True)
+
+    @timeout(60)
+    def test_fail_fast(self):
+        folder_path = os.path.join(TEST_ROOT, 'fail-fast')
+        self.assertCommandOutputContains('test %s --fail-fast' % folder_path, [
+            '# test 1',
+            '# test 2',
+            '--fail-fast: aborted all remaining tests',
+            'FAIL 2 tests executed',
+            '1 passed',
+            '1 failed',
         ], failing=True)
 
 if __name__ == '__main__':
