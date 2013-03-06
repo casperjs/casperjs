@@ -59,10 +59,10 @@ casper.test.begin('fill() tests', 15, function(test) {
     });
 });
 
-casper.test.begin('unexistent fields', 1, function(test) {
+casper.test.begin('nonexistent fields', 1, function(test) {
     casper.start('tests/site/form.html', function() {
         test.assertRaises(this.fill, ['form[action="result.html"]', {
-            unexistent: 42
+            nonexistent: 42
         }, true], 'Casper.fill() raises an exception when unable to fill a form');
     }).run(function() {
         test.done();
