@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false maxstatements:99*/
+/*jshint strict:false, maxstatements:99*/
 var utils = require('utils'),
     t = casper.test,
     x = require('casper').selectXPath;

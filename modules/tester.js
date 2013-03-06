@@ -144,16 +144,7 @@ var Tester = function Tester(casper, options) {
 
     // casper events
     this.casper.on('error', function onCasperError(msg, backtrace) {
-        if (/^AssertionError/.test(msg)) {
-            return;
-        }
-        this.test.fail(msg, {
-            type: "error",
-            doThrow: false,
-            values: {
-                stack: backtrace
-            }
-        });
+        self.processPhantomError(msg, backtrace);
     });
 
     this.casper.on('waitFor.timeout', function onWaitForTimeout(timeout) {
@@ -165,13 +156,11 @@ var Tester = function Tester(casper, options) {
             self.processError(error);
             return self.done();
         }
-        if (error.indexOf('AssertionError') === 0) {
+        if (utils.isString(error) && error.indexOf('AssertionError') === 0) {
             return;
         }
         if (error === self.SKIP_MESSAGE) {
-            casper.warn(f('--fail-fast: aborted remaining tests in "%s"', self.currentTestFile));
-            self.aborted = true;
-            return self.done();
+            return self.abort('--fail-fast: aborted all remaining tests');
         }
         var line = 0;
         try {
@@ -214,6 +203,18 @@ var Tester = function Tester(casper, options) {
 // Tester class is an EventEmitter
 utils.inherits(Tester, events.EventEmitter);
 exports.Tester = Tester;
+
+/**
+ * Aborts current test suite.
+ *
+ * @param  {String} message Warning message (optional)
+ */
+Tester.prototype.abort = function abort(message) {
+    "use strict";
+    this.aborted = true;
+    this.casper.warn(message || 'test suite aborted');
+    this.done();
+};
 
 /**
  * Asserts that a condition strictly resolves to true. Also returns an
@@ -1091,16 +1092,6 @@ Tester.prototype.pass = function pass(message) {
     });
 };
 
-Tester.prototype.prepare = function prepare(config) {
-    "use strict";
-    if (!utils.isObject(config)) {
-        throw new CasperError('prepare() needs a config object');
-    }
-    if ('setUp' in config) {
-
-    }
-};
-
 /**
  * Processes an assertion error.
  *
@@ -1108,7 +1099,7 @@ Tester.prototype.prepare = function prepare(config) {
  */
 Tester.prototype.processAssertionError = function(error) {
     "use strict";
-    var result = error && error.result,
+    var result = error && error.result || {},
         testFile = this.currentTestFile,
         stackEntry;
     try {
@@ -1172,6 +1163,31 @@ Tester.prototype.processError = function processError(error) {
         return this.processAssertionError(error);
     }
     return this.uncaughtError(error, this.currentTestFile, error.line);
+};
+
+/**
+ * Processes a PhantomJS error, which is an error message and a backtrace.
+ *
+ * @param  {String} message
+ * @param  {Array}  backtrace
+ */
+Tester.prototype.processPhantomError = function processPhantomError(msg, backtrace) {
+    "use strict";
+    if (/^AssertionError/.test(msg)) {
+        this.casper.warn('looks you did not use begin() which is mandatory since 1.1');
+    }
+    if (msg === this.SKIP_MESSAGE) {
+        return this.abort('--fail-fast: aborted all remaining tests');
+    }
+    this.fail(msg, {
+        type: "error",
+        doThrow: false,
+        values: {
+            error: msg,
+            stack: backtrace
+        }
+    });
+    this.done();
 };
 
 /**
