@@ -222,6 +222,28 @@ Tester.prototype.abort = function abort(message) {
 };
 
 /**
+ * Aborts current test suite.
+ *
+ * @param  {String} message Warning message (optional)
+ */
+Tester.prototype.skip = function skip(number, message) {
+    "use strict";
+    var step = this.casper.step,
+        steps = this.casper.steps,
+        last = steps.length;
+
+    if (message) {
+        this.casper.echo([
+                this.casper.colorize('SKIP', 'SKIP'),
+                'test suite aborted: ' + message
+            ].join(' '));
+    }
+    this.casper.step = Math.min(step + number, last);
+
+    return this;
+};
+
+/**
  * Asserts that a condition strictly resolves to true. Also returns an
  * "assertion object" containing useful informations about the test case
  * results.
