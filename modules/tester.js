@@ -123,6 +123,10 @@ var Tester = function Tester(casper, options) {
         var valueKeys = Object.keys(failure.values),
             timeElapsed = new Date() - this.currentTestStartTime;
         this.currentSuite.addFailure(failure, timeElapsed - this.lastAssertTime);
+        // check for fast failing
+        if (this.options.failFast) {
+            return this.terminate('--fail-fast: aborted all remaining tests');
+        }
         this.lastAssertTime = timeElapsed;
         // special printing
         if (failure.type) {
@@ -160,7 +164,7 @@ var Tester = function Tester(casper, options) {
             return;
         }
         if (error === self.SKIP_MESSAGE) {
-            return self.abort('--fail-fast: aborted all remaining tests');
+            return self.terminate('--fail-fast: aborted all remaining tests');
         }
         var line = 0;
         try {
@@ -211,9 +215,10 @@ exports.Tester = Tester;
  */
 Tester.prototype.abort = function abort(message) {
     "use strict";
-    this.aborted = true;
-    this.casper.warn(message || 'test suite aborted');
-    this.done();
+    if (message) {
+        this.casper.warn('test suite aborted: ' + message);
+    }
+    throw this.SKIP_MESSAGE;
 };
 
 /**
@@ -1146,9 +1151,6 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         this.casper.echo([this.colorize(status, style), this.formatMessage(message)].join(' '));
     }
     this.emit(eventName, result);
-    if (this.options.failFast && !result.success) {
-        throw this.SKIP_MESSAGE;
-    }
     return result;
 };
 
@@ -1161,6 +1163,9 @@ Tester.prototype.processError = function processError(error) {
     "use strict";
     if (error instanceof AssertionError) {
         return this.processAssertionError(error);
+    }
+    if (error === this.SKIP_MESSAGE) {
+        return this.terminate();
     }
     return this.uncaughtError(error, this.currentTestFile, error.line);
 };
@@ -1177,7 +1182,11 @@ Tester.prototype.processPhantomError = function processPhantomError(msg, backtra
         this.casper.warn('looks you did not use begin() which is mandatory since 1.1');
     }
     if (msg === this.SKIP_MESSAGE) {
-        return this.abort('--fail-fast: aborted all remaining tests');
+        var message = 'test suite aborted';
+        if (backtrace && backtrace[0]) {
+            message += ' at ' + backtrace[0].file + backtrace[0].line;
+        }
+        return this.terminate(message);
     }
     this.fail(msg, {
         type: "error",
@@ -1289,7 +1298,7 @@ Tester.prototype.runSuites = function runSuites() {
         testFiles = testFiles.concat(postTestFile);
     });
     if (testFiles.length === 0) {
-        this.bar(f("No test file found in %s, aborting.",
+        this.bar(f("No test file found in %s, terminating.",
                    Array.prototype.slice.call(arguments)), "RED_BAR");
         this.casper.exit(1);
     }
@@ -1321,6 +1330,20 @@ Tester.prototype.runTest = function runTest(testFile) {
     this.running = true; // this.running is set back to false with done()
     this.executed = 0;
     this.exec(testFile);
+};
+
+/**
+ * Terminates current suite.
+ *
+ */
+Tester.prototype.terminate = function(message) {
+    "use strict";
+    if (message) {
+        this.casper.warn(message);
+    }
+    this.done();
+    this.aborted = true;
+    this.emit('tests.complete');
 };
 
 /**
