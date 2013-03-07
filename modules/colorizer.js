@@ -66,7 +66,9 @@ var Colorizer = function Colorizer() {
         'GREEN_BAR': { fg: 'white', bg: 'green', bold: true },
         'RED_BAR':   { fg: 'white', bg: 'red', bold: true },
         'INFO_BAR':  { bg: 'cyan', fg: 'white', bold: true },
-        'WARN_BAR':  { bg: 'yellow', fg: 'white', bold: true }
+        'WARN_BAR':  { bg: 'yellow', fg: 'white', bold: true },
+        'SKIP':      { fg: 'magenta', bold: true },
+        'SKIP_BAR':  { bg: 'magenta', fg: 'white', bold: true }
     };
 
     /**

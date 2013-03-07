@@ -1614,6 +1614,55 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
 };
 
 /**
+ * Skip `nb` tests.
+ *
+ * @param Integer nb      number of tests to skip
+ * @param String  message message to display
+ */
+Casper.prototype.thenSkip = function (nb, message) {
+    return this.then(function () {
+        this.test.skip(nb, message);
+    });
+};
+
+/**
+ * Skip `nb` tests if condition is true.
+ *
+ * @param Mixed   condition  number of tests to skip
+ * @param Integer nb         number of tests to skip
+ * @param String  message    message to display
+ */
+Casper.prototype.thenSkipIf = function (condition, nb, message) {
+    return this.then(function () {
+        if (utils.isFunction(condition)) {
+            condition = condition();
+        }
+        if (utils.isTruthy(condition)) {
+            this.test.skip(nb, message);
+        }
+    });
+};
+
+/**
+ * Skip `nb` tests if condition is true.
+ *
+ * @param Mixed   condition  number of tests to skip
+ * @param Integer nb         number of tests to skip
+ * @param String  message    message to display
+ */
+Casper.prototype.thenSkipUnless = function (condition, nb, message) {
+    return this.then(function () {
+        if (utils.isFunction(condition)) {
+            condition = condition();
+        }
+        if (utils.isFalsy(condition)) {
+            this.test.skip(nb, message);
+        }
+    });
+};
+
+
+/**
  * Adds a new navigation step for opening and evaluate an expression
  * against the DOM retrieved from the provided location.
  *
