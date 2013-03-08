@@ -2094,6 +2094,11 @@ function createPage(casper) {
         casper.log(msg, logLevel, "remote");
         casper.emit('remote.message', msg);
     };
+
+    page.onCallback = function onCallback(data){
+        casper.emit('remote.callback',data);
+    };
+
     page.onError = function onError(msg, trace) {
         casper.emit('page.error', msg, trace);
     };
