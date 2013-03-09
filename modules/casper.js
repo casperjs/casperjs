@@ -1614,7 +1614,7 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
 };
 
 /**
- * Skip `nb` tests.
+ * Skip `nb` steps.
  *
  * @param Integer nb      number of tests to skip
  * @param String  message message to display
@@ -1626,7 +1626,7 @@ Casper.prototype.thenSkip = function (nb, message) {
 };
 
 /**
- * Skip `nb` tests if condition is true.
+ * Skip `nb` steps if condition is true.
  *
  * @param Mixed   condition  number of tests to skip
  * @param Integer nb         number of tests to skip
@@ -1644,7 +1644,7 @@ Casper.prototype.thenSkipIf = function (condition, nb, message) {
 };
 
 /**
- * Skip `nb` tests if condition is true.
+ * Skip `nb` steps if condition is true.
  *
  * @param Mixed   condition  number of tests to skip
  * @param Integer nb         number of tests to skip
