@@ -241,7 +241,6 @@ Tester.prototype.skip = function skip(nb, message) {
         last = steps.length;
 
     this.casper.step = Math.min(step + nb, last);
-    this.executed += this.casper.step - step;
 
     return this.processAssertionResult({
         success: null,

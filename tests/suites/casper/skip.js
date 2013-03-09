@@ -1,6 +1,6 @@
 /*global casper*/
 /*jshint strict:false*/
-casper.test.begin('Skip tests', 2, function(test) {
+casper.test.begin('Skip tests', 1, function(test) {
     casper.start('tests/site/index.html');
 
     casper.
@@ -19,7 +19,7 @@ casper.test.begin('Skip tests', 2, function(test) {
     });
 });
 
-casper.test.begin('Skip multiple', 3, function(test) {
+casper.test.begin('Skip multiple', 1, function(test) {
     casper.
         then(function () {
             test.skip(2);
@@ -61,7 +61,7 @@ casper.test.begin('Skip does not polluate next suite', 1, function(test) {
     });
 });
 
-casper.test.begin('Casper.thenSkip', 2, function(test) {
+casper.test.begin('Casper.thenSkip', 1, function(test) {
     casper.
         thenSkip(1).
         then(function () {
@@ -76,7 +76,7 @@ casper.test.begin('Casper.thenSkip', 2, function(test) {
     });
 });
 
-casper.test.begin('Casper.thenSkipIf', 5, function(test) {
+casper.test.begin('Casper.thenSkipIf', 3, function(test) {
     casper.
         thenSkipIf(true, 1, "Skip if with function").
         then(function () {
@@ -106,7 +106,7 @@ casper.test.begin('Casper.thenSkipIf', 5, function(test) {
     });
 });
 
-casper.test.begin('Casper.thenSkipUnless', 5, function(test) {
+casper.test.begin('Casper.thenSkipUnless', 3, function(test) {
     casper.
         thenSkipUnless(false, 1, "Skip unless with function").
         then(function () {
