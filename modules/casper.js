@@ -1619,9 +1619,27 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
  * @param Integer nb      number of tests to skip
  * @param String  message message to display
  */
+Casper.prototype.skip = function skip(nb, message) {
+    "use strict";
+    var step = this.step,
+        steps = this.steps,
+        last = steps.length;
+
+    this.checkStarted();
+    this.step = Math.min(step + nb, last);
+
+    return this;
+};
+
+/**
+ * Skip `nb` steps.
+ *
+ * @param Integer nb      number of tests to skip
+ * @param String  message message to display
+ */
 Casper.prototype.thenSkip = function (nb, message) {
     return this.then(function () {
-        this.test.skip(nb, message);
+        this.skip(nb, message);
     });
 };
 
@@ -1638,7 +1656,7 @@ Casper.prototype.thenSkipIf = function (condition, nb, message) {
             condition = condition();
         }
         if (utils.isTruthy(condition)) {
-            this.test.skip(nb, message);
+            this.skip(nb, message);
         }
     });
 };
@@ -1656,7 +1674,7 @@ Casper.prototype.thenSkipUnless = function (condition, nb, message) {
             condition = condition();
         }
         if (utils.isFalsy(condition)) {
-            this.test.skip(nb, message);
+            this.skip(nb, message);
         }
     });
 };

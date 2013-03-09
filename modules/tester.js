@@ -236,11 +236,8 @@ Tester.prototype.abort = function abort(message) {
  */
 Tester.prototype.skip = function skip(nb, message) {
     "use strict";
-    var step = this.casper.step,
-        steps = this.casper.steps,
-        last = steps.length;
 
-    this.casper.step = Math.min(step + nb, last);
+    this.casper.skip(nb, message);
 
     return this.processAssertionResult({
         success: null,
