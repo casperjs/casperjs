@@ -111,8 +111,9 @@ var Tester = function Tester(casper, options) {
     this.options = utils.mergeObjects({
         concise:  false,  // concise output?
         failFast: false,  // terminates a suite as soon as a test fails?
-        failText: "FAIL", // text to use for a succesful test
-        passText: "PASS", // text to use for a failed test
+        failText: "FAIL", // text to use for a failed test
+        passText: "PASS", // text to use for a succesful test
+        skipText: "SKIP", // text to use for a skipped test
         pad:      80    , // maximum number of chars for a result line
         warnText: "WARN"  // text to use for a dubious test
     }, options);
@@ -124,6 +125,12 @@ var Tester = function Tester(casper, options) {
     this.on('success', function onSuccess(success) {
         var timeElapsed = new Date() - this.currentTestStartTime;
         this.currentSuite.addSuccess(success, timeElapsed - this.lastAssertTime);
+        this.lastAssertTime = timeElapsed;
+    });
+
+    this.on('skipped', function onSkipped(skipped) {
+        var timeElapsed = new Date() - this.currentTestStartTime;
+        this.currentSuite.addSkipped(skipped, timeElapsed - this.lastAssertTime);
         this.lastAssertTime = timeElapsed;
     });
 
@@ -224,6 +231,27 @@ exports.Tester = Tester;
 Tester.prototype.abort = function abort(message) {
     "use strict";
     throw new TerminationError(message || 'test suite aborted');
+};
+
+/**
+ * Skip `nb` tests.
+ *
+ * @param Integer nb      number of tests to skip
+ * @param String  message message to display
+ */
+Tester.prototype.skip = function skip(nb, message) {
+    "use strict";
+
+    this.casper.skip(nb, message);
+
+    return this.processAssertionResult({
+        success: null,
+        standard: f("Skipping %d tests", nb),
+        message: message,
+        type: "skip",
+        number: nb,
+        skipped: true
+    });
 };
 
 /**
@@ -1148,7 +1176,11 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         message = result.message || result.standard,
         style = 'INFO',
         status = this.options.passText;
-    if (!result.success) {
+    if (null === result.success) {
+        eventName = 'skipped';
+        style = 'SKIP';
+        status = this.options.skipText;
+    }else if (!result.success) {
         eventName = 'fail';
         style = 'RED_BAR';
         status = this.options.failText;
@@ -1235,12 +1267,13 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*jshint maxstatements:25*/
     save = save || this.options.save;
     var dubious = this.suiteResults.countDubious(),
         failed = this.suiteResults.countFailed(),
         passed = this.suiteResults.countPassed(),
         total = this.suiteResults.countExecuted(),
+        skipped = this.suiteResults.countSkipped(),
         statusText,
         style,
         result,
@@ -1253,17 +1286,21 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
         if (failed > 0) {
             statusText = this.options.failText;
             style = 'RED_BAR';
+        } else if (skipped > 0) {
+            statusText = this.options.skipText;
+            style = 'SKIP_BAR';
         } else {
             statusText = this.options.passText;
             style = 'GREEN_BAR';
         }
-        result = f('%s %s tests executed in %ss, %d passed, %d failed%s.',
+        result = f('%s %s tests executed in %ss, %d passed, %d failed%s, %d skipped.',
                    statusText,
                    total,
                    utils.ms2seconds(this.suiteResults.calculateDuration()),
                    passed,
                    failed,
-                   dubious ? f(' (%d dubious)', dubious) : '');
+                   dubious ? f(' (%d dubious)', dubious) : '',
+                   skipped);
     }
     this.casper.echo(result, style, this.options.pad);
     if (failed > 0) {
@@ -1494,6 +1531,20 @@ TestSuiteResult.prototype.countPassed = function countPassed() {
 };
 
 /**
+ * Returns the number of skipped tests.
+ *
+ * @return Number
+ */
+TestSuiteResult.prototype.countSkipped = function countSkipped() {
+    "use strict";
+    return this.map(function(result) {
+        return result.skipped;
+    }).reduce(function(a, b) {
+        return a + b;
+    }, 0);
+};
+
+/**
  * Returns the number of warnings.
  *
  * @return Number
@@ -1515,6 +1566,16 @@ TestSuiteResult.prototype.countWarnings = function countWarnings() {
 TestSuiteResult.prototype.isFailed = function isFailed() {
     "use strict";
     return this.countErrors() + this.countFailed() > 0;
+};
+
+/**
+ * Checks if the suite has skipped tests.
+ *
+ * @return Number
+ */
+TestSuiteResult.prototype.isSkipped = function isFailed() {
+    "use strict";
+    return this.countSkipped() > 0;
 };
 
 /**
@@ -1543,6 +1604,20 @@ TestSuiteResult.prototype.getAllPasses = function getAllPasses() {
         passes = passes.concat(result.passes);
     });
     return passes;
+};
+
+/**
+ * Returns all skipped tests from this suite.
+ *
+ * @return Array
+ */
+TestSuiteResult.prototype.getAllSkipped = function getAllSkipped() {
+    "use strict";
+    var skipped = [];
+    this.forEach(function(result) {
+        skipped = skipped.concat(result.skipped);
+    });
+    return skipped;
 };
 
 /**
@@ -1583,6 +1658,7 @@ function TestCaseResult(options) {
     this.errors = [];
     this.failures = [];
     this.passes = [];
+    this.skip = [];
     this.warnings = [];
     this.config = options && options.config;
     this.__defineGetter__("assertions", function() {
@@ -1601,6 +1677,9 @@ function TestCaseResult(options) {
     });
     this.__defineGetter__("passed", function() {
         return this.passes.length;
+    });
+    this.__defineGetter__("skipped", function() {
+        return this.skip.length;
     });
 }
 exports.TestCaseResult = TestCaseResult;
@@ -1641,6 +1720,20 @@ TestCaseResult.prototype.addSuccess = function addSuccess(success, time) {
     success.time = time;
     this.passes.push(success);
 };
+
+/**
+ * Adds a success record and its execution time.
+ *
+ * @param Object  success
+ * @param Number  time
+ */
+TestCaseResult.prototype.addSkipped = function addSkipped(skipped, time) {
+    "use strict";
+    skipped.suite = this.name;
+    skipped.time = time;
+    this.skip.push(skipped);
+};
+
 
 /**
  * Adds a warning record.

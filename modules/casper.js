@@ -1608,6 +1608,73 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
 };
 
 /**
+ * Skip `nb` steps.
+ *
+ * @param Integer nb      number of tests to skip
+ * @param String  message message to display
+ */
+Casper.prototype.skip = function skip(nb, message) {
+    "use strict";
+    var step = this.step,
+        steps = this.steps,
+        last = steps.length;
+
+    this.checkStarted();
+    this.step = Math.min(step + nb, last);
+
+    return this;
+};
+
+/**
+ * Skip `nb` steps.
+ *
+ * @param Integer nb      number of tests to skip
+ * @param String  message message to display
+ */
+Casper.prototype.thenSkip = function (nb, message) {
+    return this.then(function () {
+        this.skip(nb, message);
+    });
+};
+
+/**
+ * Skip `nb` steps if condition is true.
+ *
+ * @param Mixed   condition  number of tests to skip
+ * @param Integer nb         number of tests to skip
+ * @param String  message    message to display
+ */
+Casper.prototype.thenSkipIf = function (condition, nb, message) {
+    return this.then(function () {
+        if (utils.isFunction(condition)) {
+            condition = condition();
+        }
+        if (utils.isTruthy(condition)) {
+            this.skip(nb, message);
+        }
+    });
+};
+
+/**
+ * Skip `nb` steps if condition is true.
+ *
+ * @param Mixed   condition  number of tests to skip
+ * @param Integer nb         number of tests to skip
+ * @param String  message    message to display
+ */
+Casper.prototype.thenSkipUnless = function (condition, nb, message) {
+    return this.then(function () {
+        if (utils.isFunction(condition)) {
+            condition = condition();
+        }
+        if (utils.isFalsy(condition)) {
+            this.skip(nb, message);
+        }
+    });
+};
+
+
+/**
  * Adds a new navigation step for opening and evaluate an expression
  * against the DOM retrieved from the provided location.
  *
