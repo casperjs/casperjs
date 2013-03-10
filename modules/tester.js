@@ -1290,9 +1290,10 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
             statusText = this.options.passText;
             style = 'GREEN_BAR';
         }
-        result = f('%s %d tests executed in %ss, %d passed, %d failed, %d dubious, %d skipped.',
+        result = f('%s %d test%s executed in %ss, %d passed, %d failed, %d dubious, %d skipped.',
                    statusText,
                    total,
+                   total > 1 ? "s" : "",
                    utils.ms2seconds(this.suiteResults.calculateDuration()),
                    this.suiteResults.countPassed(),
                    failed,

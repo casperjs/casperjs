@@ -105,6 +105,8 @@ class CasperExecTest(unittest.TestCase):
             '3 tests executed',
             '3 passed',
             '0 failed',
+            '0 dubious',
+            '0 skipped',
         ])
 
     @timeout(20)
@@ -115,9 +117,11 @@ class CasperExecTest(unittest.TestCase):
             script_path,
             '# true',
             'PASS Subject is strictly true',
-            'PASS 1 tests executed',
+            'PASS 1 test executed',
             '1 passed',
             '0 failed',
+            '0 dubious',
+            '0 skipped',
         ])
 
     @timeout(20)
@@ -132,18 +136,48 @@ class CasperExecTest(unittest.TestCase):
             '#    file: %s:3' % script_path,
             '#    code: test.assert(false);',
             '#    subject: false',
-            'FAIL 1 tests executed',
+            'FAIL 1 test executed',
             '0 passed',
             '1 failed',
+            '0 dubious',
+            '0 skipped',
         ], failing=True)
+
+    @timeout(20)
+    def test_dubious_test(self):
+        script_path = os.path.join(TEST_ROOT, 'tester', 'dubious.js')
+        self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            'dubious test: 2 tests planned, 1 tests executed',
+            'FAIL 1 test executed',
+            '1 passed',
+            '1 failed',
+            '1 dubious',
+            '0 skipped',
+        ], failing=True)
+
+    @timeout(20)
+    def test_skipped_test(self):
+        script_path = os.path.join(TEST_ROOT, 'tester', 'skipped.js')
+        self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            'SKIP 1 test skipped',
+            'PASS 1 test executed',
+            '1 passed',
+            '0 failed',
+            '0 dubious',
+            '1 skipped',
+        ])
 
     @timeout(60)
     def test_full_suite(self):
         folder_path = os.path.join(TEST_ROOT, 'tester')
         failing_script = os.path.join(folder_path, 'failing.js')
-        passsing_script = os.path.join(folder_path, 'passing.js')
+        passing_script = os.path.join(folder_path, 'passing.js')
         mytest_script = os.path.join(folder_path, 'mytest.js')
-        self.assertCommandOutputContains('test ' + folder_path, [
+        self.assertCommandOutputContains(' '.join([
+            'test', failing_script, passing_script, mytest_script
+        ]), [
             'Test file: %s' % failing_script,
             '# true',
             'FAIL Subject is strictly true',
@@ -155,12 +189,14 @@ class CasperExecTest(unittest.TestCase):
             'PASS ok1',
             'PASS ok2',
             'PASS ok3',
-            'Test file: %s' % passsing_script,
+            'Test file: %s' % passing_script,
             '# true',
             'PASS Subject is strictly true',
             'FAIL 5 tests executed',
             '4 passed',
             '1 failed',
+            '0 dubious',
+            '0 skipped',
             'Details for the 1 failed test:',
             'assert: Subject is strictly true',
         ], failing=True)
@@ -175,6 +211,8 @@ class CasperExecTest(unittest.TestCase):
             'FAIL 2 tests executed',
             '1 passed',
             '1 failed',
+            '0 dubious',
+            '0 skipped',
         ], failing=True)
 
     @timeout(60)
