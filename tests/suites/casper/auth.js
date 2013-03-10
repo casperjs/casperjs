@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false maxstatements:99*/
+/*jshint strict:false, maxstatements:99*/
 
 casper.test.begin('HTTP authentication tests', 8, function(test) {
     casper.start('tests/site/index.html');

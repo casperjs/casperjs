@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError casper console phantom require*/
+/*global CasperError, casper, console, phantom, require*/
 var fs = require('fs');
 
 casper.test.begin('Tester.sortFiles()', 1, function suite(test) {

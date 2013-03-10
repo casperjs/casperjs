@@ -1,5 +1,5 @@
-/*jshint strict:false maxstatements:99 maxcomplexity:99 */
-/*global CasperError casper console phantom require*/
+/*jshint strict:false, maxstatements:99, maxcomplexity:99*/
+/*global CasperError, casper, console, phantom, require*/
 
 var TestCaseResult = require('tester').TestCaseResult;
 

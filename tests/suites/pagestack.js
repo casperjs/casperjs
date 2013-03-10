@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false maxstatements:99*/
+/*jshint strict:false, maxstatements:99*/
 var pagestack = require('pagestack');
 var utils = require('utils');
 var webpage = require('webpage');

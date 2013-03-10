@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false maxparams:99*/
+/*jshint strict:false, maxparams:99*/
 casper.test.begin('mapping argument context', 1, function(test) {
     casper.start();
     var context = {

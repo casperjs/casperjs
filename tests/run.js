@@ -1,4 +1,4 @@
-/*global phantom CasperError patchRequire*/
+/*global phantom, CasperError, patchRequire, require:true, casper:true*/
 
 if (!phantom.casperLoaded) {
     console.log('This script must be invoked using the casperjs executable');

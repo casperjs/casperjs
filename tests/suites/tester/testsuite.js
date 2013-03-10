@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError casper console phantom require*/
+/*global CasperError, casper, console, phantom, require*/
 
 var TestCaseResult = require('tester').TestCaseResult,
     TestSuiteResult = require('tester').TestSuiteResult;

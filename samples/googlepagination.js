@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global CasperError, console, phantom, require*/
 
 /**
  * Capture multiple pages of google search results

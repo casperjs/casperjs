@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global casper __utils__*/
+/*global casper, __utils__*/
 casper.test.begin('logging tests', 4, function(test) {
     casper.start('tests/site/index.html');
 

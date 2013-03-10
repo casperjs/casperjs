@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError console phantom require*/
+/*global CasperError, console, phantom, require*/
 
 /**
  * This script will capture a screenshot of a twitter account page

@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false maxstatements:99*/
+/*jshint strict:false, maxstatements:99*/
 var fs = require('fs');
 
 casper.test.begin('Common assertions tests', 43, function(test) {

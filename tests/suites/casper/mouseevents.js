@@ -1,5 +1,5 @@
 /*global casper*/
-/*jshint strict:false maxstatements:99*/
+/*jshint strict:false, maxstatements:99*/
 casper.test.begin('mouseEvent() tests', 16, function(test) {
     casper.start('tests/site/mouse-events.html', function() {
         test.assert(this.mouseEvent('mousedown', '#test1'), 'Casper.mouseEvent() can dispatch a mousedown event');

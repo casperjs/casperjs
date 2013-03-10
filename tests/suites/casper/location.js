@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError casper console phantom require*/
+/*global CasperError, casper, console, phantom, require*/
 var utils = require('utils')
 
 if (utils.ltVersion(phantom.version, '1.8.0')) {
