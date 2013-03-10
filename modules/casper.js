@@ -1626,6 +1626,7 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
  * @param  Integer  nb  Number of steps to bypass
  */
 Casper.prototype.thenBypass = function thenBypass(nb) {
+    "use strict";
     return this.then(function _thenBypass() {
         this.bypass(nb);
     });
@@ -1638,6 +1639,7 @@ Casper.prototype.thenBypass = function thenBypass(nb) {
  * @param  Integer  nb         Number of steps to bypass
  */
 Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
+    "use strict";
     return this.then(function _thenBypassIf() {
         if (utils.isFunction(condition)) {
             condition = condition.call(this);
@@ -1655,6 +1657,7 @@ Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
  * @param Integer  nb         Number of tests to bypass
  */
 Casper.prototype.thenBypassUnless = function thenBypassUnless(condition, nb) {
+    "use strict";
     return this.then(function _thenBypassUnless() {
         if (utils.isFunction(condition)) {
             condition = condition.call(this);

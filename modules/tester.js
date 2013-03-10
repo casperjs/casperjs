@@ -130,7 +130,7 @@ var Tester = function Tester(casper, options) {
 
     this.on('skipped', function onSkipped(skipped) {
         var timeElapsed = new Date() - this.currentTestStartTime;
-        this.currentSuite.addSkipped(skipped, timeElapsed - this.lastAssertTime);
+        this.currentSuite.addSkip(skipped, timeElapsed - this.lastAssertTime);
         this.lastAssertTime = timeElapsed;
     });
 
@@ -226,7 +226,7 @@ exports.Tester = Tester;
 /**
  * Aborts current test suite.
  *
- * @param  {String} message Warning message (optional)
+ * @param  String  message Warning message (optional)
  */
 Tester.prototype.abort = function abort(message) {
     "use strict";
@@ -238,13 +238,13 @@ Tester.prototype.abort = function abort(message) {
  *
  * @param  Integer  nb       Number of tests to skip
  * @param  String   message  Message to display
+ * @return Object
  */
 Tester.prototype.skip = function skip(nb, message) {
     "use strict";
-    this.casper.bypass(nb);
     return this.processAssertionResult({
         success: null,
-        standard: f("Skipping %d tests", nb),
+        standard: f("%d test%s skipped", nb, nb > 1 ? "s" : ""),
         message: message,
         type: "skip",
         number: nb,
@@ -938,7 +938,11 @@ Tester.prototype.begin = function begin() {
 
 /**
  * Render a colorized output. Basically a proxy method for
- * Casper.Colorizer#colorize()
+ * `Casper.Colorizer#colorize()`.
+ *
+ * @param  String  message
+ * @param  String  style    The style name
+ * @return String
  */
 Tester.prototype.colorize = function colorize(message, style) {
     "use strict";
@@ -974,7 +978,8 @@ Tester.prototype.done = function done() {
             this.processError(error);
         }
     }
-    if (this.currentSuite && this.currentSuite.planned && this.currentSuite.planned !== this.executed) {
+    if (this.currentSuite && this.currentSuite.planned &&
+        this.currentSuite.planned !== this.executed + this.currentSuite.skipped) {
         this.dubious(this.currentSuite.planned, this.executed, this.currentSuite.name);
     } else if (planned && planned !== this.executed) {
         // BC
@@ -1193,7 +1198,7 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
 /**
  * Processes an error.
  *
- * @param  {Error} error
+ * @param  Error  error
  */
 Tester.prototype.processError = function processError(error) {
     "use strict";
@@ -1209,8 +1214,8 @@ Tester.prototype.processError = function processError(error) {
 /**
  * Processes a PhantomJS error, which is an error message and a backtrace.
  *
- * @param  {String} message
- * @param  {Array}  backtrace
+ * @param  String  message
+ * @param  Array   backtrace
  */
 Tester.prototype.processPhantomError = function processPhantomError(msg, backtrace) {
     "use strict";
@@ -1265,13 +1270,10 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
-    /*jshint maxstatements:25*/
+    /*jshint maxstatements:20*/
     save = save || this.options.save;
-    var dubious = this.suiteResults.countDubious(),
-        failed = this.suiteResults.countFailed(),
-        passed = this.suiteResults.countPassed(),
+    var failed = this.suiteResults.countFailed(),
         total = this.suiteResults.countExecuted(),
-        skipped = this.suiteResults.countSkipped(),
         statusText,
         style,
         result,
@@ -1292,10 +1294,10 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
                    statusText,
                    total,
                    utils.ms2seconds(this.suiteResults.calculateDuration()),
-                   passed,
+                   this.suiteResults.countPassed(),
                    failed,
-                   dubious,
-                   skipped);
+                   this.suiteResults.countDubious(),
+                   this.suiteResults.countSkipped());
     }
     this.casper.echo(result, style, this.options.pad);
     if (failed > 0) {
@@ -1606,7 +1608,7 @@ TestSuiteResult.prototype.getAllPasses = function getAllPasses() {
  *
  * @return Array
  */
-TestSuiteResult.prototype.getAllSkipped = function getAllSkipped() {
+TestSuiteResult.prototype.getAllSkips = function getAllSkips() {
     "use strict";
     var skipped = [];
     this.forEach(function(result) {
@@ -1653,7 +1655,7 @@ function TestCaseResult(options) {
     this.errors = [];
     this.failures = [];
     this.passes = [];
-    this.skip = [];
+    this.skips = [];
     this.warnings = [];
     this.config = options && options.config;
     this.__defineGetter__("assertions", function() {
@@ -1674,7 +1676,11 @@ function TestCaseResult(options) {
         return this.passes.length;
     });
     this.__defineGetter__("skipped", function() {
-        return this.skip.length;
+        return this.skips.map(function(skip) {
+            return skip.number;
+        }).reduce(function(a, b) {
+            return a + b;
+        }, 0);
     });
 }
 exports.TestCaseResult = TestCaseResult;
@@ -1722,11 +1728,11 @@ TestCaseResult.prototype.addSuccess = function addSuccess(success, time) {
  * @param Object  success
  * @param Number  time
  */
-TestCaseResult.prototype.addSkipped = function addSkipped(skipped, time) {
+TestCaseResult.prototype.addSkip = function addSkip(skipped, time) {
     "use strict";
     skipped.suite = this.name;
     skipped.time = time;
-    this.skip.push(skipped);
+    this.skips.push(skipped);
 };
 
 

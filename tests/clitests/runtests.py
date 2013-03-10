@@ -134,7 +134,7 @@ class CasperExecTest(unittest.TestCase):
             '#    subject: false',
             'FAIL 1 tests executed',
             '0 passed',
-            '1 failed.',
+            '1 failed',
         ], failing=True)
 
     @timeout(60)
