@@ -1180,7 +1180,7 @@ Tester.prototype.processAssertionResult = function processAssertionResult(result
         eventName = 'skipped';
         style = 'SKIP';
         status = this.options.skipText;
-    }else if (!result.success) {
+    } else if (!result.success) {
         eventName = 'fail';
         style = 'RED_BAR';
         status = this.options.failText;
@@ -1286,20 +1286,17 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
         if (failed > 0) {
             statusText = this.options.failText;
             style = 'RED_BAR';
-        } else if (skipped > 0) {
-            statusText = this.options.skipText;
-            style = 'SKIP_BAR';
         } else {
             statusText = this.options.passText;
             style = 'GREEN_BAR';
         }
-        result = f('%s %s tests executed in %ss, %d passed, %d failed%s, %d skipped.',
+        result = f('%s %d tests executed in %ss, %d passed, %d failed, %d dubious, %d skipped.',
                    statusText,
                    total,
                    utils.ms2seconds(this.suiteResults.calculateDuration()),
                    passed,
                    failed,
-                   dubious ? f(' (%d dubious)', dubious) : '',
+                   dubious,
                    skipped);
     }
     this.casper.echo(result, style, this.options.pad);
