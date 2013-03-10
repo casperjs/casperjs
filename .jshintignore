@@ -5,3 +5,4 @@ modules/querystring.js
 samples/**
 tests/**
 tmp
+./*.js

@@ -81,6 +81,20 @@ class CasperExecTest(unittest.TestCase):
         self.assertCommandOutputEquals(script_path, 'it works')
 
     @timeout(20)
+    def test_syntax_error(self):
+        script_path = os.path.join(TEST_ROOT, 'error', 'syntax.js')
+        self.assertCommandOutputContains(script_path, [
+            'SyntaxError: Parse error',
+        ], failing=True)
+
+    @timeout(20)
+    def test_syntax_error_in_test(self):
+        script_path = os.path.join(TEST_ROOT, 'error', 'syntax.js')
+        self.assertCommandOutputContains('test %s' % script_path, [
+            'SyntaxError: Parse error',
+        ], failing=True)
+
+    @timeout(20)
     def test_simple_test_script(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'mytest.js')
         self.assertCommandOutputContains('test ' + script_path, [

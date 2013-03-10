@@ -375,7 +375,6 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         }
     } catch (error) {
         self.emit('complete.error', error);
-        throw error;
     }
 };
 
@@ -1387,7 +1386,6 @@ Casper.prototype.runStep = function runStep(step) {
         }
     } catch (err) {
         this.emit('step.error', err);
-        throw err;
     }
     if (!skipLog) {
         this.emit('step.complete', stepResult);

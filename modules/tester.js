@@ -285,7 +285,7 @@ Tester.prototype.assertTrue = function assert(subject, message, context) {
         }
     }, context || {});
     if (!result.success && result.doThrow) {
-        throw new AssertionError(message, result);
+        throw new AssertionError(message || result.standard, result);
     }
     return this.processAssertionResult(result);
 };

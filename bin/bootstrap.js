@@ -69,12 +69,16 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     }
 
     function __die(message) {
-        console.error(message);
+        if (message) {
+            console.error(message);
+        }
         phantom.exit(1);
     }
 
     function __terminate(message) {
-        console.log(message);
+        if (message) {
+            console.log(message);
+        }
         phantom.exit();
     }
 
@@ -90,12 +94,16 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
     })(phantom.version);
 
-    // Hooks in default phantomjs error handler to print a hint when a possible
-    // casperjs command misuse is detected.
+    // Hooks in default phantomjs error handler
     phantom.onError = function onPhantomError(msg, trace) {
         phantom.defaultErrorHandler.apply(phantom, arguments);
+        // print a hint when a possible casperjs command misuse is detected
         if (msg.indexOf("ReferenceError: Can't find variable: casper") === 0) {
             console.error('Hint: you may want to use the `casperjs test` command.');
+        }
+        // exits on syntax error
+        if (msg.indexOf('SyntaxError: Parse error') === 0) {
+            __die();
         }
     };
 
