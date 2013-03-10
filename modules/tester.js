@@ -236,14 +236,12 @@ Tester.prototype.abort = function abort(message) {
 /**
  * Skip `nb` tests.
  *
- * @param Integer nb      number of tests to skip
- * @param String  message message to display
+ * @param  Integer  nb       Number of tests to skip
+ * @param  String   message  Message to display
  */
 Tester.prototype.skip = function skip(nb, message) {
     "use strict";
-
-    this.casper.skip(nb, message);
-
+    this.casper.bypass(nb);
     return this.processAssertionResult({
         success: null,
         standard: f("Skipping %d tests", nb),

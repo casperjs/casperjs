@@ -243,6 +243,21 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
 };
 
 /**
+ * Bypasses `nb` steps.
+ *
+ * @param  Integer  nb  Number of steps to bypass
+ */
+Casper.prototype.bypass = function bypass(nb) {
+    "use strict";
+    var step = this.step,
+        steps = this.steps,
+        last = steps.length;
+    this.checkStarted();
+    this.step = Math.min(step + nb, last);
+    return this;
+};
+
+/**
  * Proxy method for WebPage#render. Adds a clipRect parameter for
  * automatically set page clipRect setting values and sets it back once
  * done. If the cliprect parameter is omitted, the full page viewport
@@ -1608,71 +1623,49 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
 };
 
 /**
- * Skip `nb` steps.
+ * Adds a step which bypasses `nb` steps.
  *
- * @param Integer nb      number of tests to skip
- * @param String  message message to display
+ * @param  Integer  nb  Number of steps to bypass
  */
-Casper.prototype.skip = function skip(nb, message) {
-    "use strict";
-    var step = this.step,
-        steps = this.steps,
-        last = steps.length;
-
-    this.checkStarted();
-    this.step = Math.min(step + nb, last);
-
-    return this;
-};
-
-/**
- * Skip `nb` steps.
- *
- * @param Integer nb      number of tests to skip
- * @param String  message message to display
- */
-Casper.prototype.thenSkip = function (nb, message) {
-    return this.then(function () {
-        this.skip(nb, message);
+Casper.prototype.thenBypass = function thenBypass(nb) {
+    return this.then(function _thenBypass() {
+        this.bypass(nb);
     });
 };
 
 /**
- * Skip `nb` steps if condition is true.
+ * Bypass `nb` steps if condition is true.
  *
- * @param Mixed   condition  number of tests to skip
- * @param Integer nb         number of tests to skip
- * @param String  message    message to display
+ * @param  Mixed    condition  Test condition
+ * @param  Integer  nb         Number of steps to bypass
  */
-Casper.prototype.thenSkipIf = function (condition, nb, message) {
-    return this.then(function () {
+Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
+    return this.then(function _thenBypassIf() {
         if (utils.isFunction(condition)) {
-            condition = condition();
+            condition = condition.call(this);
         }
         if (utils.isTruthy(condition)) {
-            this.skip(nb, message);
+            this.bypass(nb);
         }
     });
 };
 
 /**
- * Skip `nb` steps if condition is true.
+ * Bypass `nb` steps if condition is true.
  *
- * @param Mixed   condition  number of tests to skip
- * @param Integer nb         number of tests to skip
- * @param String  message    message to display
+ * @param Mixed    condition  Test condition
+ * @param Integer  nb         Number of tests to bypass
  */
-Casper.prototype.thenSkipUnless = function (condition, nb, message) {
-    return this.then(function () {
+Casper.prototype.thenBypassUnless = function thenBypassUnless(condition, nb) {
+    return this.then(function _thenBypassUnless() {
         if (utils.isFunction(condition)) {
-            condition = condition();
+            condition = condition.call(this);
         }
         if (utils.isFalsy(condition)) {
-            this.skip(nb, message);
+            this.bypass(nb);
         }
     });
 };
-
 
 /**
  * Adds a new navigation step for opening and evaluate an expression
