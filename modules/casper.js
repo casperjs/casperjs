@@ -420,14 +420,15 @@ Casper.prototype.clear = function clear() {
 Casper.prototype.click = function click(selector) {
     "use strict";
     this.checkStarted();
-    var success = this.mouseEvent('click', selector);
+    var success = this.mouseEvent('mousedown', selector);
+    success = success && this.mouseEvent('click', selector);
     this.evaluate(function(selector) {
         var element = __utils__.findOne(selector);
         if (element) {
             element.focus();
         }
     }, selector);
-    return success;
+    return success && this.mouseEvent('mouseup', selector);
 };
 
 /**
