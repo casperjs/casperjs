@@ -1,8 +1,4 @@
-/**
- * CasperJS local HTTP test server
- */
-
-/*global phantom casper patchRequire*/
+/*global phantom, casper, patchRequire, require:true*/
 
 var require = patchRequire(require);
 var colorizer = require('colorizer').create('Colorizer');

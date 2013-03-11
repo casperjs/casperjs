@@ -19,6 +19,7 @@
     "predef"     : [
         "exports",
         "phantom",
-        "window"
+        "window",
+        "require"
     ]
 }
