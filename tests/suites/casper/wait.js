@@ -77,7 +77,7 @@ casper.test.begin('waitForSelector() tests', 1, function(test) {
     });
 });
 
-casper.test.begin('waitForText() tests', 2, function(test) {
+casper.test.begin('waitForText() tests', 4, function(test) {
     casper.start('tests/site/waitFor.html');
 
     casper.waitForText('<li>four</li>', function() {
@@ -91,6 +91,12 @@ casper.test.begin('waitForText() tests', 2, function(test) {
     }, function() {
         test.fail('Casper.waitForText() can wait for regexp');
     });
+
+    casper.reload().waitForText('Voilà', function() {
+        test.pass('Casper.waitForText() can wait for decoded HTML text');
+    }, function() {
+        test.fail('Casper.waitForText() can wait for decoded HTML text');
+    }, 1000);
 
     casper.run(function() {
         test.done();
