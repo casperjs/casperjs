@@ -7,7 +7,7 @@ before_script:
   - "phantomjs --version"
   - "export PHANTOMJS_EXECUTABLE='phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes'"
 script:
-  - make all
+  - make test
 notifications:
   irc:
     channels:
