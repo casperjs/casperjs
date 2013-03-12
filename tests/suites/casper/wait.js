@@ -77,7 +77,7 @@ casper.test.begin('waitForSelector() tests', 1, function(test) {
     });
 });
 
-casper.test.begin('waitForText() tests', 4, function(test) {
+casper.test.begin('waitForText() tests', 3, function(test) {
     casper.start('tests/site/waitFor.html');
 
     casper.waitForText('<li>four</li>', function() {
