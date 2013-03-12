@@ -5,31 +5,35 @@ You can check out the [contribution graphs on github](https://github.com/n1k0/ca
 ```
 $ git shortlog -s -n | cut -c8-
 Nicolas Perriault
-Brikou CARRE
 oncletom
+Brikou CARRE
 hannyu
+Julien Muetton
 Chris Lorenzo
 Victor Yap
 Rob Barreca
-Tyler Ritchie
 nrabinowitz
+Oleg Pudeyev
+Tyler Ritchie
 pborreli
-Dave Lee
-Andrew Childs
-Solomon White
+Luke Rodgers
 reina.sweet
-Reina Sweet
-Jan Schaumann
-Elmar Langholz
-Clochix
-Donovan Hutchinson
+Andrew Childs
+Dave Lee
+Solomon White
+Lee Byrd
 Julien Moulin
+Donovan Hutchinson
+Philip Hansen
+Elmar Langholz
+Reina Sweet
+Thomas Rosenau
 Michael Geers
-Jason Funk
 Vladimir Chizhov
-jean-philippe serafin
+Jan Schaumann
+Clochix
+Jason Funk
 snkashis
-Rafael
 Andrew de Andrade
 Ben Lowery
 Chris Winters
@@ -47,9 +51,13 @@ Marcel Duran
 Mathieu Agopian
 Mehdi Kabab
 Mikko Peltonen
+Narno
 Pascal Borreli
+Rafael
 Rafael Garcia
 Raphaël Benitte
 Tim Bunce
+Yevgeny Smirnov
 alfetopito
+jean-philippe serafin
 ```
