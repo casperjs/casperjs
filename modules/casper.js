@@ -2203,7 +2203,7 @@ function createPage(casper) {
     page.onNavigationRequested = function onNavigationRequested(url, type, lock, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, lock=%s, isMainFrame=%s',
                      url, type, lock, isMainFrame), "debug");
-        if (isMainFrame) {
+        if (isMainFrame && casper.requestUrl !== url) {
             casper.navigationRequested  = true;
         }
         casper.emit('navigation.requested', url, type, lock, isMainFrame);
