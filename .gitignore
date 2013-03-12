@@ -1,6 +1,6 @@
 .DS_Store
-*.xml
-*.png
+/*.xml
+/*.png
 /docs/*.js
 /docs/*.xml
 /docs/_build
