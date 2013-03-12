@@ -1,0 +1,67 @@
+Upgrading to 1.1
+================
+
+The most visible change is the way you write tests. With 1.0, you were able to access a ``.test`` property from any casper script and so running a suite using the standard ``casperjs`` executable::
+
+    // 1.0 style test script not using the `casperjs test` subcommand
+    var casper = require('casper').create();
+
+    casper.start('http://foo.bar/', function() {
+        this.test.assert(true);
+    });
+
+    casper.run(function() {
+        this.test.done(1);
+        this.test.renderResults(true);
+    });
+
+In 1.1, the test framework has been heavily refactored to decouple the tester from a casper instance as much as possible, so it's no more possible to run a test suite right from the standard ``casperjs`` command as you would have done with the script shown above.
+
+Instead you now have to use the :doc:`casperjs test <../testing>` subcommand mandatorily to access a tester instance from the ``casper.test`` property.
+
+.. warning::
+
+   As of 1.1:
+
+   - you shouldn't invoke the ``renderResults()`` method directly anymore
+   - you shouldn't use the ``done()`` first argument to set planned test as it's been deprecated
+   - you can't access the ``casper.test`` property when not using the ``casperjs test`` subcommand
+
+   If you try, you'll get an error::
+
+       // test.js
+       var casper = require('casper').create();
+       casper.test.assert(true);
+
+   Will give:
+
+   .. code-block:: text
+
+       $ casperjs test.js
+       CasperError: casper.test property is only available using the `casperjs test` command
+
+The new ``Tester#begin()`` method
+---------------------------------
+
+However, a new :ref:`begin() <tester_begin>` method as been added to the :ref:`Tester <tester_module>` prototype, to ease describing your tests::
+
+    casper.test.begin('Description of my test', 1, function(test) {
+        test.assert(true);
+        test.done();
+    });
+
+More asynchronously::
+
+    casper.test.begin('Description of my test', 1, function(test) {
+        casper.start('http://foo.bar/', function() {
+            test.assert(true);
+        });
+
+        casper.run(function() {
+            test.done();
+        });
+    });
+
+.. note::
+
+   Please note that ``begin()``'s the second argument which is now the place to set the number of planned tests.
