@@ -158,6 +158,7 @@ var Casper = function Casper(options) {
     this.started = false;
     this.step = -1;
     this.steps = [];
+    this.waiters = [];
     this._test = undefined;
     this.__defineGetter__('test', function() {
         if (!phantom.casperTest) {
@@ -1697,6 +1698,22 @@ Casper.prototype.toString = function toString() {
 };
 
 /**
+ * Clear all wait processes.
+ *
+ * @return Casper
+ */
+Casper.prototype.unwait = function unwait() {
+    "use strict";
+    this.waiters.forEach(function(interval) {
+        if (interval) {
+            clearInterval(interval);
+        }
+    });
+    this.waiters = [];
+    return this;
+};
+
+/**
  * Sets the user-agent string currently used when requesting urls.
  *
  * @param  String  userAgent  User agent string
@@ -1845,7 +1862,13 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
                 if (!utils.isFunction(onWaitTimeout)) {
                     throw new CasperError('Invalid timeout function');
                 }
-                return onWaitTimeout.call(self, timeout);
+                try {
+                    return onWaitTimeout.call(self, timeout);
+                } catch (error) {
+                    self.emit('waitFor.timeout.error', error);
+                } finally {
+                    return;
+                }
             }
             self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
             clearInterval(interval);
@@ -1853,6 +1876,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
                 self.then(then);
             }
         }, 100, this, testFx, timeout, onTimeout);
+        this.waiters.push(interval);
     });
 };
 

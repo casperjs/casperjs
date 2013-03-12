@@ -172,14 +172,13 @@ var Tester = function Tester(casper, options) {
     });
 
     function errorHandler(error, backtrace) {
+        self.casper.unwait();
         if (error instanceof Error) {
             self.processError(error);
             return self.done();
         }
-        if (utils.isString(error)) {
-            if (/^(Assertion|Termination|TimedOut)Error/.test(error)) {
-                return;
-            }
+        if (utils.isString(error) && /^(Assertion|Termination|TimedOut)Error/.test(error)) {
+            return;
         }
         var line = 0;
         try {
@@ -190,9 +189,15 @@ var Tester = function Tester(casper, options) {
         self.uncaughtError(error, self.currentTestFile, line, backtrace);
         self.done();
     }
-    this.casper.on('event.error', errorHandler);
-    this.casper.on('step.error', errorHandler);
-    this.casper.on('complete.error', errorHandler);
+
+    [
+        'waitFor.timeout.error',
+        'event.error',
+        'step.error',
+        'complete.error'
+    ].forEach(function(event) {
+        self.casper.on(event, errorHandler);
+    });
 
     this.casper.on('warn', function(warning) {
         if (self.currentSuite) {
@@ -979,7 +984,8 @@ Tester.prototype.done = function done() {
         }
     }
     if (this.currentSuite && this.currentSuite.planned &&
-        this.currentSuite.planned !== this.executed + this.currentSuite.skipped) {
+        this.currentSuite.planned !== this.executed + this.currentSuite.skipped &&
+        !this.currentSuite.failed) {
         this.dubious(this.currentSuite.planned, this.executed, this.currentSuite.name);
     } else if (planned && planned !== this.executed) {
         // BC
@@ -1272,18 +1278,20 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
     /*jshint maxstatements:20*/
     save = save || this.options.save;
-    var failed = this.suiteResults.countFailed(),
+    var exitStatus = 0,
+        failed = this.suiteResults.countFailed(),
         total = this.suiteResults.countExecuted(),
         statusText,
         style,
-        result,
-        exitStatus = ~~(status || (failed > 0 ? 1 : 0));
+        result;
     if (total === 0) {
+        exitStatus = 1;
         statusText = this.options.warnText;
         style = 'WARN_BAR';
         result = f("%s Looks like you didn't run any test.", statusText);
     } else {
-        if (failed > 0) {
+        if (this.suiteResults.isFailed()) {
+            exitStatus = 1;
             statusText = this.options.failText;
             style = 'RED_BAR';
         } else {
@@ -1301,14 +1309,12 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
                    this.suiteResults.countSkipped());
     }
     this.casper.echo(result, style, this.options.pad);
-    if (failed > 0) {
-        this.renderFailureDetails();
-    }
+    this.renderFailureDetails();
     if (save) {
         this.saveResults(save);
     }
     if (exit === true) {
-        this.casper.exit(exitStatus);
+        this.casper.exit(status ? ~~status : exitStatus);
     }
 };
 
@@ -1459,7 +1465,7 @@ exports.TestSuiteResult = TestSuiteResult;
  */
 TestSuiteResult.prototype.countTotal = function countTotal() {
     "use strict";
-    return this.countPassed() + this.countFailed();
+    return this.countPassed() + this.countFailed() + this.countDubious();
 };
 
 /**
@@ -1508,7 +1514,7 @@ TestSuiteResult.prototype.countErrors = function countErrors() {
 TestSuiteResult.prototype.countFailed = function countFailed() {
     "use strict";
     return this.map(function(result) {
-        return result.failed;
+        return result.failed - result.dubious;
     }).reduce(function(a, b) {
         return a + b;
     }, 0);
@@ -1563,7 +1569,7 @@ TestSuiteResult.prototype.countWarnings = function countWarnings() {
  */
 TestSuiteResult.prototype.isFailed = function isFailed() {
     "use strict";
-    return this.countErrors() + this.countFailed() > 0;
+    return this.countErrors() + this.countFailed() + this.countDubious() > 0;
 };
 
 /**
@@ -1571,7 +1577,7 @@ TestSuiteResult.prototype.isFailed = function isFailed() {
  *
  * @return Number
  */
-TestSuiteResult.prototype.isSkipped = function isFailed() {
+TestSuiteResult.prototype.isSkipped = function isSkipped() {
     "use strict";
     return this.countSkipped() > 0;
 };
