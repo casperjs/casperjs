@@ -421,7 +421,7 @@ Casper.prototype.clear = function clear() {
 Casper.prototype.click = function click(selector) {
     "use strict";
     this.checkStarted();
-    var success = this.mouseEvent('mousedown', selector);
+    var success = this.mouseEvent('mousedown', selector) && this.mouseEvent('mouseup', selector);
     success = success && this.mouseEvent('click', selector);
     this.evaluate(function(selector) {
         var element = __utils__.findOne(selector);
@@ -429,7 +429,7 @@ Casper.prototype.click = function click(selector) {
             element.focus();
         }
     }, selector);
-    return success && this.mouseEvent('mouseup', selector);
+    return success;
 };
 
 /**
