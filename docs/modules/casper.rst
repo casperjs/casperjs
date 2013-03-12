@@ -408,6 +408,8 @@ encode::
 
 **Signature:** ``bypass(Numbr nb)``
 
+.. versionadded:: 1.1
+
 Bypasses a given number of defined navigation steps::
 
     casper.start();
@@ -1457,6 +1459,8 @@ To run all the steps you defined, call the `run()`_ method, and voila.
 
 **Signature:** ``thenBypass(Number nb)``
 
+.. versionadded:: 1.1
+
 Adds a navigation step which will bypass a given number of following steps::
 
     casper.start('http://foo.bar/');
@@ -1476,6 +1480,8 @@ Adds a navigation step which will bypass a given number of following steps::
 -------------------------------------------------------------------------------
 
 **Signature:** ``thenBypassIf(Mixed condition, Number nb)``
+
+.. versionadded:: 1.1
 
 Bypass a given number of navigation steps if the provided condition is truthy or is a function that returns a truthy value::
 
@@ -1501,6 +1507,8 @@ Bypass a given number of navigation steps if the provided condition is truthy or
 -------------------------------------------------------------------------------
 
 **Signature:** ``thenBypassUnless(Mixed condition, Number nb)``
+
+.. versionadded:: 1.1
 
 Opposite of `thenBypassIf()`_.
 
@@ -1606,6 +1614,15 @@ Returns a string representation of current Casper instance::
     });
 
     casper.run();
+
+``unwait()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``unwait()``
+
+.. versionadded:: 1.1
+
+Abort all current waiting processes, if any.
 
 .. index:: User Agent
 
