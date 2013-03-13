@@ -308,6 +308,13 @@ Emitted when a new window has been opened.
 
 Emitted when a remote ``alert()`` call has been performed.
 
+``remote.callback``
+~~~~~~~~~~~~~~~~
+
+**Arguments:** ``data``
+
+Emitted when a remote `window.callPhantom(data) <https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#wiki-webpage-onCallback>`_ call has been performed.
+
 ``remote.message``
 ~~~~~~~~~~~~~~~~~~
 
