@@ -451,7 +451,7 @@ Asserts that the current page url matches the provided RegExp pattern::
 
     casper.test.begin('assertUrlMatch() tests', 1, function(test) {
         casper.start('http://www.google.fr/', function() {
-            test.assertUrlMatch(/^http:\/\//', 'google.fr is served in http://');
+            test.assertUrlMatch(/^http:\/\//, 'google.fr is served in http://');
         }).run(function() {
             test.done();
         });
