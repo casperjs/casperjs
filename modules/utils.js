@@ -66,7 +66,7 @@ exports.betterTypeOf = betterTypeOf;
  */
 function cleanUrl(url) {
     "use strict";
-    if (url.indexOf('/') === 0) {
+    if (url.toLowerCase().indexOf('http') !== 0) {
         return url;
     }
     var a = document.createElement('a');
