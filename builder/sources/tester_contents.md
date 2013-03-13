@@ -284,7 +284,7 @@ Asserts that a the current page url matches the provided RegExp pattern.
 
 ```javascript
 casper.start('http://www.google.fr/', function() {
-    this.test.assertUrlMatch(/^http:\/\//', 'google.fr is served in http://');
+    this.test.assertUrlMatch(/^http:\/\//, 'google.fr is served in http://');
 });
 ```
 
