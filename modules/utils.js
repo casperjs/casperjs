@@ -59,23 +59,19 @@ function betterTypeOf(input) {
 exports.betterTypeOf = betterTypeOf;
 
 /**
- * Cleans a passed URL if it lacks a slash at the end when a sole domain is used.
+ * Cleans a passed URL.
  *
  * @param  String  url An HTTP URL
  * @return String
  */
 function cleanUrl(url) {
     "use strict";
-    var parts = /(https?):\/\/(.*)/i.exec(url);
-    if (!parts) {
+    if (url.indexOf('/') === 0) {
         return url;
     }
-    var protocol = parts[1];
-    var subparts = parts[2].split('/');
-    if (subparts.length === 1) {
-        return format("%s://%s/", protocol, subparts[0]);
-    }
-    return url;
+    var a = document.createElement('a');
+    a.href = url;
+    return a.href;
 }
 exports.cleanUrl = cleanUrl;
 
