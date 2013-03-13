@@ -1,6 +1,11 @@
 CasperJS Changelog
 ==================
 
+XXXX-XX-XX, v1.0.3
+------------------
+
+- fixed [#414](https://github.com/n1k0/casperjs/issues/414) - better `utils.cleanUrl()`
+
 2013-02-08, v1.0.2
 ------------------
 
