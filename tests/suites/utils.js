@@ -24,7 +24,7 @@ casper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
     test.done();
 });
 
-casper.test.begin('utils.cleanUrl() tests', 10, function(test) {
+casper.test.begin('utils.cleanUrl() tests', 11, function(test) {
     var testCases = {
         'http://google.com/': 'http://google.com/',
         'http://google.com': 'http://google.com/',
@@ -34,6 +34,7 @@ casper.test.begin('utils.cleanUrl() tests', 10, function(test) {
         'https://google.com': 'https://google.com/',
         'https://www.google.com/': 'https://www.google.com/',
         'https://www.google.com/?plop=2': 'https://www.google.com/?plop=2',
+        'https://www.google.com?plop=2': 'https://www.google.com/?plop=2',
         'file:///Users/toto/toto.html': 'file:///Users/toto/toto.html',
         '/100': '/100'
     };
