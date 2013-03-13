@@ -139,10 +139,6 @@ var Tester = function Tester(casper, options) {
         var valueKeys = Object.keys(failure.values),
             timeElapsed = new Date() - this.currentTestStartTime;
         this.currentSuite.addFailure(failure, timeElapsed - this.lastAssertTime);
-        // check for fast failing
-        if (this.options.failFast) {
-            return this.terminate('--fail-fast: aborted all remaining tests');
-        }
         this.lastAssertTime = timeElapsed;
         // special printing
         if (failure.type) {
@@ -160,6 +156,10 @@ var Tester = function Tester(casper, options) {
         valueKeys.forEach(function(name) {
             this.comment(f('   %s: %s', name, utils.formatTestValue(failure.values[name], name)));
         }.bind(this));
+        // check for fast failing
+        if (this.options.failFast) {
+            return this.terminate('--fail-fast: aborted all remaining tests');
+        }
     });
 
     // casper events
