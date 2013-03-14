@@ -329,6 +329,15 @@ Viewport size, eg. ``{width: 800, height: 600}``
 
 .. index:: timeout
 
+``retryTimeout``
+-------------------------------------------------------------------------------
+
+**Type:** ``Number``
+
+**Default:** ``100``
+
+Default delay between attempts, for ``wait*`` family functions.
+
 ``waitTimeout``
 -------------------------------------------------------------------------------
 

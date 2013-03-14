@@ -119,6 +119,7 @@ var Casper = function Casper(options) {
         stepTimeout:         null,
         timeout:             null,
         verbose:             false,
+        retryTimeout:        100,
         waitTimeout:         5000
     };
     // options
@@ -1342,7 +1343,7 @@ Casper.prototype.run = function run(onComplete, time) {
     }
     this.log(f("Running suite: %d step%s", this.steps.length, this.steps.length > 1 ? "s" : ""), "info");
     this.emit('run.start');
-    this.checker = setInterval(this.checkStep, (time ? time: 100), this, onComplete);
+    this.checker = setInterval(this.checkStep, (time ? time: this.options.retryTimeout), this, onComplete);
     return this;
 };
 
@@ -1875,7 +1876,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
             if (then) {
                 self.then(then);
             }
-        }, 100, this, testFx, timeout, onTimeout);
+        }, this.options.retryTimeout, this, testFx, timeout, onTimeout);
         this.waiters.push(interval);
     });
 };
