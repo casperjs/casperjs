@@ -64,7 +64,7 @@ Once PhantomJS and CasperJS installed on your machine, you should obtain somethi
 .. code-block:: text
 
     $ phantomjs --version
-    1.7
+    1.8.2
     $ casperjs --version
     1.0
 
