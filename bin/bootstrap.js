@@ -166,7 +166,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     /**
      * Patched require to allow loading of native casperjs modules.
-     * Every casperjs native module have to first call this function in order to
+     * Every casperjs module have to first call this function in order to
      * load a native casperjs module:
      *
      *     var require = patchRequire(require);

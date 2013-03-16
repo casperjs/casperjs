@@ -76,7 +76,7 @@ casper.test.begin('parsing an empty argument list', 8, function(test) {
     test.done();
 });
 
-casper.test.begin('parsing commands containing args and options', 30, function(test) {
+casper.test.begin('parsing commands containing args and options', 34, function(test) {
     var parsed = cli.parse(['foo & bar', 'baz & boz', '--universe=42',
                             '--lap=13.37', '--chucknorris', '--oops=false']);
     // clean
@@ -104,6 +104,7 @@ casper.test.begin('parsing commands containing args and options', 30, function(t
     test.assertEquals(parsed.get(0), 'baz & boz', 'drop() dropped arg');
     parsed.drop("universe");
     test.assert(!parsed.has("universe"), 'drop() dropped option');
+    test.assert(!parsed.raw.has("universe"), 'drop() dropped raw option');
     test.assertEquals(parsed.args, ["baz & boz"], 'drop() did not affect other args');
     test.assertEquals(parsed.options, {
         lap: 13.37,
@@ -112,14 +113,17 @@ casper.test.begin('parsing commands containing args and options', 30, function(t
     }, 'drop() did not affect other options');
 
     // raw
-    test.assertEquals(parsed.raw.args, ['foo & bar', 'baz & boz'],
+    test.assertEquals(parsed.args.length, parsed.raw.args.length,
+        'parse() cast and raw args share same length');
+    test.assertEquals(Object.keys(parsed.options).length, Object.keys(parsed.raw.options).length,
+        'parse() cast and raw options share same length');
+    test.assertEquals(parsed.raw.args, ['baz & boz'],
         'parse() returns expected positional raw args array');
     test.assertEquals(parsed.raw.options, {
-        universe: "42",
         lap: "13.37",
         chucknorris: true,
-        oops: "false" }, 'parse() returns expected options raw object');
-    test.assertEquals(parsed.raw.get('universe'), "42", 'parse() does not a raw numeric option value');
+        oops: "false"
+    }, 'parse() returns expected options raw object');
     test.assertEquals(parsed.raw.get('lap'), "13.37", 'parse() does not cast a raw float option value');
     test.assertType(parsed.raw.get('lap'), "string", 'parse() does not cast a numeric value');
     test.assert(parsed.raw.get('chucknorris'), 'parse() can get a flag value by its option name');
@@ -128,14 +132,18 @@ casper.test.begin('parsing commands containing args and options', 30, function(t
 
     // drop() for raw
     parsed.raw.drop(0);
-    test.assertEquals(parsed.raw.get(0), 'baz & boz', 'drop() dropped raw arg');
+    test.assertEquals(parsed.raw.get(0), undefined, 'drop() dropped raw arg');
     parsed.raw.drop("universe");
     test.assert(!parsed.raw.has("universe"), 'drop() dropped raw option');
-    test.assertEquals(parsed.raw.args, ["baz & boz"], 'drop() did not affect other raw args');
+    test.assertEquals(parsed.raw.args, [], 'drop() did not affect other raw args');
     test.assertEquals(parsed.raw.options, {
         lap: "13.37",
         chucknorris: true,
         oops: "false"
     }, 'drop() did not affect other raw options');
+    parsed.raw.drop("lap");
+    test.assert(!parsed.raw.has("lap"), 'drop() dropped raw option');
+    test.assert(!parsed.has("lap"), 'drop() dropped cast option as well');
+
     test.done();
 });

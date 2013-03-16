@@ -56,20 +56,28 @@ exports.parse = function parse(phantomArgs) {
                 this.args = this.args.filter(function _filter(arg, index) {
                     return index !== what;
                 });
+                // raw
+                if ('raw' in this) {
+                    this.raw.args = this.raw.args.filter(function _filter(arg, index) {
+                        return index !== what;
+                    });
+                }
             } else if (utils.isString(what)) {
                 // deleting an arg by its value
                 this.args = this.args.filter(function _filter(arg) {
                     return arg !== what;
                 });
                 // deleting an option by its name (key)
-                var self = this;
-                Object.keys(this.options).forEach(function _forEach(option) {
-                    if (option === what) {
-                        delete self.options[what];
-                    }
-                });
+                delete this.options[what];
+                // raw
+                if ('raw' in this) {
+                    this.raw.args = this.raw.args.filter(function _filter(arg) {
+                        return arg !== what;
+                    });
+                    delete this.raw.options[what];
+                }
             } else {
-                throw new CasperError("cannot drop argument of type " + typeof what);
+                throw new CasperError("Cannot drop argument of type " + typeof what);
             }
         },
         has: function has(what) {
@@ -112,7 +120,9 @@ exports.parse = function parse(phantomArgs) {
         }
     });
     extract.raw = utils.mergeObjects(extract.raw, {
-        drop: extract.drop,
+        drop: function() {
+            return extract.drop.apply(extract, arguments);
+        },
         has: extract.has,
         get: extract.get
     });

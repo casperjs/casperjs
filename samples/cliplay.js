@@ -21,4 +21,10 @@ dump(casper.cli.args);
 casper.echo("Casper CLI passed options:");
 dump(casper.cli.options);
 
+casper.echo("Casper CLI passed RAW args:");
+dump(casper.cli.raw.args);
+
+casper.echo("Casper CLI passed RAW options:");
+dump(casper.cli.raw.options);
+
 casper.exit();
