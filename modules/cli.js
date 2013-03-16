@@ -108,7 +108,7 @@ exports.parse = function parse(phantomArgs) {
         } else {
             // positional arg
             extract.args.push(castArgument(arg));
-            extract.raw.args.push(castArgument(arg));
+            extract.raw.args.push(arg);
         }
     });
     extract.raw = utils.mergeObjects(extract.raw, {
