@@ -299,7 +299,7 @@ Asserts that given text exists in elements matching the provided :ref:`selector 
 
     casper.test.begin('assertSelectorHasText() tests', 1, function(test) {
         casper.start('http://google.com/', function() {
-            test.assertSelectorDoesntHaveText('title', 'Google');
+            test.assertSelectorHasText('title', 'Google');
         }).run(function() {
             test.done();
         });
