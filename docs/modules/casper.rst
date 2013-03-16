@@ -659,6 +659,21 @@ Iterates over provided array items and execute a callback::
 
    Have a look at the `googlematch.js <https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js>`_ sample script for a concrete use case.
 
+``eachThen()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``eachThen(Array array, Function then)``
+
+Iterates over provided array items and adds a step to the stack with current data attached to it::
+
+    casper.start().eachThen([1, 2, 3], function(response) {
+        this.echo(response.data);
+    }).run();
+
+.. note::
+
+   Current item will be stored in the ``response.data`` property.
+
 .. _casper_echo:
 
 .. index:: echo, Printing

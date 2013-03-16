@@ -110,6 +110,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 - Added [`Casper#bypass`](http://docs.casperjs.org/en/latest/modules/casper.html#bypass), [`Casper#thenBypass`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypass), [`Casper#thenBypassIf`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassif), [`Casper#thenBypassUnless`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassunless) methods
 - fixes [#410](https://github.com/n1k0/casperjs/issues/410) - trigger `mousedown` and `mousedown` events on click
 - Added [`Tester#skip`](http://docs.casperjs.org/en/latest/modules/tester.html#skip) method
+- Added [`Casper#eachThen()`](http://docs.casperjs.org/en/latest/modules/casper.html#eachThen)
 
 2013-02-08, v1.0.2
 ------------------

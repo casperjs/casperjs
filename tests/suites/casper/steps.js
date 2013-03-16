@@ -35,3 +35,17 @@ casper.test.begin('steps tests', 8, function(test) {
         test.done();
     });
 });
+
+casper.test.begin('eachThen() tests', 1, function(test) {
+    var received = [];
+
+    casper.start().eachThen([1, 2, 3], function(response) {
+        received.push(response.data);
+    });
+
+    casper.run(function() {
+        test.assertEquals(received, [1, 2, 3],
+            'Casper.eachThen() passes item to step data');
+        test.done();
+    });
+});

@@ -567,7 +567,7 @@ Casper.prototype.download = function download(url, targetPath, method, data) {
 
 /**
  * Iterates over the values of a provided array and execute a callback
- * for @ item.
+ * for each item.
  *
  * @param  Array     array
  * @param  Function  fn     Callback: function(self, item, index)
@@ -582,6 +582,32 @@ Casper.prototype.each = function each(array, fn) {
     (function _each(self) {
         array.forEach(function _forEach(item, i) {
             fn.call(self, self, item, i);
+        });
+    })(this);
+    return this;
+};
+
+/**
+ * Iterates over the values of a provided array and adds a step
+ * for each item.
+ *
+ * @param  Array     array
+ * @param  Function  then   Step: function(response); item will be attached to response.data
+ * @return Casper
+ */
+Casper.prototype.eachThen = function each(array, then) {
+    "use strict";
+    if (!utils.isArray(array)) {
+        this.log("each() only works with arrays", "error");
+        return this;
+    }
+    (function _each(self) {
+        array.forEach(function _forEach(item, i) {
+            self.then(function() {
+                this.then(this.createStep(then, {
+                    data: item
+                }));
+            });
         });
     })(this);
     return this;
@@ -1353,6 +1379,7 @@ Casper.prototype.run = function run(onComplete, time) {
  */
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
+    /*jshint maxstatements:20*/
     this.checkStarted();
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
         stepInfo = f("Step %d/%d", this.step, this.steps.length),
@@ -1381,6 +1408,9 @@ Casper.prototype.runStep = function runStep(step) {
         }, this.options.stepTimeout, this, new Date().getTime(), getCurrentSuiteId(this));
     }
     this.emit('step.start', step);
+    if (this.currentResponse) {
+        this.currentResponse.data = step.options && step.options.data || null;
+    }
     try {
         stepResult = step.call(this, this.currentResponse);
         if (utils.isFunction(this.options.onStepComplete)) {
