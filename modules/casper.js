@@ -119,7 +119,7 @@ var Casper = function Casper(options) {
         stepTimeout:         null,
         timeout:             null,
         verbose:             false,
-        retryTimeout:        100,
+        retryTimeout:        10,
         waitTimeout:         5000
     };
     // options
