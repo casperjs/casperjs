@@ -309,7 +309,7 @@ Emitted when a new window has been opened.
 Emitted when a remote ``alert()`` call has been performed.
 
 ``remote.callback``
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 **Arguments:** ``data``
 

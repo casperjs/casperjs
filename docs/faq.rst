@@ -257,6 +257,30 @@ When you have defined your navigation steps, ``run()`` executes them one by one 
 
 .. note:: The callback/listener stuff is an implementation of the `Promise pattern <http://blog.thepete.net/blog/2011/07/02/javascript-promises/>`_.
 
+.. _faq_web_security:
+
+.. index:: Web security, download, CORS
+
+I'm having hard times downloading files using ``download()``
+------------------------------------------------------------
+
+You should try to disable `web security`. Using the ``--web-security`` command line option:
+
+.. code-block:: text
+
+    $ casperjs --web-security=no myscript.js
+
+Within code::
+
+    var casper = require('casper').create({
+        pageSettings: {
+            webSecurityEnabled: false
+        }
+    });
+
+Or anytime::
+
+    casper.page.settings.webSecurityEnabled = false;
 
 Is it possible to achieve parallel browsing using CasperJS?
 -----------------------------------------------------------

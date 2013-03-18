@@ -643,6 +643,10 @@ Saves a remote resource onto the filesystem. You can optionally set the HTTP met
         this.echo('Done.').exit();
     });
 
+.. note::
+
+   If you have some troubles downloading files, try to :ref:`disable web security <faq_web_security>`.
+
 ``each()``
 -------------------------------------------------------------------------------
 
