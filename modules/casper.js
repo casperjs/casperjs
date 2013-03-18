@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom require __utils__*/
+/*global CasperError, console, exports, phantom, require, __utils__*/
 
 var colorizer = require('colorizer');
 var events = require('events');
@@ -1300,7 +1300,7 @@ Casper.prototype.run = function run(onComplete, time) {
     }
     this.log(f("Running suite: %d step%s", this.steps.length, this.steps.length > 1 ? "s" : ""), "info");
     this.emit('run.start');
-    this.checker = setInterval(this.checkStep, (time ? time: 100), this, onComplete);
+    this.checker = setInterval(this.checkStep, (time ? time: 10), this, onComplete);
     return this;
 };
 
@@ -1737,7 +1737,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
                 }
                 clearInterval(interval);
             }
-        }, 100, this, testFx, timeout, onTimeout);
+        }, 10, this, testFx, timeout, onTimeout);
     });
 };
 
