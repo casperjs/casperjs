@@ -147,3 +147,12 @@ casper.test.begin('parsing commands containing args and options', 34, function(t
 
     test.done();
 });
+
+casper.test.begin('default values', 2, function(test) {
+    var parsed = cli.parse(['foo', '--bar']);
+    test.assertEquals(parsed.get(42, 'boz'), 'boz',
+        'get() can return a default arg value');
+    test.assertEquals(parsed.get('--zorg', 'boz'), 'boz',
+        'get() can return a default option value');
+    test.done();
+});

@@ -126,8 +126,8 @@ var Casper = function Casper(options) {
     this.options = utils.mergeObjects(this.defaults, options);
     // factories
     this.cli = phantom.casperArgs;
-    this.options.logLevel = this.cli.get('log-level') || this.options.logLevel;
-    this.options.verbose = this.cli.get('direct') || this.options.verbose;
+    this.options.logLevel = this.cli.get('log-level', this.options.logLevel);
+    this.options.verbose = this.cli.get('direct', this.options.verbose);
     this.colorizer = this.getColorizer();
     this.mouse = mouse.create(this);
     this.popups = pagestack.create();

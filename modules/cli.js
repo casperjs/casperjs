@@ -83,20 +83,20 @@ exports.parse = function parse(phantomArgs) {
         has: function has(what) {
             if (utils.isNumber(what)) {
                 return what in this.args;
-            } else if (utils.isString(what)) {
+            }
+            if (utils.isString(what)) {
                 return what in this.options;
-            } else {
-                throw new CasperError("Unsupported cli arg tester " + typeof what);
             }
+            throw new CasperError("Unsupported cli arg tester " + typeof what);
         },
-        get: function get(what) {
+        get: function get(what, def) {
             if (utils.isNumber(what)) {
-                return this.args[what];
-            } else if (utils.isString(what)) {
-                return this.options[what];
-            } else {
-                throw new CasperError("Unsupported cli arg getter " + typeof what);
+                return what in this.args ? this.args[what] : def;
             }
+            if (utils.isString(what)) {
+                return what in this.options ? this.options[what] : def;
+            }
+            throw new CasperError("Unsupported cli arg getter " + typeof what);
         }
     };
     phantomArgs.forEach(function _forEach(arg) {

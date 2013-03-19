@@ -112,6 +112,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 - Added [`Tester#skip`](http://docs.casperjs.org/en/latest/modules/tester.html#skip) method
 - Added [`Casper#eachThen()`](http://docs.casperjs.org/en/latest/modules/casper.html#eachThen)
 - `cli`: Now dropping an arg or an option will be reflected in their *raw* equivalent
+- `cli.get()` now supports fallback values
 
 2013-02-08, v1.0.2
 ------------------
