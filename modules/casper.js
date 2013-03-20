@@ -1383,7 +1383,7 @@ Casper.prototype.runStep = function runStep(step) {
     /*jshint maxstatements:20*/
     this.checkStarted();
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
-        stepInfo = f("Step %s %d/%d", step.name, this.step, this.steps.length),
+        stepInfo = f("Step %s %d/%d", step.name || "anonymous", this.step, this.steps.length),
         stepResult;
     function getCurrentSuiteId(casper) {
         try {
