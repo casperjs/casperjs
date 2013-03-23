@@ -777,12 +777,14 @@
          */
         this.visible = function visible(selector) {
             try {
-                var comp,
-                    el = this.findOne(selector);
+                var el, comp,
+                    elems = this.findAll(selector);
 
-                if (el) {
+                for(var i = 0; i < elems.length; i++)
+                {
+                    el = elems[i];
                     comp = window.getComputedStyle(el, null);
-                    return comp.visibility !== 'hidden' && comp.display !== 'none' && el.offsetHeight > 0 && el.offsetWidth > 0;
+                    if (comp.visibility !== 'hidden' && comp.display !== 'none' && el.offsetHeight > 0 && el.offsetWidth > 0) return true;
                 }
                 return false;
             } catch (e) {
