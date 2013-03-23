@@ -777,16 +777,14 @@
          */
         this.visible = function visible(selector) {
             try {
-                var el, comp,
-                    elems = this.findAll(selector);
-
-                for(var i = 0; i < elems.length; i++)
-                {
-                    el = elems[i];
-                    comp = window.getComputedStyle(el, null);
-                    if (comp.visibility !== 'hidden' && comp.display !== 'none' && el.offsetHeight > 0 && el.offsetWidth > 0) return true;
-                }
-                return false;
+                var elems = this.findAll(selector);
+                return Array.prototype.some.call(elems, function(el) {
+                    var comp = window.getComputedStyle(el, null);
+                    return comp.visibility !== 'hidden' &&
+                           comp.display !== 'none' &&
+                           el.offsetHeight > 0 &&
+                           el.offsetWidth > 0;
+                });
             } catch (e) {
                 return false;
             }
