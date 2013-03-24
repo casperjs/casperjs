@@ -1368,7 +1368,7 @@ Tester.prototype.runSuites = function runSuites() {
             self.runTest(testFiles[self.currentSuiteNum]);
             self.currentSuiteNum++;
         }
-    }, 10, this);
+    }, 20, this);
 };
 
 /**

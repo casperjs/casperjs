@@ -47,7 +47,6 @@ casper.test.begin('eachThen() tests', 1, function(test) {
     });
 
     casper.run(function() {
-        console.log('PLOP!!!');
         test.assertEquals(received, [1, 2, 3],
             'Casper.eachThen() passes item to step data');
         test.done();
