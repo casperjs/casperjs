@@ -133,7 +133,7 @@ var Casper = function Casper(options) {
     this.popups = pagestack.create();
     // properties
     this.checker = null;
-    this.currentResponse = undefined;
+    this.currentResponse = {};
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = null;
     this.history = [];
@@ -1049,7 +1049,7 @@ Casper.prototype.handleReceivedResource = function(resource) {
         return;
     }
     this.currentHTTPStatus = null;
-    this.currentResponse = undefined;
+    this.currentResponse = {};
     if (utils.isHTTPResource(resource)) {
         this.emit('page.resource.received', resource);
         this.currentResponse = resource;
@@ -1503,6 +1503,7 @@ Casper.prototype.start = function start(location, then) {
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
+    this.currentResponse = {};
     this.history = [];
     this.popups = pagestack.create();
     this.steps = [];

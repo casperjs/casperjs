@@ -14,7 +14,7 @@ var service = server.listen(8090, function(request, response) {
 
 casper.test.begin('Casper.headers.get() using file protocol', 1, function(test) {
     casper.start('file://' + phantom.casperPath + 'tests/site/index.html', function(response) {
-        test.assertEquals(response, undefined, 'No response available on local page');
+        test.assertEquals(response, {data: null}, 'Empty http response on local page');
     }).run(function() {
         test.done();
     })

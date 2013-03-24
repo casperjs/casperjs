@@ -40,10 +40,14 @@ casper.test.begin('eachThen() tests', 1, function(test) {
     var received = [];
 
     casper.start().eachThen([1, 2, 3], function(response) {
+        if (!response) {
+            test.fail('No response received');
+        }
         received.push(response.data);
     });
 
     casper.run(function() {
+        console.log('PLOP!!!');
         test.assertEquals(received, [1, 2, 3],
             'Casper.eachThen() passes item to step data');
         test.done();

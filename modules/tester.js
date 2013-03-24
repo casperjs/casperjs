@@ -997,6 +997,7 @@ Tester.prototype.done = function done() {
         this.executed = 0;
     }
     this.emit('test.done');
+    this.casper.currentHTTPResponse = {};
     this.running = this.started = false;
     var nextTest = this.queue.shift();
     if (nextTest) {
