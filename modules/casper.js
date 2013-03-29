@@ -824,7 +824,7 @@ Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector, attribute) {
-        return document.querySelector(selector).getAttribute(attribute);
+        return __utils__.findOne(selector).getAttribute(attribute);
     }, selector, attribute);
 };
 
