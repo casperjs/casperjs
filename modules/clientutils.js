@@ -501,7 +501,7 @@
             }
             var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
             switch (inputs.length) {
-                case 0:  return null;
+                case 0:  return undefined;
                 case 1:  return getSingleValue(inputs[0]);
                 default: return getMultipleValues(inputs);
             }

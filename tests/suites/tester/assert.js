@@ -2,7 +2,7 @@
 /*jshint strict:false, maxstatements:99*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 43, function(test) {
+casper.test.begin('Common assertions tests', 45, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
@@ -34,6 +34,9 @@ casper.test.begin('Common assertions tests', 43, function(test) {
         test.assertElementCount('address', 0, 'Tester.assertElementCount() works as expected');
         test.assertExists('body', 'Tester.assertExists() works as expected');
         test.assertExist('body', 'Tester.assertExist() works as expected [alias]');
+        test.assertFail(function() {
+            test.assert(false);
+        }, 'Tester.assertFail() tests for a failing assertion');
         test.assertSelectorExists('body', 'Tester.assertSelectorExists() works as expected [alias]');
         test.assertSelectorExist('body', 'Tester.assertSelectorExist() works as expected [alias]');
         test.assertDoesntExist('foobar', 'Tester.assertDoesntExist() works as expected');
@@ -113,4 +116,15 @@ casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
     }).run(function() {
         test.done();
     });
+});
+
+casper.test.begin('Tester.assertField(): nonexistent fields', 2, function(test) {
+    casper.start('tests/site/form.html', function() {
+        test.assertFail(function() {
+            test.assertField('nonexistent', '');
+        }, 'Tester.assertField() only checks for existing fields');
+    });
+    casper.run(function() {
+        test.done();
+    })
 });

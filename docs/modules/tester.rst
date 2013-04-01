@@ -160,7 +160,7 @@ Asserts that a given subject is `falsy <http://11heavens.com/falsy-and-truthy-in
 ``assertField()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``assertField(String inputName, String expected[, String message])``
+**Signature:** ``assertField(String inputName, String expected[, String message, Object options])``
 
 Asserts that a given form field has the provided value::
 
@@ -176,6 +176,11 @@ Asserts that a given form field has the provided value::
 .. versionadded:: 1.0
 
 This also works with any input type: ``select``, ``textarea``, etc.
+
+.. versionadded:: 1.1
+
+The `options` parameter allows to set the options to use with
+:ref:`ClientUtils#getFieldValue() <clientutils_getfieldvalue>`.
 
 .. index:: HTTP, HTTP Status Code
 

@@ -420,18 +420,40 @@ Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, messa
 };
 
 /**
+ * Asserts that the provided assertion fails (used for internal testing).
+ *
+ * @param  Function     fn       A closure calling an assertion
+ * @param  String|null  message  Test description
+ * @return Object                An assertion result object
+ */
+Tester.prototype.assertFail = function assertFail(fn, message) {
+    "use strict";
+    var failed = false;
+    try {
+        fn();
+    } catch (e) {
+        failed = true;
+    }
+    return this.assert(failed, message, {
+        type: "assertFail",
+        standard: "Assertion fails as expected"
+    });
+};
+
+/**
  * Asserts that a given input field has the provided value.
  *
  * @param  String   inputName  The name attribute of the input element
  * @param  String   expected   The expected value of the input element
  * @param  String   message    Test description
+ * @param  Object   options    ClientUtils#getFieldValue options (optional)
  * @return Object              An assertion result object
  */
-Tester.prototype.assertField = function assertField(inputName, expected,  message) {
+Tester.prototype.assertField = function assertField(inputName, expected,  message, options) {
     "use strict";
-    var actual = this.casper.evaluate(function(inputName) {
-        return __utils__.getFieldValue(inputName);
-    }, inputName);
+    var actual = this.casper.evaluate(function(inputName, options) {
+        return __utils__.getFieldValue(inputName, options);
+    }, inputName, options);
     return this.assert(utils.equals(actual, expected),  message, {
         type: 'assertField',
         standard: f('"%s" input field has the value "%s"', inputName, expected),

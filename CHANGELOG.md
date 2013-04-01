@@ -104,11 +104,12 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 ### Bugfixes & enhancements
 
 - heavy lifting of casperjs bootstrap script
+- fixed [#387](https://github.com/n1k0/casperjs/issues/387) - Setting viewport isn't quite synchronous
+- fixed [#410](https://github.com/n1k0/casperjs/issues/410) - trigger `mousedown` and `mousedown` events on click
+- fixed [#433](https://github.com/n1k0/casperjs/issues/433) - `assertField("field", "")` will always pass even though the `field` doesn't exist
 - closed [#392](https://github.com/n1k0/casperjs/issues/392) - `--direct` & `--log-level` options available for the `casperjs` executable
 - closed [#350](https://github.com/n1k0/casperjs/issues/350) - Add a [`Casper#waitForSelectorTextChange()`](http://docs.casperjs.org/en/latest/modules/casper.html#waitforselectortextchange) method
-- fixed [#387](https://github.com/n1k0/casperjs/issues/387) - Setting viewport isn't quite synchronous
 - Added [`Casper#bypass`](http://docs.casperjs.org/en/latest/modules/casper.html#bypass), [`Casper#thenBypass`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypass), [`Casper#thenBypassIf`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassif), [`Casper#thenBypassUnless`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassunless) methods
-- fixes [#410](https://github.com/n1k0/casperjs/issues/410) - trigger `mousedown` and `mousedown` events on click
 - Added [`Tester#skip`](http://docs.casperjs.org/en/latest/modules/tester.html#skip) method
 - Added [`Casper#eachThen()`](http://docs.casperjs.org/en/latest/modules/casper.html#eachThen)
 - `cli`: Now dropping an arg or an option will be reflected in their *raw* equivalent

@@ -242,12 +242,14 @@ Retrieves all DOM elements matching a given :ref:`XPath expression <selectors>`,
 
 The ``scope`` argument allows to set the context for executing the XPath query.
 
+.. _clientutils_getfieldvalue:
+
 .. index:: Form
 
 ``getFieldValue()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``getFieldValue(String inputName)``
+**Signature:** ``getFieldValue(String inputName[, Object options])``
 
 .. versionadded:: 1.0
 
@@ -262,6 +264,10 @@ Retrieves the value from the field named against the ``inputNamed`` argument:
 Using the ``getFieldValue()`` method for ``plop``::
 
     __utils__.getFieldValue('plop'); // 42
+
+Options:
+
+- ``formSelector``: allows to set the selector for the form containing the target field.
 
 .. index:: Form
 
