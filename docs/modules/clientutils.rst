@@ -315,7 +315,7 @@ Removes all DOM elements matching a given :ref:`XPath expression <selectors>`.
 ``sendAJAX()``
 -----------------------------------------------------------------------------
 
-**Signature:** ``sendAJAX(String url[, String method, Object data, Boolean async])``
+**Signature:** ``sendAJAX(String url[, String method, Object data, Boolean async, Object settings])``
 
 .. versionadded:: 1.0
 
@@ -325,6 +325,7 @@ Sends an AJAX request, using the following parameters:
 - ``method``: The HTTP method (default: ``GET``).
 - ``data``: Request parameters (default: ``null``).
 - ``async``: Flag for an asynchroneous request? (default: ``false``)
+- ``settings``: Other settings when perform the AJAX request (default: ``null``)
 
 .. warning::
 
