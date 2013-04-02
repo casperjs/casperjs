@@ -64,7 +64,7 @@ var Tester = function Tester(casper, options) {
     this.executed = 0;
     this.currentTestFile = null;
     this.currentSuiteNum = 0;
-    this.exporter = require('xunit').create();
+    this.exporter = require(casper.cli.get('exporter') || 'xunit').create();
     this.loadIncludes = {
         includes: [],
         pre:      [],
@@ -113,7 +113,8 @@ var Tester = function Tester(casper, options) {
             failure.message  || failure.standard,
             failure.standard || "test failed",
             failure.type     || "unknown",
-            (timeElapsed - this.lastAssertTime)
+            (timeElapsed - this.lastAssertTime),
+            failure.values
         );
         this.lastAssertTime = timeElapsed;
         this.testResults.failures.push(failure);
@@ -562,12 +563,14 @@ Tester.prototype.assertFalsy = function assertFalsy(subject, message) {
  */
 Tester.prototype.assertSelectorHasText = Tester.prototype.assertSelectorContains = function assertSelectorHasText(selector, text, message) {
     "use strict";
-    var textFound = this.casper.fetchText(selector).indexOf(text) !== -1;
+    var selectorText = this.casper.fetchText(selector);
+    var textFound = selectorText.indexOf(text) !== -1;
     return this.assert(textFound, message, {
         type: "assertSelectorHasText",
         standard: f('Found "%s" within the selector "%s"', text, selector),
         values: {
             selector: selector,
+            subject: selectorText,
             text: text
         }
     });
@@ -583,12 +586,14 @@ Tester.prototype.assertSelectorHasText = Tester.prototype.assertSelectorContains
  */
 Tester.prototype.assertSelectorDoesntHaveText = Tester.prototype.assertSelectorDoesntContain = function assertSelectorDoesntHaveText(selector, text, message) {
     "use strict";
-    var textFound = this.casper.fetchText(selector).indexOf(text) === -1;
+    var selectorText = this.casper.fetchText(selector);
+    var textFound = selectorText.indexOf(text) === -1;
     return this.assert(textFound, message, {
         type: "assertSelectorDoesntHaveText",
         standard: f('Did not find "%s" within the selector "%s"', text, selector),
         values: {
             selector: selector,
+            subject: selectorText,
             text: text
         }
     });
@@ -789,6 +794,7 @@ Tester.prototype.done = function done(planned) {
     }
     this.emit('test.done');
     this.running = false;
+    this.exporter.fileFinished(this.currentTestFile);
 };
 
 /**
@@ -1104,6 +1110,7 @@ Tester.prototype.runTest = function runTest(testFile) {
     this.bar(f('Test file: %s', testFile), 'INFO_BAR');
     this.running = true; // this.running is set back to false with done()
     this.executed = 0;
+    this.exporter.fileStarted(testFile);
     this.exec(testFile);
 };
 

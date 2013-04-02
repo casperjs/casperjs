@@ -45,7 +45,7 @@ var fs = require('fs');
 function generateClassName(classname) {
     "use strict";
     classname = classname.replace(phantom.casperPath, "").trim();
-    var script = classname || phantom.casperScript || "";
+    var script = classname || phantom.casperScript;
     if (script.indexOf(fs.workingDirectory) === 0) {
         script = script.substring(fs.workingDirectory.length + 1);
     }
@@ -71,39 +71,28 @@ function generateClassName(classname) {
  */
 exports.create = function create() {
     "use strict";
-    return new XUnitExporter();
+    return new TeamCityExporter();
 };
 
 /**
  * JUnit XML (xUnit) exporter for test results.
  *
  */
-function XUnitExporter() {
-    "use strict";
-    this._xml = utils.node('testsuite');
-    this._xml.toString = function toString() {
-        return this.outerHTML; // ouch
-    };
+function TeamCityExporter() {
+    "use strict";    
 }
-exports.XUnitExporter = XUnitExporter;
+exports.TeamCityExporter = TeamCityExporter;
 
 /**
  * Adds a successful test result.
  *
  * @param  String  classname
  * @param  String  name
- * @param  Number  duration  Test duration in milliseconds
  */
-XUnitExporter.prototype.addSuccess = function addSuccess(classname, name, duration) {
+TeamCityExporter.prototype.addSuccess = function addSuccess(classname, name, duration) {
     "use strict";
-    var snode = utils.node('testcase', {
-        classname: generateClassName(classname),
-        name: name
-    });
-    if (duration !== undefined) {
-        snode.setAttribute('time', utils.ms2seconds(duration));
-    }
-    this._xml.appendChild(snode);
+    console.log("##teamcity[testStarted name='" + name + "' captureStandardOutput='false']");
+    console.log("##teamcity[testFinished name='" + name + "' duration='" + duration + "']");
 };
 
 /**
@@ -113,43 +102,46 @@ XUnitExporter.prototype.addSuccess = function addSuccess(classname, name, durati
  * @param  String  name
  * @param  String  message
  * @param  String  type
- * @param  Number  duration  Test duration in milliseconds
  */
-XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type, duration) {
+TeamCityExporter.prototype.addFailure = function addFailure(classname, name, message, type, duration, values) {
     "use strict";
-    var fnode = utils.node('testcase', {
-        classname: generateClassName(classname),
-        name:      name
-    });
-    if (duration !== undefined) {
-        fnode.setAttribute('time', utils.ms2seconds(duration));
+    var message = '', details = '';
+    if (type) {
+        message += type + ' failed|n';
     }
-    var failure = utils.node('failure', {
-        type: type || "unknown"
-    });
-    failure.appendChild(document.createTextNode(message || "no message left"));
-    fnode.appendChild(failure);
-    this._xml.appendChild(fnode);
-};
-
-XUnitExporter.prototype.fileStarted = function (filename) {
-    
-};
-
-XUnitExporter.prototype.fileFinished = function (filename) {
-    
-};
-
-/**
- * Adds test suite duration
- *
- * @param  Number  duration  Test duration in milliseconds
- */
-XUnitExporter.prototype.setSuiteDuration = function setSuiteDuration(duration) {
-    "use strict";
-    if (!isNaN(duration)) {
-        this._xml.setAttribute("time", utils.ms2seconds(duration));
+    if (values && Object.keys(values).length > 0) {
+        for (var vname in values) {
+            var comment = vname + ': ';
+            var value = values[vname];
+            try {
+                comment += utils.serialize(values[vname]);
+            } catch (e) {
+                try {
+                    comment += utils.serialize(values[vname].toString());
+                } catch (e2) {
+                    comment += '(unserializable value)';
+                }
+            }
+            details += comment + '|n';
+        }
     }
+
+    console.log("##teamcity[testStarted name='" + name + "' captureStandardOutput='false']");
+    console.log("##teamcity[testFailed name='" + name + "' message='" + message +"' details='" + details + "']");
+    console.log("##teamcity[testFinished name='" + name + "' duration='" + duration + "']");
+};
+
+TeamCityExporter.prototype.fileStarted = function (filename) {
+    var suitename = generateClassName(filename);
+    console.log("##teamcity[testSuiteStarted name='" + suitename + "']");
+};
+
+TeamCityExporter.prototype.fileFinished = function (filename) {
+    var suitename = generateClassName(filename);
+    console.log("##teamcity[testSuiteFinished name='" + suitename + "']");
+};
+
+TeamCityExporter.prototype.setSuiteDuration = function setSuiteDuration(duration) {    
 };
 
 /**
@@ -157,7 +149,7 @@ XUnitExporter.prototype.setSuiteDuration = function setSuiteDuration(duration) {
  *
  * @return HTMLElement
  */
-XUnitExporter.prototype.getXML = function getXML() {
+TeamCityExporter.prototype.getXML = function getXML() {
     "use strict";
-    return this._xml;
+    return '';
 };
