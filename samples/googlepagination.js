@@ -9,7 +9,12 @@
  * (all arguments will be used as the query)
  */
 
-var casper = require("casper").create();
+var casper = require("casper").create({
+    waitTimeout: 1000,
+    pageSettings: {
+        userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:23.0) Gecko/20130404 Firefox/23.0"
+    }
+});
 var currentPage = 1;
 
 if (casper.cli.args.length === 0) {
@@ -19,28 +24,28 @@ if (casper.cli.args.length === 0) {
     ;
 }
 
+var terminate = function() {
+    this.echo("that's all, folks.").exit();
+};
+
 var processPage = function() {
     var url;
     this.echo("capturing page " + currentPage);
     this.capture("google-results-p" + currentPage + ".png");
 
     // don't go too far down the rabbit hole
-    if (currentPage >= 5) {
-        return;
+    if (currentPage >= 5 || !this.exists("#pnnext")) {
+        return terminate.call(casper);
     }
 
-    if (this.exists("#pnnext")) {
-        currentPage++;
-        this.echo("requesting next page: " + currentPage);
-        url = this.getCurrentUrl();
-        this.thenClick("#pnnext").then(function() {
-            this.waitFor(function() {
-                return url !== this.getCurrentUrl();
-            }, processPage);
-        });
-    } else {
-        this.echo("that's all, folks.");
-    }
+    currentPage++;
+    this.echo("requesting next page: " + currentPage);
+    url = this.getCurrentUrl();
+    this.thenClick("#pnnext").then(function() {
+        this.waitFor(function() {
+            return url !== this.getCurrentUrl();
+        }, processPage, terminate);
+    });
 };
 
 casper.start("http://google.fr/", function() {
@@ -49,6 +54,6 @@ casper.start("http://google.fr/", function() {
     }, true);
 });
 
-casper.then(processPage);
+casper.waitForSelector('#pnnext', processPage, terminate);
 
 casper.run();
