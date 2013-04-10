@@ -746,21 +746,24 @@ Casper.prototype.fetchText = function fetchText(selector) {
 /**
  * Fills a form with provided field values.
  *
- * @param  String  selector  A DOM CSS3/XPath selector to the target form to fill
- * @param  Object  vals      Field values
- * @param  Boolean submit    Submit the form?
+ * @param  Casper casper    A Casper instance
+ * @param  String selector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object vals      Field values
+ * @param  Object options   The fill settings (optional)
  */
-Casper.prototype.fill = function fill(selector, vals, submit) {
+function fillForm (casper, selector, vals, options) {
     "use strict";
-    this.checkStarted();
-    submit = submit === true ? submit : false;
-    if (!utils.isObject(vals)) {
-        throw new CasperError("Form values must be provided as an object");
-    }
-    this.emit('fill', selector, vals, submit);
-    var fillResults = this.evaluate(function _evaluate(selector, values) {
-       return __utils__.fill(selector, values);
-    }, selector, vals);
+    var submit, selectorFunction;
+    casper.checkStarted();
+
+    selectorFunction = options.selectorFunction;
+    submit = options.submit === true ? options.submit : false;
+
+    casper.emit('fill', selector, vals, options);
+
+    var fillResults = casper.evaluate(function _evaluate(selector, vals, selectorFunction) {
+       return __utils__.fill(selector, vals, selectorFunction);
+    }, selector, vals, selectorFunction);
     if (!fillResults) {
         throw new CasperError("Unable to fill form");
     } else if (fillResults.errors.length > 0) {
@@ -770,7 +773,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
         if (utils.isObject(selector) && selector.type === 'xpath') {
-            this.warn('Filling file upload fields is currently not supported using ' +
+            casper.warn('Filling file upload fields is currently not supported using ' +
                       'XPath selectors; Please use a CSS selector instead.');
         } else {
             (function _each(self) {
@@ -781,15 +784,15 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
                     if (!fs.exists(file.path)) {
                         throw new CasperError('Cannot upload nonexistent file: ' + file.path);
                     }
-                    var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
+                    var fileFieldSelector = selectorFunction(self, file.name, selector).fullSelector;
                     self.page.uploadFile(fileFieldSelector, file.path);
                 });
-            })(this);
+            })(casper);
         }
     }
     // Form submission?
     if (submit) {
-        this.evaluate(function _evaluate(selector) {
+        casper.evaluate(function _evaluate(selector) {
             var form = __utils__.findOne(selector);
             var method = (form.getAttribute('method') || "GET").toUpperCase();
             var action = form.getAttribute('action') || "unknown";
@@ -808,6 +811,55 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
             }
         }, selector);
     }
+}
+
+/**
+ * Fills a form with provided field values using the Name attribute.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form? 
+ */
+Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
+    "use strict";
+    return fillForm(this, formSelector, vals, {
+        submit: submit,
+        selectorFunction: function (self, selector, form) {
+            return {
+                fullSelector: [form, '[name="' + selector + '"]'].join(' '),
+                elts: (self.findAll ? self.findAll('[name="' + selector + '"]', form) : null)
+            };
+        }
+    });
+};
+
+/**
+ * Fills a form with provided field values using the Name attribute.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form? 
+ */
+Casper.prototype.fill = Casper.prototype.fillNames
+
+/**
+ * Fills a form with provided field values using CSS3 selectors.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form? 
+ */
+Casper.prototype.fillSelectors = function fillSelectors(formSelector, vals, submit) {
+    "use strict";
+    return fillForm(this, formSelector, vals, {
+        submit: submit,
+        selectorFunction: function (self, selector, form) {
+            return {
+                fullSelector: [form, selector].join(' '),
+                elts: (self.findAll ? self.findAll(selector, form) : null)
+            };
+        }
+    });
 };
 
 /**
