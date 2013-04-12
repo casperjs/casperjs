@@ -32,6 +32,25 @@ casper.test.begin('open() GET tests', 2, {
     }
 });
 
+casper.test.begin('open() GET casing tests', 2, {
+    setUp: setUp,
+    tearDown: tearDown,
+    test: function(test) {
+        casper.open('tests/site/index.html', {
+          method: 'GET'
+        }).then(function() {
+            test.pass("Casper.open() can open and load a location using GET");
+            test.assertEquals(usedSettings, {
+                method: "GET"
+            }, "Casper.open() used the expected GET settings");
+        });
+
+        casper.run(function() {
+            test.done();
+        });
+    }
+});
+
 casper.test.begin('open() POST tests', 2, {
     setUp: setUp,
     tearDown: tearDown,
@@ -56,6 +75,30 @@ casper.test.begin('open() POST tests', 2, {
     }
 });
 
+casper.test.begin('open() POST casing tests', 2, {
+    setUp: setUp,
+    tearDown: tearDown,
+    test: function(test) {
+        casper.open('tests/site/index.html', {
+            method: 'POST',
+            data:   {
+                plop: 42,
+                chuck: 'norris'
+            }
+        }).then(function() {
+            test.pass("Casper.open() can open and load a location using POST");
+            test.assertEquals(usedSettings, {
+                method: "POST",
+                data:   "plop=42&chuck=norris"
+            }, "Casper.open() used the expected POST settings");
+        });
+
+        casper.run(function() {
+            test.done();
+        });
+    }
+});
+
 casper.test.begin('open() PUT tests', 2, {
     setUp: setUp,
     tearDown: tearDown,
@@ -70,6 +113,30 @@ casper.test.begin('open() PUT tests', 2, {
             test.pass("Casper.open() can open and load a location using PUT");
             test.assertEquals(usedSettings, {
                 method: "put",
+                data:   "plop=42&chuck=norris"
+            }, "Casper.open() used the expected PUT settings");
+        });
+
+        casper.run(function() {
+            test.done();
+        });
+    }
+});
+
+casper.test.begin('open() PUT casing tests', 2, {
+    setUp: setUp,
+    tearDown: tearDown,
+    test: function(test) {
+        casper.thenOpen('tests/site/index.html', {
+            method: 'PUT',
+            data:   {
+                plop: 42,
+                chuck: 'norris'
+            }
+        }).then(function() {
+            test.pass("Casper.open() can open and load a location using PUT");
+            test.assertEquals(usedSettings, {
+                method: "PUT",
                 data:   "plop=42&chuck=norris"
             }, "Casper.open() used the expected PUT settings");
         });

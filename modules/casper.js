@@ -1357,7 +1357,8 @@ Casper.prototype.open = function open(location, settings) {
     // http method
     // taken from https://github.com/ariya/phantomjs/blob/master/src/webpage.cpp#L302
     var methods = ["get", "head", "put", "post", "delete"];
-    if (settings.method && (!utils.isString(settings.method) || methods.indexOf(settings.method) === -1)) {
+    var lowerCaseMethod = settings.method.toLowerCase();
+    if (settings.method && (!utils.isString(settings.method) || methods.indexOf(lowerCaseMethod) === -1)) {
         throw new CasperError("open(): settings.method must be part of " + methods.join(', '));
     }
     // http data
