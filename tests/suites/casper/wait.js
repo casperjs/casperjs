@@ -117,10 +117,16 @@ casper.test.begin('waitForSelectorTextChange() tests', 1, function(test) {
     });
 });
 
-casper.test.begin('waitUntilVisible() tests', 1, function(test) {
+casper.test.begin('waitUntilVisible() tests', 2, function(test) {
     casper.start('tests/site/waitFor.html');
 
     casper.waitUntilVisible('li:nth-child(4)', function() {
+        test.pass('Casper.waitUntilVisible() waits for a selector being visible');
+    }, function() {
+        test.fail('Casper.waitUntilVisible() waits for a selector being visible');
+    });
+
+    casper.waitUntilVisible('p', function() {
         test.pass('Casper.waitUntilVisible() waits for a selector being visible');
     }, function() {
         test.fail('Casper.waitUntilVisible() waits for a selector being visible');
