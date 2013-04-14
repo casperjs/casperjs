@@ -628,17 +628,19 @@
         /**
          * Performs an AJAX request.
          *
-         * @param   String   url     Url.
-         * @param   String   method  HTTP method (default: GET).
-         * @param   Object   data    Request parameters.
-         * @param   Boolean  async   Asynchroneous request? (default: false)
-         * @return  String           Response text.
+         * @param   String   url      Url.
+         * @param   String   method   HTTP method (default: GET).
+         * @param   Object   data     Request parameters.
+         * @param   Boolean  async    Asynchroneous request? (default: false)
+         * @param   Object   settings Other settings when perform the ajax request
+         * @return  String            Response text.
          */
-        this.sendAJAX = function sendAJAX(url, method, data, async) {
+        this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];
             method = method && method.toUpperCase() || "GET";
+            var contentType = settings && settings.contentType || "application/x-www-form-urlencoded";
             xhr.open(method, url, !!async);
             this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
             xhr.overrideMimeType("text/plain; charset=x-user-defined");
@@ -652,7 +654,7 @@
                 } else if (typeof data === "string") {
                     dataString = data;
                 }
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.setRequestHeader("Content-Type", contentType);
             }
             xhr.send(method === "POST" ? dataString : null);
             return xhr.responseText;
