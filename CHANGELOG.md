@@ -118,6 +118,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 2013-02-08, v1.0.2
 ------------------
 
+- fixed [#431](https://github.com/n1k0/casperjs/pull/431) - fix for visible/waitUntilVisible when selector matches multiple elements
 - fixed [#370](https://github.com/n1k0/casperjs/pull/370) - mergeObjects failed to deep-clone when the target object did not contain the corresponding key
 - fixed [#375](https://github.com/n1k0/casperjs/pull/375) - Fixes a bug with getting form values for radio inputs, and introduces a minor optimization to avoid processing the same form fields more than once.
 - closed [#373](https://github.com/n1k0/casperjs/issues/373) - added RegExp support to `Casper.waitForText()`
