@@ -209,10 +209,10 @@
                 files:  []
             };
 
-            findFunction = findFunction || function _nameSelector(name, form) {
+            findFunction = findFunction || function _nameSelector(elementName, formSelector) {
                 return {
-                    fullSelector: [form, '[name="' + name + '"]'].join(' '),
-                    elts: this.findAll('[name="' + name + '"]', form)
+                    fullSelector: [formSelector, '[name="' + elementName + '"]'].join(' '),
+                    elts: this.findAll('[name="' + elementName + '"]', formSelector)
                 };
             };
 

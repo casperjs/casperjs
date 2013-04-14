@@ -823,10 +823,10 @@ Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
     "use strict";
     return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function _nameSelector(selector, form) {
+        selectorFunction: function _nameSelector(elementName, formSelector) {
             return {
-                fullSelector: [form, '[name="' + selector + '"]'].join(' '),
-                elts: (this.findAll ? this.findAll('[name="' + selector + '"]', form) : null)
+                fullSelector: [formSelector, '[name="' + elementName + '"]'].join(' '),
+                elts: (this.findAll ? this.findAll('[name="' + elementName + '"]', formSelector) : null)
             };
         }
     });
@@ -852,10 +852,10 @@ Casper.prototype.fillSelectors = function fillSelectors(formSelector, vals, subm
     "use strict";
     return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function _css3Selector(selector, form) {
+        selectorFunction: function _css3Selector(inputSelector, formSelector) {
             return {
-                fullSelector: [form, selector].join(' '),
-                elts: (this.findAll ? this.findAll(selector, form) : null)
+                fullSelector: [formSelector, inputSelector].join(' '),
+                elts: (this.findAll ? this.findAll(inputSelector, formSelector) : null)
             };
         }
     });
