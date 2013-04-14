@@ -750,7 +750,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
  * @param  Object vals      Field values
  * @param  Object options   The fill settings (optional)
  */
-Casper.prototype.fillForm = function (selector, vals, options) {
+Casper.prototype.fillForm = function fillForm(selector, vals, options) {
     "use strict";
     var submit, selectorFunction;
     this.checkStarted();
