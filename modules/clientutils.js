@@ -209,7 +209,7 @@
                 files:  []
             };
 
-            findFunction = findFunction || function(self, name, form) {
+            findFunction = findFunction || function _nameSelector(self, name, form) {
                 return {
                     fullSelector: [form, '[name="' + name + '"]'].join(' '),
                     elts: self.findAll('[name="' + name + '"]', form)

@@ -746,22 +746,21 @@ Casper.prototype.fetchText = function fetchText(selector) {
 /**
  * Fills a form with provided field values.
  *
- * @param  Casper casper    A Casper instance
  * @param  String selector  A DOM CSS3/XPath selector to the target form to fill
  * @param  Object vals      Field values
  * @param  Object options   The fill settings (optional)
  */
-function fillForm (casper, selector, vals, options) {
+Casper.prototype.fillForm = function (selector, vals, options) {
     "use strict";
     var submit, selectorFunction;
-    casper.checkStarted();
+    this.checkStarted();
 
-    selectorFunction = options.selectorFunction;
+    selectorFunction = options && options.selectorFunction;
     submit = options.submit === true ? options.submit : false;
 
-    casper.emit('fill', selector, vals, options);
+    this.emit('fill', selector, vals, options);
 
-    var fillResults = casper.evaluate(function _evaluate(selector, vals, selectorFunction) {
+    var fillResults = this.evaluate(function _evaluate(selector, vals, selectorFunction) {
        return __utils__.fill(selector, vals, selectorFunction);
     }, selector, vals, selectorFunction);
     if (!fillResults) {
@@ -773,7 +772,7 @@ function fillForm (casper, selector, vals, options) {
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
         if (utils.isObject(selector) && selector.type === 'xpath') {
-            casper.warn('Filling file upload fields is currently not supported using ' +
+            this.warn('Filling file upload fields is currently not supported using ' +
                       'XPath selectors; Please use a CSS selector instead.');
         } else {
             (function _each(self) {
@@ -787,12 +786,12 @@ function fillForm (casper, selector, vals, options) {
                     var fileFieldSelector = selectorFunction(self, file.name, selector).fullSelector;
                     self.page.uploadFile(fileFieldSelector, file.path);
                 });
-            })(casper);
+            })(this);
         }
     }
     // Form submission?
     if (submit) {
-        casper.evaluate(function _evaluate(selector) {
+        this.evaluate(function _evaluate(selector) {
             var form = __utils__.findOne(selector);
             var method = (form.getAttribute('method') || "GET").toUpperCase();
             var action = form.getAttribute('action') || "unknown";
@@ -822,9 +821,9 @@ function fillForm (casper, selector, vals, options) {
  */
 Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
     "use strict";
-    return fillForm(this, formSelector, vals, {
+    return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function (self, selector, form) {
+        selectorFunction: function _nameSelector(self, selector, form) {
             return {
                 fullSelector: [form, '[name="' + selector + '"]'].join(' '),
                 elts: (self.findAll ? self.findAll('[name="' + selector + '"]', form) : null)
@@ -851,9 +850,9 @@ Casper.prototype.fill = Casper.prototype.fillNames
  */
 Casper.prototype.fillSelectors = function fillSelectors(formSelector, vals, submit) {
     "use strict";
-    return fillForm(this, formSelector, vals, {
+    return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function (self, selector, form) {
+        selectorFunction: function _css3Selector(self, selector, form) {
             return {
                 fullSelector: [form, selector].join(' '),
                 elts: (self.findAll ? self.findAll(selector, form) : null)
