@@ -783,7 +783,7 @@ Casper.prototype.fillForm = function (selector, vals, options) {
                     if (!fs.exists(file.path)) {
                         throw new CasperError('Cannot upload nonexistent file: ' + file.path);
                     }
-                    var fileFieldSelector = selectorFunction(self, file.name, selector).fullSelector;
+                    var fileFieldSelector = selectorFunction.call(this, file.name, selector).fullSelector;
                     self.page.uploadFile(fileFieldSelector, file.path);
                 });
             })(this);
@@ -823,10 +823,10 @@ Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
     "use strict";
     return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function _nameSelector(self, selector, form) {
+        selectorFunction: function _nameSelector(selector, form) {
             return {
                 fullSelector: [form, '[name="' + selector + '"]'].join(' '),
-                elts: (self.findAll ? self.findAll('[name="' + selector + '"]', form) : null)
+                elts: (this.findAll ? this.findAll('[name="' + selector + '"]', form) : null)
             };
         }
     });
@@ -852,10 +852,10 @@ Casper.prototype.fillSelectors = function fillSelectors(formSelector, vals, subm
     "use strict";
     return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function _css3Selector(self, selector, form) {
+        selectorFunction: function _css3Selector(selector, form) {
             return {
                 fullSelector: [form, selector].join(' '),
-                elts: (self.findAll ? self.findAll(selector, form) : null)
+                elts: (this.findAll ? this.findAll(selector, form) : null)
             };
         }
     });

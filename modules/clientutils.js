@@ -209,10 +209,10 @@
                 files:  []
             };
 
-            findFunction = findFunction || function _nameSelector(self, name, form) {
+            findFunction = findFunction || function _nameSelector(name, form) {
                 return {
                     fullSelector: [form, '[name="' + name + '"]'].join(' '),
-                    elts: self.findAll('[name="' + name + '"]', form)
+                    elts: this.findAll('[name="' + name + '"]', form)
                 };
             };
 
@@ -235,7 +235,7 @@
                 if (!vals.hasOwnProperty(name)) {
                     continue;
                 }
-                var field = findFunction(this, name, form).elts;
+                var field = findFunction.call(this, name, form).elts;
                 var value = vals[name];
                 if (!field || field.length === 0) {
                     out.errors.push('no field named "' + name + '" in form');
