@@ -210,11 +210,11 @@
             };
 
             findFunction = findFunction || function(self, name, form) {
-                        return {
-                            fullSelector: [form, '[name="' + name + '"]'].join(' '),
-                            elts: self.findAll('[name="' + name + '"]', form)
-                        };
+                return {
+                    fullSelector: [form, '[name="' + name + '"]'].join(' '),
+                    elts: self.findAll('[name="' + name + '"]', form)
                 };
+            };
 
             if (!(form instanceof HTMLElement) || typeof form === "string") {
                 this.log("attempting to fetch form element from selector: '" + form + "'", "info");
