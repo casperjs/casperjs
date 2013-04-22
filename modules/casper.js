@@ -2208,9 +2208,10 @@ function createPage(casper) {
         if (logTest && logTest.length === 3) {
             logLevel = logTest[1];
             msg = logTest[2];
+            casper.log(msg, logLevel, "remote");
+        } else {
+            casper.emit('remote.message', msg);
         }
-        casper.log(msg, logLevel, "remote");
-        casper.emit('remote.message', msg);
     };
 
     page.onCallback = function onCallback(data){
