@@ -2267,6 +2267,10 @@ function createPage(casper) {
                      url, type, willNavigate, isMainFrame), "debug");
         if (isMainFrame && casper.requestUrl !== url) {
             casper.navigationRequested  = true;
+
+            if(willNavigate) {
+                casper.requestUrl = url;
+            }
         }
         casper.emit('navigation.requested', url, type, willNavigate, isMainFrame);
     };
