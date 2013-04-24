@@ -1,5 +1,5 @@
-
-
+/*global casper*/
+/*jshint strict:false*/
 var server = require('webserver').create();
 var service = server.listen(8090, function(request, response) {
     response.statusCode = 200;
