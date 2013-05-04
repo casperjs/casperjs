@@ -420,6 +420,35 @@
         };
 
         /**
+         * Retrieves information about the nodes matching the provided selector.
+         *
+         * @param  String|Object  selector  CSS3/XPath selector
+         * @return Array
+         */
+        this.getElementsInfo = function getElementsInfo(selector) {
+            var bounds = this.getElementsBounds(selector);
+            var visibility = this.visible(selector);
+            return Array.prototype.map.call(this.findAll(selector), function(element, index) {
+                var attributes = {};
+                [].forEach.call(element.attributes, function(attr) {
+                    attributes[attr.name.toLowerCase()] = attr.value;
+                });
+                return {
+                    nodeName: element.nodeName.toLowerCase(),
+                    attributes: attributes,
+                    tag: element.outerHTML,
+                    html: element.innerHTML,
+                    text: element.innerText,
+                    x: bounds[index].left,
+                    y: bounds[index].top,
+                    width: bounds[index].width,
+                    height: bounds[index].height,
+                    visible: visibility
+                };
+            });
+        };
+
+        /**
          * Retrieves a single DOM element matching a given XPath expression.
          *
          * @param  String            expression  The XPath expression
