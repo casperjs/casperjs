@@ -10,9 +10,11 @@ casper.test.begin('getElementAttribute() tests', 4, function(test) {
             'beautiful string', 'Casper.getElementAttribute() works with a XPath selector');
     }).then(function() {
         test.assertEquals(this.getElementsAttribute('.testo', 'data-stuff'),
-            ['beautiful string', 'not as beautiful string'], 'Casper.getElementsAttribute() works with a CSS selector');
+            ['beautiful string', 'not as beautiful string'],
+            'Casper.getElementsAttribute() works with a CSS selector');
         test.assertEquals(this.getElementsAttribute(x('//div[@class]'), 'data-stuff'),
-            ['beautiful string', 'not as beautiful string'], 'Casper.getElementsAttribute() works with a XPath selector');
+            ['beautiful string', 'not as beautiful string'],
+            'Casper.getElementsAttribute() works with a XPath selector');
     }).run(function() {
         test.done();
     });
