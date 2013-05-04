@@ -909,7 +909,7 @@ Casper.prototype.getElementsAttr = function getElementsAttr(selector, attribute)
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector, attribute) {
-        return Array.prototype.map.call(__utils__.findAll(selector), function(element) {
+        return [].map.call(__utils__.findAll(selector), function(element) {
             return element.getAttribute(attribute);
         });
     }, selector, attribute);
