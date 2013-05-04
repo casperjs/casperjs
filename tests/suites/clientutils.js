@@ -162,22 +162,38 @@ casper.test.begin('ClientUtils.getElementInfo() tests', 10, function(test) {
     test.done();
 });
 
-casper.test.begin('ClientUtils.getElementsInfo() tests', 10, function(test) {
+casper.test.begin('ClientUtils.getElementsInfo() tests', 20, function(test) {
     casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a><a href="plap" class="plip plup"><i>puf</i></a>';
-    var info = casper.getElementsInfo('a.plip')[1];
-    test.assertEquals(info.nodeName, 'a', 'ClientUtils.getElementsInfo() retrieves element name');
-    test.assertEquals(info.attributes, {
+    var info = casper.getElementsInfo('a.plip');
+
+    test.assertEquals(info[0].nodeName, 'a', 'ClientUtils.getElementsInfo() retrieves first element name');
+    test.assertEquals(info[0].attributes, {
+        'href': 'plop',
+        'class': 'plip plup'
+    }, 'ClientUtils.getElementsInfo() retrieves first element attributes');
+    test.assertEquals(info[0].html, '<i>paf</i>', 'ClientUtils.getElementsInfo() retrieves first element html content');
+    test.assertEquals(info[0].text, 'paf', 'ClientUtils.getElementsInfo() retrieves first element text');
+    test.assert(info[0].x > 0, 'ClientUtils.getElementsInfo() retrieves first element x pos');
+    test.assert(info[0].y > 0, 'ClientUtils.getElementsInfo() retrieves first element y pos');
+    test.assert(info[0].width > 0, 'ClientUtils.getElementsInfo() retrieves first element width');
+    test.assert(info[0].height > 0, 'ClientUtils.getElementsInfo() retrieves first element height');
+    test.assert(info[0].visible, 'ClientUtils.getElementsInfo() retrieves first element visibility');
+    test.assertEquals(info[0].tag, '<a href="plop" class="plip plup"><i>paf</i></a>',
+        'ClientUtils.getElementsInfo() retrieves first element whole tag contents');
+
+    test.assertEquals(info[1].nodeName, 'a', 'ClientUtils.getElementsInfo() retrieves second element name');
+    test.assertEquals(info[1].attributes, {
         'href': 'plap',
         'class': 'plip plup'
-    }, 'ClientUtils.getElementsInfo() retrieves element attributes');
-    test.assertEquals(info.html, '<i>puf</i>', 'ClientUtils.getElementsInfo() retrieves element html content');
-    test.assertEquals(info.text, 'puf', 'ClientUtils.getElementsInfo() retrieves element text');
-    test.assert(info.x > 0, 'ClientUtils.getElementsInfo() retrieves element x pos');
-    test.assert(info.y > 0, 'ClientUtils.getElementsInfo() retrieves element y pos');
-    test.assert(info.width > 0, 'ClientUtils.getElementsInfo() retrieves element width');
-    test.assert(info.height > 0, 'ClientUtils.getElementsInfo() retrieves element height');
-    test.assert(info.visible, 'ClientUtils.getElementsInfo() retrieves element visibility');
-    test.assertEquals(info.tag, '<a href="plap" class="plip plup"><i>puf</i></a>',
-        'ClientUtils.getElementsInfo() retrieves element whole tag contents');
+    }, 'ClientUtils.getElementsInfo() retrieves second element attributes');
+    test.assertEquals(info[1].html, '<i>puf</i>', 'ClientUtils.getElementsInfo() retrieves second element html content');
+    test.assertEquals(info[1].text, 'puf', 'ClientUtils.getElementsInfo() retrieves second element text');
+    test.assert(info[1].x > 0, 'ClientUtils.getElementsInfo() retrieves second element x pos');
+    test.assert(info[1].y > 0, 'ClientUtils.getElementsInfo() retrieves second element y pos');
+    test.assert(info[1].width > 0, 'ClientUtils.getElementsInfo() retrieves second element width');
+    test.assert(info[1].height > 0, 'ClientUtils.getElementsInfo() retrieves second element height');
+    test.assert(info[1].visible, 'ClientUtils.getElementsInfo() retrieves second element visibility');
+    test.assertEquals(info[1].tag, '<a href="plap" class="plip plup"><i>puf</i></a>',
+        'ClientUtils.getElementsInfo() retrieves second element whole tag contents');
     test.done();
 });
