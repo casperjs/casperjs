@@ -1453,7 +1453,7 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         this.click(selector);
     }
     this.page.sendEvent(options.eventType, keys);
-    if (isTextInput) {
+    if (isTextInput && !options.keepFocus) {
         // remove the focus
         this.evaluate(function(selector) {
             __utils__.findOne(selector).blur();

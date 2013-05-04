@@ -8,6 +8,7 @@
         <form action="result.html" enctype="multipart/form-data">
             <input type="text" name="email" placeholder="email">
             <input type="password" name="password" placeholder="password">
+            <input type="text" name="language" placeholder="language">
             <textarea name="content"></textarea>
             <select name="topic">
                 <option>foo</option>
@@ -22,5 +23,66 @@
             <input type="checkbox" name="checklist[]" value="3">
             <input type="submit" name="submit" value="submit">
         </form>
+        <script>
+            (function () {
+                'use strict';
+
+                // El-cheapo autocomplete
+
+                var choices = [
+                        'dutch',
+                        'danish',
+                        'english',
+                        'french',
+                        'german',
+                        'greek',
+                        'irish',
+                        'italian',
+                        'portuguese',
+                        'spanish'
+                    ],
+
+                    blurAutocomplete = function () {
+                        var el = document.getElementById('autocomplete');
+                        if (el) {
+                            el.parentNode.removeChild(el);
+                        }
+                    },
+
+                    input = document.querySelector('input[name="language"]');
+
+                input.onkeyup = function () {
+                    var that = this,
+                        value = this.value,
+                        html = '',
+                        el,
+                        i;
+
+                    for (i = 0; i < choices.length; i += 1) {
+                        if (choices[i].search(value) >= 0) {
+                            html += '<li>' + choices[i] + '</li>';
+                        }
+                    }
+
+                    el = document.getElementById('autocomplete');
+                    if (!el) {
+                        el = document.createElement('ul');
+                        el.setAttribute('id', 'autocomplete');
+                        el.onclick = function (e) {
+                            that.value = e.target.innerHTML;
+                        };
+
+                        document.getElementsByTagName('body')[0].appendChild(el);
+                    }
+
+                    el.innerHTML = html;
+                };
+
+                input.onblur = function () {
+                    window.setTimeout(blurAutocomplete, 200);
+                };
+
+            }());
+        </script>
     </body>
 </html>
