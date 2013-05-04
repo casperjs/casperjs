@@ -112,6 +112,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 - Added [`Casper#bypass`](http://docs.casperjs.org/en/latest/modules/casper.html#bypass), [`Casper#thenBypass`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypass), [`Casper#thenBypassIf`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassif), [`Casper#thenBypassUnless`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassunless) methods
 - Added [`Tester#skip`](http://docs.casperjs.org/en/latest/modules/tester.html#skip) method
 - Added [`Casper#eachThen()`](http://docs.casperjs.org/en/latest/modules/casper.html#eachThen)
+- merged [#427](https://github.com/n1k0/casperjs/issues/427) - Added `keepFocus` option to `Casper#sendKeys()`
 - `cli`: Now dropping an arg or an option will be reflected in their *raw* equivalent
 - `cli.get()` now supports fallback values
 
