@@ -111,6 +111,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
         this.fill('form[action="result.html"]', {
             email:         'chuck@norris.com',
             password:      'chuck',
+            language:      'english',
             content:       'Am watching thou',
             check:         true,
             choice:        'no',
@@ -129,6 +130,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "file": "C:\\fakepath\\README.md", // phantomjs/webkit sets that
             "password": "chuck",
             "submit": "submit",
+            "language": "english",
             "topic": "bar"
         }, 'Casper.getFormValues() retrieves filled values');
     });
@@ -136,6 +138,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
         this.fill('form[action="result.html"]', {
             email:         'chuck@norris.com',
             password:      'chuck',
+            language:      'english',
             content:       'Am watching thou',
             check:         true,
             choice:        'yes',
@@ -153,6 +156,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "email": "chuck@norris.com",
             "file": "C:\\fakepath\\README.md", // phantomjs/webkit sets that
             "password": "chuck",
+            "language": "english",
             "submit": "submit",
             "topic": "bar"
         }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
