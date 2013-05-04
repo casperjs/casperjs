@@ -128,6 +128,24 @@
         };
 
         /**
+         * Checks if a given DOM element is visible in remove page.
+         *
+         * @param Object   element  DOM element
+         * @return Boolean
+         */
+        this.elementVisible = function elementVisible(elem) {
+            try {
+                var comp = window.getComputedStyle(elem, null);
+                return comp.visiblility !== 'hidden' &&
+                       comp.display !== 'none' &&
+                       elem.offsetHeight > 0 &&
+                       elem.offsetWidth > 0;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        /**
          * Base64 encodes a string, even binary ones. Succeeds where
          * window.btoa() fails.
          *
@@ -427,8 +445,8 @@
          */
         this.getElementsInfo = function getElementsInfo(selector) {
             var bounds = this.getElementsBounds(selector);
-            var visibility = this.visible(selector);
-            return Array.prototype.map.call(this.findAll(selector), function(element, index) {
+            var eleVisible = this.elementVisible;
+            return [].map.call(this.findAll(selector), function(element, index) {
                 var attributes = {};
                 [].forEach.call(element.attributes, function(attr) {
                     attributes[attr.name.toLowerCase()] = attr.value;
@@ -443,7 +461,7 @@
                     y: bounds[index].top,
                     width: bounds[index].width,
                     height: bounds[index].height,
-                    visible: visibility
+                    visible: eleVisible(element)
                 };
             });
         };
@@ -801,24 +819,16 @@
         };
 
         /**
-         * Checks if a given DOM element is visible in remote page.
+         * Checks if any element matching a given selector is visible in remote page.
          *
          * @param  String  selector  CSS3 selector
          * @return Boolean
          */
         this.visible = function visible(selector) {
-            try {
-                var elems = this.findAll(selector);
-                return Array.prototype.some.call(elems, function(el) {
-                    var comp = window.getComputedStyle(el, null);
-                    return comp.visibility !== 'hidden' &&
-                           comp.display !== 'none' &&
-                           el.offsetHeight > 0 &&
-                           el.offsetWidth > 0;
-                });
-            } catch (e) {
-                return false;
-            }
+            var eleVisible = this.elementVisible;
+            return [].some.call(this.findAll(selector), function(el) {
+                return eleVisible(el);
+            });
         };
     };
 })(typeof exports === "object" ? exports : window);
