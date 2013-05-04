@@ -136,7 +136,7 @@
         this.elementVisible = function elementVisible(elem) {
             try {
                 var comp = window.getComputedStyle(elem, null);
-                return comp.visiblility !== 'hidden' &&
+                return comp.visibility !== 'hidden' &&
                        comp.display !== 'none' &&
                        elem.offsetHeight > 0 &&
                        elem.offsetWidth > 0;
@@ -825,10 +825,7 @@
          * @return Boolean
          */
         this.visible = function visible(selector) {
-            var eleVisible = this.elementVisible;
-            return [].some.call(this.findAll(selector), function(el) {
-                return eleVisible(el);
-            });
+            return [].some.call(this.findAll(selector), this.elementVisible);
         };
     };
 })(typeof exports === "object" ? exports : window);
