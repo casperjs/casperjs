@@ -59,6 +59,64 @@ casper.test.begin('fill() tests', 15, function(test) {
     });
 });
 
+casper.test.begin('fillSelector() tests', 15, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+
+    casper.start('tests/site/form.html', function() {
+        this.fillSelectors('form[action="result.html"]', {
+            "input[name='email']":          'chuck@norris.com',
+            "input[name='password']":       'chuck',
+            "textarea[name='content']":     'Am watching thou',
+            "input[name='check']":          true,
+            "input[name='choice']":         'no',
+            "select[name='topic']":         'bar',
+            "input[name='file']":           fpath,
+            "input[name='checklist[]']":    ['1', '3']
+            }
+        );
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="email"]').value;
+        }, 'chuck@norris.com', 'Casper.fill() can fill an input[type=text] form field');
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="password"]').value;
+        }, 'chuck', 'Casper.fill() can fill an input[type=password] form field');
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('textarea[name="content"]').value;
+        }, 'Am watching thou', 'Casper.fill() can fill a textarea form field');
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('select[name="topic"]').value;
+        }, 'bar', 'Casper.fill() can pick a value from a select form field');
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="check"]').checked;
+        }, true, 'Casper.fill() can check a form checkbox');
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="choice"][value="no"]').checked;
+        }, true, 'Casper.fill() can check a form radio button 1/2');
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="choice"][value="yes"]').checked;
+        }, false, 'Casper.fill() can check a form radio button 2/2');
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'Casper.fill() can select a file to upload');
+        test.assertEvalEquals(function() {
+            return (__utils__.findOne('input[name="checklist[]"][value="1"]').checked &&
+                   !__utils__.findOne('input[name="checklist[]"][value="2"]').checked &&
+                    __utils__.findOne('input[name="checklist[]"][value="3"]').checked);
+        }, true, 'Casper.fill() can fill a list of checkboxes');
+    });
+    casper.thenClick('input[type="submit"]', function() {
+        test.assertUrlMatch(/email=chuck@norris.com/, 'Casper.fill() input[type=email] field was submitted');
+        test.assertUrlMatch(/password=chuck/, 'Casper.fill() input[type=password] field was submitted');
+        test.assertUrlMatch(/content=Am\+watching\+thou/, 'Casper.fill() textarea field was submitted');
+        test.assertUrlMatch(/check=on/, 'Casper.fill() input[type=checkbox] field was submitted');
+        test.assertUrlMatch(/choice=no/, 'Casper.fill() input[type=radio] field was submitted');
+        test.assertUrlMatch(/topic=bar/, 'Casper.fill() select field was submitted');
+    });
+    casper.run(function() {
+        test.done();
+    });
+});
+
 casper.test.begin('nonexistent fields', 1, function(test) {
     casper.start('tests/site/form.html', function() {
         test.assertRaises(this.fill, ['form[action="result.html"]', {
