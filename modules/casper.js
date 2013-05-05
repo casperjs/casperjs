@@ -746,21 +746,23 @@ Casper.prototype.fetchText = function fetchText(selector) {
 /**
  * Fills a form with provided field values.
  *
- * @param  String  selector  A DOM CSS3/XPath selector to the target form to fill
- * @param  Object  vals      Field values
- * @param  Boolean submit    Submit the form?
+ * @param  String selector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object vals      Field values
+ * @param  Object options   The fill settings (optional)
  */
-Casper.prototype.fill = function fill(selector, vals, submit) {
+Casper.prototype.fillForm = function fillForm(selector, vals, options) {
     "use strict";
+    var submit, selectorFunction;
     this.checkStarted();
-    submit = submit === true ? submit : false;
-    if (!utils.isObject(vals)) {
-        throw new CasperError("Form values must be provided as an object");
-    }
-    this.emit('fill', selector, vals, submit);
-    var fillResults = this.evaluate(function _evaluate(selector, values) {
-       return __utils__.fill(selector, values);
-    }, selector, vals);
+
+    selectorFunction = options && options.selectorFunction;
+    submit = options.submit === true ? options.submit : false;
+
+    this.emit('fill', selector, vals, options);
+
+    var fillResults = this.evaluate(function _evaluate(selector, vals, selectorFunction) {
+       return __utils__.fill(selector, vals, selectorFunction);
+    }, selector, vals, selectorFunction);
     if (!fillResults) {
         throw new CasperError("Unable to fill form");
     } else if (fillResults.errors.length > 0) {
@@ -781,7 +783,7 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
                     if (!fs.exists(file.path)) {
                         throw new CasperError('Cannot upload nonexistent file: ' + file.path);
                     }
-                    var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
+                    var fileFieldSelector = selectorFunction.call(this, file.name, selector).fullSelector;
                     self.page.uploadFile(fileFieldSelector, file.path);
                 });
             })(this);
@@ -808,6 +810,55 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
             }
         }, selector);
     }
+}
+
+/**
+ * Fills a form with provided field values using the Name attribute.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form? 
+ */
+Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
+    "use strict";
+    return this.fillForm(formSelector, vals, {
+        submit: submit,
+        selectorFunction: function _nameSelector(elementName, formSelector) {
+            return {
+                fullSelector: [formSelector, '[name="' + elementName + '"]'].join(' '),
+                elts: (this.findAll ? this.findAll('[name="' + elementName + '"]', formSelector) : null)
+            };
+        }
+    });
+};
+
+/**
+ * Fills a form with provided field values using the Name attribute.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form? 
+ */
+Casper.prototype.fill = Casper.prototype.fillNames
+
+/**
+ * Fills a form with provided field values using CSS3 selectors.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form? 
+ */
+Casper.prototype.fillSelectors = function fillSelectors(formSelector, vals, submit) {
+    "use strict";
+    return this.fillForm(formSelector, vals, {
+        submit: submit,
+        selectorFunction: function _css3Selector(inputSelector, formSelector) {
+            return {
+                fullSelector: [formSelector, inputSelector].join(' '),
+                elts: (this.findAll ? this.findAll(inputSelector, formSelector) : null)
+            };
+        }
+    });
 };
 
 /**

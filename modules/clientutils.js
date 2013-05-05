@@ -194,19 +194,28 @@
         };
 
         /**
-         * Fills a form with provided field values, and optionnaly submits it.
+         * Fills a form with provided field values, and optionally submits it.
          *
-         * @param  HTMLElement|String  form  A form element, or a CSS3 selector to a form element
-         * @param  Object              vals  Field values
-         * @return Object                    An object containing setting result for each field, including file uploads
+         * @param  HTMLElement|String   form            A form element, or a CSS3 selector to a form element
+         * @param  Object               vals            Field values
+         * @param  Function             findFunction    A function to be used for getting the selector for the element or a list of matching elements (optional)
+         * @return Object                               An object containing setting result for each field, including file uploads
          */
-        this.fill = function fill(form, vals) {
+        this.fill = function fill(form, vals, findFunction) {
             /*jshint maxcomplexity:8*/
             var out = {
                 errors: [],
                 fields: [],
                 files:  []
             };
+
+            findFunction = findFunction || function _nameSelector(elementName, formSelector) {
+                return {
+                    fullSelector: [formSelector, '[name="' + elementName + '"]'].join(' '),
+                    elts: this.findAll('[name="' + elementName + '"]', formSelector)
+                };
+            };
+
             if (!(form instanceof HTMLElement) || typeof form === "string") {
                 this.log("attempting to fetch form element from selector: '" + form + "'", "info");
                 try {
@@ -226,7 +235,7 @@
                 if (!vals.hasOwnProperty(name)) {
                     continue;
                 }
-                var field = this.findAll('[name="' + name + '"]', form);
+                var field = findFunction.call(this, name, form).elts;
                 var value = vals[name];
                 if (!field || field.length === 0) {
                     out.errors.push('no field named "' + name + '" in form');
