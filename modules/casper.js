@@ -752,41 +752,51 @@ Casper.prototype.fetchText = function fetchText(selector) {
  */
 Casper.prototype.fillForm = function fillForm(selector, vals, options) {
     "use strict";
-    var submit, selectorFunction;
     this.checkStarted();
 
-    selectorFunction = options && options.selectorFunction;
-    submit = options.submit === true ? options.submit : false;
+    var selectorType = options && options.selectorType || "names",
+        submit = !!(options && options.submit);
 
     this.emit('fill', selector, vals, options);
 
-    var fillResults = this.evaluate(function _evaluate(selector, vals, selectorFunction) {
-       return __utils__.fill(selector, vals, selectorFunction);
-    }, selector, vals, selectorFunction);
+    var fillResults = this.evaluate(function _evaluate(selector, vals, selectorType) {
+        try {
+            return __utils__.fill(selector, vals, selectorType);
+        } catch (exception) {
+            return {exception: exception.toString()};
+        }
+    }, selector, vals, selectorType);
+
     if (!fillResults) {
         throw new CasperError("Unable to fill form");
+    } else if (fillResults && fillResults.exception) {
+        throw new CasperError("Unable to fill form: " + fillResults.exception);
     } else if (fillResults.errors.length > 0) {
         throw new CasperError(f('Errors encountered while filling form: %s',
                               fillResults.errors.join('; ')));
     }
+
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
         if (utils.isObject(selector) && selector.type === 'xpath') {
             this.warn('Filling file upload fields is currently not supported using ' +
                       'XPath selectors; Please use a CSS selector instead.');
         } else {
-            (function _each(self) {
-                fillResults.files.forEach(function _forEach(file) {
-                    if (!file || !file.path) {
-                        return;
-                    }
-                    if (!fs.exists(file.path)) {
-                        throw new CasperError('Cannot upload nonexistent file: ' + file.path);
-                    }
-                    var fileFieldSelector = selectorFunction.call(this, file.name, selector).fullSelector;
-                    self.page.uploadFile(fileFieldSelector, file.path);
-                });
-            })(this);
+            fillResults.files.forEach(function _forEach(file) {
+                if (!file || !file.path) {
+                    return;
+                }
+                if (!fs.exists(file.path)) {
+                    throw new CasperError('Cannot upload nonexistent file: ' + file.path);
+                }
+                var fileFieldSelector;
+                if (file.type === "names") {
+                    fileFieldSelector = [selector, 'input[name="' + file.selector + '"]'].join(' ');
+                } else if (file.type === "css") {
+                    fileFieldSelector = [selector, file.selector].join(' ');
+                }
+                this.page.uploadFile(fileFieldSelector, file.path);
+            }.bind(this));
         }
     }
     // Form submission?
@@ -817,47 +827,52 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
  *
  * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
  * @param  Object  vals          Field values
- * @param  Boolean submit        Submit the form? 
+ * @param  Boolean submit        Submit the form?
  */
 Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
     "use strict";
     return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function _nameSelector(elementName, formSelector) {
-            return {
-                fullSelector: [formSelector, '[name="' + elementName + '"]'].join(' '),
-                elts: (this.findAll ? this.findAll('[name="' + elementName + '"]', formSelector) : null)
-            };
-        }
+        selectorType: 'names'
     });
 };
-
-/**
- * Fills a form with provided field values using the Name attribute.
- *
- * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
- * @param  Object  vals          Field values
- * @param  Boolean submit        Submit the form? 
- */
-Casper.prototype.fill = Casper.prototype.fillNames
 
 /**
  * Fills a form with provided field values using CSS3 selectors.
  *
  * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
  * @param  Object  vals          Field values
- * @param  Boolean submit        Submit the form? 
+ * @param  Boolean submit        Submit the form?
  */
 Casper.prototype.fillSelectors = function fillSelectors(formSelector, vals, submit) {
     "use strict";
     return this.fillForm(formSelector, vals, {
         submit: submit,
-        selectorFunction: function _css3Selector(inputSelector, formSelector) {
-            return {
-                fullSelector: [formSelector, inputSelector].join(' '),
-                elts: (this.findAll ? this.findAll(inputSelector, formSelector) : null)
-            };
-        }
+        selectorType: 'css'
+    });
+};
+
+/**
+ * Fills a form with provided field values using the Name attribute by default.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form?
+ */
+Casper.prototype.fill = Casper.prototype.fillNames;
+
+/**
+ * Fills a form with provided field values using XPath selectors.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form?
+ */
+Casper.prototype.fillXPath = function fillXPath(formSelector, vals, submit) {
+    "use strict";
+    return this.fillForm(formSelector, vals, {
+        submit: submit,
+        selectorType: 'xpath'
     });
 };
 

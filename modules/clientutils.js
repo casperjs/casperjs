@@ -196,24 +196,17 @@
         /**
          * Fills a form with provided field values, and optionally submits it.
          *
-         * @param  HTMLElement|String   form            A form element, or a CSS3 selector to a form element
-         * @param  Object               vals            Field values
-         * @param  Function             findFunction    A function to be used for getting the selector for the element or a list of matching elements (optional)
-         * @return Object                               An object containing setting result for each field, including file uploads
+         * @param  HTMLElement|String  form      A form element, or a CSS3 selector to a form element
+         * @param  Object              vals      Field values
+         * @param  Function            findType  Element finder type (css, names, xpath)
+         * @return Object                        An object containing setting result for each field, including file uploads
          */
-        this.fill = function fill(form, vals, findFunction) {
+        this.fill = function fill(form, vals, findType) {
             /*jshint maxcomplexity:8*/
             var out = {
                 errors: [],
                 fields: [],
                 files:  []
-            };
-
-            findFunction = findFunction || function _nameSelector(elementName, formSelector) {
-                return {
-                    fullSelector: [formSelector, '[name="' + elementName + '"]'].join(' '),
-                    elts: this.findAll('[name="' + elementName + '"]', formSelector)
-                };
             };
 
             if (!(form instanceof HTMLElement) || typeof form === "string") {
@@ -227,30 +220,45 @@
                     }
                 }
             }
+
             if (!form) {
                 out.errors.push("form not found");
                 return out;
             }
-            for (var name in vals) {
-                if (!vals.hasOwnProperty(name)) {
+
+            var finders = {
+                css: function(inputSelector, formSelector) {
+                    return this.findAll(inputSelector, form);
+                },
+                names: function(elementName, formSelector) {
+                    return this.findAll('[name="' + elementName + '"]', form);
+                },
+                xpath: function(xpath, formSelector) {
+                    return this.findAll({type: "xpath", path: xpath}, form);
+                }
+            };
+
+            for (var fieldSelector in vals) {
+                if (!vals.hasOwnProperty(fieldSelector)) {
                     continue;
                 }
-                var field = findFunction.call(this, name, form).elts;
-                var value = vals[name];
+                var field = finders[findType || "names"].call(this, fieldSelector, form),
+                    value = vals[fieldSelector];
                 if (!field || field.length === 0) {
-                    out.errors.push('no field named "' + name + '" in form');
+                    out.errors.push('no field matching ' + findType + ' selector "' + fieldSelector + '" in form');
                     continue;
                 }
                 try {
-                    out.fields[name] = this.setField(field, value);
+                    out.fields[fieldSelector] = this.setField(field, value);
                 } catch (err) {
                     if (err.name === "FileUploadError") {
                         out.files.push({
-                            name: name,
+                            type: findType,
+                            selector: fieldSelector,
                             path: err.path
                         });
-                    } else if(err.name === "FieldNotFound") {
-                        out.errors.push('Form field named "' + name + '" was not found.');
+                    } else if (err.name === "FieldNotFound") {
+                        out.errors.push('Unable to find field element in form: ' + err.toString());
                     } else {
                         out.errors.push(err.toString());
                     }
@@ -680,26 +688,33 @@
             /*jshint maxcomplexity:99 */
             var logValue, fields, out;
             value = logValue = (value || "");
-            if (field instanceof NodeList) {
+
+            if (field instanceof NodeList || field instanceof Array) {
                 fields = field;
                 field = fields[0];
             }
+
             if (!(field instanceof HTMLElement)) {
                 var error = new Error('Invalid field type; only HTMLElement and NodeList are supported');
                 error.name = 'FieldNotFound';
                 throw error;
             }
+
             if (this.options && this.options.safeLogs && field.getAttribute('type') === "password") {
                 // obfuscate password value
                 logValue = new Array(value.length + 1).join("*");
             }
+
             this.log('Set "' + field.getAttribute('name') + '" field value to ' + logValue, "debug");
+
             try {
                 field.focus();
             } catch (e) {
                 this.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
             }
+
             var nodeName = field.nodeName.toLowerCase();
+
             switch (nodeName) {
                 case "input":
                     var type = field.getAttribute('type') || "text";

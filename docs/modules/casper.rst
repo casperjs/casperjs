@@ -839,7 +839,10 @@ Logs a message with an optional level in an optional space. Available levels are
 
 **Signature:** ``fill(String selector, Object values[, Boolean submit])``
 
-Fills the fields of a form with given values and optionally submits it.
+Fills the fields of a form with given values and optionally submits it. Fields
+are referenced by their ``name`` attribute.
+
+.. versionchanged:: 1.1 To use :doc:`CSS3 or XPath selectors <../selectors>` instead, check the `fillSelectors()`_ and `fillXPath()`_ methods.
 
 Example with this sample html form:
 
@@ -883,8 +886,55 @@ A script to fill and submit this form::
 
 .. warning::
 
-   1. The ``fill()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its uploadFile method, hence this limitation.
+   1. The ``fill()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its ``uploadFile()`` method, hence this limitation.
    2. Please Don't use CasperJS nor PhantomJS to send spam, or I'll be calling the Chuck. More seriously, please just don't.
+
+``fillSelectors()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``fillSelectors(String selector, Object values[, Boolean submit])``
+
+.. versionadded:: 1.1
+
+Fills form fields with given values and optionally submits it. Fields
+are referenced by ``CSS3`` selectors::
+
+    casper.start('http://some.tld/contact.form', function() {
+        this.fill('form#contact-form', {
+            'input[name="subject"]':    'I am watching you',
+            'input[name="content"]':    'So be careful.',
+            'input[name="civility"]':   'Mr',
+            'input[name="name"]':       'Chuck Norris',
+            'input[name="email"]':      'chuck@norris.com',
+            'input[name="cc"]':         true,
+            'input[name="attachment"]': '/Users/chuck/roundhousekick.doc'
+        }, true);
+    });
+
+
+``fillXPath()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``fillXPath(String selector, Object values[, Boolean submit])``
+
+.. versionadded:: 1.1
+
+Fills form fields with given values and optionally submits it. While the ``form`` element is always referenced by a CSS3 selector, fields are referenced by ``XPath`` selectors::
+
+    casper.start('http://some.tld/contact.form', function() {
+        this.fill('form#contact-form', {
+            '//input[@name="subject"]':    'I am watching you',
+            '//input[@name="content"]':    'So be careful.',
+            '//input[@name="civility"]':   'Mr',
+            '//input[@name="name"]':       'Chuck Norris',
+            '//input[@name="email"]':      'chuck@norris.com',
+            '//input[@name="cc"]':         true,
+        }, true);
+    });
+
+.. warning::
+
+   The ``fillXPath()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its ``uploadFile()`` method, hence this limitation.
 
 .. index:: URL
 
@@ -1905,6 +1955,7 @@ is changed to a different value before processing the next step. Uses `waitFor()
 -------------------------------------------------------------------------------
 
 **Signature:** ``waitForText(String text[, Function then, Function onTimeout, Number timeout])``
+
 .. versionadded:: 1.0
 
 Waits until the passed text is present in the page contents before processing the immediate next step. Uses `waitFor()`_::
