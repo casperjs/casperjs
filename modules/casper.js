@@ -963,6 +963,25 @@ Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
 };
 
 /**
+ * Retrieves the value of an attribute for each element matching the provided
+ * DOM CSS3/XPath selector.
+ * 
+ * @param  String  selector   A DOM CSS3/XPath selector
+ * @param  String  attribute  The attribute name to lookup
+ * @return Array
+ */
+Casper.prototype.getElementsAttribute =
+Casper.prototype.getElementsAttr = function getElementsAttr(selector, attribute) {
+    "use strict";
+    this.checkStarted();
+    return this.evaluate(function _evaluate(selector, attribute) {
+        return [].map.call(__utils__.findAll(selector), function(element) {
+            return element.getAttribute(attribute);
+        });
+    }, selector, attribute);
+}
+
+/**
  * Retrieves boundaries for a DOM element matching the provided DOM CSS3/XPath selector.
  *
  * @param  String  selector  A DOM CSS3/XPath selector
@@ -997,6 +1016,23 @@ Casper.prototype.getElementInfo = function getElementInfo(selector) {
     }
     return this.evaluate(function(selector) {
         return __utils__.getElementInfo(selector);
+    }, selector);
+};
+
+/**
+ * Retrieves information about the nodes matching the provided selector.
+ *
+ * @param String|Objects  selector  CSS3/XPath selector
+ * @return Array
+ */
+Casper.prototype.getElementsInfo = function getElementsInfo(selector) {
+    "use strict";
+    this.checkStarted();
+    if (!this.exists(selector)) {
+        throw new CasperError(f("Cannot get information from %s: no elements found.", selector));
+    }
+    return this.evaluate(function(selector) {
+        return __utils__.getElementsInfo(selector);
     }, selector);
 };
 

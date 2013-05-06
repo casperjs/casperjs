@@ -972,6 +972,25 @@ Retrieves the value of an attribute on the first element matching the provided :
 
 .. index:: DOM
 
+``getElementsAttribute()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getElementsAttribute(String selector, String attribute)``
+
+.. versionadded:: 1.1
+
+Retrieves the values of an attribute on each element matching the provided :doc:`selector <../selectors>`::
+
+    var casper = require('casper').create();
+
+    casper.start('http://www.google.fr/', function() {
+        require('utils').dump(this.getElementsAttribute('div[title="Google"]', 'title')); // "['Google']"
+    });
+
+    casper.run();
+
+.. index:: DOM
+
 ``getElementBounds()``
 -------------------------------------------------------------------------------
 
@@ -1024,31 +1043,70 @@ It returns an array of objects with four keys: ``top``, ``left``, ``width`` and 
 
 Retrieves information about the first element matching the provided :doc:`selector <../selectors>`::
 
-    casper.start('http://google.com/', function() {
+    casper.start('http://google.fr/', function() {
         require('utils').dump(this.getElementInfo('#hplogo'));
     });
 
 Gives something like::
 
     {
-        "nodeName": "div",
         "attributes": {
-            "dir": "ltr",
-            "title": "Google",
             "align": "left",
+            "dir": "ltr",
             "id": "hplogo",
             "onload": "window.lol&&lol()",
-            "style": "background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px"
+            "style": "height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat",
+            "title": "Google"
         },
-        "tag": "<div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;&amp;lol()\" style=\"background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px\"><div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div></div>",
+        "height": 110,
         "html": "<div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div>",
+        "nodeName": "div",
+        "tag": "<div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;&amp;lol()\" style=\"height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat\"><div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div></div>",
         "text": "France\n",
-        "x": 582.5,
-        "y": 192,
-        "width": 275,
-        "height": 95,
-        "visible": true
+        "visible": true,
+        "width": 276,
+        "x": 62,
+        "y": 76
     }
+
+.. index:: DOM
+
+``getElementsInfo()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getElementsInfo(String selector)``
+
+.. versionadded:: 1.1
+
+Retrieves information about all elements matching the provided :doc:`selector <../selectors>`::
+
+    casper.start('http://google.fr/', function() {
+        require('utils').dump(this.getElementsInfo('#hplogo'));
+    });
+
+Gives something like::
+
+    [
+        {
+            "attributes": {
+                "align": "left",
+                "dir": "ltr",
+                "id": "hplogo",
+                "onload": "window.lol&&lol()",
+                "style": "height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat",
+                "title": "Google"
+            },
+            "height": 110,
+            "html": "<div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div>",
+            "nodeName": "div",
+            "tag": "<div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;&amp;lol()\" style=\"height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat\"><div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div></div>",
+            "text": "France\n",
+            "visible": true,
+            "width": 276,
+            "x": 62,
+            "y": 76
+        }
+    ]
 
 .. index:: Form
 
