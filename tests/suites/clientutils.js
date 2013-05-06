@@ -183,6 +183,7 @@ casper.test.begin('ClientUtils.getElementsInfo() first element tests', 10, funct
 });
 
 casper.test.begin('ClientUtils.getElementsInfo() second element tests', 10, function(test) {
+    casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a><a href="plap" class="plip plup"><i>puf</i></a>';
     var info = casper.getElementsInfo('a.plip');
     test.assertEquals(info[1].nodeName, 'a', 'ClientUtils.getElementsInfo() retrieves second element name');
     test.assertEquals(info[1].attributes, {
