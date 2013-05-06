@@ -2364,13 +2364,17 @@ function createPage(casper) {
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
-    page.onNavigationRequested = function onNavigationRequested(url, type, lock, isMainFrame) {
-        casper.log(f('Navigation requested: url=%s, type=%s, lock=%s, isMainFrame=%s',
-                     url, type, lock, isMainFrame), "debug");
+    page.onNavigationRequested = function onNavigationRequested(url, type, willNavigate, isMainFrame) {
+        casper.log(f('Navigation requested: url=%s, type=%s, willNavigate=%s, isMainFrame=%s',
+                     url, type, willNavigate, isMainFrame), "debug");
         if (isMainFrame && casper.requestUrl !== url) {
             casper.navigationRequested  = true;
+
+            if (willNavigate) {
+                casper.requestUrl = url;
+            }
         }
-        casper.emit('navigation.requested', url, type, lock, isMainFrame);
+        casper.emit('navigation.requested', url, type, willNavigate, isMainFrame);
     };
     page.onPageCreated = function onPageCreated(popupPage) {
         casper.emit('popup.created', popupPage);
