@@ -9,7 +9,6 @@ var service = server.listen(8090, function(request, response) {
     response.close();
 });
 
-
 casper.test.begin('Link Navigation updates response', function(test) {
     casper.start('http://localhost:8090', function(response) {
         casper.click('a');
@@ -21,7 +20,7 @@ casper.test.begin('Link Navigation updates response', function(test) {
             test.assertEquals(
                 response.url,
                 casper.page.url,
-                'response is consisitent with the internal page'
+                'response is consistent with the internal page'
             );
 
         });
@@ -41,7 +40,7 @@ casper.test.begin('Form Submittal updates the response', function(test) {
             test.assertEquals(
                 response.url,
                 casper.page.url,
-                'response is consisitent with the internal page'
+                'response is consistent with the internal page'
             );
         });
     }).run(function() {
@@ -49,4 +48,3 @@ casper.test.begin('Form Submittal updates the response', function(test) {
         server.close();
     });
 });
-

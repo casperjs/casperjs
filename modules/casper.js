@@ -2268,7 +2268,7 @@ function createPage(casper) {
         if (isMainFrame && casper.requestUrl !== url) {
             casper.navigationRequested  = true;
 
-            if(willNavigate) {
+            if (willNavigate) {
                 casper.requestUrl = url;
             }
         }
