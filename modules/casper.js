@@ -2405,13 +2405,13 @@ function createPage(casper) {
         }
         casper.handleReceivedResource(resource);
     };
-    page.onResourceRequested = function onResourceRequested(request) {
-        casper.emit('resource.requested', request);
-        if (request.url === casper.requestUrl) {
+    page.onResourceRequested = function onResourceRequested(requestData, request) {
+        casper.emit('resource.requested', requestData, request);
+        if (requestData.url === casper.requestUrl) {
             casper.emit('page.resource.requested', request);
         }
         if (utils.isFunction(casper.options.onResourceRequested)) {
-            casper.options.onResourceRequested.call(casper, casper, request);
+            casper.options.onResourceRequested.call(casper, casper, requestData, request);
         }
     };
     page.onUrlChanged = function onUrlChanged(url) {
