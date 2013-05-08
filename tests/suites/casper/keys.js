@@ -1,5 +1,7 @@
 /*jshint strict:false*/
 /*global CasperError, casper, console, phantom, require*/
+var utils = require('utils');
+
 casper.test.begin('sendKeys() tests', 3, function(test) {
     casper.start('tests/site/form.html', function() {
         this.sendKeys('input[name="email"]', 'duke@nuk.em');
