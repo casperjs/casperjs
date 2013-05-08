@@ -116,6 +116,7 @@ Last, all the casper test suites have been upgraded to use the new testing featu
 - fixed [#441](https://github.com/n1k0/casperjs/issues/441) - added `--ssl-protocol` option support to the `casperjs` executable
 - Added [`Casper#fillSelectors()`](http://docs.casperjs.org/en/latest/modules/casper.html#fillselectors) and [`Casper#fillXPath()`](http://docs.casperjs.org/en/latest/modules/casper.html#fillxpath)
 - Added [`Casper#getElementsAttribute()`](http://docs.casperjs.org/en/latest/modules/casper.html#getelementsattribute) and [`Casper#getElementsInfo()`](http://docs.casperjs.org/en/latest/modules/casper.html#getelementsinfo)
+- Added support for key modifiers to `Casper#sendKeys()`
 - `cli`: Now dropping an arg or an option will be reflected in their *raw* equivalent
 - `cli.get()` now supports fallback values
 

@@ -965,7 +965,7 @@ Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
 /**
  * Retrieves the value of an attribute for each element matching the provided
  * DOM CSS3/XPath selector.
- * 
+ *
  * @param  String  selector   A DOM CSS3/XPath selector
  * @param  String  attribute  The attribute name to lookup
  * @return Array
@@ -1531,6 +1531,11 @@ Casper.prototype.runStep = function runStep(step) {
 /**
  * Sends keys to given element.
  *
+ * Options:
+ *
+ * - eventType: "keypress", "keyup" or "keydown" (default: "keypress")
+ * - modifiers: a string defining the key modifiers, eg. "alt", "alt+shift"
+ *
  * @param  String  selector  A DOM CSS3 compatible selector
  * @param  String  keys      A string representing the sequence of char codes to send
  * @param  Object  options   Options
@@ -1543,18 +1548,20 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         eventType: 'keypress'
     }, options || {});
     var elemInfos = this.getElementInfo(selector),
-        tag = elemInfos.nodeName.toLowerCase(),
-        type = utils.getPropertyPath(elemInfos, 'attributes.type'),
-        supported = ["color", "date", "datetime", "datetime-local", "email",
-                     "hidden", "month", "number", "password", "range", "search",
-                     "tel", "text", "time", "url", "week"];
-    var isTextInput = false;
+            tag = elemInfos.nodeName.toLowerCase(),
+            type = utils.getPropertyPath(elemInfos, 'attributes.type'),
+            supported = ["color", "date", "datetime", "datetime-local", "email",
+                         "hidden", "month", "number", "password", "range", "search",
+                         "tel", "text", "time", "url", "week"],
+        isTextInput = false;
     if (tag === 'textarea' || (tag === 'input' && supported.indexOf(type) !== -1)) {
         // clicking on the input element brings it focus
         isTextInput = true;
         this.click(selector);
     }
-    this.page.sendEvent(options.eventType, keys);
+    var modifiers = utils.computeModifier(options && options.modifiers,
+                                          this.page.event.modifier)
+    this.page.sendEvent(options.eventType, keys, null, null, modifiers);
     if (isTextInput && !options.keepFocus) {
         // remove the focus
         this.evaluate(function(selector) {

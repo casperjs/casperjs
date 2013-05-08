@@ -17,3 +17,25 @@ casper.test.begin('sendKeys() tests', 3, function(test) {
         test.done();
     });
 });
+
+casper.test.begin('sendKeys() key modifiers tests', 1, function(test) {
+    casper.start().then(function() {
+        this.setContent([
+            '<input>',
+            '<script>var keys = []; window.addEventListener("keypress", function(e) {',
+            '   keys.push({code: e.which, alt: e.altKey, ctrl: e.ctrlKey});',
+            '})</script>'
+        ].join(''));
+        this.sendKeys('input', 'k');
+        this.sendKeys('input', 'k', {modifiers: "ctrl"});
+        this.sendKeys('input', 'k', {modifiers: "ctrl+alt"});
+        test.assertEquals(this.getGlobal('keys'),
+            [
+                {code: 107, alt: false, ctrl: false},
+                {code: 107, alt: false, ctrl: true},
+                {code: 107, alt: true, ctrl: true}
+            ], 'sendKeys() uses key modifiers');
+    }).run(function() {
+        test.done();
+    });
+});

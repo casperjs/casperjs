@@ -1419,12 +1419,37 @@ Sends native keyboard events to the element matching the provided :doc:`selector
         this.click('form.contact input[type="submit"]');
     });
 
-Note that ``sendKeys()`` by default will remove the focus on text input fields, which will typically close autocomplete widgets. If you want to maintain focus, use the ``keepFocus`` option. For example, if using jQuery-UI, you can click on the first autocomplete suggestion using::
+.. versionadded:: 1.1
 
-    casper.then(function() {
-        this.sendKeys('form.contact input#name', 'action', {keepFocus: true});
-        this.click('form.contact ul.ui-autocomplete li.ui-menu-item:first-child a');
-    });
+Options
+~~~~~~~
+
+- ``(Boolean) keepFocus``:
+
+
+  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, us  e   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
+
+      casper.then(function() {
+          this.sendKeys('form.contact input#name', 'action', {keepFocus: true});
+          this.click('form.contact ul.ui-autocomplete li.ui-menu-item:first-  child a');
+      });
+
+- ``(String) modifiers``:
+
+  ``sendKeys()`` accepts a ``modifiers`` option to support key modifiers. The   options is a string representing the composition of modifiers to use,   separated by the ``+`` character::
+
+      casper.then(function() {
+          this.sendKeys('document', 's', {modifiers: 'ctrl+alt+shift'});
+      });
+
+  Available modifiers are:
+
+  - ``ctrl``
+  - ``alt``
+  - ``shift``
+  - ``meta``
+  - ``keypad``
+
 
 .. index:: auth
 

@@ -90,6 +90,30 @@ function clone(o) {
 exports.clone = clone;
 
 /**
+ * Computes a modifier string to its PhantomJS equivalent. A modifier string is
+ * in the form "ctrl+alt+shift".
+ *
+ * @param  String  modifierString  Modifier string, eg. "ctrl+alt+shift"
+ * @param  Object  modifiers       Modifiers definitions
+ * @return Number
+ */
+function computeModifier(modifierString, modifiers) {
+    "use strict";
+    var modifier = 0,
+        checkKey = function(key) {
+            if (key in modifiers) return;
+            throw new CasperError(format('%s is not a supported key modifier', key));
+        };
+    if (!modifierString) return modifier;
+    var keys = modifierString.split('+');
+    keys.forEach(checkKey);
+    return keys.reduce(function(acc, key) {
+        return acc | modifiers[key];
+    }, modifier);
+}
+exports.computeModifier = computeModifier;
+
+/**
  * Dumps a JSON representation of passed value to the console. Used for
  * debugging purpose only.
  *
