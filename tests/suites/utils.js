@@ -52,26 +52,28 @@ casper.test.begin('utils.clone() tests', 2, function(test) {
     test.done();
 });
 
-casper.test.begin('utils.computeModifier() tests', 7, function(test) {
-    var modifiers = require('webpage').create().event.modifier;
-    test.assertType(modifiers, "object");
-    test.assertEquals(utils.computeModifier("", modifiers), 0,
-        'computeModifier() computes a "none" modifier');
-    test.assertEquals(utils.computeModifier("alt", modifiers),
-                      modifiers.alt,
-                     'computeModifier() computes an "alt" modifier');
-    test.assertEquals(utils.computeModifier("ctrl+alt", modifiers),
-                      modifiers.ctrl | modifiers.alt,
-                     'computeModifier() computes a "ctrl+alt" modifier');
-    test.assertEquals(utils.computeModifier("ctrl+alt+shift", modifiers),
-                      modifiers.ctrl | modifiers.alt | modifiers.shift,
-                     'computeModifier() computes a "ctrl+alt+shift" modifier');
-    test.assertThrows(utils.computeModifier, ["chucknorris", modifiers],
-                     'computeModifier() checks for a valid modifier');
-    test.assertThrows(utils.computeModifier, ["chuck+norris", modifiers],
-                     'computeModifier() checks for a valid complex modifier');
-    test.done();
-});
+if (utils.gteVersion(phantom.version, '1.9.0')) {
+    casper.test.begin('utils.computeModifier() tests', 7, function(test) {
+        var modifiers = require('webpage').create().event.modifier;
+        test.assertType(modifiers, "object");
+        test.assertEquals(utils.computeModifier("", modifiers), 0,
+            'computeModifier() computes a "none" modifier');
+        test.assertEquals(utils.computeModifier("alt", modifiers),
+                          modifiers.alt,
+                         'computeModifier() computes an "alt" modifier');
+        test.assertEquals(utils.computeModifier("ctrl+alt", modifiers),
+                          modifiers.ctrl | modifiers.alt,
+                         'computeModifier() computes a "ctrl+alt" modifier');
+        test.assertEquals(utils.computeModifier("ctrl+alt+shift", modifiers),
+                          modifiers.ctrl | modifiers.alt | modifiers.shift,
+                         'computeModifier() computes a "ctrl+alt+shift" modifier');
+        test.assertThrows(utils.computeModifier, ["chucknorris", modifiers],
+                         'computeModifier() checks for a valid modifier');
+        test.assertThrows(utils.computeModifier, ["chuck+norris", modifiers],
+                         'computeModifier() checks for a valid complex modifier');
+        test.done();
+    });
+}
 
 casper.test.begin('equals() tests', 23, function(test) {
     test.assert(utils.equals(null, null), 'equals() null equality');
