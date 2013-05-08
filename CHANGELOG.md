@@ -101,6 +101,18 @@ casper.test.begin("Planning 4 tests", 4, function(test) {
 
 Last, all the casper test suites have been upgraded to use the new testing features, you may want to have a look at the changes.
 
+#### Request abortion
+
+When using PhantomJS >=1.9.0, you can now abort outgoing requests:
+
+```js
+casper.on('page.resource.requested', function(requestData, request) {
+    if (requestData.url.indexOf('http://adserver.com') === 0) {
+        request.abort();
+    }
+});
+```
+
 ### Bugfixes & enhancements
 
 - heavy lifting of casperjs bootstrap script

@@ -273,6 +273,18 @@ Emitted when the HTTP response corresponding to current required url has been re
 
 Emitted when a new HTTP request is performed to open the required url.
 
+.. versionadded:: 1.1
+
+**Arguments:** ``requestData, request``
+
+You can also abort requests::
+
+    casper.on('page.resource.requested', function(requestData, request) {
+        if (requestData.url.indexOf('http://adserver.com') === 0) {
+            request.abort();
+        }
+    });
+
 ``popup.created``
 ~~~~~~~~~~~~~~~~~
 
