@@ -6,8 +6,8 @@ function testUA(ua, match) {
     );
 }
 
-function fetchUA(request) {
-    var headers = request.headers.filter(function(header) {
+function fetchUA(requestData, request) {
+    var headers = requestData.headers.filter(function(header) {
         return header.name === "User-Agent";
     });
     casper.test.assert(headers.length > 0);
