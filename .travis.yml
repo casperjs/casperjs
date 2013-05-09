@@ -6,23 +6,23 @@ branches:
 before_install:
   - wget http://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-i686.tar.bz2
   - tar -xf phantomjs-1.8.2-linux-i686.tar.bz2
-  - sudo mv phantomjs-1.8.2-linux-i686/bin/phantomjs /usr/local/bin/phantomjs182
+  - sudo mv phantomjs-1.8.2-linux-i686/bin/phantomjs /usr/local/phantomjs182
   - wget http://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-i686.tar.bz2
   - tar -xf phantomjs-1.9.0-linux-i686.tar.bz2
-  - sudo mv phantomjs-1.9.0-linux-i686/bin/phantomjs /usr/local/bin/phantomjs190
+  - sudo mv phantomjs-1.9.0-linux-i686/bin/phantomjs /usr/local/phantomjs190
 
 before_script:
   - "npm install -g jshint@1.1.0"
-  - /usr/local/bin/phantomjs182 --version
-  - /usr/local/bin/phantomjs190 --version
+  - /usr/local/phantomjs182 --version
+  - /usr/local/phantomjs190 --version
 
 script:
   - make test
 
 env:
   matrix:
-    - PHANTOMJS_EXECUTABLE="/usr/local/bin/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
-    - PHANTOMJS_EXECUTABLE="/usr/local/bin/phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+    - PHANTOMJS_EXECUTABLE="/usr/local/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+    - PHANTOMJS_EXECUTABLE="/usr/local/phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
 
 notifications:
   irc:
