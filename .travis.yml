@@ -8,12 +8,12 @@ before_install:
   - wget http://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-i686.tar.bz2
   - tar -xvf phantomjs-1.8.2-linux-i686.tar.bz2
   - sudo mv phantomjs-1.8.2-linux-i686/bin/phantomjs bin/phantomjs182
-  - ~/phantomjs182 --version
+  - bin/phantomjs182 --version
   - echo "installing PhantomJS 1.9.0"
   - wget http://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-i686.tar.bz2
   - tar -xvf phantomjs-1.9.0-linux-i686.tar.bz2
   - sudo mv phantomjs-1.9.0-linux-i686/bin/phantomjs bin/phantomjs190
-  - ~/phantomjs190 --version
+  - bin/phantomjs190 --version
 
 before_script:
   - "npm install -g jshint@1.1.0"
