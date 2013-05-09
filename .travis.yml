@@ -5,15 +5,15 @@ branches:
 
 before_install:
   - echo "installing PhantomJS 1.8.2"
-  - wget http://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-i686.tar.bz2
-  - tar -xvf phantomjs-1.8.2-linux-i686.tar.bz2
-  - sudo mv phantomjs-1.8.2-linux-i686/bin/phantomjs bin/phantomjs182
+  - wget http://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-x86_64.tar.bz2
+  - tar -xvf phantomjs-1.8.2-linux-x86_64.tar.bz2
+  - sudo mv phantomjs-1.8.2-linux-x86_64/bin/phantomjs bin/phantomjs182
   - ls -la bin/phantomjs182
   - bin/phantomjs182 --version
   - echo "installing PhantomJS 1.9.0"
-  - wget http://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-i686.tar.bz2
-  - tar -xvf phantomjs-1.9.0-linux-i686.tar.bz2
-  - sudo mv phantomjs-1.9.0-linux-i686/bin/phantomjs bin/phantomjs190
+  - wget http://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-x86_64.tar.bz2
+  - tar -xvf phantomjs-1.9.0-linux-x86_64.tar.bz2
+  - sudo mv phantomjs-1.9.0-linux-x86_64/bin/phantomjs bin/phantomjs190
   - bin/phantomjs190 --version
   - ls -la bin/phantomjs190
 
