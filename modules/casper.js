@@ -1946,7 +1946,11 @@ Casper.prototype.wait = function wait(timeout, then) {
         setTimeout(function _check(self) {
             self.log(f("wait() finished waiting for %dms.", timeout), "info");
             if (then) {
-                then.call(self, self);
+                try {
+                    then.call(self, self);
+                } catch (error) {
+                    self.emit('wait.error', error);
+                }
             }
             self.waitDone();
         }, timeout, this);

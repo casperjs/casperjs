@@ -191,6 +191,7 @@ var Tester = function Tester(casper, options) {
     }
 
     [
+        'wait.error',
         'waitFor.timeout.error',
         'event.error',
         'step.error',
