@@ -2,12 +2,34 @@ branches:
   only:
     - "master"
     - "1.0"
+
+before_install:
+  - echo "installing PhantomJS 1.8.2"
+  - wget http://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-x86_64.tar.bz2
+  - tar -xvf phantomjs-1.8.2-linux-x86_64.tar.bz2
+  - sudo mv phantomjs-1.8.2-linux-x86_64/bin/phantomjs bin/phantomjs182
+  - ls -la bin/phantomjs182
+  - bin/phantomjs182 --version
+  - echo "installing PhantomJS 1.9.0"
+  - wget http://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-x86_64.tar.bz2
+  - tar -xvf phantomjs-1.9.0-linux-x86_64.tar.bz2
+  - sudo mv phantomjs-1.9.0-linux-x86_64/bin/phantomjs bin/phantomjs190
+  - bin/phantomjs190 --version
+  - ls -la bin/phantomjs190
+
 before_script:
   - "npm install -g jshint@1.1.0"
-  - "phantomjs --version"
-  - "export PHANTOMJS_EXECUTABLE='phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes'"
+  - bin/phantomjs182 --version
+  - bin/phantomjs190 --version
+
 script:
   - make test
+
+env:
+  matrix:
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+
 notifications:
   irc:
     channels:
