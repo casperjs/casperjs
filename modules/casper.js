@@ -2067,6 +2067,28 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
 };
 
 /**
+ * Waits for a given url to be loaded.
+ *
+ * @param  String|RegExp  url  The url to wait for
+ * @param  Function         then       The next step to perform (optional)
+ * @param  Function         onTimeout  A callback function to call on timeout (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForUrl = function waitForUrl(url, then, onTimeout, timeout) {
+    "use strict";
+    this.checkStarted();
+    timeout = timeout ? timeout : this.options.waitTimeout;
+    return this.waitFor(function _check() {
+        if (utils.isString(url)) {
+            return this.getCurrentUrl().indexOf(url) !== -1;
+        } else if (utils.isRegExp(url)) {
+            return url.test(this.getCurrentUrl());
+        }
+        throw new CasperError('invalid url argument');
+    }, then, onTimeout, timeout);
+};
+
+/**
  * Waits until an element matching the provided DOM CSS3/XPath selector exists in
  * remote DOM to process a next step.
  *

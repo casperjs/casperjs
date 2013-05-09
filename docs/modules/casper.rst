@@ -1984,6 +1984,25 @@ Wait until a resource that matches the given ``testFx`` is loaded to process a n
 
     casper.run();
 
+.. _casper_waitforurl:
+
+.. index:: URL
+
+``waitForUrl()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForUrl(String|RegExp url[, Function then, Function onTimeout, Number timeout])``
+
+.. versionadded:: 1.1
+
+Waits for the current pahe url to match the provided argument (``String`` or ``RegExp``)::
+
+    casper.start('http://foo/').waitForUrl(/login\.html$/, function() {
+        this.echo('redirected to login.html');
+    });
+
+    casper.run();
+
 .. index:: selector
 
 ``waitForSelector()``

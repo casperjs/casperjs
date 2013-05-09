@@ -136,3 +136,35 @@ casper.test.begin('waitUntilVisible() tests', 2, function(test) {
         test.done();
     });
 });
+
+casper.test.begin('waitForUrl() regexp tests', 1, function(test) {
+    casper.start().thenEvaluate(function() {
+        setTimeout(function() {
+            document.location = './form.html';
+        }, 100);
+    });
+
+    casper.waitForUrl(/form\.html$/, function() {
+        test.pass('Casper.waitForUrl() waits for a given regexp url');
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('waitForUrl() string tests', 1, function(test) {
+    casper.start().thenEvaluate(function() {
+        setTimeout(function() {
+            document.location = './form.html';
+        }, 100);
+    });
+
+    casper.waitForUrl('form.html', function() {
+        test.pass('Casper.waitForUrl() waits for a given string url');
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});

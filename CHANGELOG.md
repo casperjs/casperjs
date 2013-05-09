@@ -129,6 +129,7 @@ casper.on('page.resource.requested', function(requestData, request) {
 - fixed [#452](https://github.com/n1k0/casperjs/pull/452) - allow uppercase http methods in `Casper#open()`
 - Added [`Casper#fillSelectors()`](http://docs.casperjs.org/en/latest/modules/casper.html#fillselectors) and [`Casper#fillXPath()`](http://docs.casperjs.org/en/latest/modules/casper.html#fillxpath)
 - Added [`Casper#getElementsAttribute()`](http://docs.casperjs.org/en/latest/modules/casper.html#getelementsattribute) and [`Casper#getElementsInfo()`](http://docs.casperjs.org/en/latest/modules/casper.html#getelementsinfo)
+- Added [`Casper#waitForUrl()`](http://docs.casperjs.org/en/latest/modules/casper.html#waitforurl)
 - Added support for key modifiers to `Casper#sendKeys()`
 - `cli`: Now dropping an arg or an option will be reflected in their *raw* equivalent
 - `cli.get()` now supports fallback values
