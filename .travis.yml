@@ -18,9 +18,10 @@ before_script:
 script:
   - make test
 
-matrix:
-  - PHANTOMJS_EXECUTABLE="phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
-  - PHANTOMJS_EXECUTABLE="phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+env:
+  matrix:
+    - PHANTOMJS_EXECUTABLE="phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+    - PHANTOMJS_EXECUTABLE="phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
 
 notifications:
   irc:
