@@ -7,3 +7,4 @@ tests/clitests/**
 tests/testdir/**
 tmp
 ./*.js
+./phantomjs*/*
