@@ -13,15 +13,16 @@ before_install:
 
 before_script:
   - "npm install -g jshint@1.1.0"
-  - "phantomjs --version"
+  - /usr/local/bin/phantomjs182 --version
+  - /usr/local/bin/phantomjs190 --version
 
 script:
   - make test
 
 env:
   matrix:
-    - PHANTOMJS_EXECUTABLE="phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
-    - PHANTOMJS_EXECUTABLE="phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+    - PHANTOMJS_EXECUTABLE="/usr/local/bin/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+    - PHANTOMJS_EXECUTABLE="/usr/local/bin/phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
 
 notifications:
   irc:
