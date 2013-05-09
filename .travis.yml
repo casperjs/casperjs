@@ -5,11 +5,15 @@ branches:
 
 before_install:
   - wget http://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-i686.tar.bz2
-  - tar -xf phantomjs-1.8.2-linux-i686.tar.bz2
+  - tar -xvf phantomjs-1.8.2-linux-i686.tar.bz2
+  - ls -la phantomjs-1.8.2-linux-i686/bin/phantomjs
   - sudo mv phantomjs-1.8.2-linux-i686/bin/phantomjs /usr/local/phantomjs182
+  - chmod +x /usr/local/phantomjs182
   - wget http://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-i686.tar.bz2
-  - tar -xf phantomjs-1.9.0-linux-i686.tar.bz2
+  - tar -xvf phantomjs-1.9.0-linux-i686.tar.bz2
+  - ls -la phantomjs-1.9.0-linux-i686/bin/phantomjs
   - sudo mv phantomjs-1.9.0-linux-i686/bin/phantomjs /usr/local/phantomjs190
+  - chmod +x /usr/local/phantomjs190
 
 before_script:
   - "npm install -g jshint@1.1.0"
