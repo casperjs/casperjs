@@ -126,6 +126,7 @@ casper.on('page.resource.requested', function(requestData, request) {
 - Added [`Casper#eachThen()`](http://docs.casperjs.org/en/latest/modules/casper.html#eachThen)
 - merged [#427](https://github.com/n1k0/casperjs/issues/427) - Added `keepFocus` option to `Casper#sendKeys()`
 - fixed [#441](https://github.com/n1k0/casperjs/issues/441) - added `--ssl-protocol` option support to the `casperjs` executable
+- fixed [#452](https://github.com/n1k0/casperjs/pull/452) - allow uppercase http methods in `Casper#open()`
 - Added [`Casper#fillSelectors()`](http://docs.casperjs.org/en/latest/modules/casper.html#fillselectors) and [`Casper#fillXPath()`](http://docs.casperjs.org/en/latest/modules/casper.html#fillxpath)
 - Added [`Casper#getElementsAttribute()`](http://docs.casperjs.org/en/latest/modules/casper.html#getelementsattribute) and [`Casper#getElementsInfo()`](http://docs.casperjs.org/en/latest/modules/casper.html#getelementsinfo)
 - Added support for key modifiers to `Casper#sendKeys()`
