@@ -1548,11 +1548,11 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         eventType: 'keypress'
     }, options || {});
     var elemInfos = this.getElementInfo(selector),
-            tag = elemInfos.nodeName.toLowerCase(),
-            type = utils.getPropertyPath(elemInfos, 'attributes.type'),
-            supported = ["color", "date", "datetime", "datetime-local", "email",
-                         "hidden", "month", "number", "password", "range", "search",
-                         "tel", "text", "time", "url", "week"],
+        tag = elemInfos.nodeName.toLowerCase(),
+        type = utils.getPropertyPath(elemInfos, 'attributes.type'),
+        supported = ["color", "date", "datetime", "datetime-local", "email",
+                     "hidden", "month", "number", "password", "range", "search",
+                     "tel", "text", "time", "url", "week"],
         isTextInput = false;
     if (tag === 'textarea' || (tag === 'input' && supported.indexOf(type) !== -1)) {
         // clicking on the input element brings it focus
