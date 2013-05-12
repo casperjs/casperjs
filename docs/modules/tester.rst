@@ -761,6 +761,31 @@ Render test results, save results in an XUnit formatted file, and optionally exi
 
    This method is not to be called when using the ``casperjs test`` command (see documentation for :doc:`testing <../testing>`), where it's done automatically for you.
 
+``setUp()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``setUp([Function fn])``
+
+Defines a function which will be executed before every test defined using `begin()`_::
+
+    casper.test.setUp(function() {
+        casper.start().userAgent('Mosaic 0.1');
+    });
+
+To perform asynchronous operations, use the ``done`` argument::
+
+    casper.test.setUp(function(done) {
+        casper.start('http://foo').then(function() {
+            // ...
+        }).run(done);
+    });
+
+.. warning::
+
+   Don't specify the ``done`` argument if you don't intend to use the method asynchronously.
+
+.. seealso:: `tearDown()`_
+
 ``skip()``
 -------------------------------------------------------------------------------
 
@@ -774,3 +799,28 @@ Skips a given number of planned tests::
         test.skip(2, 'Two tests skipped');
         test.done();
     });
+
+``tearDown()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``tearDown([Function fn])``
+
+Defines a function which will be executed before after every test defined using `begin()`_::
+
+    casper.test.tearDown(function() {
+        casper.echo('See ya');
+    });
+
+To perform asynchronous operations, use the ``done`` argument::
+
+    casper.test.tearDown(function(done) {
+        casper.start('http://foo/goodbye').then(function() {
+            // ...
+        }).run(done);
+    });
+
+.. warning::
+
+   Don't specify the ``done`` argument if you don't intend to use the method asynchronously.
+
+.. seealso:: `setUp()`_

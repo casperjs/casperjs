@@ -66,7 +66,37 @@ casper.test.begin('Casperjs.org is navigable', 2, function suite(test) {
 });
 ```
 
-`Tester#begin()` has also `setUp()` and `tearDown()` capabilities if you pass it a configuration object instead of a function:
+[`Tester#setUp()`](docs.casperjs.org/en/latest/modules/tester.html#setup) and [`Tester#tearDown()`](docs.casperjs.org/en/latest/modules/tester.html#teardown) methods have been also added in order to ease the definition of operations to be performed before and after each test defined using `Tester#begin()`:
+
+```js
+casper.test.setUp(function() {
+    console.log('executed before each test');
+});
+
+casper.test.tearDown(function() {
+    console.log('executed after each test');
+});
+```
+
+Both can work asynchronously as well of you define the `done` argument:
+
+```js
+casper.test.setUp(function(done) {
+    setTimeout(function() {
+        console.log('asynchronously executed before each test');
+        done();
+    }, 1000);
+});
+
+casper.test.tearDown(function(done) {
+    setTimeout(function() {
+        console.log('asynchronously executed after each test');
+        done();
+    }, 1000);
+});
+```
+
+`Tester#begin()` itself has also local `setUp()` and `tearDown()` capabilities if you pass it a configuration object instead of a function:
 
 ```js
 casper.test.begin('range tests', 1, {
@@ -75,9 +105,11 @@ casper.test.begin('range tests', 1, {
     setUp: function(test) {
         this.range.push(3);
     },
+
     tearDown: function(test) {
         range = [];
     },
+
     test: function(test) {
         test.assertEquals(range.length, 3);
         test.done();
@@ -85,7 +117,7 @@ casper.test.begin('range tests', 1, {
 });
 ```
 
-Also, scraping and testing are now betterly separated in CasperJS, and bad code is now a bit less bad. That involves breaking up BC on some points though:
+Scraping and testing are now better separated in CasperJS. That involves breaking up BC on some points though:
 
 - The Casper object won't be created with a `test` reference if not invoked using the [`casperjs test` command](http://casperjs.org/testing.html#casper-test-command), therefore the ability to run any test without calling it has been dropped. I know, get over it.
 - Passing the planned number of tests to `casper.done()` has been dropped as well, because `done()` may be never called at all when big troubles happen; rather use the new `begin()` method and provide the expected number of tests using the second argument:
