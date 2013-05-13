@@ -14,4 +14,4 @@ clitest:
 	python tests/clitests/runtests.py
 
 jshint:
-	jshint --config=.jshintconfig .
+	jshint .
