@@ -9,6 +9,9 @@ casper.test.setUp(function() {
 
 casper.test.tearDown(function() {
     tearDown = true;
+    // reset
+    casper.test.setUp();
+    casper.test.tearDown();
 });
 
 casper.test.begin('setUp() tests', 1, function(test) {
@@ -18,8 +21,5 @@ casper.test.begin('setUp() tests', 1, function(test) {
 
 casper.test.begin('tearDown() tests', 1, function(test) {
     test.assertTrue(tearDown, 'Tester.tearDown() executed the tear down function');
-    // reset
-    test.setUp();
-    test.tearDown();
     test.done();
 });

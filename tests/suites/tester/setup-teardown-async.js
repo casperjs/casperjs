@@ -14,6 +14,9 @@ casper.test.tearDown(function(done) {
     setTimeout(function() {
         tearDown = true;
         done();
+        // reset
+        casper.test.setUp();
+        casper.test.tearDown();
     }, 50);
 });
 
@@ -24,8 +27,5 @@ casper.test.begin('setUp() tests', 1, function(test) {
 
 casper.test.begin('tearDown() tests', 1, function(test) {
     test.assertTrue(tearDown, 'Tester.tearDown() executed the async tear down function');
-    // reset
-    test.setUp();
-    test.tearDown();
     test.done();
 });
