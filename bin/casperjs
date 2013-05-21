@@ -9,44 +9,70 @@ def resolve(path):
         return resolve(path)
     return path
 
-PHANTOMJS_NATIVE_ARGS = [
-    'cookies-file',
-    'config',
-    'debug',
-    'disk-cache',
-    'ignore-ssl-errors',
-    'load-images',
-    'load-plugins',
-    'local-storage-path',
-    'local-storage-quota',
-    'local-to-remote-url-access',
-    'max-disk-cache-size',
-    'output-encoding',
-    'proxy',
-    'proxy-auth',
-    'proxy-type',
-    'remote-debugger-port',
-    'remote-debugger-autorun',
-    'script-encoding',
-    'ssl-protocol',
-    'web-security',
-]
+SUPPORTED_ENGINES = {
+    'phantomjs' : {
+        'native_args': [
+            'cookies-file',
+            'config',
+            'debug',
+            'disk-cache',
+            'ignore-ssl-errors',
+            'load-images',
+            'load-plugins',
+            'local-storage-path',
+            'local-storage-quota',
+            'local-to-remote-url-access',
+            'max-disk-cache-size',
+            'output-encoding',
+            'proxy',
+            'proxy-auth',
+            'proxy-type',
+            'remote-debugger-port',
+            'remote-debugger-autorun',
+            'script-encoding',
+            'ssl-protocol',
+            'web-security',
+        ],
+        'env_varname': 'PHANTOMJS_EXECUTABLE',
+        'default_exec' : 'phantomjs'
+    }
+}
+
+ENGINE = 'phantomjs'
+ENGINE_ARGS = []
+ENGINE_NATIVE_ARGS = []
+ENGINE_EXECUTABLE = ''
+
 CASPER_ARGS = []
 CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
-PHANTOMJS_ARGS = []
 SYS_ARGS = sys.argv[1:]
+
+# retrieve the engine name
+for arg in SYS_ARGS:
+    if arg.startswith('--engine='):
+        ENGINE = arg[9:].lower()
+        break
+
+if ENGINE in SUPPORTED_ENGINES:
+    ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
+    ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'], SUPPORTED_ENGINES[ENGINE]['default_exec'])
+else:
+    print('Bad engine name. Only phantomjs and slimerjs are supported')
+    sys.exit(1)
+
 
 for arg in SYS_ARGS:
     found = False
-    for native in PHANTOMJS_NATIVE_ARGS:
+    for native in ENGINE_NATIVE_ARGS:
         if arg.startswith('--%s' % native):
-            PHANTOMJS_ARGS.append(arg)
+            ENGINE_ARGS.append(arg)
             found = True
     if not found:
-        CASPER_ARGS.append(arg)
+        if arg.startswith('--engine=') == False:
+            CASPER_ARGS.append(arg)
 
-CASPER_COMMAND = os.environ.get('PHANTOMJS_EXECUTABLE', 'phantomjs').split(' ')
-CASPER_COMMAND.extend(PHANTOMJS_ARGS)
+CASPER_COMMAND = ENGINE_EXECUTABLE.split(' ')
+CASPER_COMMAND.extend(ENGINE_ARGS)
 CASPER_COMMAND.extend([
     os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'),
     '--casper-path=%s' % CASPER_PATH,
