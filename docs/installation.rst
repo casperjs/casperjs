@@ -10,10 +10,14 @@ CasperJS can be installed on most Linuxes, OSX and Windows.
 Prerequisites
 -------------
 
-.. index:: PhantomJS, Python
+.. index:: PhantomJS, Python, SlimerJS
 
 - PhantomJS_ 1.8.1 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
 - Python_ 2.6 or greater
+
+.. versionadded:: 1.1
+
+- Experimental: SlimerJS_ 0.7 or greater to run your tests against Gecko (Firefox) instead of Webkit.
 
 .. note::
 
@@ -167,3 +171,4 @@ Known Bugs & Limitations
 
 .. _PhantomJS: http://phantomjs.org/
 .. _Python: http://python.org/
+.. _SlimerJS: http://slimerjs.org/

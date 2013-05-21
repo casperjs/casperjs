@@ -31,11 +31,56 @@ SUPPORTED_ENGINES = {
             'remote-debugger-autorun',
             'script-encoding',
             'ssl-protocol',
+            'ssl-certificates-path',
             'web-security',
+            'webdriver',
+            'webdriver-logfile',
+            'webdriver-loglevel'
+            'webdriver-selenium-grid-hub',
+            'wd',
+            'w',
         ],
         'env_varname': 'PHANTOMJS_EXECUTABLE',
         'default_exec' : 'phantomjs'
-    }
+    },
+    'slimerjs': {
+        'native_args': [
+            'P',
+            'jsconsole',
+            'CreateProfile',
+            'profile',
+            #phantomjs options
+            'cookies-file',
+            'config',
+            'debug',
+            'disk-cache',
+            'ignore-ssl-errors',
+            'load-images',
+            'load-plugins',
+            'local-storage-path',
+            'local-storage-quota',
+            'local-to-remote-url-access',
+            'max-disk-cache-size',
+            'output-encoding',
+            'proxy',
+            'proxy-auth',
+            'proxy-type',
+            'remote-debugger-port',
+            'remote-debugger-autorun',
+            'script-encoding',
+            'ssl-protocol',
+            'ssl-certificates-path',
+            'web-security',
+            'webdriver',
+            'webdriver-logfile',
+            'webdriver-loglevel'
+            'webdriver-selenium-grid-hub',
+            'wd',
+            'w',
+        ],
+        'env_varname': 'SLIMERJS_EXECUTABLE',
+        'default_exec' : 'slimerjs'
+    },
 }
 
 ENGINE = 'phantomjs'

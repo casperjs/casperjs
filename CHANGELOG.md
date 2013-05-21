@@ -148,6 +148,7 @@ casper.on('page.resource.requested', function(requestData, request) {
 ### Bugfixes & enhancements
 
 - heavy lifting of casperjs bootstrap script
+- closed [#482](https://github.com/n1k0/casperjs/issues/482) - support of Gecko (Firefox's engine) with [SlimerJS](http://slimerjs.org): new option --engine=slimerjs (experimental)
 - fixed [#387](https://github.com/n1k0/casperjs/issues/387) - Setting viewport isn't quite synchronous
 - fixed [#410](https://github.com/n1k0/casperjs/issues/410) - trigger `mousedown` and `mousedown` events on click
 - fixed [#433](https://github.com/n1k0/casperjs/issues/433) - `assertField("field", "")` will always pass even though the `field` doesn't exist
