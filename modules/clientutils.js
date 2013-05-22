@@ -705,9 +705,12 @@
                 dataList = [];
             method = method && method.toUpperCase() || "GET";
             var contentType = settings && settings.contentType || "application/x-www-form-urlencoded";
+            var mimeType = settings && settings.mimeType || "text/plain; charset=x-user-defined";
+            var overrideMimeType = (settings && 'overrideMimeType' in settings) ? settings.overrideMimeType : true;
             xhr.open(method, url, !!async);
             this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
-            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+            if (overrideMimeType)
+                xhr.overrideMimeType(mimeType);
             if (method === "POST") {
                 if (typeof data === "object") {
                     for (var k in data) {
