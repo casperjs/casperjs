@@ -29,7 +29,7 @@
  */
 
 /*global console, phantom, require:true*/
-/*jshint maxstatements:30, maxcomplexity:10*/
+/*jshint maxstatements:33, maxcomplexity:10*/
 
 // phantom check
 if (!phantom) {
@@ -299,8 +299,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         require.paths.push(fs.workingDirectory);
 
         // declare a dummy patchRequire function
-        require.globals.patchRequire = global.patchRequire
-                                     = function(req) { return req;}
+        require.globals.patchRequire = global.patchRequire = function(req) { return req;};
     }
     else {
         // patch require
