@@ -40,7 +40,7 @@ casper.echo("Let the match begin between \"" + (terms.join('", "')) + "\"!");
 casper.start("http://google.fr/");
 
 casper.each(terms, function(casper, term, i) {
-    this.echo('Fecthing score for ' + term);
+    this.echo('Fetching score for ' + term);
     this.then(function() {
         this.fill('form[action="/search"]', {q: term}, true);
     });
