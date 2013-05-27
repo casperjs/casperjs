@@ -667,7 +667,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     this.injectClientUtils();
     // function context
     if (arguments.length === 1) {
-        return this.page.evaluate(fn);
+        return utils.clone(this.page.evaluate(fn));
     } else if (arguments.length === 2) {
         // check for closure signature if it matches context
         if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
@@ -679,7 +679,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         // phantomjs-style signature
         context = [].slice.call(arguments).slice(1);
     }
-    return this.page.evaluate.apply(this.page, [fn].concat(context));
+    return utils.clone(this.page.evaluate.apply(this.page, [fn].concat(context)));
 };
 
 /**
