@@ -28,8 +28,13 @@
  *
  */
 
-/*global console, phantom, require:true*/
+/*global process, console, phantom, require:true*/
 /*jshint maxstatements:30, maxcomplexity:10*/
+
+// node check
+if (process && process.title === "node") {
+    console.error('CasperJS cannot be executed within a nodejs environment');
+}
 
 // phantom check
 if (!phantom) {
