@@ -34,6 +34,7 @@
 // node check
 if (process && process.title === "node") {
     console.error('CasperJS cannot be executed within a nodejs environment');
+    process.exit(1);
 }
 
 // phantom check
