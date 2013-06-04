@@ -44,7 +44,7 @@ var f = utils.format;
 
 
 var defaultUserAgent = phantom.defaultPageSettings.userAgent
-    .replace('PhantomJS', f("CasperJS/%s", phantom.casperVersion) + '+Phantomjs');
+    .replace(/(PhantomJS|SlimerJS)/, f("CasperJS/%s", phantom.casperVersion) + '+$&');
 
 exports.create = function create(options) {
     "use strict";
