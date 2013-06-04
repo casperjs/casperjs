@@ -28,7 +28,7 @@
  *
  */
 
-/*global CasperError console exports phantom require __utils__*/
+/*global CasperError, console, exports, phantom, require, __utils__*/
 
 var colorizer = require('colorizer');
 var events = require('events');
@@ -726,6 +726,12 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
             var method = (form.getAttribute('method') || "GET").toUpperCase();
             var action = form.getAttribute('action') || "unknown";
             __utils__.log('submitting form to ' + action + ', HTTP ' + method, 'info');
+            var event = document.createEvent('Event');
+            event.initEvent('submit', true, true);
+            if (!form.dispatchEvent(event)) {
+                __utils__.log('unable to submit form', 'warning');
+                return;
+            }
             if (typeof form.submit === "function") {
                 form.submit();
             } else {
@@ -818,7 +824,7 @@ Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector, attribute) {
-        return document.querySelector(selector).getAttribute(attribute);
+        return __utils__.findOne(selector).getAttribute(attribute);
     }, selector, attribute);
 };
 
@@ -1294,7 +1300,7 @@ Casper.prototype.run = function run(onComplete, time) {
     }
     this.log(f("Running suite: %d step%s", this.steps.length, this.steps.length > 1 ? "s" : ""), "info");
     this.emit('run.start');
-    this.checker = setInterval(this.checkStep, (time ? time: 100), this, onComplete);
+    this.checker = setInterval(this.checkStep, (time ? time: 10), this, onComplete);
     return this;
 };
 
@@ -1731,7 +1737,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
                 }
                 clearInterval(interval);
             }
-        }, 100, this, testFx, timeout, onTimeout);
+        }, 10, this, testFx, timeout, onTimeout);
     });
 };
 
@@ -2011,9 +2017,10 @@ function createPage(casper) {
         if (logTest && logTest.length === 3) {
             logLevel = logTest[1];
             msg = logTest[2];
+            casper.log(msg, logLevel, "remote");
+        } else {
+            casper.emit('remote.message', msg);
         }
-        casper.log(msg, logLevel, "remote");
-        casper.emit('remote.message', msg);
     };
     page.onError = function onError(msg, trace) {
         casper.emit('page.error', msg, trace);

@@ -1098,7 +1098,7 @@ Tester.prototype.runSuites = function runSuites() {
             self.passesTime = [];
             self.failuresTime = [];
         }
-    }, 100, this);
+    }, 10, this);
 };
 
 /**
