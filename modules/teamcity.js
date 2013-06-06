@@ -64,6 +64,29 @@ function generateClassName(classname) {
     return script || "unknown";
 }
 
+
+function escapeTeamCityText(text) {
+    text = text.replace(/\|/g,"||");
+    text = text.replace(/\'/g,"|'");
+    text = text.replace(/\n/g,"|n");
+    text = text.replace(/\r/g,"|r");
+    text = text.replace(/\[/g,"|[");
+    text = text.replace(/\]/g,"|]");
+    return text;
+}
+
+function getTeamCityNowDate()
+{
+    var date = new Date();
+    return date.toISOString().replace("Z","+0000");;
+}
+
+function getTeamCityEarlierDate(duration)
+{
+    var date = new Date(new Date() - duration);
+    return date.toISOString().replace("Z","+0000");
+}
+
 /**
  * Creates a XUnit instance
  *
@@ -91,8 +114,8 @@ exports.TeamCityExporter = TeamCityExporter;
  */
 TeamCityExporter.prototype.addSuccess = function addSuccess(classname, name, duration) {
     "use strict";
-    console.log("##teamcity[testStarted name='" + name + "' captureStandardOutput='false']");
-    console.log("##teamcity[testFinished name='" + name + "' duration='" + duration + "']");
+    console.log("##teamcity[testStarted name='" + escapeTeamCityText(name) + "' captureStandardOutput='false' timestamp='" + getTeamCityEarlierDate(duration) + "' ]");
+    console.log("##teamcity[testFinished name='" + escapeTeamCityText(name) + "' duration='" + duration + "' timestamp='" + getTeamCityNowDate() + "']");
 };
 
 /**
@@ -126,19 +149,19 @@ TeamCityExporter.prototype.addFailure = function addFailure(classname, name, mes
         }
     }
 
-    console.log("##teamcity[testStarted name='" + name + "' captureStandardOutput='false']");
-    console.log("##teamcity[testFailed name='" + name + "' message='" + message +"' details='" + details + "']");
-    console.log("##teamcity[testFinished name='" + name + "' duration='" + duration + "']");
+    console.log("##teamcity[testStarted name='" + escapeTeamCityText(name) + "' captureStandardOutput='false' timestamp='" + getTeamCityEarlierDate(duration) + "']");
+    console.log("##teamcity[testFailed name='" + escapeTeamCityText(name) + "' message='" + escapeTeamCityText(message) +"' details='" + escapeTeamCityText(details) + "' timestamp='" + getTeamCityNowDate() + "']");
+    console.log("##teamcity[testFinished name='" + escapeTeamCityText(name) + "' duration='" + duration + "' timestamp='" + getTeamCityNowDate() + "']");
 };
 
 TeamCityExporter.prototype.fileStarted = function (filename) {
     var suitename = generateClassName(filename);
-    console.log("##teamcity[testSuiteStarted name='" + suitename + "']");
+    console.log("##teamcity[testSuiteStarted name='" + escapeTeamCityText(suitename) + "' timestamp='" + getTeamCityNowDate() + "']");
 };
 
 TeamCityExporter.prototype.fileFinished = function (filename) {
     var suitename = generateClassName(filename);
-    console.log("##teamcity[testSuiteFinished name='" + suitename + "']");
+    console.log("##teamcity[testSuiteFinished name='" + escapeTeamCityText(suitename) + "' timestamp='" + getTeamCityNowDate() + "']");
 };
 
 TeamCityExporter.prototype.setSuiteDuration = function setSuiteDuration(duration) {    

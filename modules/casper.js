@@ -1315,6 +1315,7 @@ Casper.prototype.runStep = function runStep(step) {
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true;
     var stepInfo = f("Step %d/%d", this.step, this.steps.length);
     var stepResult;
+    var start = new Date().getTime();
     if (!skipLog && /^http/.test(this.getCurrentUrl())) {
         this.log(stepInfo + f(' %s (HTTP %d)', this.getCurrentUrl(), this.currentHTTPStatus), "info");
     }
@@ -1338,7 +1339,8 @@ Casper.prototype.runStep = function runStep(step) {
     }
     if (!skipLog) {
         this.emit('step.complete', stepResult);
-        this.log(stepInfo + f(": done in %dms.", new Date().getTime() - this.startTime), "info");
+        var duration = new Date().getTime() - start;
+        this.log(stepInfo + f(": done in %dms.", duration), "info");
     }
 };
 
