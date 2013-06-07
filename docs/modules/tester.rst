@@ -206,7 +206,7 @@ Asserts that current `HTTP status code <http://www.w3.org/Protocols/rfc2616/rfc2
 
 Asserts that a provided string matches a provided javascript ``RegExp`` pattern::
 
-    casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris' first name is Chuck');
+    casper.test.assertMatch('Chuck Norris', /^chuck/i, 'Chuck Norris\' first name is Chuck');
 
 .. seealso::
 
