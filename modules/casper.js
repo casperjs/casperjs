@@ -139,6 +139,7 @@ var Casper = function Casper(options) {
     this.history = [];
     this.loadInProgress = false;
     this.navigationRequested = false;
+    this.browserInitializing = false;
     this.logFormats = {};
     this.logLevels = ["debug", "info", "warning", "error"];
     this.logStyles = {
@@ -357,7 +358,7 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
-    if (self.pendingWait || self.loadInProgress || self.navigationRequested) {
+    if (self.pendingWait || self.loadInProgress || self.navigationRequested || self.browserInitializing) {
         return;
     }
     var step = self.steps[self.step++];
@@ -1380,6 +1381,7 @@ Casper.prototype.open = function open(location, settings) {
     // custom headers
     this.page.customHeaders = utils.mergeObjects(utils.clone(baseCustomHeaders), customHeaders);
     // perfom request
+    this.browserInitializing = true;
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
         data:      settings.data
@@ -2382,6 +2384,7 @@ function createPage(casper) {
             message += ': ' + casper.requestUrl;
             casper.log(message, "warning");
             casper.navigationRequested = false;
+            casper.browserInitializing = false;
             if (utils.isFunction(casper.options.onLoadError)) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
@@ -2400,6 +2403,7 @@ function createPage(casper) {
     page.onNavigationRequested = function onNavigationRequested(url, type, willNavigate, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, willNavigate=%s, isMainFrame=%s',
                      url, type, willNavigate, isMainFrame), "debug");
+        casper.browserInitializing = false;
         if (isMainFrame && casper.requestUrl !== url) {
             casper.navigationRequested  = true;
 
