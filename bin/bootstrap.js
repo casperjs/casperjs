@@ -306,6 +306,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
         // declare a dummy patchRequire function
         require.globals.patchRequire = global.patchRequire = function(req) { return req;};
+        require.globals.CasperError = CasperError;
     }
     else {
         // patch require
