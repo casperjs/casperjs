@@ -26,11 +26,20 @@ service = server.listen(testServerPort, function(request, response) {
         response.write("404 - NOT FOUND");
     } else {
         var headers = {};
+        var binMode = false;
         if (/js$/.test(pageFile)) {
             headers['Content-Type'] = "application/javascript";
         }
+        else if (/png$/.test(pageFile)) {
+            binMode = true;
+        }
         response.writeHead(200, headers);
-        response.write(fs.read(pageFile));
+        if (binMode) {
+            response.write(fs.read(pageFile, 'b'));
+        }
+        else {
+            response.write(fs.read(pageFile));
+        }
     }
     response.close();
 });
