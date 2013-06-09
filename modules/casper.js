@@ -2366,6 +2366,9 @@ function createPage(casper) {
         }
     };
     page.onLoadStarted = function onLoadStarted() {
+        // in some case, there is no navigation requested event, so
+        // be sure that browserInitializing is false to not block checkStep()
+        casper.browserInitializing = false;
         casper.loadInProgress = true;
         casper.emit('load.started');
     };
