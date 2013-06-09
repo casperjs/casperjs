@@ -14,6 +14,7 @@ function info(message) {
 }
 
 service = server.listen(testServerPort, function(request, response) {
+    /*jshint maxstatements:20*/
     "use strict";
     var requestPath = request.url;
     if (requestPath.indexOf('?') !== -1) {
