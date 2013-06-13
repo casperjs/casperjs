@@ -1029,7 +1029,7 @@ Tester.prototype.done = function done() {
     /*jshint maxstatements:20, maxcomplexity:20*/
     var planned, config = this.currentSuite && this.currentSuite.config || {};
 
-    if (utils.isNumber(arguments[0])) {
+    if (arguments.length && utils.isNumber(arguments[0])) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
         planned = arguments[0];
     }
@@ -1230,9 +1230,27 @@ Tester.prototype.processAssertionError = function(error) {
         testFile = this.currentTestFile,
         stackEntry;
     try {
-        stackEntry = error.stackArray.filter(function(entry) {
-            return testFile === entry.sourceURL;
-        })[0];
+        if ("stackArray" in error) {
+            // PhantomJS has changed the API of the Error object :-/
+            // https://github.com/ariya/phantomjs/commit/c9cf14f221f58a3daf585c47313da6fced0276bc
+            stackEntry = error.stackArray.filter(function(entry) {
+                return testFile === entry.sourceURL;
+            })[0];
+        }
+        else if ('stack' in error) {
+            var r = /^\s*(.*)@(.*):(\d+)\s*$/gm;
+            var m;
+            while ((m = r.exec(e.stack))) {
+                var sourceURL = m[2];
+                if (sourceURL.indexOf('->') != -1) {
+                    sourceURL = sourceURL.split('->')[1].trim();
+                }
+                if (sourceURL == testFile) {
+                    stackEntry = { sourceURL: sourceURL, line: m[3]}
+                    break;
+                }
+            }
+        }
     } catch (e) {}
     if (stackEntry) {
         result.line = stackEntry.line;
