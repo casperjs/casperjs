@@ -71,7 +71,7 @@ function patchRequire(require, requireDirs) {
     "use strict";
     require('webserver'); // force generation of phantomjs' require.cache for the webserver module
     var fs = require('fs');
-    var phantomBuiltins = ['child_process', 'fs', 'webpage', 'system', 'webserver'];
+    var phantomBuiltins = ['fs', 'webpage', 'system', 'webserver'];
     var phantomRequire = phantom.__orig__require = require;
     var requireCache = {};
     function possiblePaths(path, requireDir) {
