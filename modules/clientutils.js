@@ -28,7 +28,7 @@
  *
  */
 
-/*global console, escape, exports, NodeList, window*/
+/*global console escape exports NodeList window*/
 
 (function(exports) {
     "use strict";
@@ -76,7 +76,7 @@
          * @return string
          */
         this.decode = function decode(str) {
-            /*jshint maxstatements:30, maxcomplexity:30 */
+            /*jshint maxstatements:30 maxcomplexity:30 */
             var c1, c2, c3, c4, i = 0, len = str.length, out = "";
             while (i < len) {
                 do {
@@ -455,13 +455,10 @@
          * Retrieves the value of a form field.
          *
          * @param  String  inputName  The for input name attr value
-         * @param  Object  options    Object with formSelector, optional
          * @return Mixed
          */
-        this.getFieldValue = function getFieldValue(inputName, options) {
-            options = options || {};
+        this.getFieldValue = function getFieldValue(inputName) {
             function getSingleValue(input) {
-                var type;
                 try {
                     type = input.getAttribute('type').toLowerCase();
                 } catch (e) {
@@ -477,7 +474,6 @@
                 return input.checked;
             }
             function getMultipleValues(inputs) {
-                var type;
                 type = inputs[0].getAttribute('type').toLowerCase();
                 if (type === 'radio') {
                     var value;
@@ -495,13 +491,9 @@
                     return values;
                 }
             }
-            var formSelector = '';
-            if (options && options.formSelector) {
-                formSelector = options.formSelector + ' ';
-            }
-            var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
+            var inputs = this.findAll('[name="' + inputName + '"]'), type;
             switch (inputs.length) {
-                case 0:  return undefined;
+                case 0:  return null;
                 case 1:  return getSingleValue(inputs[0]);
                 default: return getMultipleValues(inputs);
             }
@@ -520,7 +512,7 @@
             [].forEach.call(form.elements, function(element) {
                 var name = element.getAttribute('name');
                 if (name && !values[name]) {
-                    values[name] = self.getFieldValue(name, {formSelector: selector});
+                    values[name] = self.getFieldValue(name);
                 }
             });
             return values;

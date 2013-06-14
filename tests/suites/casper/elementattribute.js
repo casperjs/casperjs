@@ -2,13 +2,14 @@
 /*jshint strict:false*/
 var x = require('casper').selectXPath;
 
-casper.test.begin('getElementAttribute() tests', 2, function(test) {
-    casper.start('tests/site/elementattribute.html', function() {
-        test.assertEquals(this.getElementAttribute('.testo', 'data-stuff'),
-            'beautiful string', 'Casper.getElementAttribute() works with a CSS selector');
-        test.assertEquals(this.getElementAttribute(x('//div[@class]'), 'data-stuff'),
-            'beautiful string', 'Casper.getElementAttribute() works with a XPath selector');
-    }).run(function() {
-        test.done();
-    });
+casper.start('tests/site/elementattribute.html', function() {
+    this.test.comment('Casper.getElementAttribute()');
+    this.test.assertEquals(this.getElementAttribute('.testo', 'data-stuff'),
+      'beautiful string', 'Casper.getElementAttribute() works with a CSS selector');
+    this.test.assertEquals(this.getElementAttribute(x('//div[@class]'), 'data-stuff'),
+      'beautiful string', 'Casper.getElementAttribute() works with a XPath selector');
+});
+
+casper.run(function() {
+    this.test.done(2);
 });

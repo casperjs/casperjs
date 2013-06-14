@@ -28,9 +28,8 @@
  *
  */
 
-/*global CasperError, console, exports, phantom, __utils__, patchRequire, require:true*/
+/*global CasperError, console, exports, phantom, require, __utils__*/
 
-var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');
@@ -97,9 +96,6 @@ var Casper = function Casper(options) {
         onPageInitialized:   null,
         onResourceReceived:  null,
         onResourceRequested: null,
-        onRunComplete:       function _onRunComplete() {
-            this.exit();
-        },
         onStepComplete:      null,
         onStepTimeout:       function _onStepTimeout(timeout, stepNum) {
             this.die("Maximum step execution timeout exceeded for step " + stepNum);
@@ -119,21 +115,15 @@ var Casper = function Casper(options) {
         stepTimeout:         null,
         timeout:             null,
         verbose:             false,
-        retryTimeout:        20,
         waitTimeout:         5000
     };
     // options
     this.options = utils.mergeObjects(this.defaults, options);
-    // factories
-    this.cli = phantom.casperArgs;
-    this.options.logLevel = this.cli.get('log-level', this.options.logLevel);
-    this.options.verbose = this.cli.get('direct', this.options.verbose);
-    this.colorizer = this.getColorizer();
-    this.mouse = mouse.create(this);
-    this.popups = pagestack.create();
     // properties
     this.checker = null;
-    this.currentResponse = {};
+    this.cli = phantom.casperArgs;
+    this.colorizer = this.getColorizer();
+    this.currentResponse = undefined;
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = null;
     this.history = [];
@@ -147,8 +137,10 @@ var Casper = function Casper(options) {
         warning: 'COMMENT',
         error:   'ERROR'
     };
+    this.mouse = mouse.create(this);
     this.page = null;
     this.pendingWait = false;
+    this.popups = pagestack.create();
     this.requestUrl = 'about:blank';
     this.resources = [];
     this.result = {
@@ -159,23 +151,13 @@ var Casper = function Casper(options) {
     this.started = false;
     this.step = -1;
     this.steps = [];
-    this.waiters = [];
-    this._test = undefined;
-    this.__defineGetter__('test', function() {
-        if (!phantom.casperTest) {
-            throw new CasperError('casper.test property is only available using the `casperjs test` command');
-        }
-        if (!utils.isObject(this._test)) {
-            this._test = tester.create(this);
-        }
-        return this._test;
-    });
+    this.test = tester.create(this);
 
     // init phantomjs error handler
     this.initErrorHandler();
 
     this.on('error', function(msg, backtrace) {
-        if (/^(Assertion|Termination|TimedOut)Error/.test(msg)) {
+        if (msg === this.test.SKIP_MESSAGE) {
             return;
         }
         var c = this.getColorizer();
@@ -242,21 +224,6 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
     return this.evaluate(function _evaluate(url, method, data) {
         return __utils__.getBase64(url, method, data);
     }, url, method, data);
-};
-
-/**
- * Bypasses `nb` steps.
- *
- * @param  Integer  nb  Number of steps to bypass
- */
-Casper.prototype.bypass = function bypass(nb) {
-    "use strict";
-    var step = this.step,
-        steps = this.steps,
-        last = steps.length;
-    this.checkStarted();
-    this.step = Math.min(step + nb, last);
-    return this;
 };
 
 /**
@@ -362,21 +329,19 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
     }
     var step = self.steps[self.step++];
     if (utils.isFunction(step)) {
-        return self.runStep(step);
-    }
-    self.result.time = new Date().getTime() - self.startTime;
-    self.log(f("Done %s steps in %dms", self.steps.length, self.result.time), "info");
-    clearInterval(self.checker);
-    self.step -= 1;
-    self.emit('run.complete');
-    try {
+        self.runStep(step);
+    } else {
+        self.result.time = new Date().getTime() - self.startTime;
+        self.log(f("Done %s steps in %dms", self.steps.length, self.result.time), "info");
+        clearInterval(self.checker);
+        self.step -= 1;
+        self.emit('run.complete');
         if (utils.isFunction(onComplete)) {
             onComplete.call(self, self);
-        } else if (utils.isFunction(self.options.onRunComplete)) {
-            self.options.onRunComplete.call(self, self);
+        } else {
+            // default behavior is to exit
+            self.exit();
         }
-    } catch (error) {
-        self.emit('complete.error', error);
     }
 };
 
@@ -422,8 +387,7 @@ Casper.prototype.clear = function clear() {
 Casper.prototype.click = function click(selector) {
     "use strict";
     this.checkStarted();
-    var success = this.mouseEvent('mousedown', selector) && this.mouseEvent('mouseup', selector);
-    success = success && this.mouseEvent('click', selector);
+    var success = this.mouseEvent('click', selector);
     this.evaluate(function(selector) {
         var element = __utils__.findOne(selector);
         if (element) {
@@ -568,7 +532,7 @@ Casper.prototype.download = function download(url, targetPath, method, data) {
 
 /**
  * Iterates over the values of a provided array and execute a callback
- * for each item.
+ * for @ item.
  *
  * @param  Array     array
  * @param  Function  fn     Callback: function(self, item, index)
@@ -583,32 +547,6 @@ Casper.prototype.each = function each(array, fn) {
     (function _each(self) {
         array.forEach(function _forEach(item, i) {
             fn.call(self, self, item, i);
-        });
-    })(this);
-    return this;
-};
-
-/**
- * Iterates over the values of a provided array and adds a step
- * for each item.
- *
- * @param  Array     array
- * @param  Function  then   Step: function(response); item will be attached to response.data
- * @return Casper
- */
-Casper.prototype.eachThen = function each(array, then) {
-    "use strict";
-    if (!utils.isArray(array)) {
-        this.log("each() only works with arrays", "error");
-        return this;
-    }
-    (function _each(self) {
-        array.forEach(function _forEach(item, i) {
-            self.then(function() {
-                this.then(this.createStep(then, {
-                    data: item
-                }));
-            });
         });
     })(this);
     return this;
@@ -775,12 +713,6 @@ Casper.prototype.fill = function fill(selector, vals, submit) {
         } else {
             (function _each(self) {
                 fillResults.files.forEach(function _forEach(file) {
-                    if (!file || !file.path) {
-                        return;
-                    }
-                    if (!fs.exists(file.path)) {
-                        throw new CasperError('Cannot upload nonexistent file: ' + file.path);
-                    }
                     var fileFieldSelector = [selector, 'input[name="' + file.name + '"]'].join(' ');
                     self.page.uploadFile(fileFieldSelector, file.path);
                 });
@@ -1049,7 +981,7 @@ Casper.prototype.handleReceivedResource = function(resource) {
         return;
     }
     this.currentHTTPStatus = null;
-    this.currentResponse = {};
+    this.currentResponse = undefined;
     if (utils.isHTTPResource(resource)) {
         this.emit('page.resource.received', resource);
         this.currentResponse = resource;
@@ -1303,7 +1235,6 @@ Casper.prototype.reload = function reload(then) {
     if (utils.isFunction(then)) {
         this.then(this.createStep(then));
     }
-    return this;
 };
 
 /**
@@ -1369,7 +1300,7 @@ Casper.prototype.run = function run(onComplete, time) {
     }
     this.log(f("Running suite: %d step%s", this.steps.length, this.steps.length > 1 ? "s" : ""), "info");
     this.emit('run.start');
-    this.checker = setInterval(this.checkStep, (time ? time: this.options.retryTimeout), this, onComplete);
+    this.checker = setInterval(this.checkStep, (time ? time: 10), this, onComplete);
     return this;
 };
 
@@ -1380,25 +1311,17 @@ Casper.prototype.run = function run(onComplete, time) {
  */
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
-    /*jshint maxstatements:20*/
     this.checkStarted();
-    var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
-        stepInfo = f("Step %s %d/%d", step.name || "anonymous", this.step, this.steps.length),
-        stepResult;
-    function getCurrentSuiteId(casper) {
-        try {
-            return casper.test.getCurrentSuiteId();
-        } catch (e) {
-            return casper.step;
-        }
-    }
+    var skipLog = utils.isObject(step.options) && step.options.skipLog === true;
+    var stepInfo = f("Step %d/%d", this.step, this.steps.length);
+    var stepResult;
     if (!skipLog && /^http/.test(this.getCurrentUrl())) {
         this.log(stepInfo + f(' %s (HTTP %d)', this.getCurrentUrl(), this.currentHTTPStatus), "info");
     }
     if (utils.isNumber(this.options.stepTimeout) && this.options.stepTimeout > 0) {
         var stepTimeoutCheckInterval = setInterval(function _check(self, start, stepNum) {
             if (new Date().getTime() - start > self.options.stepTimeout) {
-                if (getCurrentSuiteId(self) === stepNum) {
+                if ((self.test.currentSuiteNum + "-" + self.step) === stepNum) {
                     self.emit('step.timeout');
                     if (utils.isFunction(self.options.onStepTimeout)) {
                         self.options.onStepTimeout.call(self, self.options.stepTimeout, stepNum);
@@ -1406,19 +1329,12 @@ Casper.prototype.runStep = function runStep(step) {
                 }
                 clearInterval(stepTimeoutCheckInterval);
             }
-        }, this.options.stepTimeout, this, new Date().getTime(), getCurrentSuiteId(this));
+        }, this.options.stepTimeout, this, new Date().getTime(), this.test.currentSuiteNum + "-" + this.step);
     }
     this.emit('step.start', step);
-    if (this.currentResponse) {
-        this.currentResponse.data = step.options && step.options.data || null;
-    }
-    try {
-        stepResult = step.call(this, this.currentResponse);
-        if (utils.isFunction(this.options.onStepComplete)) {
-            this.options.onStepComplete.call(this, this, stepResult);
-        }
-    } catch (err) {
-        this.emit('step.error', err);
+    stepResult = step.call(this, this.currentResponse);
+    if (utils.isFunction(this.options.onStepComplete)) {
+        this.options.onStepComplete.call(this, this, stepResult);
     }
     if (!skipLog) {
         this.emit('step.complete', stepResult);
@@ -1463,19 +1379,6 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
 };
 
 /**
- * Sets current page content.
- *
- * @param  String  content  Desired page content
- * @return Casper
- */
-Casper.prototype.setContent = function setContent(content) {
-    "use strict";
-    this.checkStarted();
-    this.page.content = content;
-    return this;
-};
-
-/**
  * Sets current WebPage instance the credentials for HTTP authentication.
  *
  * @param  String  username
@@ -1503,7 +1406,6 @@ Casper.prototype.start = function start(location, then) {
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
-    this.currentResponse = {};
     this.history = [];
     this.popups = pagestack.create();
     this.steps = [];
@@ -1604,9 +1506,12 @@ Casper.prototype.then = function then(step) {
  * @see    Casper#click
  * @see    Casper#then
  */
-Casper.prototype.thenClick = function thenClick(selector, then) {
+Casper.prototype.thenClick = function thenClick(selector, then, fallbackToHref) {
     "use strict";
     this.checkStarted();
+    if (arguments.length > 2) {
+        this.emit("deprecated", "The thenClick() method does not process the fallbackToHref argument since 0.6");
+    }
     this.then(function _step() {
         this.click(selector);
     });
@@ -1655,54 +1560,6 @@ Casper.prototype.thenOpen = function thenOpen(location, settings, then) {
 };
 
 /**
- * Adds a step which bypasses `nb` steps.
- *
- * @param  Integer  nb  Number of steps to bypass
- */
-Casper.prototype.thenBypass = function thenBypass(nb) {
-    "use strict";
-    return this.then(function _thenBypass() {
-        this.bypass(nb);
-    });
-};
-
-/**
- * Bypass `nb` steps if condition is true.
- *
- * @param  Mixed    condition  Test condition
- * @param  Integer  nb         Number of steps to bypass
- */
-Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
-    "use strict";
-    return this.then(function _thenBypassIf() {
-        if (utils.isFunction(condition)) {
-            condition = condition.call(this);
-        }
-        if (utils.isTruthy(condition)) {
-            this.bypass(nb);
-        }
-    });
-};
-
-/**
- * Bypass `nb` steps if condition is true.
- *
- * @param Mixed    condition  Test condition
- * @param Integer  nb         Number of tests to bypass
- */
-Casper.prototype.thenBypassUnless = function thenBypassUnless(condition, nb) {
-    "use strict";
-    return this.then(function _thenBypassUnless() {
-        if (utils.isFunction(condition)) {
-            condition = condition.call(this);
-        }
-        if (utils.isFalsy(condition)) {
-            this.bypass(nb);
-        }
-    });
-};
-
-/**
  * Adds a new navigation step for opening and evaluate an expression
  * against the DOM retrieved from the provided location.
  *
@@ -1730,22 +1587,6 @@ Casper.prototype.toString = function toString() {
 };
 
 /**
- * Clear all wait processes.
- *
- * @return Casper
- */
-Casper.prototype.unwait = function unwait() {
-    "use strict";
-    this.waiters.forEach(function(interval) {
-        if (interval) {
-            clearInterval(interval);
-        }
-    });
-    this.waiters = [];
-    return this;
-};
-
-/**
  * Sets the user-agent string currently used when requesting urls.
  *
  * @param  String  userAgent  User agent string
@@ -1761,15 +1602,13 @@ Casper.prototype.userAgent = function userAgent(agent) {
 };
 
 /**
- * Changes the current viewport size. That operation is asynchronous as the page
- * has to reflow its contents accordingly.
+ * Changes the current viewport size.
  *
- * @param  Number    width   The viewport width, in pixels
- * @param  Number    height  The viewport height, in pixels
- * @param  Function  then    Next step to process (optional)
+ * @param  Number  width   The viewport width, in pixels
+ * @param  Number  height  The viewport height, in pixels
  * @return Casper
  */
-Casper.prototype.viewport = function viewport(width, height, then) {
+Casper.prototype.viewport = function viewport(width, height) {
     "use strict";
     this.checkStarted();
     if (!utils.isNumber(width) || !utils.isNumber(height) || width <= 0 || height <= 0) {
@@ -1780,7 +1619,7 @@ Casper.prototype.viewport = function viewport(width, height, then) {
         height: height
     };
     this.emit('viewport.changed', [width, height]);
-    return utils.isFunction(then) ? this.then(then) : this;
+    return this;
 };
 
 /**
@@ -1800,8 +1639,7 @@ Casper.prototype.visible = function visible(selector) {
 };
 
 /**
- * Displays a warning message onto the console and logs the event. Also emits a
- * `warn` event with the message passed.
+ * Displays a warning message onto the console and logs the event.
  *
  * @param  String  message
  * @return Casper
@@ -1810,7 +1648,6 @@ Casper.prototype.warn = function warn(message) {
     "use strict";
     this.log(message, "warning", "phantom");
     var formatted = f.apply(null, ["⚠  " + message].concat([].slice.call(arguments, 1)));
-    this.emit('warn', message);
     return this.echo(formatted, 'COMMENT');
 };
 
@@ -1827,19 +1664,19 @@ Casper.prototype.wait = function wait(timeout, then) {
     this.checkStarted();
     timeout = ~~timeout;
     if (timeout < 1) {
-        throw new CasperError("wait() only accepts a positive integer > 0 as a timeout value");
+        this.die("wait() only accepts a positive integer > 0 as a timeout value");
     }
     if (then && !utils.isFunction(then)) {
-        throw new CasperError("wait() a step definition must be a function");
+        this.die("wait() a step definition must be a function");
     }
     return this.then(function _step() {
         this.waitStart();
         setTimeout(function _check(self) {
-            self.log(f("wait() finished waiting for %dms.", timeout), "info");
-            if (then) {
-                then.call(self, self);
-            }
-            self.waitDone();
+          self.log(f("wait() finished waiting for %dms.", timeout), "info");
+          if (then) {
+            then.call(self, self);
+          }
+          self.waitDone();
         }, timeout, this);
     });
 };
@@ -1870,45 +1707,37 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
     this.checkStarted();
     timeout = timeout ? timeout : this.options.waitTimeout;
     if (!utils.isFunction(testFx)) {
-        throw new CasperError("waitFor() needs a test function");
+        this.die("waitFor() needs a test function");
     }
     if (then && !utils.isFunction(then)) {
-        throw new CasperError("waitFor() next step definition must be a function");
+        this.die("waitFor() next step definition must be a function");
     }
     return this.then(function _step() {
         this.waitStart();
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function _check(self, testFx, timeout, onTimeout) {
-            /*jshint maxstatements:20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
-                return;
-            }
-            self.waitDone();
-            if (!condition) {
-                self.log("Casper.waitFor() timeout", "warning");
-                var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
-                self.emit('waitFor.timeout', timeout, onWaitTimeout);
-                clearInterval(interval); // refs #383
-                if (!utils.isFunction(onWaitTimeout)) {
-                    throw new CasperError('Invalid timeout function');
+            } else {
+                self.waitDone();
+                if (!condition) {
+                    self.log("Casper.waitFor() timeout", "warning");
+                    self.emit('waitFor.timeout');
+                    var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
+                    if (!utils.isFunction(onWaitTimeout)) {
+                        throw new CasperError('Invalid timeout function, exiting.');
+                    }
+                    onWaitTimeout.call(self, timeout);
+                } else {
+                    self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
+                    if (then) {
+                        self.then(then);
+                    }
                 }
-                try {
-                    return onWaitTimeout.call(self, timeout);
-                } catch (error) {
-                    self.emit('waitFor.timeout.error', error);
-                } finally {
-                    return;
-                }
+                clearInterval(interval);
             }
-            self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
-            clearInterval(interval);
-            if (then) {
-                self.then(then);
-            }
-        }, this.options.retryTimeout, this, testFx, timeout, onTimeout);
-        this.waiters.push(interval);
+        }, 10, this, testFx, timeout, onTimeout);
     });
 };
 
@@ -1991,26 +1820,6 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
             return pattern.test(content);
         }
         return content.indexOf(pattern) !== -1;
-    }, then, onTimeout, timeout);
-};
-
-/**
- * Waits until the text on an element matching the provided DOM CSS3/XPath selector
- * is changed to a different value.
- *
- * @param String    selector    A DOM CSS3/XPath selector
- * @param Function  then        The next step to preform (optional)
- * @param Function  onTimeout   A callback function to call on timeout (optional)
- * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
- * @return Casper
- */
-Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout, timeout) {
-    "use strict";
-    this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var currentSelectorText = this.fetchText(selector);
-    return this.waitFor(function _check() {
-        return currentSelectorText !== this.fetchText(selector);
     }, then, onTimeout, timeout);
 };
 
@@ -2212,11 +2021,6 @@ function createPage(casper) {
         casper.log(msg, logLevel, "remote");
         casper.emit('remote.message', msg);
     };
-
-    page.onCallback = function onCallback(data){
-        casper.emit('remote.callback',data);
-    };
-
     page.onError = function onError(msg, trace) {
         casper.emit('page.error', msg, trace);
     };
@@ -2261,13 +2065,13 @@ function createPage(casper) {
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
-    page.onNavigationRequested = function onNavigationRequested(url, type, lock, isMainFrame) {
+    page.onNavigationRequested = function onNavigationRequested(url, navigationType, navigationLocked, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, lock=%s, isMainFrame=%s',
-                     url, type, lock, isMainFrame), "debug");
-        if (isMainFrame && casper.requestUrl !== url) {
+                     url, navigationType, navigationLocked, isMainFrame), "debug");
+        if(isMainFrame) {
             casper.navigationRequested  = true;
         }
-        casper.emit('navigation.requested', url, type, lock, isMainFrame);
+        casper.emit('navigation.requested', url, navigationType, navigationLocked, isMainFrame);
     };
     page.onPageCreated = function onPageCreated(popupPage) {
         casper.emit('popup.created', popupPage);

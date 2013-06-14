@@ -1,124 +1,16 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.1
-----------------
+XXXX-XX-XX, v1.0.3
+------------------
 
-This version is yet to be released, and will possibly be tagged as 2.0 as not-so-backward-compatible refactoring occured on the `master` branch. I don't know yet.
-
-### Important Changes & Caveats
-
-#### Minimum PhantomJS version
-
-**PhantomJS 1.8.1 or later is required for 1.1.**
-
-#### `require()` in custom modules
-
-CasperJS 1.1 now internally uses PhantomJS' native `require()` function, but it has side effect if you write your own casperjs modules; in any casperjs module, you now have to use the new global `patchRequire()` function first:
-
-```js
-// casperjs module code
-var require = patchRequire(require);
-// now you can require casperjs builtins
-var utils = require('utils');
-exports = {
-    // ...
-};
-```
-
-**Note:** you don't have to use `patchRequire()` in a standard casperjs script.
-
-#### Testing framework refactoring
-
-A new `Tester.begin()` method has been introduced to help organizing tests better:
-
-```js
-function Cow() {
-    this.mowed = false;
-    this.moo = function moo() {
-        this.mowed = true; // mootable state: don't do that
-        return 'moo!';
-    };
-}
-
-// unit style synchronous test case
-casper.test.begin('Cow can moo', 2, function suite(test) {
-    var cow = new Cow();
-    test.assertEquals(cow.moo(), 'moo!');
-    test.assert(cow.mowed);
-    test.done();
-});
-
-// asynchronous test case
-casper.test.begin('Casperjs.org is navigable', 2, function suite(test) {
-    casper.start('http://casperjs.org/', function() {
-        test.assertTitleMatches(/casperjs/i);
-        this.clickLabel('Testing');
-    });
-
-    casper.then(function() {
-        test.assertUrlMatches(/testing\.html$/);
-    });
-
-    casper.run(function() {
-        test.done();
-    });
-});
-```
-
-`Tester#begin()` has also `setUp()` and `tearDown()` capabilities if you pass it a configuration object instead of a function:
-
-```js
-casper.test.begin('range tests', 1, {
-    range: [1, 2],
-
-    setUp: function(test) {
-        this.range.push(3);
-    },
-    tearDown: function(test) {
-        range = [];
-    },
-    test: function(test) {
-        test.assertEquals(range.length, 3);
-        test.done();
-    }
-});
-```
-
-Also, scraping and testing are now betterly separated in CasperJS, and bad code is now a bit less bad. That involves breaking up BC on some points though:
-
-- The Casper object won't be created with a `test` reference if not invoked using the [`casperjs test` command](http://casperjs.org/testing.html#casper-test-command), therefore the ability to run any test without calling it has been dropped. I know, get over it.
-- Passing the planned number of tests to `casper.done()` has been dropped as well, because `done()` may be never called at all when big troubles happen; rather use the new `begin()` method and provide the expected number of tests using the second argument:
-
-```js
-casper.test.begin("Planning 4 tests", 4, function(test) {
-    [1, 2, 3, 4].forEach(function() {
-        test.assert(true);
-    });
-    test.done();
-});
-```
-
-Last, all the casper test suites have been upgraded to use the new testing features, you may want to have a look at the changes.
-
-### Bugfixes & enhancements
-
-- heavy lifting of casperjs bootstrap script
-- fixed [#387](https://github.com/n1k0/casperjs/issues/387) - Setting viewport isn't quite synchronous
-- fixed [#410](https://github.com/n1k0/casperjs/issues/410) - trigger `mousedown` and `mousedown` events on click
-- fixed [#433](https://github.com/n1k0/casperjs/issues/433) - `assertField("field", "")` will always pass even though the `field` doesn't exist
-- closed [#392](https://github.com/n1k0/casperjs/issues/392) - `--direct` & `--log-level` options available for the `casperjs` executable
-- closed [#350](https://github.com/n1k0/casperjs/issues/350) - Add a [`Casper#waitForSelectorTextChange()`](http://docs.casperjs.org/en/latest/modules/casper.html#waitforselectortextchange) method
-- Added [`Casper#bypass`](http://docs.casperjs.org/en/latest/modules/casper.html#bypass), [`Casper#thenBypass`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypass), [`Casper#thenBypassIf`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassif), [`Casper#thenBypassUnless`](http://docs.casperjs.org/en/latest/modules/casper.html#thenbypassunless) methods
-- Added [`Tester#skip`](http://docs.casperjs.org/en/latest/modules/tester.html#skip) method
-- Added [`Casper#eachThen()`](http://docs.casperjs.org/en/latest/modules/casper.html#eachThen)
-- `cli`: Now dropping an arg or an option will be reflected in their *raw* equivalent
-- `cli.get()` now supports fallback values
+- speeded up tests and `wait*` operations (expect average execution time to be divided by 4)
+- fixed [#414](https://github.com/n1k0/casperjs/issues/414) - better `utils.cleanUrl()`
+- fixed [#438](https://github.com/n1k0/casperjs/issues/438) - fixed `Casper#getElementAttribute()` broken compatibility with XPath selectors
 
 2013-02-08, v1.0.2
 ------------------
 
-- fixed [#370](https://github.com/n1k0/casperjs/pull/370) - mergeObjects failed to deep-clone when the target object did not contain the corresponding key
 - fixed [#375](https://github.com/n1k0/casperjs/pull/375) - Fixes a bug with getting form values for radio inputs, and introduces a minor optimization to avoid processing the same form fields more than once.
 - closed [#373](https://github.com/n1k0/casperjs/issues/373) - added RegExp support to `Casper.waitForText()`
 - fixed [#368](https://github.com/n1k0/casperjs/issues/368) - Remote JS error is thrown when a click target is missing after `click()`
