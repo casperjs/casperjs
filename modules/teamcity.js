@@ -130,7 +130,7 @@ TeamCityExporter.prototype.addFailure = function addFailure(classname, name, mes
     "use strict";
     var message = '', details = '';
     if (type) {
-        message += type + ' failed|n';
+        message += type + ' failed';
     }
     if (values && Object.keys(values).length > 0) {
         for (var vname in values) {
@@ -145,7 +145,7 @@ TeamCityExporter.prototype.addFailure = function addFailure(classname, name, mes
                     comment += '(unserializable value)';
                 }
             }
-            details += comment + '|n';
+            details += comment;
         }
     }
 
