@@ -307,12 +307,14 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         // declare a dummy patchRequire function
         require.globals.patchRequire = global.patchRequire = function(req) { return req;};
         require.globals.CasperError = CasperError;
+        phantom.casperEngine = "slimerjs";
     }
     else {
         // patch require
         global.__require = require;
         global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
         global.require = patchRequire(global.require);
+        phantom.casperEngine = "phantomjs";
     }
 
     // casper cli args
