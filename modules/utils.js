@@ -52,7 +52,13 @@ function betterTypeOf(input) {
             return 'null';
         default:
         try {
-            return Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+            var type = Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+            if (type == 'object'
+                && phantom.casperEngine != "phantomjs"
+                && '__type' in input) {
+                type = input.__type;
+            }
+            return type;
         } catch (e) {
             return typeof input;
         }
