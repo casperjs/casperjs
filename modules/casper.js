@@ -120,7 +120,9 @@ var Casper = function Casper(options) {
         timeout:             null,
         verbose:             false,
         retryTimeout:        20,
-        waitTimeout:         5000
+        waitTimeout:         5000,
+        clipRect : null,
+        viewportSize : null,
     };
     // options
     this.options = utils.mergeObjects(this.defaults, options);
