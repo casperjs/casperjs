@@ -53,9 +53,9 @@ function betterTypeOf(input) {
         default:
         try {
             var type = Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
-            if (type == 'object'
-                && phantom.casperEngine != "phantomjs"
-                && '__type' in input) {
+            if (type === 'object' &&
+                phantom.casperEngine !== "phantomjs" &&
+                '__type' in input) {
                 type = input.__type;
             }
             return type;

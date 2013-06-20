@@ -1219,6 +1219,33 @@ Tester.prototype.pass = function pass(message) {
     });
 };
 
+function getStackEntry(error, testFile) {
+    "use strict";
+    if ("stackArray" in error) {
+        // PhantomJS has changed the API of the Error object :-/
+        // https://github.com/ariya/phantomjs/commit/c9cf14f221f58a3daf585c47313da6fced0276bc
+        return error.stackArray.filter(function(entry) {
+            return testFile === entry.sourceURL;
+        })[0];
+    }
+
+    if (! ('stack' in error))
+        return null;
+
+    var r = /^\s*(.*)@(.*):(\d+)\s*$/gm;
+    var m;
+    while ((m = r.exec(error.stack))) {
+        var sourceURL = m[2];
+        if (sourceURL.indexOf('->') !== -1) {
+            sourceURL = sourceURL.split('->')[1].trim();
+        }
+        if (sourceURL === testFile) {
+            return { sourceURL: sourceURL, line: m[3]}
+        }
+    }
+    return null;
+}
+
 /**
  * Processes an assertion error.
  *
@@ -1230,27 +1257,7 @@ Tester.prototype.processAssertionError = function(error) {
         testFile = this.currentTestFile,
         stackEntry;
     try {
-        if ("stackArray" in error) {
-            // PhantomJS has changed the API of the Error object :-/
-            // https://github.com/ariya/phantomjs/commit/c9cf14f221f58a3daf585c47313da6fced0276bc
-            stackEntry = error.stackArray.filter(function(entry) {
-                return testFile === entry.sourceURL;
-            })[0];
-        }
-        else if ('stack' in error) {
-            var r = /^\s*(.*)@(.*):(\d+)\s*$/gm;
-            var m;
-            while ((m = r.exec(e.stack))) {
-                var sourceURL = m[2];
-                if (sourceURL.indexOf('->') != -1) {
-                    sourceURL = sourceURL.split('->')[1].trim();
-                }
-                if (sourceURL == testFile) {
-                    stackEntry = { sourceURL: sourceURL, line: m[3]}
-                    break;
-                }
-            }
-        }
+        stackEntry = getStackEntry(error, testFile);
     } catch (e) {}
     if (stackEntry) {
         result.line = stackEntry.line;

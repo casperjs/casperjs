@@ -29,7 +29,7 @@
  */
 
 /*global process, console, phantom, require:true*/
-/*jshint maxstatements:33, maxcomplexity:10*/
+/*jshint maxstatements:34, maxcomplexity:10*/
 
 // node check
 if ('process' in this && process.title === "node") {
