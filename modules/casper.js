@@ -2408,7 +2408,23 @@ function createPage(casper) {
                      url, type, willNavigate, isMainFrame), "debug");
         casper.browserInitializing = false;
         if (isMainFrame && casper.requestUrl !== url) {
-            casper.navigationRequested  = true;
+            var currentUrl = casper.requestUrl;
+            var newUrl = url;
+            var pos = currentUrl.indexOf('#')
+            if (pos !== -1) {
+                currentUrl = currentUrl.substring(0, pos);
+            }
+            pos = newUrl.indexOf('#')
+            if (pos !== -1) {
+                newUrl = newUrl.substring(0, pos);
+            }
+            // for URLs that are only different by their hash part
+            // don't turn navigationRequested to true, because
+            // there will not be loadStarted, loadFinished events
+            // so it could cause issues (for exemple, checkStep that
+            // do no execute the next step -> infinite loop on checkStep)
+            if (currentUrl !== newUrl)
+                casper.navigationRequested  = true;
 
             if (willNavigate) {
                 casper.requestUrl = url;
