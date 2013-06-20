@@ -143,8 +143,10 @@ function equals(v1, v2) {
     if (isFunction(v1)) {
         return v1.toString() === v2.toString();
     }
-    if (v1 instanceof Object) {
-        if (!(v2 instanceof Object) || Object.keys(v1).length !== Object.keys(v2).length) {
+    // with Gecko, instanceof is not enough to test object
+    if (v1 instanceof Object || isObject(v1)) {
+        if (!(v2 instanceof Object || isObject(v2)) ||
+            Object.keys(v1).length !== Object.keys(v2).length) {
             return false;
         }
         for (var k in v1) {
