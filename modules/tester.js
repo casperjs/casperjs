@@ -177,7 +177,7 @@ var Tester = function Tester(casper, options) {
         self.casper.unwait();
         if (error instanceof Error) {
             self.processError(error);
-            return self.done();
+            return;
         }
         if (utils.isString(error) && /^(Assertion|Termination|TimedOut)Error/.test(error)) {
             return;
@@ -189,6 +189,10 @@ var Tester = function Tester(casper, options) {
             })[0].line;
         } catch (e) {}
         self.uncaughtError(error, self.currentTestFile, line, backtrace);
+    }
+    
+    function errorHandlerAndDone(error, backtrace) {
+        errorHandler(error, backtrace);
         self.done();
     }
 
@@ -196,11 +200,12 @@ var Tester = function Tester(casper, options) {
         'wait.error',
         'waitFor.timeout.error',
         'event.error',
-        'step.error',
         'complete.error'
     ].forEach(function(event) {
-        self.casper.on(event, errorHandler);
+        self.casper.on(event, errorHandlerAndDone);
     });
+
+    self.casper.on('step.error', errorHandler);
 
     this.casper.on('warn', function(warning) {
         if (self.currentSuite) {
