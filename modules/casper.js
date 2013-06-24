@@ -2437,6 +2437,11 @@ function createPage(casper) {
     page.onPageCreated = function onPageCreated(popupPage) {
         casper.emit('popup.created', popupPage);
         popupPage.onLoadFinished = function onLoadFinished() {
+            // SlimerJS needs this line of code because of issue
+            // https://github.com/laurentj/slimerjs/issues/48
+            // else checkStep turns into an infinite loop
+            // after clicking on an <a target="_blank">
+            casper.navigationRequested  = false;
             casper.popups.push(popupPage);
             casper.emit('popup.loaded', popupPage);
         };
