@@ -21,7 +21,7 @@ casper.test.begin('onclick variants tests', 8, function(test) {
         test.assert(this.click('#test3'), 'Casper.click() can click an `onclick=".*; return false"` link');
         test.assert(this.click('#test4'), 'Casper.click() can click an unobstrusive js handled link');
         var results = this.getGlobal('results');
-        if (phantom.casperEngine == 'slimerjs') {
+        if (phantom.casperEngine === 'slimerjs') {
             // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
             test.skip(1)
         }
@@ -46,7 +46,7 @@ casper.test.begin('clickLabel tests tests', 8, function(test) {
         test.assert(this.clickLabel('test4'),
             'Casper.clickLabel() can click an unobstrusive js handled link');
         var results = this.getGlobal('results');
-        if (phantom.casperEngine == 'slimerjs') {
+        if (phantom.casperEngine === 'slimerjs') {
             // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
             test.skip(1)
         }
