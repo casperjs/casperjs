@@ -1,5 +1,5 @@
 **[PhantomJS](http://phantomjs.org/) >= 1.7 must be installed on your system**.
-Check out [PhantomJS' installation instructions](http://code.google.com/p/phantomjs/wiki/Installation),
+Check out [PhantomJS' installation instructions](http://phantomjs.org/download.html),
 and:
 
 * Ensure to always install the **latest stable version of PhantomJS**;
