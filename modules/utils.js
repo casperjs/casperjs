@@ -58,6 +58,10 @@ function betterTypeOf(input) {
                 '__type' in input) {
                 type = input.__type;
             }
+            // gecko returns window instead of domwindow
+            else if (type === 'window') {
+                return 'domwindow';
+            }
             return type;
         } catch (e) {
             return typeof input;
@@ -532,7 +536,7 @@ function isValidSelector(value) {
             // phantomjs env has a working document object, let's use it
             document.querySelector(value);
         } catch(e) {
-            if ('name' in e && e.name === 'SYNTAX_ERR') {
+            if ('name' in e && (e.name === 'SYNTAX_ERR' || e.name === 'SyntaxError')) {
                 return false;
             }
         }
@@ -565,6 +569,32 @@ function isWebPage(what) {
 }
 exports.isWebPage = isWebPage;
 
+
+
+function isPlainObject(obj) {
+    "use strict";
+    if (!obj || typeof(obj) !== 'object')
+        return false;
+    var type = Object.prototype.toString.call(obj).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+    return (type === 'object');
+}
+
+function mergeObjectsInSlimerjs(origin, add) {
+    "use strict";
+    for (var p in add) {
+        if (isPlainObject(add[p])) {
+            if (isPlainObject(origin[p])) {
+                origin[p] = mergeObjects(origin[p], add[p]);
+            } else {
+                origin[p] = clone(add[p]);
+            }
+        } else {
+            origin[p] = add[p];
+        }
+    }
+    return origin;
+}
+
 /**
  * Object recursive merging utility.
  *
@@ -574,6 +604,13 @@ exports.isWebPage = isWebPage;
  */
 function mergeObjects(origin, add) {
     "use strict";
+
+    if (phantom.casperEngine === 'slimerjs') {
+        // Because of an issue in the module system of slimerjs (security membranes?)
+        // constructor is undefined.
+        // let's use an other algorithm
+        return mergeObjectsInSlimerjs(origin, add);
+    }
     for (var p in add) {
         if (add[p] && add[p].constructor === Object) {
             if (origin[p] && origin[p].constructor === Object) {

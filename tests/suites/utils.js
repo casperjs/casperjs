@@ -288,7 +288,8 @@ casper.test.begin('isJsFile() tests', 5, function(test) {
     test.done();
 });
 
-casper.test.begin('mergeObjects() tests', 7, function(test) {
+
+casper.test.begin('mergeObjects() tests', 8, function(test) {
     var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
@@ -326,8 +327,9 @@ casper.test.begin('mergeObjects() tests', 7, function(test) {
     var merged1 = utils.mergeObjects({}, {a: obj});
     var merged2 = utils.mergeObjects({a: {}}, {a: obj});
     merged1.a.x = 2;
+    test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones #1');
     merged2.a.x = 2;
-    test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones');
+    test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones #2');
     test.done();
 });
 
