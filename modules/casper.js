@@ -1384,12 +1384,15 @@ Casper.prototype.open = function open(location, settings) {
     this.page.customHeaders = utils.mergeObjects(utils.clone(baseCustomHeaders), customHeaders);
     // perfom request
     this.browserInitializing = true;
+    var self = this;
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
         data:      settings.data
-    }, this.page.settings);
-    // revert base custom headers
-    this.page.customHeaders = baseCustomHeaders;
+    }, this.page.settings, function(){
+            // revert base custom headers
+            self.page.customHeaders = baseCustomHeaders;
+        });
+
     return this;
 };
 
