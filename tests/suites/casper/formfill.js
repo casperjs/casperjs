@@ -158,6 +158,10 @@ casper.test.begin('field array', 1, function(test) {
 
 casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+    var fileValue = 'README.md';
+    if (phantom.casperEngine === 'phantomjs') {
+        fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
+    }
 
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
@@ -179,7 +183,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "no",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            "file": "C:\\fakepath\\README.md", // phantomjs/webkit sets that
+            "file": fileValue,
             "password": "chuck",
             "submit": "submit",
             "language": "english",
@@ -206,7 +210,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "yes",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            "file": "C:\\fakepath\\README.md", // phantomjs/webkit sets that
+            "file": fileValue,
             "password": "chuck",
             "language": "english",
             "submit": "submit",
