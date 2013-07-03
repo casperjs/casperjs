@@ -1455,7 +1455,8 @@ Casper.prototype.resourceExists = function resourceExists(test) {
             break;
         case "function":
             testFn = test;
-            testFn.name = "_testResourceExists_Function";
+            if (phantom.casperEngine !== "slimerjs")
+                testFn.name = "_testResourceExists_Function";
             break;
         default:
             throw new CasperError("Invalid type");
