@@ -1084,7 +1084,7 @@ Casper.prototype.getGlobal = function getGlobal(name) {
         try {
             result.value = JSON.stringify(window[name]);
         } catch (e) {
-            var message = f("Unable to JSON encode window.%s: %s", name, e);
+            var message = "Unable to JSON encode window." + name + ": " + e;
             __utils__.log(message, "error");
             result.error = message;
         }
