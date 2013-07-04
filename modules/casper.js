@@ -1081,8 +1081,16 @@ Casper.prototype.getGlobal = function getGlobal(name) {
     this.checkStarted();
     var result = this.evaluate(function _evaluate(name) {
         var result = {};
+        var keys = name.replace(/\[/g, ".").replace(/\]/g, '').split('.');
+        var value = window;
+        keys.forEach(function (key) {
+            key = key.replace(/'/g, '').replace(/"/g, '').replace(/"/g, '');
+            if (!/^\s*$/.test(key)) {
+                value = value[key];
+            }
+        });
         try {
-            result.value = JSON.stringify(window[name]);
+            result.value = JSON.stringify(value);
         } catch (e) {
             var message = "Unable to JSON encode window." + name + ": " + e;
             __utils__.log(message, "error");
