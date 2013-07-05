@@ -14,7 +14,7 @@
     }
   ],
   "dependencies": {
-    "http://www.phantomjs.org/": "master"
+    "phantomjs": "~1.9.1"
   },
   "bugs": {
     "url": "https://github.com/n1k0/casperjs/issues"
