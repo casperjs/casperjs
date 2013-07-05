@@ -6,6 +6,7 @@
     "phantomjs",
     "javascript"
   ],
+  "bin": "./bin/casperjs",
   "maintainers": [
     {
       "name": "Nicolas Perriault",
