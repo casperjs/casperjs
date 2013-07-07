@@ -636,9 +636,9 @@ exports.objectValues = objectValues;
 function quoteXPathAttributeString(string) {
     "use strict";
     if (/"/g.test(str)) {
-        return 'concat("' + str.toString().replace(/"/g, '", \'"\', "') + '")';
+        return '\'concat("' + str.toString().replace(/"/g, '", \'"\', "') + '")\'';
     } else {
-        return '"' + str + '"';
+        return '\'"' + str + '"\'';
     }
 }
 exports.quoteXPathAttributeString = quoteXPathAttributeString;
