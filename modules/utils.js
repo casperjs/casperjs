@@ -628,6 +628,22 @@ function objectValues(obj) {
 exports.objectValues = objectValues;
 
 /**
+ * Prepares a string for xpath expression with the condition [text()=].
+ *
+ * @param  String  string
+ * @return String
+ */
+function quoteXPathAttributeString(string) {
+    "use strict";
+    if (/"/g.test(str)) {
+        return 'concat("' + str.toString().replace(/"/g, '", \'"\', "') + '")';
+    } else {
+        return '"' + str + '"';
+    }
+}
+exports.quoteXPathAttributeString = quoteXPathAttributeString;
+
+/**
  * Serializes a value using JSON.
  *
  * @param  Mixed  value

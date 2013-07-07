@@ -445,7 +445,7 @@ Casper.prototype.clickLabel = function clickLabel(label, tag) {
     "use strict";
     this.checkStarted();
     tag = tag || "*";
-    var escapedLabel = label.toString().replace(/"/g, '\\"');
+    var escapedLabel = utils.quoteXPathAttributeString(label);
     var selector = selectXPath(f('//%s[text()="%s"]', tag, escapedLabel));
     return this.click(selector);
 };
