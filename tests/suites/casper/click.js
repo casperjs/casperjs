@@ -30,7 +30,7 @@ casper.test.begin('onclick variants tests', 8, function(test) {
     });
 });
 
-casper.test.begin('clickLabel tests tests', 8, function(test) {
+casper.test.begin('clickLabel tests tests', 12, function(test) {
     casper.start('tests/site/click.html', function() {
         test.assert(this.clickLabel('test1'),
             'Casper.clickLabel() can click an `href="javascript:` link');
