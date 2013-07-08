@@ -1554,7 +1554,7 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
                      "hidden", "month", "number", "password", "range", "search",
                      "tel", "text", "time", "url", "week"],
         isTextInput = false;
-    if (tag === 'textarea' || (tag === 'input' && supported.indexOf(type) !== -1)) {
+    if (tag === 'textarea' || (tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1))) {
         // clicking on the input element brings it focus
         isTextInput = true;
         this.click(selector);
