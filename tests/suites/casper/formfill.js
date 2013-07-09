@@ -147,18 +147,18 @@ casper.test.begin('multiple forms', 2, function(test) {
 
 casper.test.begin('file multiple', 1, function(test) {
     var fpaths = [fs.pathJoin(phantom.casperPath, 'README.md'),
-		  fs.pathJoin(phantom.casperPath, 'LICENSE.md')
-		 ];
+                  fs.pathJoin(phantom.casperPath, 'LICENSE.md')
+                 ];
 
     casper.start('tests/site/field-file-multiple.html', function() {
-	this.fillSelectors('form[action="result.html"]', {
+        this.fillSelectors('form[action="result.html"]', {
             'input[name="files[]"]': fpaths
-	});
+        });
         test.assertEvalEquals(function() {
             return __utils__.findOne('input[name="files[]"]').files.length === 2;
         }, true, 'can select 2 files to upload');
     }).run(function() {
-	test.done();
+        test.done();
     });
 });
 
