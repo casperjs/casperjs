@@ -339,6 +339,19 @@ casper.test.begin('objectValues() tests', 2, function(test) {
     test.done();
 });
 
+casper.test.begin('quoteXPathAttributeString() tests', 2, function(test) {
+    casper.start('tests/site/click.html', function() {
+        var selector = utils.format('//a[text()=%s]',
+            utils.quoteXPathAttributeString('Label with double "quotes"'));
+        test.assertExists(x(selector), utils.format('Xpath selector "%s" is found on "tests/site/click.html" page', selector));
+        selector = utils.format('//a[text()=%s]',
+            utils.quoteXPathAttributeString("Label with single 'quotes'"));
+        test.assertExists(x(selector), utils.format('Xpath selector "%s" is found on "tests/site/click.html" page', selector));
+    }).run(function() {
+        test.done();
+    });
+});
+
 casper.test.begin('unique() tests', 4, function(test) {
     var testCases = [
         {
