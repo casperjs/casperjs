@@ -12,6 +12,14 @@ This version is yet to be released, and will possibly be tagged as 2.0 as not-so
 
 **PhantomJS 1.8.1 or later is required for 1.1.**
 
+#### Support of Gecko, with SlimerJS
+
+CasperJS can now be launched with [SlimerJS](http://slimerjs.org) instead of PhantomJS.
+It allows you to execute tests with the rendering engine of Firefox. Just launch CasperJS
+with the flag `--engine=slimerjs`.
+
+SlimerJS 0.8 or later is required.
+
 #### `require()` in custom modules
 
 CasperJS 1.1 now internally uses PhantomJS' native `require()` function, but it has side effect if you write your own casperjs modules; in any casperjs module, you now have to use the new global `patchRequire()` function first:

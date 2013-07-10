@@ -17,7 +17,7 @@ Prerequisites
 
 .. versionadded:: 1.1
 
-- Experimental: SlimerJS_ 0.7 or greater to run your tests against Gecko (Firefox) instead of Webkit.
+- Experimental: SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit.
 
 .. note::
 
