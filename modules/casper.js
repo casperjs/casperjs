@@ -1892,12 +1892,22 @@ Casper.prototype.viewport = function viewport(width, height, then) {
     if (!utils.isNumber(width) || !utils.isNumber(height) || width <= 0 || height <= 0) {
         throw new CasperError(f("Invalid viewport: %dx%d", width, height));
     }
+
     this.page.viewportSize = {
         width: width,
         height: height
     };
-    this.emit('viewport.changed', [width, height]);
-    return utils.isFunction(then) ? this.then(then) : this;
+
+    return this.then(function _step() {
+        this.waitStart();
+        setTimeout(function _check(self) {
+            self.waitDone();
+            self.emit('viewport.changed', [width, height]);
+            if (utils.isFunction(then)){
+                self.then(then);
+            }
+        }, 300, this);
+    });
 };
 
 /**
