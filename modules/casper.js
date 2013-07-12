@@ -1897,7 +1897,7 @@ Casper.prototype.viewport = function viewport(width, height, then) {
         width: width,
         height: height
     };
-
+    var time = (phantom.casperEngine == 'slimerjs'?400:100);
     return this.then(function _step() {
         this.waitStart();
         setTimeout(function _check(self) {
@@ -1906,7 +1906,7 @@ Casper.prototype.viewport = function viewport(width, height, then) {
             if (utils.isFunction(then)){
                 self.then(then);
             }
-        }, 300, this);
+        }, time, this);
     });
 };
 
