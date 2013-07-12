@@ -1894,7 +1894,10 @@ Casper.prototype.viewport = function viewport(width, height, then) {
         width: width,
         height: height
     };
-    var time = (phantom.casperEngine == 'slimerjs'?400:100);
+    // setting the viewport could cause a redraw and it can take
+    // time. At least for Gecko, we should wait a bit, even
+    // if this time could not be enough.
+    var time = (phantom.casperEngine === 'slimerjs'?400:100);
     return this.then(function _step() {
         this.waitStart();
         setTimeout(function _check(self) {
