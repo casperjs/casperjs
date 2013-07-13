@@ -177,7 +177,7 @@ var Tester = function Tester(casper, options) {
         self.casper.unwait();
         if (error instanceof Error) {
             self.processError(error);
-            return self.done();
+            return;
         }
         if (utils.isString(error) && /^(Assertion|Termination|TimedOut)Error/.test(error)) {
             return;
@@ -189,6 +189,10 @@ var Tester = function Tester(casper, options) {
             })[0].line;
         } catch (e) {}
         self.uncaughtError(error, self.currentTestFile, line, backtrace);
+    }
+    
+    function errorHandlerAndDone(error, backtrace) {
+        errorHandler(error, backtrace);
         self.done();
     }
 
@@ -196,11 +200,12 @@ var Tester = function Tester(casper, options) {
         'wait.error',
         'waitFor.timeout.error',
         'event.error',
-        'step.error',
         'complete.error'
     ].forEach(function(event) {
-        self.casper.on(event, errorHandler);
+        self.casper.on(event, errorHandlerAndDone);
     });
+
+    self.casper.on('step.error', errorHandler);
 
     this.casper.on('warn', function(warning) {
         if (self.currentSuite) {
@@ -1029,7 +1034,7 @@ Tester.prototype.done = function done() {
     /*jshint maxstatements:20, maxcomplexity:20*/
     var planned, config = this.currentSuite && this.currentSuite.config || {};
 
-    if (utils.isNumber(arguments[0])) {
+    if (arguments.length && utils.isNumber(arguments[0])) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
         planned = arguments[0];
     }
@@ -1219,6 +1224,33 @@ Tester.prototype.pass = function pass(message) {
     });
 };
 
+function getStackEntry(error, testFile) {
+    "use strict";
+    if ("stackArray" in error) {
+        // PhantomJS has changed the API of the Error object :-/
+        // https://github.com/ariya/phantomjs/commit/c9cf14f221f58a3daf585c47313da6fced0276bc
+        return error.stackArray.filter(function(entry) {
+            return testFile === entry.sourceURL;
+        })[0];
+    }
+
+    if (! ('stack' in error))
+        return null;
+
+    var r = /^\s*(.*)@(.*):(\d+)\s*$/gm;
+    var m;
+    while ((m = r.exec(error.stack))) {
+        var sourceURL = m[2];
+        if (sourceURL.indexOf('->') !== -1) {
+            sourceURL = sourceURL.split('->')[1].trim();
+        }
+        if (sourceURL === testFile) {
+            return { sourceURL: sourceURL, line: m[3]}
+        }
+    }
+    return null;
+}
+
 /**
  * Processes an assertion error.
  *
@@ -1230,9 +1262,7 @@ Tester.prototype.processAssertionError = function(error) {
         testFile = this.currentTestFile,
         stackEntry;
     try {
-        stackEntry = error.stackArray.filter(function(entry) {
-            return testFile === entry.sourceURL;
-        })[0];
+        stackEntry = getStackEntry(error, testFile);
     } catch (e) {}
     if (stackEntry) {
         result.line = stackEntry.line;

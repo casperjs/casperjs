@@ -44,7 +44,7 @@ var f = utils.format;
 
 
 var defaultUserAgent = phantom.defaultPageSettings.userAgent
-    .replace('PhantomJS', f("CasperJS/%s", phantom.casperVersion) + '+Phantomjs');
+    .replace(/(PhantomJS|SlimerJS)/, f("CasperJS/%s", phantom.casperVersion) + '+$&');
 
 exports.create = function create(options) {
     "use strict";
@@ -120,7 +120,9 @@ var Casper = function Casper(options) {
         timeout:             null,
         verbose:             false,
         retryTimeout:        20,
-        waitTimeout:         5000
+        waitTimeout:         5000,
+        clipRect : null,
+        viewportSize : null,
     };
     // options
     this.options = utils.mergeObjects(this.defaults, options);
@@ -139,6 +141,7 @@ var Casper = function Casper(options) {
     this.history = [];
     this.loadInProgress = false;
     this.navigationRequested = false;
+    this.browserInitializing = false;
     this.logFormats = {};
     this.logLevels = ["debug", "info", "warning", "error"];
     this.logStyles = {
@@ -357,7 +360,7 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
-    if (self.pendingWait || self.loadInProgress || self.navigationRequested) {
+    if (self.pendingWait || self.loadInProgress || self.navigationRequested || self.browserInitializing) {
         return;
     }
     var step = self.steps[self.step++];
@@ -1380,6 +1383,7 @@ Casper.prototype.open = function open(location, settings) {
     // custom headers
     this.page.customHeaders = utils.mergeObjects(utils.clone(baseCustomHeaders), customHeaders);
     // perfom request
+    this.browserInitializing = true;
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
         data:      settings.data
@@ -1448,7 +1452,8 @@ Casper.prototype.resourceExists = function resourceExists(test) {
             break;
         case "function":
             testFn = test;
-            testFn.name = "_testResourceExists_Function";
+            if (phantom.casperEngine !== "slimerjs")
+                testFn.name = "_testResourceExists_Function";
             break;
         default:
             throw new CasperError("Invalid type");
@@ -1884,12 +1889,25 @@ Casper.prototype.viewport = function viewport(width, height, then) {
     if (!utils.isNumber(width) || !utils.isNumber(height) || width <= 0 || height <= 0) {
         throw new CasperError(f("Invalid viewport: %dx%d", width, height));
     }
+
     this.page.viewportSize = {
         width: width,
         height: height
     };
-    this.emit('viewport.changed', [width, height]);
-    return utils.isFunction(then) ? this.then(then) : this;
+    // setting the viewport could cause a redraw and it can take
+    // time. At least for Gecko, we should wait a bit, even
+    // if this time could not be enough.
+    var time = (phantom.casperEngine === 'slimerjs'?400:100);
+    return this.then(function _step() {
+        this.waitStart();
+        setTimeout(function _check(self) {
+            self.waitDone();
+            self.emit('viewport.changed', [width, height]);
+            if (utils.isFunction(then)){
+                self.then(then);
+            }
+        }, time, this);
+    });
 };
 
 /**
@@ -2364,6 +2382,9 @@ function createPage(casper) {
         }
     };
     page.onLoadStarted = function onLoadStarted() {
+        // in some case, there is no navigation requested event, so
+        // be sure that browserInitializing is false to not block checkStep()
+        casper.browserInitializing = false;
         casper.loadInProgress = true;
         casper.emit('load.started');
     };
@@ -2382,6 +2403,7 @@ function createPage(casper) {
             message += ': ' + casper.requestUrl;
             casper.log(message, "warning");
             casper.navigationRequested = false;
+            casper.browserInitializing = false;
             if (utils.isFunction(casper.options.onLoadError)) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
@@ -2400,8 +2422,25 @@ function createPage(casper) {
     page.onNavigationRequested = function onNavigationRequested(url, type, willNavigate, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, willNavigate=%s, isMainFrame=%s',
                      url, type, willNavigate, isMainFrame), "debug");
+        casper.browserInitializing = false;
         if (isMainFrame && casper.requestUrl !== url) {
-            casper.navigationRequested  = true;
+            var currentUrl = casper.requestUrl;
+            var newUrl = url;
+            var pos = currentUrl.indexOf('#')
+            if (pos !== -1) {
+                currentUrl = currentUrl.substring(0, pos);
+            }
+            pos = newUrl.indexOf('#')
+            if (pos !== -1) {
+                newUrl = newUrl.substring(0, pos);
+            }
+            // for URLs that are only different by their hash part
+            // don't turn navigationRequested to true, because
+            // there will not be loadStarted, loadFinished events
+            // so it could cause issues (for exemple, checkStep that
+            // do no execute the next step -> infinite loop on checkStep)
+            if (currentUrl !== newUrl)
+                casper.navigationRequested  = true;
 
             if (willNavigate) {
                 casper.requestUrl = url;
@@ -2412,6 +2451,11 @@ function createPage(casper) {
     page.onPageCreated = function onPageCreated(popupPage) {
         casper.emit('popup.created', popupPage);
         popupPage.onLoadFinished = function onLoadFinished() {
+            // SlimerJS needs this line of code because of issue
+            // https://github.com/laurentj/slimerjs/issues/48
+            // else checkStep turns into an infinite loop
+            // after clicking on an <a target="_blank">
+            casper.navigationRequested  = false;
             casper.popups.push(popupPage);
             casper.emit('popup.loaded', popupPage);
         };
