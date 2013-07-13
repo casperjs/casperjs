@@ -3,10 +3,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="http://casperjs.org/">
-    <title>CasperJS, a navigation scripting and testing utility for PhantomJS | CasperJS 1.0.2</title>
+    <title>CasperJS, a navigation scripting and testing utility for PhantomJS and SlimerJS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-    <meta name="keywords" content="phantomjs, phantom, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
-    <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript on top of PhantomJS.">
+    <meta name="keywords" content="phantomjs, phantom, slimerjs, slimer, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
+    <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript for PhantomJS or SlimerJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
     <link rel="stylesheet" href="prettify/prettify.css?1363162175523">
@@ -28,31 +28,10 @@
                 <a class="brand" href="./index.html">CasperJS</a>
                 <div class="nav-collapse">
                     <ul class="nav">
-                        <li><a href="installation.html">Install</a></li>
-                        <li><a href="quickstart.html">Quickstart</a></li>
-                        <li class="dropdown" id="api-menu">
-                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#api-menu" href="api.html">
-                                <abbr title="Application Programming Interface">API</abbr>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="api.html#intro">Home</a></li>
-                                <li class="divider"></li>
-                                <li><a href="api.html#casper">Casper API</a></li>
-                                <li><a href="api.html#client-utils">Client-side utils</a></li>
-                                <li><a href="api.html#colorizer">Colorizer API</a></li>
-                                <li><a href="api.html#tester">Tester API</a></li>
-                                <li><a href="api.html#utils">Utils API</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="cli.html"><abbr title="Command Line Interface">CLI</abbr></a></li>
-                        <li><a href="selectors.html">Selectors</a></li>
-                        <li><a href="events-filters.html">Events</a></li>
-                        <li><a href="logging.html">Logging</a></li>
-                        <li><a href="extending.html">Extending</a></li>
-                        <li><a href="testing.html">Testing</a></li>
-                        <li><a href="debugging.html">Debugging</a></li>
-                        <li><a href="faq.html"><abbr title="Frequently Asked Questions">FAQ</abbr></a></li>
+                        <li><a href="http://docs.casperjs.org/en/latest/">Documentation</a></li>
+                        <li><a href="http://docs.casperjs.org/en/latest/upgrading/1.1.html">Upgrade to 1.1</a></li>
+                        <li><a href="http://docs.casperjs.org/en/latest/faq.html"><abbr title="Frequently Asked Questions">FAQ</abbr></a></li>
+                        <li><a href="https://github.com/n1k0/casperjs">Github</a></li>
                         <li><a href="https://groups.google.com/forum/#!forum/casperjs">Support</a></li>
                     </ul>
                 </div>
@@ -66,8 +45,8 @@
             CasperJS
             <small>
                 is a navigation scripting &amp; testing utility for
-                <a href="http://phantomjs.org/">PhantomJS</a>, written in
-                Javascript
+                <a href="http://phantomjs.org/">PhantomJS</a> and
+                <a href="http://slimrjs.org/">SlimerJS</a> written in Javascript
             </small>
         </h1>
     </div>
@@ -76,10 +55,10 @@
             <article class="just-informative casper-intro">
                 <p>
                     CasperJS is an open source <strong>navigation scripting &amp;
-                    testing utility</strong> written in Javascript and based on
-                    <a href="http://www.phantomjs.org/">PhantomJS</a> — the scriptable
-                    headless <a href="http://www.webkit.org/">WebKit</a>
-                    engine. It eases the process of <strong>defining a full navigation
+                    testing utility</strong> written in Javascript for the
+                    <a href="http://www.phantomjs.org/">PhantomJS</a> WebKit headless browser and
+                    <a href="http://www.slimerjs.org/">SlimerJS</a> (Gecko).
+                    It eases the process of <strong>defining a full navigation
                     scenario</strong> and provides useful <strong>high-level functions,
                     methods &amp; syntactic sugar</strong> for doing common tasks such as:
                 </p>
@@ -99,33 +78,35 @@
         <aside class="span4 download">
             <h1>Download</h1>
             <p>
-                CasperJS latest released version is <strong>1.0.2</strong>,<br>
-                see the <a href="https://github.com/n1k0/casperjs/blob/1.0/CHANGELOG.md#files">CHANGELOG</a>.
+                CasperJS latest hipstered version is <strong>1.1-beta1</strong>,<br>
+                see the <a href="https://github.com/n1k0/casperjs/releases/tag/1.1-beta1">changelog</a> and
+                <a href="http://docs.casperjs.org/en/latest/upgrading/1.1.html">upgrading documentation</a>.
             </p>
             <div class="dl-links">
+                <p><a href="https://github.com/n1k0/casperjs/zipball/1.1-beta1" class="btn btn-success">
+                    Download 1.1-beta1 (ZIP)
+                </a></p>
+            </div>
+            <div class="dl-alternate">
                 <p>
-                    <a href="https://github.com/n1k0/casperjs/zipball/1.0.2" class="btn btn-success">
-                        Download as .zip archive
-                    </a>
+                    CasperJS latest old boring stable version is <strong>1.0.3</strong>,<br>
+                    see the <a href="https://github.com/n1k0/casperjs/releases/tag/1.0.3">changelog</a>.
                 </p>
-                <p>
-                    <a href="https://github.com/n1k0/casperjs/tarball/1.0.2" class="btn btn-success">
-                        Download as .tar.gz archive
-                    </a>
-                </p>
+                <div class="dl-links">
+                    <p><a href="https://github.com/n1k0/casperjs/zipball/1.0.3" class="btn btn-warning">
+                        Download 1.0.3 (ZIP)
+                    </a></p>
+                </div>
             </div>
             <p>
-                Or download CasperJS at <a href="http://jspkg.com/packages/casperjs">jspkg.com</a>
-            </p>
-            <p>
-                </p><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                     <input type="hidden" name="cmd" value="_s-xclick">
                     <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
                     <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="Donate" title="Donate">
                     <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
                 </form>
                 <small>(ghosts have bills, you know)</small>
-            <p></p>
+            </p>
         </aside>
     </div>
     <div class="row">
@@ -140,14 +121,15 @@
         <article class="span5">
             <h1>Get started</h1>
             <p>
-                <a href="installation.html">Install CasperJS</a> and
-                <a href="quickstart.html">get started</a>.
-                Browse the <a href="https://github.com/n1k0/casperjs/tree/master/samples">sample
-                examples repository</a>.
+                Browse the <a href="http://docs.casperjs.org/en/latest/">documentation</a> and
+                <a href="http://docs.casperjs.org/en/latest/quickstart.html">get started</a>.
                 Get <a href="https://groups.google.com/forum/#!forum/casperjs">support</a>.
                 Checkout the <a href="https://github.com/n1k0/casperjs">code at Github</a>.
                 Don't hesitate to fork and send a pull request for any cool example
-                of yours as well! Troubleshooting? Read the <a href="faq.html">FAQ</a> or
+                of yours as well!
+            </p>
+            <p>
+                Troubleshooting? Read the <a href="faq.html">FAQ</a> or
                 <a href="https://github.com/n1k0/casperjs/issues">open an issue</a>. Follow
                 <a href="https://twitter.com/casperjs_org">@casperjs_org</a> on Twitter.
             </p>
@@ -221,6 +203,4 @@ DEALINGS IN THE SOFTWARE.</pre>
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
     </script>
-
-
 </body></html>

@@ -6283,6 +6283,14 @@ td code {
   width: 220px;
   color: #fff;
 }
+.dl-alternate {
+  font-size: 90%;
+}
+.dl-alternate .dl-links a {
+  height: 20px;
+  line-height: 20px;
+  font-size: 90%;
+}
 .download {
   padding-top: .5em;
   text-align: center;
