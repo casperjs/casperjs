@@ -9,10 +9,10 @@
 >- **hosted on [docs.casperjs.org](http://docs.casperjs.org/) for the development branch**
 >- hosted on [casperjs.org](http://casperjs.org/) for the 1.0 branch
 >
->[Travis-CI](http://travis-ci.org/n1k0/casperjs) build statuses:
+>[Travis-CI](http://travis-ci.org/n1k0/casperjs) build status:
 >
 >- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master) `master` branch
->- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=1.0) `1.0` branch
+>- 1.0 tests unfortunately have to be run manually using the `casperjs selftest` command
 
 CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/)
 and [SlimerJS](http://slimerjs.org/). It eases the process of defining a full navigation
