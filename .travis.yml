@@ -1,7 +1,6 @@
 branches:
   only:
     - "master"
-    - "1.0"
 
 before_install:
   - echo "installing PhantomJS 1.8.2"
