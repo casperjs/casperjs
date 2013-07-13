@@ -37,12 +37,9 @@ if ('process' in this && process.title === "node") {
     process.exit(1);
 }
 
-// phantom checks
+// phantom check
 if (!('phantom' in this)) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
-} else if (phantom.version.major >= 1 && phantom.version.minor >= 9) {
-    console.error('CasperJS 1.0.x does not support PhantomJS version >= 1.9');
-    phantom.exit();
 }
 
 // Common polyfills
