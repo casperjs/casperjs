@@ -36,7 +36,10 @@ if (!phantom) {
 }
 
 if (phantom.version.major === 1 && phantom.version.minor < 7) {
-    console.error('CasperJS needs at least PhantomJS v1.7 or later.');
+    console.error('CasperJS 1.0.x needs at least PhantomJS v1.7 or later.');
+    phantom.exit(1);
+}  else if (phantom.version.major >= 1 && phantom.version.minor >= 9) {
+    console.error('CasperJS 1.0.x does not support PhantomJS version >= 1.9');
     phantom.exit(1);
 } else {
     try {

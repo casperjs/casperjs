@@ -1,16 +1,27 @@
 branches:
   only:
-    - "master"
     - "1.0"
+
+before_install:
+  - echo "installing PhantomJS 1.8.2"
+  - wget http://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-x86_64.tar.bz2
+  - tar -xvf phantomjs-1.8.2-linux-x86_64.tar.bz2
+  - sudo mv phantomjs-1.8.2-linux-x86_64/bin/phantomjs bin/phantomjs182
+  - ls -la bin/phantomjs182
+  - bin/phantomjs182 --version
+
 before_script:
-  - "npm install -g jshint"
-  - "phantomjs --version"
-  - "export PHANTOMJS_EXECUTABLE='phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes'"
+  - bin/phantomjs182 --version
+  - "jshint --config=.jshintconfig ."
+
 script:
   - "./bin/casperjs selftest"
   - "./bin/casperjs __selfcommandtest"
-after_script:
-  - "jshint --config=.jshintconfig ."
+
+env:
+  matrix:
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+
 notifications:
   irc:
     channels:
