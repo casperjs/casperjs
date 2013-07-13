@@ -2,19 +2,25 @@
 /*global CasperError, casper, console, phantom, require*/
 var utils = require('utils');
 
-casper.test.begin('sendKeys() tests', 3, function(test) {
+casper.test.begin('sendKeys() tests', 4, function(test) {
     casper.start('tests/site/form.html', function() {
         this.sendKeys('input[name="email"]', 'duke@nuk.em');
         this.sendKeys('input[name="language"]', 'fr', {keepFocus: true});
         this.click('#autocomplete li:first-child');
         this.sendKeys('textarea', "Damn, I’m looking good.");
-        var values = this.getFormValues('form');
+        var values = this.getFormValues('form[action="result.html"]');
         test.assertEquals(values.email, 'duke@nuk.em',
             'Casper.sendKeys() sends keys to given input');
         test.assertEquals(values.language, 'french',
             'Casper.sendKeys() sends keys to given input and keeps focus afterweards');
         test.assertEquals(values.content, "Damn, I’m looking good.",
             'Casper.sendKeys() sends keys to given textarea');
+
+        this.sendKeys('input[name="notype"]', "I have no type.");
+        values = this.getFormValues('form#no-type-test-form');
+        test.assertEquals(values.notype, "I have no type.",
+            'Casper.sendKeys() sends keys to given input without type attribute');
+
     }).run(function() {
         test.done();
     });

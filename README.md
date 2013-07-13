@@ -58,6 +58,12 @@ Run the script:
 
 ![](http://cl.ly/image/271e2i403A0F/Capture%20d%E2%80%99%C3%A9cran%202013-01-20%20%C3%A0%2009.26.15.png)
 
+##Support
+
+If you're having problems with using the project, use the support forum at CodersClan.
+
+<a href="http://codersclan.net/forum/index.php?repo_id=32"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
+
 ## Contributing
 
 ### Contributing code

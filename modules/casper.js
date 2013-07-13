@@ -448,8 +448,8 @@ Casper.prototype.clickLabel = function clickLabel(label, tag) {
     "use strict";
     this.checkStarted();
     tag = tag || "*";
-    var escapedLabel = label.toString().replace(/"/g, '\\"');
-    var selector = selectXPath(f('//%s[text()="%s"]', tag, escapedLabel));
+    var escapedLabel = utils.quoteXPathAttributeString(label);
+    var selector = selectXPath(f('//%s[text()=%s]', tag, escapedLabel));
     return this.click(selector);
 };
 
@@ -1087,7 +1087,7 @@ Casper.prototype.getGlobal = function getGlobal(name) {
         try {
             result.value = JSON.stringify(window[name]);
         } catch (e) {
-            var message = f("Unable to JSON encode window.%s: %s", name, e);
+            var message = "Unable to JSON encode window." + name + ": " + e;
             __utils__.log(message, "error");
             result.error = message;
         }
@@ -1559,7 +1559,7 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
                      "hidden", "month", "number", "password", "range", "search",
                      "tel", "text", "time", "url", "week"],
         isTextInput = false;
-    if (tag === 'textarea' || (tag === 'input' && supported.indexOf(type) !== -1)) {
+    if (tag === 'textarea' || (tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1))) {
         // clicking on the input element brings it focus
         isTextInput = true;
         this.click(selector);

@@ -35,7 +35,7 @@ casper.test.begin('onclick variants tests', 8, function(test) {
     });
 });
 
-casper.test.begin('clickLabel tests tests', 8, function(test) {
+casper.test.begin('clickLabel tests tests', 12, function(test) {
     casper.start('tests/site/click.html', function() {
         test.assert(this.clickLabel('test1'),
             'Casper.clickLabel() can click an `href="javascript:` link');
@@ -45,6 +45,10 @@ casper.test.begin('clickLabel tests tests', 8, function(test) {
             'Casper.clickLabel() can click an `onclick=".*; return false"` link');
         test.assert(this.clickLabel('test4'),
             'Casper.clickLabel() can click an unobstrusive js handled link');
+        test.assert(this.clickLabel('Label with double "quotes"'),
+            'Casper.clickLabel() can click the link with double quotes in the label');
+        test.assert(this.clickLabel("Label with single 'quotes'"),
+            'Casper.clickLabel() can click the link with the single quotes in the label');
         var results = this.getGlobal('results');
         if (phantom.casperEngine === 'slimerjs') {
             // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
@@ -59,6 +63,10 @@ casper.test.begin('clickLabel tests tests', 8, function(test) {
             'Casper.clickLabel() has clicked an `onclick=".*; return false"` link');
         test.assert(results.test4,
             'Casper.clickLabel() has clicked an unobstrusive js handled link');
+        test.assert(results.test6,
+            'Casper.clickLabel() has clicked the link with double quotes in the label');
+        test.assert(results.test7,
+            'Casper.clickLabel() has clicked the link with single quotes in the label');
     }).run(function() {
         test.done();
     });
