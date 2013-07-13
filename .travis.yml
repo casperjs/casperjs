@@ -11,7 +11,7 @@ before_install:
   - bin/phantomjs182 --version
 
 before_script:
-  - "npm install -g jshint@1.0.1"
+  - "npm install -g jshint@1.1.0"
   - bin/phantomjs182 --version
   - "jshint --config=.jshintconfig ."
 
