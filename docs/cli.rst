@@ -87,7 +87,7 @@ Execution results:
 
 .. versionadded:: 1.1
 
-.. index:: Logging, log levels
+.. index:: Logging, log levels, SlimerJS
 
 The `casperjs` command has three available options:
 
