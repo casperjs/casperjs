@@ -27,7 +27,7 @@ casper.test.begin("HTTP status code handling", 163, {
             this.testCodes.push(118);
         }
 
-        if (utils.ltVersion(phantom.version, '1.9.0') || isGecko) {
+        if (utils.ltVersion(phantom.version, '1.9.0') || isGecko) {
             // https://github.com/ariya/phantomjs/issues/11163
             this.testCodes = this.testCodes.concat([
                 400, 401, 402, 403, 404, 405, 406, 407, 409, 410, 411, 412, 413,
