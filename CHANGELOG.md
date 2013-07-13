@@ -1,13 +1,16 @@
 CasperJS Changelog
 ==================
 
-XXXX-XX-XX, v1.0.3
+2013-07-13, v1.0.3
 ------------------
 
 - speeded up tests and `wait*` operations (expect average execution time to be divided by 4)
 - fixed [#414](https://github.com/n1k0/casperjs/issues/414) - better `utils.cleanUrl()`
 - fixed [#438](https://github.com/n1k0/casperjs/issues/438) - fixed `Casper#getElementAttribute()` broken compatibility with XPath selectors
 - fixed [#484](https://github.com/n1k0/casperjs/issues/484) - added support for the PhantomJS `child_process` module
+- fixes [#457](https://github.com/n1k0/casperjs/issues/457) - fill should not emit console messages
+- added support for `child_process` phantomjs module
+- peeded up tests and `wait*` methods execution
 
 2013-02-08, v1.0.2
 ------------------
