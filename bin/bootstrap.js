@@ -28,7 +28,7 @@
  *
  */
 
-/*global process, console, phantom, require:true*/
+/*global process, console, phantom, slimer, require:true*/
 /*jshint maxstatements:34, maxcomplexity:10*/
 
 // node check
@@ -162,10 +162,11 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      * Prints CasperJS help.
      */
     function printHelp() {
-        var phantomVersion = [phantom.version.major, phantom.version.minor, phantom.version.patch].join('.');
+        var engine = phantom.casperEngine === 'slimerjs' ? slimer : phantom;
+        var version = [engine.version.major, engine.version.minor, engine.version.patch].join('.');
         return __terminate([
             'CasperJS version ' + phantom.casperVersion.toString() +
-            ' at ' + phantom.casperPath + ', using PhantomJS version ' + phantomVersion,
+            ' at ' + phantom.casperPath + ', using ' + phantom.casperEngine + ' version ' + version,
             fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt'))
         ].join('\n'))
     }
