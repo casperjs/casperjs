@@ -52,7 +52,17 @@ function betterTypeOf(input) {
             return 'null';
         default:
         try {
-            return Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+            var type = Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+            if (type === 'object' &&
+                phantom.casperEngine !== "phantomjs" &&
+                '__type' in input) {
+                type = input.__type;
+            }
+            // gecko returns window instead of domwindow
+            else if (type === 'window') {
+                return 'domwindow';
+            }
+            return type;
         } catch (e) {
             return typeof input;
         }
@@ -137,8 +147,10 @@ function equals(v1, v2) {
     if (isFunction(v1)) {
         return v1.toString() === v2.toString();
     }
-    if (v1 instanceof Object) {
-        if (!(v2 instanceof Object) || Object.keys(v1).length !== Object.keys(v2).length) {
+    // with Gecko, instanceof is not enough to test object
+    if (v1 instanceof Object || isObject(v1)) {
+        if (!(v2 instanceof Object || isObject(v2)) ||
+            Object.keys(v1).length !== Object.keys(v2).length) {
             return false;
         }
         for (var k in v1) {
@@ -524,7 +536,7 @@ function isValidSelector(value) {
             // phantomjs env has a working document object, let's use it
             document.querySelector(value);
         } catch(e) {
-            if ('name' in e && e.name === 'SYNTAX_ERR') {
+            if ('name' in e && (e.name === 'SYNTAX_ERR' || e.name === 'SyntaxError')) {
                 return false;
             }
         }
@@ -557,6 +569,32 @@ function isWebPage(what) {
 }
 exports.isWebPage = isWebPage;
 
+
+
+function isPlainObject(obj) {
+    "use strict";
+    if (!obj || typeof(obj) !== 'object')
+        return false;
+    var type = Object.prototype.toString.call(obj).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+    return (type === 'object');
+}
+
+function mergeObjectsInSlimerjs(origin, add) {
+    "use strict";
+    for (var p in add) {
+        if (isPlainObject(add[p])) {
+            if (isPlainObject(origin[p])) {
+                origin[p] = mergeObjects(origin[p], add[p]);
+            } else {
+                origin[p] = clone(add[p]);
+            }
+        } else {
+            origin[p] = add[p];
+        }
+    }
+    return origin;
+}
+
 /**
  * Object recursive merging utility.
  *
@@ -566,6 +604,13 @@ exports.isWebPage = isWebPage;
  */
 function mergeObjects(origin, add) {
     "use strict";
+
+    if (phantom.casperEngine === 'slimerjs') {
+        // Because of an issue in the module system of slimerjs (security membranes?)
+        // constructor is undefined.
+        // let's use an other algorithm
+        return mergeObjectsInSlimerjs(origin, add);
+    }
     for (var p in add) {
         if (add[p] && add[p].constructor === Object) {
             if (origin[p] && origin[p].constructor === Object) {

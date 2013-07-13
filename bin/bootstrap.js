@@ -29,7 +29,7 @@
  */
 
 /*global process, console, phantom, require:true*/
-/*jshint maxstatements:30, maxcomplexity:10*/
+/*jshint maxstatements:34, maxcomplexity:10*/
 
 // node check
 if ('process' in this && process.title === "node") {
@@ -177,6 +177,8 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      *
      *     var require = patchRequire(require);
      *     var utils = require('utils');
+     *
+     * Useless for SlimerJS
      */
     function patchRequire(require) {
         if (require.patched) {
@@ -296,16 +298,37 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         };
     })(phantom.casperPath);
 
-    // patch require
-    global.__require = require;
-    global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
-    global.require = patchRequire(global.require);
+    if ("slimer" in global) {
+        // for SlimerJS, use the standard API to declare directories
+        // where to search modules
+        require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
+        require.paths.push(fs.workingDirectory);
+
+        // declare a dummy patchRequire function
+        require.globals.patchRequire = global.patchRequire = function(req) { return req;};
+        require.globals.CasperError = CasperError;
+        phantom.casperEngine = "slimerjs";
+    }
+    else {
+        // patch require
+        global.__require = require;
+        global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
+        global.require = patchRequire(global.require);
+        phantom.casperEngine = "phantomjs";
+    }
 
     // casper cli args
     phantom.casperArgs = require('cli').parse(phantomArgs);
 
     if (true === phantom.casperArgs.get('cli')) {
         initCasperCli(phantom.casperArgs);
+    }
+
+    if ("slimer" in global && phantom.casperScriptBaseDir) {
+        // initCasperCli has set casperScriptBaseDir
+        // use it instead of fs.workingDirectory
+        require.paths.pop();
+        require.paths.push(phantom.casperScriptBaseDir);
     }
 
     // casper loading status flag
@@ -315,4 +338,4 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     if (phantom.casperScript && !phantom.injectJs(phantom.casperScript)) {
         return __die('Unable to load script ' + phantom.casperScript + '; check file syntax');
     }
-})(window, phantom);
+})(this, phantom);

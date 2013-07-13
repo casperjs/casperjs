@@ -33,16 +33,16 @@
                     event.preventDefault();
                 };
                 window.onmousedown = function(event) {
-                    results.testdown = [event.x, event.y];
+                    results.testdown = [event.clientX, event.clientY];
                 };
                 window.onmouseup = function(event) {
-                    results.testup = [event.x, event.y];
+                    results.testup = [event.clientX, event.clientY];
                 };
                 window.onmousemove = function(event) {
-                    results.testmove = [event.x, event.y];
+                    results.testmove = [event.clientX, event.clientY];
                 };
                 window.ondblclick = function(event) {
-                    results.testdoubleclick = [event.x, event.y];
+                    results.testdoubleclick = [event.clientX, event.clientY];
                 };
                 var test5elem = document.querySelector('#test5');
                 test5elem.addEventListener('mousedown', function(event) {

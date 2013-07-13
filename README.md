@@ -12,7 +12,8 @@
 >- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=1.0) `1.0` branch
 >- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master) `master` branch
 
-CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/).
+CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/)
+and [SlimerJS](http://slimerjs.org/).
 It eases the process of defining a full navigation scenario and provides useful
 high-level functions, methods & syntaxic sugar for doing common tasks such as:
 
