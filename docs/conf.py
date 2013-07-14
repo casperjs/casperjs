@@ -27,9 +27,7 @@ highlight_language = 'javascript'
 source_suffix = '.rst'
 
 # Prolog
-rst_prolog = ('.. note:: This is the documentation for the |release| version of'
-              ' CasperJS. Find docs for 1.0 stable'
-              ' `on the official website <http://casperjs.org/>`_.\n')
+rst_prolog = None
 
 # The encoding of source files.
 source_encoding = 'utf-8'
