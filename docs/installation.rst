@@ -143,7 +143,9 @@ Run the script using the ``phantom.exe`` program:
 
 .. note::
 
-   There is no output coloration when running CasperJS on Microsoft platforms.
+   .. versionadded:: 1.1-beta1
+
+   Windows users will get colorized output if ansicon_ is installed.
 
 
 .. index:: Bugs, REPL
@@ -156,3 +158,4 @@ Known Bugs & Limitations
 .. _PhantomJS: http://phantomjs.org/
 .. _Python: http://python.org/
 .. _SlimerJS: http://slimerjs.org/
+.. _ansicon: https://github.com/adoxa/ansicon
