@@ -17,22 +17,28 @@ Prerequisites
 
 .. versionadded:: 1.1
 
-- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit. To see PhantomJS API compatibility of SLimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_.
+- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit. To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_.
 
 .. warning::
 
    .. deprecated:: 1.1
 
-   The `Ruby <http://ruby-lang.org/>`_ version of the ``casperjs`` executable also available in the ``rubybin/`` directory has been deprecated as of 1.1-beta, and is not compatible with SLimerJS_.
+   The `Ruby <http://ruby-lang.org/>`_ version of the ``casperjs`` executable also available in the ``rubybin/`` directory has been deprecated as of 1.1-beta, and is not compatible with SlimerJS_.
 
 .. index:: Homebrew
 
 Installing from Homebrew (OSX)
 ------------------------------
 
-Installation of both PhantomJS and CasperJS can be achieved through `Homebrew <http://mxcl.github.com/homebrew/>`_::
+Installation of both PhantomJS and CasperJS can be achieved through `Homebrew <http://mxcl.github.com/homebrew/>`_.
 
-   $ brew install casperjs
+For the 1.1 development version (recommended)::
+
+    $ brew install casperjs --devel
+
+For the 1.0.x stable version::
+
+    $ brew install casperjs
 
 .. index:: git
 
