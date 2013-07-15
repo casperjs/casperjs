@@ -65,3 +65,22 @@ More asynchronously::
 .. note::
 
    Please note that ``begin()``'s the second argument which is now the place to set the number of planned tests.
+
+
+require() in custom modules
+---------------------------
+
+CasperJS 1.1 now internally uses PhantomJS' native ``require()`` function, but it has side effect if you write your own casperjs modules; in any casperjs module, you now have to use the new global ``patchRequire()`` function first::
+
+    // casperjs module code
+    var require = patchRequire(require);
+    // now you can require casperjs builtins
+    var utils = require('utils');
+    exports = {
+        // ...
+    };
+
+
+.. note::
+
+    You don't have to use ``patchRequire()`` in a standard casperjs script.
