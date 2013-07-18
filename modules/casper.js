@@ -2180,6 +2180,11 @@ Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
     return this.waitUntilVisible(selector, then, onTimeout, timeout);
 };
 
+Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout){
+    var selector = selectXPath(f("text()[contains(., %s]", text));
+    return this.waitUntilVisible(selector, then, onTimeout, timeout);
+};
+
 /**
  * Waits until an element that contains given label is visible.
  * Uses waitUntilVisible.
