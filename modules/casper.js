@@ -2158,6 +2158,8 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
  * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
  */
 Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
+    "use strict";
+
     if(!tag){
         tag = "*";
     }
@@ -2171,6 +2173,7 @@ Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
 };
 
 Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout){
+    "use strict";
     var selector = selectXPath(f("text()[contains(., %s]", text));
     return this.waitUntilVisible(selector, then, onTimeout, timeout);
 };
@@ -2185,6 +2188,7 @@ Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout)
  * @returns {*}
  */
 Casper.prototype.waitForTitle = function(title, then, onTimeout, timeout){
+    "use strict";
     return this.waitFor(function wait(){
         // this.log("waiting for title " + title);
         // this.log("current title: " + this.getTitle());
