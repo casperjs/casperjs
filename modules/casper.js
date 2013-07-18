@@ -2148,7 +2148,7 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
 };
 
 /**
- * Waits until an element containing given label is visible on the page.
+ * Waits until an element with text equal to the given label is visible on the page.
  * Uses waitUntilVisible.
  *
  * @param String    label       Element innerText value
