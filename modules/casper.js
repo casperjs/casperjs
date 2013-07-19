@@ -2198,7 +2198,7 @@ Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout)
  */
 Casper.prototype.waitForTitle = function(title, then, onTimeout, timeout){
     "use strict";
-    var wait = function wait(){
+    var wait = function(){
         // this.log("waiting for title " + title);
         // this.log("current title: " + this.getTitle());
 
