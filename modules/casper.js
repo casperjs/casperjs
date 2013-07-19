@@ -2198,7 +2198,7 @@ Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout)
  */
 Casper.prototype.waitForTitle = function(title, then, onTimeout, timeout){
     "use strict";
-    return this.waitFor(function wait(){
+    var wait = function wait(){
         // this.log("waiting for title " + title);
         // this.log("current title: " + this.getTitle());
 
@@ -2207,7 +2207,8 @@ Casper.prototype.waitForTitle = function(title, then, onTimeout, timeout){
         }, {
             pageTitle: title
         });
-    }, then, onTimeout, timeout);
+    };
+    return this.waitFor(wait, then, onTimeout, timeout);
 };
 
 /**
