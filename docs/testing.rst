@@ -195,7 +195,7 @@ CasperJS can export the results of the test suite to an XUnit XML file, which is
 
 .. code-block:: text
 
-    $ casperjs test googletesting.js --save=log.xml
+    $ casperjs test googletesting.js --xunit=log.xml
 
 You should get a pretty XUnit XML report like this:
 
