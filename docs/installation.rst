@@ -5,7 +5,7 @@
 Installation
 ============
 
-CasperJS can be installed on most Linuxes, OSX and Windows.
+CasperJS can be installed on Mac OSX, Windows and most Linuxes.
 
 Prerequisites
 -------------
@@ -30,7 +30,7 @@ Prerequisites
 Installing from Homebrew (OSX)
 ------------------------------
 
-Installation of both PhantomJS and CasperJS can be achieved through `Homebrew <http://mxcl.github.com/homebrew/>`_.
+Installation of both PhantomJS and CasperJS can be achieved using Homebrew_, a popular package manager for Mac OS X.
 
 For the 1.1 development version (recommended)::
 
@@ -155,6 +155,7 @@ Known Bugs & Limitations
 
 - Due to its asynchronous nature, CasperJS doesn't work well with `PhantomJS' REPL <http://code.google.com/p/phantomjs/wiki/InteractiveModeREPL>`_.
 
+.. _Homebrew: http://mxcl.github.com/homebrew/
 .. _PhantomJS: http://phantomjs.org/
 .. _Python: http://python.org/
 .. _SlimerJS: http://slimerjs.org/

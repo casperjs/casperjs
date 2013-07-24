@@ -66,6 +66,21 @@ Emitted when a :index:`screenshot` image has been captured.
 
 Emitted when the ``Casper.click()`` method has been called.
 
+``complete.error``
+~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``error``
+
+.. versionadded:: 1.1
+
+Emitted when a complete callback has errored.
+
+By default, CasperJS doesn't listen to this event, you have to declare your own listeners by hand::
+
+    casper.on('complete.error', function(err) {
+        this.die("Complete callback has failed: " + err);
+    });
+
 ``die``
 ~~~~~~~
 
@@ -91,7 +106,7 @@ Emitted when a file has been downloaded by :ref:`Casper.download() <casper_downl
 
 .. versionadded:: 0.6.9
 
-Emitted when an error hasn't been caught. Do basically what PhantomJS' ``onError()`` native handler does.
+Emitted when an error hasn't been explicitly caught within the CasperJS/PhantomJS environment. Do basically what PhantomJS' ``onError()`` native handler does.
 
 .. index:: exit
 
@@ -396,6 +411,21 @@ Emitted when a navigation step has been executed.
 **Arguments:** ``fn``
 
 Emitted when a new navigation step has been created.
+
+``step.error``
+~~~~~~~~~~~~~~
+
+**Arguments:** ``error``
+
+.. versionadded:: 1.1
+
+Emitted when a step function has errored.
+
+By default, CasperJS doesn't listen to this event, you have to declare your own listeners by hand::
+
+    casper.on('step.error', function(err) {
+        this.die("Step has failed: " + err);
+    });
 
 ``step.start``
 ~~~~~~~~~~~~~~
