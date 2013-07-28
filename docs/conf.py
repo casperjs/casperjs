@@ -184,10 +184,10 @@ htmlhelp_basename = 'casper-docs'
 
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+'papersize': 'letterpaper',
 
 # The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
 #'preamble': '',
@@ -195,9 +195,10 @@ latex_elements = {
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
-# latex_documents = [
-#   (),
-# ]
+ latex_documents = [
+   ('index', 'casperjs.tex', 'CasperJs Documentation',
+   'Nicolas Perriault', 'manual'),
+ ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
