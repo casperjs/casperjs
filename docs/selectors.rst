@@ -52,7 +52,7 @@ Or if you're using the :doc:`testing framework <testing>`::
 
     casper.test.begin('The heading exists', 1, function suite(test) {
         casper.start('http://domain.tld/page.html', function() {
-            this.assertExists('h1.page-title');
+            test.assertExists('h1.page-title');
         }).run(function() {
             test.done();
         });
@@ -62,9 +62,9 @@ Some other convenient testing methods are relying on selectors::
 
     casper.test.begin('Page content tests', 3, function suite(test) {
         casper.start('http://domain.tld/page.html', function() {
-            this.assertExists('h1.page-title');
-            this.assertSelectorHasText('h1.page-title', 'Hello');
-            this.assertVisible('footer');
+            test.assertExists('h1.page-title');
+            test.assertSelectorHasText('h1.page-title', 'Hello');
+            test.assertVisible('footer');
         }).run(function() {
             test.done();
         });
