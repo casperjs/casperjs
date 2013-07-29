@@ -70,6 +70,12 @@ Sometimes it's helpful to inspect a variable, especially Object contents. The :r
 Localize yourself in modules
 ----------------------------
 
+.. warning::
+
+   .. deprecated:: 1.1
+
+   As of 1.1, CasperJS uses PhantomJS' builtin `require` and won't expose the `__file__` variable anymore.
+
 If you're creating Casper modules, a cool thing to know is that there's a special built-in variable available in every module, ``__file__``, which contains the absolute path to current javascript file (the module file).
 
 
