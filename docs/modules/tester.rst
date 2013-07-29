@@ -653,6 +653,8 @@ Formats a message to highlight some parts of it. Only used internally by the tes
 
 .. versionadded:: 1.0
 
+.. deprecated:: 1.1
+
 Retrieves failures for current test suite::
 
     casper.test.assertEquals(true, false);
