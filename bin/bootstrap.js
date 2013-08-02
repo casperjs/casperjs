@@ -233,7 +233,11 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;
             casperArgs.drop("test");
-            phantom.casperScriptBaseDir = fs.dirname(casperArgs.get(0));
+            var scriptDir = fs.dirname(casperArgs.get(0));
+            if (scriptDir === casperArgs.get(0)) {
+                scriptDir = '.';
+            }
+            phantom.casperScriptBaseDir = scriptDir;
         } else if (casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperSelfTest = phantom.casperTest = true;
