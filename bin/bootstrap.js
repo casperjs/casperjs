@@ -227,17 +227,21 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     function initCasperCli(casperArgs) {
         var baseTestsPath = fs.pathJoin(phantom.casperPath, 'tests');
 
+        function setScriptBaseDir(scriptName) {
+            var dir = fs.dirname(scriptName);
+            if(dir === scriptName) {
+                dir = '.';
+            }
+            phantom.casperScriptBaseDir = dir;
+        }
+
         if (!!casperArgs.options.version) {
             return __terminate(phantom.casperVersion.toString())
         } else if (casperArgs.get(0) === "test") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;
             casperArgs.drop("test");
-            var scriptDir = fs.dirname(casperArgs.get(0));
-            if (scriptDir === casperArgs.get(0)) {
-                scriptDir = '.';
-            }
-            phantom.casperScriptBaseDir = scriptDir;
+            setScriptBaseDir(casperArgs.get(0));
         } else if (casperArgs.get(0) === "selftest") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperSelfTest = phantom.casperTest = true;
@@ -260,11 +264,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
 
         if (!phantom.casperScriptBaseDir) {
-            var scriptDir = fs.dirname(phantom.casperScript);
-            if (scriptDir === phantom.casperScript) {
-                scriptDir = '.';
-            }
-            phantom.casperScriptBaseDir = fs.absolute(scriptDir);
+            setScriptBaseDir(phantom.casperScript);
         }
 
         // filter out the called script name from casper args
