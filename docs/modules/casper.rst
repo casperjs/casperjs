@@ -677,6 +677,8 @@ Iterates over provided array items and execute a callback::
 
 **Signature:** ``eachThen(Array array, Function then)``
 
+.. versionadded:: 1.1
+
 Iterates over provided array items and adds a step to the stack with current data attached to it::
 
     casper.start().eachThen([1, 2, 3], function(response) {
