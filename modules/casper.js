@@ -272,7 +272,7 @@ Casper.prototype.bypass = function bypass(nb) {
  * @param  mixed   clipRect    An optional clipRect object (optional)
  * @return Casper
  */
-Casper.prototype.capture = function capture(targetFile, clipRect) {
+Casper.prototype.capture = function capture(targetFile, clipRect, imgOptions) {
     "use strict";
     /*jshint maxstatements:20*/
     this.checkStarted();
@@ -288,7 +288,7 @@ Casper.prototype.capture = function capture(targetFile, clipRect) {
     } else {
         this.log(f("Capturing page to %s", targetFile), "debug");
     }
-    if (!this.page.render(this.filter('capture.target_filename', targetFile) || targetFile)) {
+    if (!this.page.render(this.filter('capture.target_filename', targetFile) || targetFile, imgOptions)) {
         this.log(f("Failed to save screenshot to %s; please check permissions", targetFile), "error");
     } else {
         this.log(f("Capture saved to %s", targetFile), "info");
@@ -347,9 +347,9 @@ Casper.prototype.captureBase64 = function captureBase64(format, area) {
  * @param  String  selector    DOM CSS3/XPath selector
  * @return Casper
  */
-Casper.prototype.captureSelector = function captureSelector(targetFile, selector) {
+Casper.prototype.captureSelector = function captureSelector(targetFile, selector, imgOptions) {
     "use strict";
-    return this.capture(targetFile, this.getElementBounds(selector));
+    return this.capture(targetFile, this.getElementBounds(selector), imgOptions);
 };
 
 /**
