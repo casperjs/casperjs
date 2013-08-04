@@ -496,7 +496,7 @@ Clicks on the first DOM element found containing ``label`` text. Optionaly ensur
 ``capture()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``capture(String targetFilepath, Object clipRect)``
+**Signature:** ``capture(String targetFilepath, [Object clipRect, Object imgOptions])``
 
 Proxy method for PhantomJS' ``WebPage#render``. Adds a ``clipRect`` parameter for automatically setting page ``clipRect`` setting and reverts it back once done::
 
@@ -510,6 +510,22 @@ Proxy method for PhantomJS' ``WebPage#render``. Adds a ``clipRect`` parameter fo
     });
 
     casper.run();
+
+.. versionadded:: 1.1
+
+The ``imgOptions`` object allows to specify two options:
+
+- ``format`` to set the image format manually, avoiding relying on the filename
+- ``quality`` to set the image quality, from 1 to 100
+
+Example::
+
+    casper.start('http://foo', function() {
+        this.capture('foo', undefined, {
+            format: 'jpg',
+            quality: 75
+        });
+    });
 
 .. index:: screenshot, Base64
 
@@ -555,7 +571,7 @@ Example::
 ``captureSelector()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``captureSelector(String targetFile, String selector)``
+**Signature:** ``captureSelector(String targetFile, String selector [, Object imgOptions])``
 
 Captures the page area containing the provided selector and saves it to ``targetFile``::
 
@@ -564,6 +580,13 @@ Captures the page area containing the provided selector and saves it to ``target
     });
 
     casper.run();
+
+.. versionadded:: 1.1
+
+The ``imgOptions`` object allows to specify two options:
+
+- ``format`` to set the image format manually, avoiding relying on the target filename
+- ``quality`` to set the image quality, from 1 to 100
 
 ``clear()``
 -------------------------------------------------------------------------------
