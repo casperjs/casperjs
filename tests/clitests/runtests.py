@@ -51,16 +51,16 @@ class CasperExecTest(unittest.TestCase):
                               % (cmd, err.errorcode))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
-        self.assertEquals(self.runCommand(cmd), result)
+        self.assertEqual(self.runCommand(cmd).decode('utf-8'), result)
 
     def assertCommandOutputContains(self, cmd, what, **kwargs):
         if not what:
             raise AssertionError('Empty lookup')
         if isinstance(what, (list, tuple)):
             for entry in what:
-                self.assertIn(entry, self.runCommand(cmd, **kwargs))
+                self.assertIn(entry, self.runCommand(cmd, **kwargs).decode('utf-8'))
         else:
-            self.assertIn(what, self.runCommand(cmd))
+            self.assertIn(what, self.runCommand(cmd).decode('utf-8'))
 
     @timeout(20)
     def test_version(self):
