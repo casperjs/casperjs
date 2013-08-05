@@ -1151,7 +1151,7 @@ Casper.prototype.handleReceivedResource = function(resource) {
         return;
     }
     this.resources.push(resource);
-    if (resource.url !== this.requestUrl) {
+    if (resource.url !== this.requestUrl && decodeURIComponent(resource.url) !== this.requestUrl) {
         return;
     }
     this.currentHTTPStatus = null;
