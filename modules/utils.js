@@ -124,6 +124,22 @@ function computeModifier(modifierString, modifiers) {
 exports.computeModifier = computeModifier;
 
 /**
+ * Decodes a URL.
+ * @param  String  url
+ * @return String
+ */
+function decodeUrl(url) {
+    "use strict";
+    try {
+        return decodeURIComponent(url);
+    } catch (e) {
+        /*global unescape*/
+        return unescape(url);
+    }
+}
+exports.decodeUrl = decodeUrl;
+
+/**
  * Dumps a JSON representation of passed value to the console. Used for
  * debugging purpose only.
  *

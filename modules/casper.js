@@ -938,15 +938,9 @@ Casper.prototype.getPageContent = function getPageContent() {
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
-    var url = this.evaluate(function _evaluate() {
+    return utils.decodeUrl(this.evaluate(function _evaluate() {
         return document.location.href;
-    });
-    try {
-        return decodeURIComponent(url);
-    } catch (e) {
-        /*global unescape*/
-        return unescape(url);
-    }
+    }));
 };
 
 /**
@@ -1151,7 +1145,7 @@ Casper.prototype.handleReceivedResource = function(resource) {
         return;
     }
     this.resources.push(resource);
-    if (resource.url !== this.requestUrl) {
+    if (utils.decodeUrl(resource.url) !== this.requestUrl) {
         return;
     }
     this.currentHTTPStatus = null;

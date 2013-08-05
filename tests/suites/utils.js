@@ -75,6 +75,15 @@ if (utils.gteVersion(phantom.version, '1.9.0')) {
     });
 }
 
+casper.test.begin('decodeUrl() tests', 4, function(test) {
+    /* global escape */
+    test.assertEquals(utils.decodeUrl('foo'), 'foo');
+    test.assertEquals(utils.decodeUrl('Forlì'), 'Forlì');
+    test.assertEquals(utils.decodeUrl(encodeURIComponent('Forlì')), 'Forlì');
+    test.assertEquals(utils.decodeUrl(escape('Forlì')), 'Forlì');
+    test.done();
+});
+
 casper.test.begin('equals() tests', 23, function(test) {
     test.assert(utils.equals(null, null), 'equals() null equality');
     test.assertNot(utils.equals(null, undefined), 'equals() null vs. undefined inequality');
