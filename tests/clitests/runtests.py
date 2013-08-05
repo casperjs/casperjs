@@ -51,16 +51,16 @@ class CasperExecTest(unittest.TestCase):
                               % (cmd, err.errorcode))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
-        self.assertEquals(self.runCommand(cmd), result)
+        self.assertEqual(self.runCommand(cmd).decode('utf-8'), result)
 
     def assertCommandOutputContains(self, cmd, what, **kwargs):
         if not what:
             raise AssertionError('Empty lookup')
         if isinstance(what, (list, tuple)):
             for entry in what:
-                self.assertIn(entry, self.runCommand(cmd, **kwargs))
+                self.assertIn(entry, self.runCommand(cmd, **kwargs).decode('utf-8'))
         else:
-            self.assertIn(what, self.runCommand(cmd))
+            self.assertIn(what, self.runCommand(cmd).decode('utf-8'))
 
     @timeout(20)
     def test_version(self):
@@ -98,7 +98,6 @@ class CasperExecTest(unittest.TestCase):
     def test_simple_test_script(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'mytest.js')
         self.assertCommandOutputContains('test ' + script_path, [
-            script_path,
             'PASS ok1',
             'PASS ok2',
             'PASS ok3',
@@ -114,7 +113,6 @@ class CasperExecTest(unittest.TestCase):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
         self.assertCommandOutputContains('test ' + script_path, [
-            script_path,
             '# true',
             'PASS Subject is strictly true',
             'PASS 1 test executed',
@@ -160,7 +158,6 @@ class CasperExecTest(unittest.TestCase):
     def test_skipped_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'skipped.js')
         self.assertCommandOutputContains('test ' + script_path, [
-            script_path,
             'SKIP 1 test skipped',
             'PASS 1 test executed',
             '1 passed',
