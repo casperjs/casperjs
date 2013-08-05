@@ -98,7 +98,6 @@ class CasperExecTest(unittest.TestCase):
     def test_simple_test_script(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'mytest.js')
         self.assertCommandOutputContains('test ' + script_path, [
-            script_path,
             'PASS ok1',
             'PASS ok2',
             'PASS ok3',
@@ -114,7 +113,6 @@ class CasperExecTest(unittest.TestCase):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
         self.assertCommandOutputContains('test ' + script_path, [
-            script_path,
             '# true',
             'PASS Subject is strictly true',
             'PASS 1 test executed',
@@ -160,7 +158,6 @@ class CasperExecTest(unittest.TestCase):
     def test_skipped_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'skipped.js')
         self.assertCommandOutputContains('test ' + script_path, [
-            script_path,
             'SKIP 1 test skipped',
             'PASS 1 test executed',
             '1 passed',
