@@ -708,6 +708,19 @@ Iterates over provided array items and adds a step to the stack with current dat
         this.echo(response.data);
     }).run();
 
+Here's an example for opening an array of urls::
+
+    var casper = require('casper').create();
+    var urls = ['http://google.com/', 'http://yahoo.com/'];
+
+    casper.start().eachThen(urls, function(response) {
+      this.thenOpen(response.data, function(response) {
+        console.log('Opened', response.url);
+      });
+    });
+
+    casper.run();
+
 .. note::
 
    Current item will be stored in the ``response.data`` property.
