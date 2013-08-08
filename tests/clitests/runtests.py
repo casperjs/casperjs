@@ -40,18 +40,18 @@ class CasperExecTest(unittest.TestCase):
         failing = kwargs.get('failing', False)
         cmd_args = [CASPER_EXEC, '--no-colors'] + cmd.split(' ')
         try:
-            return subprocess.check_output(cmd_args).strip()
+            return subprocess.check_output(cmd_args).strip().decode('utf-8')
             if failing:
                 raise AssertionError('Command %s has not failed' % cmd)
         except subprocess.CalledProcessError as err:
             if failing:
-                return err.output
+                return err.output.decode('utf-8')
             else:
                 raise IOError('Command %s exited with status %s'
                               % (cmd, err.errorcode))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
-        self.assertEquals(self.runCommand(cmd), result)
+        self.assertEqual(self.runCommand(cmd), result)
 
     def assertCommandOutputContains(self, cmd, what, **kwargs):
         if not what:
