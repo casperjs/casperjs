@@ -1847,9 +1847,8 @@ Sets the `User-Agent string <http://en.wikipedia.org/wiki/User-Agent>`_ to send 
 
     casper.thenOpen('http://google.com/', function() {
         this.echo("I'm a Mac.");
+        casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
     });
-
-    casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
     casper.thenOpen('http://google.com/', function() {
         this.echo("I'm a PC.");
