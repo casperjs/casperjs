@@ -1725,7 +1725,7 @@ Opposite of `thenBypassIf()`_.
 
 Adds a new navigation step to click a given selector and optionally add a new navigation step in a single operation::
 
-    // Querying for "Chuck Norris" on Google
+    // Click the first link in the casperJS page
     casper.start('http://casperjs.org/').thenClick('a', function() {
         this.echo("I clicked on first link found, the page is now loaded.");
     });
