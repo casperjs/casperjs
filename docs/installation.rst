@@ -5,42 +5,40 @@
 Installation
 ============
 
-CasperJS can be installed on most Linuxes, OSX and Windows.
+CasperJS can be installed on Mac OSX, Windows and most Linuxes.
 
 Prerequisites
 -------------
 
-.. index:: PhantomJS, Python
+.. index:: PhantomJS, Python, SlimerJS
 
 - PhantomJS_ 1.8.1 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
 - Python_ 2.6 or greater
 
-.. note::
+.. versionadded:: 1.1
 
-   .. versionadded:: 1.0
+- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit. To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_.
 
-   A `Ruby <http://ruby-lang.org/>`_ version of the ``casperjs`` executable is also available in the ``rubybin/`` directory; in order to use the :index:`Ruby` version instead of the Python one:
+.. warning::
 
-   .. code-block:: text
+   .. deprecated:: 1.1
 
-       $ ln -sf `pwd`/rubybin/casperjs /usr/local/bin/casperjs
-
-   Or using the ruby interpreter:
-
-   .. code-block:: text
-
-       $ ruby /path/to/casperjs/rubybin/casperjs
-       CasperJS version 1.1-DEV at /path/to/casperjs/rubybin/casperjs, using PhantomJS version 1.7.0
-       ...
+   The `Ruby <http://ruby-lang.org/>`_ version of the ``casperjs`` executable also available in the ``rubybin/`` directory has been deprecated as of 1.1-beta, and is not compatible with SlimerJS_.
 
 .. index:: Homebrew
 
 Installing from Homebrew (OSX)
 ------------------------------
 
-Installation of both PhantomJS and CasperJS can be achieved through `Homebrew <http://mxcl.github.com/homebrew/>`_::
+Installation of both PhantomJS and CasperJS can be achieved using Homebrew_, a popular package manager for Mac OS X.
 
-   $ brew install casperjs
+For the 1.1 development version (recommended)::
+
+    $ brew install casperjs --devel
+
+For the 1.0.x stable version::
+
+    $ brew install casperjs
 
 .. index:: git
 
@@ -49,14 +47,13 @@ Installing from git
 
 Installation can be achieved using `git <http://git-scm.com/>`_. The code is mainly hosted on `Github <https://github.com/n1k0/casperjs>`_.
 
-From a stable tag
-~~~~~~~~~~~~~~~~~
+From the master branch
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: text
 
     $ git clone git://github.com/n1k0/casperjs.git
     $ cd casperjs
-    $ git checkout tags/1.0
     $ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
 
 Once PhantomJS and CasperJS installed on your machine, you should obtain something like this:
@@ -65,27 +62,18 @@ Once PhantomJS and CasperJS installed on your machine, you should obtain somethi
 
     $ phantomjs --version
     1.8.2
-    $ casperjs --version
-    1.0
+    $ casperjs
+    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using phantomjs version 1.9.0
+    # ...
 
-From the master branch
-~~~~~~~~~~~~~~~~~~~~~~
-
-The ``master`` branch hosts the current development version of CasperJS.
+Or if SlimerJS is your thing:
 
 .. code-block:: text
 
-    $ git clone git://github.com/n1k0/casperjs.git
-    $ cd casperjs
-    $ git checkout master
-    $ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
-
-To check your current installed version:
-
-.. code-block:: text
-
-    $ casperjs --version
-    1.1-DEV
+    $ slimerjs --version
+    Innophi SlimerJS 0.8pre, Copyright 2012-2013 Laurent Jouanneau & Innophi
+    $ casperjs
+    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using slimerjs version 0.8.0
 
 You are now ready to write your :doc:`first script <quickstart>`!
 
@@ -155,7 +143,9 @@ Run the script using the ``phantom.exe`` program:
 
 .. note::
 
-   There is no output coloration when running CasperJS on Microsoft platforms.
+   .. versionadded:: 1.1-beta1
+
+   Windows users will get colorized output if ansicon_ is installed.
 
 
 .. index:: Bugs, REPL
@@ -165,5 +155,8 @@ Known Bugs & Limitations
 
 - Due to its asynchronous nature, CasperJS doesn't work well with `PhantomJS' REPL <http://code.google.com/p/phantomjs/wiki/InteractiveModeREPL>`_.
 
+.. _Homebrew: http://mxcl.github.com/homebrew/
 .. _PhantomJS: http://phantomjs.org/
 .. _Python: http://python.org/
+.. _SlimerJS: http://slimerjs.org/
+.. _ansicon: https://github.com/adoxa/ansicon

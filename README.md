@@ -1,20 +1,23 @@
 # CasperJS
 
->**Important note:** the `master` branch hosts the development version of CasperJS, and may be rather instable from time to time. Use the [`1.0` branch](https://github.com/n1k0/casperjs/tree/1.0) if you want to keep in sync with the stable version, or [use tagged versions](https://github.com/n1k0/casperjs/tags).
+>**Important note:** the `master` branch hosts the development version of CasperJS, which is now pretty stable and should be the right version to use if you ask me.
+>
+>Use the [`1.0` branch](https://github.com/n1k0/casperjs/tree/1.0) if you want to keep in sync with the stable old version, or [use tagged versions](https://github.com/n1k0/casperjs/tags).
 >
 >Currently, available documentation is:
 >
+>- **hosted on [docs.casperjs.org](http://docs.casperjs.org/) for the development branch**
 >- hosted on [casperjs.org](http://casperjs.org/) for the 1.0 branch
->- hosted on [docs.casperjs.org](http://docs.casperjs.org/) for the development branch
 >
->[Travis-CI](http://travis-ci.org/n1k0/casperjs) build statuses:
+>[Travis-CI](http://travis-ci.org/n1k0/casperjs) build status:
 >
->- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=1.0) `1.0` branch
 >- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master) `master` branch
+>- 1.0 tests unfortunately have to be run manually using the `casperjs selftest` command
 
-CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/).
-It eases the process of defining a full navigation scenario and provides useful
-high-level functions, methods & syntaxic sugar for doing common tasks such as:
+CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/)
+and [SlimerJS](http://slimerjs.org/). It eases the process of defining a full navigation
+scenario and provides useful high-level functions, methods & syntaxic sugar for doing common
+tasks such as:
 
 - defining & ordering [navigation steps](http://casperjs.org/quickstart.html)
 - [filling forms](http://casperjs.org/api.html#casper.fill)

@@ -105,7 +105,7 @@ var Colorizer = function Colorizer() {
             codes.push(background[style.bg]);
         }
         for (var option in options) {
-            if (style[option] === true) {
+            if (option in style && style[option] === true) {
                 codes.push(options[option]);
             }
         }

@@ -15,19 +15,33 @@ casper.test.begin("HTTP status code handling", 163, {
             response.write("");
             response.close();
         });
+        var isGecko = (phantom.casperEngine === 'slimerjs');
+
         this.testCodes = [
-            100, 101, 102, 118, 200, 201, 202, 203, 204, 205, 206, 207, 210,
+            100, 101, 200, 201, 202, 203, 204, 205, 206, 207, 210,
             300, 301, 302, 303, 304, 305, 307, 310
         ];
-        if (utils.ltVersion(phantom.version, '1.9.0')) {
+        if (!isGecko) {
+            // it seems that the network layer of Gecko does not process these response
+            this.testCodes.push(102);
+            this.testCodes.push(118);
+        }
+
+        if (utils.ltVersion(phantom.version, '1.9.0') || isGecko) {
             // https://github.com/ariya/phantomjs/issues/11163
             this.testCodes = this.testCodes.concat([
-                400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
+                400, 401, 402, 403, 404, 405, 406, 407, 409, 410, 411, 412, 413,
                      414, 415, 416, 417, 418, 422, 423, 424, 425, 426, 449, 450,
                 500, 501, 502, 503, 504, 505, 507, 509
             ]);
-        } else {
-            test.skip(102);
+            if (!isGecko) {
+                // it seems that the network layer of Gecko has a different
+                // behavior for 408 than PhantomJS's webkit
+                this.testCodes.push(408);
+            }
+        }
+        if ((this.testCodes.length * 3) < 165 ) {
+            test.skip(163 - (this.testCodes.length * 3 - 2) );
         }
     },
 

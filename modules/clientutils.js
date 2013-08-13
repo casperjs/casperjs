@@ -445,7 +445,7 @@
                 attributes: attributes,
                 tag: element.outerHTML,
                 html: element.innerHTML,
-                text: element.innerText,
+                text: element.textContent || element.innerText,
                 x: bounds.left,
                 y: bounds.top,
                 width: bounds.width,
@@ -473,7 +473,7 @@
                     attributes: attributes,
                     tag: element.outerHTML,
                     html: element.innerHTML,
-                    text: element.innerText,
+                    text: element.textContent || element.innerText,
                     x: bounds[index].left,
                     y: bounds[index].top,
                     width: bounds[index].width,
@@ -766,24 +766,6 @@
                 case "input":
                     var type = field.getAttribute('type') || "text";
                     switch (type.toLowerCase()) {
-                        case "color":
-                        case "date":
-                        case "datetime":
-                        case "datetime-local":
-                        case "email":
-                        case "hidden":
-                        case "month":
-                        case "number":
-                        case "password":
-                        case "range":
-                        case "search":
-                        case "tel":
-                        case "text":
-                        case "time":
-                        case "url":
-                        case "week":
-                            field.value = value;
-                            break;
                         case "checkbox":
                             if (fields.length > 1) {
                                 var values = value;
@@ -813,7 +795,7 @@
                             }
                             break;
                         default:
-                            out = "Unsupported input field type: " + type;
+                            field.value = value;
                             break;
                     }
                     break;

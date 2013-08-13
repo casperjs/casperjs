@@ -75,6 +75,15 @@ if (utils.gteVersion(phantom.version, '1.9.0')) {
     });
 }
 
+casper.test.begin('decodeUrl() tests', 4, function(test) {
+    /* global escape */
+    test.assertEquals(utils.decodeUrl('foo'), 'foo');
+    test.assertEquals(utils.decodeUrl('Forlì'), 'Forlì');
+    test.assertEquals(utils.decodeUrl(encodeURIComponent('Forlì')), 'Forlì');
+    test.assertEquals(utils.decodeUrl(escape('Forlì')), 'Forlì');
+    test.done();
+});
+
 casper.test.begin('equals() tests', 23, function(test) {
     test.assert(utils.equals(null, null), 'equals() null equality');
     test.assertNot(utils.equals(null, undefined), 'equals() null vs. undefined inequality');
@@ -288,7 +297,8 @@ casper.test.begin('isJsFile() tests', 5, function(test) {
     test.done();
 });
 
-casper.test.begin('mergeObjects() tests', 7, function(test) {
+
+casper.test.begin('mergeObjects() tests', 8, function(test) {
     var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
@@ -326,8 +336,9 @@ casper.test.begin('mergeObjects() tests', 7, function(test) {
     var merged1 = utils.mergeObjects({}, {a: obj});
     var merged2 = utils.mergeObjects({a: {}}, {a: obj});
     merged1.a.x = 2;
+    test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones #1');
     merged2.a.x = 2;
-    test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones');
+    test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones #2');
     test.done();
 });
 
@@ -337,6 +348,19 @@ casper.test.begin('objectValues() tests', 2, function(test) {
     test.assertEquals(utils.objectValues({a: 1, b: 2}), [1, 2],
         'objectValues() can extract object values');
     test.done();
+});
+
+casper.test.begin('quoteXPathAttributeString() tests', 2, function(test) {
+    casper.start('tests/site/click.html', function() {
+        var selector = utils.format('//a[text()=%s]',
+            utils.quoteXPathAttributeString('Label with double "quotes"'));
+        test.assertExists(x(selector), utils.format('Xpath selector "%s" is found on "tests/site/click.html" page', selector));
+        selector = utils.format('//a[text()=%s]',
+            utils.quoteXPathAttributeString("Label with single 'quotes'"));
+        test.assertExists(x(selector), utils.format('Xpath selector "%s" is found on "tests/site/click.html" page', selector));
+    }).run(function() {
+        test.done();
+    });
 });
 
 casper.test.begin('unique() tests', 4, function(test) {

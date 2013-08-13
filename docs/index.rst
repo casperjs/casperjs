@@ -2,7 +2,7 @@
 CasperJS documentation
 ======================
 
-CasperJS_ is a navigation scripting & testing utility for PhantomJS_, written in Javascript.
+CasperJS_ is a navigation scripting & testing utility for the PhantomJS_ (WebKit) and SlimerJS_ (Gecko) headless browsers, written in Javascript.
 
 .. figure:: _static/images/casperjs-logo.png
    :align: right
@@ -43,3 +43,4 @@ Community
 
 .. _CasperJS: http://casperjs.org/
 .. _PhantomJS: http://phantomjs.org/
+.. _SlimerJS: http://slimerjs.org/

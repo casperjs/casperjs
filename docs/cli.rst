@@ -87,12 +87,14 @@ Execution results:
 
 .. versionadded:: 1.1
 
-.. index:: Logging, log levels
+.. index:: Logging, log levels, SlimerJS
 
-The `casperjs` command has two available options:
+The `casperjs` command has three available options:
 
 - ``--direct``: to prints out log messages to the console
 - ``--log-level=[debug|info|warning|error]`` to set the :ref:`logging level <logging>`
+- ``--engine=[phantomjs|slimerjs]`` to select the browser engine you want to use. CasperJS
+   supports PhantomJS (default) that runs Webkit, and SlimerJS that runs Gecko.
 
 Example:
 
@@ -109,7 +111,7 @@ Last but not least, you can still use all PhantomJS standard CLI options as you 
 .. hint::
 
    To remember what the native phantomjs available cli options are, run the ``phantomjs --help`` command.
-
+   SlimerJS supports almost same options as PhantomJS.
 
 .. index:: Raw values
 
