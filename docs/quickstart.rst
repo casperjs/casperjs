@@ -40,7 +40,7 @@ You should get something like this:
 .. code-block:: text
 
     $ casperjs sample.js
-    CasperJS, a navigation scripting and testing utility for PhantomJS | CasperJS 1.0.0
+    CasperJS, a navigation scripting and testing utility for PhantomJS
     PhantomJS: Headless WebKit with JavaScript API
 
 .. topic:: What did we just do?
