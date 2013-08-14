@@ -32,6 +32,10 @@ Installing from Homebrew (OSX)
 
 Installation of both PhantomJS and CasperJS can be achieved using Homebrew_, a popular package manager for Mac OS X.
 
+Above all, don't forget to update Formulaes::
+
+    $ brew update
+   
 For the 1.1 development version (recommended)::
 
     $ brew install casperjs --devel
@@ -39,6 +43,12 @@ For the 1.1 development version (recommended)::
 For the 1.0.x stable version::
 
     $ brew install casperjs
+    
+If you already install casperjs and want to have the last release (stable|devel), use ``upgrade``::
+
+    $ brew upgrade casperjs
+   
+Upgrade only update to the latest release branch (1.0.x|1.1-dev).
 
 .. index:: git
 
