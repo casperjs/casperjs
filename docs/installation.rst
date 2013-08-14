@@ -44,7 +44,7 @@ For the 1.0.x stable version::
 
     $ brew install casperjs
     
-If you already install casperjs and want to have the last release (stable|devel), use ``upgrade``::
+If you have already installed casperjs and want to have the last release (stable|devel), use ``upgrade``::
 
     $ brew upgrade casperjs
    
