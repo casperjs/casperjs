@@ -166,6 +166,8 @@ Options are prefixed with a double-dash (``--``):
 - ``--pre=pre-test.js`` will add the tests contained in ``pre-test.js`` **before** executing the whole test suite;
 - ``--post=post-test.js`` will add the tests contained in ``post-test.js`` **after** having executed the whole test suite;
 - ``--fail-fast`` will terminate the current test suite as soon as a first failure is encountered.
+- ``--concise`` will create a more concise output of the test suite.
+- ``--no-colors`` will create an output without (beautifull) colors from casperjs.
 
 Sample custom command:
 
