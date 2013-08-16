@@ -167,7 +167,7 @@ Options are prefixed with a double-dash (``--``):
 - ``--post=post-test.js`` will add the tests contained in ``post-test.js`` **after** having executed the whole test suite;
 - ``--fail-fast`` will terminate the current test suite as soon as a first failure is encountered.
 - ``--concise`` will create a more concise output of the test suite.
-- ``--no-colors`` will create an output without (beautifull) colors from casperjs.
+- ``--no-colors`` will create an output without (beautiful) colors from casperjs.
 
 Sample custom command:
 
