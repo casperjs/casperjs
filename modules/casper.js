@@ -1795,7 +1795,7 @@ Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
 };
 
 /**
- * Bypass `nb` steps if condition is true.
+ * Bypass `nb` steps if condition is false.
  *
  * @param Mixed    condition  Test condition
  * @param Integer  nb         Number of tests to bypass
