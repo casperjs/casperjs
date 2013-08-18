@@ -10,8 +10,10 @@ TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
 CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', 'casperjs')
 
+
 class TimeoutException(Exception):
     pass
+
 
 def timeout(timeout_time):
     def timeout_function(f):
@@ -31,7 +33,8 @@ def timeout(timeout_time):
         return f2
     return timeout_function
 
-class CasperExecTest(unittest.TestCase):
+
+class CasperExecTestBase(unittest.TestCase):
     def setUp(self):
         with open(os.path.join(CASPERJS_ROOT, 'package.json')) as f:
             self.pkg_version = json.load(f).get('version')
@@ -46,9 +49,7 @@ class CasperExecTest(unittest.TestCase):
         except subprocess.CalledProcessError as err:
             if failing:
                 return err.output.decode('utf-8')
-            else:
-                raise IOError('Command %s exited with status %s'
-                              % (cmd, err.errorcode))
+            raise IOError('Command %s exited: %s' % (cmd, err))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
         self.assertEqual(self.runCommand(cmd), result)
@@ -62,6 +63,8 @@ class CasperExecTest(unittest.TestCase):
         else:
             self.assertIn(what, self.runCommand(cmd))
 
+
+class BasicCommandsTest(CasperExecTestBase):
     @timeout(20)
     def test_version(self):
         self.assertCommandOutputEquals('--version', self.pkg_version)
@@ -70,16 +73,42 @@ class CasperExecTest(unittest.TestCase):
     def test_help(self):
         self.assertCommandOutputContains('--help', self.pkg_version)
 
+
+class RequireTest(CasperExecTestBase):
     @timeout(20)
-    def test_require(self):
+    def test_simple_require(self):
         script_path = os.path.join(TEST_ROOT, 'modules', 'test.js')
         self.assertCommandOutputEquals(script_path, 'hello, world')
 
+    @timeout(20)
+    def test_require_coffee(self):
+        script_path = os.path.join(TEST_ROOT, 'modules', 'test_coffee.js')
+        self.assertCommandOutputEquals(script_path, '42')
+
+    @timeout(20)
+    def test_node_module_require(self):
+        script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_mod.js')
+        self.assertCommandOutputEquals(script_path, '42')
+
+    @timeout(20)
+    def test_node_module_require_index(self):
+        script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_mod_index.js')
+        self.assertCommandOutputEquals(script_path, '42')
+
+    @timeout(20)
+    def test_node_module_require_json(self):
+        script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_json.js')
+        self.assertCommandOutputEquals(script_path, '42')
+
+
+class ScriptOutputTest(CasperExecTestBase):
     @timeout(20)
     def test_simple_script(self):
         script_path = os.path.join(TEST_ROOT, 'scripts', 'script.js')
         self.assertCommandOutputEquals(script_path, 'it works')
 
+
+class ScriptErrorTest(CasperExecTestBase):
     @timeout(20)
     def test_syntax_error(self):
         script_path = os.path.join(TEST_ROOT, 'error', 'syntax.js')
@@ -94,6 +123,8 @@ class CasperExecTest(unittest.TestCase):
             'SyntaxError: Parse error',
         ], failing=True)
 
+
+class TestCommandOutputTest(CasperExecTestBase):
     @timeout(20)
     def test_simple_test_script(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'mytest.js')
@@ -224,6 +255,7 @@ class CasperExecTest(unittest.TestCase):
             'PASS test 5',
             'this is my abort message',
         ], failing=True)
+
 
 if __name__ == '__main__':
     unittest.main()
