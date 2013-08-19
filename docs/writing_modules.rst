@@ -28,3 +28,47 @@ From your root casper script::
 
     var universe = require('./universe');
     console.log(universe.answer()); // prints "It's 42"
+
+.. versionadded:: 1.1.
+
+.. hint::
+
+    Like PhantomJS, CasperJS allows using nodejs modules installed through npm_.
+   
+As an example, let's install the underscore_ library:
+.. _npm: https://npmjs.org/
+
+.. code-block:: text
+
+    $ npm install underscore
+    
+    
+Then, ``require`` it like you would with any other nodejs compliant module::
+   
+    //npm-underscore-test.js
+    var _ = require('underscore');
+    var casper = require('casper').create();
+    var urls = _.uniq([
+      'http://google.com/',
+      'http://docs.casperjs.org/',
+      'http://google.com/'
+    ]);
+    
+    casper.start().eachThen(urls, function(response) {
+      this.thenOpen(response.data, function(response) {
+        this.echo(this.getTitle());
+      });
+    });
+    
+    casper.run();
+    
+    
+Finaly, you’ll probably get something like this:
+    
+.. code-block:: text
+
+    $ casperjs npm-underscore-test.js
+    Google
+    CasperJS documentation | CasperJS 1.1.0-DEV documentation
+    
+    
