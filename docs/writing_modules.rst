@@ -33,15 +33,42 @@ From your root casper script::
 
 .. hint::
 
-   CasperJS is able to call nodejs modules in the same way that phantomjs, take a look at the example below::
+    CasperJS is able to call nodejs modules in the same way that phantomjs, take a look at the example below.
    
-    // underscoreByNpm.js
-    require('underscore').uniq([1, 2, 3, 2, 3]) );
-
-With:
+First, install a module using npm_ :
+.. _npm: https://npmjs.org/
 
 .. code-block:: text
 
     $ npm install underscore
+    
+    
+Then, you can access it using ``require`` function::
+   
+    //npm-underscore-test.js
+    var _ = require('underscore');
+    var casper = require('casper').create();
+    var urls = _.uniq([
+      'http://google.com/',
+      'http://docs.casperjs.org/',
+      'http://google.com/'
+    ]);
+    
+    casper.start().eachThen(urls, function(response) {
+      this.thenOpen(response.data, function(response) {
+        this.echo(this.getTitle());
+      });
+    });
+    
+    casper.run();
+    
+    
+Finaly, you’ll probably get something like this:
+    
+.. code-block:: text
+
+    $ casperjs npm-underscore-test.js
+    Google
+    CasperJS documentation ÔÇö CasperJS 1.1.0-DEV documentation
     
     
