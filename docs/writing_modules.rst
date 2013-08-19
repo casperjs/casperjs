@@ -28,3 +28,20 @@ From your root casper script::
 
     var universe = require('./universe');
     console.log(universe.answer()); // prints "It's 42"
+
+.. versionadded:: 1.1-dev
+
+.. hint::
+
+   CasperJS is able to call nodejs modules in the same way that phantomjs, take a look at the example below::
+   
+    // underscoreByNpm.js
+    require('underscore').uniq([1, 2, 3, 2, 3]) );
+
+With:
+
+.. code-block:: text
+
+    $ npm install underscore
+    
+    
