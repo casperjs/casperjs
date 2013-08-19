@@ -29,7 +29,7 @@ From your root casper script::
     var universe = require('./universe');
     console.log(universe.answer()); // prints "It's 42"
 
-.. versionadded:: 1.1-dev
+.. versionadded:: 1.1
 
 .. hint::
 
