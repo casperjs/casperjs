@@ -69,6 +69,6 @@ Finaly, you’ll probably get something like this:
 
     $ casperjs npm-underscore-test.js
     Google
-    CasperJS documentation ÔÇö CasperJS 1.1.0-DEV documentation
+    CasperJS documentation | CasperJS 1.1.0-DEV documentation
     
     
