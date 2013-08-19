@@ -189,9 +189,9 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             var extensions = ['js', 'coffee', 'json'];
             var basenames = [path, path + '/index'];
             var paths = [];
-            extensions.forEach(function(extension) {
-                basenames.forEach(function(basename) {
-                    paths.push(fs.pathJoin(dir, basename));
+            basenames.forEach(function(basename) {
+                paths.push(fs.pathJoin(dir, basename));
+                extensions.forEach(function(extension) {
                     paths.push(fs.pathJoin(dir, [basename, extension].join('.')));
                 });
             });
