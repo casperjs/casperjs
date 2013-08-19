@@ -191,6 +191,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             var paths = [];
             extensions.forEach(function(extension) {
                 basenames.forEach(function(basename) {
+                    paths.push(fs.pathJoin(dir, basename));
                     paths.push(fs.pathJoin(dir, [basename, extension].join('.')));
                 });
             });
