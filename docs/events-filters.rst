@@ -257,7 +257,7 @@ Emitted when PhantomJS' ``WebPage`` object used by CasperJS has been created.
 
 **Arguments:** ``message, trace``
 
-Emitted when retrieved page leaved a Javascript error uncaught::
+Emitted when retrieved page leaves a Javascript error uncaught::
 
     casper.on("page.error", function(msg, trace) {
         this.echo("Error: " + msg, "ERROR");
