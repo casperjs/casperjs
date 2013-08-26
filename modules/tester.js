@@ -851,7 +851,7 @@ Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, className
     "use strict";
     var actual = subject instanceof className;
     return this.assert(utils.equals(actual, true), message, {
-        type: "assertType",
+        type: "assertInstanceOf",
         standard: f('Subject is an instance of: "%s"', className),
         values: {
             subject: subject,
