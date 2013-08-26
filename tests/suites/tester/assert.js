@@ -2,7 +2,7 @@
 /*jshint strict:false, maxstatements:99*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 45, function(test) {
+casper.test.begin('Common assertions tests', 46, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
@@ -60,7 +60,9 @@ casper.test.begin('Common assertions tests', 45, function(test) {
         test.assertTitleMatch(/test index/, 'Tester.assertTitleMatch() works as expected');
         test.assertTitleMatches(/test index/, 'Tester.assertTitleMatches() works as expected [alias]');
         test.assertType("plop", "string", "Tester.assertType() works as expected");
-        test.assertInstanceOf(casper, "Casper", "Tester.assertInstanceOf() works as expected");
+        // we need a constructor and an object
+        function Cow(){}; var daisy = new Cow();
+        test.assertInstanceOf(daisy, Cow, "Tester.assertInstanceOf() works as expected");
         test.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
         test.assertUrlMatches(/index\.html$/, "Tester.assertUrlMatches() works as expected [alias]");
         test.assertVisible('img', 'Tester.assertVisible() works as expected');
