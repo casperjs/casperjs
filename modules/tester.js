@@ -842,20 +842,20 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
 /**
  * Asserts that the provided subject is of the given class name.
  *
- * @param  mixed   subject    The value to test
- * @param  String  className  The javascript class name
- * @param  String  message    Test description
- * @return Object             An assertion result object
+ * @param  mixed   subject          The value to test
+ * @param  function  constructor    The object constructor
+ * @param  String  message          Test description
+ * @return Object                   An assertion result object
  */
-Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, className, message) {
+Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, constructor, message) {
     "use strict";
-    var actual = subject instanceof className;
+    var actual = subject instanceof constructor;
     return this.assert(utils.equals(actual, true), message, {
         type: "assertInstanceOf",
-        standard: f('Subject is an instance of: "%s"', className),
+        standard: f('Subject is an instance of: "%s"', constructor),
         values: {
             subject: subject,
-            className: className,
+            constructor: constructor,
             actual: actual
         }
     });

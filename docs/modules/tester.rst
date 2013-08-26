@@ -450,14 +450,19 @@ Asserts that the provided input is of the given type::
 ``assertInstanceOf()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``assertInstanceOf(mixed input, String className[, String message])``
+**Signature:** ``assertInstanceOf(mixed input, function constructor[, String message])``
 
 Asserts that the provided input is of the given className::
-
+    
+    function Cow() {
+        this.moo = function moo() {
+            return 'moo!';
+        };
+    } 
     casper.test.begin('assertInstanceOf() tests', 1, function suite(test) {
-        var daisy = new Cow(){};
-        test.assertInstanceOf(daisy, "Cow", "Okay, daisy is a cow.");
-        test.assertInstanceOf(daisy, "Casper", "Moo is not Boo");
+        var daisy = new Cow();
+        test.assertInstanceOf(daisy, Cow, "Okay, daisy is a cow.");
+        test.assertInstanceOf(daisy, Casper, "Moo is not Boo");
         test.done();
     });
 
