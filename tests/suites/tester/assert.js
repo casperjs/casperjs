@@ -60,6 +60,7 @@ casper.test.begin('Common assertions tests', 45, function(test) {
         test.assertTitleMatch(/test index/, 'Tester.assertTitleMatch() works as expected');
         test.assertTitleMatches(/test index/, 'Tester.assertTitleMatches() works as expected [alias]');
         test.assertType("plop", "string", "Tester.assertType() works as expected");
+        test.assertInstanceOf(casper, "Casper", "Tester.assertInstanceOf() works as expected");
         test.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
         test.assertUrlMatches(/index\.html$/, "Tester.assertUrlMatches() works as expected [alias]");
         test.assertVisible('img', 'Tester.assertVisible() works as expected');

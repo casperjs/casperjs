@@ -840,6 +840,28 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
 };
 
 /**
+ * Asserts that the provided subject is of the given class name.
+ *
+ * @param  mixed   subject    The value to test
+ * @param  String  className  The javascript class name
+ * @param  String  message    Test description
+ * @return Object             An assertion result object
+ */
+Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, className, message) {
+    "use strict";
+    var actual = subject instanceof className;
+    return this.assert(utils.equals(actual, true), message, {
+        type: "assertType",
+        standard: f('Subject is an instance of: "%s"', className),
+        values: {
+            subject: subject,
+            className: className,
+            actual: actual
+        }
+    });
+};
+
+/**
  * Asserts that a the current page url matches a given pattern. A pattern may be
  * either a RegExp object or a String. The method will test if the URL matches
  * the pattern or contains the String.
