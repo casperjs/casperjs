@@ -61,7 +61,7 @@ casper.test.begin('Common assertions tests', 46, function(test) {
         test.assertTitleMatches(/test index/, 'Tester.assertTitleMatches() works as expected [alias]');
         test.assertType("plop", "string", "Tester.assertType() works as expected");
         // we need a constructor and an object
-        function Cow(){}; var daisy = new Cow();
+        function Cow(){} var daisy = new Cow();
         test.assertInstanceOf(daisy, Cow, "Tester.assertInstanceOf() works as expected");
         test.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
         test.assertUrlMatches(/index\.html$/, "Tester.assertUrlMatches() works as expected [alias]");
