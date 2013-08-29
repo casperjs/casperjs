@@ -849,13 +849,15 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
  */
 Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, constructor, message) {
     "use strict";
-    var actual = subject instanceof constructor;
-    return this.assert(utils.equals(actual, true), message, {
+    if (utils.betterTypeOf(constructor) !== "function") {
+        throw new CasperError('Invalid constructor.');
+    }
+    return this.assert(subject instanceof constructor, message, {
         type: "assertInstanceOf",
-        standard: f('Subject is an instance of: "%s"', constructor),
+        standard: f('Subject is an instance of: "%s"', constructor.name),
         values: {
             subject: subject,
-            constructor: constructor,
+            constructor: constructor.name,
             actual: actual
         }
     });
