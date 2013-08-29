@@ -459,7 +459,7 @@ Asserts that the provided input is of the given className::
             return 'moo!';
         };
     } 
-    casper.test.begin('assertInstanceOf() tests', 1, function suite(test) {
+    casper.test.begin('assertInstanceOf() tests', 2, function suite(test) {
         var daisy = new Cow();
         test.assertInstanceOf(daisy, Cow, "Okay, daisy is a cow.");
         test.assertInstanceOf(daisy, Casper, "Moo is not Boo");
