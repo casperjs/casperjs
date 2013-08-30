@@ -49,7 +49,7 @@ class CasperExecTestBase(unittest.TestCase):
         except subprocess.CalledProcessError as err:
             if failing:
                 return err.output.decode('utf-8')
-            raise IOError('Command %s exited: %s' % (cmd, err))
+            raise IOError('Command %s exited: %s \n %s' % (cmd, err, err.output.decode('utf-8')))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
         self.assertEqual(self.runCommand(cmd), result)
