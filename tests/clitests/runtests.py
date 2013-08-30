@@ -74,7 +74,7 @@ class BasicCommandsTest(CasperExecTestBase):
         self.assertCommandOutputContains('--help', self.pkg_version)
 
 
-class RequireTest(CasperExecTestBase):
+class RequireScriptFullPathTest(CasperExecTestBase):
     @timeout(20)
     def test_simple_require(self):
         script_path = os.path.join(TEST_ROOT, 'modules', 'test.js')
@@ -100,6 +100,77 @@ class RequireTest(CasperExecTestBase):
         script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_json.js')
         self.assertCommandOutputEquals(script_path, '42')
 
+
+
+class RequireWithOnlyScriptNameTest(CasperExecTestBase):
+
+    def setUp(self):
+        self.currentPath = os.getcwd()
+        os.chdir(os.path.join(TEST_ROOT, 'modules'))
+        super(RequireWithOnlyScriptNameTest, self).setUp()
+
+    def tearDown(self):
+        os.chdir(self.currentPath)
+        super(RequireWithOnlyScriptNameTest, self).tearDown()
+
+    @timeout(20)
+    def test_simple_require(self):
+        self.assertCommandOutputEquals('test.js', 'hello, world')
+
+    @timeout(20)
+    def test_simple_patched_require(self):
+        self.assertCommandOutputEquals('test_patched_require.js', 'hello, world')
+
+    @timeout(20)
+    def test_require_coffee(self):
+        self.assertCommandOutputEquals('test_coffee.js', '42')
+
+    @timeout(20)
+    def test_node_module_require(self):
+        self.assertCommandOutputEquals('test_node_mod.js', '42')
+
+    @timeout(20)
+    def test_node_module_require_index(self):
+        self.assertCommandOutputEquals('test_node_mod_index.js', '42')
+
+    @timeout(20)
+    def test_node_module_require_json(self):
+        self.assertCommandOutputEquals('test_node_json.js', '42')
+
+class RequireWithRelativeScriptPathTest(CasperExecTestBase):
+
+    def setUp(self):
+        self.currentPath = os.getcwd()
+        os.chdir(os.path.join(TEST_ROOT, 'modules'))
+        super(RequireWithRelativeScriptPathTest, self).setUp()
+
+    def tearDown(self):
+        os.chdir(self.currentPath)
+        super(RequireWithRelativeScriptPathTest, self).tearDown()
+
+    @timeout(20)
+    def test_simple_require(self):
+        self.assertCommandOutputEquals('./test.js', 'hello, world')
+
+    @timeout(20)
+    def test_simple_patched_require(self):
+        self.assertCommandOutputEquals('test_patched_require.js', 'hello, world')
+
+    @timeout(20)
+    def test_require_coffee(self):
+        self.assertCommandOutputEquals('./test_coffee.js', '42')
+
+    @timeout(20)
+    def test_node_module_require(self):
+        self.assertCommandOutputEquals('./test_node_mod.js', '42')
+
+    @timeout(20)
+    def test_node_module_require_index(self):
+        self.assertCommandOutputEquals('./test_node_mod_index.js', '42')
+
+    @timeout(20)
+    def test_node_module_require_json(self):
+        self.assertCommandOutputEquals('./test_node_json.js', '42')
 
 class ScriptOutputTest(CasperExecTestBase):
     @timeout(20)
