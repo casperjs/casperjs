@@ -9,7 +9,11 @@ import unittest
 TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
 CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', 'casperjs')
-
+PHANTOMJS_EXEC = os.environ['PHANTOMJS_EXECUTABLE']
+# make it to an absolute path, because some test change the working directory
+# and relative path to phantomjs would be invalid
+if not os.path.isabs(PHANTOMJS_EXEC):
+    os.environ['PHANTOMJS_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, PHANTOMJS_EXEC)
 
 class TimeoutException(Exception):
     pass
