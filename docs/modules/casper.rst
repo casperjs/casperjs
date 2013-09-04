@@ -398,16 +398,16 @@ Example: retrieving google logo image encoded in base64::
 You can also perform an HTTP POST request to retrieve the contents to
 encode::
 
-    var base46contents = null;
+    var base64contents = null;
     casper.start('http://domain.tld/download.html', function() {
-        base46contents = this.base64encode('http://domain.tld/', 'POST', {
+        base64contents = this.base64encode('http://domain.tld/', 'POST', {
             param1: 'foo',
             param2: 'bar'
         });
     });
 
     casper.run(function() {
-        this.echo(base46contents).exit();
+        this.echo(base64contents).exit();
     });
 
 .. index:: bypass, Step stack
