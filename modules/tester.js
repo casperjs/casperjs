@@ -843,22 +843,21 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
  * Asserts that the provided subject is of the given class name.
  *
  * @param  mixed   subject          The value to test
- * @param  function  constructor    The object constructor
+ * @param  string  className        The className
  * @param  String  message          Test description
  * @return Object                   An assertion result object
  */
-Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, constructor, message) {
+Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, className, message) {
     "use strict";
     if (utils.betterTypeOf(constructor) !== "function") {
-        throw new CasperError('Invalid constructor.');
+        throw new CasperError('Subject is null or undefined.');
     }
-    return this.assert(subject instanceof constructor, message, {
+    return this.assert(utils.equals(subject.constructor.name, className), message, {
         type: "assertInstanceOf",
         standard: f('Subject is an instance of: "%s"', constructor.name),
         values: {
             subject: subject,
             constructor: constructor.name,
-            actual: actual
         }
     });
 };
