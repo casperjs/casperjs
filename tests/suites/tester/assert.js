@@ -60,9 +60,8 @@ casper.test.begin('Common assertions tests', 50, function(test) {
         test.assertTitleMatch(/test index/, 'Tester.assertTitleMatch() works as expected');
         test.assertTitleMatches(/test index/, 'Tester.assertTitleMatches() works as expected [alias]');
         test.assertType("plop", "string", "Tester.assertType() works as expected");
-        // We need two objects to test inheritance case
-        function Cow(){}; function SuperCow(){}; SuperCow.prototype = new Cow;
-        var daisy = new Cow(); var superCowie = new SuperCow();
+        // we need an custom object to test
+        function Cow(){} var daisy = new Cow();
         test.assertInstanceOf(12, "Number", "Tester.assertInstanceOf() works as expected");
         test.assertInstanceOf("Boo", "String", "Tester.assertInstanceOf() works as expected");
         test.assertInstanceOf(["moo", "bar"], "Array", "Tester.assertInstanceOf() works as expected")
