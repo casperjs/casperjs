@@ -67,7 +67,6 @@ casper.test.begin('Common assertions tests', 50, function(test) {
         test.assertInstanceOf(["moo", "bar"], "Array", "Tester.assertInstanceOf() works as expected")
         test.assertInstanceOf(true, "Boolean", "Test.assertInstanceOf() works as expected");
         test.assertInstanceOf(daisy, "Cow", "Tester.assertInstanceOf() works as expected");
-        test.assertInstanceOf(superCowie, "SuperCow", "Tester.assertInstanceOf() works as expected");
         test.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
         test.assertUrlMatches(/index\.html$/, "Tester.assertUrlMatches() works as expected [alias]");
         test.assertVisible('img', 'Tester.assertVisible() works as expected');
