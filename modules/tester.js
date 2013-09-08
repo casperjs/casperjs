@@ -840,6 +840,30 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
 };
 
 /**
+ * Asserts that the provided subject is of the given class name.
+ *
+ * @param  mixed   subject          The value to test
+ * @param  function  constructor    The object constructor
+ * @param  String  message          Test description
+ * @return Object                   An assertion result object
+ */
+Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, constructor, message) {
+    "use strict";
+    if (utils.betterTypeOf(constructor) !== "function") {
+        throw new CasperError('Invalid constructor.');
+    }
+    return this.assert(subject instanceof constructor, message, {
+        type: "assertInstanceOf",
+        standard: f('Subject is an instance of: "%s"', constructor.name),
+        values: {
+            subject: subject,
+            constructor: constructor.name,
+            actual: actual
+        }
+    });
+};
+
+/**
  * Asserts that a the current page url matches a given pattern. A pattern may be
  * either a RegExp object or a String. The method will test if the URL matches
  * the pattern or contains the String.
