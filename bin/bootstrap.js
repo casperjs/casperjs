@@ -190,9 +190,9 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             var basenames = [path, path + '/index'];
             var paths = [];
             basenames.forEach(function(basename) {
-                paths.push(fs.pathJoin(dir, basename));
+                paths.push(fs.absolute(fs.pathJoin(dir, basename)));
                 extensions.forEach(function(extension) {
-                    paths.push(fs.pathJoin(dir, [basename, extension].join('.')));
+                    paths.push(fs.absolute(fs.pathJoin(dir, [basename, extension].join('.'))));
                 });
             });
             for (var i = 0; i < paths.length; i++) {
@@ -200,6 +200,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
                     return paths[i];
                 }
             }
+            return null;
         }
         function getCurrentScriptRoot() {
             if ((phantom.casperScriptBaseDir || "").indexOf(fs.workingDirectory) === 0) {
