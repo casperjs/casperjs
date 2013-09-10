@@ -44,8 +44,8 @@ casper.test.begin('utils.betterInstanceOf() tests', 13,  function(test) {
         {subject: superDaisy, constructor: Cow, expected: true}
     ];
     testCases.forEach(function(testCase) {
-        test.assertEquals(utils.betterTypeOf(testCase.subject), testCase.expected,
-            utils.format('betterTypeOf() detects expected type "%s"', testCase.expected));
+        test.assertEquals(utils.betterTypeOf(testCase.subject, testCase.constructor), testCase.expected,
+            utils.format('betterInstanceOf() detects expected constructor "%s"', testCase.constructor.name));
     });
     test.done();
 });
