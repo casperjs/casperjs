@@ -36,8 +36,8 @@ casper.test.begin('utils.betterInstanceOf() tests', 12,  function(test) {
         {subject: undefined, constructor: Array, expected: false},
         {subject: null, constructor: Array, expected: false},
         {subject: function(){}, constructor: Function, expected: true},
-        {subject: new Date(), constructor: Date, expected: 'date'},
-        {subject: new RegExp(), constructor: RegExp, expected: 'regexp'},
+        {subject: new Date(), constructor: Date, expected: true},
+        {subject: new RegExp(), constructor: RegExp, expected: true},
         {subject: daisy, constructor: Cow, expected: true},
         {subject: superDaisy, constructor: SuperCow, expected: true},
         {subject: superDaisy, constructor: Cow, expected: true}
