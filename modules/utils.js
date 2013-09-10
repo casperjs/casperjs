@@ -86,7 +86,8 @@ function betterInstanceOf(input, constructor) {
         return true;
       }  
       if (typeof input === 'xml') {
-        return constructor.prototype === XMLDocument.prototype;
+        var xmlDom = XMLDocument;
+        return constructor.prototype === xmlDom.prototype;
       }
       if (typeof input === 'undefined') {
         return false;
