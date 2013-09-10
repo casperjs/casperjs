@@ -854,7 +854,7 @@ Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, construct
     }
     return this.assert(utils.betterInstanceOf(subject, constructor), message, {
         type: "assertInstanceOf",
-        standard: f('Subject type is: "%s"', constructor),
+        standard: f('Subject is instance of: "%s"', constructor.name),
         values: {
             subject: subject,
             className: constructor.name,
