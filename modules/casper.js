@@ -380,7 +380,7 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         }
     } catch (error) {
         self.emit('complete.error', error);
-        this.emit('error', error);
+        self.emit('error', error);
     }
 };
 
