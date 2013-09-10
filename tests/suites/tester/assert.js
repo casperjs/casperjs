@@ -2,7 +2,7 @@
 /*jshint strict:false, maxstatements:99*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 50, function(test) {
+casper.test.begin('Common assertions tests', 46, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
@@ -60,13 +60,7 @@ casper.test.begin('Common assertions tests', 50, function(test) {
         test.assertTitleMatch(/test index/, 'Tester.assertTitleMatch() works as expected');
         test.assertTitleMatches(/test index/, 'Tester.assertTitleMatches() works as expected [alias]');
         test.assertType("plop", "string", "Tester.assertType() works as expected");
-        // we need a class and an instance of this class
-        function Cow(){} var daisy = new Cow();
-        test.assertInstanceOf(12, "Number", "Tester.assertInstanceOf() works as expected");
-        test.assertInstanceOf("Boo", "String", "Tester.assertInstanceOf() works as expected");
-        test.assertInstanceOf(["moo", "bar"], "Array", "Tester.assertInstanceOf() works as expected")
-        test.assertInstanceOf(true, "Boolean", "Test.assertInstanceOf() works as expected");
-        test.assertInstanceOf(daisy, "Cow", "Tester.assertInstanceOf() works as expected");
+        test.assertInstanceOf("plop", String, "Tester.assertInstanceOf() works as expected");
         test.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
         test.assertUrlMatches(/index\.html$/, "Tester.assertUrlMatches() works as expected [alias]");
         test.assertVisible('img', 'Tester.assertVisible() works as expected');

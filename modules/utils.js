@@ -71,6 +71,33 @@ function betterTypeOf(input) {
 exports.betterTypeOf = betterTypeOf;
 
 /**
+ * Provides a better instanceof operator equivalent, able to retrieve the uninstantiated string
+ * or inheritance cases.
+ *
+ * @param  mixed  input
+ * @param  function constructor
+ * @return String
+ * @see    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model
+ */
+function betterInstanceOf(input, constructor) {
+    "use strict";
+    while (input !== null) {
+      if (input === constructor.prototype) {
+        return true;
+      }
+      if (typeof input === 'xml') {
+        return constructor.prototype === document.prototype;
+      }
+      if (typeof input === 'undefined') {
+        return false;
+      }
+      input = input.__proto__;
+   }
+   return false;
+}
+exports.betterInstanceOf = betterInstanceOf;
+
+/**
  * Cleans a passed URL.
  *
  * @param  String  url An HTTP URL
