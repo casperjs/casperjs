@@ -3,7 +3,7 @@
     "browser":       true,
     "debug":         true,
     "devel":         true,
-    "eqeqeq":        true,
+    "eqeqeq":        false,
     "eqnull":        true, 
     "evil":          true,
     "maxparams":     5,
