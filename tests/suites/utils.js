@@ -40,7 +40,7 @@ casper.test.begin('utils.betterInstanceOf() tests', 13,  function(test) {
         {subject: new Date(), constructor: Date, expected: 'date'},
         {subject: new RegExp(), constructor: RegExp, expected: 'regexp'},
         {subject: daisy, constructor: Cow, expected: true},
-        {subject: superDaisy, constructor: SuperCow, expected: true}
+        {subject: superDaisy, constructor: SuperCow, expected: true},
         {subject: superDaisy, constructor: Cow, expected: true}
     ];
     testCases.forEach(function(testCase) {
