@@ -71,8 +71,7 @@ function betterTypeOf(input) {
 exports.betterTypeOf = betterTypeOf;
 
 /**
- * Provides a better instanceof operator equivalent, able to retrieve the uninstantiated string
- * or inheritance cases.
+ * Provides a better instanceof operator, capable of checking against the full object prototype hierarchy.
  *
  * @param  mixed  input
  * @param  function constructor

@@ -29,7 +29,7 @@ Provides a better ``typeof`` operator equivalent, eg. able to retrieve the ``Arr
 
 **Signature:** ``betterInstanceOf(input, constructor)``
 
-Provides a better ``instanceof`` operator equivalent, eg. able to retrieve the ``Array`` type or to deal with inheritance.
+Provides a better ``instanceof`` operator equivalent, is able to retrieve the ``Array`` instance or to deal with inheritance.
 
 .. index:: dump, Serialization, Debugging, JSON
 

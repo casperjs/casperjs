@@ -450,7 +450,7 @@ Asserts that the provided input is of the given type::
 ``assertInstanceOf()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``assertInstanceOf(mixed input, function constructor[, String message])``
+**Signature:** ``assertInstanceOf(mixed input, Function constructor[, String message])``
 
 Asserts that the provided input is of the given constructor::
     

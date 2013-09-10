@@ -840,10 +840,10 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
 };
 
 /**
- * Asserts that the provided subject is of the given class.
+ * Asserts that the provided subject has the provided constructor in its prototype hierarchy.
  *
  * @param  mixed   subject       The value to test
- * @param  function constructor  The javascript type name
+ * @param  Function constructor  The javascript type name
  * @param  String  message       Test description
  * @return Object                An assertion result object
  */
@@ -857,7 +857,7 @@ Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, construct
         standard: f('Subject is instance of: "%s"', constructor.name),
         values: {
             subject: subject,
-            className: constructor.name,
+            constructor: constructor.name,
         }
     });
 };
