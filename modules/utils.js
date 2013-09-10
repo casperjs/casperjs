@@ -80,14 +80,14 @@ exports.betterTypeOf = betterTypeOf;
  */
 function betterInstanceOf(input, constructor) {
     "use strict";
-    while (input !== null) {
-      if (input === constructor.prototype) {
+    while (input != null) {
+      if (input == constructor.prototype) {
         return true;
       }
-      if (typeof input === 'xml') {
-        return constructor.prototype === document.prototype;
+      if (typeof input == 'xml') {
+        return constructor.prototype == document.prototype;
       }
-      if (typeof input === 'undefined') {
+      if (typeof input == 'undefined') {
         return false;
       }
       input = input.__proto__;
