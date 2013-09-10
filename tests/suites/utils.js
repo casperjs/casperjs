@@ -28,6 +28,7 @@ casper.test.begin('utils.betterInstanceOf() tests', 12,  function(test) {
     // need two objects to test inheritance
     function Cow(){} var daisy = new Cow();
     function SuperCow(){} SuperCow.prototype = new Cow(); var superDaisy = new SuperCow();
+    var date = new Date() var regex = new RegExp()
     var testCases = [
         {subject: 1, constructor: Number, expected: true},
         {subject: '1', constructor: String, expected: true},
@@ -36,8 +37,8 @@ casper.test.begin('utils.betterInstanceOf() tests', 12,  function(test) {
         {subject: undefined, constructor: Array, expected: false},
         {subject: null, constructor: Array, expected: false},
         {subject: function(){}, constructor: Function, expected: true},
-        {subject: new Date(), constructor: Date, expected: true},
-        {subject: new RegExp(), constructor: RegExp, expected: true},
+        {subject: date, constructor: Date, expected: true},
+        {subject: regex, constructor: RegExp, expected: true},
         {subject: daisy, constructor: Cow, expected: true},
         {subject: superDaisy, constructor: SuperCow, expected: true},
         {subject: superDaisy, constructor: Cow, expected: true}
