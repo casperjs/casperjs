@@ -84,7 +84,7 @@ function betterInstanceOf(input, constructor) {
     while (input !== null) {
       if (input === constructor.prototype) {
         return true;
-      }  
+      }
       if (typeof input === 'xml') {
         return constructor.prototype === document.prototype;
       }
