@@ -30,22 +30,22 @@ casper.test.begin('utils.betterInstanceOf() tests', 12,  function(test) {
     function SuperCow(){} SuperCow.prototype = new Cow(); var superDaisy = new SuperCow();
     var date = new Date() var regex = new RegExp()
     var testCases = [
-        {subject: 1, constructor: Number, expected: true},
-        {subject: '1', constructor: String, expected: true},
-        {subject: {}, constructor: Object, expected: true},
-        {subject: [], constructor: Array, expected: true},
-        {subject: undefined, constructor: Array, expected: false},
-        {subject: null, constructor: Array, expected: false},
-        {subject: function(){}, constructor: Function, expected: true},
-        {subject: date, constructor: Date, expected: true},
-        {subject: regex, constructor: RegExp, expected: true},
-        {subject: daisy, constructor: Cow, expected: true},
-        {subject: superDaisy, constructor: SuperCow, expected: true},
-        {subject: superDaisy, constructor: Cow, expected: true}
+        {subject: 1, fn: Number, expected: true},
+        {subject: '1', fn: String, expected: true},
+        {subject: {}, fn: Object, expected: true},
+        {subject: [], fn: Array, expected: true},
+        {subject: undefined, fn: Array, expected: false},
+        {subject: null, fn: Array, expected: false},
+        {subject: function(){}, fn: Function, expected: true},
+        {subject: date, fn: Date, expected: true},
+        {subject: regex, fn: RegExp, expected: true},
+        {subject: daisy, fn: Cow, expected: true},
+        {subject: superDaisy, fn: SuperCow, expected: true},
+        {subject: superDaisy, fn: Cow, expected: true}
     ];
     testCases.forEach(function(testCase) {
-        test.assertEquals(utils.betterInstanceOf(testCase.subject, testCase.constructor), testCase.expected,
-            utils.format('betterInstanceOf() detects expected constructor "%s"', testCase.constructor.name));
+        test.assertEquals(utils.betterInstanceOf(testCase.subject, testCase.fn), testCase.expected,
+            utils.format('betterInstanceOf() detects expected constructor "%s"', testCase.fn.name));
     });
     test.done();
 });
