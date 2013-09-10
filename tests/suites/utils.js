@@ -24,6 +24,32 @@ casper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
     test.done();
 });
 
+casper.test.begin('utils.betterInstanceOf() tests', 13,  function(test) {
+    // need two objects to test inheritance
+    function Cow(){} var daisy = new Cow();
+    function SuperCow(){} SuperCow.prototype = new Cow(); var superDaisy = new SuperCow();
+    var testCases = [
+        {subject: 1, constructor: Number, expected: true},
+        {subject: '1', constructor: String, expected: true},
+        {subject: {}, constructor: Object, expected: true},
+        {subject: [], constructor: Array, expected: true},
+        {subject: undefined, constructor: Array, expected: 'Subject is null or undefined.'},
+        {subject: null, constructor: Array, expected: 'Subject is null or undefined.'},
+        {subject: function(){}, constructor: Function, expected: true},
+        {subject: window, constructor: Window, expected: true},
+        {subject: new Date(), constructor: Date, expected: 'date'},
+        {subject: new RegExp(), constructor: RegExp, expected: 'regexp'},
+        {subject: daisy, constructor: Cow, expected: true},
+        {subject: superDaisy, constructor: SuperCow, expected: true}
+        {subject: superDaisy, constructor: Cow, expected: true}
+    ];
+    testCases.forEach(function(testCase) {
+        test.assertEquals(utils.betterTypeOf(testCase.subject), testCase.expected,
+            utils.format('betterTypeOf() detects expected type "%s"', testCase.expected));
+    });
+    test.done();
+});
+
 casper.test.begin('utils.cleanUrl() tests', 11, function(test) {
     var testCases = {
         'http://google.com/': 'http://google.com/',
