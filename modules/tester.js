@@ -857,7 +857,7 @@ Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, construct
         standard: f('Subject is instance of: "%s"', constructor.name),
         values: {
             subject: subject,
-            constructor: constructor.name,
+            constructorName: constructor.name,
         }
     });
 };
