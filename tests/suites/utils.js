@@ -24,11 +24,11 @@ casper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
     test.done();
 });
 
-casper.test.begin('utils.betterInstanceOf() tests', 12,  function(test) {
+casper.test.begin('utils.betterInstanceOf() tests', 13,  function(test) {
     // need two objects to test inheritance
     function Cow(){} var daisy = new Cow();
     function SuperCow(){} SuperCow.prototype = new Cow(); var superDaisy = new SuperCow();
-    var date = new Date(); var regex = new RegExp();
+    var date = new Date(); var regex = new RegExp(); var xmlDoc = document.implementation.createDocument("<y>", "x");
     var testCases = [
         {subject: 1, fn: Number, expected: true},
         {subject: '1', fn: String, expected: true},
@@ -39,6 +39,7 @@ casper.test.begin('utils.betterInstanceOf() tests', 12,  function(test) {
         {subject: function(){}, fn: Function, expected: true},
         {subject: date, fn: Date, expected: true},
         {subject: regex, fn: RegExp, expected: true},
+        {subject: xmlDoc, fn: XMLDocument, expected: true},
         {subject: daisy, fn: Cow, expected: true},
         {subject: superDaisy, fn: SuperCow, expected: true},
         {subject: superDaisy, fn: Cow, expected: true}
