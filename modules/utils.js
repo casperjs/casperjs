@@ -80,7 +80,8 @@ exports.betterTypeOf = betterTypeOf;
  */
 function betterInstanceOf(input, constructor) {
     "use strict";
-    /*jshint eqnull:true, eqeqeq:false, global XMLDocument */
+    /* global XMLDocument */
+    /*jshint eqnull:true, eqeqeq:false */
     while (input != null) {
       if (input == constructor.prototype) {
         return true;
