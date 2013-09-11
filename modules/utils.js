@@ -80,7 +80,7 @@ exports.betterTypeOf = betterTypeOf;
  */
 function betterInstanceOf(input, constructor) {
     "use strict";
-    /*jshint eqnull:true, eqeqeq:false, browser:false */
+    /*jshint eqnull:true, eqeqeq:false */
     while (input != null) {
       if (input == constructor.prototype) {
         return true;
