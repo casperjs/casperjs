@@ -1358,7 +1358,7 @@ Tester.prototype.processError = function processError(error) {
 Tester.prototype.processPhantomError = function processPhantomError(msg, backtrace) {
     "use strict";
     if (/^AssertionError/.test(msg)) {
-        this.casper.warn('looks you did not use begin() which is mandatory since 1.1');
+        this.casper.warn('looks like you did not use begin(), which is mandatory since 1.1');
     }
     var termination = /^TerminationError:?\s?(.*)/.exec(msg);
     if (termination) {
