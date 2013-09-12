@@ -1554,8 +1554,12 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         supported = ["color", "date", "datetime", "datetime-local", "email",
                      "hidden", "month", "number", "password", "range", "search",
                      "tel", "text", "time", "url", "week"],
-        isTextInput = false;
-    if (tag === 'textarea' || (tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1))) {
+        isTextInput = false,
+        isTextArea = tag === 'textarea',
+        isValidInput = tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1),
+        isContentEditable = !!elemInfos.attributes.contenteditable;
+
+    if (isTextArea || isValidInput || isContentEditable) {
         // clicking on the input element brings it focus
         isTextInput = true;
         this.click(selector);

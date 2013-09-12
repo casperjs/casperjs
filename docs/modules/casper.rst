@@ -1459,6 +1459,8 @@ Sends native keyboard events to the element matching the provided :doc:`selector
 
 .. versionadded:: 1.1
 
+The currently supported HTMLElements that can receive keyboard events from ``sendKeys`` are ``<input>``, ``<textarea>``, and any HTMLElement with attribute ``contenteditable="true"``.
+
 Options
 ~~~~~~~
 
