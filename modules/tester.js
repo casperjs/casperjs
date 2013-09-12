@@ -840,24 +840,24 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
 };
 
 /**
- * Asserts that the provided subject is of the given class name.
+ * Asserts that the provided subject has the provided constructor in its prototype hierarchy.
  *
- * @param  mixed   subject          The value to test
- * @param  string  className        The className
- * @param  String  message          Test description
- * @return Object                   An assertion result object
+ * @param  mixed   subject       The value to test
+ * @param  Function constructor  The javascript type name
+ * @param  String  message       Test description
+ * @return Object                An assertion result object
  */
-Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, className, message) {
+Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, constructor, message) {
     "use strict";
-    if (utils.betterTypeOf(subject.constructor) !== "function") {
+    if (utils.betterTypeOf(constructor) !== "function") {
         throw new CasperError('Subject is null or undefined.');
     }
-    return this.assert(utils.equals(subject.constructor.name, className), message, {
+    return this.assert(utils.betterInstanceOf(subject, constructor), message, {
         type: "assertInstanceOf",
-        standard: f('Subject is an instance of: "%s"', subject.constructor.name),
+        standard: f('Subject is instance of: "%s"', constructor.name),
         values: {
             subject: subject,
-            className: className,
+            constructorName: constructor.name,
         }
     });
 };
