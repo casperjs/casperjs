@@ -27,6 +27,8 @@ Provides a better ``typeof`` operator equivalent, eg. able to retrieve the ``Arr
 ``betterInstanceOf()``
 -------------------------------------------------------------------------------
 
+.. versionadded:: 1.1
+
 **Signature:** ``betterInstanceOf(input, constructor)``
 
 Provides a better ``instanceof`` operator equivalent, is able to retrieve the ``Array`` instance or to deal with inheritance.
