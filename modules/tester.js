@@ -849,7 +849,6 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
  */
 Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, constructor, message) {
     "use strict";
-    /*global XMLDocument */
     if (utils.betterTypeOf(constructor) !== "function") {
         throw new CasperError('Subject is null or undefined.');
     }

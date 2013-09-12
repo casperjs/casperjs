@@ -25,6 +25,7 @@ casper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
 });
 
 casper.test.begin('utils.betterInstanceOf() tests', 13,  function(test) {
+    /*global XMLDocument*/
     // need two objects to test inheritance
     function Cow(){} var daisy = new Cow();
     function SuperCow(){} SuperCow.prototype = new Cow(); var superDaisy = new SuperCow();
