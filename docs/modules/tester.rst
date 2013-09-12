@@ -452,6 +452,8 @@ Asserts that the provided input is of the given type::
 
 **Signature:** ``assertInstanceOf(mixed input, Function constructor[, String message])``
 
+.. versionadded:: 1.1
+
 Asserts that the provided input is of the given constructor::
     
     function Cow() {
