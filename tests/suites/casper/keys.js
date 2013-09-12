@@ -20,7 +20,17 @@ casper.test.begin('sendKeys() tests', 4, function(test) {
         values = this.getFormValues('form#no-type-test-form');
         test.assertEquals(values.notype, "I have no type.",
             'Casper.sendKeys() sends keys to given input without type attribute');
+    }).run(function() {
+        test.done();
+    });
+});
 
+casper.test.begin('sendKeys() works on content-editable elements', function(test) {
+    casper.start('tests/site/elementattribute.html', function() {
+        this.click('#content-editable-div');
+        this.sendKeys('#content-editable-div', 'A Clockwork Orange');
+    }).then(function() {
+        test.assertSelectorHasText('#content-editable-div','A Clockwork Orange');
     }).run(function() {
         test.done();
     });
