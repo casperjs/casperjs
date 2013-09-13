@@ -13,7 +13,8 @@ PHANTOMJS_EXEC = os.environ['PHANTOMJS_EXECUTABLE']
 # make it to an absolute path, because some test change the working directory
 # and relative path to phantomjs would be invalid
 if not os.path.isabs(PHANTOMJS_EXEC):
-    os.environ['PHANTOMJS_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, PHANTOMJS_EXEC)
+    os.environ['PHANTOMJS_EXECUTABLE'] = os.path.join(CASPERJS_ROOT,
+                                                      PHANTOMJS_EXEC)
 
 class TimeoutException(Exception):
     pass
@@ -53,7 +54,8 @@ class CasperExecTestBase(unittest.TestCase):
         except subprocess.CalledProcessError as err:
             if failing:
                 return err.output.decode('utf-8')
-            raise IOError('Command %s exited: %s \n %s' % (cmd, err, err.output.decode('utf-8')))
+            raise IOError('Command %s exited: %s \n %s'
+                          % (cmd, err, err.output.decode('utf-8')))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
         self.assertEqual(self.runCommand(cmd), result)
@@ -96,14 +98,20 @@ class RequireScriptFullPathTest(CasperExecTestBase):
 
     @timeout(20)
     def test_node_module_require_index(self):
-        script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_mod_index.js')
+        script_path = os.path.join(
+            TEST_ROOT, 'modules', 'test_node_mod_index.js')
+        self.assertCommandOutputEquals(script_path, '42')
+
+    @timeout(20)
+    def test_node_module_require_json_package(self):
+        script_path = os.path.join(
+            TEST_ROOT, 'modules', 'test_node_mod_json_package.js')
         self.assertCommandOutputEquals(script_path, '42')
 
     @timeout(20)
     def test_node_module_require_json(self):
         script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_json.js')
         self.assertCommandOutputEquals(script_path, '42')
-
 
 
 class RequireWithOnlyScriptNameTest(CasperExecTestBase):
@@ -123,7 +131,8 @@ class RequireWithOnlyScriptNameTest(CasperExecTestBase):
 
     @timeout(20)
     def test_simple_patched_require(self):
-        self.assertCommandOutputEquals('test_patched_require.js', 'hello, world')
+        self.assertCommandOutputEquals(
+            'test_patched_require.js', 'hello, world')
 
     @timeout(20)
     def test_require_coffee(self):
@@ -138,11 +147,15 @@ class RequireWithOnlyScriptNameTest(CasperExecTestBase):
         self.assertCommandOutputEquals('test_node_mod_index.js', '42')
 
     @timeout(20)
+    def test_node_module_require_json_package(self):
+        self.assertCommandOutputEquals('test_node_mod_json_package.js', '42')
+
+    @timeout(20)
     def test_node_module_require_json(self):
         self.assertCommandOutputEquals('test_node_json.js', '42')
 
-class RequireWithRelativeScriptPathTest(CasperExecTestBase):
 
+class RequireWithRelativeScriptPathTest(CasperExecTestBase):
     def setUp(self):
         self.currentPath = os.getcwd()
         os.chdir(os.path.join(TEST_ROOT, 'modules'))
@@ -158,7 +171,8 @@ class RequireWithRelativeScriptPathTest(CasperExecTestBase):
 
     @timeout(20)
     def test_simple_patched_require(self):
-        self.assertCommandOutputEquals('test_patched_require.js', 'hello, world')
+        self.assertCommandOutputEquals(
+            'test_patched_require.js', 'hello, world')
 
     @timeout(20)
     def test_require_coffee(self):
@@ -173,8 +187,13 @@ class RequireWithRelativeScriptPathTest(CasperExecTestBase):
         self.assertCommandOutputEquals('./test_node_mod_index.js', '42')
 
     @timeout(20)
+    def test_node_module_require_json_package(self):
+        self.assertCommandOutputEquals('./test_node_mod_json_package.js', '42')
+
+    @timeout(20)
     def test_node_module_require_json(self):
         self.assertCommandOutputEquals('./test_node_json.js', '42')
+
 
 class ScriptOutputTest(CasperExecTestBase):
     @timeout(20)

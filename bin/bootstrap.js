@@ -185,10 +185,33 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         if (require.patched) {
             return require;
         }
+        function fromPackageJson(module, dir) {
+            var pkgPath, pkgContents, pkg;
+            pkgPath = fs.pathJoin(dir, module, 'package.json');
+            if (!fs.exists(pkgPath)) {
+                return;
+            }
+            pkgContents = fs.read(pkgPath);
+            if (!pkgContents) {
+                return;
+            }
+            try {
+                pkg = JSON.parse(pkgContents);
+            } catch (e) {
+                return;
+            }
+            if (typeof pkg === "object" && pkg.main) {
+                return fs.absolute(fs.pathJoin(dir, module, pkg.main));
+            }
+        }
         function resolveFile(path, dir) {
             var extensions = ['js', 'coffee', 'json'];
             var basenames = [path, path + '/index'];
             var paths = [];
+            var nodejsScript = fromPackageJson(path, dir);
+            if (nodejsScript) {
+                return nodejsScript;
+            }
             basenames.forEach(function(basename) {
                 paths.push(fs.absolute(fs.pathJoin(dir, basename)));
                 extensions.forEach(function(extension) {
