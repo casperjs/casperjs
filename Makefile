@@ -13,7 +13,7 @@ selftest:
 	bin/casperjs selftest
 
 compile-dotNET:
-	mcs -out:bin/casperjs.exe src/casperjs.cs
+	mcs -langversion:3 -out:bin/casperjs.exe src/casperjs.cs
 
 selftest-dotNET:
 	bin/casperjs.exe selftest
