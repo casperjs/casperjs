@@ -27,6 +27,7 @@ before_install:
   - sudo mv phantomjs-1.9.2-linux-x86_64/bin/phantomjs bin/phantomjs192
   - bin/phantomjs192 --version
   - ls -la bin/phantomjs192
+  - sudo apt-get install -qq mono-devel mono-mcs
 
 before_script:
   - "npm install -g jshint@2.0.1"
@@ -37,6 +38,7 @@ before_script:
 
 script:
   - make test
+  - make test-dotNET
 
 env:
   matrix:
