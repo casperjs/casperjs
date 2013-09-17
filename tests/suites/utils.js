@@ -24,6 +24,34 @@ casper.test.begin('utils.betterTypeOf() tests', 10,  function(test) {
     test.done();
 });
 
+casper.test.begin('utils.betterInstanceOf() tests', 13,  function(test) {
+    /*global XMLDocument*/
+    // need two objects to test inheritance
+    function Cow(){} var daisy = new Cow();
+    function SuperCow(){} SuperCow.prototype = new Cow(); var superDaisy = new SuperCow();
+    var date = new Date(); var regex = new RegExp(); var xmlDoc = document.implementation.createDocument("<y>", "x");
+    var testCases = [
+        {subject: 1, fn: Number, expected: true},
+        {subject: '1', fn: String, expected: true},
+        {subject: {}, fn: Object, expected: true},
+        {subject: [], fn: Array, expected: true},
+        {subject: undefined, fn: Array, expected: false},
+        {subject: null, fn: Array, expected: false},
+        {subject: function(){}, fn: Function, expected: true},
+        {subject: date, fn: Date, expected: true},
+        {subject: regex, fn: RegExp, expected: true},
+        {subject: xmlDoc, fn: XMLDocument, expected: true},
+        {subject: daisy, fn: Cow, expected: true},
+        {subject: superDaisy, fn: SuperCow, expected: true},
+        {subject: superDaisy, fn: Cow, expected: true}
+    ];
+    testCases.forEach(function(testCase) {
+        test.assertEquals(utils.betterInstanceOf(testCase.subject, testCase.fn), testCase.expected,
+            utils.format('betterInstanceOf() detects expected constructor "%s"', testCase.fn.name));
+    });
+    test.done();
+});
+
 casper.test.begin('utils.cleanUrl() tests', 11, function(test) {
     var testCases = {
         'http://google.com/': 'http://google.com/',
@@ -74,6 +102,15 @@ if (utils.gteVersion(phantom.version, '1.9.0')) {
         test.done();
     });
 }
+
+casper.test.begin('decodeUrl() tests', 4, function(test) {
+    /* global escape */
+    test.assertEquals(utils.decodeUrl('foo'), 'foo');
+    test.assertEquals(utils.decodeUrl('Forlì'), 'Forlì');
+    test.assertEquals(utils.decodeUrl(encodeURIComponent('Forlì')), 'Forlì');
+    test.assertEquals(utils.decodeUrl(escape('Forlì')), 'Forlì');
+    test.done();
+});
 
 casper.test.begin('equals() tests', 23, function(test) {
     test.assert(utils.equals(null, null), 'equals() null equality');
