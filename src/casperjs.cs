@@ -55,7 +55,8 @@ class slimerjs : engine {
         return "SLIMERJS_EXECUTABLE";
     }
     public string default_exec() {
-        return "slimerjs";
+        // use bat file on windows
+        return (Path.DirectorySeparatorChar == '/') ? "slimerjs" : "slimerjs.bat";
     }
     public string[] native_args() {
         return new [] {
