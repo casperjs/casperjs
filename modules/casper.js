@@ -2435,11 +2435,12 @@ function createPage(casper) {
                 newUrl = newUrl.substring(0, pos);
             }
             // for URLs that are only different by their hash part
+            // or if navigation locked (willNavigate == false)
             // don't turn navigationRequested to true, because
             // there will not be loadStarted, loadFinished events
             // so it could cause issues (for exemple, checkStep that
             // do no execute the next step -> infinite loop on checkStep)
-            if (currentUrl !== newUrl)
+            if (willNavigate && currentUrl !== newUrl)
                 casper.navigationRequested  = true;
 
             if (willNavigate) {
