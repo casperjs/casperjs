@@ -63,7 +63,7 @@ function generateClassName(classname) {
         script = phantom.casperScript;
     }
     return script || "unknown";
-};
+}
 
 /**
  * Creates a json instance
@@ -72,28 +72,29 @@ function generateClassName(classname) {
  */
 exports.create = function create() {
     "use strict";
-    return new jsonExporter();
+    return new JsonExporter();
 };
 
 /**
  * json mocha style exporter for test results.
  *
  */
-function jsonExporter(){
+function JsonExporter(){
 	"use strict";
 	this.results = undefined; //we didn't get them yet
 	this._json = {};//utils.node('testsuites'); //TODO:check if this is what I need
+	var testList = [];
 	this._json.toString = function toString(){ //overriding the default toString to enable my custom serializtion
-		return JSON.stringify(this._json);
+		return JSON.stringify(this);
 	};
 }
-exports.jsonExporter = jsonExporter;
-jsonExporter.prototype.getJSON = function getJSON(){
+exports.jsonExporter = JsonExporter;
+JsonExporter.prototype.getJSON = function getJSON(){
   "use strict"; //cargo cult like a pro.. :( doing this just so jshint won't shout at me. should find out why.
   if (!(this.results instanceof TestSuiteResult)){ //first check if the results we are proccessing are an instance of casper testsuite. if not bye bye
 	throw new CasperError('Results not set, cannot get JSON');
   }
-  //var _json = {};
+  var testList = [];
   this.results.forEach(function(result){
 	var suite = {
 		title: result.name,
@@ -109,14 +110,15 @@ jsonExporter.prototype.getJSON = function getJSON(){
 	result.passes.forEach(function(success){
 		var testCase = {
 			status: "success",
-			name: success.message || success.standard,
+			name: success.message,
+			type: success.type,
+			values: success.values,
 			time: utils.ms2seconds(~~success.time)
-		};
-		this._json.tests.push(testCase);
-	
+		}
+		testList.push(testCase);
 	});
 	result.failures.forEach(function(failure){
-		var testCase = {
+		var testcase = {
 			status: "failure",
 			name: failure.message || failure.standard,
 			time: utils.m2seconds(~~failure.time),
@@ -127,27 +129,27 @@ jsonExporter.prototype.getJSON = function getJSON(){
 				type: utils.betterTypeOf(failure.values.error),
 				stack: failure.values.error.stack
 				};
-			testCase.push(failureStack);
+			testcase.push(failureStack);
 		}
-		this._json.tests.push(testCase);
+		testList.push(testcase);
 
 	});
-	result.error.forEach(function(error){
-		var testCase = {
+	result.errors.forEach(function(error){
+		var testcase = {
 			status: "error",
 			type: error.name
 		};
 		var errorStack = {
 			stack: error.stack || error.message
 		};
-		testCase.push(errorStack);
-		this._json.tests.push(testCase);
+		testcase.push(errorStack);
+		testList.push(testcase);
 	});
-	this._json.tests.push(result.warnings.join('\n'))
+	this._json.warnings = {warnings: result.warnings.join('\n')};
+	this._json.tests = testList;
 		
 	
   }.bind(this));
-  utils.dump(this._json);
   return this._json;
 };
 /**
@@ -155,7 +157,7 @@ jsonExporter.prototype.getJSON = function getJSON(){
  * 
  * @param TestSuite results
  */
-jsonExporter.prototype.setResults = function setResults(results){
+JsonExporter.prototype.setResults = function setResults(results){
 	"use strict";
 	if (!(results instanceof TestSuiteResult)){
 		throw new CasperError('invalid results type.');
@@ -163,92 +165,3 @@ jsonExporter.prototype.setResults = function setResults(results){
 	this.results = results;
 	return results;
 };
-//function XUnitExporter() {
-//    "use strict";
-//    this.results = undefined;
-//    this._xml = utils.node('testsuites');
-//    this._xml.toString = function toString() {
-//        var serializer = new XMLSerializer();
-//        return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this);
-//    };
-//}
-//exports.XUnitExporter = XUnitExporter;
-
-
-//XUnitExporter.prototype.getXML = function getXML() {
-//    "use strict";
-//    if (!(this.results instanceof TestSuiteResult)) {
-//        throw new CasperError('Results not set, cannot get XML.');
-//    }
-//    this.results.forEach(function(result) {
-//        var suiteNode = utils.node('testsuite', {
-//            name: result.name,
-//            tests: result.assertions,
-//            failures: result.failed,
-//            errors: result.crashed,
-//            time: utils.ms2seconds(result.calculateDuration()),
-//            timestamp: (new Date()).toISOString(),
-//            'package': generateClassName(result.file)
-//        });
-//        // succesful test cases
-//        result.passes.forEach(function(success) {
-//            var testCase = utils.node('testcase', {
-//                name: success.message || success.standard,
-//                classname: generateClassName(success.file),
-//                time: utils.ms2seconds(~~success.time)
-//            });
-//            suiteNode.appendChild(testCase);
-//        });
-//        // failed test cases
-//        result.failures.forEach(function(failure) {
-//            var testCase = utils.node('testcase', {
-//                name: failure.message || failure.standard,
-//                classname: generateClassName(failure.file),
-//                time: utils.ms2seconds(~~failure.time)
-//            });
-//            var failureNode = utils.node('failure', {
-//                type: failure.type || "failure"
-//            });
-//            failureNode.appendChild(document.createTextNode(failure.message || "no message left"));
-//            if (failure.values && failure.values.error instanceof Error) {
-//                var errorNode = utils.node('error', {
-//                    type: utils.betterTypeOf(failure.values.error)
-//                });
-//                errorNode.appendChild(document.createTextNode(failure.values.error.stack));
-//                testCase.appendChild(errorNode);
-//            }
-//            testCase.appendChild(failureNode);
-//            suiteNode.appendChild(testCase);
-//        });
-//        // errors
-//        result.errors.forEach(function(error) {
-//            var errorNode = utils.node('error', {
-//                type: error.name
-//            });
-//            errorNode.appendChild(document.createTextNode(error.stack ? error.stack : error.message));
-//            suiteNode.appendChild(errorNode);
-//        });
-//        // warnings
-//        var warningNode = utils.node('system-out');
-//        warningNode.appendChild(document.createTextNode(result.warnings.join('\n')));
-//        suiteNode.appendChild(warningNode);
-//        this._xml.appendChild(suiteNode);
-//    }.bind(this));
-//    this._xml.setAttribute('duration', utils.ms2seconds(this.results.calculateDuration()));
-//    return this._xml;
-//};
-//
-/**
- * Sets test results.
- *
- * @param TestSuite  results
- */
-//XUnitExporter.prototype.setResults = function setResults(results) {
-//    "use strict";
-//    if (!(results instanceof TestSuiteResult)) {
-//        throw new CasperError('Invalid results type.');
-//    }
-//    this.results = results;
-//    return results;
-//};
-

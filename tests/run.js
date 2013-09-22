@@ -99,6 +99,7 @@ function initRunner() {
 
     // test suites completion listener
     casper.test.on('tests.complete', function() {
+	console.log('before savetype');
 	var savetype = 'xunit';
 	if (casper.cli.get('jsonReporter') !== undefined){
 	   savetype = 'jsonReporter';
