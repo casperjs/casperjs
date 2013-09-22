@@ -103,7 +103,7 @@ function initRunner() {
 	if (casper.cli.get('jsonReporter') !== undefined){
 	   savetype = 'jsonReporter';
 	}
-        this.renderResults(true, undefined, casper.cli.get('xunit') || casper.cli.get('jsonReporter') || undefined, savetype);
+        this.renderResults(true, undefined, casper.cli.get('xunit') || casper.cli.get('jsonReporter') || undefined, savetype || undefined);
         if (this.options.failFast && this.testResults.failures.length > 0) {
             casper.warn('Test suite failed fast, all tests may not have been executed.');
         }
