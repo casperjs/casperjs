@@ -82,9 +82,9 @@ exports.create = function create() {
 function jsonExporter(){
 	"use strict";
 	this.results = undefined; //we didn't get them yet
-	this._json = undefined;//utils.node('testsuites'); //TODO:check if this is what I need
+	this._json = {};//utils.node('testsuites'); //TODO:check if this is what I need
 	this._json.toString = function toString(){ //overriding the default toString to enable my custom serializtion
-		return JSON.stringify(this);
+		return JSON.stringify(this._json);
 	};
 }
 exports.jsonExporter = jsonExporter;
