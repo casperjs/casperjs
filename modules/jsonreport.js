@@ -115,7 +115,7 @@ JsonExporter.prototype.getJSON = function getJSON(){
 	result.passes.forEach(function(success){
 		var testCase = {
 			status: "success",
-			name: success.message,
+			message: success.message,
 			type: success.type,
 			values: success.values,
 			time: utils.ms2seconds(~~success.time)
