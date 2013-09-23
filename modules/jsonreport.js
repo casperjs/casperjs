@@ -94,10 +94,13 @@ JsonExporter.prototype.getJSON = function getJSON(){
   if (!(this.results instanceof TestSuiteResult)){ //first check if the results we are proccessing are an instance of casper testsuite. if not bye bye
 	throw new CasperError('Results not set, cannot get JSON');
   }
-  var testList = [];
-  this.results.forEach(function(result){
+    this._json['suites'] = this.results.length;
+    this._json['testsuites'] = [];
+    this.results.forEach(function(result){
+	var testsuite = {}
+	var testList = [];
+
 	var suite = {
-		title: result.name,
 		tests: result.assertions,
 		failures: result.failed,
 		errors:result.crashed,
@@ -105,7 +108,9 @@ JsonExporter.prototype.getJSON = function getJSON(){
 		timestamp:(new Date()).toISOString() //why is date enclosed in parthensis?
 
 		};
-	this._json.stats = suite;
+	testsuite.testsuite = result.name;
+	testsuite.stats = suite;
+	//this._json.stats = suite;
 
 	result.passes.forEach(function(success){
 		var testCase = {
@@ -145,9 +150,10 @@ JsonExporter.prototype.getJSON = function getJSON(){
 		testcase.push(errorStack);
 		testList.push(testcase);
 	});
-	this._json.warnings = {warnings: result.warnings.join('\n')};
-	this._json.tests = testList;
-		
+	testsuite.warnings = result.warnings.join('\n');
+	testsuite.tests = testList;
+	this._json['testsuites'].push(testsuite);
+	
 	
   }.bind(this));
   return this._json;
