@@ -32,7 +32,7 @@ casper.test.begin('jsonReporter() can hold test suites', 4, function suite(test)
     test.assertTextExists('"suites":2');
     test.assertTextExists('"testsuite":"foo"');
     test.assertTextExists('"testsuite":"bar"');
-    var content = JSON.parse(this.getPageContent());
+    var content = JSON.parse(casper.getPageContent());
     test.assertEquals(content.testsuites.length,2);
     test.done();
 });
@@ -53,7 +53,7 @@ casper.test.begin('jsonReporter() can hold a suite with a succesful test', 2, fu
     results.push(suite1);
     jsonreporter.setResults(results);
     casper.start().setContent(jsonreporter.getJSON());
-    var content = JSON.parse(this.getPageContent());
+    var content = JSON.parse(casper.getPageContent());
     test.assertTextExists('"suite":1,"testsuites":[{"testsuite":"foo","stats":{tests:1,"failures":0,"errors":0');
     test.assertTextExists('"status":"success","message":"footext","type":"footype"');
     test.done();
