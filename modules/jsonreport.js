@@ -125,8 +125,8 @@ JsonExporter.prototype.getJSON = function getJSON(){
 	result.failures.forEach(function(failure){
 		var testcase = {
 			status: "failure",
-			name: failure.message || failure.standard,
-			time: utils.m2seconds(~~failure.time),
+			message: failure.message || failure.standard,
+			time: utils.ms2seconds(~~failure.time),
 			type: failure.type || "failure"
 		};
 		if (failure.values && failure.values.error instanceof Error) {
