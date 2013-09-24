@@ -26,16 +26,18 @@ casper.test.begin('jsonReporter() can hold test suites', 4, function suite(test)
     results.push(suite2);
     jsonreporter.setResults(results);
     casper.start().setContent(jsonreporter.getJSON());
-    test.assertEvalEquals(function() {
-        return __utils__.findAll('testsuite').length;
-    }, 2);
-    test.assertExists('"suites":2');
-    test.assertExists('"testsuite":"foo"');
-    test.assertExists('"testsuite":"bar"');
+    //test.assertEvalEquals(function() {
+    //    return __utils__.findAll('testsuite').length;
+    //}, 2);
+    test.assertTextExists('"suites":2');
+    test.assertTextExists('"testsuite":"foo"');
+    test.assertTextExists('"testsuite":"bar"');
+    var content = JSON.parse(this.getPageContent());
+    test.assertEquals(content.testsuites.length,2);
     test.done();
 });
 
-casper.test.begin('jsonReporter() can hold a suite with a succesful test', 1, function suite(test) {
+casper.test.begin('jsonReporter() can hold a suite with a succesful test', 2, function suite(test) {
     var jsonreporter = require('jsonreport').create();
     var results = new tester.TestSuiteResult();
     var suite1 = new tester.TestCaseResult({
@@ -51,8 +53,9 @@ casper.test.begin('jsonReporter() can hold a suite with a succesful test', 1, fu
     results.push(suite1);
     jsonreporter.setResults(results);
     casper.start().setContent(jsonreporter.getJSON());
-    test.assertExists('"suite":1,"testsuites":[{"testsuite":"foo","stats":{tests:1,"failures":0,"errors":0');
-    test.assertExists('"status":"success","message":"footext","type":"footype"');
+    var content = JSON.parse(this.getPageContent());
+    test.assertTextExists('"suite":1,"testsuites":[{"testsuite":"foo","stats":{tests:1,"failures":0,"errors":0');
+    test.assertTextExists('"status":"success","message":"footext","type":"footype"');
     test.done();
 });
 
@@ -69,7 +72,7 @@ casper.test.begin('jsonReporter() can handle a failed test', 2, function suite(t
         message: "footext",
         file: "/foo"
     });
-    results.push(suite1);
+    results.push(suite1)
     jsonreporter.setResults(results);
     casper.start().setContent(jsonreporter.getJSON());
     test.assertExists('"suite":1,"testsuites":[{"testsuite":"foo","stats":{tests:1,"failures":1,"errors":0');
