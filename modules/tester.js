@@ -1443,12 +1443,12 @@ Tester.prototype.renderResults = function renderResults(exit, status, save, save
     this.casper.echo(result, style, this.options.pad);
     this.renderFailureDetails();
     if (save) {
-	if (savetype === 'xunit' || savetype === undefined){
-		this.saveResults(save);
-	} else if (savetype === 'jsonReporter'){
-		this.saveResultsToJson(save);
-		}
-	}
+  if (savetype === 'xunit' || savetype === undefined){
+    this.saveResults(save);
+  } else if (savetype === 'jsonReporter'){
+    this.saveResultsToJson(save);
+    }
+  }
     
     if (exit === true) {
         this.casper.exit(status ? ~~status : exitStatus);
@@ -1551,15 +1551,15 @@ Tester.prototype.saveResults = function saveResults(filepath) {
 };
 
 Tester.prototype.saveResultsToJson = function saveResultsToJson(filepath){
-	"use strict";
-	var exporter = require('jsonreport').create();
-	exporter.setResults(this.suiteResults);
-	try{
-		fs.write(filepath, exporter.getJSON(),'w');
-		this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
-	} catch (e){
-		this.casper.echo(f('Unable to write results to %s: %s', filepath, e), 'ERROR', 80);
-	}
+  "use strict";
+  var exporter = require('jsonreport').create();
+  exporter.setResults(this.suiteResults);
+  try{
+    fs.write(filepath, exporter.getJSON(),'w');
+    this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
+  } catch (e){
+    this.casper.echo(f('Unable to write results to %s: %s', filepath, e), 'ERROR', 80);
+  }
 };
 
 /**
