@@ -157,6 +157,7 @@ Options
 Options are prefixed with a double-dash (``--``):
 
 - ``--xunit=<filename>`` will export test suite results in a :ref:`XUnit XML file <xunit_report>`
+- ``--jsonReporter=<filename>`` will export test suite results in 
 - ``--direct`` will print :doc:`log messages <logging>` directly to the console
 - ``--log-level=<logLevel>`` sets the logging level (see the :doc:`related section <logging>`)
 
@@ -184,7 +185,6 @@ Sample custom command:
 .. hint::
 
    A `demo gist <https://gist.github.com/3813361>`_ is also available in order to get you started with a sample suite involving some of these options.
-
 
 .. _xunit_report:
 
@@ -214,6 +214,82 @@ You should get a pretty XUnit XML report like this:
             <system-out/>
         </testsuite>
     </testsuites>
+
+.. _jsonReporter:
+
+.. index:: JSON, Continuous Integration
+
+Exporting results in JSON format
+--------------------------------
+CasperJS can export the results of the test suite to a JSON file, which can be used to integration with various tools and services. To save the JSON log of your test suite, use the ``--jsonReporter`` option:
+
+.. code-block:: text
+
+    $ casperjs test googletesting.js --jsonReporter=log.json
+
+You should get a JSON report like this:
+
+.. code-block:: json
+
+    {
+    "suites": 1,
+    "testsuites": [
+        {
+        "testsuite": "Google search retrieves 10 or more results",
+        "stats": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "duration": 2.866,
+            "timestamp": "2013-09-26T19:28:20.260Z"
+        },
+        "warnings": "",
+        "tests": [
+            {
+            "status": "success",
+            "message": "google homepage title is the one expected",
+            "type": "assertTitle",
+            "values": {
+                "subject": "Google",
+                "expected": "Google"
+            },
+            "time": 2.038
+            },
+            {
+            "status": "success",
+            "message": "main form is found",
+            "type": "assertExists",
+            "values": {
+                "subject": true,
+                "selector": "form[action=\"\/search\"]"
+            },
+            "time": 0.003
+            },
+            {
+            "status": "success",
+            "message": "search term has been submitted",
+            "type": "assertUrlMatch",
+            "values": {
+                "subject": true,
+                "currentUrl": "https:\/\/www.google.co.il\/search?hl=iw&source=hp&q=casperjs&gbv=2&oq=&gs_l=",
+                "pattern": "\/q=casperjs\/"
+            },
+            "time": 0.824
+            },
+            {
+            "status": "success",
+            "message": "google search for \"casperjs\" retrieves 10 or more results",
+            "type": "assertEval",
+            "values": {
+                "subject": true
+            },
+            "time": 0.001
+            }
+        ]
+        }
+    ]
+    }
+
 
 CasperJS own tests
 ------------------
