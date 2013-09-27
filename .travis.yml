@@ -1,6 +1,5 @@
 branches:
   only:
-    - "add_json"
     - "master"
 
 before_install:
