@@ -227,7 +227,7 @@ CasperJS can export the results of the test suite to a JSON file, which can be u
 
     $ casperjs test googletesting.js --jsonReporter=log.json
 
-You should get a JSON report like this:
+You should get a prettified JSON report like this:
 
 .. code-block:: json
 
