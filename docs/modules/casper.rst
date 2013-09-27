@@ -938,7 +938,7 @@ Fills form fields with given values and optionally submits it. Fields
 are referenced by ``CSS3`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillSelectors('form#contact-form', {
             'input[name="subject"]':    'I am watching you',
             'input[name="content"]':    'So be careful.',
             'input[name="civility"]':   'Mr',
@@ -960,7 +960,7 @@ are referenced by ``CSS3`` selectors::
 Fills form fields with given values and optionally submits it. While the ``form`` element is always referenced by a CSS3 selector, fields are referenced by ``XPath`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillXPath('form#contact-form', {
             '//input[@name="subject"]':    'I am watching you',
             '//input[@name="content"]':    'So be careful.',
             '//input[@name="civility"]':   'Mr',
