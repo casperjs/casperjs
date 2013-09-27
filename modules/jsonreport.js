@@ -85,7 +85,7 @@ function JsonExporter(){
     this._json = {};
     var testList = [];
     this._json.toString = function toString(){ //overriding the default toString to enable my custom serializtion
-        return JSON.stringify(this);
+        return JSON.stringify(this,null,2);
     };
 }
 exports.jsonExporter = JsonExporter;
