@@ -97,7 +97,7 @@ var Casper = function Casper(options) {
         onPageInitialized:   null,
         onResourceReceived:  null,
         onResourceRequested: null,
-        onResourceError:     null, 
+        onResourceError:     null,
         onRunComplete:       function _onRunComplete() {
             this.exit();
         },
