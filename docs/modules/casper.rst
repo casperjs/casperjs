@@ -176,6 +176,17 @@ Proxy method for PhantomJS' WebPage#onResourceRequested() callback, but the curr
 
 .. index:: Step stack
 
+``onResourceError``
+-------------------------------------------------------------------------------
+
+**Type:** ``Function``
+
+**Default:** ``null``
+
+Proxy method for PhantomJS' WebPage#onResourceError() callback, but the current Casper instance is passed as first argument.
+
+.. index:: Step stack
+
 ``onStepComplete``
 -------------------------------------------------------------------------------
 

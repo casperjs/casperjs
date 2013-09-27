@@ -50,6 +50,25 @@ casper.test.begin('onResourceRequested() & onResourceReceived() hook tests', 6, 
     });
 });
 
+casper.test.begin('onResourceError() hook tests', 3, function(test) {
+    var error = null;
+    casper.options.onResourceError = function(self, resourceError) {
+        error = resourceError;
+    };
+
+    casper.start('tests/site/non-existant.html', function() {
+        var expectedPath = '/tests/site/non-existant.html';
+        test.assert(error != null, 'onResourceError() called with error information');
+        test.assert(error.errorCode == 203, 'onResourceError() error code is correct');
+        test.assert((error.url.indexOf(expectedPath, error.url.length - expectedPath.length) !== -1), 'onResourceError() url is correct');
+    })
+
+    casper.run(function() {
+        this.options.onResourceError = undefined;
+        test.done();
+    });
+});
+
 casper.test.begin('onAlert() hook tests', 1, function(test) {
     var message;
     casper.options.onAlert = function(self, msg) {
