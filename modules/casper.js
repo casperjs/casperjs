@@ -938,9 +938,16 @@ Casper.prototype.getPageContent = function getPageContent() {
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
-    return utils.decodeUrl(this.evaluate(function _evaluate() {
-        return document.location.href;
-    }));
+    try {
+        return utils.decodeUrl(this.evaluate(function _evaluate() {
+            return document.location.href;
+        }));
+    } catch (e) {
+        // most likely the current page object has been "deleted" (think closed popup)
+        if (/deleted QObject/.test(e.message))
+            return "";
+        throw e;
+    }
 };
 
 /**
