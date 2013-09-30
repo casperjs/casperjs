@@ -960,9 +960,16 @@ Casper.prototype.getPageContent = function getPageContent() {
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
-    return utils.decodeUrl(this.evaluate(function _evaluate() {
-        return document.location.href;
-    }));
+    try {
+        return utils.decodeUrl(this.evaluate(function _evaluate() {
+            return document.location.href;
+        }));
+    } catch (e) {
+        // most likely the current page object has been "deleted" (think closed popup)
+        if (/deleted QObject/.test(e.message))
+            return "";
+        throw e;
+    }
 };
 
 /**
@@ -1576,8 +1583,12 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         supported = ["color", "date", "datetime", "datetime-local", "email",
                      "hidden", "month", "number", "password", "range", "search",
                      "tel", "text", "time", "url", "week"],
-        isTextInput = false;
-    if (tag === 'textarea' || (tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1))) {
+        isTextInput = false,
+        isTextArea = tag === 'textarea',
+        isValidInput = tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1),
+        isContentEditable = !!elemInfos.attributes.contenteditable;
+
+    if (isTextArea || isValidInput || isContentEditable) {
         // clicking on the input element brings it focus
         isTextInput = true;
         this.click(selector);
@@ -1817,7 +1828,7 @@ Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
 };
 
 /**
- * Bypass `nb` steps if condition is true.
+ * Bypass `nb` steps if condition is false.
  *
  * @param Mixed    condition  Test condition
  * @param Integer  nb         Number of tests to bypass
@@ -2268,12 +2279,12 @@ Casper.prototype.withFrame = function withFrame(frameInfo, then) {
     } catch (e) {
         // revert to main page on error
         this.warn("Error while processing frame step: " + e);
-        this.page.switchToMainFrame();
+        this.page.switchToParentFrame();
         throw e;
     }
     return this.then(function _step() {
         // revert to main page
-        this.page.switchToMainFrame();
+        this.page.switchToParentFrame();
     });
 };
 
@@ -2453,11 +2464,12 @@ function createPage(casper) {
                 newUrl = newUrl.substring(0, pos);
             }
             // for URLs that are only different by their hash part
+            // or if navigation locked (willNavigate == false)
             // don't turn navigationRequested to true, because
             // there will not be loadStarted, loadFinished events
             // so it could cause issues (for exemple, checkStep that
             // do no execute the next step -> infinite loop on checkStep)
-            if (currentUrl !== newUrl)
+            if (willNavigate && currentUrl !== newUrl)
                 casper.navigationRequested  = true;
 
             if (willNavigate) {

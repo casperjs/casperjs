@@ -840,6 +840,29 @@ Tester.prototype.assertType = function assertType(subject, type, message) {
 };
 
 /**
+ * Asserts that the provided subject has the provided constructor in its prototype hierarchy.
+ *
+ * @param  mixed   subject       The value to test
+ * @param  Function constructor  The javascript type name
+ * @param  String  message       Test description
+ * @return Object                An assertion result object
+ */
+Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, constructor, message) {
+    "use strict";
+    if (utils.betterTypeOf(constructor) !== "function") {
+        throw new CasperError('Subject is null or undefined.');
+    }
+    return this.assert(utils.betterInstanceOf(subject, constructor), message, {
+        type: "assertInstanceOf",
+        standard: f('Subject is instance of: "%s"', constructor.name),
+        values: {
+            subject: subject,
+            constructorName: constructor.name,
+        }
+    });
+};
+
+/**
  * Asserts that a the current page url matches a given pattern. A pattern may be
  * either a RegExp object or a String. The method will test if the URL matches
  * the pattern or contains the String.
@@ -1335,7 +1358,7 @@ Tester.prototype.processError = function processError(error) {
 Tester.prototype.processPhantomError = function processPhantomError(msg, backtrace) {
     "use strict";
     if (/^AssertionError/.test(msg)) {
-        this.casper.warn('looks you did not use begin() which is mandatory since 1.1');
+        this.casper.warn('looks like you did not use begin(), which is mandatory since 1.1');
     }
     var termination = /^TerminationError:?\s?(.*)/.exec(msg);
     if (termination) {

@@ -398,16 +398,16 @@ Example: retrieving google logo image encoded in base64::
 You can also perform an HTTP POST request to retrieve the contents to
 encode::
 
-    var base46contents = null;
+    var base64contents = null;
     casper.start('http://domain.tld/download.html', function() {
-        base46contents = this.base64encode('http://domain.tld/', 'POST', {
+        base64contents = this.base64encode('http://domain.tld/', 'POST', {
             param1: 'foo',
             param2: 'bar'
         });
     });
 
     casper.run(function() {
-        this.echo(base46contents).exit();
+        this.echo(base64contents).exit();
     });
 
 .. index:: bypass, Step stack
@@ -938,7 +938,7 @@ Fills form fields with given values and optionally submits it. Fields
 are referenced by ``CSS3`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillSelectors('form#contact-form', {
             'input[name="subject"]':    'I am watching you',
             'input[name="content"]':    'So be careful.',
             'input[name="civility"]':   'Mr',
@@ -960,7 +960,7 @@ are referenced by ``CSS3`` selectors::
 Fills form fields with given values and optionally submits it. While the ``form`` element is always referenced by a CSS3 selector, fields are referenced by ``XPath`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillXPath('form#contact-form', {
             '//input[@name="subject"]':    'I am watching you',
             '//input[@name="content"]':    'So be careful.',
             '//input[@name="civility"]':   'Mr',
@@ -1458,6 +1458,8 @@ Sends native keyboard events to the element matching the provided :doc:`selector
     });
 
 .. versionadded:: 1.1
+
+The currently supported HTMLElements that can receive keyboard events from ``sendKeys`` are ``<input>``, ``<textarea>``, and any HTMLElement with attribute ``contenteditable="true"``.
 
 Options
 ~~~~~~~

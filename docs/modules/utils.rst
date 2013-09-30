@@ -24,6 +24,15 @@ Usage is pretty much straightforward::
 
 Provides a better ``typeof`` operator equivalent, eg. able to retrieve the ``Array`` type.
 
+``betterInstanceOf()``
+-------------------------------------------------------------------------------
+
+.. versionadded:: 1.1
+
+**Signature:** ``betterInstanceOf(input, constructor)``
+
+Provides a better ``instanceof`` operator equivalent, is able to retrieve the ``Array`` instance or to deal with inheritance.
+
 .. index:: dump, Serialization, Debugging, JSON
 
 .. _utils_dump:

@@ -32,6 +32,10 @@ Installing from Homebrew (OSX)
 
 Installation of both PhantomJS and CasperJS can be achieved using Homebrew_, a popular package manager for Mac OS X.
 
+Above all, don't forget to update Formulaes::
+
+    $ brew update
+   
 For the 1.1 development version (recommended)::
 
     $ brew install casperjs --devel
@@ -39,6 +43,12 @@ For the 1.1 development version (recommended)::
 For the 1.0.x stable version::
 
     $ brew install casperjs
+    
+If you have already installed casperjs and want to have the last release (stable|devel), use ``upgrade``::
+
+    $ brew upgrade casperjs
+   
+Upgrade only update to the latest release branch (1.0.x|1.1-dev).
 
 .. index:: git
 
@@ -61,9 +71,9 @@ Once PhantomJS and CasperJS installed on your machine, you should obtain somethi
 .. code-block:: text
 
     $ phantomjs --version
-    1.8.2
+    1.8.1
     $ casperjs
-    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using phantomjs version 1.9.0
+    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using phantomjs version 1.8.1
     # ...
 
 Or if SlimerJS is your thing:
@@ -85,8 +95,8 @@ You can download tagged archives of CasperJS code:
 
 **Latest stable version:**
 
-- https://github.com/n1k0/casperjs/zipball/1.0.0 (zip)
-- https://github.com/n1k0/casperjs/tarball/1.0.0 (tar.gz)
+- https://github.com/n1k0/casperjs/zipball/1.0.3 (zip)
+- https://github.com/n1k0/casperjs/tarball/1.0.3 (tar.gz)
 
 **Latest development version (master branch):**
 
