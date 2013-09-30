@@ -13,7 +13,8 @@ Prerequisites
 .. index:: PhantomJS, Python, SlimerJS
 
 - PhantomJS_ 1.8.1 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
-- Python_ 2.6 or greater
+- Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
+- .NET Framework 3.5 or greater (or Mono_ 2.10.8 or greater)
 
 .. versionadded:: 1.1
 
@@ -24,6 +25,8 @@ Prerequisites
    .. deprecated:: 1.1
 
    The `Ruby <http://ruby-lang.org/>`_ version of the ``casperjs`` executable also available in the ``rubybin/`` directory has been deprecated as of 1.1-beta, and is not compatible with SlimerJS_.
+
+   The batch version of the ``casperjs`` executable also available in the ``batchbin/`` directory has been deprecated as of 1.1-beta, and is not compatible with SlimerJS_.
 
 .. index:: Homebrew
 
@@ -120,9 +123,23 @@ Phantomjs installation additions
 Casperjs installation additions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 1.0
+**CasperJS, as of 1.1-beta3, ships with a .NET application so you don't need Python nor Ruby to use it.**
 
-CasperJS, as of 1.0.0-RC3, ships with a Batch script so you don't need Python nor Ruby to use it.
+.. versionadded:: 1.1-beta3
+
+- Append ``";C:\casperjs\bin"`` to your ``PATH`` environment variable.
+- Modify this path appropriately if you installed CasperJS to a different location.
+
+You can now run any regular casper scripts that way:
+
+.. code-block:: text
+
+    C:> casperjs myscript.js
+
+Earlier versions of CasperJS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**CasperJS, as of 1.0.0-RC3, ships with a Batch script so you don't need Python nor Ruby to use it.**
 
 - Append ``";C:\casperjs\batchbin"`` to your ``PATH`` environment variable.
 - Modify this path appropriately if you installed CasperJS to a different location.
@@ -133,10 +150,7 @@ You can now run any regular casper scripts that way:
 
     C:> casperjs.bat myscript.js
 
-Earlier versions of CasperJS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Before 1.0.0-RC3, you had to setup your casper scripts that way::
+**Before 1.0.0-RC3, you had to setup your casper scripts that way::**
 
     phantom.casperPath = 'C:\\casperjs-1.1';
     phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
@@ -170,3 +184,4 @@ Known Bugs & Limitations
 .. _Python: http://python.org/
 .. _SlimerJS: http://slimerjs.org/
 .. _ansicon: https://github.com/adoxa/ansicon
+.. _Mono: http://www.mono-project.com/
