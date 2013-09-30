@@ -791,19 +791,15 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
                     return;
                 }
 
-                var paths = [];
-                if (utils.isObject(file.path) && utils.isArray(file.path) && file.path.length > 1) {
-                    paths = file.path;
-                } else {
-                    paths = [file.path];
-                }
-                var fpaths = [];
-                paths.forEach(function _forEachPath(file_path) {
-                    if (!fs.exists(file_path)) {
-                        throw new CasperError('Cannot upload nonexistent file: ' + file_path);
-                    }
-                    fpaths.push(file_path);
-                }.bind(this));
+                var paths = (utils.isArray(file.path) && file.path.length > 1) ? file.path :[file.path];
+                paths.map(
+                    function(file_path) {
+                        if (!fs.exists(file_path)) {
+                            throw new CasperError('Cannot upload nonexistent file: ' + file_path);
+                        };
+                        fpaths.push(file_path);
+                    }, this
+                );
                 var fileFieldSelector = this.getFileFieldSelector(selector, file);
                 this.page.uploadFile(fileFieldSelector, fpaths);
             }.bind(this));
@@ -836,15 +832,15 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
 /**
  * Retrieves an input of type file base on selector.
  *
- * @param  String|Object  selector  The selector string or object
- * @param  Array          file      The path (or paths) for file (or files)
+ * @param  String|Object selector  The selector string or object
+ * @param  Array         file      The path (or paths) for file (or files)
  */
 Casper.prototype.getFileFieldSelector = function getFileFieldSelector(selector, file) {
     "use strict";
     if (file.type === "names") {
-	return [selector, 'input[name="' + file.selector + '"]'].join(' ');
+        return [selector, 'input[name="' + file.selector + '"]'].join(' ');
     } else if (file.type === "css") {
-	return [selector, file.selector].join(' ');
+        return [selector, file.selector].join(' ');
     }
 };
 
