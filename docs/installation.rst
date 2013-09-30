@@ -14,7 +14,7 @@ Prerequisites
 
 - PhantomJS_ 1.8.1 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
 - Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
-- .NET Framework 3.5 or greater (or Mono_ 2.10.8 or greater)
+- .NET Framework 3.5 or greater (or Mono_ 2.10.8 or greater) for ``casperjs.exe`` in the ``bin/`` directory
 
 .. versionadded:: 1.1
 
