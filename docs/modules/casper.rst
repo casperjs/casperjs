@@ -2034,7 +2034,7 @@ Wait until a resource that matches the given ``testFx`` is loaded to process a n
 
 .. versionadded:: 1.1
 
-Waits for the current pahe url to match the provided argument (``String`` or ``RegExp``)::
+Waits for the current page url to match the provided argument (``String`` or ``RegExp``)::
 
     casper.start('http://foo/').waitForUrl(/login\.html$/, function() {
         this.echo('redirected to login.html');
