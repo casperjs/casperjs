@@ -938,9 +938,16 @@ Casper.prototype.getPageContent = function getPageContent() {
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
-    return utils.decodeUrl(this.evaluate(function _evaluate() {
-        return document.location.href;
-    }));
+    try {
+        return utils.decodeUrl(this.evaluate(function _evaluate() {
+            return document.location.href;
+        }));
+    } catch (e) {
+        // most likely the current page object has been "deleted" (think closed popup)
+        if (/deleted QObject/.test(e.message))
+            return "";
+        throw e;
+    }
 };
 
 /**
@@ -2314,12 +2321,12 @@ Casper.prototype.withFrame = function withFrame(frameInfo, then) {
     } catch (e) {
         // revert to main page on error
         this.warn("Error while processing frame step: " + e);
-        this.page.switchToMainFrame();
+        this.page.switchToParentFrame();
         throw e;
     }
     return this.then(function _step() {
         // revert to main page
-        this.page.switchToMainFrame();
+        this.page.switchToParentFrame();
     });
 };
 
@@ -2499,11 +2506,12 @@ function createPage(casper) {
                 newUrl = newUrl.substring(0, pos);
             }
             // for URLs that are only different by their hash part
+            // or if navigation locked (willNavigate == false)
             // don't turn navigationRequested to true, because
             // there will not be loadStarted, loadFinished events
             // so it could cause issues (for exemple, checkStep that
             // do no execute the next step -> infinite loop on checkStep)
-            if (currentUrl !== newUrl)
+            if (willNavigate && currentUrl !== newUrl)
                 casper.navigationRequested  = true;
 
             if (willNavigate) {
