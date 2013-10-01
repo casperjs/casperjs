@@ -1467,7 +1467,7 @@ Options
 - ``(Boolean) keepFocus``:
 
 
-  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, us  e   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
+  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, use   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
 
       casper.then(function() {
           this.sendKeys('form.contact input#name', 'action', {keepFocus: true});
