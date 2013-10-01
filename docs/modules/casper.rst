@@ -1467,7 +1467,7 @@ Options
 - ``(Boolean) keepFocus``:
 
 
-  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, us  e   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
+  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, use   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
 
       casper.then(function() {
           this.sendKeys('form.contact input#name', 'action', {keepFocus: true});
@@ -2034,7 +2034,7 @@ Wait until a resource that matches the given ``testFx`` is loaded to process a n
 
 .. versionadded:: 1.1
 
-Waits for the current pahe url to match the provided argument (``String`` or ``RegExp``)::
+Waits for the current page url to match the provided argument (``String`` or ``RegExp``)::
 
     casper.start('http://foo/').waitForUrl(/login\.html$/, function() {
         this.echo('redirected to login.html');
