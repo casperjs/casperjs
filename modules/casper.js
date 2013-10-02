@@ -496,18 +496,11 @@ Casper.prototype.createStep = function createStep(name, fn, options) {
         throw new CasperError("createStep(): a step definition must be a function");
     }
     // add an options object to the function, if it does not exist
-    if (!fn.options) {
-        fn.options = {};
-    }
+    fn.options = fn.options || {};
+
     // merge any new options
-    if (options)
-    {
-        for (var property in options) {
-            if (options.hasOwnProperty(property)) {
-                fn.options[property] = options[property];
-            }
-        }
-    }
+    utils.mergeObjects(fn.options, options);
+
     // Check that stepName is set, if it is not, use the name passed
     // note that any later call will have less "context", so names which
     // are set first are of greater value than names set later, for instance
@@ -1826,7 +1819,7 @@ Casper.prototype.thenBypass = function thenBypass(nb) {
  */
 Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
     "use strict";
-    var step = this.createStep(condition.name ? condition.name : "_thenBypassIf", function () {
+    var step = this.createStep(utils.coalesce(condition.name, "_thenBypassIf"), function () {
         if (utils.isFunction(condition)) {
             condition = condition.call(this);
         }
@@ -1845,7 +1838,7 @@ Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
  */
 Casper.prototype.thenBypassUnless = function thenBypassUnless(condition, nb) {
     "use strict";
-    var step = this.createStep(condition.name ? condition.name : "_thenBypassUnless", function () {
+    var step = this.createStep(utils.coalesce(condition.name, "_thenBypassUnless"), function () {
         if (utils.isFunction(condition)) {
             condition = condition.call(this);
         }
@@ -1938,7 +1931,7 @@ Casper.prototype.viewport = function viewport(width, height, then) {
     // time. At least for Gecko, we should wait a bit, even
     // if this time could not be enough.
     var time = (phantom.casperEngine === 'slimerjs'?400:100);
-    var step = this.createStep(then && then.name ? then.name : "_viewportChanged", function () {
+    var step = this.createStep(utils.coalesce(then && then.name, "_viewportChanged"), function () {
         this.waitStart();
         setTimeout(function _check(self) {
             self.waitDone();
@@ -1997,7 +1990,7 @@ Casper.prototype.wait = function wait(timeout, then) {
     if (timeout < 1) {
         throw new CasperError("wait() only accepts a positive integer > 0 as a timeout value");
     }
-    var step = this.createStep(then && then.name ? then.name : "_wait", function () {
+    var step = this.createStep(utils.coalesce(then && then.name, "_wait"), function () {
         this.waitStart();
         setTimeout(function _check(self) {
             self.log(f("wait() finished waiting for %dms.", timeout), "info");
@@ -2038,14 +2031,14 @@ Casper.prototype.waitDone = function waitDone() {
 Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
     if (!utils.isFunction(testFx)) {
         throw new CasperError("waitFor() needs a test function");
     }
     if (then && !utils.isFunction(then)) {
         throw new CasperError("waitFor() next step definition must be a function");
     }
-    var step = this.createStep(testFx.name ? testFx.name : "_waitFor", function () {
+    var step = this.createStep(utils.coalesce(testFx.name, "_waitFor"), function () {
         this.waitStart();
         var start = new Date().getTime();
         var condition = false;
@@ -2058,7 +2051,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
             self.waitDone();
             if (!condition) {
                 self.log("Casper.waitFor() timeout", "warning");
-                var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
+                var onWaitTimeout = utils.coalesce(onTimeout, self.options.onWaitTimeout);
                 self.emit('waitFor.timeout', timeout, onWaitTimeout);
                 clearInterval(interval); // refs #383
                 if (!utils.isFunction(onWaitTimeout)) {
@@ -2095,7 +2088,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
  */
 Casper.prototype.waitForPopup = function waitForPopup(urlPattern, then, onTimeout, timeout) {
     "use strict";
-    var step = this.createStep(then && then.name ? then.name : "_waitForPopup", function () {
+    var step = this.createStep(utils.coalesce(then && then.name, "_waitForPopup"), function () {
         try {
             this.popups.find(urlPattern);
             return true;
@@ -2119,8 +2112,8 @@ Casper.prototype.waitForPopup = function waitForPopup(urlPattern, then, onTimeou
 Casper.prototype.waitForResource = function waitForResource(test, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var step = this.createStep(test.name ? test.name : "_waitForResource", function () {
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
+    var step = this.createStep(utils.coalesce(test.name, "_waitForResource"), function () {
         return this.resourceExists(test);
     });
     return this.waitFor(step, then, onTimeout, timeout);
@@ -2137,8 +2130,8 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
 Casper.prototype.waitForUrl = function waitForUrl(url, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var step = this.createStep(then ? then.name : "_waitForUrl", function () {
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
+    var step = this.createStep(utils.coalesce(then && then.name, "_waitForUrl"), function () {
         if (utils.isString(url)) {
             return this.getCurrentUrl().indexOf(url) !== -1;
         } else if (utils.isRegExp(url)) {
@@ -2162,8 +2155,8 @@ Casper.prototype.waitForUrl = function waitForUrl(url, then, onTimeout, timeout)
 Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var step = this.createStep(then ? then.name : "_waitForSelector", function () {
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
+    var step = this.createStep(utils.coalesce(then && then.name, "_waitForSelector"), function () {
         return this.exists(selector);
     });
     return this.waitFor(step, then, onTimeout, timeout);
@@ -2181,8 +2174,8 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
 Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var step = this.createStep(this && this.name ? this.name : "_waitForText", function () {
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
+    var step = this.createStep(utils.coalesce(this && this.name, "_waitForText"), function () {
         var content = this.getPageContent();
         if (utils.isRegExp(pattern)) {
             return pattern.test(content);
@@ -2205,9 +2198,9 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
 Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
     var currentSelectorText = this.fetchText(selector);
-    var step = this.createStep(this && this.name ? this.name : "_waitForSelectorTextChange", function () {
+    var step = this.createStep(utils.coalesce(this && this.name, "_waitForSelectorTextChange"), function () {
         return currentSelectorText !== this.fetchText(selector);
     });
     return this.waitFor(step, then, onTimeout, timeout);
@@ -2226,8 +2219,8 @@ Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout,
 Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var step = this.createStep(this && this.name ? this.name : "_waitWhileSelector", function () {
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
+    var step = this.createStep(utils.coalesce(this && this.name, "_waitWhileSelector"), function () {
         return !this.exists(selector);
     });
     return this.waitFor(step, then, onTimeout, timeout);
@@ -2246,8 +2239,8 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
 Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var step = this.createStep(then && then.name ? then.name : "_waitUntilVisible", function () {
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
+    var step = this.createStep(utils.coalesce(then && then.name, "_waitUntilVisible"), function () {
         return this.visible(selector);
     });
     return this.waitFor(step, then, onTimeout, timeout);
@@ -2266,8 +2259,8 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
 Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, onTimeout, timeout) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
-    var step = this.createStep(then && then.name ? then.name : "_waitWhileVisible", function () {
+    timeout = utils.coalesce(timeout, this.options.waitTimeout);
+    var step = this.createStep(utils.coalesce(then && then.name, "_waitWhileVisible"), function () {
         return !this.visible(selector);
     });
     return this.waitFor(step, then, onTimeout, timeout);

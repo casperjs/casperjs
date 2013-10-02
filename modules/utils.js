@@ -771,6 +771,33 @@ function unique(array) {
 }
 exports.unique = unique;
 
+
+/**
+ * Return the first truthy value.
+ *
+ * Note: the name is borrowed from the SQL function of the same name.
+ *
+ * @param  mixed p0
+ * @param  mixed p1
+ * @param  mixed p2
+ * @param  mixed p3
+ * @param  mixed p4
+ * @param  mixed p5
+ * @param  mixed p6
+ * @param  mixed p7
+ * @param  mixed p8
+ * @param  mixed p9
+ * @return mixed
+ */
+
+function coalesce(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9)  // jshint maxparams:10
+{
+    /*jshint maxparams:10*/
+    "use strict";
+    return p0 ? p0 : p1 ? p1 : p2 ? p2 : p3 ? p3 : p4 ? p4 : p5 ? p5 : p6 ? p6 : p7 ? p7 : p8 ? p8 : p9;
+}
+exports.coalesce = coalesce;
+
 /**
  * Compare two version numbers represented as strings.
  *
