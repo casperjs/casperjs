@@ -366,7 +366,7 @@ Moves back a step in browser's history::
         console.log(this.getCurrentUrl()); // 'http://foo.bar/2'
     });
 
-Also have a look at ``Casper.forward()``.
+Also have a look at `forward()`_.
 
 .. _casper_base64encode:
 
