@@ -1440,6 +1440,8 @@ Casper suite **will run**::
         this.exit(); // <--- don't forget me!
     });
 
+Binding a callback to ``complete.error`` will trigger when the ``onComplete`` callback fails.
+
 .. index:: Form
 
 ``sendKeys()``
