@@ -641,11 +641,7 @@ function mergeObjectsInSlimerjs(origin, add, opts) {
             if (isPlainObject(origin[p])) {
                 origin[p] = mergeObjects(origin[p], add[p]);
             } else {
-                if (keepReferences) {
-                    origin[p] = add[p];
-                } else {
-                    origin[p] = clone(add[p]);
-                }
+                origin[p] = keepReferences ? add[p] : clone(add[p]);
             }
         } else {
             origin[p] = add[p];
@@ -680,11 +676,7 @@ function mergeObjects(origin, add, opts) {
             if (origin[p] && origin[p].constructor === Object) {
                 origin[p] = mergeObjects(origin[p], add[p]);
             } else {
-                if (keepReferences) {
-                    origin[p] = add[p];
-                } else {
-                    origin[p] = clone(add[p]);
-                }
+                origin[p] = keepReferences ? add[p] : clone(add[p]);
             }
         } else {
             origin[p] = add[p];

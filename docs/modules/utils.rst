@@ -220,7 +220,7 @@ Checks if passed argument is an instance of native PhantomJS' ``WebPage`` object
 
 Merges two objects recursively.
 
-Add opts.keepReferences if cloning of internal objects is not needed.
+Add ``opts.keepReferences`` if cloning of internal objects is not needed.
 
 .. index:: DOM
 

@@ -327,6 +327,7 @@ casper.test.begin('isJsFile() tests', 5, function(test) {
 
 
 casper.test.begin('mergeObjects() tests', 10, function(test) {
+    /* jshint eqeqeq:false */
     var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
