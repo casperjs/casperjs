@@ -885,7 +885,7 @@ Casper.prototype.fillXPath = function fillXPath(formSelector, vals, submit) {
  *
  * @return Casper
  */
-Casper.prototype.forward = function forward(then) {
+Casper.prototype.forward = function forward() {
     "use strict";
     this.checkStarted();
     return this.then(function _step() {
