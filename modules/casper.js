@@ -2192,7 +2192,7 @@ Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
  */
 Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout){
     "use strict";
-    var selector = selectXPath(f("text()[contains(., '%s']", text));
+    var selector = selectXPath(f('text()[contains(., "%s"]', text));
     return this.waitUntilVisible(selector, then, onTimeout, timeout);
 };
 
