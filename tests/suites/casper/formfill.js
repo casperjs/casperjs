@@ -33,9 +33,10 @@ function testUrl(test) {
     test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
     test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
     test.assertUrlMatch(/topic=bar/, 'select field was submitted');
+    test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
 }
 
-casper.test.begin('fill() & fillNames() tests', 15, function(test) {
+casper.test.begin('fill() & fillNames() tests', 16, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -47,7 +48,8 @@ casper.test.begin('fill() & fillNames() tests', 15, function(test) {
             choice:        'no',
             topic:         'bar',
             file:          fpath,
-            'checklist[]': ['1', '3']
+            'checklist[]': ['1', '3'],
+            strange:       "very"
         });
         testFormValues(test);
         test.assertEvalEquals(function() {
@@ -62,7 +64,7 @@ casper.test.begin('fill() & fillNames() tests', 15, function(test) {
     });
 });
 
-casper.test.begin('fillSelectors() tests', 15, function(test) {
+casper.test.begin('fillSelectors() tests', 16, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -74,7 +76,8 @@ casper.test.begin('fillSelectors() tests', 15, function(test) {
             "input[name='choice']":       'no',
             "select[name='topic']":       'bar',
             "input[name='file']":         fpath,
-            "input[name='checklist[]']":  ['1', '3']
+            "input[name='checklist[]']":  ['1', '3'],
+            "input[name='strange']":      "very"
         });
         testFormValues(test);
         test.assertEvalEquals(function() {
@@ -89,7 +92,7 @@ casper.test.begin('fillSelectors() tests', 15, function(test) {
     });
 });
 
-casper.test.begin('fillXPath() tests', 14, function(test) {
+casper.test.begin('fillXPath() tests', 15, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fillXPath('form[action="result.html"]', {
             '//input[@name="email"]':       'chuck@norris.com',
@@ -98,7 +101,8 @@ casper.test.begin('fillXPath() tests', 14, function(test) {
             '//input[@name="check"]':       true,
             '//input[@name="choice"]':      'no',
             '//select[@name="topic"]':      'bar',
-            '//input[@name="checklist[]"]': ['1', '3']
+            '//input[@name="checklist[]"]': ['1', '3'],
+            '//input[@name="strange"]':     "very"
         });
         testFormValues(test);
         // note: file inputs cannot be filled using XPath
@@ -173,7 +177,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             choice:        'no',
             topic:         'bar',
             file:          fpath,
-            'checklist[]': ['1', '3']
+            'checklist[]': ['1', '3'],
+            strange:       "very"
         });
     });
     casper.then(function() {
@@ -187,7 +192,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "password": "chuck",
             "submit": "submit",
             "language": "english",
-            "topic": "bar"
+            "topic": "bar",
+            "strange": "very"
         }, 'Casper.getFormValues() retrieves filled values');
     });
     casper.then(function() {
@@ -200,7 +206,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             choice:        'yes',
             topic:         'bar',
             file:          fpath,
-            'checklist[]': ['1', '3']
+            'checklist[]': ['1', '3'],
+            strange:       "very"
         });
     });
     casper.then(function() {
@@ -214,7 +221,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "password": "chuck",
             "language": "english",
             "submit": "submit",
-            "topic": "bar"
+            "topic": "bar",
+            "strange": "very"
         }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
     });
     casper.run(function() {

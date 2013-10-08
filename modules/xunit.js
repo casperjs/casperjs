@@ -83,7 +83,8 @@ function XUnitExporter() {
     this.results = undefined;
     this._xml = utils.node('testsuites');
     this._xml.toString = function toString() {
-        return '<?xml version="1.0" encoding="UTF-8"?>' + this.outerHTML; // ouch
+        var serializer = new XMLSerializer();
+        return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this);
     };
 }
 exports.XUnitExporter = XUnitExporter;

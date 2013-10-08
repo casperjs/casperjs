@@ -272,7 +272,7 @@ Casper.prototype.bypass = function bypass(nb) {
  * @param  mixed   clipRect    An optional clipRect object (optional)
  * @return Casper
  */
-Casper.prototype.capture = function capture(targetFile, clipRect) {
+Casper.prototype.capture = function capture(targetFile, clipRect, imgOptions) {
     "use strict";
     /*jshint maxstatements:20*/
     this.checkStarted();
@@ -288,7 +288,7 @@ Casper.prototype.capture = function capture(targetFile, clipRect) {
     } else {
         this.log(f("Capturing page to %s", targetFile), "debug");
     }
-    if (!this.page.render(this.filter('capture.target_filename', targetFile) || targetFile)) {
+    if (!this.page.render(this.filter('capture.target_filename', targetFile) || targetFile, imgOptions)) {
         this.log(f("Failed to save screenshot to %s; please check permissions", targetFile), "error");
     } else {
         this.log(f("Capture saved to %s", targetFile), "info");
@@ -347,9 +347,9 @@ Casper.prototype.captureBase64 = function captureBase64(format, area) {
  * @param  String  selector    DOM CSS3/XPath selector
  * @return Casper
  */
-Casper.prototype.captureSelector = function captureSelector(targetFile, selector) {
+Casper.prototype.captureSelector = function captureSelector(targetFile, selector, imgOptions) {
     "use strict";
-    return this.capture(targetFile, this.getElementBounds(selector));
+    return this.capture(targetFile, this.getElementBounds(selector), imgOptions);
 };
 
 /**
@@ -380,6 +380,7 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         }
     } catch (error) {
         self.emit('complete.error', error);
+        this.emit('error', error);
     }
 };
 
@@ -937,14 +938,15 @@ Casper.prototype.getPageContent = function getPageContent() {
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
-    var url = this.evaluate(function _evaluate() {
-        return document.location.href;
-    });
     try {
-        return decodeURIComponent(url);
+        return utils.decodeUrl(this.evaluate(function _evaluate() {
+            return document.location.href;
+        }));
     } catch (e) {
-        /*global unescape*/
-        return unescape(url);
+        // most likely the current page object has been "deleted" (think closed popup)
+        if (/deleted QObject/.test(e.message))
+            return "";
+        throw e;
     }
 };
 
@@ -1150,7 +1152,7 @@ Casper.prototype.handleReceivedResource = function(resource) {
         return;
     }
     this.resources.push(resource);
-    if (resource.url !== this.requestUrl) {
+    if (utils.decodeUrl(resource.url) !== this.requestUrl) {
         return;
     }
     this.currentHTTPStatus = null;
@@ -1526,6 +1528,7 @@ Casper.prototype.runStep = function runStep(step) {
         }
     } catch (err) {
         this.emit('step.error', err);
+        this.emit('error', err);
     }
     if (!skipLog) {
         this.emit('step.complete', stepResult);
@@ -1558,8 +1561,12 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         supported = ["color", "date", "datetime", "datetime-local", "email",
                      "hidden", "month", "number", "password", "range", "search",
                      "tel", "text", "time", "url", "week"],
-        isTextInput = false;
-    if (tag === 'textarea' || (tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1))) {
+        isTextInput = false,
+        isTextArea = tag === 'textarea',
+        isValidInput = tag === 'input' && (typeof type === 'undefined' || supported.indexOf(type) !== -1),
+        isContentEditable = !!elemInfos.attributes.contenteditable;
+
+    if (isTextArea || isValidInput || isContentEditable) {
         // clicking on the input element brings it focus
         isTextInput = true;
         this.click(selector);
@@ -1799,7 +1806,7 @@ Casper.prototype.thenBypassIf = function thenBypassIf(condition, nb) {
 };
 
 /**
- * Bypass `nb` steps if condition is true.
+ * Bypass `nb` steps if condition is false.
  *
  * @param Mixed    condition  Test condition
  * @param Integer  nb         Number of tests to bypass
@@ -2314,12 +2321,12 @@ Casper.prototype.withFrame = function withFrame(frameInfo, then) {
     } catch (e) {
         // revert to main page on error
         this.warn("Error while processing frame step: " + e);
-        this.page.switchToMainFrame();
+        this.page.switchToParentFrame();
         throw e;
     }
     return this.then(function _step() {
         // revert to main page
-        this.page.switchToMainFrame();
+        this.page.switchToParentFrame();
     });
 };
 
@@ -2499,11 +2506,12 @@ function createPage(casper) {
                 newUrl = newUrl.substring(0, pos);
             }
             // for URLs that are only different by their hash part
+            // or if navigation locked (willNavigate == false)
             // don't turn navigationRequested to true, because
             // there will not be loadStarted, loadFinished events
             // so it could cause issues (for exemple, checkStep that
             // do no execute the next step -> infinite loop on checkStep)
-            if (currentUrl !== newUrl)
+            if (willNavigate && currentUrl !== newUrl)
                 casper.navigationRequested  = true;
 
             if (willNavigate) {

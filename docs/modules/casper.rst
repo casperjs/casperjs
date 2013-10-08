@@ -398,16 +398,16 @@ Example: retrieving google logo image encoded in base64::
 You can also perform an HTTP POST request to retrieve the contents to
 encode::
 
-    var base46contents = null;
+    var base64contents = null;
     casper.start('http://domain.tld/download.html', function() {
-        base46contents = this.base64encode('http://domain.tld/', 'POST', {
+        base64contents = this.base64encode('http://domain.tld/', 'POST', {
             param1: 'foo',
             param2: 'bar'
         });
     });
 
     casper.run(function() {
-        this.echo(base46contents).exit();
+        this.echo(base64contents).exit();
     });
 
 .. index:: bypass, Step stack
@@ -496,7 +496,7 @@ Clicks on the first DOM element found containing ``label`` text. Optionaly ensur
 ``capture()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``capture(String targetFilepath, Object clipRect)``
+**Signature:** ``capture(String targetFilepath, [Object clipRect, Object imgOptions])``
 
 Proxy method for PhantomJS' ``WebPage#render``. Adds a ``clipRect`` parameter for automatically setting page ``clipRect`` setting and reverts it back once done::
 
@@ -510,6 +510,22 @@ Proxy method for PhantomJS' ``WebPage#render``. Adds a ``clipRect`` parameter fo
     });
 
     casper.run();
+
+.. versionadded:: 1.1
+
+The ``imgOptions`` object allows to specify two options:
+
+- ``format`` to set the image format manually, avoiding relying on the filename
+- ``quality`` to set the image quality, from 1 to 100
+
+Example::
+
+    casper.start('http://foo', function() {
+        this.capture('foo', undefined, {
+            format: 'jpg',
+            quality: 75
+        });
+    });
 
 .. index:: screenshot, Base64
 
@@ -555,7 +571,7 @@ Example::
 ``captureSelector()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``captureSelector(String targetFile, String selector)``
+**Signature:** ``captureSelector(String targetFile, String selector [, Object imgOptions])``
 
 Captures the page area containing the provided selector and saves it to ``targetFile``::
 
@@ -564,6 +580,13 @@ Captures the page area containing the provided selector and saves it to ``target
     });
 
     casper.run();
+
+.. versionadded:: 1.1
+
+The ``imgOptions`` object allows to specify two options:
+
+- ``format`` to set the image format manually, avoiding relying on the target filename
+- ``quality`` to set the image quality, from 1 to 100
 
 ``clear()``
 -------------------------------------------------------------------------------
@@ -677,11 +700,26 @@ Iterates over provided array items and execute a callback::
 
 **Signature:** ``eachThen(Array array, Function then)``
 
+.. versionadded:: 1.1
+
 Iterates over provided array items and adds a step to the stack with current data attached to it::
 
     casper.start().eachThen([1, 2, 3], function(response) {
         this.echo(response.data);
     }).run();
+
+Here's an example for opening an array of urls::
+
+    var casper = require('casper').create();
+    var urls = ['http://google.com/', 'http://yahoo.com/'];
+
+    casper.start().eachThen(urls, function(response) {
+      this.thenOpen(response.data, function(response) {
+        console.log('Opened', response.url);
+      });
+    });
+
+    casper.run();
 
 .. note::
 
@@ -900,7 +938,7 @@ Fills form fields with given values and optionally submits it. Fields
 are referenced by ``CSS3`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillSelectors('form#contact-form', {
             'input[name="subject"]':    'I am watching you',
             'input[name="content"]':    'So be careful.',
             'input[name="civility"]':   'Mr',
@@ -922,7 +960,7 @@ are referenced by ``CSS3`` selectors::
 Fills form fields with given values and optionally submits it. While the ``form`` element is always referenced by a CSS3 selector, fields are referenced by ``XPath`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillXPath('form#contact-form', {
             '//input[@name="subject"]':    'I am watching you',
             '//input[@name="content"]':    'So be careful.',
             '//input[@name="civility"]':   'Mr',
@@ -1402,6 +1440,8 @@ Casper suite **will run**::
         this.exit(); // <--- don't forget me!
     });
 
+Binding a callback to ``complete.error`` will trigger when the ``onComplete`` callback fails.
+
 .. index:: Form
 
 ``sendKeys()``
@@ -1421,13 +1461,15 @@ Sends native keyboard events to the element matching the provided :doc:`selector
 
 .. versionadded:: 1.1
 
+The currently supported HTMLElements that can receive keyboard events from ``sendKeys`` are ``<input>``, ``<textarea>``, and any HTMLElement with attribute ``contenteditable="true"``.
+
 Options
 ~~~~~~~
 
 - ``(Boolean) keepFocus``:
 
 
-  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, us  e   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
+  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, use   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
 
       casper.then(function() {
           this.sendKeys('form.contact input#name', 'action', {keepFocus: true});
@@ -1687,7 +1729,7 @@ Opposite of `thenBypassIf()`_.
 
 Adds a new navigation step to click a given selector and optionally add a new navigation step in a single operation::
 
-    // Querying for "Chuck Norris" on Google
+    // Click the first link in the casperJS page
     casper.start('http://casperjs.org/').thenClick('a', function() {
         this.echo("I clicked on first link found, the page is now loaded.");
     });
@@ -1809,9 +1851,8 @@ Sets the `User-Agent string <http://en.wikipedia.org/wiki/User-Agent>`_ to send 
 
     casper.thenOpen('http://google.com/', function() {
         this.echo("I'm a Mac.");
+        this.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
     });
-
-    casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
     casper.thenOpen('http://google.com/', function() {
         this.echo("I'm a PC.");
@@ -1995,7 +2036,7 @@ Wait until a resource that matches the given ``testFx`` is loaded to process a n
 
 .. versionadded:: 1.1
 
-Waits for the current pahe url to match the provided argument (``String`` or ``RegExp``)::
+Waits for the current page url to match the provided argument (``String`` or ``RegExp``)::
 
     casper.start('http://foo/').waitForUrl(/login\.html$/, function() {
         this.echo('redirected to login.html');

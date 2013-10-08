@@ -1,6 +1,9 @@
 Upgrading to 1.1
 ================
 
+Testing framework refactor
+--------------------------
+
 The most visible change is the way you write tests. With 1.0, you were able to access a ``.test`` property from any casper script and so running a suite using the standard ``casperjs`` executable::
 
     // 1.0 style test script not using the `casperjs test` subcommand
@@ -41,7 +44,7 @@ Instead you now have to use the :doc:`casperjs test <../testing>` subcommand man
        CasperError: casper.test property is only available using the `casperjs test` command
 
 The new ``Tester#begin()`` method
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 However, a new :ref:`begin() <tester_begin>` method as been added to the :ref:`Tester <tester_module>` prototype, to ease describing your tests::
 
@@ -64,7 +67,7 @@ More asynchronously::
 
 .. note::
 
-   Please note that ``begin()``'s the second argument which is now the place to set the number of planned tests.
+   Please notice ``begin()``'s second argument which is now the place to set the number of planned tests.
 
 
 require() in custom modules
@@ -80,7 +83,28 @@ CasperJS 1.1 now internally uses PhantomJS' native ``require()`` function, but i
         // ...
     };
 
-
 .. note::
 
     You don't have to use ``patchRequire()`` in a standard casperjs script.
+
+
+``__file__`` has been removed
+-----------------------------
+
+As of 1.1, CasperJS now uses native PhantomJS' ``require()`` function which doesn't support the ``__file__`` builtin variable within custom modules like 1.0 allowed.
+
+
+``Tester#getFailures()`` and ``Tester#getSuccesses()`` methods removed
+----------------------------------------------------------------------
+
+These two methods have been removed from the :doc:`Tester <../modules/tester>` API.
+
+
+Step and run completion callbacks don't throw anymore
+-----------------------------------------------------
+
+Instead, you should listen to the ``step.error`` and ``complete.error`` events; if you really want to keep raising them::
+
+    casper.on("step.error complete.error", function(error) {
+      throw error;
+    });
