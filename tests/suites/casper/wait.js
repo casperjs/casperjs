@@ -172,7 +172,7 @@ casper.test.begin('waitForUrl() string tests', 1, function(test) {
 casper.test.begin('waitForLabel() tests', 1, function(test) {
     casper.start('tests/site/waitFor.html');
 
-    casper.waitForLabel('four', function() {
+    casper.waitForLabel('four', 'li', function() {
         test.pass('Casper.waitForLabel() waits for label');
     }, function() {
         test.fail('Casper.waitForLabel() waits for label');
