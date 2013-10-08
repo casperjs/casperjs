@@ -2163,6 +2163,7 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
  * @param Function  then        The next step to perform (optional)
  * @param Function  onTimeout   A callback function to call on timeout (optional)
  * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
  */
 Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
     "use strict";
@@ -2181,6 +2182,7 @@ Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
 
 /**
  * Waits until an element that contains given label is visible.
+ * Uses waitUntilVisible.
  *
  * @param String    text        Text to search for
  * @param Function  then        The next step to perform (optional)
@@ -2195,7 +2197,7 @@ Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout)
 };
 
 /**
- * Waits until the page title equals given value
+ * Waits until the page title equals given value.
  *
  * @param String    title       Title to check for
  * @param Function  then        The next step to perform (optional)
@@ -2206,9 +2208,6 @@ Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout)
 Casper.prototype.waitForTitle = function(title, then, onTimeout, timeout){
     "use strict";
     var wait = function(){
-        // this.log("waiting for title " + title);
-        // this.log("current title: " + this.getTitle());
-
         return this.evaluate(function(pageTitle){
             return document.title === pageTitle;
         }, {
@@ -2226,7 +2225,7 @@ Casper.prototype.waitForTitle = function(title, then, onTimeout, timeout){
  * @param Function  then        The next step to preform (optional)
  * @param Function  onTimeout   A callback function to call on timeout (optional)
  * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
- * @return Casper
+ * @returns Casper
  */
 Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout, timeout) {
     "use strict";
