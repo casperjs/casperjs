@@ -2182,6 +2182,7 @@ Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
 
 /**
  * Waits until an element that contains given label is visible.
+ * Uses waitUntilVisible.
  *
  * @param String    text        Text to search for
  * @param Function  then        The next step to perform (optional)
@@ -2196,6 +2197,7 @@ Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout)
 };
 
 /**
+
  * Waits until an element that contains given label is visible.
  * Uses waitUntilVisible.
  *
