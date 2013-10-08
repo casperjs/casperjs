@@ -157,7 +157,7 @@ Options
 Options are prefixed with a double-dash (``--``):
 
 - ``--xunit=<filename>`` will export test suite results in a :ref:`XUnit XML file <xunit_report>`
-- ``--direct`` will print :doc:`log messages <logging>` directly to the console
+- ``--verbose`` will print :doc:`log messages <logging>` directly to the console
 - ``--log-level=<logLevel>`` sets the logging level (see the :doc:`related section <logging>`)
 
 .. versionadded:: 1.0
@@ -176,7 +176,7 @@ Sample custom command:
     $ casperjs test --includes=foo.js,bar.js \
                     --pre=pre-test.js \
                     --post=post-test.js \
-                    --direct \
+                    --verbose \
                     --log-level=debug \
                     --fail-fast \
                     test1.js test2.js /path/to/some/test/dir
