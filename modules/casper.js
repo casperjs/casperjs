@@ -2197,23 +2197,6 @@ Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout)
 };
 
 /**
-
- * Waits until an element that contains given label is visible.
- * Uses waitUntilVisible.
- *
- * @param String    text        Text to search for
- * @param Function  then        The next step to perform (optional)
- * @param Function  onTimeout   A callback function to call on timeout (optional)
- * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
- * @returns {*}
- */
-Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout){
-    "use strict";
-    var selector = selectXPath(f("text()[contains(., '%s']", text));
-    return this.waitUntilVisible(selector, then, onTimeout, timeout);
-};
-
-/**
  * Waits until the page title equals given value.
  *
  * @param String    title       Title to check for
