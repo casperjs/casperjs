@@ -32,7 +32,6 @@
 
 var require = patchRequire(require);
 var utils = require('utils');
-var fs = require('fs');
 var TestSuiteResult = require('tester').TestSuiteResult;
 
 /**
