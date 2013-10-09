@@ -5,15 +5,15 @@ var testpage = require('webpage').create();
 var utils = require('utils');
 
 casper.test.begin('jsonReporter() initialization', 1, function suite(test) {
-    var jsonreporter = require('jsonreport').create();
+    var jsonReporter = require('jsonreport').create();
     var results = new tester.TestSuiteResult();
-    jsonreporter.setResults(results);
-    test.assertTruthy(jsonreporter.getJSON());
+    jsonReporter.setResults(results);
+    test.assertTruthy(jsonReporter.getDataFormat());
     test.done();
 });
 
 casper.test.begin('jsonReporter() can hold test suites', 4, function suite(test) {
-    var jsonreporter = require('jsonreport').create();
+    var jsonReporter = require('jsonreport').create();
     var results = new tester.TestSuiteResult();
     var suite1 = new tester.TestCaseResult({
         name: 'foo',
@@ -24,12 +24,11 @@ casper.test.begin('jsonReporter() can hold test suites', 4, function suite(test)
         name: 'bar',
         file: '/bar'
     });
-  
+
     results.push(suite2);
-  jsonreporter.setResults(results);
-  
-  //casper.start().setContent(jsonreporter.getJSON());
-    var content = jsonreporter.getJSON();
+  jsonReporter.setResults(results);
+
+    var content = jsonReporter.getDataFormat();
     test.assert(content["suites"]=== 2,' there are 2 suites');
     test.assert(content["testsuites"].length === 2, 'there are 2 testsuites');
     test.assert(content["testsuites"][0]["testsuite"] ==="foo",'first testsuite is foo');
@@ -41,7 +40,7 @@ casper.test.begin('jsonReporter() can hold test suites', 4, function suite(test)
   
 
 casper.test.begin('jsonReporter() can hold a suite with a succesful test', 6, function suite(test) {
-    var jsonreporter = require('jsonreport').create();
+    var jsonReporter = require('jsonreport').create();
     var results = new tester.TestSuiteResult();
     var suite1 = new tester.TestCaseResult({
         name: 'foo',
@@ -54,9 +53,8 @@ casper.test.begin('jsonReporter() can hold a suite with a succesful test', 6, fu
         file: "/foo",
     });
     results.push(suite1);
-    jsonreporter.setResults(results);
-    //casper.start().setContent(jsonreporter.getJSON());
-    var content = jsonreporter.getJSON();
+    jsonReporter.setResults(results);
+    var content = jsonReporter.getDataFormat();
     casper.echo(content);
     test.assert(content["testsuites"][0]["stats"]["tests"] === 1)
     test.assert(content["testsuites"][0]["stats"]["failures"] === 0);
@@ -69,7 +67,7 @@ casper.test.begin('jsonReporter() can hold a suite with a succesful test', 6, fu
 });
 
 casper.test.begin('jsonReporter() can handle a failed test', 7, function suite(test) {
-    var jsonreporter = require('jsonreport').create();
+    var jsonReporter = require('jsonreport').create();
     var results = new tester.TestSuiteResult();
     var suite1 = new tester.TestCaseResult({
         name: 'foo',
@@ -82,9 +80,8 @@ casper.test.begin('jsonReporter() can handle a failed test', 7, function suite(t
         file: "/foo"
     });
     results.push(suite1)
-    jsonreporter.setResults(results);
-    //casper.start().setContent(jsonreporter.getJSON());
-    var content = jsonreporter.getJSON();
+    jsonReporter.setResults(results);
+    var content = jsonReporter.getDataFormat();
     test.assert(content["testsuites"][0]["testsuite"] === "foo", 'The correct testsuite name is foo');
     test.assert(content["testsuites"][0]["stats"]["tests"] === 1, 'The correct number of tests should be 1');
     test.assert(content["testsuites"][0]["stats"]["failures"] ===  1, '1 failure should be in failed testsuite stats');
