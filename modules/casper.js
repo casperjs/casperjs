@@ -129,7 +129,7 @@ var Casper = function Casper(options) {
     // factories
     this.cli = phantom.casperArgs;
     this.options.logLevel = this.cli.get('log-level', this.options.logLevel);
-    this.options.verbose = this.cli.has('verbose');
+    this.options.verbose = this.cli.has('direct') || this.cli.has('verbose');
     this.colorizer = this.getColorizer();
     this.mouse = mouse.create(this);
     this.popups = pagestack.create();
@@ -208,6 +208,11 @@ var Casper = function Casper(options) {
 
     // dispatching an event when instance has been constructed
     this.emit('init');
+
+    // deprecated direct option
+    if (this.cli.has('direct')) {
+        this.emit("deprecated", "--direct option has been deprecated since 1.1; you should use --verbose instead.")
+    }
 };
 
 // Casper class is an EventEmitter
