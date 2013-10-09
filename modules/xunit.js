@@ -34,35 +34,7 @@ var require = patchRequire(require);
 var utils = require('utils');
 var fs = require('fs');
 var TestSuiteResult = require('tester').TestSuiteResult;
-
-/**
- * Generates a value for 'classname' attribute of the JUnit XML report.
- *
- * Uses the (relative) file name of the current casper script without file
- * extension as classname.
- *
- * @param  String  classname
- * @return String
- */
-function generateClassName(classname) {
-    "use strict";
-    classname = (classname || "").replace(phantom.casperPath, "").trim();
-    var script = classname || phantom.casperScript || "";
-    if (script.indexOf(fs.workingDirectory) === 0) {
-        script = script.substring(fs.workingDirectory.length + 1);
-    }
-    if (script.indexOf('/') === 0) {
-        script = script.substring(1, script.length);
-    }
-    if (~script.indexOf('.')) {
-        script = script.substring(0, script.lastIndexOf('.'));
-    }
-    // If we have trimmed our string down to nothing, default to script name
-    if (!script && phantom.casperScript) {
-        script = phantom.casperScript;
-    }
-    return script || "unknown";
-}
+var generateClassName = utils.generateClassName;
 
 /**
  * Creates a XUnit instance
@@ -94,7 +66,7 @@ exports.XUnitExporter = XUnitExporter;
  *
  * @return HTMLElement
  */
-XUnitExporter.prototype.getXML = function getXML() {
+XUnitExporter.prototype.getDataFormat= function getDataFormat() {
     "use strict";
     if (!(this.results instanceof TestSuiteResult)) {
         throw new CasperError('Results not set, cannot get XML.');

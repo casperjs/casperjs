@@ -1406,10 +1406,10 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  *
  * @param  Boolean  exit
  */
-Tester.prototype.renderResults = function renderResults(exit, status, save) {
+Tester.prototype.renderResults = function renderResults(exit, status, config) {
     "use strict";
-    /*jshint maxstatements:20*/
-    save = save || this.options.save;
+    /*jshint maxstatements:25*/
+    config.save = config.save || this.options.save;
     var exitStatus = 0,
         failed = this.suiteResults.countFailed(),
         total = this.suiteResults.countExecuted(),
@@ -1442,9 +1442,10 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     }
     this.casper.echo(result, style, this.options.pad);
     this.renderFailureDetails();
-    if (save) {
-        this.saveResults(save);
+    if (config.save) {
+        this.saveResults(config.save, config.saveAs);
     }
+
     if (exit === true) {
         this.casper.exit(status ? ~~status : exitStatus);
     }
@@ -1533,12 +1534,12 @@ Tester.prototype.terminate = function(message) {
  *
  * @param  String  filename  Target file path.
  */
-Tester.prototype.saveResults = function saveResults(filepath) {
+Tester.prototype.saveResults = function saveResults(filepath, reporter) {
     "use strict";
-    var exporter = require('xunit').create();
+    var exporter = require(reporter).create();
     exporter.setResults(this.suiteResults);
     try {
-        fs.write(filepath, exporter.getXML(), 'w');
+        fs.write(filepath, exporter.getDataFormat(), 'w');
         this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
     } catch (e) {
         this.casper.echo(f('Unable to write results to %s: %s', filepath, e), 'ERROR', 80);

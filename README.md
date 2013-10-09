@@ -12,6 +12,7 @@
 >[Travis-CI](http://travis-ci.org/n1k0/casperjs) build status:
 >
 >- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master) `master` branch
+
 >- 1.0 tests unfortunately have to be run manually using the `casperjs selftest` command
 
 CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/)
@@ -44,16 +45,16 @@ Sample test to see if some dropdown can be opened:
 
 ```javascript
 casper.test.begin('a twitter bootsrap dropdown can be opened', 2, function(test) {
-    casper.start('http://twitter.github.com/bootstrap/javascript.html#dropdowns', function() {
-        test.assertExists('#navbar-example');
-        this.click('#dropdowns .nav-pills .dropdown:last-of-type a.dropdown-toggle');
-        this.waitUntilVisible('#dropdowns .nav-pills .open', function() {
-            test.pass('Dropdown is open');
+        casper.start('http://twitter.github.com/bootstrap/javascript.html#dropdowns', function() {
+            test.assertExists('#navbar-example');
+            this.click('#dropdowns .nav-pills .dropdown:last-of-type a.dropdown-toggle');
+            this.waitUntilVisible('#dropdowns .nav-pills .open', function() {
+                test.pass('Dropdown is open');
+                });
+            }).run(function() {
+                test.done();
+                });
         });
-    }).run(function() {
-        test.done();
-    });
-});
 ```
 
 Run the script:
