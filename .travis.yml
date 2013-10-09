@@ -37,15 +37,19 @@ before_script:
   - bin/phantomjs192 --version
 
 script:
-  - make test
-  - make test-dotNET
+  - $TEST_SUITE
 
 env:
-  matrix:
-    - PHANTOMJS_EXECUTABLE="bin/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
-    - PHANTOMJS_EXECUTABLE="bin/phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
-    - PHANTOMJS_EXECUTABLE="bin/phantomjs191 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
-    - PHANTOMJS_EXECUTABLE="bin/phantomjs192 --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
+    matrix:
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs191 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs192 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs182 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test-dotNET"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs190 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test-dotNET"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs191 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test-dotNET"
+    - PHANTOMJS_EXECUTABLE="bin/phantomjs192 --local-to-remote-url-access=yes --ignore-ssl-errors=yes" TEST_SUITE="make test-dotNET"
+
 
 notifications:
   irc:
