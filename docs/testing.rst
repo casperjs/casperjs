@@ -184,7 +184,7 @@ Sample custom command:
 .. warning::
 
    .. deprecated:: 1.1
-   ``--direct`` option now become ``--verbose``
+   ``--direct`` option has been renamed to ``--verbose``, though ``--direct`` will still works, while is to be considered deprecated.
 
 .. hint::
 
