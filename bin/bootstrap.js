@@ -308,7 +308,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             phantom.casperScript = casperArgs.get(0);
         }
 
-        if (!fs.isFile(phantom.casperScript)) {
+        if (phantom.casperScript !== "/dev/stdin" && !fs.isFile(phantom.casperScript)) {
             return __die('Unable to open file: ' + phantom.casperScript);
         }
 

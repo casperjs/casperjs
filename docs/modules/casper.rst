@@ -377,7 +377,7 @@ Moves back a step in browser's history::
         console.log(this.getCurrentUrl()); // 'http://foo.bar/2'
     });
 
-Also have a look at ``Casper.forward()``.
+Also have a look at `forward()`_.
 
 .. _casper_base64encode:
 
@@ -949,7 +949,7 @@ Fills form fields with given values and optionally submits it. Fields
 are referenced by ``CSS3`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillSelectors('form#contact-form', {
             'input[name="subject"]':    'I am watching you',
             'input[name="content"]':    'So be careful.',
             'input[name="civility"]':   'Mr',
@@ -971,7 +971,7 @@ are referenced by ``CSS3`` selectors::
 Fills form fields with given values and optionally submits it. While the ``form`` element is always referenced by a CSS3 selector, fields are referenced by ``XPath`` selectors::
 
     casper.start('http://some.tld/contact.form', function() {
-        this.fill('form#contact-form', {
+        this.fillXPath('form#contact-form', {
             '//input[@name="subject"]':    'I am watching you',
             '//input[@name="content"]':    'So be careful.',
             '//input[@name="civility"]':   'Mr',
@@ -1451,6 +1451,8 @@ Casper suite **will run**::
         this.exit(); // <--- don't forget me!
     });
 
+Binding a callback to ``complete.error`` will trigger when the ``onComplete`` callback fails.
+
 .. index:: Form
 
 ``sendKeys()``
@@ -1478,7 +1480,7 @@ Options
 - ``(Boolean) keepFocus``:
 
 
-  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, us  e   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
+  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, use   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
 
       casper.then(function() {
           this.sendKeys('form.contact input#name', 'action', {keepFocus: true});
@@ -2045,7 +2047,7 @@ Wait until a resource that matches the given ``testFx`` is loaded to process a n
 
 .. versionadded:: 1.1
 
-Waits for the current pahe url to match the provided argument (``String`` or ``RegExp``)::
+Waits for the current page url to match the provided argument (``String`` or ``RegExp``)::
 
     casper.start('http://foo/').waitForUrl(/login\.html$/, function() {
         this.echo('redirected to login.html');

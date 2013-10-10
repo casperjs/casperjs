@@ -77,3 +77,15 @@ Please read the [CONTRIBUTING.md](https://github.com/n1k0/casperjs/blob/master/C
 CasperJS's documentation is written using the [Markdown format](http://daringfireball.net/projects/markdown/), and hosted on Github thanks to the [Github Pages Feature](http://pages.github.com/).
 
 To view the source files on github, head to [the gh-pages branch](https://github.com/n1k0/casperjs/tree/gh-pages), and check the [documentation's README](https://github.com/n1k0/casperjs/tree/gh-pages#readme) for further instructions.
+
+## Team
+
+- Nicolas Perriault ([@n1k0](https://github.com/n1k0))
+- Nick Currier ([@hexid](https://github.com/hexid))
+- Laurent Jouanneau ([@laurentj](https://github.com/laurentj))
+- Mickaël Andrieu ([@mickaelandrieu](https://github.com/mickaelandrieu))
+- Matt DuVall ([@mduvall](https://github.com/mduvall))
+
+## License
+
+MIT
