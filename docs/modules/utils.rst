@@ -216,9 +216,11 @@ Checks if passed argument is an instance of native PhantomJS' ``WebPage`` object
 ``mergeObjects()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``mergeObjects(origin, add)``
+**Signature:** ``mergeObjects(origin, add[, Object opts])``
 
 Merges two objects recursively.
+
+Add ``opts.keepReferences`` if cloning of internal objects is not needed.
 
 .. index:: DOM
 

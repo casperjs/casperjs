@@ -622,14 +622,26 @@ function isPlainObject(obj) {
     return (type === 'object');
 }
 
-function mergeObjectsInSlimerjs(origin, add) {
+/**
+ * Object recursive merging utility for use in the SlimerJS environment
+ *
+ * @param  Object  origin  the origin object
+ * @param  Object  add     the object to merge data into origin
+ * @param  Object  opts    optional options to be passed in
+ * @return Object
+ */
+function mergeObjectsInSlimerjs(origin, add, opts) {
     "use strict";
+
+    var options = opts || {},
+        keepReferences = options.keepReferences;
+
     for (var p in add) {
         if (isPlainObject(add[p])) {
             if (isPlainObject(origin[p])) {
                 origin[p] = mergeObjects(origin[p], add[p]);
             } else {
-                origin[p] = clone(add[p]);
+                origin[p] = keepReferences ? add[p] : clone(add[p]);
             }
         } else {
             origin[p] = add[p];
@@ -643,10 +655,14 @@ function mergeObjectsInSlimerjs(origin, add) {
  *
  * @param  Object  origin  the origin object
  * @param  Object  add     the object to merge data into origin
+ * @param  Object  opts    optional options to be passed in
  * @return Object
  */
-function mergeObjects(origin, add) {
+function mergeObjects(origin, add, opts) {
     "use strict";
+
+    var options = opts || {},
+        keepReferences = options.keepReferences;
 
     if (phantom.casperEngine === 'slimerjs') {
         // Because of an issue in the module system of slimerjs (security membranes?)
@@ -654,12 +670,13 @@ function mergeObjects(origin, add) {
         // let's use an other algorithm
         return mergeObjectsInSlimerjs(origin, add);
     }
+
     for (var p in add) {
         if (add[p] && add[p].constructor === Object) {
             if (origin[p] && origin[p].constructor === Object) {
                 origin[p] = mergeObjects(origin[p], add[p]);
             } else {
-                origin[p] = clone(add[p]);
+                origin[p] = keepReferences ? add[p] : clone(add[p]);
             }
         } else {
             origin[p] = add[p];
