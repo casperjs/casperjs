@@ -129,8 +129,19 @@ casper.test.begin('Tester.assertField(): nonexistent fields', 2, function(test) 
         test.assertFail(function() {
             test.assertField('nonexistent', '');
         }, 'Tester.assertField() only checks for existing fields');
-    });
-    casper.run(function() {
+    }).run(function() {
         test.done();
-    })
+    });
+});
+
+casper.test.begin('Tester.assertField(): CSS selectors', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            'email': 'albert@camus.com'
+        });
+
+        test.assertField('', 'albert@camus.com', 'Tester.assertField() works as expected with CSS selectors', {inputSelector: '#email'});
+    }).run(function() {
+        test.done();
+    });
 });

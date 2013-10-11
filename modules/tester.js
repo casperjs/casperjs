@@ -451,17 +451,18 @@ Tester.prototype.assertFail = function assertFail(fn, message) {
 /**
  * Asserts that a given input field has the provided value.
  *
- * @param  String   inputName  The name attribute of the input element
+ * @param  String   inputName  The name attribute or CSS selector of the input element
  * @param  String   expected   The expected value of the input element
  * @param  String   message    Test description
  * @param  Object   options    ClientUtils#getFieldValue options (optional)
  * @return Object              An assertion result object
  */
-Tester.prototype.assertField = function assertField(inputName, expected,  message, options) {
+Tester.prototype.assertField = function assertField(inputName, expected, message, options) {
     "use strict";
     var actual = this.casper.evaluate(function(inputName, options) {
         return __utils__.getFieldValue(inputName, options);
     }, inputName, options);
+
     return this.assert(utils.equals(actual, expected),  message, {
         type: 'assertField',
         standard: f('"%s" input field has the value "%s"', inputName, expected),

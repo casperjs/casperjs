@@ -182,6 +182,8 @@ This also works with any input type: ``select``, ``textarea``, etc.
 The `options` parameter allows to set the options to use with
 :ref:`ClientUtils#getFieldValue() <clientutils_getfieldvalue>`.
 
+``options.inputSelector`` can be used in lieu of a ``inputName`` to assert a value on an input by CSS selector.
+
 .. index:: HTTP, HTTP Status Code
 
 ``assertHttpStatus()``
