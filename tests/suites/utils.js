@@ -326,7 +326,8 @@ casper.test.begin('isJsFile() tests', 5, function(test) {
 });
 
 
-casper.test.begin('mergeObjects() tests', 8, function(test) {
+casper.test.begin('mergeObjects() tests', 10, function(test) {
+    /* jshint eqeqeq:false */
     var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}
@@ -360,13 +361,24 @@ casper.test.begin('mergeObjects() tests', 8, function(test) {
             'mergeObjects() can merge objects'
         );
     });
-    var obj = {x: 1};
+    var obj = {x: 1},
+        qtruntimeobject = {foo: 'baz'};
+
     var merged1 = utils.mergeObjects({}, {a: obj});
-    var merged2 = utils.mergeObjects({a: {}}, {a: obj});
     merged1.a.x = 2;
     test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones #1');
+
+    var merged2 = utils.mergeObjects({a: {}}, {a: obj});
     merged2.a.x = 2;
     test.assertEquals(obj.x, 1, 'mergeObjects() creates deep clones #2');
+
+    var refObj = {a: qtruntimeobject};
+    var merged3 = utils.mergeObjects({}, refObj, {keepReferences: false});
+    test.assertFalsy(merged3.a == refObj.a, 'disabling references should not point to same object');
+
+    var merged4 = utils.mergeObjects({}, refObj, {keepReferences: true});
+    test.assert(merged4.a == refObj.a, 'enabling references should point to same object');
+
     test.done();
 });
 
