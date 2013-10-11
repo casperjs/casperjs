@@ -8,3 +8,4 @@ tests/testdir/**
 tmp
 ./*.js
 ./phantomjs*/*
+./engine/*
