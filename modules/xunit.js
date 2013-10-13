@@ -62,6 +62,12 @@ function XUnitExporter() {
 exports.XUnitExporter = XUnitExporter;
 
 /**
+ * Added back for backward compatibility sake, If someone uses this API directly
+ */
+
+XUnitExporter.prototype.getXML = XUnitExporter.prototype.getXML;
+
+/**
  * Retrieves generated XML object - actually an HTMLElement.
  *
  * @return HTMLElement
