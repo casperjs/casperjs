@@ -269,6 +269,24 @@ class TestCommandOutputTest(CasperExecTestBase):
         ], failing=True)
 
     @timeout(20)
+    def test_step_throwing_test(self):
+        # using begin()
+        script_path = os.path.join(TEST_ROOT, 'tester', 'step_throws.js')
+        self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            '# step throws',
+            'FAIL Error: oops!',
+            '#    type: error',
+            '#    file: %s:5' % script_path,
+            '#    error: oops!',
+            'FAIL 2 tests executed',   # this is another bug
+            '0 passed',
+            '2 failed',
+            '0 dubious',
+            '0 skipped',
+        ], failing=True)
+
+    @timeout(20)
     def test_dubious_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'dubious.js')
         self.assertCommandOutputContains('test ' + script_path, [
