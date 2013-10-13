@@ -194,7 +194,7 @@ var Casper = function Casper(options) {
         notices.forEach(function(notice) {
             console.error(c.colorize(notice, 'COMMENT'));
         });
-        backtrace.forEach(function(item) {
+        (backtrace || []).forEach(function(item) {
             var message = fs.absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
             if (item['function']) {
                 message += " in " + c.colorize(item['function'], "PARAMETER");
