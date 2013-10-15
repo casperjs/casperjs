@@ -180,9 +180,6 @@ var Casper = function Casper(options) {
     this.initErrorHandler();
 
     this.on('error', function(msg, backtrace) {
-        if (/^(Assertion|Termination|TimedOut)Error/.test(msg)) {
-            return;
-        }
         var c = this.getColorizer();
         var match = /^(.*): __mod_error(.*):: (.*)/.exec(msg);
         var notices = [];
@@ -194,7 +191,7 @@ var Casper = function Casper(options) {
         notices.forEach(function(notice) {
             console.error(c.colorize(notice, 'COMMENT'));
         });
-        backtrace.forEach(function(item) {
+        (backtrace || []).forEach(function(item) {
             var message = fs.absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
             if (item['function']) {
                 message += " in " + c.colorize(item['function'], "PARAMETER");
@@ -387,7 +384,6 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         }
     } catch (error) {
         self.emit('complete.error', error);
-        self.emit('error', error);
     }
 };
 
@@ -1535,7 +1531,6 @@ Casper.prototype.runStep = function runStep(step) {
         }
     } catch (err) {
         this.emit('step.error', err);
-        this.emit('error', err);
     }
     if (!skipLog) {
         this.emit('step.complete', stepResult);
