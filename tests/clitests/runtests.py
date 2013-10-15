@@ -276,12 +276,12 @@ class TestCommandOutputTest(CasperExecTestBase):
             script_path,
             '# step throws',
             'FAIL Error: oops!',
-            '#    type: error',
+            '#    type: uncaughtError',
             '#    file: %s:5' % script_path,
             '#    error: oops!',
-            'FAIL 2 tests executed',   # this is another bug
+            'FAIL 1 test executed',
             '0 passed',
-            '2 failed',
+            '1 failed',
             '0 dubious',
             '0 skipped',
         ], failing=True)
