@@ -129,7 +129,7 @@ var Casper = function Casper(options) {
     // factories
     this.cli = phantom.casperArgs;
     this.options.logLevel = this.cli.get('log-level', this.options.logLevel);
-    if (this.options.verbose === false) {
+    if (!this.options.verbose) {
         this.options.verbose = this.cli.has('direct') || this.cli.has('verbose');
     }
     this.colorizer = this.getColorizer();
