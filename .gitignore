@@ -6,3 +6,4 @@
 /docs/_build
 /tmp
 *.pyc
+/.idea/*
