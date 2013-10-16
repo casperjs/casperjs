@@ -1736,7 +1736,7 @@ Adds a new navigation step to click a given selector and optionally add a new na
 
     casper.run();
 
-This method is basically a convenient a shortcut for chaining a `then()`_ and an `evaluate()`_ calls.
+This method is basically a convenient a shortcut for chaining a `then()`_ and an `click()`_ calls.
 
 ``thenEvaluate()``
 -------------------------------------------------------------------------------
