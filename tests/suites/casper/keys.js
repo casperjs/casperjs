@@ -59,3 +59,14 @@ if (utils.gteVersion(phantom.version, '1.9.0')) {
         });
     });
 }
+
+casper.test.begin('sendKeys() reset option', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.sendKeys('textarea', 'foo');
+        this.sendKeys('textarea', 'bar', {reset: true});
+        var values = this.getFormValues('form[action="result.html"]');
+        test.assertEquals(values.content, "bar");
+    }).run(function() {
+        test.done();
+    });
+});

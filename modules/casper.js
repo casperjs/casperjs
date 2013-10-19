@@ -1555,7 +1555,8 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
     "use strict";
     this.checkStarted();
     options = utils.mergeObjects({
-        eventType: 'keypress'
+        eventType: 'keypress',
+        reset: false
     }, options || {});
     var elemInfos = this.getElementInfo(selector),
         tag = elemInfos.nodeName.toLowerCase(),
@@ -1571,6 +1572,12 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
     if (isTextArea || isValidInput || isContentEditable) {
         // clicking on the input element brings it focus
         isTextInput = true;
+        this.click(selector);
+    }
+    if (options.reset) {
+        this.evaluate(function(selector) {
+            __utils__.setField(__utils__.findOne(selector), '');
+        }, selector);
         this.click(selector);
     }
     var modifiers = utils.computeModifier(options && options.modifiers,

@@ -1466,8 +1466,11 @@ The currently supported HTMLElements that can receive keyboard events from ``sen
 Options
 ~~~~~~~
 
-- ``(Boolean) keepFocus``:
+- ``(Boolean) reset``:
 
+  When set to ``true``, this option will first empty the current field value. By default, it's set to ``false`` and ``sendKeys()`` will just append string to the current field value.
+
+- ``(Boolean) keepFocus``:
 
   ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, use   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
 
