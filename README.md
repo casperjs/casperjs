@@ -59,10 +59,11 @@ Run the script:
 
 ##Support
 
-If you're having problems with using the project, use the support forum at CodersClan.
+Need help with getting CasperJS up and running? Got a time-consuming problem you want to get solved quickly? 
 
-<a href="http://codersclan.net/forum/index.php?repo_id=32"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
+Get <a href="http://codersclan.net/?repo_id=32">CasperJS support on CodersClan.</a>
 
+<a href="http://codersclan.net/?repo_id=32"><img src="http://www.codersclan.net/gs_button/?repo_id=32" width="200"></a>
 ## Contributing
 
 ### Contributing code
