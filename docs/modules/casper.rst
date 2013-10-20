@@ -1468,6 +1468,8 @@ Options
 
 - ``(Boolean) reset``:
 
+  .. versionadded:: 1.1-beta3
+
   When set to ``true``, this option will first empty the current field value. By default, it's set to ``false`` and ``sendKeys()`` will just append string to the current field value.
 
 - ``(Boolean) keepFocus``:
