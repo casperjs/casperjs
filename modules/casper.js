@@ -2084,11 +2084,11 @@ Casper.prototype.waitForPopup = function waitForPopup(urlPattern, then, onTimeou
 /**
  * Waits until a given resource is loaded
  *
- * @param  String/Function  test       A function to test if the resource exists.
- *                                     A string will be matched against the resources url.
- * @param  Function         then       The next step to perform (optional)
- * @param  Function         onTimeout  A callback function to call on timeout (optional)
- * @param  Number           timeout    The max amount of time to wait, in milliseconds (optional)
+ * @param  String/Function/RegExp  test       A function to test if the resource exists.
+ *                                            A string will be matched against the resources url.
+ * @param  Function                then       The next step to perform (optional)
+ * @param  Function                onTimeout  A callback function to call on timeout (optional)
+ * @param  Number                  timeout    The max amount of time to wait, in milliseconds (optional)
  * @return Casper
  */
 Casper.prototype.waitForResource = function waitForResource(test, then, onTimeout, timeout) {

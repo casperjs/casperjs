@@ -1382,9 +1382,9 @@ Repeats a navigation step a given number of times::
 ``resourceExists()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``resourceExists(Mixed test)``
+**Signature:** ``resourceExists(String|Function|RegExp test)``
 
-Checks if a resource has been loaded. You can pass either a function or a string to perform the test::
+Checks if a resource has been loaded. You can pass either a function, a string or a ``RegExp`` instance to perform the test::
 
     casper.start('http://www.google.com/', function() {
         if (this.resourceExists('logo3w.png')) {
@@ -2016,17 +2016,29 @@ The currently loaded popups are available in the ``Casper.popups`` array-like pr
 ``waitForResource()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])``
+**Signature:** ``waitForResource(String|Function|RegExp testFx[, Function then, Function onTimeout, Number timeout])``
 
-Wait until a resource that matches the given ``testFx`` is loaded to process a next step. Uses `waitFor()`_::
+Wait until a resource that matches a resource matching constraints defined by ``testFx`` are satisfief to process a next step.
 
-    casper.start('http://foo.bar/');
+The ``testFx`` argument can be either a string, a function or a ``RegExp`` instance::
 
     casper.waitForResource("foobar.png", function() {
         this.echo('foobar.png has been loaded.');
     });
 
-    casper.run();
+Using a regexp::
+
+    casper.waitForResource(/foo(bar|baz)\.png$/, function() {
+        this.echo('foobar.png or foobaz.png has been loaded.');
+    });
+
+Using a function::
+
+    casper.waitForResource(function testResource(resource) {
+        return resource.url.indexOf("https") === 0;
+    }, function onReceived() {
+        this.echo('a secure resource has been loaded.');
+    });
 
 .. _casper_waitforurl:
 
