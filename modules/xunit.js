@@ -153,7 +153,7 @@ XUnitExporter.prototype.getXML = function getXML() {
         suiteNode.appendChild(warningNode);
         this._xml.appendChild(suiteNode);
     }.bind(this));
-    this._xml.setAttribute('duration', utils.ms2seconds(this.results.calculateDuration()));
+    this._xml.setAttribute('time', utils.ms2seconds(this.results.calculateDuration()));
     return this._xml;
 };
 
