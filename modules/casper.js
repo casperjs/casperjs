@@ -574,11 +574,11 @@ Casper.prototype.download = function download(url, targetPath, method, data) {
 };
 
 /**
- * Iterates over the values of a provided array and execute a callback
- * for each item.
+ * Iterates over the values of a provided array and execute a callback for each
+ * item.
  *
  * @param  Array     array
- * @param  Function  fn     Callback: function(self, item, index)
+ * @param  Function  fn     Callback: function(casper, item, index)
  * @return Casper
  */
 Casper.prototype.each = function each(array, fn) {
@@ -587,17 +587,14 @@ Casper.prototype.each = function each(array, fn) {
         this.log("each() only works with arrays", "error");
         return this;
     }
-    (function _each(self) {
-        array.forEach(function _forEach(item, i) {
-            fn.call(self, self, item, i);
-        });
-    })(this);
+    array.forEach(function _forEach(item, i) {
+        fn.call(this, this, item, i);
+    }, this);
     return this;
 };
 
 /**
- * Iterates over the values of a provided array and adds a step
- * for each item.
+ * Iterates over the values of a provided array and adds a step for each item.
  *
  * @param  Array     array
  * @param  Function  then   Step: function(response); item will be attached to response.data
@@ -606,18 +603,14 @@ Casper.prototype.each = function each(array, fn) {
 Casper.prototype.eachThen = function each(array, then) {
     "use strict";
     if (!utils.isArray(array)) {
-        this.log("each() only works with arrays", "error");
+        this.log("eachThen() only works with arrays", "error");
         return this;
     }
-    (function _each(self) {
-        array.forEach(function _forEach(item, i) {
-            self.then(function() {
-                this.then(this.createStep(then, {
-                    data: item
-                }));
-            });
+    array.forEach(function _forEach(item) {
+        this.then(function() {
+            this.then(this.createStep(then, {data: item}));
         });
-    })(this);
+    }, this);
     return this;
 };
 
