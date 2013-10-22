@@ -140,7 +140,19 @@ casper.test.begin('Tester.assertField(): CSS selectors', 1, function(test) {
             'email': 'albert@camus.com'
         });
 
-        test.assertField('', 'albert@camus.com', 'Tester.assertField() works as expected with CSS selectors', {inputSelector: '#email'});
+        test.assertFieldCSS('', 'albert@camus.com', 'Tester.assertField() works as expected with CSS selectors', '#email');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Tester.assertField(): XPath selectors', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            'email': 'albert@camus.com'
+        });
+
+        test.assertFieldXPath('', 'albert@camus.com', 'Tester.assertField() works as expected with XPath selectors', '/html/body/form[1]/input[1]');
     }).run(function() {
         test.done();
     });

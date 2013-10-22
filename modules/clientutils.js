@@ -574,6 +574,10 @@
                 inputs = inputs.concat(this.findAll(options.inputSelector));
             }
 
+            if (options.inputXPath) {
+                inputs = inputs.concat(this.getElementsByXPath(options.inputXPath));
+            }
+
             switch (inputs.length) {
                 case 0:  return undefined;
                 case 1:  return getSingleValue(inputs[0]);
