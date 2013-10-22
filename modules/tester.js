@@ -449,6 +449,8 @@ Tester.prototype.assertFail = function assertFail(fn, message) {
 };
 
 function baseFieldAssert(inputName, expected, actual, message, tester) {
+    "use strict";
+
     return tester.assert(utils.equals(actual, expected),  message, {
         type: 'assertField',
         standard: f('"%s" input field has the value "%s"', inputName, expected),
