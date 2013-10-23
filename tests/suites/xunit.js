@@ -29,7 +29,7 @@ casper.test.begin('XUnitReporter() can hold test suites', 4, function suite(test
     test.assertEvalEquals(function() {
         return __utils__.findAll('testsuite').length;
     }, 2);
-    test.assertExists('testsuites[duration]');
+    test.assertExists('testsuites[time]');
     test.assertExists('testsuite[name="foo"][package="foo"]');
     test.assertExists('testsuite[name="bar"][package="bar"]');
     test.done();
