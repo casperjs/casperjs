@@ -1396,8 +1396,7 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
         if (failure.suite) {
             this.casper.echo(f('  %s', failure.suite), "PARAMETER");
         }
-        this.casper.echo(f('    %s: %s', failure.type || "unknown",
-            failure.message || failure.standard || "(no message was entered)"), "COMMENT");
+        try { this.processAssertionResult(failure); } catch(e) {}
     }.bind(this));
 };
 
