@@ -2460,6 +2460,14 @@ function createPage(casper) {
     };
     page.onPageCreated = function onPageCreated(popupPage) {
         casper.emit('popup.created', popupPage);
+        popupPage.onPageCreated = function (popupDaughter){
+                ['onAlert','onCallback','onClosing','onConfirm','onConsoleMessage',
+                'onError','onFilePicker','onInitialized','onLoadFinished','onLoadStarted',
+                'onNavigationRequested','onPageCreated','onPrompt','onResourceRequested',
+                'onResourceReceived','onResourceError','onUrlChanged'].forEach(function (event) {
+                        popupDaughter[event] = casper.page[event];
+                });
+        };
         popupPage.onLoadFinished = function onLoadFinished() {
             // SlimerJS needs this line of code because of issue
             // https://github.com/laurentj/slimerjs/issues/48
