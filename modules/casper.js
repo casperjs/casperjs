@@ -1504,7 +1504,7 @@ Casper.prototype.runStep = function runStep(step) {
         var stepTimeoutCheckInterval = setInterval(function _check(self, start, stepNum) {
             if (new Date().getTime() - start > self.options.stepTimeout) {
                 if (getCurrentSuiteId(self) === stepNum) {
-                    self.emit('step.timeout');
+                    self.emit('step.timeout', stepNum, self.options.onStepTimeout);
                     if (utils.isFunction(self.options.onStepTimeout)) {
                         self.options.onStepTimeout.call(self, self.options.stepTimeout, stepNum);
                     }

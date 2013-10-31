@@ -437,7 +437,7 @@ Emitted when a navigation step has been started.
 ``step.timeout``
 ~~~~~~~~~~~~~~~~
 
-**Arguments:** ``None``
+**Arguments:** ``[step, timeout]``
 
 Emitted when a navigation step has been executed.
 
