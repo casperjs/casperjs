@@ -1943,7 +1943,7 @@ You can also write the same thing like this::
 ``waitFor()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])``
+**Signature:** ``waitFor(Function testFx[, Function then, Function onTimeout, Number timeout, Object details])``
 
 Waits until a function returns true to process any next step.
 
@@ -1976,6 +1976,9 @@ Example using the ``onTimeout`` callback::
     });
 
     casper.run();
+
+``details`` is a property bag of various information that will be passed to the ``waitFor.timeout`` event, if it is emitted.
+This can be used for better error messages or to conditionally ignore some timeout events.
 
 .. _casper_waitforpopup:
 
