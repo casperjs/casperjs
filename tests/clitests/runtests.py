@@ -64,8 +64,9 @@ class CasperExecTestBase(unittest.TestCase):
         if not what:
             raise AssertionError('Empty lookup')
         if isinstance(what, (list, tuple)):
+            output = self.runCommand(cmd, **kwargs)
             for entry in what:
-                self.assertIn(entry, self.runCommand(cmd, **kwargs))
+                self.assertIn(entry, output)
         else:
             self.assertIn(what, self.runCommand(cmd))
 
