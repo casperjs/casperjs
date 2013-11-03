@@ -287,6 +287,21 @@ class TestCommandOutputTest(CasperExecTestBase):
         ], failing=True)
 
     @timeout(20)
+    def test_waitFor_timeout(self):
+        # using begin()
+        script_path = os.path.join(TEST_ROOT, 'tester', 'waitFor_timeout.js')
+        self.assertCommandOutputContains('test ' + script_path, [
+            '"p.nonexistent" still did not exist in',
+            '"#encoded" did not have a text change in',
+            '"p[style]" never appeared in',
+            '/github\.com/ did not load in',
+            '/foobar/ did not pop up in',
+            '"Lorem ipsum" did not appear in the page in',
+            'return false',
+            'did not evaluate to something truthy in'
+        ], failing=True)
+
+    @timeout(20)
     def test_dubious_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'dubious.js')
         self.assertCommandOutputContains('test ' + script_path, [
