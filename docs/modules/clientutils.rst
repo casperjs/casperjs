@@ -343,6 +343,14 @@ Sends an AJAX request, using the following parameters:
            require('utils').dump(data);
        });
 
+   In some scenarios, we don't want to override the mimetype, you can do like this::
+
+       __utils__.sendAJAX(url, 'POST', params, false, {
+           overrideMimeType : false
+       });
+
+   otherwise, this function will always override mime type by using the default one: "text/plain; charset=x-user-defined"
+
 ``visible()``
 -------------------------------------------------------------------------------
 
