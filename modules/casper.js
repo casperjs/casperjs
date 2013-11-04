@@ -2009,7 +2009,8 @@ Casper.prototype.waitDone = function waitDone() {
 Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, details) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
+    timeout = timeout || this.options.waitTimeout;
+    details = details || { testFx: testFx };
     if (!utils.isFunction(testFx)) {
         throw new CasperError("waitFor() needs a test function");
     }
@@ -2030,13 +2031,13 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
             if (!condition) {
                 self.log("Casper.waitFor() timeout", "warning");
                 var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
-                self.emit('waitFor.timeout', timeout, details || { testFx: testFx });
+                self.emit('waitFor.timeout', timeout, details);
                 clearInterval(interval); // refs #383
                 if (!utils.isFunction(onWaitTimeout)) {
                     throw new CasperError('Invalid timeout function');
                 }
                 try {
-                    return onWaitTimeout.call(self, timeout);
+                    return onWaitTimeout.call(self, timeout, details);
                 } catch (error) {
                     self.emit('waitFor.timeout.error', error);
                 } finally {
