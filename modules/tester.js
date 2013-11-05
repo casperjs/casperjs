@@ -164,15 +164,6 @@ var Tester = function Tester(casper, options) {
         }
     });
 
-    // casper events
-    this.casper.on('error', function onCasperError(msg, backtrace) {
-        self.processPhantomError(msg, backtrace);
-    });
-
-    this.casper.on('waitFor.timeout', function onWaitForTimeout(timeout) {
-        this.warn(f('wait timeout of %dms reached', timeout));
-    });
-
     function errorHandler(error, backtrace) {
         self.casper.unwait();
         if (error instanceof Error) {
@@ -190,11 +181,16 @@ var Tester = function Tester(casper, options) {
         } catch (e) {}
         self.uncaughtError(error, self.currentTestFile, line, backtrace);
     }
-    
+
     function errorHandlerAndDone(error, backtrace) {
         errorHandler(error, backtrace);
         self.done();
     }
+
+    // casper events
+    this.casper.on('error', function onCasperError(msg, backtrace) {
+        self.processPhantomError(msg, backtrace);
+    });
 
     [
         'wait.error',
@@ -227,8 +223,34 @@ var Tester = function Tester(casper, options) {
         throw new TimedOutError(f("Timeout occured (%dms)", timeout));
     };
 
-    this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout) {
-        throw new TimedOutError(f("Wait timeout occured (%dms)", timeout));
+    this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout, details) {
+        /*jshint maxcomplexity:10*/
+        var message = f("Wait timeout occured (%dms)", timeout);
+        details = details || {};
+
+        if (details.selector) {
+            message = f(details.waitWhile ? '"%s" never went away in %dms' : '"%s" still did not exist in %dms', details.selector, timeout);
+        }
+        else if (details.visible) {
+            message = f(details.waitWhile ? '"%s" never disappeared in %dms' : '"%s" never appeared in %dms', details.visible, timeout);
+        }
+        else if (details.url || details.resource) {
+            message = f('%s did not load in %dms', details.url || details.resource, timeout);
+        }
+        else if (details.popup) {
+            message = f('%s did not pop up in %dms', details.popup, timeout);
+        }
+        else if (details.text) {
+            message = f('"%s" did not appear in the page in %dms', details.text, timeout);
+        }
+        else if (details.selectorTextChange) {
+            message = f('"%s" did not have a text change in %dms', details.selectorTextChange, timeout);
+        }
+        else if (utils.isFunction(details.testFx)) {
+            message = f('"%s" did not evaluate to something truthy in %dms', details.testFx.toString(), timeout);
+        }
+
+        errorHandlerAndDone(new TimedOutError(message));
     };
 };
 
@@ -857,7 +879,7 @@ Tester.prototype.assertInstanceOf = function assertInstanceOf(subject, construct
         standard: f('Subject is instance of: "%s"', constructor.name),
         values: {
             subject: subject,
-            constructorName: constructor.name,
+            constructorName: constructor.name
         }
     });
 };

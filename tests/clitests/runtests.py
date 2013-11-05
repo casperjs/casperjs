@@ -64,8 +64,9 @@ class CasperExecTestBase(unittest.TestCase):
         if not what:
             raise AssertionError('Empty lookup')
         if isinstance(what, (list, tuple)):
+            output = self.runCommand(cmd, **kwargs)
             for entry in what:
-                self.assertIn(entry, self.runCommand(cmd, **kwargs))
+                self.assertIn(entry, output)
         else:
             self.assertIn(what, self.runCommand(cmd))
 
@@ -284,6 +285,21 @@ class TestCommandOutputTest(CasperExecTestBase):
             '1 failed',
             '0 dubious',
             '0 skipped',
+        ], failing=True)
+
+    @timeout(20)
+    def test_waitFor_timeout(self):
+        # using begin()
+        script_path = os.path.join(TEST_ROOT, 'tester', 'waitFor_timeout.js')
+        self.assertCommandOutputContains('test ' + script_path, [
+            '"p.nonexistent" still did not exist in',
+            '"#encoded" did not have a text change in',
+            '"p[style]" never appeared in',
+            '/github\.com/ did not load in',
+            '/foobar/ did not pop up in',
+            '"Lorem ipsum" did not appear in the page in',
+            'return false',
+            'did not evaluate to something truthy in'
         ], failing=True)
 
     @timeout(20)

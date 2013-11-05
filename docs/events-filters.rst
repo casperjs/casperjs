@@ -437,7 +437,7 @@ Emitted when a navigation step has been started.
 ``step.timeout``
 ~~~~~~~~~~~~~~~~
 
-**Arguments:** ``None``
+**Arguments:** ``[step, timeout]``
 
 Emitted when a navigation step has been executed.
 
@@ -483,9 +483,11 @@ Emitted when a ``Casper.wait()`` operation starts.
 ``waitFor.timeout``
 ~~~~~~~~~~~~~~~~~~~
 
-**Arguments:** ``None``
+**Arguments:** ``[timeout, details]``
 
-Emitted when the execution time of a ``Casper.wait*()`` operation has exceeded the value of ``Casper.options.stepTimeout``.
+Emitted when the execution time of a ``Casper.wait*()`` operation has exceeded the value of ``timeout``.
+
+``deatils`` is a property bag describing what was being waited on. For example, if ``waitForSelector`` timed out, ``details`` will have a ``selector`` string property that was the selector that did not show up in time.
 
 
 .. index:: filters

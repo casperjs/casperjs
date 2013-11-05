@@ -122,7 +122,7 @@ var Casper = function Casper(options) {
         retryTimeout:        20,
         waitTimeout:         5000,
         clipRect : null,
-        viewportSize : null,
+        viewportSize : null
     };
     // options
     this.options = utils.mergeObjects(this.defaults, options);
@@ -1504,7 +1504,7 @@ Casper.prototype.runStep = function runStep(step) {
         var stepTimeoutCheckInterval = setInterval(function _check(self, start, stepNum) {
             if (new Date().getTime() - start > self.options.stepTimeout) {
                 if (getCurrentSuiteId(self) === stepNum) {
-                    self.emit('step.timeout');
+                    self.emit('step.timeout', stepNum, self.options.onStepTimeout);
                     if (utils.isFunction(self.options.onStepTimeout)) {
                         self.options.onStepTimeout.call(self, self.options.stepTimeout, stepNum);
                     }
@@ -2003,12 +2003,14 @@ Casper.prototype.waitDone = function waitDone() {
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+ * @param  Object    details    A property bag of information about the condition being waited on (optional)
  * @return Casper
  */
-Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
+Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, details) {
     "use strict";
     this.checkStarted();
-    timeout = timeout ? timeout : this.options.waitTimeout;
+    timeout = timeout || this.options.waitTimeout;
+    details = details || { testFx: testFx };
     if (!utils.isFunction(testFx)) {
         throw new CasperError("waitFor() needs a test function");
     }
@@ -2019,7 +2021,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
         this.waitStart();
         var start = new Date().getTime();
         var condition = false;
-        var interval = setInterval(function _check(self, testFx, timeout, onTimeout) {
+        var interval = setInterval(function _check(self) {
             /*jshint maxstatements:20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
@@ -2029,13 +2031,13 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
             if (!condition) {
                 self.log("Casper.waitFor() timeout", "warning");
                 var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
-                self.emit('waitFor.timeout', timeout, onWaitTimeout);
+                self.emit('waitFor.timeout', timeout, details);
                 clearInterval(interval); // refs #383
                 if (!utils.isFunction(onWaitTimeout)) {
                     throw new CasperError('Invalid timeout function');
                 }
                 try {
-                    return onWaitTimeout.call(self, timeout);
+                    return onWaitTimeout.call(self, timeout, details);
                 } catch (error) {
                     self.emit('waitFor.timeout.error', error);
                 } finally {
@@ -2047,7 +2049,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout) {
             if (then) {
                 self.then(then);
             }
-        }, this.options.retryTimeout, this, testFx, timeout, onTimeout);
+        }, this.options.retryTimeout, this);
         this.waiters.push(interval);
     });
 };
@@ -2071,7 +2073,7 @@ Casper.prototype.waitForPopup = function waitForPopup(urlPattern, then, onTimeou
         } catch (e) {
             return false;
         }
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, { popup: urlPattern });
 };
 
 /**
@@ -2090,7 +2092,7 @@ Casper.prototype.waitForResource = function waitForResource(test, then, onTimeou
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.resourceExists(test);
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, { resource: test });
 };
 
 /**
@@ -2112,7 +2114,7 @@ Casper.prototype.waitForUrl = function waitForUrl(url, then, onTimeout, timeout)
             return url.test(this.getCurrentUrl());
         }
         throw new CasperError('invalid url argument');
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, { url: url });
 };
 
 /**
@@ -2131,7 +2133,7 @@ Casper.prototype.waitForSelector = function waitForSelector(selector, then, onTi
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.exists(selector);
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, { selector: selector });
 };
 
 /**
@@ -2153,7 +2155,7 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
             return pattern.test(content);
         }
         return content.indexOf(pattern) !== -1;
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, { text: pattern });
 };
 
 /**
@@ -2173,7 +2175,7 @@ Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout,
     var currentSelectorText = this.fetchText(selector);
     return this.waitFor(function _check() {
         return currentSelectorText !== this.fetchText(selector);
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, { selectorTextChange: selector });
 };
 
 /**
@@ -2192,7 +2194,10 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return !this.exists(selector);
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, {
+        selector: selector,
+        waitWhile: true
+    });
 };
 
 /**
@@ -2211,7 +2216,7 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return this.visible(selector);
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, { visible: selector });
 };
 
 /**
@@ -2230,7 +2235,10 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
     timeout = timeout ? timeout : this.options.waitTimeout;
     return this.waitFor(function _check() {
         return !this.visible(selector);
-    }, then, onTimeout, timeout);
+    }, then, onTimeout, timeout, {
+        visible: selector,
+        waitWhile: true
+    });
 };
 
 /**
