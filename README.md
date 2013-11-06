@@ -40,6 +40,8 @@ Follow the CasperJS project [on twitter](https://twitter.com/casperjs_org) and [
 
 ## Show me some code!
 
+First [install CasperJS](http://docs.casperjs.org/en/latest/installation.html), we'll use 1.1 beta here.
+
 Sample test to see if some dropdown can be opened:
 
 ```javascript
