@@ -917,8 +917,8 @@ Casper.prototype.getPageContent = function getPageContent() {
     }
     // for some reason webkit/qtwebkit will always enclose body contents within html tags
     var sanitizedHtml = this.evaluate(function checkHtml() {
-        if (__utils__.findOne('head').childNodes.length === 0 &&
-            __utils__.findOne('body').childNodes.length === 1 &&
+        if (__utils__.findOne('head') && __utils__.findOne('head').childNodes.length === 0 &&
+            __utils__.findOne('body') && __utils__.findOne('body').childNodes.length === 1 &&
             __utils__.findOne('body pre[style]')) {
             return __utils__.findOne('body pre').textContent.trim();
         }
