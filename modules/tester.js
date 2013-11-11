@@ -510,7 +510,7 @@ Tester.prototype.assertSelectorExist = function assertExists(selector, message) 
     "use strict";
     return this.assert(this.casper.exists(selector), message, {
         type: "assertExists",
-        standard: f("Found an element matching: %s", selector),
+        standard: f("Find an element matching: %s", selector),
         values: {
             selector: selector
         }
@@ -530,7 +530,7 @@ Tester.prototype.assertNotExists = function assertDoesntExist(selector, message)
     "use strict";
     return this.assert(!this.casper.exists(selector), message, {
         type: "assertDoesntExist",
-        standard: f("No element found matching selector: %s", selector),
+        standard: f("Fail to find element matching selector: %s", selector),
         values: {
             selector: selector
         }
@@ -660,7 +660,7 @@ Tester.prototype.assertResourceExist = function assertResourceExists(test, messa
     "use strict";
     return this.assert(this.casper.resourceExists(test), message, {
         type: "assertResourceExists",
-        standard: "Expected resource has been found",
+        standard: "Confirm page has resource",
         values: {
             test: test
         }
@@ -704,7 +704,7 @@ Tester.prototype.assertTextExist = function assertTextExists(text, message) {
     }).indexOf(text) !== -1);
     return this.assert(textFound, message, {
         type: "assertTextExists",
-        standard: "Found expected text within the document body",
+        standard: "Find text within the document body",
         values: {
             text: text
         }
@@ -764,7 +764,7 @@ Tester.prototype.assertSelectorContains = function assertSelectorHasText(selecto
     var textFound = got.indexOf(text) !== -1;
     return this.assert(textFound, message, {
         type: "assertSelectorHasText",
-        standard: f('Found "%s" within the selector "%s"', text, selector),
+        standard: f('Find "%s" within the selector "%s"', text, selector),
         values: {
             selector: selector,
             text: text,
