@@ -182,6 +182,62 @@ This also works with any input type: ``select``, ``textarea``, etc.
 The `options` parameter allows to set the options to use with
 :ref:`ClientUtils#getFieldValue() <clientutils_getfieldvalue>`.
 
+.. deprecated:: 1.1
+
+``assertFieldName()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``assertFieldName(String inputName, String expected[, String message, Object options])``
+
+Asserts that a given form field has the provided value::
+
+    casper.test.begin('assertField() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            this.fill('form[name="gs"]', { q: 'plop' }, false);
+            test.assertField('q', 'plop', 'did not plop', {formSelector: 'plopper'});
+        }).run(function() {
+            test.done();
+        });
+    });
+
+.. versionadded:: 1.1
+
+``assertFieldCSS()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``assertField(String inputName, String expected, String message, String cssSelector)``
+
+Asserts that a given form field has the provided value given a CSS selector::
+
+    casper.test.begin('assertField() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            this.fill('form[name="gs"]', { q: 'plop' }, false);
+            test.assertField('q', 'plop', 'did not plop', 'input.plop');
+        }).run(function() {
+            test.done();
+        });
+    });
+
+.. versionadded:: 1.1
+
+``assertFieldXPath()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``assertField(String inputName, String expected, String message, String xpathSelector)``
+
+Asserts that a given form field has the provided value given a XPath selector::
+
+    casper.test.begin('assertField() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            this.fill('form[name="gs"]', { q: 'plop' }, false);
+            test.assertField('q', 'plop', 'did not plop', '/html/body/form[0]/input[1]');
+        }).run(function() {
+            test.done();
+        });
+    });
+
+.. versionadded:: 1.1
+
 .. index:: HTTP, HTTP Status Code
 
 ``assertHttpStatus()``
@@ -455,12 +511,12 @@ Asserts that the provided input is of the given type::
 .. versionadded:: 1.1
 
 Asserts that the provided input is of the given constructor::
-    
+
     function Cow() {
         this.moo = function moo() {
             return 'moo!';
         };
-    } 
+    }
     casper.test.begin('assertInstanceOf() tests', 2, function suite(test) {
         var daisy = new Cow();
         test.assertInstanceOf(daisy, Cow, "Ok, daisy is a cow.");

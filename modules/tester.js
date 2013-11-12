@@ -470,21 +470,10 @@ Tester.prototype.assertFail = function assertFail(fn, message) {
     });
 };
 
-/**
- * Asserts that a given input field has the provided value.
- *
- * @param  String   inputName  The name attribute of the input element
- * @param  String   expected   The expected value of the input element
- * @param  String   message    Test description
- * @param  Object   options    ClientUtils#getFieldValue options (optional)
- * @return Object              An assertion result object
- */
-Tester.prototype.assertField = function assertField(inputName, expected,  message, options) {
+function baseFieldAssert(inputName, expected, actual, message, tester) {
     "use strict";
-    var actual = this.casper.evaluate(function(inputName, options) {
-        return __utils__.getFieldValue(inputName, options);
-    }, inputName, options);
-    return this.assert(utils.equals(actual, expected),  message, {
+
+    return tester.assert(utils.equals(actual, expected),  message, {
         type: 'assertField',
         standard: f('"%s" input field has the value "%s"', inputName, expected),
         values: {
@@ -493,6 +482,62 @@ Tester.prototype.assertField = function assertField(inputName, expected,  messag
             expected: expected
          }
     });
+}
+
+/**
+ * Asserts that a given input field has the provided value.
+ *
+ * @param  String   inputName  The name attribute
+ * @param  String   expected   The expected value of the input element
+ * @param  String   message    Test description
+ * @param  Object   options    ClientUtils#getFieldValue options (optional)
+ * @return Object              An assertion result object
+ */
+Tester.prototype.assertFieldName =
+Tester.prototype.assertField = function assertField(inputName, expected, message, options) {
+    "use strict";
+    options = options || {};
+    var actual = this.casper.evaluate(function(inputName, options) {
+        return __utils__.getFieldValue(inputName, {formSelector: options.formSelector});
+    }, inputName, options);
+
+    return baseFieldAssert(inputName, expected, actual, message, this);
+};
+
+/**
+ * Asserts that a given input field by CSS selector has the provided value.
+ *
+ * @param  String   inputName   The name attribute
+ * @param  String   expected    The expected value of the input element
+ * @param  String   message     Test description
+ * @param  Object   cssSelector The CSS selector to use for the assert field value
+ * @return Object               An assertion result object
+ */
+Tester.prototype.assertFieldCSS = function assertFieldCSS(inputName, expected, message, cssSelector) {
+    "use strict";
+    var actual = this.casper.evaluate(function(inputName, cssSelector) {
+        return __utils__.getFieldValue(inputName, {inputSelector: cssSelector});
+    }, inputName, cssSelector);
+
+    return baseFieldAssert(inputName, expected, actual, message, this);
+};
+
+/**
+ * Asserts that a given input field by XPath selector has the provided value.
+ *
+ * @param  String   inputName     The name attribute
+ * @param  String   expected      The expected value of the input element
+ * @param  String   message       Test description
+ * @param  Object   xPathSelector The XPath selector to use for the assert field value
+ * @return Object                 An assertion result object
+ */
+Tester.prototype.assertFieldXPath = function assertFieldXPath(inputName, expected, message, xPathSelector) {
+    "use strict";
+    var actual = this.casper.evaluate(function(inputName, xPathSelector) {
+        return __utils__.getFieldValue(inputName, {inputXPath: xPathSelector});
+    }, inputName, xPathSelector);
+
+    return baseFieldAssert(inputName, expected, actual, message, this);
 };
 
 /**

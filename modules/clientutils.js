@@ -290,16 +290,17 @@
          *
          * @param  String            selector  CSS3 selector
          * @param  HTMLElement|null  scope     Element to search child elements within
-         * @return NodeList|undefined
+         * @return Array|undefined
          */
         this.findAll = function findAll(selector, scope) {
             scope = scope || this.options.scope;
             try {
                 var pSelector = this.processSelector(selector);
+
                 if (pSelector.type === 'xpath') {
                     return this.getElementsByXPath(pSelector.path, scope);
                 } else {
-                    return scope.querySelectorAll(pSelector.path);
+                    return Array.prototype.slice.call(scope.querySelectorAll(pSelector.path));
                 }
             } catch (e) {
                 this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
@@ -518,12 +519,13 @@
         /**
          * Retrieves the value of a form field.
          *
-         * @param  String  inputName  The for input name attr value
+         * @param  String  inputName  The for input name attr value or a CSS selector
          * @param  Object  options    Object with formSelector, optional
          * @return Mixed
          */
         this.getFieldValue = function getFieldValue(inputName, options) {
             options = options || {};
+
             function getSingleValue(input) {
                 var type;
                 try {
@@ -540,6 +542,7 @@
                 }
                 return input.checked;
             }
+
             function getMultipleValues(inputs) {
                 var type;
                 type = inputs[0].getAttribute('type').toLowerCase();
@@ -560,10 +563,21 @@
                 }
             }
             var formSelector = '';
-            if (options && options.formSelector) {
+
+            if (options.formSelector) {
                 formSelector = options.formSelector + ' ';
             }
-            var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
+
+            var inputs = this.findAll(formSelector + '[name="' + inputName + '"]')
+
+            if (options.inputSelector) {
+                inputs = inputs.concat(this.findAll(options.inputSelector));
+            }
+
+            if (options.inputXPath) {
+                inputs = inputs.concat(this.getElementsByXPath(options.inputXPath));
+            }
+
             switch (inputs.length) {
                 case 0:  return undefined;
                 case 1:  return getSingleValue(inputs[0]);
