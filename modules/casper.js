@@ -915,10 +915,14 @@ Casper.prototype.getPageContent = function getPageContent() {
     if (!utils.isString(contentType)) {
         return this.page.frameContent;
     }
-    // for some reason webkit/qtwebkit will always enclose body contents within html tags
+    // for some reason (qt)webkit will always enclose non text/html body contents within an html
+    // structure like this:
+    // <html><head></head><body><pre style="(...)">content</pre></body></html>
     var sanitizedHtml = this.evaluate(function checkHtml() {
-        if (__utils__.findOne('head').childNodes.length === 0 &&
-            __utils__.findOne('body').childNodes.length === 1 &&
+        var head = __utils__.findOne('head'),
+            body = __utils__.findOne('body');
+        if (head && head.childNodes.length === 0 &&
+            body && body.childNodes.length === 1 &&
             __utils__.findOne('body pre[style]')) {
             return __utils__.findOne('body pre').textContent.trim();
         }
