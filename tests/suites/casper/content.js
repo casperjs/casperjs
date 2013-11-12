@@ -1,3 +1,5 @@
+/*global casper*/
+/*jshint strict:false*/
 var fs = require("fs");
 
 casper.test.begin("Casper.getPageContent() text/html content", 1, function(test) {
