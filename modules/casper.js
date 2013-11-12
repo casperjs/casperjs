@@ -1206,7 +1206,7 @@ Casper.prototype.injectClientScripts = function injectClientScripts() {
     }
     this.options.clientScripts.forEach(function _forEach(script) {
         if (this.page.injectJs(script)) {
-            this.log(f('Automatically injected %s client side', script), "debug");
+            this.log(f('Automatically injected %s client side%s', script, (this.page.frameName !== '' ? ' into frame ' + this.page.frameName : '')), "debug");
         } else {
             this.warn('Failed injecting %s client side', script);
         }
@@ -1229,7 +1229,7 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
     }
     var clientUtilsPath = require('fs').pathJoin(phantom.casperPath, 'modules', 'clientutils.js');
     if (true === this.page.injectJs(clientUtilsPath)) {
-        this.log("Successfully injected Casper client-side utilities", "debug");
+        this.log("Successfully injected Casper client-side utilities" + (this.page.frameName !== '' ? ' into frame ' + this.page.frameName : ''), "debug");
     } else {
         this.warn("Failed to inject Casper client-side utilities");
     }
@@ -2247,6 +2247,33 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
 
 /**
  * Makes the provided frame page as the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @param  String|Number    frameInfo  Target frame name or number
+ * @param  Function  then       Next step function
+ * @return Casper
+ */
+Casper.prototype.switchToFrame = function switchToFrame(frameInfo) {
+    "use strict";
+    if (utils.isNumber(frameInfo)) {
+        if (frameInfo > this.page.framesCount - 1) {
+            throw new CasperError(f('Frame number "%d" is out of bounds.', frameInfo));
+        }
+    } else if (this.page.framesName.indexOf(frameInfo) === -1) {
+        throw new CasperError(f('No frame named "%s" was found.', frameInfo));
+    }
+    // make the frame page the currently active one
+    this.page.switchToFrame(frameInfo);
+    // inject local, remote and utils client scripts into frame
+    this.injectClientScripts();
+    this.includeRemoteScripts();
+    this.injectClientUtils();
+    this.emit('frame.changed', this.page.frameName);
+
+    return this;
+};
+/**
+ * Makes the provided frame page as the currently active one. Note that the
  * active page will be reverted when finished.
  *
  * @param  String|Number    frameInfo  Target frame name or number
@@ -2256,15 +2283,7 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
 Casper.prototype.withFrame = function withFrame(frameInfo, then) {
     "use strict";
     this.then(function _step() {
-        if (utils.isNumber(frameInfo)) {
-            if (frameInfo > this.page.childFramesCount() - 1) {
-                throw new CasperError(f('Frame number "%d" is out of bounds.', frameInfo));
-            }
-        } else if (this.page.childFramesName().indexOf(frameInfo) === -1) {
-            throw new CasperError(f('No frame named "%s" was found.', frameInfo));
-        }
-        // make the frame page the currently active one
-        this.page.switchToChildFrame(frameInfo);
+      this.switchToFrame(frameInfo);
     });
     try {
         this.then(then);
@@ -2272,11 +2291,13 @@ Casper.prototype.withFrame = function withFrame(frameInfo, then) {
         // revert to main page on error
         this.warn("Error while processing frame step: " + e);
         this.page.switchToParentFrame();
+        this.emit('frame.changed', this.page.frameName);
         throw e;
     }
     return this.then(function _step() {
         // revert to main page
         this.page.switchToParentFrame();
+        this.emit('frame.changed', this.page.frameName);
     });
 };
 
