@@ -619,7 +619,7 @@
                 var center_x = 1, center_y = 1;
                 try {
                     var pos = elem.getBoundingClientRect();
-                    center_x = Math.floor((pos.left + pos.right) / 2),
+                    center_x = Math.floor((pos.left + pos.right) / 2);
                     center_y = Math.floor((pos.top + pos.bottom) / 2);
                 } catch(e) {}
                 evt.initMouseEvent(type, true, true, window, 1, 1, 1, center_x, center_y, false, false, false, false, 0, elem);

@@ -925,16 +925,16 @@ Casper.prototype.getPageContent = function getPageContent() {
         if (!head || !body) {
             return null;
         }
-        if (head.childNodes.length == 0 &&
+        if (head.childNodes.length === 0 &&
             body.childNodes.length === 1 &&
             __utils__.findOne('body pre[style]')) {
             return __utils__.findOne('body pre').textContent.trim();
         }
         if (head.childNodes.length === 1 &&
             body.childNodes.length === 1 &&
-            head.childNodes[0].localName == 'link' &&
-            head.childNodes[0].getAttribute('href') == 'resource://gre-resources/plaintext.css' &&
-            body.childNodes[0].localName == 'pre' ) {
+            head.childNodes[0].localName === 'link' &&
+            head.childNodes[0].getAttribute('href') === 'resource://gre-resources/plaintext.css' &&
+            body.childNodes[0].localName === 'pre' ) {
             return body.childNodes[0].textContent.trim();
         }
         return null;
