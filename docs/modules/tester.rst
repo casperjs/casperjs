@@ -160,7 +160,7 @@ Asserts that a given subject is `falsy <http://11heavens.com/falsy-and-truthy-in
 ``assertField()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``assertField(String inputName, String expected[, String message, Object options])``
+**Signature:** ``assertField(String|object input, String expected[, String message, Object options])``
 
 Asserts that a given form field has the provided value::
 
@@ -168,6 +168,16 @@ Asserts that a given form field has the provided value::
         casper.start('http://www.google.fr/', function() {
             this.fill('form[name="gs"]', { q: 'plop' }, false);
             test.assertField('q', 'plop');
+        }).run(function() {
+            test.done();
+        });
+    });
+
+    // Path usage with type 'css'
+    casper.test.begin('assertField() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            this.fill('form[name="gs"]', { q: 'plop' }, false);
+            test.assertField({type: 'css', path: '.q.foo'}, 'plop');
         }).run(function() {
             test.done();
         });
@@ -181,6 +191,63 @@ This also works with any input type: ``select``, ``textarea``, etc.
 
 The `options` parameter allows to set the options to use with
 :ref:`ClientUtils#getFieldValue() <clientutils_getfieldvalue>`.
+
+`input` parameter introspects whether or not a `type` key is passed in with `xpath` or `css` and a property `path` specified along with it.
+
+``assertFieldName()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``assertFieldName(String inputName, String expected[, String message, Object options])``
+
+.. versionadded:: 1.1-beta3
+
+Asserts that a given form field has the provided value::
+
+    casper.test.begin('assertField() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            this.fill('form[name="gs"]', { q: 'plop' }, false);
+            test.assertField('q', 'plop', 'did not plop', {formSelector: 'plopper'});
+        }).run(function() {
+            test.done();
+        });
+    });
+
+``assertFieldCSS()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``assertFieldCSS(String cssSelector, String expected, String message)``
+
+.. versionadded:: 1.1
+
+Asserts that a given form field has the provided value given a CSS selector::
+
+    casper.test.begin('assertField() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            this.fill('form[name="gs"]', { q: 'plop' }, false);
+            test.assertField('q', 'plop', 'did not plop', 'input.plop');
+        }).run(function() {
+            test.done();
+        });
+    });
+
+``assertFieldXPath()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``assertFieldXPath(String xpathSelector, String expected, String message)``
+
+.. versionadded:: 1.1
+
+Asserts that a given form field has the provided value given a XPath selector::
+
+    casper.test.begin('assertField() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            this.fill('form[name="gs"]', { q: 'plop' }, false);
+            test.assertField('q', 'plop', 'did not plop', '/html/body/form[0]/input[1]');
+        }).run(function() {
+            test.done();
+        });
+    });
+
 
 .. index:: HTTP, HTTP Status Code
 

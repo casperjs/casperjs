@@ -129,8 +129,75 @@ casper.test.begin('Tester.assertField(): nonexistent fields', 2, function(test) 
         test.assertFail(function() {
             test.assertField('nonexistent', '');
         }, 'Tester.assertField() only checks for existing fields');
-    });
-    casper.run(function() {
+    }).run(function() {
         test.done();
-    })
+    });
+});
+
+casper.test.begin('Tester.assertField(): CSS selectors', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            'email': 'albert@camus.com'
+        });
+
+        test.assertField({
+            type: 'css',
+            path: '#email'
+        },
+            'albert@camus.com',
+            'Tester.assertField() works as expected with CSS selectors'
+        );
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Tester.assertField(): XPath selectors', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            'email': 'albert@camus.com'
+        });
+
+        test.assertField({
+            type: 'xpath',
+            path: '/html/body/form[1]/input[1]'
+        },
+             'albert@camus.com',
+             'Tester.assertField() works as expected with XPath selectors'
+        );
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Tester.assertFieldCSS(): CSS selectors', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            'email': 'albert@camus.com'
+        });
+
+        test.assertFieldCSS(
+            '#email',
+            'albert@camus.com',
+            'Tester.assertFieldCSS() works as expected with CSS selectors'
+        );
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Tester.assertFieldXPath(): XPath selectors', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            'email': 'albert@camus.com'
+        });
+
+        test.assertFieldXPath(
+             '/html/body/form[1]/input[1]',
+             'albert@camus.com',
+             'Tester.assertFieldXPath() works as expected with XPath selectors'
+        );
+    }).run(function() {
+        test.done();
+    });
 });
