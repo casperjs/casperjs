@@ -292,6 +292,19 @@ To get the form values::
 
     __utils__.getFormValues('form#login'); // {username: 'foo', password: 'bar'}
 
+.. index:: log
+
+``log()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``log(String message[, String level])``
+
+Logs a message with an optional level. Will format the message a way CasperJS will be able to log phantomjs side. Default level is ``debug``.
+
+    casper.start('http://foo.ner/').thenEvaluate(function() {
+        __utils__.log("We've got a problem on client side", 'error');
+    });
+
 ``mouseEvent()``
 -------------------------------------------------------------------------------
 
