@@ -51,17 +51,17 @@ casper.test.begin('ClientUtils.exists() tests', 5, function(test) {
 casper.test.begin('ClientUtils.findAll() tests', 7, function(test) {
     var clientutils = require('clientutils').create();
     fakeDocument('<ul class="foo"><li>bar</li><li>baz</li></ul>');
-    test.assertType(clientutils.findAll('li'), 'nodelist',
+    test.assertType(clientutils.findAll('li'), 'array',
         'ClientUtils.findAll() can find matching DOM elements');
     test.assertEquals(clientutils.findAll('li').length, 2,
         'ClientUtils.findAll() can find matching DOM elements');
-    test.assertType(clientutils.findAll('ol'), 'nodelist',
+    test.assertType(clientutils.findAll('ol'), 'array',
         'ClientUtils.findAll() can find matching DOM elements');
     test.assertEquals(clientutils.findAll('ol').length, 0,
         'ClientUtils.findAll() can find matching DOM elements');
     // scoped
     var scope = clientutils.findOne('ul');
-    test.assertType(clientutils.findAll('li', scope), 'nodelist',
+    test.assertType(clientutils.findAll('li', scope), 'array',
         'ClientUtils.findAll() can find matching DOM elements within a given scope');
     test.assertEquals(clientutils.findAll('li', scope).length, 2,
         'ClientUtils.findAll() can find matching DOM elements within a given scope');

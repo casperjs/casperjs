@@ -290,7 +290,7 @@
          *
          * @param  String            selector  CSS3 selector
          * @param  HTMLElement|null  scope     Element to search child elements within
-         * @return NodeList|undefined
+         * @return Array|undefined
          */
         this.findAll = function findAll(selector, scope) {
             scope = scope || this.options.scope;
@@ -299,7 +299,7 @@
                 if (pSelector.type === 'xpath') {
                     return this.getElementsByXPath(pSelector.path, scope);
                 } else {
-                    return scope.querySelectorAll(pSelector.path);
+                    return Array.prototype.slice.call(scope.querySelectorAll(pSelector.path));
                 }
             } catch (e) {
                 this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
@@ -560,10 +560,19 @@
                 }
             }
             var formSelector = '';
-            if (options && options.formSelector) {
+            if (options.formSelector) {
                 formSelector = options.formSelector + ' ';
             }
             var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
+
+            if (options.inputSelector) {
+                inputs = inputs.concat(this.findAll(options.inputSelector));
+            }
+
+            if (options.inputXPath) {
+                inputs = inputs.concat(this.getElementsByXPath(options.inputXPath));
+            }
+
             switch (inputs.length) {
                 case 0:  return undefined;
                 case 1:  return getSingleValue(inputs[0]);
