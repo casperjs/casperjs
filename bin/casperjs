@@ -109,7 +109,7 @@ else:
 for arg in SYS_ARGS:
     found = False
     for native in ENGINE_NATIVE_ARGS:
-        if arg.startswith('--%s' % native):
+        if arg == '--%s' % native:
             ENGINE_ARGS.append(arg)
             found = True
     if not found:
