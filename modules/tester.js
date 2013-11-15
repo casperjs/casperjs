@@ -450,6 +450,7 @@ Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, messa
 };
 
 function baseFieldAssert(inputName, expected, actual, message) {
+    /*jshint validthis:true */
     "use strict";
 
     return this.assert(utils.equals(actual, expected),  message, {
@@ -503,6 +504,8 @@ Tester.prototype.assertField = function assertField(input, expected, message, op
                 return this.assertFieldCSS(input.path, expected, message);
             case 'xpath':
                 return this.assertFieldXPath(input.path, expected, message);
+            default:
+                throw new CasperError('Invalid regexp.');
             // no default
         }
     }

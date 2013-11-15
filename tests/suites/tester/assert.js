@@ -170,6 +170,25 @@ casper.test.begin('Tester.assertField(): XPath selectors', 1, function(test) {
     });
 });
 
+casper.test.begin('Tester.assertField(): invalid selectors', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            'email': 'albert@camus.com'
+        });
+
+        test.assertRaise(function() {
+            test.assertField({
+                type: 'albert'
+            },
+                 'albert@camus.com',
+                 'Tester.assertField() works as expected with XPath selectors'
+            );
+        }, [], 'should throw an error for an invalid selector');
+    }).run(function() {
+        test.done();
+    });
+});
+
 casper.test.begin('Tester.assertFieldCSS(): CSS selectors', 1, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {

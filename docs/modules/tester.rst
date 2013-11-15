@@ -160,9 +160,9 @@ Asserts that a given subject is `falsy <http://11heavens.com/falsy-and-truthy-in
 ``assertField()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``assertField(String|object input, String expected[, String message, Object options])``
+**Signature:** ``assertField(String|Object input, String expected[, String message, Object options])``
 
-Asserts that a given form field has the provided value::
+Asserts that a given form field has the provided value with input name or :ref:`selector expression <selectors>`::
 
     casper.test.begin('assertField() tests', 1, function(test) {
         casper.start('http://www.google.fr/', function() {
