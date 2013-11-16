@@ -22,11 +22,11 @@ script:
 
 env:
   matrix:
-    - ENGINE="phantomjs" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_VERSION="1.8.2" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_VERSION="1.9.0" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_VERSION="1.9.1" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.1-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_VERSION="1.9.2" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2"
-    - ENGINE="slimerjs" ENGINE_EXECUTABLE="engine/slimerjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_VERSION="0.8.4" ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
+    - ENGINE="phantomjs" ENGINE_VERSION="1.8.2" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-x86_64.tar.bz2"
+    - ENGINE="phantomjs" ENGINE_VERSION="1.9.0" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-x86_64.tar.bz2"
+    - ENGINE="phantomjs" ENGINE_VERSION="1.9.1" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.1-linux-x86_64.tar.bz2"
+    - ENGINE="phantomjs" ENGINE_VERSION="1.9.2" ENGINE_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2"
+    - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" ENGINE_EXECUTABLE="engine/slimerjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes" ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
 
 notifications:
   irc:
