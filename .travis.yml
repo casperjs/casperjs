@@ -20,6 +20,10 @@ before_script:
   - "npm install -g jshint@2.0.1"
 
 script:
+  - echo "######################################"
+  - echo "PLATFORM: $ENGINE"
+  - echo "VERSION: $ENGINE_VERSION"
+  - echo "######################################"
   - make test
   - make test-dotNET
 
@@ -29,6 +33,7 @@ env:
     - ENGINE="phantomjs" ENGINE_VERSION="1.9.0"
     - ENGINE="phantomjs" ENGINE_VERSION="1.9.1"
     - ENGINE="phantomjs" ENGINE_VERSION="1.9.2"
+    - ENGINE="slimerjs" ENGINE_VERSION="0.8.4"
   global:
     - PHANTOMJS_EXECUTABLE="engine/bin/phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
     - SLIMERJS_EXECUTABLE="engine/slimerjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes"
