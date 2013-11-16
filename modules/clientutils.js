@@ -130,19 +130,24 @@
         /**
          * Checks if a given DOM element is visible in remove page.
          *
-         * @param Object   element  DOM element
+         * @param  Object   element  DOM element
          * @return Boolean
          */
         this.elementVisible = function elementVisible(elem) {
+            var style;
             try {
-                var comp = window.getComputedStyle(elem, null);
-                return comp.visibility !== 'hidden' &&
-                       comp.display !== 'none' &&
-                       elem.offsetHeight > 0 &&
-                       elem.offsetWidth > 0;
+                style = window.getComputedStyle(elem, null);
             } catch (e) {
                 return false;
             }
+            var hidden = style.visibility === 'hidden' || style.display === 'none';
+            if (hidden) {
+                return false;
+            }
+            if (style.display === "inline") {
+                return true;
+            }
+            return elem.clientHeight > 0 && elem.clientWidth > 0;
         }
 
         /**
