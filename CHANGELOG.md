@@ -1,6 +1,11 @@
 CasperJS Changelog
 ==================
 
+2013-11-17, v1.0.4
+------------------
+
+- fixed erroneous version number in `package.json`
+
 2013-07-13, v1.0.3
 ------------------
 
