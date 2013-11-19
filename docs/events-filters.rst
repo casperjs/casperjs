@@ -126,16 +126,12 @@ Emitted when the ``Casper.exit()`` method has been called.
 
 Emitted when a form is filled using the ``Casper.fill()`` method.
 
-.. index:: forward
-
 ``forward``
 ~~~~~~~~~~~
 
 **Arguments:** ``None``
 
 Emitted when the embedded browser is asked to go forward a step in its history.
-
-.. index:: frame.changed
 
 ``frame.changed``
 ~~~~~~~~~~~~~~~~~

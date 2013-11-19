@@ -2249,18 +2249,15 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
  * Makes the provided frame page as the currently active one. Note that the
  * active page will NOT be reverted when finished.
  *
- * @param  String|Number    frameInfo  Target frame name or number
- * @param  Function  then       Next step function
+ * @param  String|Number frameInfo  Target frame name or number
  * @return Casper
  */
 Casper.prototype.switchToFrame = function switchToFrame(frameInfo) {
     "use strict";
-    if (utils.isNumber(frameInfo)) {
-        if (frameInfo > this.page.framesCount - 1) {
-            throw new CasperError(f('Frame number "%d" is out of bounds.', frameInfo));
-        }
-    } else if (this.page.framesName.indexOf(frameInfo) === -1) {
+    if (utils.isString(frameInfo) && this.page.childFramesName().indexOf(frameInfo) === -1) {
         throw new CasperError(f('No frame named "%s" was found.', frameInfo));
+    } else if (utils.isNumber(frameInfo) && frameInfo > this.page.childFramesCount() - 1) {
+        throw new CasperError(f('Frame number "%d" is out of bounds.', frameInfo));
     }
     // make the frame page the currently active one
     this.page.switchToFrame(frameInfo);
@@ -2273,11 +2270,57 @@ Casper.prototype.switchToFrame = function switchToFrame(frameInfo) {
     return this;
 };
 /**
+ * Makes the frame page which has focus the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @param  String|Number frameInfo  Target frame name or number
+ * @return Casper
+ */
+Casper.prototype.switchToFocusedFrame = function switchToFocusedFrame() {
+    "use strict";
+    this.page.switchToFocusedFrame();
+    // inject local, remote and utils client scripts into frame
+    this.injectClientScripts();
+    this.includeRemoteScripts();
+    this.injectClientUtils();
+    this.emit('frame.changed', this.page.frameName);
+
+    return this;
+}
+/**
+ * Makes the main frame the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @param  String|Number frameInfo  Target frame name or number
+ * @return Casper
+ */
+Casper.prototype.switchToMainFrame = function switchToMainFrame() {
+    "use strict";
+    this.page.switchToMainFrame();
+    this.emit('frame.changed', this.page.frameName);
+
+    return this;
+}
+/**
+ * Makes parent frame of current one the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @param  String|Number frameInfo  Target frame name or number
+ * @return Casper
+ */
+Casper.prototype.switchToParentFrame = function switchToParentFrame() {
+    "use strict";
+    this.page.switchToParentFrame();
+    this.emit('frame.changed', this.page.frameName);
+
+    return this;
+}
+/**
  * Makes the provided frame page as the currently active one. Note that the
  * active page will be reverted when finished.
  *
- * @param  String|Number    frameInfo  Target frame name or number
- * @param  Function  then       Next step function
+ * @param  String|Number frameInfo  Target frame name or number
+ * @param  Function      then       Next step function
  * @return Casper
  */
 Casper.prototype.withFrame = function withFrame(frameInfo, then) {

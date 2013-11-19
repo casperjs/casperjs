@@ -1582,6 +1582,47 @@ Returns the status of current Casper instance::
 
     casper.run();
 
+
+``switchToFrame()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``switchToFrame(String|Number frameInfo)``
+
+.. versionadded:: 1.2
+
+Switches the main page to the frame having the name or frame index number matching the passed argument. Inject local scripts, remote scripts and client utils into this frame. 
+
+
+``switchToFocusedFrame()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``switchToFocusedFrame()``
+
+.. versionadded:: 1.2
+
+Switches the main page to the frame having the focus. Inject local scripts, remote scripts and client utils into this frame. 
+
+
+``switchToMainFrame()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``switchToMainFrame()``
+
+.. versionadded:: 1.2
+
+Switch the main page to the parent frame of the currently active one.
+
+
+``switchToParentFrame()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``switchToParentFrame()``
+
+.. versionadded:: 1.2
+
+Switch the main page to the main frame.
+
+
 .. index:: Step stack, Asynchronicity
 
 ``then()``
