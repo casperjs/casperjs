@@ -1524,6 +1524,7 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
         this.saveResults(save);
     }
     if (exit === true) {
+        this.emit("exit");
         this.casper.exit(status ? ~~status : exitStatus);
     }
 };
