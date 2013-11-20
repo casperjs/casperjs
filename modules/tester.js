@@ -1482,7 +1482,9 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
 /**
  * Render tests results, an optionally exit phantomjs.
  *
- * @param  Boolean  exit
+ * @param  Boolean  exit    Exit casper after results have been rendered?
+ * @param  Number   status  Exit status code (default: 0)
+ * @param  String   save    Optional path to file where to save the results log
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
