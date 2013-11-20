@@ -59,8 +59,9 @@ function checkArgs() {
         casper.options.colorizerType = cls;
         casper.colorizer = colorizer.create(cls);
     }
-    casper.test.options.concise = casper.cli.get('concise') || false;
-    casper.test.options.failFast = casper.cli.get('fail-fast') || false;
+    casper.test.options.concise = casper.cli.get('concise', false);
+    casper.test.options.failFast = casper.cli.get('fail-fast', false);
+    casper.test.options.autoExit = casper.cli.get('auto-exit') !== "no";
 
     // test paths are passed as args
     if (casper.cli.args.length) {
@@ -99,7 +100,7 @@ function initRunner() {
 
     // test suites completion listener
     casper.test.on('tests.complete', function() {
-        this.renderResults(true, undefined, casper.cli.get('xunit') || undefined);
+        this.renderResults(this.options.autoExit, undefined, casper.cli.get('xunit') || undefined);
         if (this.options.failFast && this.testResults.failures.length > 0) {
             casper.warn('Test suite failed fast, all tests may not have been executed.');
         }
