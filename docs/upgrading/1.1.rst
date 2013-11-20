@@ -94,10 +94,12 @@ CasperJS 1.1 now internally uses PhantomJS' native ``require()`` function, but i
 As of 1.1, CasperJS now uses native PhantomJS' ``require()`` function which doesn't support the ``__file__`` builtin variable within custom modules like 1.0 allowed.
 
 
-``Tester#getFailures()`` and ``Tester#getSuccesses()`` methods removed
-----------------------------------------------------------------------
+``Tester#getFailures()`` and ``Tester#getPasses()`` methods removed
+-------------------------------------------------------------------
 
 These two methods have been removed from the :doc:`Tester <../modules/tester>` API.
+
+You can retrieve test failure and success records by simply accessing `tester.currentSuite.failures` and `tester.currentSuite.passes` instead.
 
 
 Step and run completion callbacks don't throw anymore
