@@ -319,7 +319,17 @@ class TestCommandOutputTest(CasperExecTestBase):
     @timeout(20)
     def test_exit_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'exit.js')
-        self.assertCommandOutputContains('test ' + script_path, ['exited'])
+        self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            '# sample',
+            'PASS Subject is strictly true',
+            'PASS 1 test executed',
+            '1 passed',
+            '0 failed',
+            '0 dubious',
+            '0 skipped.',
+            'exited'
+        ])
 
     @timeout(20)
     def test_skipped_test(self):
