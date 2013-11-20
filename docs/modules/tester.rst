@@ -522,12 +522,12 @@ Asserts that the provided input is of the given type::
 .. versionadded:: 1.1
 
 Asserts that the provided input is of the given constructor::
-    
+
     function Cow() {
         this.moo = function moo() {
             return 'moo!';
         };
-    } 
+    }
     casper.test.begin('assertInstanceOf() tests', 2, function suite(test) {
         var daisy = new Cow();
         test.assertInstanceOf(daisy, Cow, "Ok, daisy is a cow.");
@@ -783,12 +783,18 @@ That will give something like this:
     In c.js:0
        assertEquals: Subject equals the expected value
 
+.. note::
+
+   In CasperJS 1.1, you can retrieve test failure records by simply accessing `tester.currentSuite.failures`.
+
 ``getPasses()``
 -------------------------------------------------------------------------------
 
 **Signature:** ``getPasses()``
 
 .. versionadded:: 1.0
+
+.. deprecated:: 1.1
 
 Retrieves a report for successful test cases in the current test suite::
 
@@ -817,6 +823,10 @@ That will give something like this::
         ]
     }
     PASS 1 tests executed, 1 passed, 0 failed.
+
+.. note::
+
+   In CasperJS 1.1, you can retrieve test success records by simply accessing `tester.currentSuite.passes`.
 
 ``info()``
 -------------------------------------------------------------------------------
