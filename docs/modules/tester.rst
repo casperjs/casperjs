@@ -785,7 +785,13 @@ That will give something like this:
 
 .. note::
 
-   In CasperJS 1.1, you can retrieve test failure records by simply accessing `tester.currentSuite.failures`.
+    In CasperJS 1.1, you can store test successes by recording them listening to the tester ``pass`` event::
+
+        var failures = [];
+
+        casper.test.on("fail", function(failure) {
+          failures.push(failure);
+        });
 
 ``getPasses()``
 -------------------------------------------------------------------------------
@@ -826,7 +832,13 @@ That will give something like this::
 
 .. note::
 
-   In CasperJS 1.1, you can retrieve test success records by simply accessing `tester.currentSuite.passes`.
+   In CasperJS 1.1, you can store test successes by recording them listening to the tester ``pass`` event::
+
+       var successes = [];
+
+       casper.test.on("pass", function(success) {
+         successes.push(success);
+       });
 
 ``info()``
 -------------------------------------------------------------------------------
