@@ -1488,7 +1488,7 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*jshint maxstatements:25*/
     save = save || this.options.save;
     var exitStatus = 0,
         failed = this.suiteResults.countFailed(),
