@@ -89,7 +89,8 @@ ENGINE_NATIVE_ARGS = []
 ENGINE_EXECUTABLE = ''
 
 CASPER_ARGS = []
-CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)), '..'))
+CASPER_PATH = os.path.abspath(os.path.join(os.path.dirname(resolve(__file__)),
+                                           '..'))
 SYS_ARGS = sys.argv[1:]
 
 # retrieve the engine name
@@ -98,23 +99,30 @@ for arg in SYS_ARGS:
         ENGINE = arg[9:].lower()
         break
 
-if ENGINE in SUPPORTED_ENGINES:
-    ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
-    ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'], SUPPORTED_ENGINES[ENGINE]['default_exec'])
-else:
+if not ENGINE in SUPPORTED_ENGINES:
     print('Bad engine name. Only phantomjs and slimerjs are supported')
     sys.exit(1)
 
+ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
+ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'],
+                                   SUPPORTED_ENGINES[ENGINE]['default_exec'])
+
+def extract_arg_name(arg):
+    "parse out any option name"
+    try:
+        return arg.split('=', 1)[0].replace('--', '', 1)
+    except IndexError:
+        return arg
 
 for arg in SYS_ARGS:
+    arg_name = extract_arg_name(arg)
     found = False
     for native in ENGINE_NATIVE_ARGS:
-        if arg.startswith('--%s' % native):
+        if arg_name == native:
             ENGINE_ARGS.append(arg)
             found = True
-    if not found:
-        if arg.startswith('--engine=') == False:
-            CASPER_ARGS.append(arg)
+    if not found and arg_name != 'engine':
+        CASPER_ARGS.append(arg)
 
 CASPER_COMMAND = ENGINE_EXECUTABLE.split(' ')
 CASPER_COMMAND.extend(ENGINE_ARGS)

@@ -449,6 +449,21 @@ Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, messa
     });
 };
 
+function baseFieldAssert(inputName, expected, actual, message) {
+    /*jshint validthis:true */
+    "use strict";
+
+    return this.assert(utils.equals(actual, expected),  message, {
+        type: 'assertField',
+        standard: f('"%s" input field has the value "%s"', inputName, expected),
+        values: {
+            inputName: inputName,
+            actual: actual,
+            expected: expected
+         }
+    });
+}
+
 /**
  * Asserts that the provided assertion fails (used for internal testing).
  *
@@ -473,26 +488,67 @@ Tester.prototype.assertFail = function assertFail(fn, message) {
 /**
  * Asserts that a given input field has the provided value.
  *
- * @param  String   inputName  The name attribute of the input element
- * @param  String   expected   The expected value of the input element
- * @param  String   message    Test description
- * @param  Object   options    ClientUtils#getFieldValue options (optional)
- * @return Object              An assertion result object
+ * @param  String|Object   input      The name attribute of the input element
+ *                                    or an object with the selector
+ * @param  String          expected   The expected value of the input element
+ * @param  String          message    Test description
+ * @param  Object          options    ClientUtils#getFieldValue options (optional)
+ * @return Object                     An assertion result object
  */
-Tester.prototype.assertField = function assertField(inputName, expected,  message, options) {
+Tester.prototype.assertField = function assertField(input, expected, message, options) {
     "use strict";
+
+    if (typeof input === 'object') {
+        switch (input.type) {
+            case 'css':
+                return this.assertFieldCSS(input.path, expected, message);
+            case 'xpath':
+                return this.assertFieldXPath(input.path, expected, message);
+            default:
+                throw new CasperError('Invalid regexp.');
+            // no default
+        }
+    }
+
     var actual = this.casper.evaluate(function(inputName, options) {
         return __utils__.getFieldValue(inputName, options);
-    }, inputName, options);
-    return this.assert(utils.equals(actual, expected),  message, {
-        type: 'assertField',
-        standard: f('"%s" input field has the value "%s"', inputName, expected),
-        values: {
-            inputName: inputName,
-            actual: actual,
-            expected: expected
-         }
-    });
+    }, input, options);
+
+    return baseFieldAssert.call(this, input, expected, actual, message);
+};
+
+/**
+ * Asserts that a given input field by CSS selector has the provided value.
+ *
+ * @param  Object   cssSelector The CSS selector to use for the assert field value
+ * @param  String   expected    The expected value of the input element
+ * @param  String   message     Test description
+ * @return Object               An assertion result object
+ */
+Tester.prototype.assertFieldCSS = function assertFieldCSS(cssSelector, expected, message) {
+    "use strict";
+    var actual = this.casper.evaluate(function(inputName, cssSelector) {
+        return __utils__.getFieldValue(inputName, {inputSelector: cssSelector});
+    }, null, cssSelector);
+
+    return baseFieldAssert.call(this, null, expected, actual, message);
+};
+
+/**
+ * Asserts that a given input field by XPath selector has the provided value.
+ *
+ * @param  Object   xPathSelector The XPath selector to use for the assert field value
+ * @param  String   expected      The expected value of the input element
+ * @param  String   message       Test description
+ * @return Object                 An assertion result object
+ */
+Tester.prototype.assertFieldXPath = function assertFieldXPath(xPathSelector, expected, message) {
+    "use strict";
+    var actual = this.casper.evaluate(function(inputName, xPathSelector) {
+        return __utils__.getFieldValue(inputName, {inputXPath: xPathSelector});
+    }, null, xPathSelector);
+
+    return baseFieldAssert.call(this, null, expected, actual, message);
 };
 
 /**
@@ -1426,11 +1482,13 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
 /**
  * Render tests results, an optionally exit phantomjs.
  *
- * @param  Boolean  exit
+ * @param  Boolean  exit    Exit casper after results have been rendered?
+ * @param  Number   status  Exit status code (default: 0)
+ * @param  String   save    Optional path to file where to save the results log
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*jshint maxstatements:25*/
     save = save || this.options.save;
     var exitStatus = 0,
         failed = this.suiteResults.countFailed(),
@@ -1468,6 +1526,7 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
         this.saveResults(save);
     }
     if (exit === true) {
+        this.emit("exit");
         this.casper.exit(status ? ~~status : exitStatus);
     }
 };
