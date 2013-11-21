@@ -925,11 +925,13 @@ Casper.prototype.getPageContent = function getPageContent() {
         if (!head || !body) {
             return null;
         }
+        // for content in Webkit
         if (head.childNodes.length === 0 &&
             body.childNodes.length === 1 &&
             __utils__.findOne('body pre[style]')) {
             return __utils__.findOne('body pre').textContent.trim();
         }
+        // for content in Gecko
         if (head.childNodes.length === 1 &&
             body.childNodes.length === 1 &&
             head.childNodes[0].localName === 'link' &&
