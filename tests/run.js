@@ -13,7 +13,8 @@ var f            = utils.format;
 var loadIncludes = ['includes', 'pre', 'post'];
 var tests        = [];
 var casper       = require('casper').create({
-    exitOnError: false
+    exitOnError: false,
+    silentErrors: true // we subscribe to error events for catching them
 });
 
 // local utils

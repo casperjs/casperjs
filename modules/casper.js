@@ -116,6 +116,7 @@ var Casper = function Casper(options) {
             userAgent:                     defaultUserAgent
         },
         remoteScripts:       [],
+        silentErrors:        false,
         stepTimeout:         null,
         timeout:             null,
         verbose:             false,
@@ -384,6 +385,9 @@ Casper.prototype.checkStep = function checkStep(self, onComplete) {
         }
     } catch (error) {
         self.emit('complete.error', error);
+        if (!self.options.silentErrors) {
+            throw error;
+        }
     }
 };
 
@@ -1528,6 +1532,9 @@ Casper.prototype.runStep = function runStep(step) {
         }
     } catch (err) {
         this.emit('step.error', err);
+        if (!this.options.silentErrors) {
+            throw err;
+        }
     }
     if (!skipLog) {
         this.emit('step.complete', stepResult);
@@ -1981,6 +1988,9 @@ Casper.prototype.wait = function wait(timeout, then) {
                     then.call(self, self);
                 } catch (error) {
                     self.emit('wait.error', error);
+                    if (!self.options.silentErrors) {
+                        throw error;
+                    }
                 }
             }
             self.waitDone();
@@ -2044,6 +2054,9 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
                     return onWaitTimeout.call(self, timeout, details);
                 } catch (error) {
                     self.emit('waitFor.timeout.error', error);
+                    if (!self.options.silentErrors) {
+                        throw error;
+                    }
                 } finally {
                     return;
                 }

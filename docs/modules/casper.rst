@@ -281,6 +281,17 @@ When this option is set to true — which is the default, any password informat
 
 .. index:: Step stack, timeout
 
+``silentErrors``
+-------------------------------------------------------------------------------
+
+**Type:** ``Boolean``
+
+**Default:** ``false``
+
+When this option is enabled, caught step errors are not thrown (though related events are still emitted). Mostly used internally in a testing context.
+
+.. index:: timeout
+
 ``stepTimeout``
 -------------------------------------------------------------------------------
 
