@@ -258,7 +258,7 @@ is just a shortcut for this one:
 
 .. code-block:: text
 
-    $ casper /path/to/casperjs/tests/run.js [path]
+    $ casperjs /path/to/casperjs/tests/run.js [path]
 
 So if you want to extend Casper capabilities for your tests, your best bet is to write your own runner and extend the casper object instance from there.
 
