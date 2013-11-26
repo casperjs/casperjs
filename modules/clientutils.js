@@ -724,6 +724,23 @@
         };
 
         /**
+         * Scrolls current document to x, y coordinates.
+         *
+         * @param  {Number} x X position
+         * @param  {Number} y Y position
+         */
+        this.scrollTo = function scrollTo(x, y) {
+            window.scrollTo(parseInt(x || 0, 10), parseInt(y || 0, 10));
+        };
+
+        /**
+         * Scrolls current document up to its bottom.
+         */
+        this.scrollToBottom = function scrollToBottom() {
+            this.scrollTo(0, this.getDocumentHeight());
+        },
+
+        /**
          * Performs an AJAX request.
          *
          * @param   String   url      Url.
