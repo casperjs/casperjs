@@ -1600,6 +1600,30 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
 };
 
 /**
+ * Scrolls current document to x, y coordinates.
+ *
+ * @param  {Number} x X position
+ * @param  {Number} y Y position
+ * @return {Casper}
+ */
+Casper.prototype.scrollTo = function(x, y) {
+    "use strict";
+    this.callUtils("scrollTo", x, y);
+    return this;
+};
+
+/**
+ * Scrolls current document up to its bottom.
+ *
+ * @return {Casper}
+ */
+Casper.prototype.scrollToBottom = function scrollToBottom() {
+    "use strict";
+    this.callUtils("scrollToBottom");
+    return this;
+};
+
+/**
  * Sets current page content.
  *
  * @param  String  content  Desired page content

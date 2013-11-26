@@ -1453,6 +1453,40 @@ Casper suite **will run**::
 
 Binding a callback to ``complete.error`` will trigger when the ``onComplete`` callback fails.
 
+.. index:: Scroll
+
+``scrollTo()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``scrollTo(Number x, Number y)``
+
+.. versionadded:: 1.1-beta3
+
+Scrolls current document to the coordinates defined by the value of ``x`` and ``y``::
+
+    casper.start('http://foo.bar/home', function() {
+        this.scrollTo(500, 300);
+    });
+
+.. note:: This operation is synchronous.
+
+.. index:: Scroll
+
+``scrollToBottom()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``scrollToBottom()``
+
+.. versionadded:: 1.1-beta3
+
+Scrolls current document to its bottom::
+
+    casper.start('http://foo.bar/home', function() {
+        this.scrollToBottom();
+    });
+
+.. note:: This operation is synchronous.
+
 .. index:: Form
 
 ``sendKeys()``
