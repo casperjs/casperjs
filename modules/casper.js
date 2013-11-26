@@ -2558,6 +2558,9 @@ function createPage(casper) {
             casper.options.onResourceRequested.call(casper, casper, requestData, request);
         }
     };
+    page.onResourceError = function onResourceError(resourceError) {
+        casper.emit('resource.error', resourceError);
+    };
     page.onUrlChanged = function onUrlChanged(url) {
         casper.log(f('url changed to "%s"', url), "debug");
         casper.navigationRequested = false;

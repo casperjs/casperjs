@@ -20,3 +20,16 @@ casper.test.begin("Basic resources tests", 5, function(test) {
     test.done();
   });
 });
+
+casper.test.begin('"resource.error" event', 3, function(test) {
+    casper.on("resource.error", function(error) {
+        test.assertType(error, "object", '"resource.error" triggered error information');
+        test.assert(error.errorCode === 203, '"resource.error" error code is correct');
+        test.assertMatch(error.url, /non-existant\.html$/, '"resource.error" url is correct');
+    });
+
+    casper.start('tests/site/non-existant.html').run(function() {
+        casper.removeAllListeners("resource.error");
+        test.done();
+    });
+});
