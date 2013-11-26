@@ -59,6 +59,26 @@
         // public members
         this.options = options || {};
         this.options.scope = this.options.scope || document;
+
+        /**
+         * Calls a method part of the current prototype, with arguments.
+         *
+         * @param  {String} method Method name
+         * @param  {Array}  args   arguments
+         * @return {Mixed}
+         */
+        this.__call = function __call(method, args) {
+            if (method === "__call") {
+                return;
+            }
+            try {
+                return this[method].apply(this, args);
+            } catch (err) {
+                err.__isCallError = true;
+                return err;
+            }
+        };
+
         /**
          * Clicks on the DOM element behind the provided selector.
          *
