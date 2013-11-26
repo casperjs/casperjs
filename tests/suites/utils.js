@@ -29,7 +29,7 @@ casper.test.begin('utils.betterInstanceOf() tests', 13,  function(test) {
     // need two objects to test inheritance
     function Cow(){} var daisy = new Cow();
     function SuperCow(){} SuperCow.prototype = new Cow(); var superDaisy = new SuperCow();
-    var date = new Date(); var regex = new RegExp(); var xmlDoc = document.implementation.createDocument("<y>", "x");
+    var date = new Date(); var regex = new RegExp(); var xmlDoc = document.implementation.createDocument("<y>", "x", null);
     var testCases = [
         {subject: 1, fn: Number, expected: true},
         {subject: '1', fn: String, expected: true},
