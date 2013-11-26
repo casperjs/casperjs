@@ -247,9 +247,7 @@ Casper.prototype.back = function back() {
  */
 Casper.prototype.base64encode = function base64encode(url, method, data) {
     "use strict";
-    return this.evaluate(function _evaluate(url, method, data) {
-        return __utils__.getBase64(url, method, data);
-    }, url, method, data);
+    return this.callUtils("getBase64", url, method, data);
 };
 
 /**
@@ -265,6 +263,27 @@ Casper.prototype.bypass = function bypass(nb) {
     this.checkStarted();
     this.step = Math.min(step + nb, last);
     return this;
+};
+
+/**
+ * Invokes a client side utils object method within the remote page, with arguments.
+ *
+ * @param  {String}   method  Method name
+ * @return {...args}          Arguments
+ * @return {Mixed}
+ * @throws {CasperError}      If invokation failed.
+ */
+Casper.prototype.callUtils = function callUtils(method) {
+    "use strict";
+    var args = [].slice.call(arguments, 1);
+    var result = this.evaluate(function(method, args) {
+        return __utils__.__call(method, args);
+    }, method, args);
+    if (utils.isObject(result) && result.__isCallError) {
+        throw new CasperError(f("callUtils(%s) with args %s thrown an error: %s",
+                              method, args, result.message));
+    }
+    return result;
 };
 
 /**
@@ -715,9 +734,7 @@ Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message, status) {
 Casper.prototype.exists = function exists(selector) {
     "use strict";
     this.checkStarted();
-    return this.evaluate(function _evaluate(selector) {
-        return __utils__.exists(selector);
-    }, selector);
+    return this.callUtils("exists", selector);
 };
 
 /**
@@ -742,9 +759,7 @@ Casper.prototype.exit = function exit(status) {
 Casper.prototype.fetchText = function fetchText(selector) {
     "use strict";
     this.checkStarted();
-    return this.evaluate(function _evaluate(selector) {
-        return __utils__.fetchText(selector);
-    }, selector);
+    return this.callUtils("fetchText", selector);
 };
 
 /**
@@ -1002,9 +1017,7 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
-    var clipRect = this.evaluate(function _evaluate(selector) {
-        return __utils__.getElementBounds(selector);
-    }, selector);
+    var clipRect = this.callUtils("getElementBounds", selector);
     if (!utils.isClipRect(clipRect)) {
         throw new CasperError('Could not fetch boundaries for element matching selector: ' + selector);
     }
@@ -1023,9 +1036,7 @@ Casper.prototype.getElementInfo = function getElementInfo(selector) {
     if (!this.exists(selector)) {
         throw new CasperError(f("Cannot get informations from %s: element not found.", selector));
     }
-    return this.evaluate(function(selector) {
-        return __utils__.getElementInfo(selector);
-    }, selector);
+    return this.callUtils("getElementInfo", selector);
 };
 
 /**
@@ -1040,9 +1051,7 @@ Casper.prototype.getElementsInfo = function getElementsInfo(selector) {
     if (!this.exists(selector)) {
         throw new CasperError(f("Cannot get information from %s: no elements found.", selector));
     }
-    return this.evaluate(function(selector) {
-        return __utils__.getElementsInfo(selector);
-    }, selector);
+    return this.callUtils("getElementsInfo", selector);
 };
 
 /**
@@ -1057,9 +1066,7 @@ Casper.prototype.getElementsBounds = function getElementBounds(selector) {
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
-    return this.evaluate(function _evaluate(selector) {
-        return __utils__.getElementsBounds(selector);
-    }, selector);
+    return this.callUtils("getElementsBounds", selector);
 };
 
 /**
@@ -1074,9 +1081,7 @@ Casper.prototype.getFormValues = function(selector) {
     if (!this.exists(selector)) {
         throw new CasperError(f('Form matching selector "%s" not found', selector));
     }
-    return this.evaluate(function(selector) {
-        return __utils__.getFormValues(selector);
-    }, selector);
+    return this.callUtils("getFormValues", selector);
 };
 
 /**
@@ -1328,9 +1333,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
     if (!this.exists(selector)) {
         throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
     }
-    if (this.evaluate(function(type, selector) {
-        return window.__utils__.mouseEvent(type, selector);
-    }, type, selector)) {
+    if (this.callUtils("mouseEvent", type, selector)) {
         return true;
     }
     // fallback onto native QtWebKit mouse events
@@ -1941,9 +1944,7 @@ Casper.prototype.viewport = function viewport(width, height, then) {
 Casper.prototype.visible = function visible(selector) {
     "use strict";
     this.checkStarted();
-    return this.evaluate(function _evaluate(selector) {
-        return __utils__.visible(selector);
-    }, selector);
+    return this.callUtils("visible", selector);
 };
 
 /**
