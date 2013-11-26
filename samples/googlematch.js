@@ -42,7 +42,7 @@ casper.start("http://google.fr/");
 casper.each(terms, function(casper, term, i) {
     this.echo('Fetching score for ' + term);
     this.then(function() {
-        this.fill('form[action="/search"]', {q: term}, true);
+        this.fill('form[action="/search"]', {q: '"' + term + '"'}, true);
     });
     this.then(function() {
         var score = this.fetchScore();
