@@ -97,7 +97,6 @@ var Casper = function Casper(options) {
         onPageInitialized:   null,
         onResourceReceived:  null,
         onResourceRequested: null,
-        onResourceError:     null,
         onRunComplete:       function _onRunComplete() {
             this.exit();
         },
@@ -2547,9 +2546,6 @@ function createPage(casper) {
     };
     page.onResourceError = function onResourceError(resourceError) {
         casper.emit('resource.error', resourceError);
-        if (utils.isFunction(casper.options.onResourceError)) {
-            casper.options.onResourceError.call(casper, casper, resourceError);
-        }
     };
     page.onUrlChanged = function onUrlChanged(url) {
         casper.log(f('url changed to "%s"', url), "debug");

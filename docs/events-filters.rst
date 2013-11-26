@@ -349,6 +349,16 @@ Emitted when a remote `window.callPhantom(data) <https://github.com/ariya/phanto
 
 Emitted when any remote console logging call has been performed.
 
+``resource.error``
+~~~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``resourceError``
+
+Emitted when any requested resource fails to load properly. The received ``resourceError`` object has the following properties:
+
+- ``errorCode``: HTTP status code received
+- ``url``: resource url
+
 ``resource.received``
 ~~~~~~~~~~~~~~~~~~~~~
 
