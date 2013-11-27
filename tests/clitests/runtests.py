@@ -304,6 +304,13 @@ class TestCommandOutputTest(CasperExecTestBase):
         ], failing=True)
 
     @timeout(20)
+    def test_casper_test_instance_overriding(self):
+        script_path = os.path.join(TEST_ROOT, 'tester', 'casper-instance-override.js')
+        self.assertCommandOutputContains('test ' + script_path, [
+            "Fatal: you can't override the preconfigured casper instance",
+        ], failing=True)
+
+    @timeout(20)
     def test_dubious_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'dubious.js')
         self.assertCommandOutputContains('test ' + script_path, [

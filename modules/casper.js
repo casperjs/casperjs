@@ -48,6 +48,13 @@ var defaultUserAgent = phantom.defaultPageSettings.userAgent
 
 exports.create = function create(options) {
     "use strict";
+    // This is a bit of a hack to check if one is trying to override the preconfigured
+    // casper instance from within a test environment.
+    if (phantom.casperTest && window.casper) {
+        console.error("Fatal: you can't override the preconfigured casper instance in a test environment.");
+        console.error("Docs: http://docs.casperjs.org/en/latest/testing.html#test-command-args-and-options");
+        phantom.exit(1);
+    }
     return new Casper(options);
 };
 
