@@ -12,9 +12,10 @@ CasperJS ships with its own :doc:`testing framework <modules/tester>`, providing
 
     .. versionchanged:: 1.1
 
-    The testing framework — hence its whole API — can only be used when using the ``casperjs test`` subcommand.
+    The testing framework — hence its whole API — can only be used when using the ``casperjs test`` subcommand:
 
-    If you try to use the ``casper.test`` property out of the testing environment, you'll get an error.
+    - If you try to use the ``casper.test`` property out of the testing environment, you'll get an error;
+    - As of 1.1-beta3, you can't override the preconfigured ``casper`` instance in this test environment. You can read more about the whys in the :ref:`dedicated FAQ entry <faq_test_casper_instance>`.
 
 .. index:: Unit testing
 
@@ -135,6 +136,7 @@ The :ref:`Tester#begin() <tester_begin>` accepts either a function or an object 
         }
     });
 
+.. _test_subcomand:
 
 Test command args and options
 -----------------------------
