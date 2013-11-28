@@ -2239,10 +2239,6 @@ Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
         tag = "*";
     }
 
-    // Examples of different XPath queries for text:
-    //var selectorString = "//*[contains(text(), 'Yahoo')]";
-    //var selector = selectXPath(f('//%s[contains(text(), %s)]', tag, label));
-    //var selector = selectXPath(f('//text()[.="%s"]', label));
     var selector = selectXPath(f('//%s[text()="%s"]', tag, label));
     return this.waitUntilVisible(selector, then, onTimeout, timeout);
 };
