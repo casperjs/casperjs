@@ -2174,6 +2174,35 @@ Waits until the passed text is present in the page contents before processing th
 
     casper.run();
 
+``waitForLabel()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForLabel(String label[, String tag, Function then, Function onTimeout, Number timeout])``
+
+.. versionadded:: 1.0
+
+Waits until an element with text equal to the given label is visible on the page.
+Uses waitUntilVisible.
+
+``waitForLabelContains()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForLabelContains(String text[, Function then, Function onTimeout, Number timeout])``
+
+.. versionadded:: 1.0
+
+Waits until an element that contains given label is visible.
+Uses waitUntilVisible.
+
+``waitForTitle()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForTitle(String title[, Function then, Function onTimeout, Number timeout])``
+
+.. versionadded:: 1.0
+
+Waits until the page title equals given value.
+
 ``waitUntilVisible()``
 -------------------------------------------------------------------------------
 
