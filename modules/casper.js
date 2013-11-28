@@ -2255,7 +2255,7 @@ Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
  * @param Function  then        The next step to perform (optional)
  * @param Function  onTimeout   A callback function to call on timeout (optional)
  * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
- * @return {*}
+ * @return Casper
  */
 Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout){
     "use strict";
