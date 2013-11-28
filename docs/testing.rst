@@ -159,7 +159,7 @@ Options
 Options are prefixed with a double-dash (``--``):
 
 - ``--xunit=<filename>`` will export test suite results in a :ref:`XUnit XML file <xunit_report>`
-- ``--direct`` will print :doc:`log messages <logging>` directly to the console
+- ``--direct`` or ``--verbose``  will print :doc:`log messages <logging>` directly to the console
 - ``--log-level=<logLevel>`` sets the logging level (see the :doc:`related section <logging>`)
 - ``--auto-exit=no`` prevents the test runner to exit when all the tests have been executed; this usually allows performing supplementary operations, though implies to exit casper manually listening to the ``exit`` tester event::
 
