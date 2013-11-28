@@ -81,19 +81,23 @@ exports.betterTypeOf = betterTypeOf;
 function betterInstanceOf(input, constructor) {
     "use strict";
     /*jshint eqnull:true, eqeqeq:false */
-    while (input != null) {
-      if (input == constructor.prototype) {
+    if (typeof input == 'undefined' || input == null) {
+      return false;
+    }
+    var inputToTest = input;
+    while (inputToTest != null) {
+      if (inputToTest == constructor.prototype) {
         return true;
       }
-      if (typeof input == 'xml') {
+      if (typeof inputToTest == 'xml') {
         return constructor.prototype == document.prototype;
       }
-      if (typeof input == 'undefined') {
+      if (typeof inputToTest == 'undefined') {
         return false;
       }
-      input = input.__proto__;
-   }
-   return false;
+      inputToTest = inputToTest.__proto__;
+    }
+    return equals(input.constructor.name, constructor.name);
 }
 exports.betterInstanceOf = betterInstanceOf;
 
