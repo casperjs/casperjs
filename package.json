@@ -1,34 +1,33 @@
 {
   "name": "casperjs",
-  "description": "Navigation scripting & testing utility for PhantomJS",
+  "description": "A navigation scripting & testing utility for PhantomJS and SlimerJS",
   "version": "1.1.0-DEV",
   "keywords": [
     "phantomjs",
-    "javascript"
+    "slimerjs",
+    "test",
+    "testing",
+    "scraping"
   ],
   "bin": "./bin/casperjs",
-  "maintainers": [
-    {
-      "name": "Nicolas Perriault",
-      "email": "nperriault@gmail.com",
-      "web": "https://nicolas.perriault.net/"
-    }
-  ],
+  "author": {
+    "name": "Nicolas Perriault",
+    "email": "nicolas@perriault.net",
+    "web": "https://nicolas.perriault.net/"
+  },
   "dependencies": {
-    "phantomjs": "~1.9.1"
+    "phantomjs": ">=1.8.2"
   },
   "bugs": {
     "url": "https://github.com/n1k0/casperjs/issues"
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "git://github.com/n1k0/casperjs.git"
-    }
-  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/n1k0/casperjs.git"
+  },
   "licenses": [
     {
-      "name": "MIT",
+      "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
   ],
