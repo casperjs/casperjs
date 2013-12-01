@@ -38,7 +38,7 @@ Installation of both PhantomJS and CasperJS can be achieved using Homebrew_, a p
 Above all, don't forget to update Formulaes::
 
     $ brew update
-   
+
 For the 1.1 development version (recommended)::
 
     $ brew install casperjs --devel
@@ -46,12 +46,29 @@ For the 1.1 development version (recommended)::
 For the 1.0.x stable version::
 
     $ brew install casperjs
-    
+
 If you have already installed casperjs and want to have the last release (stable|devel), use ``upgrade``::
 
     $ brew upgrade casperjs
-   
+
 Upgrade only update to the latest release branch (1.0.x|1.1-dev).
+
+Installing from npm
+-------------------
+
+.. versionadded:: 1.1-beta3
+
+You can install CasperJS using `npm <http://npmjs.org/>`_::
+
+    $ npm install -g casperjs
+
+.. note::
+
+   The `-g` flag makes the `casperjs` executable available system-wide.
+
+.. warning::
+
+   While CasperJS is installable via npm, :ref:`it's not a NodeJS package <faq_node>`.
 
 .. index:: git
 

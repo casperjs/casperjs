@@ -10,6 +10,8 @@ FAQ
    :local:
    :backlinks: top
 
+.. _faq_node:
+
 .. index:: Node.js
 
 Is CasperJS a `node.js <http://nodejs.org/>`_ library?
