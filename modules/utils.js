@@ -634,7 +634,7 @@ function isPlainObject(obj) {
  * @param  Object  opts    optional options to be passed in
  * @return Object
  */
-function mergeObjectsInSlimerjs(origin, add, opts) {
+function mergeObjectsInGecko(origin, add, opts) {
     "use strict";
 
     var options = opts || {},
@@ -648,7 +648,18 @@ function mergeObjectsInSlimerjs(origin, add, opts) {
                 origin[p] = keepReferences ? add[p] : clone(add[p]);
             }
         } else {
-            origin[p] = add[p];
+            // if a property is only a getter, we could have a Javascript error
+            // in strict mode "TypeError: setting a property that has only a getter"
+            // when setting the value to the new object (gecko 25+).
+            // To avoid it, let's define the property on the new object, do not set
+            // directly the value
+            var prop = Object.getOwnPropertyDescriptor(add, p);
+            if (prop.get && !prop.set) {
+                Object.defineProperty(origin, p, prop)
+            }
+            else {
+                origin[p] = add[p];
+            }
         }
     }
     return origin;
@@ -672,7 +683,7 @@ function mergeObjects(origin, add, opts) {
         // Because of an issue in the module system of slimerjs (security membranes?)
         // constructor is undefined.
         // let's use an other algorithm
-        return mergeObjectsInSlimerjs(origin, add, options);
+        return mergeObjectsInGecko(origin, add, options);
     }
 
     for (var p in add) {
