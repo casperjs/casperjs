@@ -672,7 +672,7 @@ function mergeObjects(origin, add, opts) {
         // Because of an issue in the module system of slimerjs (security membranes?)
         // constructor is undefined.
         // let's use an other algorithm
-        return mergeObjectsInSlimerjs(origin, add);
+        return mergeObjectsInSlimerjs(origin, add, options);
     }
 
     for (var p in add) {
