@@ -2118,6 +2118,31 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
 };
 
 /**
+ * Waits until any alert is triggered.
+ *
+ * @param  Function  then       The next step to perform (required)
+ * @param  Function  onTimeout  A callback function to call on timeout (optional)
+ * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForAlert = function(then, onTimeout, timeout) {
+    "use strict";
+    if (!utils.isFunction(then)) {
+        throw new CasperError("waitForAlert() needs a step function");
+    }
+    var message;
+    function alertCallback(msg) {
+        message = msg;
+    }
+    this.once("remote.alert", alertCallback);
+    return this.waitFor(function isAlertReceived() {
+        return message !== undefined;
+    }, function onAlertReceived() {
+        this.then(this.createStep(then, {data: message}));
+    }, onTimeout, timeout);
+};
+
+/**
  * Waits for a popup page having its url matching the provided pattern to be opened
  * and loaded.
  *
