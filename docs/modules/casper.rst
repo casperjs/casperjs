@@ -2025,6 +2025,19 @@ Example using the ``onTimeout`` callback::
 ``details`` is a property bag of various information that will be passed to the ``waitFor.timeout`` event, if it is emitted.
 This can be used for better error messages or to conditionally ignore some timeout events.
 
+.. index:: alert
+
+``waitForAlert()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForAlert(Function then[, Function onTimeout, Number timeout])``
+
+Waits until a `JavaScript alert <https://developer.mozilla.org/en-US/docs/Web/API/Window.alert>`_ is triggered. The step function will be passed the alert message in the ``response.data`` property::
+
+    casper.waitForAlert(function(response) {
+        this.echo("Alert received: " + response.data);
+    });
+
 .. _casper_waitforpopup:
 
 .. index:: Popups, New window, window.open, Tabs
