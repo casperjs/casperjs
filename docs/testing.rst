@@ -144,7 +144,7 @@ Test command args and options
 Arguments
 ~~~~~~~~~
 
-The ``capserjs test`` command will treat every passed argument as file or directory paths containing tests. It will recursively scan any passed directory to search for ``*.js`` or ``*.coffee`` files and add them to the stack.
+The ``casperjs test`` command will treat every passed argument as file or directory paths containing tests. It will recursively scan any passed directory to search for ``*.js`` or ``*.coffee`` files and add them to the stack.
 
 .. warning ::
 
