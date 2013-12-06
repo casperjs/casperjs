@@ -2032,6 +2032,8 @@ This can be used for better error messages or to conditionally ignore some timeo
 
 **Signature:** ``waitForAlert(Function then[, Function onTimeout, Number timeout])``
 
+.. versionadded:: 1.1-beta4
+
 Waits until a `JavaScript alert <https://developer.mozilla.org/en-US/docs/Web/API/Window.alert>`_ is triggered. The step function will be passed the alert message in the ``response.data`` property::
 
     casper.waitForAlert(function(response) {
