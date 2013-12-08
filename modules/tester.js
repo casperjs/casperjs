@@ -1619,7 +1619,7 @@ Tester.prototype.saveResults = function saveResults(filepath) {
     var exporter = require('xunit').create();
     exporter.setResults(this.suiteResults);
     try {
-        fs.write(filepath, exporter.getXML(), 'w');
+        fs.write(filepath, exporter.getSerializedXML(), 'w');
         this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
     } catch (e) {
         this.casper.echo(f('Unable to write results to %s: %s', filepath, e), 'ERROR', 80);
