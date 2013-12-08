@@ -82,10 +82,11 @@ function XUnitExporter() {
     "use strict";
     this.results = undefined;
     this._xml = utils.node('testsuites');
-    this._xml.toString = function toString() {
+    /*this._xml.serializeToString = function toString() {
+console.log("----> _xml.toString")
         var serializer = new XMLSerializer();
         return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this);
-    };
+    };*/
 }
 exports.XUnitExporter = XUnitExporter;
 
@@ -156,6 +157,16 @@ XUnitExporter.prototype.getXML = function getXML() {
     this._xml.setAttribute('time', utils.ms2seconds(this.results.calculateDuration()));
     return this._xml;
 };
+
+/**
+ * Retrieves generated Xunit XML
+ *
+ * @return string
+ */
+XUnitExporter.prototype.getSerializedXML = function getSerializedXML(xml) {
+    var serializer = new XMLSerializer();
+    return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this.getXML());
+}
 
 /**
  * Sets test results.
