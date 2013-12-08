@@ -82,11 +82,6 @@ function XUnitExporter() {
     "use strict";
     this.results = undefined;
     this._xml = utils.node('testsuites');
-    /*this._xml.serializeToString = function toString() {
-console.log("----> _xml.toString")
-        var serializer = new XMLSerializer();
-        return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this);
-    };*/
 }
 exports.XUnitExporter = XUnitExporter;
 
