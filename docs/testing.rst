@@ -114,6 +114,20 @@ You'll probably get something like this:
    :align: center
 
 
+.. index:: options
+
+Setting Casper options in the test environment
+----------------------------------------------
+
+As you must use a preconfigured ``casper`` instance within the test environment, updating its :ref:`options <casper_options>` can be achieved this way::
+
+    casper.options.optionName = optionValue; // where optionName is obviously the desired option name
+
+    casper.options.clientScripts.push("new-script.js");
+
+
+.. index:: setUp, tearDown
+
 Advanced techniques
 -------------------
 
@@ -195,6 +209,7 @@ Sample custom command:
 .. warning::
 
    .. deprecated:: 1.1
+
    ``--direct`` option has been renamed to ``--verbose``, though ``--direct`` will still works, while is to be considered deprecated.
 
 .. hint::
