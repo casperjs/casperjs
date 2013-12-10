@@ -408,5 +408,30 @@ class TestCommandOutputTest(CasperExecTestBase):
         ], failing=True)
 
 
+class XUnitReportTest(CasperExecTestBase):
+    XUNIT_LOG = os.path.join(TEST_ROOT, '__log.xml')
+
+    def setUp(self):
+        self.clean()
+
+    def tearDown(self):
+        self.clean()
+
+    def clean(self):
+        if os.path.exists(self.XUNIT_LOG):
+            os.remove(self.XUNIT_LOG)
+
+    def test_xunit_report_passing(self):
+        script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
+        command = 'test %s --xunit=%s' % (script_path, self.XUNIT_LOG)
+        self.runCommand(command, failing=False)
+        self.assertTrue(os.path.exists(self.XUNIT_LOG))
+
+    def test_xunit_report_failing(self):
+        script_path = os.path.join(TEST_ROOT, 'tester', 'failing.js')
+        command = 'test %s --xunit=%s' % (script_path, self.XUNIT_LOG)
+        self.runCommand(command, failing=True)
+        self.assertTrue(os.path.exists(self.XUNIT_LOG))
+
 if __name__ == '__main__':
     unittest.main()
