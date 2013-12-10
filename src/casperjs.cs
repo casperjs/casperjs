@@ -97,7 +97,7 @@ class slimerjs : engine {
 }
 
 class casperjs {
-    static void Main(string[] args) {
+    static int Main(string[] args) {
         var SUPPORTED_ENGINES = new Dictionary<string, engine> {
             {"phantomjs", new phantomjs()},
             {"slimerjs", new slimerjs()}
@@ -167,9 +167,10 @@ class casperjs {
                 string line = p.StandardOutput.ReadLine();
                 Console.WriteLine(line);
             }
+            return p.ExitCode;
         } catch(Win32Exception e) {
             Console.WriteLine("Fatal: " + e.Message + "; did you install " + ENGINE + "?");
-            Environment.Exit(1);
+            return -1;
         }
     }
 }
