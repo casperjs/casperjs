@@ -61,4 +61,4 @@ These people have contributed to CasperJS:
 Logo
 ----
 
-CasperJS logo designed by `Jeremy Forveille <http://www.forveillejeremy.com/>`_
+CasperJS logo designed by `Jeremy Forveille <http://www.linkedin.com/pub/j%C3%A9r%C3%A9my-forveille/15/315/691>`_
