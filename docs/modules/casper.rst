@@ -2083,7 +2083,7 @@ The currently loaded popups are available in the ``Casper.popups`` array-like pr
 
 **Signature:** ``waitForResource(String|Function|RegExp testFx[, Function then, Function onTimeout, Number timeout])``
 
-Wait until a resource that matches a resource matching constraints defined by ``testFx`` are satisfief to process a next step.
+Wait until a resource that matches a resource matching constraints defined by ``testFx`` are satisfied to process a next step.
 
 The ``testFx`` argument can be either a string, a function or a ``RegExp`` instance::
 
