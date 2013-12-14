@@ -167,6 +167,7 @@ class casperjs {
                 string line = p.StandardOutput.ReadLine();
                 Console.WriteLine(line);
             }
+            p.WaitForExit();
             return p.ExitCode;
         } catch(Win32Exception e) {
             Console.WriteLine("Fatal: " + e.Message + "; did you install " + ENGINE + "?");
