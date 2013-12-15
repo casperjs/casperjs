@@ -1485,12 +1485,14 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  *
  * @param  Boolean  exit    Exit casper after results have been rendered?
  * @param  Number   status  Exit status code (default: 0)
- * @param  String   save    Optional path to file where to save the results log
+ * @param  String   format  Format type [xunit|html]
+ * @param  String   file    Optional path to file where to save the results log
  */
-Tester.prototype.renderResults = function renderResults(exit, status, save) {
+Tester.prototype.renderResults = function renderResults(exit, status, format, file) {
     "use strict";
     /*jshint maxstatements:25*/
-    save = save || this.options.save;
+    format = format || this.options.format;
+    file = file || this.options.file;
     var exitStatus = 0,
         failed = this.suiteResults.countFailed(),
         total = this.suiteResults.countExecuted(),
@@ -1523,8 +1525,8 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
     }
     this.casper.echo(result, style, this.options.pad);
     this.renderFailureDetails();
-    if (save) {
-        this.saveResults(save);
+    if (format && file) {
+        this.saveResults(format, file);
     }
     if (exit === true) {
         this.emit("exit");
@@ -1613,14 +1615,15 @@ Tester.prototype.terminate = function(message) {
 /**
  * Saves results to file.
  *
- * @param  String  filename  Target file path.
+ * @param  String  format    [xunit|html]
+ * @param  String  filepath      Target file path
  */
-Tester.prototype.saveResults = function saveResults(filepath) {
+Tester.prototype.saveResults = function saveResults(format, filepath) {
     "use strict";
-    var exporter = require('xunit').create();
+    var exporter = require(format).create();
     exporter.setResults(this.suiteResults);
     try {
-        fs.write(filepath, exporter.getSerializedXML(), 'w');
+        fs.write(filepath, exporter.render(), 'w');
         this.casper.echo(f('Result log stored in %s', filepath), 'INFO', 80);
     } catch (e) {
         this.casper.echo(f('Unable to write results to %s: %s', filepath, e), 'ERROR', 80);

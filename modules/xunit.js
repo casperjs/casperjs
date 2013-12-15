@@ -90,7 +90,7 @@ exports.XUnitExporter = XUnitExporter;
  *
  * @return HTMLElement
  */
-XUnitExporter.prototype.getXML = function getXML() {
+XUnitExporter.prototype.render = function render() {
     "use strict";
     if (!(this.results instanceof TestSuiteResult)) {
         throw new CasperError('Results not set, cannot get XML.');
@@ -150,7 +150,7 @@ XUnitExporter.prototype.getXML = function getXML() {
         this._xml.appendChild(suiteNode);
     }.bind(this));
     this._xml.setAttribute('time', utils.ms2seconds(this.results.calculateDuration()));
-    return this._xml;
+    return this.getSerializedXML(this._xml);
 };
 
 /**
@@ -161,7 +161,7 @@ XUnitExporter.prototype.getXML = function getXML() {
 XUnitExporter.prototype.getSerializedXML = function getSerializedXML(xml) {
     "use strict";
     var serializer = new XMLSerializer();
-    return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this.getXML());
+    return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(xml);
 }
 
 /**
