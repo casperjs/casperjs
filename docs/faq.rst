@@ -339,9 +339,9 @@ Why can't I create a new `casper` instance in a test environment?
 
 The `casperjs test` :ref:`subcommand <test_subcomand>` is a convenient utility which bootstraps and configures a :ref:`test environment <testing>` for you, so a preconfigured `casper` object is already available in your test script when using this command.
 
-As of 1.1-beta3, you're prevented to override this preconfigured instance at this practice prevents the test runner to work properly. If you try to create a new casper instance in a test script, you'll get an error and CasperJS will exit with an error message with a link pointing to the documentation.
+As of 1.1-beta3, you're prevented from overriding this preconfigured instance as this practice prevents the test runner from working properly. If you try to create a new casper instance in a test script, you'll get an error and CasperJS will exit with an error message with a link pointing to the documentation.
 
-One may argue this is mostly related to some hostorical bad design decision, and she might be true. This behavior is not likely exist anymore in a future 2.0.
+One may argue this is mostly related to some historical bad design decisions, and this might be true. This behavior is not likely to exist anymore in a future 2.0.
 
 .. _faq_javascript:
 
