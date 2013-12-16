@@ -202,20 +202,7 @@ EventEmitter.prototype.prependListener = function prependListener(type, listener
   return this;
 };
 
-EventEmitter.prototype.on = function on(type, listener, tag) {
-    switch(tag) {
-        case "ADD":
-        return this.addListener(type, listener);
-        break;
-
-        case "PREPEND":
-        return this.prependListener;
-        break;
-
-        default:
-        return this.addListener(type, listener);
-    }
-};
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
 
 EventEmitter.prototype.once = function once(type, listener) {
   if ('function' !== typeof listener) {
