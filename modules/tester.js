@@ -1532,7 +1532,7 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
 };
 
 /**
- * Runs al suites contained in the paths passed as arguments.
+ * Runs all suites contained in the paths passed as arguments.
  *
  */
 Tester.prototype.runSuites = function runSuites() {
