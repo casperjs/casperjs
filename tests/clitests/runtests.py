@@ -5,10 +5,12 @@ import os
 import signal
 import subprocess
 import unittest
+import sys
 
 TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
-CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', 'casperjs')
+CASPER_EXEC_FILE = sys.argv[1] if (len(sys.argv) == 2) else 'casperjs'
+CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', CASPER_EXEC_FILE)
 ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
                              os.environ.get('PHANTOMJS_EXECUTABLE',
                                             "phantomjs"))
@@ -434,4 +436,5 @@ class XUnitReportTest(CasperExecTestBase):
         self.assertTrue(os.path.exists(self.XUNIT_LOG))
 
 if __name__ == '__main__':
+    del sys.argv[1:]
     unittest.main()
