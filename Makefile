@@ -4,7 +4,7 @@ default: test
 
 test: selftest clitest jshint
 
-test-dotNET: compile-dotNET selftest-dotNET jshint clitest-dotNET
+test-dotNET: compile-dotNET selftest-dotNET clitest-dotNET jshint
 
 docs:
 	sphinx-build -b html ./docs docs/_build
