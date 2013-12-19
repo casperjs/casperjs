@@ -122,6 +122,7 @@ class casperjs {
         if(SUPPORTED_ENGINES.ContainsKey(ENGINE)) {
             ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE].native_args();
             ENGINE_EXECUTABLE = Environment.GetEnvironmentVariable(SUPPORTED_ENGINES[ENGINE].env_varname())
+                    ?? Environment.GetEnvironmentVariable("ENGINE_EXECUTABLE")
                     ?? SUPPORTED_ENGINES[ENGINE].default_exec();
         } else {
             Console.WriteLine("Bad engine name. Only phantomjs and slimerjs are supported");
