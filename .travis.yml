@@ -15,6 +15,7 @@ before_install:
     fi
   - ls -la $ENGINE_EXECUTABLE && $ENGINE_EXECUTABLE --version;
   - export ENGINE_EXECUTABLE="$ENGINE_EXECUTABLE $ENGINE_FLAGS"
+  - make $(echo $MAKE_TEST_COMMAND)-engine
 
 install:
   - sudo apt-get install -qq mono-devel mono-mcs

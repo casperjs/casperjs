@@ -1,4 +1,4 @@
-.PHONY: default test test-dotNET docs selftest compile-dotNET selftest-dotNET clitest clitest-dotNET jshint
+.PHONY: default test test-dotNET docs selftest compile-dotNET selftest-dotNET clitest clitest-dotNET jshint print-help print-help-dotNET
 
 default: test
 
@@ -26,3 +26,9 @@ clitest-dotNET:
 
 jshint:
 	jshint .
+
+test-engine:
+	bin/casperjs --help
+
+test-dotNET-engine:
+	bin/casperjs.exe --help
