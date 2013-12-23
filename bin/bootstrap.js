@@ -76,6 +76,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
 // casperjs env initialization
 (function(global, phantom){
+    /*jshint maxstatements:99*/
     "use strict";
     // phantom args
     // NOTE: we can't use require('system').args here for some very obscure reason
