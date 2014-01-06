@@ -2169,7 +2169,7 @@ is changed to a different value before processing the next step. Uses `waitFor()
     casper.start('http://foo.bar/');
 
     casper.waitForSelectorTextChange('.selector', function() {
-        this.echo('The text on .selector has been changed.);
+        this.echo('The text on .selector has been changed.');
     });
 
     casper.run();
