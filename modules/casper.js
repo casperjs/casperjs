@@ -2083,10 +2083,10 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         // Check immediately so we don't have to wait for setInterval to expire
         // If the testFx returns false, then go ahead and do setInterval
         var condition = testFx.call(this, this);
-        if(condition) {
+        if (condition) {
             this.waitDone();
             this.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
-            if(then){
+            if (then) {
                 this.then(then);
             }
             return;
@@ -2096,7 +2096,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
             /*jshint maxstatements:20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
-                if(condition){
+                if (condition) {
                     self.waitDone();
                     self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
                     clearInterval(interval);
