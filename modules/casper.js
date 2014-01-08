@@ -2096,32 +2096,33 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
             /*jshint maxstatements:20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
+                if(condition){
+                    self.waitDone();
+                    self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
+                    clearInterval(interval);
+                    if (then) {
+                        self.then(then);
+                    }
+                }
                 return;
             }
             self.waitDone();
-            if (!condition) {
-                self.log("Casper.waitFor() timeout", "warning");
-                var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
-                self.emit('waitFor.timeout', timeout, details);
-                clearInterval(interval); // refs #383
-                if (!utils.isFunction(onWaitTimeout)) {
-                    throw new CasperError('Invalid timeout function');
-                }
-                try {
-                    return onWaitTimeout.call(self, timeout, details);
-                } catch (error) {
-                    self.emit('waitFor.timeout.error', error);
-                    if (!self.options.silentErrors) {
-                        throw error;
-                    }
-                } finally {
-                    return;
-                }
+            self.log("Casper.waitFor() timeout", "warning");
+            var onWaitTimeout = onTimeout ? onTimeout : self.options.onWaitTimeout;
+            self.emit('waitFor.timeout', timeout, details);
+            clearInterval(interval); // refs #383
+            if (!utils.isFunction(onWaitTimeout)) {
+                throw new CasperError('Invalid timeout function');
             }
-            self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
-            clearInterval(interval);
-            if (then) {
-                self.then(then);
+            try {
+                return onWaitTimeout.call(self, timeout, details);
+            } catch (error) {
+                self.emit('waitFor.timeout.error', error);
+                if (!self.options.silentErrors) {
+                    throw error;
+                }
+            } finally {
+                return;
             }
         }, this.options.retryTimeout, this);
         this.waiters.push(interval);
