@@ -2085,7 +2085,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         var condition = testFx.call(this, this);
         if(condition) {
             this.waitDone();
-            self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
+            this.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
             if(then){
                 this.then(then);
             }
