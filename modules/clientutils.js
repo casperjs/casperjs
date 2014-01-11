@@ -885,4 +885,4 @@
             return [].some.call(this.findAll(selector), this.elementVisible);
         };
     };
-})(typeof exports === "object" ? exports : window);
+})(typeof exports ===  "object" && !(exports instanceof Element) ? exports : window);
