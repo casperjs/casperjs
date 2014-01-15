@@ -138,7 +138,7 @@ You can also write Casper scripts using the `CoffeeScript syntax <http://jashken
       Array::map.call links, (e) -> e.getAttribute "href"
 
     links = []
-    casper = new require("casper").Casper
+    casper = require('casper').create()
 
     casper.start "http://google.fr/", ->
       # search for 'casperjs' from google form
