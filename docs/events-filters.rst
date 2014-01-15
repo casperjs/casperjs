@@ -356,8 +356,10 @@ Emitted when any remote console logging call has been performed.
 
 Emitted when any requested resource fails to load properly. The received ``resourceError`` object has the following properties:
 
-- ``errorCode``: HTTP status code received
+- ``errorCode``: error code
+- ``errorString``: error description
 - ``url``: resource url
+- ``id``: resource id
 
 ``resource.received``
 ~~~~~~~~~~~~~~~~~~~~~

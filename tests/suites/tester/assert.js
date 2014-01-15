@@ -2,7 +2,7 @@
 /*jshint strict:false, maxstatements:99*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 46, function(test) {
+casper.test.begin('Common assertions tests', 47, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
@@ -66,6 +66,7 @@ casper.test.begin('Common assertions tests', 46, function(test) {
         test.assertVisible('img', 'Tester.assertVisible() works as expected');
         test.assertNotVisible('p#hidden', 'Tester.assertNotVisible() works as expected');
         test.assertInvisible('p#hidden', 'Tester.assertInvisible() works as expected [alias]');
+        test.assertExists('div#exports', 'Tester.assertExists() works as expected with reserved word id');
     }).run(function() {
         test.done();
     });
