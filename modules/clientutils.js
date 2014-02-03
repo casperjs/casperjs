@@ -376,7 +376,9 @@
          */
         this.getBinary = function getBinary(url, method, data) {
             try {
-                return this.sendAJAX(url, method, data, false);
+                return this.sendAJAX(url, method, data, false, {
+                    overrideMimeType: "text/plain; charset=x-user-defined"
+                });
             } catch (e) {
                 if (e.name === "NETWORK_ERR" && e.code === 101) {
                     this.log("getBinary(): Unfortunately, casperjs cannot make cross domain ajax requests", "warning");
@@ -758,7 +760,9 @@
             var contentType = settings && settings.contentType || "application/x-www-form-urlencoded";
             xhr.open(method, url, !!async);
             this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
-            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+            if (settings && settings.overrideMimeType) {
+                xhr.overrideMimeType(settings.overrideMimeType);
+            }
             if (method === "POST") {
                 if (typeof data === "object") {
                     for (var k in data) {
