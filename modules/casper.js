@@ -2413,6 +2413,16 @@ Casper.prototype.withPopup = function withPopup(popupInfo, then) {
 };
 
 /**
+* Allow user to create a new page object after calling a casper.page.close()
+* @return WebPage
+*/
+
+Casper.prototype.newPage = function newPage() {
+    "use strict";
+    return createPage(this);
+};
+
+/**
  * Changes the current page zoom factor.
  *
  * @param  Number  factor  The zoom factor
