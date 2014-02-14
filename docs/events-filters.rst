@@ -451,7 +451,7 @@ Emitted when a navigation step has been started.
 
 **Arguments:** ``[step, timeout]``
 
-Emitted when a navigation step has been executed.
+Emitted when a navigation step has timed out.
 
 ``timeout``
 ~~~~~~~~~~~
