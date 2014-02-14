@@ -1347,6 +1347,28 @@ Supported events are ``mouseup``, ``mousedown``, ``click``, ``mousemove``, ``mou
 
     casper.run();
 
+``newPage()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``newPage()``
+
+.. versionadded:: 1.1
+
+Creates a new WebPage instance::
+
+    casper.start('http://google.com', function() {
+        // ...
+    });
+
+    casper.then(function() {
+        casper.page = casper.newPage();
+        casper.open('http://yahoo.com').then( function() {
+            // ....
+        });
+    });
+
+    casper.run();
+
 .. index:: HTTP, HTTP Request, HTTP Method, HTTP Headers
 
 ``open()``
