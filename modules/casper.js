@@ -2403,7 +2403,17 @@ Casper.prototype.withPopup = function withPopup(popupInfo, then) {
 
 Casper.prototype.newPage = function newPage() {
     "use strict";
-    return createPage(this);
+    this.checkStarted();
+    this.page.close();        
+    this.page = this.mainPage = createPage(this);
+    this.page.settings = utils.mergeObjects(this.page.settings, this.options.pageSettings);
+    if (utils.isClipRect(this.options.clipRect)) {
+        this.page.clipRect = this.options.clipRect;
+    }
+    if (utils.isObject(this.options.viewportSize)) {
+        this.page.viewportSize = this.options.viewportSize;
+    }
+    return this.page;
 };
 
 /**
