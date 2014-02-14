@@ -2404,7 +2404,7 @@ Casper.prototype.withPopup = function withPopup(popupInfo, then) {
 Casper.prototype.newPage = function newPage() {
     "use strict";
     this.checkStarted();
-    this.page.close();        
+    this.page.close();
     this.page = this.mainPage = createPage(this);
     this.page.settings = utils.mergeObjects(this.page.settings, this.options.pageSettings);
     if (utils.isClipRect(this.options.clipRect)) {
