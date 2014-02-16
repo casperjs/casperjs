@@ -13,8 +13,11 @@ Prerequisites
 .. index:: PhantomJS, Python, SlimerJS
 
 - PhantomJS_ 1.8.2 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
+  (Beware: CasperJS 1.0.4 needs a PhantomJS older than 1.9, `available here <code.google.com/p/phantomjs/downloads/list?can=4&q=1.8>`_ ) 
 - Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
+  (except if you download Windows binaries)
 - .NET Framework 3.5 or greater (or Mono_ 2.10.8 or greater) for ``casperjs.exe`` in the ``bin/`` directory
+  (except if you download Windows binaries)
 
 .. versionadded:: 1.1
 
@@ -131,6 +134,8 @@ Phantomjs installation additions
 
 Casperjs installation additions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Append ``";C:\casperjs\batchbin"`` to your ``PATH`` environment variable.
 
 .. versionadded:: 1.1-beta3
 
