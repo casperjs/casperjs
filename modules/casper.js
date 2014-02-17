@@ -1396,7 +1396,11 @@ Casper.prototype.open = function open(location, settings) {
     // http data
     if (settings.data) {
         if (utils.isObject(settings.data)) { // query object
-            settings.data = qs.encode(settings.data);
+            if (settings.headers && settings.headers["Content-Type"] === "application/json") {
+                settings.data = JSON.stringify(settings.data); // convert object to JSON notation
+            } else {
+                settings.data = qs.encode(settings.data); // escapes all characters except alphabetic, decimal digits and ,-_.!~*'()
+            }
         } else if (!utils.isString(settings.data)) {
             throw new CasperError("open(): invalid request settings data value: " + settings.data);
         }
