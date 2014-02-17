@@ -1118,6 +1118,10 @@ Gives something like::
         "y": 76
     }
 
+.. note::
+
+   This method **does not** return a DOM element, only a simple object representation of it; this is because the casper environment has no direct access to the scraped page one.
+
 .. index:: DOM
 
 ``getElementsInfo()``
@@ -1156,6 +1160,10 @@ Gives something like::
             "y": 76
         }
     ]
+
+.. note::
+
+   This method **does not** return a ``NodeList``, only a simple array of object representations of matching elements; this is because the casper environment has no direct access to the scraped page one.
 
 .. index:: Form
 
