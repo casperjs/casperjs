@@ -48,12 +48,12 @@ casper.test.begin('Common assertions tests', 47, function(test) {
         test.assertRaises(function() {
             throw new Error('plop');
         }, [], 'Tester.assertRaises() works as expected');
-        test.assertRaise(function() {
-            throw new Error('plop');
-        }, [], 'Tester.assertRaise() works as expected [alias]');
-        test.assertThrows(function() {
-            throw new Error('plop');
-        }, [], 'Tester.assertThrows() works as expected [alias]');
+        try {
+            test.assertRaises(function() {}, []);
+            test.fail("Tester.assertRaises() doesn't pass when no error is thrown");
+        } catch (err) {
+            test.pass("Tester.assertRaises() doesn't pass when no error is thrown");
+        }
         test.assertResourceExists(/index\.html/, 'Tester.assertResourceExists() works as expected');
         test.assertResourceExist(/index\.html/, 'Tester.assertResourceExist() works as expected [alias]');
         test.assertTitle('CasperJS test index', 'Tester.assertTitle() works as expected');

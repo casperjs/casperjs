@@ -688,20 +688,23 @@ Tester.prototype.assertRaises =
 Tester.prototype.assertRaise =
 Tester.prototype.assertThrows = function assertRaises(fn, args, message) {
     "use strict";
-    var context = {
-        type: "assertRaises",
-        standard: "Function raises an error"
-    };
+    var thrown = false,
+        error = undefined,
+        context = {
+            type: "assertRaises",
+            standard: "Function raises an error"
+        };
     try {
         fn.apply(null, args);
-        this.assert(false, message, context);
-    } catch (error) {
-        this.assert(true, message, utils.mergeObjects(context, {
-            values: {
-                error: error
-            }
-        }));
+    } catch (err) {
+        thrown = true;
+        error = err;
     }
+    this.assert(thrown, message, utils.mergeObjects(context, {
+        values: {
+            error: error
+        }
+    }));
 };
 
 /**
