@@ -68,7 +68,7 @@ The whole list of available options is detailed below.
 
 **Default:** ``[]``
 
-A collection of script filepaths to include in every page loaded
+A collection of script filepaths to include in every page loaded.
 
 .. index:: exit, error
 
