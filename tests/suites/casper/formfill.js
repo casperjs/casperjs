@@ -125,14 +125,12 @@ casper.test.begin('nonexistent fields', 1, function(test) {
     });
 });
 
-casper.test.begin('multiple forms', 2, function(test) {
+casper.test.begin('multiple forms', 1, function(test) {
     casper.start('tests/site/multiple-forms.html', function() {
         this.fill('form[name="f2"]', {
             yo: "ok"
         }, true);
-    }).then(function() {
-        test.assertUrlMatch(/\?f=f2&yo=ok$/, 'Casper.fill() handles multiple forms');
-    }).then(function() {
+    }).waitForUrl(/\?f=f2&yo=ok$/, function() {
         this.fill('form[name="f2"]', {
             yo: "ok"
         });
@@ -152,9 +150,8 @@ casper.test.begin('field array', 1, function(test) {
             'foo[bar]': "bar",
             'foo[baz]': "baz"
         }, true);
-    }).then(function() {
-        test.assertUrlMatch('?foo[bar]=bar&foo[baz]=baz',
-            'Casper.fill() handles array syntax field names');
+    }).waitForUrl("?foo[bar]=bar&foo[baz]=baz", function() {
+        test.pass('Casper.fill() handles array syntax field names');
     }).run(function() {
         test.done();
     });
