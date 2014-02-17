@@ -688,12 +688,10 @@ Tester.prototype.assertRaises =
 Tester.prototype.assertRaise =
 Tester.prototype.assertThrows = function assertRaises(fn, args, message) {
     "use strict";
-    var thrown = false,
-        error = undefined,
-        context = {
-            type: "assertRaises",
-            standard: "Function raises an error"
-        };
+    var error, thrown = false, context = {
+        type: "assertRaises",
+        standard: "Function raises an error"
+    };
     try {
         fn.apply(null, args);
     } catch (err) {
