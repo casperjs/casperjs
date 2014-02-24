@@ -432,6 +432,19 @@ Casper.prototype.checkStarted = function checkStarted() {
 };
 
 /**
+ * Checks if executing JavaScript in the Page is enabled.
+ *
+ * @return Boolean
+ */
+Casper.prototype.javascriptEnabled = function javascriptEnabled() {
+    "use strict";
+    if (this.options.pageSettings.javascriptEnabled === false) {
+        return false;
+    }
+    return true;
+};
+
+/**
  * Clears the current page execution environment context. Useful to avoid
  * having previously loaded DOM contents being still active (refs #34).
  *
@@ -690,6 +703,10 @@ Casper.prototype.echo = function echo(text, style, pad) {
 Casper.prototype.evaluate = function evaluate(fn, context) {
     "use strict";
     this.checkStarted();
+    // check whether javascript is enabled !!
+    if (!this.javascriptEnabled()) {
+        throw new CasperError("evaluate() requires javascript to be enabled");
+    }
     // preliminary checks
     if (!utils.isFunction(fn) && !utils.isString(fn)) { // phantomjs allows functions defs as string
         throw new CasperError("evaluate() only accepts functions or strings");
@@ -979,15 +996,25 @@ Casper.prototype.getPageContent = function getPageContent() {
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
-    try {
-        return utils.decodeUrl(this.evaluate(function _evaluate() {
-            return document.location.href;
-        }));
-    } catch (e) {
-        // most likely the current page object has been "deleted" (think closed popup)
-        if (/deleted QObject/.test(e.message))
-            return "";
-        throw e;
+    if (!this.javascriptEnabled()) {
+        try {
+            return this.page.url;
+        } catch (e) {
+            if (/deleted QObject/.test(e.message))
+                return "";
+            throw e;
+        }
+    } else {
+        try {
+            return utils.decodeUrl(this.evaluate(function _evaluate() {
+                return document.location.href;
+            }));
+        } catch (e) {
+            // most likely the current page object has been "deleted" (think closed popup)
+            if (/deleted QObject/.test(e.message))
+                return "";
+            throw e;
+        }
     }
 };
 
@@ -2525,7 +2552,11 @@ function createPage(casper) {
         // Client-side utils injection
         casper.injectClientUtils();
         // history
-        casper.history.push(casper.getCurrentUrl());
+        if (!casper.javascriptEnabled()) {
+            casper.history.push(casper.page.url);
+        } else {
+            casper.history.push(casper.getCurrentUrl());
+        }
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
