@@ -497,7 +497,7 @@ Casper.prototype.clickLabel = function clickLabel(label, tag) {
  */
 Casper.prototype.configureHttpAuth = function configureHttpAuth(location, settings) {
     "use strict";
-    var username, password, httpAuthMatch = location.match(/^https?:\/\/(.+):(.+)@/i);
+    var httpAuthMatch = location.match(/^https?:\/\/(.+):(.+)@/i);
     this.checkStarted();
     if (httpAuthMatch) {
         this.page.settings.userName = httpAuthMatch[1];
@@ -508,8 +508,8 @@ Casper.prototype.configureHttpAuth = function configureHttpAuth(location, settin
     } else {
         return;
     }
-    this.emit('http.auth', username, password);
-    this.log("Setting HTTP authentication for user " + username, "info");
+    this.emit('http.auth', this.page.settings.userName, this.page.settings.password);
+    this.log("Setting HTTP authentication for user " + this.page.settings.userName, "info");
     return this;
 };
 
