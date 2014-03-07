@@ -149,7 +149,7 @@ class casperjs {
         var CASPER_COMMAND = new List<string>(ENGINE_EXEC);
         CASPER_COMMAND.AddRange(ENGINE_ARGS);
         CASPER_COMMAND.AddRange(new [] {
-            @"""" + Path.Combine(CASPER_PATH, "bin\\bootstrap.js") + @"""",
+            @"""" + Path.Combine(CASPER_PATH, "bin", "bootstrap.js") + @"""",
             @"--casper-path=""" + CASPER_PATH + @"""",
             "--cli"
         });
