@@ -1397,7 +1397,7 @@ Casper.prototype.open = function open(location, settings) {
     // http data
     if (settings.data) {
         if (utils.isObject(settings.data)) { // query object
-            if (settings.headers && settings.headers["Content-Type"] === "application/json") {
+            if (settings.headers && settings.headers["Content-Type"].match(/application\/json/)) {
                 settings.data = JSON.stringify(settings.data); // convert object to JSON notation
             } else {
                 settings.data = qs.encode(settings.data); // escapes all characters except alphabetic, decimal digits and ,-_.!~*'()
