@@ -32,6 +32,9 @@
                     results.test4 = true;
                     event.preventDefault();
                 };
+                document.querySelector('#test5').onclick = function(event) {
+                    results.testclick = [event.clientX, event.clientY];
+                };
                 window.onmousedown = function(event) {
                     results.testdown = [event.clientX, event.clientY];
                 };
@@ -50,6 +53,9 @@
                 });
                 test5elem.addEventListener('mouseup', function(event) {
                     results.test5.push('mouseup');
+                });
+                test5elem.addEventListener('click', function(event) {
+                    results.test5.push('click');
                 });
 	            document.querySelector('#test6').onclick = function(event) {
 		            results.test6 = true;
