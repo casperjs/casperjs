@@ -467,6 +467,7 @@ Casper.prototype.click = function click(selector) {
             element.focus();
         }
     }, selector);
+    this.emit('click', selector);
     return success;
 };
 

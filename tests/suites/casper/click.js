@@ -111,7 +111,7 @@ casper.test.begin('element focus on click', 1, function(test) {
     });
 });
 
-casper.test.begin('mouse events on click', 2, function(test) {
+casper.test.begin('mouse events on click', 3, function(test) {
     casper.start('tests/site/click.html', function() {
         this.click('#test5');
     }).then(function() {
@@ -120,6 +120,8 @@ casper.test.begin('mouse events on click', 2, function(test) {
             'Casper.click() triggers mousedown event');
         test.assert(results.test5.indexOf('mouseup') !== -1,
             'Casper.click() triggers mouseup event');
+        test.assert(results.test5.indexOf('click') !== -1,
+            'Casper.click() triggers click event');
     }).run(function() {
         test.done();
     });
