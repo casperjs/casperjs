@@ -18,6 +18,7 @@ before_install:
 
 install:
   - sudo apt-get install -qq mono-devel mono-mcs
+  - make $(echo $MAKE_TEST_COMMAND)-engine
 
 before_script:
   - "npm install -g jshint@2.0.1"
