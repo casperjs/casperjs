@@ -164,7 +164,7 @@
             if (hidden) {
                 return false;
             }
-            if (style.display === "inline") {
+            if (style.display === "inline" || style.display === "inline-block") {
                 return true;
             }
             return elem.clientHeight > 0 && elem.clientWidth > 0;

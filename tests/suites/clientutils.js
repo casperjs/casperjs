@@ -201,3 +201,23 @@ casper.test.begin('ClientUtils.getElementsInfo() second element tests', 10, func
         'ClientUtils.getElementsInfo() retrieves second element whole tag contents');
     test.done();
 });
+
+casper.test.begin('ClientUtils.getElementInfo() visibility tests', 4, function(test) {
+    casper.page.content = '<a href="plop" class="plip plup" style="display: inline"><i>paf</i></a>';
+    var info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="display: inline-block"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline-block');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="visibility: hidden"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with visibility hidden');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="display: none"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display none');
+
+    test.done();
+});
