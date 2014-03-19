@@ -558,6 +558,15 @@
                 } catch (e) {
                     type = 'other';
                 }
+
+                if (input.type === 'select-multiple') {
+                    return [].filter.call(input.options, function(option) {
+                        return !!option.selected;
+                    }).map(function(option) {
+                        return option.value;
+                    });
+                }
+
                 if (['checkbox', 'radio'].indexOf(type) === -1) {
                     return input.value;
                 }
@@ -855,6 +864,14 @@
                     }
                     break;
                 case "select":
+                    if (field.multiple) {
+                        [].forEach.call(field.options, function(option) {
+                            option.selected = value.indexOf(option.value) !== -1;
+                        });
+                    } else {
+                      field.value = value;
+                    }
+                    break;
                 case "textarea":
                     field.value = value;
                     break;

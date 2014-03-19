@@ -933,6 +933,30 @@ A script to fill and submit this form::
         this.echo('message sent').exit();
     });
 
+The ``fill()`` method supports single selects in the same way as text input.
+For multiple selects, supply an array of values to match against:
+
+.. code-block :: html
+
+    <form action="/contact" id="contact-form" enctype="multipart/form-data">
+        <select multiple name="category">
+        <option value=​"0">Friends​</option>​
+        <option value=​"1">​Family​</option>​
+        <option value=​"2">​Acquitances​</option>​
+        <option value=​"3">​Colleagues</option>​
+        </select>
+    </form>
+
+A script to select multiple options for category in this form:
+
+.. code-block :: javascript
+
+     casper.then(function() {
+        this.fill('form#contact-form', {
+            'categories': ['0', '1'] // Friends and Family
+        });
+     });
+
 .. warning::
 
    1. The ``fill()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its ``uploadFile()`` method, hence this limitation.
@@ -2309,4 +2333,3 @@ Sets the current page zoom factor::
     });
 
     casper.run();
-
