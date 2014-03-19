@@ -11,6 +11,8 @@ function testFormValues(test) {
         'can fill a textarea form field');
     test.assertField('topic', 'bar',
         'can pick a value from a select form field');
+    test.assertField('multitopic', ['bar', 'car'],
+            'can pick a set of values from a multiselect form field');
     test.assertField('check', true,
         'can check a form checkbox');
     test.assertEvalEquals(function() {
@@ -36,7 +38,7 @@ function testUrl(test) {
     test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
 }
 
-casper.test.begin('fill() & fillNames() tests', 16, function(test) {
+casper.test.begin('fill() & fillNames() tests', 17, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -47,6 +49,7 @@ casper.test.begin('fill() & fillNames() tests', 16, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
+            multitopic:    ['bar', 'car'],
             file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"
@@ -64,7 +67,7 @@ casper.test.begin('fill() & fillNames() tests', 16, function(test) {
     });
 });
 
-casper.test.begin('fillSelectors() tests', 16, function(test) {
+casper.test.begin('fillSelectors() tests', 17, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -75,6 +78,7 @@ casper.test.begin('fillSelectors() tests', 16, function(test) {
             "input[name='check']":        true,
             "input[name='choice']":       'no',
             "select[name='topic']":       'bar',
+            "select[name='multitopic']":  ['bar', 'car'],
             "input[name='file']":         fpath,
             "input[name='checklist[]']":  ['1', '3'],
             "input[name='strange']":      "very"
@@ -92,7 +96,7 @@ casper.test.begin('fillSelectors() tests', 16, function(test) {
     });
 });
 
-casper.test.begin('fillXPath() tests', 15, function(test) {
+casper.test.begin('fillXPath() tests', 16, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fillXPath('form[action="result.html"]', {
             '//input[@name="email"]':       'chuck@norris.com',
@@ -101,6 +105,7 @@ casper.test.begin('fillXPath() tests', 15, function(test) {
             '//input[@name="check"]':       true,
             '//input[@name="choice"]':      'no',
             '//select[@name="topic"]':      'bar',
+            '//select[@name="multitopic"]': ['bar', 'car'],
             '//input[@name="checklist[]"]': ['1', '3'],
             '//input[@name="strange"]':     "very"
         });
@@ -173,6 +178,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
+            multitopic:         ['bar', 'car'],
             file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"
@@ -190,6 +196,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "submit": "submit",
             "language": "english",
             "topic": "bar",
+            "multitopic": ["bar", "car"],
             "strange": "very"
         }, 'Casper.getFormValues() retrieves filled values');
     });
@@ -202,6 +209,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'yes',
             topic:         'bar',
+            multitopic:    ["bar", "car"],
             file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"
@@ -219,6 +227,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "language": "english",
             "submit": "submit",
             "topic": "bar",
+            "multitopic": ["bar", "car"],
             "strange": "very"
         }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
     });
