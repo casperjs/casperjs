@@ -76,6 +76,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
 // casperjs env initialization
 (function(global, phantom){
+    /*jshint maxstatements:99*/
     "use strict";
     // phantom args
     // NOTE: we can't use require('system').args here for some very obscure reason
@@ -352,22 +353,23 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         };
     })(phantom.casperPath);
 
-    if ("slimer" in global) {
-        // for SlimerJS, use the standard API to declare directories
-        // where to search modules
+    if ("paths" in global.require) {
+        // declare a dummy patchRequire function
+        global.patchRequire = function(req) {return req;};
+
         require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
         require.paths.push(fs.workingDirectory);
-
-        // declare a dummy patchRequire function
-        require.globals.patchRequire = global.patchRequire = function(req) { return req;};
-        require.globals.CasperError = CasperError;
-        phantom.casperEngine = "slimerjs";
-    }
-    else {
-        // patch require
+    } else {
         global.__require = require;
         global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
         global.require = patchRequire(global.require);
+    }
+
+    if ("slimer" in global) {
+        require.globals.patchRequire = global.patchRequire;
+        require.globals.CasperError = CasperError;
+        phantom.casperEngine = "slimerjs";
+    } else {
         phantom.casperEngine = "phantomjs";
     }
 
@@ -378,11 +380,13 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         initCasperCli(phantom.casperArgs);
     }
 
-    if ("slimer" in global && phantom.casperScriptBaseDir) {
-        // initCasperCli has set casperScriptBaseDir
-        // use it instead of fs.workingDirectory
-        require.paths.pop();
-        require.paths.push(phantom.casperScriptBaseDir);
+    if ("paths" in global.require) {
+        if ((phantom.casperScriptBaseDir || "").indexOf(fs.workingDirectory) === 0) {
+            require.paths.push(phantom.casperScriptBaseDir);
+        } else {
+            require.paths.push(fs.pathJoin(fs.workingDirectory, phantom.casperScriptBaseDir));
+        }
+        require.paths.push(fs.pathJoin(require.paths[require.paths.length-1], 'node_modules'));
     }
 
     // casper loading status flag
