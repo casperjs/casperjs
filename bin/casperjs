@@ -2,6 +2,7 @@
 
 import os
 import sys
+import subprocess
 
 def resolve(path):
     if os.path.islink(path):
@@ -133,8 +134,11 @@ CASPER_COMMAND.extend([
 ])
 CASPER_COMMAND.extend(CASPER_ARGS)
 
+retval = 0
 try:
-    os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
+    retval = subprocess.call(CASPER_COMMAND)
 except OSError as err:
     print('Fatal: %s; did you install %s?' % (err, ENGINE))
     sys.exit(1)
+
+sys.exit(retval)
