@@ -1274,7 +1274,7 @@ Tester.prototype.findTestFiles = function findTestFiles(dir) {
         }
     });
     return entries.filter(function _filter(entry) {
-        return utils.isJsFile(fs.absolute(fs.pathJoin(dir, entry)));
+        return utils.isJsFile(entry);
     }).sort();
 };
 
