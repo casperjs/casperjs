@@ -6,7 +6,7 @@
 Selectors
 =========
 
-CasperJS makes an heavy use of selectors in order to work with the `DOM <http://www.w3.org/TR/dom/>`_, and can transparently use either `CSS3 <http://www.w3.org/TR/selectors/>`_ or `XPath <http://www.w3.org/TR/xpath/>`_ expressions.
+CasperJS makes a heavy use of selectors in order to work with the `DOM <http://www.w3.org/TR/dom/>`_, and can transparently use either `CSS3 <http://www.w3.org/TR/selectors/>`_ or `XPath <http://www.w3.org/TR/xpath/>`_ expressions.
 
 All the examples below are based on this HTML code:
 
