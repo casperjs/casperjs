@@ -836,7 +836,7 @@ That will give something like this::
 
        var successes = [];
 
-       casper.test.on("pass", function(success) {
+       casper.test.on("success", function(success) {
          successes.push(success);
        });
 
