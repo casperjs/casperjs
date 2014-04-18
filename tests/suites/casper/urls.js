@@ -23,3 +23,17 @@ casper.test.begin('urls tests', 6, function(test) {
         test.done();
     });
 });
+
+// https://github.com/n1k0/casperjs/issues/841
+casper.test.begin('url tests with javascript disabled', 1, function(test) {
+    casper.options.pageSettings.javascriptEnabled = false;
+    casper.start('tests/site/urls.html');
+    casper.then(function() {
+        test.assertMatch(this.getCurrentUrl(), /urls\.html$/,
+            'Casper.getCurrentUrl() can work, with javascript disabled');
+    });
+    casper.run(function() {
+        test.done();
+        casper.options.pageSettings.javascriptEnabled = true;
+    });
+});
