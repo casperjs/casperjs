@@ -996,25 +996,19 @@ Casper.prototype.getPageContent = function getPageContent() {
 Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
-    if (!this.javascriptEnabled()) {
-        try {
+    try {
+        if (!this.javascriptEnabled()) {
             return this.page.url;
-        } catch (e) {
-            if (/deleted QObject/.test(e.message))
-                return "";
-            throw e;
-        }
-    } else {
-        try {
+        } else {
             return utils.decodeUrl(this.evaluate(function _evaluate() {
                 return document.location.href;
             }));
-        } catch (e) {
-            // most likely the current page object has been "deleted" (think closed popup)
-            if (/deleted QObject/.test(e.message))
-                return "";
-            throw e;
         }
+    } catch (e) {
+        // most likely the current page object has been "deleted" (think closed popup)
+        if (/deleted QObject/.test(e.message))
+            return "";
+        throw e;
     }
 };
 
@@ -2552,11 +2546,7 @@ function createPage(casper) {
         // Client-side utils injection
         casper.injectClientUtils();
         // history
-        if (!casper.javascriptEnabled()) {
-            casper.history.push(casper.page.url);
-        } else {
-            casper.history.push(casper.getCurrentUrl());
-        }
+        casper.history.push(casper.getCurrentUrl());
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
