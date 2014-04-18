@@ -51,6 +51,26 @@ casper.test.begin('open() GET casing tests', 2, {
     }
 });
 
+casper.test.begin('open() (JS disabled) tests', 3, {
+    setUp: setUp,
+    tearDown: tearDown,
+    test: function(test) {
+        casper.options.pageSettings.javascriptEnabled = false;
+        casper.open('tests/site/alert.html').then(function() {
+            test.pass("Casper.open() can open and load a location using GET, with JS disabled");
+            test.assertEquals(usedSettings, {
+                method: "get"
+            }, "Casper.open() used the expected GET settings");
+            test.assertHttpStatus(200, "Response Code is 200");
+        });
+
+        casper.run(function() {
+            test.done();
+            casper.options.pageSettings.javascriptEnabled = true;
+        });
+    }
+});
+
 casper.test.begin('open() POST tests', 2, {
     setUp: setUp,
     tearDown: tearDown,

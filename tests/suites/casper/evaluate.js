@@ -110,3 +110,22 @@ casper.test.begin("evaluate() returns a value which can be altered", 1, function
         test.done();
     });
 });
+
+// https://github.com/n1k0/casperjs/issues/841
+casper.test.begin("evaluate() with js disabled, throws error", 1, function(test) {
+    casper.options.pageSettings.javascriptEnabled = false;
+    casper.start().then(function() {
+        function getListResult() {
+            return this.evaluate(function() {
+                return [{a: 1}, {b: 2}];
+        });
+        }
+        test.assertThrows(getListResult, undefined,
+            "Casper.evaluate() raises an error if JavaScript is disabled in the page");
+    });
+
+    casper.run(function() {
+        test.done();
+        casper.options.pageSettings.javascriptEnabled = true;
+    });
+});
