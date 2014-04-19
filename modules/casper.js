@@ -432,19 +432,6 @@ Casper.prototype.checkStarted = function checkStarted() {
 };
 
 /**
- * Checks if executing JavaScript in the Page is enabled.
- *
- * @return Boolean
- */
-Casper.prototype.javascriptEnabled = function javascriptEnabled() {
-    "use strict";
-    if (this.options.pageSettings.javascriptEnabled === false) {
-        return false;
-    }
-    return true;
-};
-
-/**
  * Clears the current page execution environment context. Useful to avoid
  * having previously loaded DOM contents being still active (refs #34).
  *
@@ -704,7 +691,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     "use strict";
     this.checkStarted();
     // check whether javascript is enabled !!
-    if (!this.javascriptEnabled()) {
+    if (this.options.pageSettings.javascriptEnabled === false) {
         throw new CasperError("evaluate() requires javascript to be enabled");
     }
     // preliminary checks
@@ -997,7 +984,7 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
     try {
-        if (!this.javascriptEnabled()) {
+        if (this.options.pageSettings.javascriptEnabled === false) {
             return this.page.url;
         } else {
             return utils.decodeUrl(this.evaluate(function _evaluate() {
