@@ -690,6 +690,10 @@ Casper.prototype.echo = function echo(text, style, pad) {
 Casper.prototype.evaluate = function evaluate(fn, context) {
     "use strict";
     this.checkStarted();
+    // check whether javascript is enabled !!
+    if (this.options.pageSettings.javascriptEnabled === false) {
+        throw new CasperError("evaluate() requires javascript to be enabled");
+    }
     // preliminary checks
     if (!utils.isFunction(fn) && !utils.isString(fn)) { // phantomjs allows functions defs as string
         throw new CasperError("evaluate() only accepts functions or strings");
@@ -980,9 +984,13 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
     "use strict";
     this.checkStarted();
     try {
-        return utils.decodeUrl(this.evaluate(function _evaluate() {
-            return document.location.href;
-        }));
+        if (this.options.pageSettings.javascriptEnabled === false) {
+            return this.page.url;
+        } else {
+            return utils.decodeUrl(this.evaluate(function _evaluate() {
+                return document.location.href;
+            }));
+        }
     } catch (e) {
         // most likely the current page object has been "deleted" (think closed popup)
         if (/deleted QObject/.test(e.message))
