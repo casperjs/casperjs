@@ -35,7 +35,7 @@ var utils = require('utils');
 var system = require('system');
 
 /**
- * Extracts, normalize ad organize PhantomJS CLI arguments in a dedicated
+ * Extracts, normalize and organize PhantomJS CLI arguments in a dedicated
  * Object.
  *
  * @param  array  phantomArgs  system.args value
