@@ -1744,6 +1744,27 @@ To run all the steps you defined, call the `run()`_ method, and voila.
         $ casperjs dump-headers.js
         Thu, 18 Oct 2012 08:26:34 GMT
 
+.. index:: DOMReady
+
+.. warning::
+
+   Step functions added to `then()` are processed in two different cases:
+
+   1. when the previous step function has been executed,
+   2. when the previous main HTTP request has been executed and the page *loaded*;
+
+   Note that there's no single definition of *page loaded*; is it when the ``DOMReady`` event has been triggered? Is it "all requests being finished"? Is it *all application logic being performed"? Or "all elements being rendered"? The answer always depends on the context. Hence why you're encouraged to always use the `waitFor()`_ family methods to keep explicit control on what you actually expect.
+
+   A common trick is to use `waitForSelector()`_::
+
+       casper.start('http://my.website.com/');
+
+       casper.waitForSelector("#plop", function() {
+           this.echo("I'm sure #plop is available in the DOM");
+       });
+
+       casper.run();
+
 .. index:: bypass, Step stack
 
 ``thenBypass()``
