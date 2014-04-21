@@ -63,7 +63,7 @@ Also, don't forget that CasperJS supports a `CommonJS-compliant module pattern <
 
 .. note::
 
-    CasperJS' implementation of ``require()`` differs a bit from the one provided by PhantomJS_, but I personnaly never really encountered any functional difference.
+    CasperJS' implementation of ``require()`` differs a bit from the one provided by PhantomJS_, but I personally never encountered any functional difference.
 
 
 .. index:: Versionning
@@ -97,7 +97,7 @@ A first solution is to inject it into the remote DOM environment by hand using t
 
     casper.page.injectJs('/path/to/jquery.js');
 
-If you need jQuery being available everytime, you can also make it being injected in every received response by setting the ``clientScripts`` option of CasperJS::
+In the event that you require jQuery being available on every page, you can make use of the ``clientScripts`` option of CasperJS::
 
     var casper = require('casper').create({
         clientScripts: ["includes/jquery.min.js"]
@@ -189,7 +189,7 @@ Nowhere. CasperJS doesn't write logs on the filesystem. You have to implement th
 What's this mysterious ``__utils__`` object?
 --------------------------------------------
 
-The ``__utils__`` object is actually a :ref:`ClientUtils object <clientutils_prototype>` which have been automatically injected into the page DOM and is therefore alway available.
+The ``__utils__`` object is actually a :ref:`ClientUtils object <clientutils_prototype>` which have been automatically injected into the page DOM and is therefore always available.
 
 So everytime to perform an :ref:`evaluate() <casper_evaluate>` call, you have this instance available to perform common operation like:
 
