@@ -1,0 +1,6 @@
+{
+    "paths": [
+        "../fail-fast/standard"
+    ],
+    "fail-fast": true
+}

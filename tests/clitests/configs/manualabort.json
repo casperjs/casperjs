@@ -1,0 +1,6 @@
+{
+    "paths": [
+        "../fail-fast/manual-abort"
+    ],
+    "fail-fast": true
+}

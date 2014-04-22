@@ -239,6 +239,22 @@ class TestCommandOutputTest(CasperExecTestBase):
         ])
 
     @timeout(20)
+    def test_config_simple_test_script(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'simple_test_script.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'mytest.js')
+        self.assertCommandOutputContains('test ' + config_path, [
+            script_path,
+            'PASS ok1',
+            'PASS ok2',
+            'PASS ok3',
+            '3 tests executed',
+            '3 passed',
+            '0 failed',
+            '0 dubious',
+            '0 skipped',
+        ])
+
+    @timeout(20)
     def test_new_style_test(self):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
@@ -254,10 +270,46 @@ class TestCommandOutputTest(CasperExecTestBase):
         ])
 
     @timeout(20)
+    def test_config_new_style_test(self):
+        # using begin()
+        config_path = os.path.join(TEST_ROOT, 'configs', 'passing.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
+        self.assertCommandOutputContains('test ' + config_path, [
+            script_path,
+            '# true',
+            'PASS Subject is strictly true',
+            'PASS 1 test executed',
+            '1 passed',
+            '0 failed',
+            '0 dubious',
+            '0 skipped',
+        ])
+
+    @timeout(20)
     def test_new_failing_test(self):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'failing.js')
         self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            '# true',
+            'FAIL Subject is strictly true',
+            '#    type: assert',
+            '#    file: %s:3' % script_path,
+            '#    code: test.assert(false);',
+            '#    subject: false',
+            'FAIL 1 test executed',
+            '0 passed',
+            '1 failed',
+            '0 dubious',
+            '0 skipped',
+        ], failing=True)
+
+    @timeout(20)
+    def test_config_new_failing_test(self):
+        # using begin()
+        config_path = os.path.join(TEST_ROOT, 'configs', 'failing.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'failing.js')
+        self.assertCommandOutputContains('test ' + config_path, [
             script_path,
             '# true',
             'FAIL Subject is strictly true',
@@ -291,10 +343,45 @@ class TestCommandOutputTest(CasperExecTestBase):
         ], failing=True)
 
     @timeout(20)
+    def test_config_step_throwing_test(self):
+        # using begin()
+        config_path = os.path.join(TEST_ROOT, 'configs', 'step_throws.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'step_throws.js')
+        self.assertCommandOutputContains('test ' + config_path, [
+            script_path,
+            '# step throws',
+            'FAIL Error: oops!',
+            '#    type: uncaughtError',
+            '#    file: %s:5' % script_path,
+            '#    error: oops!',
+            'FAIL 1 test executed',
+            '0 passed',
+            '1 failed',
+            '0 dubious',
+            '0 skipped',
+        ], failing=True)
+
+    @timeout(20)
     def test_waitFor_timeout(self):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'waitFor_timeout.js')
         self.assertCommandOutputContains('test ' + script_path, [
+            '"p.nonexistent" still did not exist in',
+            '"#encoded" did not have a text change in',
+            '"p[style]" never appeared in',
+            '/github\.com/ did not load in',
+            '/foobar/ did not pop up in',
+            '"Lorem ipsum" did not appear in the page in',
+            'return false',
+            'did not evaluate to something truthy in'
+        ], failing=True)
+
+    @timeout(20)
+    def test_config_waitFor_timeout(self):
+        # using begin()
+        config_path = os.path.join(TEST_ROOT, 'configs', 'waitFor_timeout.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'waitFor_timeout.js')
+        self.assertCommandOutputContains('test ' + config_path, [
             '"p.nonexistent" still did not exist in',
             '"#encoded" did not have a text change in',
             '"p[style]" never appeared in',
@@ -313,9 +400,31 @@ class TestCommandOutputTest(CasperExecTestBase):
         ], failing=True)
 
     @timeout(20)
+    def test_config_casper_test_instance_overriding(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'casper-instance-override.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'casper-instance-override.js')
+        self.assertCommandOutputContains('test ' + config_path, [
+            "Fatal: you can't override the preconfigured casper instance",
+        ], failing=True)
+
+    @timeout(20)
     def test_dubious_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'dubious.js')
         self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            'dubious test: 2 tests planned, 1 tests executed',
+            'FAIL 1 test executed',
+            '1 passed',
+            '1 failed',
+            '1 dubious',
+            '0 skipped',
+        ], failing=True)
+
+    @timeout(20)
+    def test_config_dubious_test(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'dubious.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'dubious.js')
+        self.assertCommandOutputContains('test ' + config_path, [
             script_path,
             'dubious test: 2 tests planned, 1 tests executed',
             'FAIL 1 test executed',
@@ -341,9 +450,39 @@ class TestCommandOutputTest(CasperExecTestBase):
         ])
 
     @timeout(20)
+    def test_config_exit_test(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'exit.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'exit.js')
+        self.assertCommandOutputContains('test ' + config_path, [
+            script_path,
+            '# sample',
+            'PASS Subject is strictly true',
+            'PASS 1 test executed',
+            '1 passed',
+            '0 failed',
+            '0 dubious',
+            '0 skipped.',
+            'exited'
+        ])
+
+    @timeout(20)
     def test_skipped_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'skipped.js')
         self.assertCommandOutputContains('test ' + script_path, [
+            script_path,
+            'SKIP 1 test skipped',
+            'PASS 1 test executed',
+            '1 passed',
+            '0 failed',
+            '0 dubious',
+            '1 skipped',
+        ])
+
+    @timeout(20)
+    def test_config_skipped_test(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'skipped.json')
+        script_path = os.path.join(TEST_ROOT, 'tester', 'skipped.js')
+        self.assertCommandOutputContains('test ' + config_path, [
             script_path,
             'SKIP 1 test skipped',
             'PASS 1 test executed',
@@ -385,6 +524,37 @@ class TestCommandOutputTest(CasperExecTestBase):
             'assert: Subject is strictly true',
         ], failing=True)
 
+    @timeout(20)
+    def test_config_full_suite(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'fullsuite.json')
+        folder_path = os.path.join(TEST_ROOT, 'tester')
+        failing_script = os.path.join(folder_path, 'failing.js')
+        passing_script = os.path.join(folder_path, 'passing.js')
+        mytest_script = os.path.join(folder_path, 'mytest.js')
+        self.assertCommandOutputContains('test ' + config_path, [
+            'Test file: %s' % failing_script,
+            '# true',
+            'FAIL Subject is strictly true',
+            '#    type: assert',
+            '#    file: %s:3' % failing_script,
+            '#    code: test.assert(false);',
+            '#    subject: false',
+            'Test file: %s' % mytest_script,
+            'PASS ok1',
+            'PASS ok2',
+            'PASS ok3',
+            'Test file: %s' % passing_script,
+            '# true',
+            'PASS Subject is strictly true',
+            'FAIL 5 tests executed',
+            '4 passed',
+            '1 failed',
+            '0 dubious',
+            '0 skipped',
+            'Details for the 1 failed test:',
+            'assert: Subject is strictly true',
+        ], failing=True)
+
     @timeout(60)
     def test_fail_fast(self):
         folder_path = os.path.join(TEST_ROOT, 'fail-fast', 'standard')
@@ -399,10 +569,34 @@ class TestCommandOutputTest(CasperExecTestBase):
             '0 skipped',
         ], failing=True)
 
+    @timeout(20)
+    def test_config_fail_fast(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'failfast.json')
+        self.assertCommandOutputContains('test ' + config_path, [
+            '# test 1',
+            '# test 2',
+            '--fail-fast: aborted all remaining tests',
+            'FAIL 2 tests executed',
+            '1 passed',
+            '1 failed',
+            '0 dubious',
+            '0 skipped',
+        ], failing=True)
+
     @timeout(60)
     def test_manual_abort(self):
         folder_path = os.path.join(TEST_ROOT, 'fail-fast', 'manual-abort')
-        self.assertCommandOutputContains('test %s --fail-fast' % folder_path, [
+        self.assertCommandOutputContains('test %s' % folder_path, [
+            '# test abort()',
+            'PASS test 1',
+            'PASS test 5',
+            'this is my abort message',
+        ], failing=True)
+
+    @timeout(20)
+    def test_config_manual_abort(self):
+        config_path = os.path.join(TEST_ROOT, 'configs', 'manualabort.json')
+        self.assertCommandOutputContains('test ' + config_path, [
             '# test abort()',
             'PASS test 1',
             'PASS test 5',
@@ -429,9 +623,21 @@ class XUnitReportTest(CasperExecTestBase):
         self.runCommand(command, failing=False)
         self.assertTrue(os.path.exists(self.XUNIT_LOG))
 
+    def test_config_xunit_report_passing(self):
+        script_path = os.path.join(TEST_ROOT, 'configs', 'xunit-passing.json')
+        command = 'test %s' % (script_path)
+        self.runCommand(command, failing=False)
+        self.assertTrue(os.path.exists(self.XUNIT_LOG))
+
     def test_xunit_report_failing(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'failing.js')
         command = 'test %s --xunit=%s' % (script_path, self.XUNIT_LOG)
+        self.runCommand(command, failing=True)
+        self.assertTrue(os.path.exists(self.XUNIT_LOG))
+
+    def test_config_xunit_report_passing(self):
+        script_path = os.path.join(TEST_ROOT, 'configs', 'xunit-failing.json')
+        command = 'test %s' % (script_path)
         self.runCommand(command, failing=True)
         self.assertTrue(os.path.exists(self.XUNIT_LOG))
 

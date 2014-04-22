@@ -190,6 +190,7 @@ exports.dump = dump;
  * @param  Boolean
  */
 function equals(v1, v2) {
+    /*jshint maxcomplexity:9*/
     "use strict";
     if (isFunction(v1)) {
         return v1.toString() === v2.toString();
@@ -468,6 +469,21 @@ function isJsFile(file) {
     return isString(ext, "string") && ['js', 'coffee'].indexOf(ext) !== -1;
 }
 exports.isJsFile = isJsFile;
+
+/**
+ * Checks if a file is of the given extension type.
+ *
+ * @param  String  file  Path to the file to test
+ * @param  String  type  extension to match for
+ * @return Boolean
+ */
+function isFileExtOfType(file, type) {
+    "use strict";
+    var ext = fileExt(file);
+    type = isString(type) ? [type] : type;
+    return isString(ext, "string") && type.indexOf(ext) !== -1;
+}
+exports.isFileExtOfType = isFileExtOfType;
 
 /**
  * Checks if the provided value is null

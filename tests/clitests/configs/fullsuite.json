@@ -1,0 +1,7 @@
+{
+    "paths": [
+        "../tester/failing.js",
+        "../tester/passing.js",
+        "../tester/mytest.js"
+    ]
+}

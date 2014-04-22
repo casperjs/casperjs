@@ -1,0 +1,6 @@
+{
+    "paths": [
+        "../tester/failing.js"
+    ],
+    "xunit": "tests/clitests/__log.xml"
+}
