@@ -712,7 +712,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         }
     } else {
         // phantomjs-style signature
-        context = [].slice.call(arguments).slice(1);
+        context = [].slice.call(arguments, 1);
     }
     return utils.clone(this.page.evaluate.apply(this.page, [fn].concat(context)));
 };
