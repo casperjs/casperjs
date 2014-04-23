@@ -785,7 +785,7 @@ That will give something like this:
 
 .. note::
 
-    In CasperJS 1.1, you can store test failures by recording them listening to the tester ``fail`` event::
+    In CasperJS 1.1, you can recorded test failures by listening to the tester ``fail`` event::
 
         var failures = [];
 
@@ -832,7 +832,7 @@ That will give something like this::
 
 .. note::
 
-   In CasperJS 1.1, you can store test successes by recording them listening to the tester ``pass`` event::
+   In CasperJS 1.1, you can recorded test successes by listening to the tester ``success`` event::
 
        var successes = [];
 
