@@ -108,7 +108,7 @@ XUnitExporter.prototype.getXML = function getXML() {
         // succesful test cases
         result.passes.forEach(function(success) {
             var testCase = utils.node('testcase', {
-                name: success.message || success.standard,
+                name: success.name || success.standard,
                 classname: generateClassName(success.file),
                 time: utils.ms2seconds(~~success.time)
             });
@@ -117,7 +117,7 @@ XUnitExporter.prototype.getXML = function getXML() {
         // failed test cases
         result.failures.forEach(function(failure) {
             var testCase = utils.node('testcase', {
-                name: failure.message || failure.standard,
+                name: failure.name || failure.standard,
                 classname: generateClassName(failure.file),
                 time: utils.ms2seconds(~~failure.time)
             });
