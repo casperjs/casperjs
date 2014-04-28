@@ -6,7 +6,7 @@
 Selectors
 =========
 
-CasperJS makes an heavy use of selectors in order to work with the `DOM <http://www.w3.org/TR/dom/>`_, and can transparently use either `CSS3 <http://www.w3.org/TR/selectors/>`_ or `XPath <http://www.w3.org/TR/xpath/>`_ expressions.
+CasperJS makes a heavy use of selectors in order to work with the `DOM <http://www.w3.org/TR/dom/>`_, and can transparently use either `CSS3 <http://www.w3.org/TR/selectors/>`_ or `XPath <http://www.w3.org/TR/xpath/>`_ expressions.
 
 All the examples below are based on this HTML code:
 
@@ -52,7 +52,7 @@ Or if you're using the :doc:`testing framework <testing>`::
 
     casper.test.begin('The heading exists', 1, function suite(test) {
         casper.start('http://domain.tld/page.html', function() {
-            this.assertExists('h1.page-title');
+            test.assertExists('h1.page-title');
         }).run(function() {
             test.done();
         });
@@ -62,9 +62,9 @@ Some other convenient testing methods are relying on selectors::
 
     casper.test.begin('Page content tests', 3, function suite(test) {
         casper.start('http://domain.tld/page.html', function() {
-            this.assertExists('h1.page-title');
-            this.assertSelectorHasText('h1.page-title', 'Hello');
-            this.assertVisible('footer');
+            test.assertExists('h1.page-title');
+            test.assertSelectorHasText('h1.page-title', 'Hello');
+            test.assertVisible('footer');
         }).run(function() {
             test.done();
         });

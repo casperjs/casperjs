@@ -2,8 +2,8 @@
 /*jshint strict:false*/
 var currentRequest;
 
-function onResourceRequested(request) {
-    currentRequest = request;
+function onResourceRequested(requestData, request) {
+    currentRequest = requestData;
 }
 
 function testHeader(header) {

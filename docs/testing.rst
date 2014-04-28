@@ -12,9 +12,10 @@ CasperJS ships with its own :doc:`testing framework <modules/tester>`, providing
 
     .. versionchanged:: 1.1
 
-    The testing framework — hence its whole API — can only be used when using the ``casperjs test`` subcommand.
+    The testing framework — hence its whole API — can only be used when using the ``casperjs test`` subcommand:
 
-    If you try to use the ``casper.test`` property out of the testing environment, you'll get an error.
+    - If you try to use the ``casper.test`` property out of the testing environment, you'll get an error;
+    - As of 1.1-beta3, you can't override the preconfigured ``casper`` instance in this test environment. You can read more about the whys in the :ref:`dedicated FAQ entry <faq_test_casper_instance>`.
 
 .. index:: Unit testing
 
@@ -113,6 +114,20 @@ You'll probably get something like this:
    :align: center
 
 
+.. index:: options
+
+Setting Casper options in the test environment
+----------------------------------------------
+
+As you must use a preconfigured ``casper`` instance within the test environment, updating its :ref:`options <casper_options>` can be achieved this way::
+
+    casper.options.optionName = optionValue; // where optionName is obviously the desired option name
+
+    casper.options.clientScripts.push("new-script.js");
+
+
+.. index:: setUp, tearDown
+
 Advanced techniques
 -------------------
 
@@ -135,6 +150,7 @@ The :ref:`Tester#begin() <tester_begin>` accepts either a function or an object 
         }
     });
 
+.. _test_subcomand:
 
 Test command args and options
 -----------------------------
@@ -142,7 +158,7 @@ Test command args and options
 Arguments
 ~~~~~~~~~
 
-The ``capserjs test`` command will treat every passed argument as file or directory paths containing tests. It will recursively scan any passed directory to search for ``*.js`` or ``*.coffee`` files and add them to the stack.
+The ``casperjs test`` command will treat every passed argument as file or directory paths containing tests. It will recursively scan any passed directory to search for ``*.js`` or ``*.coffee`` files and add them to the stack.
 
 .. warning ::
 
@@ -157,8 +173,17 @@ Options
 Options are prefixed with a double-dash (``--``):
 
 - ``--xunit=<filename>`` will export test suite results in a :ref:`XUnit XML file <xunit_report>`
-- ``--direct`` will print :doc:`log messages <logging>` directly to the console
+- ``--direct`` or ``--verbose``  will print :doc:`log messages <logging>` directly to the console
 - ``--log-level=<logLevel>`` sets the logging level (see the :doc:`related section <logging>`)
+- ``--auto-exit=no`` prevents the test runner to exit when all the tests have been executed; this usually allows performing supplementary operations, though implies to exit casper manually listening to the ``exit`` tester event::
+
+    // $ casperjs test --auto-exit=no
+    casper.test.on("exit", function() {
+      someTediousAsyncProcess(function() {
+        casper.exit();
+      });
+    });
+
 
 .. versionadded:: 1.0
 
@@ -166,6 +191,8 @@ Options are prefixed with a double-dash (``--``):
 - ``--pre=pre-test.js`` will add the tests contained in ``pre-test.js`` **before** executing the whole test suite;
 - ``--post=post-test.js`` will add the tests contained in ``post-test.js`` **after** having executed the whole test suite;
 - ``--fail-fast`` will terminate the current test suite as soon as a first failure is encountered.
+- ``--concise`` will create a more concise output of the test suite.
+- ``--no-colors`` will create an output without (beautiful) colors from casperjs.
 
 Sample custom command:
 
@@ -178,6 +205,12 @@ Sample custom command:
                     --log-level=debug \
                     --fail-fast \
                     test1.js test2.js /path/to/some/test/dir
+
+.. warning::
+
+   .. deprecated:: 1.1
+
+   ``--direct`` option has been renamed to ``--verbose``, though ``--direct`` will still works, while is to be considered deprecated.
 
 .. hint::
 
@@ -195,7 +228,7 @@ CasperJS can export the results of the test suite to an XUnit XML file, which is
 
 .. code-block:: text
 
-    $ casperjs test googletesting.js --save=log.xml
+    $ casperjs test googletesting.js --xunit=log.xml
 
 You should get a pretty XUnit XML report like this:
 
@@ -242,7 +275,7 @@ is just a shortcut for this one:
 
 .. code-block:: text
 
-    $ casper /path/to/casperjs/tests/run.js [path]
+    $ casperjs /path/to/casperjs/tests/run.js [path]
 
 So if you want to extend Casper capabilities for your tests, your best bet is to write your own runner and extend the casper object instance from there.
 

@@ -66,6 +66,21 @@ Emitted when a :index:`screenshot` image has been captured.
 
 Emitted when the ``Casper.click()`` method has been called.
 
+``complete.error``
+~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``error``
+
+.. versionadded:: 1.1
+
+Emitted when a complete callback has errored.
+
+By default, CasperJS doesn't listen to this event, you have to declare your own listeners by hand::
+
+    casper.on('complete.error', function(err) {
+        this.die("Complete callback has failed: " + err);
+    });
+
 ``die``
 ~~~~~~~
 
@@ -91,7 +106,7 @@ Emitted when a file has been downloaded by :ref:`Casper.download() <casper_downl
 
 .. versionadded:: 0.6.9
 
-Emitted when an error hasn't been caught. Do basically what PhantomJS' ``onError()`` native handler does.
+Emitted when an error hasn't been explicitly caught within the CasperJS/PhantomJS environment. Do basically what PhantomJS' ``onError()`` native handler does.
 
 .. index:: exit
 
@@ -242,7 +257,7 @@ Emitted when PhantomJS' ``WebPage`` object used by CasperJS has been created.
 
 **Arguments:** ``message, trace``
 
-Emitted when retrieved page leaved a Javascript error uncaught::
+Emitted when retrieved page leaves a Javascript error uncaught::
 
     casper.on("page.error", function(msg, trace) {
         this.echo("Error: " + msg, "ERROR");
@@ -272,6 +287,18 @@ Emitted when the HTTP response corresponding to current required url has been re
 **Arguments:** ``request``
 
 Emitted when a new HTTP request is performed to open the required url.
+
+.. versionadded:: 1.1
+
+**Arguments:** ``requestData, request``
+
+You can also abort requests::
+
+    casper.on('page.resource.requested', function(requestData, request) {
+        if (requestData.url.indexOf('http://adserver.com') === 0) {
+            request.abort();
+        }
+    });
 
 ``popup.created``
 ~~~~~~~~~~~~~~~~~
@@ -321,6 +348,18 @@ Emitted when a remote `window.callPhantom(data) <https://github.com/ariya/phanto
 **Arguments:** ``msg``
 
 Emitted when any remote console logging call has been performed.
+
+``resource.error``
+~~~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``resourceError``
+
+Emitted when any requested resource fails to load properly. The received ``resourceError`` object has the following properties:
+
+- ``errorCode``: error code
+- ``errorString``: error description
+- ``url``: resource url
+- ``id``: resource id
 
 ``resource.received``
 ~~~~~~~~~~~~~~~~~~~~~
@@ -385,6 +424,21 @@ Emitted when a navigation step has been executed.
 
 Emitted when a new navigation step has been created.
 
+``step.error``
+~~~~~~~~~~~~~~
+
+**Arguments:** ``error``
+
+.. versionadded:: 1.1
+
+Emitted when a step function has errored.
+
+By default, CasperJS doesn't listen to this event, you have to declare your own listeners by hand::
+
+    casper.on('step.error', function(err) {
+        this.die("Step has failed: " + err);
+    });
+
 ``step.start``
 ~~~~~~~~~~~~~~
 
@@ -395,9 +449,9 @@ Emitted when a navigation step has been started.
 ``step.timeout``
 ~~~~~~~~~~~~~~~~
 
-**Arguments:** ``None``
+**Arguments:** ``[step, timeout]``
 
-Emitted when a navigation step has been executed.
+Emitted when a navigation step has timed out.
 
 ``timeout``
 ~~~~~~~~~~~
@@ -441,9 +495,11 @@ Emitted when a ``Casper.wait()`` operation starts.
 ``waitFor.timeout``
 ~~~~~~~~~~~~~~~~~~~
 
-**Arguments:** ``None``
+**Arguments:** ``[timeout, details]``
 
-Emitted when the execution time of a ``Casper.wait*()`` operation has exceeded the value of ``Casper.options.stepTimeout``.
+Emitted when the execution time of a ``Casper.wait*()`` operation has exceeded the value of ``timeout``.
+
+``deatils`` is a property bag describing what was being waited on. For example, if ``waitForSelector`` timed out, ``details`` will have a ``selector`` string property that was the selector that did not show up in time.
 
 
 .. index:: filters

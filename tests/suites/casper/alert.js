@@ -23,3 +23,22 @@ casper.test.begin('alert events', 1, {
         });
     }
 });
+
+casper.test.begin("Casper.waitForAlert() waits for an alert", 1, function(test) {
+    casper.start().then(function() {
+        this.evaluate(function() {
+            setTimeout(function() {
+                alert("plop");
+            }, 500);
+        });
+    });
+
+    casper.waitForAlert(function(response) {
+        test.assertEquals(response.data, "plop",
+            "Casper.waitForAlert() can wait for an alert to be triggered");
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});

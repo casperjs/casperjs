@@ -68,7 +68,7 @@ The whole list of available options is detailed below.
 
 **Default:** ``[]``
 
-A collection of script filepaths to include in every page loaded
+A collection of script filepaths to include in every page loaded.
 
 .. index:: exit, error
 
@@ -281,6 +281,17 @@ When this option is set to true — which is the default, any password informat
 
 .. index:: Step stack, timeout
 
+``silentErrors``
+-------------------------------------------------------------------------------
+
+**Type:** ``Boolean``
+
+**Default:** ``false``
+
+When this option is enabled, caught step errors are not thrown (though related events are still emitted). Mostly used internally in a testing context.
+
+.. index:: timeout
+
 ``stepTimeout``
 -------------------------------------------------------------------------------
 
@@ -366,7 +377,7 @@ Moves back a step in browser's history::
         console.log(this.getCurrentUrl()); // 'http://foo.bar/2'
     });
 
-Also have a look at ``Casper.forward()``.
+Also have a look at `forward()`_.
 
 .. _casper_base64encode:
 
@@ -398,16 +409,16 @@ Example: retrieving google logo image encoded in base64::
 You can also perform an HTTP POST request to retrieve the contents to
 encode::
 
-    var base46contents = null;
+    var base64contents = null;
     casper.start('http://domain.tld/download.html', function() {
-        base46contents = this.base64encode('http://domain.tld/', 'POST', {
+        base64contents = this.base64encode('http://domain.tld/', 'POST', {
             param1: 'foo',
             param2: 'bar'
         });
     });
 
     casper.run(function() {
-        this.echo(base46contents).exit();
+        this.echo(base64contents).exit();
     });
 
 .. index:: bypass, Step stack
@@ -496,7 +507,7 @@ Clicks on the first DOM element found containing ``label`` text. Optionaly ensur
 ``capture()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``capture(String targetFilepath, Object clipRect)``
+**Signature:** ``capture(String targetFilepath, [Object clipRect, Object imgOptions])``
 
 Proxy method for PhantomJS' ``WebPage#render``. Adds a ``clipRect`` parameter for automatically setting page ``clipRect`` setting and reverts it back once done::
 
@@ -510,6 +521,22 @@ Proxy method for PhantomJS' ``WebPage#render``. Adds a ``clipRect`` parameter fo
     });
 
     casper.run();
+
+.. versionadded:: 1.1
+
+The ``imgOptions`` object allows to specify two options:
+
+- ``format`` to set the image format manually, avoiding relying on the filename
+- ``quality`` to set the image quality, from 1 to 100
+
+Example::
+
+    casper.start('http://foo', function() {
+        this.capture('foo', undefined, {
+            format: 'jpg',
+            quality: 75
+        });
+    });
 
 .. index:: screenshot, Base64
 
@@ -555,7 +582,7 @@ Example::
 ``captureSelector()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``captureSelector(String targetFile, String selector)``
+**Signature:** ``captureSelector(String targetFile, String selector [, Object imgOptions])``
 
 Captures the page area containing the provided selector and saves it to ``targetFile``::
 
@@ -564,6 +591,13 @@ Captures the page area containing the provided selector and saves it to ``target
     });
 
     casper.run();
+
+.. versionadded:: 1.1
+
+The ``imgOptions`` object allows to specify two options:
+
+- ``format`` to set the image format manually, avoiding relying on the target filename
+- ``quality`` to set the image quality, from 1 to 100
 
 ``clear()``
 -------------------------------------------------------------------------------
@@ -677,11 +711,26 @@ Iterates over provided array items and execute a callback::
 
 **Signature:** ``eachThen(Array array, Function then)``
 
+.. versionadded:: 1.1
+
 Iterates over provided array items and adds a step to the stack with current data attached to it::
 
     casper.start().eachThen([1, 2, 3], function(response) {
         this.echo(response.data);
     }).run();
+
+Here's an example for opening an array of urls::
+
+    var casper = require('casper').create();
+    var urls = ['http://google.com/', 'http://yahoo.com/'];
+
+    casper.start().eachThen(urls, function(response) {
+      this.thenOpen(response.data, function(response) {
+        console.log('Opened', response.url);
+      });
+    });
+
+    casper.run();
 
 .. note::
 
@@ -839,7 +888,10 @@ Logs a message with an optional level in an optional space. Available levels are
 
 **Signature:** ``fill(String selector, Object values[, Boolean submit])``
 
-Fills the fields of a form with given values and optionally submits it.
+Fills the fields of a form with given values and optionally submits it. Fields
+are referenced by their ``name`` attribute.
+
+.. versionchanged:: 1.1 To use :doc:`CSS3 or XPath selectors <../selectors>` instead, check the `fillSelectors()`_ and `fillXPath()`_ methods.
 
 Example with this sample html form:
 
@@ -881,10 +933,81 @@ A script to fill and submit this form::
         this.echo('message sent').exit();
     });
 
+The ``fill()`` method supports single selects in the same way as text input.
+For multiple selects, supply an array of values to match against:
+
+.. code-block :: html
+
+    <form action="/contact" id="contact-form" enctype="multipart/form-data">
+        <select multiple name="category">
+        <option value=​"0">Friends​</option>​
+        <option value=​"1">​Family​</option>​
+        <option value=​"2">​Acquitances​</option>​
+        <option value=​"3">​Colleagues</option>​
+        </select>
+    </form>
+
+A script to select multiple options for category in this form:
+
+.. code-block :: javascript
+
+     casper.then(function() {
+        this.fill('form#contact-form', {
+            'categories': ['0', '1'] // Friends and Family
+        });
+     });
+
 .. warning::
 
-   1. The ``fill()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its uploadFile method, hence this limitation.
+   1. The ``fill()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its ``uploadFile()`` method, hence this limitation.
    2. Please Don't use CasperJS nor PhantomJS to send spam, or I'll be calling the Chuck. More seriously, please just don't.
+
+``fillSelectors()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``fillSelectors(String selector, Object values[, Boolean submit])``
+
+.. versionadded:: 1.1
+
+Fills form fields with given values and optionally submits it. Fields
+are referenced by ``CSS3`` selectors::
+
+    casper.start('http://some.tld/contact.form', function() {
+        this.fillSelectors('form#contact-form', {
+            'input[name="subject"]':    'I am watching you',
+            'input[name="content"]':    'So be careful.',
+            'input[name="civility"]':   'Mr',
+            'input[name="name"]':       'Chuck Norris',
+            'input[name="email"]':      'chuck@norris.com',
+            'input[name="cc"]':         true,
+            'input[name="attachment"]': '/Users/chuck/roundhousekick.doc'
+        }, true);
+    });
+
+
+``fillXPath()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``fillXPath(String selector, Object values[, Boolean submit])``
+
+.. versionadded:: 1.1
+
+Fills form fields with given values and optionally submits it. While the ``form`` element is always referenced by a CSS3 selector, fields are referenced by ``XPath`` selectors::
+
+    casper.start('http://some.tld/contact.form', function() {
+        this.fillXPath('form#contact-form', {
+            '//input[@name="subject"]':    'I am watching you',
+            '//input[@name="content"]':    'So be careful.',
+            '//input[@name="civility"]':   'Mr',
+            '//input[@name="name"]':       'Chuck Norris',
+            '//input[@name="email"]':      'chuck@norris.com',
+            '//input[@name="cc"]':         true,
+        }, true);
+    });
+
+.. warning::
+
+   The ``fillXPath()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its ``uploadFile()`` method, hence this limitation.
 
 .. index:: URL
 
@@ -916,6 +1039,25 @@ Retrieves the value of an attribute on the first element matching the provided :
 
     casper.start('http://www.google.fr/', function() {
         require('utils').dump(this.getElementAttribute('div[title="Google"]', 'title')); // "Google"
+    });
+
+    casper.run();
+
+.. index:: DOM
+
+``getElementsAttribute()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getElementsAttribute(String selector, String attribute)``
+
+.. versionadded:: 1.1
+
+Retrieves the values of an attribute on each element matching the provided :doc:`selector <../selectors>`::
+
+    var casper = require('casper').create();
+
+    casper.start('http://www.google.fr/', function() {
+        require('utils').dump(this.getElementsAttribute('div[title="Google"]', 'title')); // "['Google']"
     });
 
     casper.run();
@@ -974,31 +1116,78 @@ It returns an array of objects with four keys: ``top``, ``left``, ``width`` and 
 
 Retrieves information about the first element matching the provided :doc:`selector <../selectors>`::
 
-    casper.start('http://google.com/', function() {
+    casper.start('http://google.fr/', function() {
         require('utils').dump(this.getElementInfo('#hplogo'));
     });
 
 Gives something like::
 
     {
-        "nodeName": "div",
         "attributes": {
-            "dir": "ltr",
-            "title": "Google",
             "align": "left",
+            "dir": "ltr",
             "id": "hplogo",
             "onload": "window.lol&&lol()",
-            "style": "background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px"
+            "style": "height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat",
+            "title": "Google"
         },
-        "tag": "<div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;&amp;lol()\" style=\"background:url(images/srpr/logo3w.png) no-repeat;background-size:275px 95px;height:95px;width:275px\"><div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div></div>",
+        "height": 110,
         "html": "<div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div>",
+        "nodeName": "div",
+        "tag": "<div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;&amp;lol()\" style=\"height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat\"><div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div></div>",
         "text": "France\n",
-        "x": 582.5,
-        "y": 192,
-        "width": 275,
-        "height": 95,
-        "visible": true
+        "visible": true,
+        "width": 276,
+        "x": 62,
+        "y": 76
     }
+
+.. note::
+
+   This method **does not** return a DOM element, only a simple object representation of it; this is because the casper environment has no direct access to the scraped page one.
+
+.. index:: DOM
+
+``getElementsInfo()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getElementsInfo(String selector)``
+
+.. versionadded:: 1.1
+
+Retrieves information about all elements matching the provided :doc:`selector <../selectors>`::
+
+    casper.start('http://google.fr/', function() {
+        require('utils').dump(this.getElementsInfo('#hplogo'));
+    });
+
+Gives something like::
+
+    [
+        {
+            "attributes": {
+                "align": "left",
+                "dir": "ltr",
+                "id": "hplogo",
+                "onload": "window.lol&&lol()",
+                "style": "height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat",
+                "title": "Google"
+            },
+            "height": 110,
+            "html": "<div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div>",
+            "nodeName": "div",
+            "tag": "<div dir=\"ltr\" title=\"Google\" align=\"left\" id=\"hplogo\" onload=\"window.lol&amp;&amp;lol()\" style=\"height:110px;width:276px;background:url(/images/srpr/logo1w.png) no-repeat\"><div nowrap=\"nowrap\" style=\"color:#777;font-size:16px;font-weight:bold;position:relative;left:214px;top:70px\">France</div></div>",
+            "text": "France\n",
+            "visible": true,
+            "width": 276,
+            "x": 62,
+            "y": 76
+        }
+    ]
+
+.. note::
+
+   This method **does not** return a ``NodeList``, only a simple array of object representations of matching elements; this is because the casper environment has no direct access to the scraped page one.
 
 .. index:: Form
 
@@ -1236,9 +1425,9 @@ Repeats a navigation step a given number of times::
 ``resourceExists()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``resourceExists(Mixed test)``
+**Signature:** ``resourceExists(String|Function|RegExp test)``
 
-Checks if a resource has been loaded. You can pass either a function or a string to perform the test::
+Checks if a resource has been loaded. You can pass either a function, a string or a ``RegExp`` instance to perform the test::
 
     casper.start('http://www.google.com/', function() {
         if (this.resourceExists('logo3w.png')) {
@@ -1294,6 +1483,42 @@ Casper suite **will run**::
         this.exit(); // <--- don't forget me!
     });
 
+Binding a callback to ``complete.error`` will trigger when the ``onComplete`` callback fails.
+
+.. index:: Scroll
+
+``scrollTo()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``scrollTo(Number x, Number y)``
+
+.. versionadded:: 1.1-beta3
+
+Scrolls current document to the coordinates defined by the value of ``x`` and ``y``::
+
+    casper.start('http://foo.bar/home', function() {
+        this.scrollTo(500, 300);
+    });
+
+.. note:: This operation is synchronous.
+
+.. index:: Scroll
+
+``scrollToBottom()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``scrollToBottom()``
+
+.. versionadded:: 1.1-beta3
+
+Scrolls current document to its bottom::
+
+    casper.start('http://foo.bar/home', function() {
+        this.scrollToBottom();
+    });
+
+.. note:: This operation is synchronous.
+
 .. index:: Form
 
 ``sendKeys()``
@@ -1310,6 +1535,45 @@ Sends native keyboard events to the element matching the provided :doc:`selector
         this.sendKeys('form.contact textarea#message', "Damn, I'm looking good.");
         this.click('form.contact input[type="submit"]');
     });
+
+.. versionadded:: 1.1
+
+The currently supported HTMLElements that can receive keyboard events from ``sendKeys`` are ``<input>``, ``<textarea>``, and any HTMLElement with attribute ``contenteditable="true"``.
+
+Options
+~~~~~~~
+
+- ``(Boolean) reset``:
+
+  .. versionadded:: 1.1-beta3
+
+  When set to ``true``, this option will first empty the current field value. By default, it's set to ``false`` and ``sendKeys()`` will just append string to the current field value.
+
+- ``(Boolean) keepFocus``:
+
+  ``sendKeys()`` by default will remove the focus on text input fields, which   will typically close autocomplete widgets. If you want to maintain focus, use   the ``keepFocus`` option. For example, if using jQuery-UI, you can click on   the first autocomplete suggestion using::
+
+      casper.then(function() {
+          this.sendKeys('form.contact input#name', 'action', {keepFocus: true});
+          this.click('form.contact ul.ui-autocomplete li.ui-menu-item:first-  child a');
+      });
+
+- ``(String) modifiers``:
+
+  ``sendKeys()`` accepts a ``modifiers`` option to support key modifiers. The   options is a string representing the composition of modifiers to use,   separated by the ``+`` character::
+
+      casper.then(function() {
+          this.sendKeys('document', 's', {modifiers: 'ctrl+alt+shift'});
+      });
+
+  Available modifiers are:
+
+  - ``ctrl``
+  - ``alt``
+  - ``shift``
+  - ``meta``
+  - ``keypad``
+
 
 .. index:: auth
 
@@ -1480,6 +1744,27 @@ To run all the steps you defined, call the `run()`_ method, and voila.
         $ casperjs dump-headers.js
         Thu, 18 Oct 2012 08:26:34 GMT
 
+.. index:: DOMReady
+
+.. warning::
+
+   Step functions added to `then()` are processed in two different cases:
+
+   1. when the previous step function has been executed,
+   2. when the previous main HTTP request has been executed and the page *loaded*;
+
+   Note that there's no single definition of *page loaded*; is it when the ``DOMReady`` event has been triggered? Is it "all requests being finished"? Is it *all application logic being performed"? Or "all elements being rendered"? The answer always depends on the context. Hence why you're encouraged to always use the `waitFor()`_ family methods to keep explicit control on what you actually expect.
+
+   A common trick is to use `waitForSelector()`_::
+
+       casper.start('http://my.website.com/');
+
+       casper.waitForSelector("#plop", function() {
+           this.echo("I'm sure #plop is available in the DOM");
+       });
+
+       casper.run();
+
 .. index:: bypass, Step stack
 
 ``thenBypass()``
@@ -1547,14 +1832,14 @@ Opposite of `thenBypassIf()`_.
 
 Adds a new navigation step to click a given selector and optionally add a new navigation step in a single operation::
 
-    // Querying for "Chuck Norris" on Google
+    // Click the first link in the casperJS page
     casper.start('http://casperjs.org/').thenClick('a', function() {
         this.echo("I clicked on first link found, the page is now loaded.");
     });
 
     casper.run();
 
-This method is basically a convenient a shortcut for chaining a `then()`_ and an `evaluate()`_ calls.
+This method is basically a convenient a shortcut for chaining a `then()`_ and an `click()`_ calls.
 
 ``thenEvaluate()``
 -------------------------------------------------------------------------------
@@ -1669,9 +1954,8 @@ Sets the `User-Agent string <http://en.wikipedia.org/wiki/User-Agent>`_ to send 
 
     casper.thenOpen('http://google.com/', function() {
         this.echo("I'm a Mac.");
+        this.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
     });
-
-    casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
     casper.thenOpen('http://google.com/', function() {
         this.echo("I'm a PC.");
@@ -1757,7 +2041,7 @@ You can also write the same thing like this::
 ``waitFor()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``waitFor(Function testFx[, Function then, Function onTimeout, Number timeout])``
+**Signature:** ``waitFor(Function testFx[, Function then, Function onTimeout, Number timeout, Object details])``
 
 Waits until a function returns true to process any next step.
 
@@ -1790,6 +2074,24 @@ Example using the ``onTimeout`` callback::
     });
 
     casper.run();
+
+``details`` is a property bag of various information that will be passed to the ``waitFor.timeout`` event, if it is emitted.
+This can be used for better error messages or to conditionally ignore some timeout events.
+
+.. index:: alert
+
+``waitForAlert()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForAlert(Function then[, Function onTimeout, Number timeout])``
+
+.. versionadded:: 1.1-beta4
+
+Waits until a `JavaScript alert <https://developer.mozilla.org/en-US/docs/Web/API/Window.alert>`_ is triggered. The step function will be passed the alert message in the ``response.data`` property::
+
+    casper.waitForAlert(function(response) {
+        this.echo("Alert received: " + response.data);
+    });
 
 .. _casper_waitforpopup:
 
@@ -1832,14 +2134,45 @@ The currently loaded popups are available in the ``Casper.popups`` array-like pr
 ``waitForResource()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``waitForResource(Function testFx[, Function then, Function onTimeout, Number timeout])``
+**Signature:** ``waitForResource(String|Function|RegExp testFx[, Function then, Function onTimeout, Number timeout])``
 
-Wait until a resource that matches the given ``testFx`` is loaded to process a next step. Uses `waitFor()`_::
+Wait until a resource that matches a resource matching constraints defined by ``testFx`` are satisfied to process a next step.
 
-    casper.start('http://foo.bar/');
+The ``testFx`` argument can be either a string, a function or a ``RegExp`` instance::
 
     casper.waitForResource("foobar.png", function() {
         this.echo('foobar.png has been loaded.');
+    });
+
+Using a regexp::
+
+    casper.waitForResource(/foo(bar|baz)\.png$/, function() {
+        this.echo('foobar.png or foobaz.png has been loaded.');
+    });
+
+Using a function::
+
+    casper.waitForResource(function testResource(resource) {
+        return resource.url.indexOf("https") === 0;
+    }, function onReceived() {
+        this.echo('a secure resource has been loaded.');
+    });
+
+.. _casper_waitforurl:
+
+.. index:: URL
+
+``waitForUrl()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForUrl(String|RegExp url[, Function then, Function onTimeout, Number timeout])``
+
+.. versionadded:: 1.1
+
+Waits for the current page url to match the provided argument (``String`` or ``RegExp``)::
+
+    casper.start('http://foo/').waitForUrl(/login\.html$/, function() {
+        this.echo('redirected to login.html');
     });
 
     casper.run();
@@ -1889,7 +2222,7 @@ is changed to a different value before processing the next step. Uses `waitFor()
     casper.start('http://foo.bar/');
 
     casper.waitForSelectorTextChange('.selector', function() {
-        this.echo('The text on .selector has been changed.);
+        this.echo('The text on .selector has been changed.');
     });
 
     casper.run();
@@ -1898,6 +2231,7 @@ is changed to a different value before processing the next step. Uses `waitFor()
 -------------------------------------------------------------------------------
 
 **Signature:** ``waitForText(String text[, Function then, Function onTimeout, Number timeout])``
+
 .. versionadded:: 1.0
 
 Waits until the passed text is present in the page contents before processing the immediate next step. Uses `waitFor()`_::
@@ -2020,4 +2354,3 @@ Sets the current page zoom factor::
     });
 
     casper.run();
-

@@ -39,8 +39,8 @@ You should get something like this:
 
 .. code-block:: text
 
-    $ casperjs c.js
-    CasperJS, a navigation scripting and testing utility for PhantomJS | CasperJS 1.0.0
+    $ casperjs sample.js
+    CasperJS, a navigation scripting and testing utility for PhantomJS
     PhantomJS: Headless WebKit with JavaScript API
 
 .. topic:: What did we just do?
@@ -67,7 +67,7 @@ Fire up your favorite editor and save the javascript code below in a
     function getLinks() {
         var links = document.querySelectorAll('h3.r a');
         return Array.prototype.map.call(links, function(e) {
-            return e.getAttribute('href')
+            return e.getAttribute('href');
         });
     }
 
@@ -164,11 +164,15 @@ Just remember to suffix your script with the ``.coffee`` extension.
 A minimal testing script
 ------------------------
 
-CasperJS is also a :ref:`testing framework <testing>`; test scripts are slightly different than scraping ones, though they share most of their API. A simplest test script::
+CasperJS is also a :ref:`testing framework <testing>`; test scripts are slightly different than scraping ones, though they share most of the API.
+
+A simplest test script::
 
     // hello-test.js
-    casper.test.assert(true);
-    casper.test.done();
+    casper.test.begin("Hello, Test!", 1, function(test) {
+      test.assert(true);
+      test.done();
+    });
 
 Run it using the ``casperjs test`` subcommand:
 
@@ -176,8 +180,9 @@ Run it using the ``casperjs test`` subcommand:
 
     $ casperjs test hello-test.js
     Test file: hello-test.js
+    # Hello, Test!
     PASS Subject is strictly true
-    PASS 1 tests executed in 0.103s, 1 passed, 0 failed.
+    PASS 1 test executed in 0.023s, 1 passed, 0 failed, 0 dubious, 0 skipped.
 
 .. note::
 

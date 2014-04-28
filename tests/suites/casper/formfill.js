@@ -1,131 +1,237 @@
-/*global casper*/
+/*global casper, __utils__*/
 /*jshint strict:false*/
-casper.start('tests/site/form.html', function() {
-    this.test.comment('Casper.fill()');
-    this.fill('form[action="result.html"]', {
-        email:         'chuck@norris.com',
-        password:      'chuck',
-        content:       'Am watching thou',
-        check:         true,
-        choice:        'no',
-        topic:         'bar',
-        file:          phantom.libraryPath + '/README.md',
-        'checklist[]': ['1', '3']
+var fs = require('fs');
+
+function testFormValues(test) {
+    test.assertField('email', 'chuck@norris.com',
+        'can fill an input[type=text] form field');
+    test.assertField('password', 'chuck',
+        'can fill an input[type=password] form field')
+    test.assertField('content', 'Am watching thou',
+        'can fill a textarea form field');
+    test.assertField('topic', 'bar',
+        'can pick a value from a select form field');
+    test.assertField('multitopic', ['bar', 'car'],
+            'can pick a set of values from a multiselect form field');
+    test.assertField('check', true,
+        'can check a form checkbox');
+    test.assertEvalEquals(function() {
+        return __utils__.findOne('input[name="choice"][value="no"]').checked;
+    }, true, 'can check a form radio button 1/2');
+    test.assertEvalEquals(function() {
+        return __utils__.findOne('input[name="choice"][value="yes"]').checked;
+    }, false, 'can check a form radio button 2/2');
+    test.assertEvalEquals(function() {
+        return (__utils__.findOne('input[name="checklist[]"][value="1"]').checked &&
+               !__utils__.findOne('input[name="checklist[]"][value="2"]').checked &&
+                __utils__.findOne('input[name="checklist[]"][value="3"]').checked);
+    }, true, 'can fill a list of checkboxes');
+}
+
+function testUrl(test) {
+    test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
+    test.assertUrlMatch(/password=chuck/, 'input[type=password] field was submitted');
+    test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
+    test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
+    test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
+    test.assertUrlMatch(/topic=bar/, 'select field was submitted');
+    test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
+}
+
+casper.test.begin('fill() & fillNames() tests', 17, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            email:         'chuck@norris.com',
+            password:      'chuck',
+            content:       'Am watching thou',
+            check:         true,
+            choice:        'no',
+            topic:         'bar',
+            multitopic:    ['bar', 'car'],
+            file:          fpath,
+            'checklist[]': ['1', '3'],
+            strange:       "very"
+        });
+        testFormValues(test);
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'can select a file to upload');
     });
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('input[name="email"]').value;
-    }, 'chuck@norris.com', 'Casper.fill() can fill an input[type=text] form field');
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('input[name="password"]').value;
-    }, 'chuck', 'Casper.fill() can fill an input[type=password] form field');
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('textarea[name="content"]').value;
-    }, 'Am watching thou', 'Casper.fill() can fill a textarea form field');
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('select[name="topic"]').value;
-    }, 'bar', 'Casper.fill() can pick a value from a select form field');
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('input[name="check"]').checked;
-    }, true, 'Casper.fill() can check a form checkbox');
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('input[name="choice"][value="no"]').checked;
-    }, true, 'Casper.fill() can check a form radio button 1/2');
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('input[name="choice"][value="yes"]').checked;
-    }, false, 'Casper.fill() can check a form radio button 2/2');
-    this.test.assertEvalEquals(function() {
-        return document.querySelector('input[name="file"]').files.length === 1;
-    }, true, 'Casper.fill() can select a file to upload');
-    this.test.assertEvalEquals(function() {
-        return (document.querySelector('input[name="checklist[]"][value="1"]').checked &&
-               !document.querySelector('input[name="checklist[]"][value="2"]').checked &&
-                document.querySelector('input[name="checklist[]"][value="3"]').checked);
-    }, true, 'Casper.fill() can fill a list of checkboxes');
-
-});
-
-casper.then(function() {
-    this.test.comment('Casper.getFormValues()');
-    this.test.assertEquals(this.getFormValues('form'), {
-        "check": true,
-        "checklist[]": ["1", "3"],
-        "choice": "no",
-        "content": "Am watching thou",
-        "email": "chuck@norris.com",
-        "file": "C:\\fakepath\\README.md",
-        "password": "chuck",
-        "submit": "submit",
-        "topic": "bar"
-    }, 'Casper.getFormValues() retrieves filled values');
-    this.test.comment('submitting form');
-    this.click('input[type="submit"]');
-});
-
-casper.then(function() {
-    this.test.comment('Form submitted');
-    this.test.assertUrlMatch(/email=chuck@norris.com/, 'Casper.fill() input[type=email] field was submitted');
-    this.test.assertUrlMatch(/password=chuck/, 'Casper.fill() input[type=password] field was submitted');
-    this.test.assertUrlMatch(/content=Am\+watching\+thou/, 'Casper.fill() textarea field was submitted');
-    this.test.assertUrlMatch(/check=on/, 'Casper.fill() input[type=checkbox] field was submitted');
-    this.test.assertUrlMatch(/choice=no/, 'Casper.fill() input[type=radio] field was submitted');
-    this.test.assertUrlMatch(/topic=bar/, 'Casper.fill() select field was submitted');
-});
-
-casper.thenOpen('tests/site/form.html', function() {
-    this.fill('form[action="result.html"]', {
-        email:         'chuck@norris.com',
-        password:      'chuck',
-        content:       'Am watching thou',
-        check:         true,
-        choice:        'yes',
-        topic:         'bar',
-        file:          phantom.libraryPath + '/README.md',
-        'checklist[]': ['1', '3']
+    casper.thenClick('input[type="submit"]', function() {
+        testUrl(test);
+    });
+    casper.run(function() {
+        test.done();
     });
 });
 
-casper.then(function() {
-    this.test.assertEquals(this.getFormValues('form'), {
-        "check": true,
-        "checklist[]": ["1", "3"],
-        "choice": "yes",
-        "content": "Am watching thou",
-        "email": "chuck@norris.com",
-        "file": "C:\\fakepath\\README.md",
-        "password": "chuck",
-        "submit": "submit",
-        "topic": "bar"
-    }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
+casper.test.begin('fillSelectors() tests', 17, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+
+    casper.start('tests/site/form.html', function() {
+        this.fillSelectors('form[action="result.html"]', {
+            "input[name='email']":        'chuck@norris.com',
+            "input[name='password']":     'chuck',
+            "textarea[name='content']":   'Am watching thou',
+            "input[name='check']":        true,
+            "input[name='choice']":       'no',
+            "select[name='topic']":       'bar',
+            "select[name='multitopic']":  ['bar', 'car'],
+            "input[name='file']":         fpath,
+            "input[name='checklist[]']":  ['1', '3'],
+            "input[name='strange']":      "very"
+        });
+        testFormValues(test);
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'can select a file to upload');
+    });
+    casper.thenClick('input[type="submit"]', function() {
+        testUrl(test);
+    });
+    casper.run(function() {
+        test.done();
+    });
 });
 
-casper.thenOpen('tests/site/form.html', function() {
-    this.test.comment('Unexistent fields');
-    this.test.assertRaises(this.fill, ['form[action="result.html"]', {
-        unexistent: 42
-    }, true], 'Casper.fill() raises an exception when unable to fill a form');
+casper.test.begin('fillXPath() tests', 16, function(test) {
+    casper.start('tests/site/form.html', function() {
+        this.fillXPath('form[action="result.html"]', {
+            '//input[@name="email"]':       'chuck@norris.com',
+            '//input[@name="password"]':    'chuck',
+            '//textarea[@name="content"]':  'Am watching thou',
+            '//input[@name="check"]':       true,
+            '//input[@name="choice"]':      'no',
+            '//select[@name="topic"]':      'bar',
+            '//select[@name="multitopic"]': ['bar', 'car'],
+            '//input[@name="checklist[]"]': ['1', '3'],
+            '//input[@name="strange"]':     "very"
+        });
+        testFormValues(test);
+        // note: file inputs cannot be filled using XPath
+    });
+    casper.thenClick('input[type="submit"]', function() {
+        testUrl(test);
+    });
+    casper.run(function() {
+        test.done();
+    });
 });
 
-// multiple forms
-casper.thenOpen('tests/site/multiple-forms.html', function() {
-    this.test.comment('Multiple forms');
-    this.fill('form[name="f2"]', {
-        yo: "ok"
-    }, true);
-}).then(function() {
-    this.test.assertUrlMatch(/\?f=f2&yo=ok$/, 'Casper.fill() handles multiple forms');
+casper.test.begin('nonexistent fields', 1, function(test) {
+    casper.start('tests/site/form.html', function() {
+        test.assertRaises(this.fill, ['form[action="result.html"]', {
+            nonexistent: 42
+        }, true], 'Casper.fill() raises an exception when unable to fill a form');
+    }).run(function() {
+        test.done();
+    });
 });
 
-// issue #267: array syntax field names
-casper.thenOpen('tests/site/field-array.html', function() {
-    this.test.comment('Field arrays');
-    this.fill('form', {
-        'foo[bar]': "bar",
-        'foo[baz]': "baz"
-    }, true);
-}).then(function() {
-    this.test.assertUrlMatch('?foo[bar]=bar&foo[baz]=baz', 'Casper.fill() handles array syntax field names');
+casper.test.begin('multiple forms', 1, function(test) {
+    casper.start('tests/site/multiple-forms.html', function() {
+        this.fill('form[name="f2"]', {
+            yo: "ok"
+        }, true);
+    }).waitForUrl(/\?f=f2&yo=ok$/, function() {
+        this.fill('form[name="f2"]', {
+            yo: "ok"
+        });
+        test.assertEquals(this.getFormValues('form[name="f2"]'), {
+            f: "f2",
+            yo: "ok"
+        }, 'Casper.getFormValues() retrieves filled values when multiple forms have same field names');
+    }).run(function() {
+        test.done();
+    });
 });
 
-casper.run(function() {
-    this.test.done(20);
+casper.test.begin('field array', 1, function(test) {
+    // issue #267: array syntax field names
+    casper.start('tests/site/field-array.html', function() {
+        this.fill('form', {
+            'foo[bar]': "bar",
+            'foo[baz]': "baz"
+        }, true);
+    }).waitForUrl("?foo[bar]=bar&foo[baz]=baz", function() {
+        test.pass('Casper.fill() handles array syntax field names');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('getFormValues() tests', 2, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+    var fileValue = 'README.md';
+    if (phantom.casperEngine === 'phantomjs') {
+        fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
+    }
+
+    casper.start('tests/site/form.html', function() {
+        this.fill('form[action="result.html"]', {
+            email:         'chuck@norris.com',
+            password:      'chuck',
+            language:      'english',
+            content:       'Am watching thou',
+            check:         true,
+            choice:        'no',
+            topic:         'bar',
+            multitopic:         ['bar', 'car'],
+            file:          fpath,
+            'checklist[]': ['1', '3'],
+            strange:       "very"
+        });
+    });
+    casper.then(function() {
+        test.assertEquals(this.getFormValues('form'), {
+            "check": true,
+            "checklist[]": ["1", "3"],
+            "choice": "no",
+            "content": "Am watching thou",
+            "email": "chuck@norris.com",
+            "file": fileValue,
+            "password": "chuck",
+            "submit": "submit",
+            "language": "english",
+            "topic": "bar",
+            "multitopic": ["bar", "car"],
+            "strange": "very"
+        }, 'Casper.getFormValues() retrieves filled values');
+    });
+    casper.then(function() {
+        this.fill('form[action="result.html"]', {
+            email:         'chuck@norris.com',
+            password:      'chuck',
+            language:      'english',
+            content:       'Am watching thou',
+            check:         true,
+            choice:        'yes',
+            topic:         'bar',
+            multitopic:    ["bar", "car"],
+            file:          fpath,
+            'checklist[]': ['1', '3'],
+            strange:       "very"
+        });
+    });
+    casper.then(function() {
+        test.assertEquals(this.getFormValues('form'), {
+            "check": true,
+            "checklist[]": ["1", "3"],
+            "choice": "yes",
+            "content": "Am watching thou",
+            "email": "chuck@norris.com",
+            "file": fileValue,
+            "password": "chuck",
+            "language": "english",
+            "submit": "submit",
+            "topic": "bar",
+            "multitopic": ["bar", "car"],
+            "strange": "very"
+        }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
+    });
+    casper.run(function() {
+        test.done();
+    });
 });

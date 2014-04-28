@@ -51,17 +51,17 @@ casper.test.begin('ClientUtils.exists() tests', 5, function(test) {
 casper.test.begin('ClientUtils.findAll() tests', 7, function(test) {
     var clientutils = require('clientutils').create();
     fakeDocument('<ul class="foo"><li>bar</li><li>baz</li></ul>');
-    test.assertType(clientutils.findAll('li'), 'nodelist',
+    test.assertType(clientutils.findAll('li'), 'array',
         'ClientUtils.findAll() can find matching DOM elements');
     test.assertEquals(clientutils.findAll('li').length, 2,
         'ClientUtils.findAll() can find matching DOM elements');
-    test.assertType(clientutils.findAll('ol'), 'nodelist',
+    test.assertType(clientutils.findAll('ol'), 'array',
         'ClientUtils.findAll() can find matching DOM elements');
     test.assertEquals(clientutils.findAll('ol').length, 0,
         'ClientUtils.findAll() can find matching DOM elements');
     // scoped
     var scope = clientutils.findOne('ul');
-    test.assertType(clientutils.findAll('li', scope), 'nodelist',
+    test.assertType(clientutils.findAll('li', scope), 'array',
         'ClientUtils.findAll() can find matching DOM elements within a given scope');
     test.assertEquals(clientutils.findAll('li', scope).length, 2,
         'ClientUtils.findAll() can find matching DOM elements within a given scope');
@@ -159,5 +159,65 @@ casper.test.begin('ClientUtils.getElementInfo() tests', 10, function(test) {
     test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility');
     test.assertEquals(info.tag, '<a href="plop" class="plip plup"><i>paf</i></a>',
         'ClientUtils.getElementInfo() retrieves element whole tag contents');
+    test.done();
+});
+
+casper.test.begin('ClientUtils.getElementsInfo() first element tests', 10, function(test) {
+    casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a><a href="plap" class="plip plup"><i>puf</i></a>';
+    var info = casper.getElementsInfo('a.plip');
+    test.assertEquals(info[0].nodeName, 'a', 'ClientUtils.getElementsInfo() retrieves first element name');
+    test.assertEquals(info[0].attributes, {
+        'href': 'plop',
+        'class': 'plip plup'
+    }, 'ClientUtils.getElementsInfo() retrieves first element attributes');
+    test.assertEquals(info[0].html, '<i>paf</i>', 'ClientUtils.getElementsInfo() retrieves first element html content');
+    test.assertEquals(info[0].text, 'paf', 'ClientUtils.getElementsInfo() retrieves first element text');
+    test.assert(info[0].x > 0, 'ClientUtils.getElementsInfo() retrieves first element x pos');
+    test.assert(info[0].y > 0, 'ClientUtils.getElementsInfo() retrieves first element y pos');
+    test.assert(info[0].width > 0, 'ClientUtils.getElementsInfo() retrieves first element width');
+    test.assert(info[0].height > 0, 'ClientUtils.getElementsInfo() retrieves first element height');
+    test.assert(info[0].visible, 'ClientUtils.getElementsInfo() retrieves first element visibility');
+    test.assertEquals(info[0].tag, '<a href="plop" class="plip plup"><i>paf</i></a>',
+        'ClientUtils.getElementsInfo() retrieves first element whole tag contents');
+    test.done();
+});
+
+casper.test.begin('ClientUtils.getElementsInfo() second element tests', 10, function(test) {
+    casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a><a href="plap" class="plip plup"><i>puf</i></a>';
+    var info = casper.getElementsInfo('a.plip');
+    test.assertEquals(info[1].nodeName, 'a', 'ClientUtils.getElementsInfo() retrieves second element name');
+    test.assertEquals(info[1].attributes, {
+        'href': 'plap',
+        'class': 'plip plup'
+    }, 'ClientUtils.getElementsInfo() retrieves second element attributes');
+    test.assertEquals(info[1].html, '<i>puf</i>', 'ClientUtils.getElementsInfo() retrieves second element html content');
+    test.assertEquals(info[1].text, 'puf', 'ClientUtils.getElementsInfo() retrieves second element text');
+    test.assert(info[1].x > 0, 'ClientUtils.getElementsInfo() retrieves second element x pos');
+    test.assert(info[1].y > 0, 'ClientUtils.getElementsInfo() retrieves second element y pos');
+    test.assert(info[1].width > 0, 'ClientUtils.getElementsInfo() retrieves second element width');
+    test.assert(info[1].height > 0, 'ClientUtils.getElementsInfo() retrieves second element height');
+    test.assert(info[1].visible, 'ClientUtils.getElementsInfo() retrieves second element visibility');
+    test.assertEquals(info[1].tag, '<a href="plap" class="plip plup"><i>puf</i></a>',
+        'ClientUtils.getElementsInfo() retrieves second element whole tag contents');
+    test.done();
+});
+
+casper.test.begin('ClientUtils.getElementInfo() visibility tests', 4, function(test) {
+    casper.page.content = '<a href="plop" class="plip plup" style="display: inline"><i>paf</i></a>';
+    var info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="display: inline-block"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline-block');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="visibility: hidden"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with visibility hidden');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="display: none"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display none');
+
     test.done();
 });

@@ -5,42 +5,61 @@
 Installation
 ============
 
-CasperJS can be installed on most Linuxes, OSX and Windows.
+CasperJS can be installed on Mac OSX, Windows and most Linuxes.
 
 Prerequisites
 -------------
 
-.. index:: PhantomJS, Python
+.. index:: PhantomJS, Python, SlimerJS
 
-- PhantomJS_ 1.8.1 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
-- Python_ 2.6 or greater
+- PhantomJS_ 1.8.2 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
+- Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
 
-.. note::
+.. versionadded:: 1.1
 
-   .. versionadded:: 1.0
-
-   A `Ruby <http://ruby-lang.org/>`_ version of the ``casperjs`` executable is also available in the ``rubybin/`` directory; in order to use the :index:`Ruby` version instead of the Python one:
-
-   .. code-block:: text
-
-       $ ln -sf `pwd`/rubybin/casperjs /usr/local/bin/casperjs
-
-   Or using the ruby interpreter:
-
-   .. code-block:: text
-
-       $ ruby /path/to/casperjs/rubybin/casperjs
-       CasperJS version 1.1-DEV at /path/to/casperjs/rubybin/casperjs, using PhantomJS version 1.7.0
-       ...
+- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit (just add `--engine=slimerjs` to your command line options). To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_.
 
 .. index:: Homebrew
 
 Installing from Homebrew (OSX)
 ------------------------------
 
-Installation of both PhantomJS and CasperJS can be achieved through `Homebrew <http://mxcl.github.com/homebrew/>`_::
+Installation of both PhantomJS and CasperJS can be achieved using Homebrew_, a popular package manager for Mac OS X.
 
-   $ brew install casperjs
+Above all, don't forget to update Formulaes::
+
+    $ brew update
+
+For the 1.1 development version (recommended)::
+
+    $ brew install casperjs --devel
+
+For the 1.0.x stable version::
+
+    $ brew install casperjs
+
+If you have already installed casperjs and want to have the last release (stable|devel), use ``upgrade``::
+
+    $ brew upgrade casperjs
+
+Upgrade only update to the latest release branch (1.0.x|1.1-dev).
+
+Installing from npm
+-------------------
+
+.. versionadded:: 1.1-beta3
+
+You can install CasperJS using `npm <http://npmjs.org/>`_::
+
+    $ npm install -g casperjs
+
+.. note::
+
+   The ``-g`` flag makes the ``casperjs`` executable available system-wide.
+
+.. warning::
+
+   While CasperJS is installable via npm, :ref:`it's not a NodeJS package <faq_node>`, neither it's capable to require native NodeJS modules.
 
 .. index:: git
 
@@ -49,14 +68,13 @@ Installing from git
 
 Installation can be achieved using `git <http://git-scm.com/>`_. The code is mainly hosted on `Github <https://github.com/n1k0/casperjs>`_.
 
-From a stable tag
-~~~~~~~~~~~~~~~~~
+From the master branch
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: text
 
     $ git clone git://github.com/n1k0/casperjs.git
     $ cd casperjs
-    $ git checkout tags/1.0
     $ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
 
 Once PhantomJS and CasperJS installed on your machine, you should obtain something like this:
@@ -64,28 +82,19 @@ Once PhantomJS and CasperJS installed on your machine, you should obtain somethi
 .. code-block:: text
 
     $ phantomjs --version
-    1.8.2
-    $ casperjs --version
-    1.0
+    1.9.2
+    $ casperjs
+    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using phantomjs version 1.9.2
+    # ...
 
-From the master branch
-~~~~~~~~~~~~~~~~~~~~~~
-
-The ``master`` branch hosts the current development version of CasperJS.
+Or if SlimerJS is your thing:
 
 .. code-block:: text
 
-    $ git clone git://github.com/n1k0/casperjs.git
-    $ cd casperjs
-    $ git checkout master
-    $ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
-
-To check your current installed version:
-
-.. code-block:: text
-
-    $ casperjs --version
-    1.1-DEV
+    $ slimerjs --version
+    Innophi SlimerJS 0.8pre, Copyright 2012-2013 Laurent Jouanneau & Innophi
+    $ casperjs
+    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using slimerjs version 0.8.0
 
 You are now ready to write your :doc:`first script <quickstart>`!
 
@@ -95,15 +104,15 @@ Installing from an archive
 
 You can download tagged archives of CasperJS code:
 
-**Latest stable version:**
-
-- https://github.com/n1k0/casperjs/zipball/1.0.0 (zip)
-- https://github.com/n1k0/casperjs/tarball/1.0.0 (tar.gz)
-
 **Latest development version (master branch):**
 
 - https://github.com/n1k0/casperjs/zipball/master (zip)
 - https://github.com/n1k0/casperjs/tarball/master (tar.gz)
+
+**Latest stable version:**
+
+- https://github.com/n1k0/casperjs/zipball/1.0.3 (zip)
+- https://github.com/n1k0/casperjs/tarball/1.0.3 (tar.gz)
 
 Operations are then the same as with a git checkout.
 
@@ -122,48 +131,41 @@ Phantomjs installation additions
 Casperjs installation additions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 1.0
+.. versionadded:: 1.1-beta3
 
-CasperJS, as of 1.0.0-RC3, ships with a Batch script so you don't need Python nor Ruby to use it.
-
-- Append ``";C:\casperjs\batchbin"`` to your ``PATH`` environment variable.
+- Append ``";C:\casperjs\bin"`` to your ``PATH`` environment variable.
 - Modify this path appropriately if you installed CasperJS to a different location.
 
 You can now run any regular casper scripts that way:
 
 .. code-block:: text
 
-    C:> casperjs.bat myscript.js
+    C:> casperjs myscript.js
 
-Earlier versions of CasperJS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Before 1.0.0-RC3, you had to setup your casper scripts that way::
-
-    phantom.casperPath = 'C:\\casperjs-1.1';
-    phantom.injectJs(phantom.casperPath + '\\bin\\bootstrap.js');
-
-    var casper = require('casper').create();
-
-    // do stuff
-
-Run the script using the ``phantom.exe`` program:
-
-.. code-block:: text
-
-    C:> phantomjs.exe myscript.js
+Colorized output
+~~~~~~~~~~~~~~~~
 
 .. note::
 
-   There is no output coloration when running CasperJS on Microsoft platforms.
+   .. versionadded:: 1.1-beta1
 
+   Windows users will get colorized output if ansicon_ is installed.
 
 .. index:: Bugs, REPL
+
+Compilation (Optionaly)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+- .NET Framework 3.5 or greater (or Mono_ 2.10.8 or greater) for ``casperjs.exe`` in the ``bin/`` directory
 
 Known Bugs & Limitations
 ------------------------
 
 - Due to its asynchronous nature, CasperJS doesn't work well with `PhantomJS' REPL <http://code.google.com/p/phantomjs/wiki/InteractiveModeREPL>`_.
 
+.. _Homebrew: http://mxcl.github.com/homebrew/
 .. _PhantomJS: http://phantomjs.org/
 .. _Python: http://python.org/
+.. _SlimerJS: http://slimerjs.org/
+.. _ansicon: https://github.com/adoxa/ansicon
+.. _Mono: http://www.mono-project.com/

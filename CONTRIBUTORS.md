@@ -5,43 +5,78 @@ You can check out the [contribution graphs on github](https://github.com/n1k0/ca
 ```
 $ git shortlog -s -n | cut -c8-
 Nicolas Perriault
-oncletom
+Mickaël Andrieu
+Laurent Jouanneau
+hexid
 Brikou CARRE
+oncletom
+Matt DuVall
+Nathan Black
 hannyu
 Julien Muetton
+Chris Bosco
+Matt Bowman
+Shiryaev Andrey
+mickaelandrieu
+Clochix
 Chris Lorenzo
 Victor Yap
+JF Paradis
+Matthew DuVall
 Rob Barreca
-nrabinowitz
 Oleg Pudeyev
-Tyler Ritchie
 pborreli
-Luke Rodgers
-reina.sweet
+nrabinowitz
+Darrell Hamilton
+Tyler Ritchie
 Andrew Childs
+Eric Bouchut
 Dave Lee
 Solomon White
-Lee Byrd
-Julien Moulin
+Luke Rodgers
+reina.sweet
+renatodarrigo
 Donovan Hutchinson
-Philip Hansen
-Elmar Langholz
-Reina Sweet
-Thomas Rosenau
-Michael Geers
+Sean Massa
 Vladimir Chizhov
+Samuel Gabel
+Reina Sweet
 Jan Schaumann
-Clochix
+fwebdev
+Reid Lynch
+Justin Collum
+Philip Hansen
+Michael Geers
+Orchestrator81
+Nick Currier
+Julien Moulin
+Elmar Langholz
 Jason Funk
-snkashis
+Lee Byrd
+Thomas Rosenau
+V Sreekanth
+Patrick Reagan
 Andrew de Andrade
+Andy Shinn
+Ben Johnson
 Ben Lowery
+Bert Pareyn
+Brandon Bethke
+Charlie Park
 Chris Winters
 Christophe Benz
+Dharrya
+Dmitry Menshikov
+Florent DUBOST
 Harrison Reiser
+Itamar Nabriski
+Ivan
+Jamey J. DeOrio
 Jan Pochyla
 Jan-Martin Fruehwacht
+John F. Douthat
 Julian Gruber
+Justin Marsan
 Justin Slattery
 Justine Tunney
 KaroDidi
@@ -50,14 +85,25 @@ Maisons du monde
 Marcel Duran
 Mathieu Agopian
 Mehdi Kabab
+Miguel González
+Mikhail Korobov
 Mikko Peltonen
 Narno
 Pascal Borreli
+Phillip Alexander
 Rafael
 Rafael Garcia
 Raphaël Benitte
+Rock Li
+Scott
+Thomas Parisot
 Tim Bunce
+Tzvi Friedman
+Yasuo Ohgaki
 Yevgeny Smirnov
 alfetopito
+jayseeg
 jean-philippe serafin
+shekyan
+snkashis
 ```

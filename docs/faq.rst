@@ -10,6 +10,8 @@ FAQ
    :local:
    :backlinks: top
 
+.. _faq_node:
+
 .. index:: Node.js
 
 Is CasperJS a `node.js <http://nodejs.org/>`_ library?
@@ -61,7 +63,7 @@ Also, don't forget that CasperJS supports a `CommonJS-compliant module pattern <
 
 .. note::
 
-    CasperJS' implementation of ``require()`` differs a bit from the one provided by PhantomJS_, but I personnaly never really encountered any functional difference.
+    CasperJS' implementation of ``require()`` differs a bit from the one provided by PhantomJS_, but I personally never encountered any functional difference.
 
 
 .. index:: Versionning
@@ -95,7 +97,7 @@ A first solution is to inject it into the remote DOM environment by hand using t
 
     casper.page.injectJs('/path/to/jquery.js');
 
-If you need jQuery being available everytime, you can also make it being injected in every received response by setting the ``clientScripts`` option of CasperJS::
+In the event that you require jQuery being available on every page, you can make use of the ``clientScripts`` option of CasperJS::
 
     var casper = require('casper').create({
         clientScripts: ["includes/jquery.min.js"]
@@ -187,7 +189,7 @@ Nowhere. CasperJS doesn't write logs on the filesystem. You have to implement th
 What's this mysterious ``__utils__`` object?
 --------------------------------------------
 
-The ``__utils__`` object is actually a :ref:`ClientUtils object <clientutils_prototype>` which have been automatically injected into the page DOM and is therefore alway available.
+The ``__utils__`` object is actually a :ref:`ClientUtils object <clientutils_prototype>` which have been automatically injected into the page DOM and is therefore always available.
 
 So everytime to perform an :ref:`evaluate() <casper_evaluate>` call, you have this instance available to perform common operation like:
 
@@ -329,6 +331,17 @@ Of course, it's a whole lot more verbose, but Casper provides convenient methods
         });
         this.echo('Element HTML is now: ' + this.getElementInfo('h1').html);
     });
+
+.. _faq_test_casper_instance:
+
+Why can't I create a new `casper` instance in a test environment?
+-----------------------------------------------------------------
+
+The `casperjs test` :ref:`subcommand <test_subcomand>` is a convenient utility which bootstraps and configures a :ref:`test environment <testing>` for you, so a preconfigured `casper` object is already available in your test script when using this command.
+
+As of 1.1-beta3, you're prevented from overriding this preconfigured instance as this practice prevents the test runner from working properly. If you try to create a new casper instance in a test script, you'll get an error and CasperJS will exit with an error message with a link pointing to the documentation.
+
+One may argue this is mostly related to some historical bad design decisions, and this might be true. This behavior is not likely to exist anymore in a future 2.0.
 
 .. _faq_javascript:
 

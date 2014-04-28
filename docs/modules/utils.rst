@@ -24,6 +24,15 @@ Usage is pretty much straightforward::
 
 Provides a better ``typeof`` operator equivalent, eg. able to retrieve the ``Array`` type.
 
+``betterInstanceOf()``
+-------------------------------------------------------------------------------
+
+.. versionadded:: 1.1
+
+**Signature:** ``betterInstanceOf(input, constructor)``
+
+Provides a better ``instanceof`` operator equivalent, is able to retrieve the ``Array`` instance or to deal with inheritance.
+
 .. index:: dump, Serialization, Debugging, JSON
 
 .. _utils_dump:
@@ -207,9 +216,11 @@ Checks if passed argument is an instance of native PhantomJS' ``WebPage`` object
 ``mergeObjects()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``mergeObjects(origin, add)``
+**Signature:** ``mergeObjects(origin, add[, Object opts])``
 
 Merges two objects recursively.
+
+Add ``opts.keepReferences`` if cloning of internal objects is not needed.
 
 .. index:: DOM
 
