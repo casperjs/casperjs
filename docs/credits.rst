@@ -62,3 +62,11 @@ Logo
 ----
 
 CasperJS logo designed by `Jeremy Forveille <http://www.linkedin.com/pub/j%C3%A9r%C3%A9my-forveille/15/315/691>`_
+
+You can download the logo sources here:
+
+- `logo CasperJS (PDF) <_static/images/logo_casperjs.pdf>`_
+- `logo CasperJS (EPS) <_static/images/logo_casperjs.eps>`_
+- `logo CasperJS (AI) <_static/images/logo_casperjs.ai>`_
+
+These assets are under `MIT license <http://en.wikipedia.org/wiki/MIT_License>`_
