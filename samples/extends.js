@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError, console, phantom, require*/
+/*global CasperError, console, phantom, require, __utils__ */
 
 var casper = require("casper").create({
     loadImages: false,

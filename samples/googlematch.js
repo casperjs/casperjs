@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError, console, phantom, require*/
+/*global CasperError, console, phantom, require, __utils__*/
 
 /**
  * Takes provided terms passed as arguments and query google for the number of
