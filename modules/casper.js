@@ -1047,7 +1047,15 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
+    var zoomFactor = this.page.zoomFactor || 1;
     var clipRect = this.callUtils("getElementBounds", selector);
+    if (zoomFactor !== 1) {
+        for (var prop in clipRect) {
+            if (clipRect.hasOwnProperty(prop)) {
+                clipRect[prop] = clipRect[prop] * zoomFactor;
+            }
+        }
+    }
     if (!utils.isClipRect(clipRect)) {
         throw new CasperError('Could not fetch boundaries for element matching selector: ' + selector);
     }
@@ -1090,13 +1098,24 @@ Casper.prototype.getElementsInfo = function getElementsInfo(selector) {
  * @param  String  selector  A DOM CSS3/XPath selector
  * @return Array
  */
-Casper.prototype.getElementsBounds = function getElementBounds(selector) {
+Casper.prototype.getElementsBounds = function getElementsBounds(selector) {
     "use strict";
     this.checkStarted();
     if (!this.exists(selector)) {
         throw new CasperError("No element matching selector found: " + selector);
     }
-    return this.callUtils("getElementsBounds", selector);
+    var zoomFactor = this.page.zoomFactor || 1;
+    var clipRects = this.callUtils("getElementsBounds", selector);
+    if (zoomFactor !== 1) {
+        Array.prototype.forEach.call(clipRects, function(clipRect) {
+            for (var prop in clipRect) {
+                if (clipRect.hasOwnProperty(prop)) {
+                    clipRect[prop] = clipRect[prop] * zoomFactor;
+                }
+            }
+        });
+    }
+    return clipRects;
 };
 
 /**
