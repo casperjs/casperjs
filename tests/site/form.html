@@ -37,6 +37,9 @@
             (function () {
                 'use strict';
 
+                // Force fields initialization
+                document.querySelector("input[name=email]").value = "";
+
                 // El-cheapo autocomplete
 
                 var choices = [
