@@ -129,7 +129,7 @@ EventEmitter.prototype.addListener = function addListener(type, listener) {
   } else if (isArray(this._events[type])) {
 
     // If we've already got an array, just append.
-    this._events[type].push(listener);
+    this._events[type]['fail' === type ? 'unshift' : 'push'](listener);
 
     // Check for listener leak
     if (!this._events[type].warned) {
@@ -151,7 +151,7 @@ EventEmitter.prototype.addListener = function addListener(type, listener) {
     }
   } else {
     // Adding the second element, need to change to array.
-    this._events[type] = [this._events[type], listener];
+    this._events[type] = 'fail' === type ? [listener, this._events[type]] : [this._events[type], listener];
   }
 
   return this;
