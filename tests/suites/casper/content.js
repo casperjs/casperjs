@@ -13,7 +13,7 @@ casper.test.begin("Casper.getPageContent() text/html content", 1, function(test)
 
 casper.test.begin("Casper.getPageContent() non text/html content", 1, function(test) {
   casper.start("tests/site/dummy.js", function() {
-    test.assertEquals(this.getPageContent(), "document.write('foo');",
+    test.assertEquals(this.getPageContent(), "document.write('foo');\n",
                       "Casper.getPageContent() retrieves non text/html content");
   }).run(function() {
     test.done();

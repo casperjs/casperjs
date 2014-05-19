@@ -233,11 +233,9 @@ utils.inherits(Casper, events.EventEmitter);
 Casper.prototype.back = function back() {
     "use strict";
     this.checkStarted();
-    return this.then(function _step() {
+    return this.then(function() {
         this.emit('back');
-        this.evaluate(function _evaluate() {
-            history.back();
-        });
+        this.page.goBack();
     });
 };
 
@@ -943,36 +941,10 @@ Casper.prototype.getPageContent = function getPageContent() {
     "use strict";
     this.checkStarted();
     var contentType = utils.getPropertyPath(this, 'currentResponse.contentType');
-    if (!utils.isString(contentType)) {
+    if (!utils.isString(contentType) || contentType.indexOf("text/html") !== -1) {
         return this.page.frameContent;
     }
-    // for some reason (qt)webkit/Gecko will always enclose non text/html body contents within an html
-    // structure like this:
-    // webkit: <html><head></head><body><pre style="(...)">content</pre></body></html>
-    // gecko: <html><head><link rel="alternate stylesheet" type="text/css" href="resource://gre-resources/plaintext.css" title="..."></head><body><pre>document.write('foo');\n</pre></body></html>
-    var sanitizedHtml = this.evaluate(function checkHtml() {
-        var head = __utils__.findOne('head'),
-            body = __utils__.findOne('body');
-        if (!head || !body) {
-            return null;
-        }
-        // for content in Webkit
-        if (head.childNodes.length === 0 &&
-            body.childNodes.length === 1 &&
-            __utils__.findOne('body pre[style]')) {
-            return __utils__.findOne('body pre').textContent.trim();
-        }
-        // for content in Gecko
-        if (head.childNodes.length === 1 &&
-            body.childNodes.length === 1 &&
-            head.childNodes[0].localName === 'link' &&
-            head.childNodes[0].getAttribute('href') === 'resource://gre-resources/plaintext.css' &&
-            body.childNodes[0].localName === 'pre' ) {
-            return body.childNodes[0].textContent.trim();
-        }
-        return null;
-    });
-    return sanitizedHtml ? sanitizedHtml : this.page.frameContent;
+    return this.page.framePlainText;
 };
 
 /**
