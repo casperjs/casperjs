@@ -2084,6 +2084,13 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         throw new CasperError("waitFor() next step definition must be a function");
     }
     return this.then(function _step() {
+        // if the condition is met already, simply add the provided step and return
+        if (testFx.call(this, this)) {
+            setTimeout(function() {
+                this.then(then);
+            }.bind(this), 0);
+            return;
+        }
         this.waitStart();
         var start = new Date().getTime();
         var condition = false;
