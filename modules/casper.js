@@ -913,11 +913,9 @@ Casper.prototype.fillXPath = function fillXPath(formSelector, vals, submit) {
 Casper.prototype.forward = function forward() {
     "use strict";
     this.checkStarted();
-    return this.then(function _step() {
+    return this.then(function() {
         this.emit('forward');
-        this.evaluate(function _evaluate() {
-            history.forward();
-        });
+        this.page.goForward();
     });
 };
 
