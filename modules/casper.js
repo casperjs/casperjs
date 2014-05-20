@@ -1436,9 +1436,8 @@ Casper.prototype.open = function open(location, settings) {
 Casper.prototype.reload = function reload(then) {
     "use strict";
     this.checkStarted();
-    // window.location.reload() is broken under phantomjs
     this.then(function() {
-        this.open(this.getCurrentUrl());
+        this.page.reload();
     });
     if (utils.isFunction(then)) {
         this.then(this.createStep(then));
