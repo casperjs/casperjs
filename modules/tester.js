@@ -313,6 +313,7 @@ Tester.prototype.assertTrue = function assert(subject, message, context) {
         type: "assert",
         standard: "Subject is strictly true",
         message: message,
+        description: "Use this property to customize textContent of a failure node (XML) - useful for jenkins report",
         file: this.currentTestFile,
         doThrow: true,
         values: {
@@ -481,7 +482,8 @@ Tester.prototype.assertFail = function assertFail(fn, message) {
     }
     return this.assert(failed, message, {
         type: "assertFail",
-        standard: "Assertion fails as expected"
+        standard: "Assertion fails as expected",
+        description : typeof this.description !== 'undefined' ? this.description : message
     });
 };
 

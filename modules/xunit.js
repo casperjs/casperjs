@@ -124,12 +124,14 @@ XUnitExporter.prototype.getXML = function getXML() {
             var failureNode = utils.node('failure', {
                 type: failure.type || "failure"
             });
-            failureNode.appendChild(document.createTextNode(failure.message || "no message left"));
+            failureNode.appendChild(document.createTextNode(typeof failure.description !== "undefined" && failure.description !==
+            "Use this property to customize textContent of a failure node (XML) - useful for jenkins report" ? failure.description : failure.message || "no message left"));
             if (failure.values && failure.values.error instanceof Error) {
                 var errorNode = utils.node('error', {
                     type: utils.betterTypeOf(failure.values.error)
                 });
-                errorNode.appendChild(document.createTextNode(failure.values.error.stack));
+                errorNode.appendChild(document.createTextNode(typeof failure.description !== "undefined" && failure.description !==
+                "Use this property to customize textContent of a failure node (XML) - useful for jenkins report" ? failure.description : failure.message || "no message left"));
                 testCase.appendChild(errorNode);
             }
             testCase.appendChild(failureNode);
