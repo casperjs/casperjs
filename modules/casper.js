@@ -233,11 +233,9 @@ utils.inherits(Casper, events.EventEmitter);
 Casper.prototype.back = function back() {
     "use strict";
     this.checkStarted();
-    return this.then(function _step() {
+    return this.then(function() {
         this.emit('back');
-        this.evaluate(function _evaluate() {
-            history.back();
-        });
+        this.page.goBack();
     });
 };
 
