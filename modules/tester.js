@@ -103,6 +103,7 @@ var Tester = function Tester(casper, options) {
     this.currentTestFile = null;
     this.currentTestStartTime = new Date();
     this.currentSuite = undefined;
+    this.currentFileNum = 0;
     this.currentSuiteNum = 0;
     this.lastAssertTime = 0;
     this.loadIncludes = {
@@ -1136,6 +1137,11 @@ Tester.prototype.done = function done() {
     /*jshint maxstatements:20, maxcomplexity:20*/
     var planned, config = this.currentSuite && this.currentSuite.config || {};
 
+    this.casper.echo(f("done called"), "INFO");
+
+    this.casper.echo(f("Incrementing suite num: %d -> %d", this.currentSuiteNum, this.currentSuiteNum+1), "INFO");
+    this.currentSuiteNum += 1;
+
     if (arguments.length && utils.isNumber(arguments[0])) {
         this.casper.warn('done() `planned` arg is deprecated as of 1.1');
         planned = arguments[0];
@@ -1285,7 +1291,8 @@ Tester.prototype.findTestFiles = function findTestFiles(dir) {
  */
 Tester.prototype.getCurrentSuiteId = function getCurrentSuiteId() {
     "use strict";
-    return this.casper.test.currentSuiteNum + "-" + this.casper.step;
+    // (currentFileNum - 1) because it is incremented immediately after begin() is called
+    return (this.casper.test.currentFileNum-1) + "-" + this.casper.test.currentSuiteNum + "-" + this.casper.step;
 };
 
 /**
@@ -1566,6 +1573,7 @@ Tester.prototype.runSuites = function runSuites() {
                    Array.prototype.slice.call(arguments)), "RED_BAR");
         this.casper.exit(1);
     }
+    self.currentFileNum = 0;
     self.currentSuiteNum = 0;
     self.currentTestStartTime = new Date();
     self.lastAssertTime = 0;
@@ -1573,13 +1581,18 @@ Tester.prototype.runSuites = function runSuites() {
         if (self.running) {
             return;
         }
-        if (self.currentSuiteNum === testFiles.length || self.aborted) {
+        if (self.currentFileNum === testFiles.length || self.aborted) {
             self.emit('tests.complete');
             clearInterval(interval);
             self.aborted = false;
         } else {
-            self.runTest(testFiles[self.currentSuiteNum]);
-            self.currentSuiteNum++;
+            this.casper.echo(f("Resetting suite num to 0"), 'INFO');
+            self.currentSuiteNum = 0;
+
+            self.runTest(testFiles[self.currentFileNum]);
+
+            this.casper.echo(f("Incrementing file num: %d -> %d", self.currentFileNum, self.currentFileNum+1), 'INFO');
+            self.currentFileNum++;
         }
     }, 20, this);
 };
