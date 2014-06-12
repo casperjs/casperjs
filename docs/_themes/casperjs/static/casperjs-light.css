@@ -885,3 +885,20 @@ p {
     -o-filter: drop-shadow(0 1px 20px rgba(0,0,0,.5));
     filter: drop-shadow(0 1px 20px rgba(0,0,0,.5));
 }
+
+
+/* Make sidebar fixed to keep it in window when scrolling */
+
+div.related, div.footer { margin-left: 16rem; width: auto; }
+
+div.sphinxsidebar {
+	position: fixed;
+	left: 0;
+	top: 0px;
+	height: 100%;
+	margin: 0;
+	float: none;
+	right: auto;
+	overflow: auto;
+	border-left: 2px solid #ffffff;
+}

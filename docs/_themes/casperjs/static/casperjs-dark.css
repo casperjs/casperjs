@@ -989,3 +989,24 @@ p {
 .donate .flattr {
     margin-top: 1.5em;
 }
+
+
+/* Make sidebar fixed to keep it in window when scrolling */
+
+body { background: #333;}
+
+div.related, div.footer { margin-right: 18rem; width: auto; }
+
+div.related ul { padding-right: 4px; }
+
+div.sphinxsidebar {
+	position: fixed;
+	right: 0;
+	top: 0px;
+	height: 100%;
+	margin: 0;
+	float: none;
+	left: auto;
+	overflow: auto;
+	border-left: 2px solid #ffffff;
+}
