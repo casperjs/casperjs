@@ -821,7 +821,7 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
                 var fileFieldSelector;
                 if (file.type === "names") {
                     fileFieldSelector = [selector, 'input[name="' + file.selector + '"]'].join(' ');
-                } else if (file.type === "css") {
+                } else if (file.type === "css" || file.type === "labels") {
                     fileFieldSelector = [selector, file.selector].join(' ');
                 }
                 this.page.uploadFile(fileFieldSelector, file.path);
@@ -863,6 +863,21 @@ Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
     return this.fillForm(formSelector, vals, {
         submit: submit,
         selectorType: 'names'
+    });
+};
+
+/**
+ * Fills a form with provided field values using associated label text.
+ *
+ * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  Object  vals          Field values
+ * @param  Boolean submit        Submit the form?
+ */
+Casper.prototype.fillLabels = function fillLabels(formSelector, vals, submit) {
+    "use strict";
+    return this.fillForm(formSelector, vals, {
+        submit: submit,
+        selectorType: 'labels'
     });
 };
 
