@@ -721,11 +721,12 @@ Writes an error-style formatted message to stdout::
 ``fail()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``fail(String message)``
+**Signature:** ``fail(String message [, Object option])``
 
 Adds a failed test entry to the stack::
 
     casper.test.fail("Georges W. Bush");
+    casper.test.fail("Here goes a really long and expressive message", {name:'shortfacts'});
 
 .. seealso:: `pass()`_
 
