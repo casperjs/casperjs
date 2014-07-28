@@ -391,6 +391,7 @@ class TestCommandOutputTest(CasperExecTestBase):
         self.assertCommandOutputContains('test %s --fail-fast' % folder_path, [
             '# test 1',
             '# test 2',
+            'fail event fired!',
             '--fail-fast: aborted all remaining tests',
             'FAIL 2 tests executed',
             '1 passed',
