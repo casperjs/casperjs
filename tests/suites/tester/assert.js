@@ -40,7 +40,7 @@ casper.test.begin('Common assertions tests', 47, function(test) {
         test.assertSelectorExists('body', 'Tester.assertSelectorExists() works as expected [alias]');
         test.assertSelectorExist('body', 'Tester.assertSelectorExist() works as expected [alias]');
         test.assertDoesntExist('foobar', 'Tester.assertDoesntExist() works as expected');
-        test.assertNotExist('foobar', 'Tester.assertNotExist() works as expected [alias]');
+        test.assertNotExists('foobar', 'Tester.assertNotExists() works as expected [alias]');
         // using file:// protocol, HTTP status is always null
         test.assertHttpStatus(200, 'Tester.assertHttpStatus() works as expected');
         test.assertMatch("the lazy dog", /lazy/, 'Tester.assertMatch() works as expected');
