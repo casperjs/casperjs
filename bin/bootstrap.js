@@ -101,15 +101,17 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         phantom.exit();
     }
 
-    (function(version) {
+    (function (version) {
         // required version check
-        if (version.major !== 1) {
-            return __die('CasperJS needs PhantomJS v1.x');
-        } if (version.minor < 8) {
-            return __die('CasperJS needs at least PhantomJS v1.8 or later.');
-        }
-        if (version.minor === 8 && version.patch < 1) {
-            return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
+        if (version.major === 1) {
+            if (version.minor < 8) {
+                return __die('CasperJS needs at least PhantomJS v1.8 or later.');
+            }
+            if (version.minor === 8 && version.patch < 1) {
+                return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
+            }
+        } else if (version.major !== 2) {
+            return __die('CasperJS needs PhantomJS v1.x or v2.x');
         }
     })(phantom.version);
 
