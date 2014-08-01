@@ -198,6 +198,10 @@ class RequireWithRelativeScriptPathTest(CasperExecTestBase):
     def test_node_module_require_json(self):
         self.assertCommandOutputEquals('./test_node_json.js', '42')
 
+    @timeout(20)
+    def test_node_module_require_subdir(self):
+        self.assertCommandOutputEquals('./test_node_subdir/test_node_mod.js', '42')
+
 
 class ScriptOutputTest(CasperExecTestBase):
     @timeout(20)

@@ -248,7 +248,14 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             return resolveFile(path, fs.pathJoin(phantom.casperPath, 'modules'));
         }
         function nodeModulePath(path) {
-            return resolveFile(path, fs.pathJoin(getCurrentScriptRoot(), 'node_modules'));
+            var resolved, prevBaseDir;
+            var baseDir = getCurrentScriptRoot();
+            do {
+                resolved = resolveFile(path, fs.pathJoin(baseDir, 'node_modules'));
+                prevBaseDir = baseDir;
+                baseDir = fs.absolute(fs.pathJoin(prevBaseDir, '..'));
+            } while (!resolved && baseDir !== '/' && baseDir !== prevBaseDir);
+            return resolved;
         }
         function localModulePath(path) {
             return resolveFile(path, phantom.casperScriptBaseDir || fs.workingDirectory);
