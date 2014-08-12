@@ -815,16 +815,18 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
                 if (!file || !file.path) {
                     return;
                 }
-                if (!fs.exists(file.path)) {
-                    throw new CasperError('Cannot upload nonexistent file: ' + file.path);
-                }
-                var fileFieldSelector;
-                if (file.type === "names") {
-                    fileFieldSelector = [selector, 'input[name="' + file.selector + '"]'].join(' ');
-                } else if (file.type === "css") {
-                    fileFieldSelector = [selector, file.selector].join(' ');
-                }
-                this.page.uploadFile(fileFieldSelector, file.path);
+
+                var paths = (utils.isArray(file.path) && file.path.length > 1) ? file.path :[file.path];
+                paths.map(
+                    function(file_path) {
+                        if (!fs.exists(file_path)) {
+                            throw new CasperError('Cannot upload nonexistent file: ' + file_path);
+                        };
+                        fpaths.push(file_path);
+                    }, this
+                );
+                var fileFieldSelector = this.getFileFieldSelector(selector, file);
+                this.page.uploadFile(fileFieldSelector, fpaths);
             }.bind(this));
         }
     }
@@ -850,6 +852,22 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
         }, selector);
     }
 }
+
+
+/**
+ * Retrieves an input of type file base on selector.
+ *
+ * @param  String|Object selector  The selector string or object
+ * @param  Array         file      The path (or paths) for file (or files)
+ */
+Casper.prototype.getFileFieldSelector = function getFileFieldSelector(selector, file) {
+    "use strict";
+    if (file.type === "names") {
+        return [selector, 'input[name="' + file.selector + '"]'].join(' ');
+    } else if (file.type === "css") {
+        return [selector, file.selector].join(' ');
+    }
+};
 
 /**
  * Fills a form with provided field values using the Name attribute.

@@ -148,6 +148,24 @@ casper.test.begin('multiple forms', 1, function(test) {
     });
 });
 
+casper.test.begin('file multiple', 1, function(test) {
+    var fpaths = [fs.pathJoin(phantom.casperPath, 'README.md'),
+                  fs.pathJoin(phantom.casperPath, 'LICENSE.md')
+                 ];
+
+    casper.start('tests/site/field-file-multiple.html', function() {
+        this.fillSelectors('form[action="result.html"]', {
+            'input[name="files[]"]': fpaths
+        });
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="files[]"]').files.length === 2;
+        }, true, 'can select 2 files to upload');
+    }).run(function() {
+        test.done();
+    });
+});
+
+
 casper.test.begin('field array', 1, function(test) {
     // issue #267: array syntax field names
     casper.start('tests/site/field-array.html', function() {
