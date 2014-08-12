@@ -1540,6 +1540,10 @@ Sends native keyboard events to the element matching the provided :doc:`selector
 
 The currently supported HTMLElements that can receive keyboard events from ``sendKeys`` are ``<input>``, ``<textarea>``, and any HTMLElement with attribute ``contenteditable="true"``.
 
+To send special keys, like Enter, refer to the [list of key enums](https://github.com/ariya/phantomjs/blob/cf12fc4a236e071382e9e6b9c391b606eac17ea1/src/modules/webpage.js#L463) and refer to them using `casper.page.event.key.Enter`.
+
+
+
 Options
 ~~~~~~~
 
