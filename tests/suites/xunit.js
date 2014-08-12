@@ -75,3 +75,26 @@ casper.test.begin('XUnitReporter() can handle a failed test', 2, function suite(
     test.assertEquals(casper.getElementInfo('failure[type="footype"]').text, 'footext');
     test.done();
 });
+
+casper.test.begin('XUnitReporter() can handle a failed test, customized using description property', 2, function suite(test) {
+    var xunit = require('xunit').create();
+    var results = new tester.TestSuiteResult();
+    var suite1 = new tester.TestCaseResult({
+        name: 'foo',
+        file: '/foo'
+    });
+    suite1.addFailure({
+        success: false,
+        type: "footype",
+        message: "footext",
+        description: "failureNodeTextContent",
+        file: "/foo"
+    });
+    results.push(suite1);
+    xunit.setResults(results);
+    casper.start().setContent(xunit.getSerializedXML());
+    test.assertExists('testsuite[name="foo"][package="foo"][tests="1"][failures="1"] testcase[name="footext"] failure[type="footype"]');
+    test.assertEquals(casper.getElementInfo('failure[type="footype"]').text, 'failureNodeTextContent');
+    test.done();
+});
+
