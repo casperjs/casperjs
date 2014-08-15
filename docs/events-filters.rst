@@ -499,7 +499,7 @@ Emitted when a ``Casper.wait()`` operation starts.
 
 Emitted when the execution time of a ``Casper.wait*()`` operation has exceeded the value of ``timeout``.
 
-``deatils`` is a property bag describing what was being waited on. For example, if ``waitForSelector`` timed out, ``details`` will have a ``selector`` string property that was the selector that did not show up in time.
+``details`` is a property bag describing what was being waited on. For example, if ``waitForSelector`` timed out, ``details`` will have a ``selector`` string property that was the selector that did not show up in time.
 
 
 .. index:: filters
