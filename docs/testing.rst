@@ -246,6 +246,27 @@ You should get a pretty XUnit XML report like this:
         </testsuite>
     </testsuites>
 
+You can customize the value for the `name` property by passing an object to `casper.test.fail()` like:
+
+.. code-block:: js
+
+    casper.test.fail('google search for "casperjs" retrieves 10 or more results', {name: 'result count is 10+'});
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <testsuites duration="1.249">
+        <testsuite errors="0" failures="0" name="Google search retrieves 10 or more results" package="googletesting" tests="5" time="1.249" timestamp="2012-12-30T21:27:26.320Z">
+            <testcase classname="googletesting" name="google homepage title is the one expected" time="0.813"/>
+            <testcase classname="googletesting" name="main form is found" time="0.002"/>
+            <testcase classname="googletesting" name="google title is ok" time="0.416"/>
+            <testcase classname="googletesting" name="search term has been submitted" time="0.017"/>
+            <testcase classname="googletesting" name="results count is 10+" time="0.001"/>
+                <failure type="fail">google search for "casperjs" retrieves 10 or more results</failure>
+            <system-out/>
+        </testsuite>
+    </testsuites>
+
 CasperJS own tests
 ------------------
 
