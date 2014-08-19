@@ -6,27 +6,40 @@
     </head>
     <body>
         <form action="result.html" enctype="multipart/form-data">
+            <label for="email">Email</label>
             <input type="email" name="email" placeholder="email" id="email">
-            <input type="password" name="password" placeholder="password">
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="password" id="password">
             <input type="text" name="language" placeholder="language">
-            <input type="whatever" name="strange">
-            <textarea name="content"></textarea>
-            <select name="topic">
+            <label for="strange">Strange</label>
+            <input type="whatever" name="strange" id="strange">
+            <label for="content">Content</label>
+            <textarea name="content" id="content"></textarea>
+            <label for="topic">Topic</label>
+            <select name="topic" id="topic">
                 <option>foo</option>
                 <option value="bar">baz</option>
             </select>
-            <select multiple name="multitopic">
+            <label for="multitopic">Multitopic</label>
+            <select multiple name="multitopic" id="multitopic">
                 <option>foo</option>
                 <option value="bar">baz</option>
                 <option value="car">caz</option>
             </select>
-            <input type="checkbox" name="check">
-            <input type="radio" name="choice" value="yes">
-            <input type="radio" name="choice" value="no">
-            <input type="file" name="file">
-            <input type="checkbox" name="checklist[]" value="1">
-            <input type="checkbox" name="checklist[]" value="2">
-            <input type="checkbox" name="checklist[]" value="3">
+            <label for="check">Check</label>
+            <input type="checkbox" name="check" id="check">
+            <label for="choice_yes">Yes</label>
+            <input type="radio" name="choice" value="yes" id="choice_yes">
+            <label for="choice_no">No</label>
+            <input type="radio" name="choice" value="no" id="choice_no">
+            <label for="file">File</label>
+            <input type="file" name="file" id="file">
+            <label for="checklist_1">1</label>
+            <input type="checkbox" name="checklist[]" value="1" id="checklist_1">
+            <label for="checklist_2">2</label>
+            <input type="checkbox" name="checklist[]" value="2" id="checklist_2">
+            <label for="checklist_3">3</label>
+            <input type="checkbox" name="checklist[]" value="3" id="checklist_3">
             <input type="submit" name="submit" value="submit">
         </form>
         <form id="no-type-test-form" action="#" enctype="multipart/form-data">

@@ -67,6 +67,36 @@ casper.test.begin('fill() & fillNames() tests', 17, function(test) {
     });
 });
 
+casper.test.begin('fillLabels() tests', 17, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+
+    casper.start('tests/site/form.html', function() {
+        this.fillLabels('form[action="result.html"]', {
+            Email:         'chuck@norris.com',
+            Password:      'chuck',
+            Content:       'Am watching thou',
+            Check:         true,
+            No:            true,
+            Topic:         'bar',
+            Multitopic:    ['bar', 'car'],
+            File:          fpath,
+            "1":           true,
+            "3":           true,
+            Strange:       "very"
+        });
+        testFormValues(test);
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'can select a file to upload');
+    });
+    casper.thenClick('input[type="submit"]', function() {
+        testUrl(test);
+    });
+    casper.run(function() {
+        test.done();
+    });
+});
+
 casper.test.begin('fillSelectors() tests', 17, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
