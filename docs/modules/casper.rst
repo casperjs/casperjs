@@ -984,31 +984,6 @@ are referenced by ``CSS3`` selectors::
         }, true);
     });
 
-``fillLabels())``
--------------------------------------------------------------------------------
-
-**Signature:** ``fillLabels(String selector, Object values[, Boolean submit])``
-
-.. versionadded:: 1.1
-
-Fills a form with provided field values using associated label text Fields
-are referenced by label content values::
-
-    casper.start('http://some.tld/contact.form', function() {
-        this.fillLabels('fform#contact-form', {
-            Email:         'chuck@norris.com',
-            Password:      'chuck',
-            Content:       'Am watching thou',
-            Check:         true,
-            No:            true,
-            Topic:         'bar',
-            Multitopic:    ['bar', 'car'],
-            File:          fpath,
-            "1":           true,
-            "3":           true,
-            Strange:       "very"
-        }, true);
-    });
 
 ``fillXPath()``
 -------------------------------------------------------------------------------
