@@ -9,7 +9,7 @@ fi
 
 name="casperjs"
 name=${name%.spec}
-topdir=$(mktemp -d)
+topdir=$(mktemp -d "${TMPDIR:-/tmp}/${name}-build-XXXXXX")
 # Get version from package.json
 version=$(grep '"version"' ../package.json | sed 's/.*"\(.*\)": "\(.*\)".*/\2/' | sed 's/[-]//')
 builddir=${TMPDIR:-/tmp}/${name}-${version}
