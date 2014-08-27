@@ -65,7 +65,7 @@ Then, ``require`` it like you would with any other nodejs compliant module::
     casper.run();
     
     
-Finaly, you’ll probably get something like this:
+Finally, you’ll probably get something like this:
     
 .. code-block:: text
 
