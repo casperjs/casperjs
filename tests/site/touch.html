@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>CasperJS test touch</title>
+    </head>
+    <body>
+        <div id="test1">test1</div>
+        <div id="test2" ontouchstart="results.test2 = true;">test2</div>
+        <div id="test3" ontouchstart="results.test3 = true; return false">test3</div>
+        <div id="test5">test3</div>
+        <script>
+            (function(window) {
+                window.results = {
+                    test1: false,
+                    test2: false,
+                    test3: false,
+                    test5: []
+                };
+                document.querySelector('#test1').ontouchstart = function(event) {
+                    results.test1 = true;
+                    event.preventDefault();
+                };
+            var test5elem = document.querySelector('#test5');
+                test5elem.addEventListener('touchstart', function(event) {
+                    results.test5.push('touchstart');
+                });
+                test5elem.addEventListener('touchmove', function(event) {
+                    results.test5.push('touchmove');
+                });
+                test5elem.addEventListener('touchend', function(event) {
+                    results.test5.push('touchend');
+                });
+            })(window);
+        </script>
+    </body>
+</html>

@@ -1928,6 +1928,43 @@ Returns a string representation of current Casper instance::
 
     casper.run();
 
+.. _casper_touch:
+
+.. index:: touch
+
+``touch()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``touch(String selector)``
+
+Performs a touch on the element matching the provided :doc:`selector expression <../selectors>`. The method tries strategy that trying to trigger a UIEvent in Javascript.
+
+Example::
+    var casper = require("casper").create({
+        pageSettings: {
+            userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53' // Set mobile UA in the begining.
+        }
+    });
+
+    casper.start('http://www.google.com/');
+
+    casper.thenEvaluate(function(term) {
+        document.querySelector('input[name="q"]').setAttribute('value', term);
+    }, 'CasperJS');
+
+    casper.then(function() {
+        // Touch on 1st result link
+        this.touch('form[name=gs]');
+    });
+
+    casper.then(function() {
+        console.log('touched ok, new location is ' + this.getCurrentUrl());
+    });
+
+    casper.run();
+
+.. index:: touch
+
 ``unwait()``
 -------------------------------------------------------------------------------
 
