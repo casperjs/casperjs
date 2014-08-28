@@ -28,7 +28,7 @@ casper.test.begin('touch events on touch', 3, function(test) {
         var results = this.getGlobal('results');
         test.assert(results.test5.indexOf('touchstart') !== -1,
             'Casper.touch() triggers touchstart event');
-        test.assert(results.test5.indexOf('touchmove') == -1,
+        test.assert(results.test5.indexOf('touchmove') === -1,
             'Casper.touch() doesn\'t trigger touchmove event');
         test.assert(results.test5.indexOf('touchend') !== -1,
             'Casper.touch() triggers touchend event');
