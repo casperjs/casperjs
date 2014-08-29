@@ -2599,7 +2599,7 @@ function createPage(casper) {
     };
     page.onResourceRequested = function onResourceRequested(requestData, request) {
         casper.emit('resource.requested', requestData, request);
-        if (requestData.url === casper.requestUrl) {
+        if (utils.decodeUrl(requestData.url) === casper.requestUrl) {
             casper.emit('page.resource.requested', requestData, request);
         }
         if (utils.isFunction(casper.options.onResourceRequested)) {
