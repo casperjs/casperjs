@@ -109,7 +109,7 @@ Retrieves all DOM elements matching a given :ref:`selector expression <selectors
     casper.start('http://foo.bar/', function() {
         links = this.evaluate(function() {
             var elements = __utils__.findAll('a.menu');
-            return Array.prototype.forEach.call(elements, function(e) {
+            return elements.map(function(e) {
                 return e.getAttribute('href');
             });
         });
