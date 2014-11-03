@@ -230,7 +230,7 @@
             var text = '', elements = this.findAll(selector);
             if (elements && elements.length) {
                 Array.prototype.forEach.call(elements, function _forEach(element) {
-                    text += element.textContent || element.innerText;
+                    text += element.textContent || element.innerText || element.value;
                 });
             }
             return text;
