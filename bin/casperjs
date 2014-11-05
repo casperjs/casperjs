@@ -45,10 +45,10 @@ SUPPORTED_ENGINES = {
     },
     'slimerjs': {
         'native_args': [
-            'P',
-            'jsconsole',
-            'CreateProfile',
-            'profile',
+            '-P',
+            '-jsconsole',
+            '-CreateProfile',
+            '-profile',
             #phantomjs options
             'cookies-file',
             'config',
