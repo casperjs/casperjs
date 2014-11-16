@@ -131,7 +131,12 @@ def getEngineExec():
         return fallback
 
     for candidate in engine['default_exec_candidates']:
-        relative_path = normpath(os.path.join(os.path.dirname(__file__), candidate))
+        # os.path.realpath eliminates symlinks in the path
+        # Since relative_path relies on the real path to the current source directory
+        # os.path.realpath is essential.
+        source_path = os.path.realpath(__file__)
+        source_dir = os.path.dirname(source_path)
+        relative_path = normpath(os.path.join(source_dir, candidate))
         if os.access(relative_path, os.X_OK):
             return relative_path
         elif which(candidate) != None:
