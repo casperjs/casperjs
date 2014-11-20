@@ -568,7 +568,7 @@ Casper.prototype.die = function die(message, status) {
     this.result.status = "error";
     this.result.time = new Date().getTime() - this.startTime;
     if (!utils.isString(message) || !message.length) {
-        message = "Suite explicitely interrupted without any message given.";
+        message = "Suite explicitly interrupted without any message given.";
     }
     this.log(message, "error");
     this.echo(message, "ERROR");
