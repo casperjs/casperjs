@@ -1048,6 +1048,36 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
 };
 
 /**
+ * Retrieves the node matching the provided selector.
+ *
+ * @param  String|Objects  selector  CSS3/XPath selector
+ * @return Object
+ */
+Casper.prototype.getElement = function getElement(selector) {
+    "use strict";
+    this.checkStarted();
+    if (!this.exists(selector)) {
+        throw new CasperError(f("Cannot get informations from %s: element not found.", selector));
+    }
+    return this.callUtils("getElement", selector);
+};
+
+/**
+ * Retrieves the node matching the provided selector.
+ *
+ * @param  String|Objects  selector  CSS3/XPath selector
+ * @return Object
+ */
+Casper.prototype.getElements = function getElements(selector) {
+    "use strict";
+    this.checkStarted();
+    if (!this.exists(selector)) {
+        throw new CasperError(f("Cannot get informations from %s: element not found.", selector));
+    }
+    return this.callUtils("getElements", selector);
+};
+
+/**
  * Retrieves information about the node matching the provided selector.
  *
  * @param  String|Objects  selector  CSS3/XPath selector

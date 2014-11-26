@@ -467,6 +467,34 @@
         };
 
         /**
+         * Retrieves an element as an Element of a Document in the current scope
+         * (See: https://developer.mozilla.org/en-US/docs/Web/API/document.querySelector)
+         *
+         * @param String|Object selector CSS3/XPath selector 
+         * @return Object
+        */
+        this.getElement = function getElement(selector) {
+            var element = this.findOne(selector);
+
+            return element;
+        };
+
+        /**
+         * Retrieves an array of elements as an Element of a Document in the current scope
+         * (See: https://developer.mozilla.org/en-US/docs/Web/API/document.querySelector)
+         *
+         * @param String|Object selector CSS3/XPath selector 
+         * @return Array
+        */
+        this.getElements = function getElements(selector) {
+            var elements = this.findAll(selector);
+            var elementsArray = [].slice.call(elements);
+
+            return elementsArray;
+        };
+
+
+        /**
          * Retrieves information about the node matching the provided selector.
          *
          * @param  String|Object  selector  CSS3/XPath selector

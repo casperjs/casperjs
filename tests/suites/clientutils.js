@@ -171,6 +171,25 @@ casper.test.begin('ClientUtils.getElementBounds() page zoom factor tests', 3, fu
     });
 });
 
+casper.test.begin('ClientUtils.getElement() tests', 2, function(test) {
+    casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a>';
+    var element = casper.getElement('a.plip');
+    test.assert(element !== null, 'ClientUtils.getElement() retrieves element');
+    test.assertEquals(element.tagName, 'A', 'ClientUtils.getElement() retrieves the correct element tagName');
+   
+    test.done();
+});
+
+casper.test.begin('ClientUtils.getElements() second element tests', 2, function(test) {
+    casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a><a href="plap" class="plip plup"><i>puf</i></a><a href="plip"><i>fup</i></a>';
+    var elements = casper.getElements('a.plip');
+    test.assertType(elements, 'array',
+        'ClientUtils.getElements() can find matching DOM elements');
+    test.assert(elements.length === 2, 'ClientUtils.getElements() retrieves the correct elements');
+
+    test.done();
+});
+
 casper.test.begin('ClientUtils.getElementInfo() tests', 10, function(test) {
     casper.page.content = '<a href="plop" class="plip plup"><i>paf</i></a>';
     var info = casper.getElementInfo('a.plip');
