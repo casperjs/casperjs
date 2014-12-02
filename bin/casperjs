@@ -42,7 +42,7 @@ SUPPORTED_ENGINES = {
             'w',
         ],
         'env_varname': 'PHANTOMJS_EXECUTABLE',
-        'default_exec_candidates' : ['../node_modules/phantomjs/bin/phantomjs'],
+        'default_exec_candidates' : ['../node_modules/phantomjs/bin/phantomjs', '../../.bin/phantomjs'],
         'default_exec_fallback' : 'phantomjs'
     },
     'slimerjs': {
