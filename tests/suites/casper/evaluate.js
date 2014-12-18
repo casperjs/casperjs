@@ -78,7 +78,7 @@ casper.test.begin('natural arguments context (phantomjs equivalent)', 3, functio
 
 casper.test.begin('thenEvaluate() tests', 2, function(test) {
     casper.start().thenEvaluate(function(a, b) {
-        window.a = a
+        window.a = a;
         window.b = b;
     }, "foo", "bar");
     casper.then(function() {

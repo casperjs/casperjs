@@ -97,3 +97,26 @@ To ease the use and reading of XPath expressions, a ``selectXPath`` helper is av
 .. warning::
 
    The only limitation of XPath use in CasperJS is in the :ref:`casper.fill() <casper_fill>` method when you want to fill **file fields**; PhantomJS natively only allows the use of CSS3 selectors in its `uploadFile method <https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-webpage-uploadFile>`_, hence this limitation.
+   
+.. index:: Link text
+
+Link text
+---------
+
+.. versionadded:: 1.1.4
+You can alternatively use `Link text <http://docs.seleniumhq.org/docs/03_webdriver.jsp>`_ as webdriver urged::
+
+    casper.start('http://domain.tld/page.html', function() {
+        this.test.assertExists({
+            type: 'link_text',
+            path: 'a text link you get'
+        }, 'the element exists');
+    });
+
+To ease the use and reading of Link Text, a ``selectLinkText`` helper is available from the ``casper`` module::
+
+    var x = require('casper').selectLinkText;
+
+    casper.start('http://domain.tld/page.html', function() {
+        this.test.assertExists(x('a link text you get'), 'the element exists');
+    });

@@ -95,7 +95,7 @@ function betterInstanceOf(input, constructor) {
       if (typeof inputToTest == 'undefined') {
         return false;
       }
-      inputToTest = inputToTest.__proto__;
+      inputToTest = (inputToTest instanceof Object || isObject(inputToTest)) && Object.getPrototypeOf(inputToTest);
     }
     return equals(input.constructor.name, constructor.name);
 }
@@ -655,7 +655,7 @@ function mergeObjectsInGecko(origin, add, opts) {
             // directly the value
             var prop = Object.getOwnPropertyDescriptor(add, p);
             if (prop.get && !prop.set) {
-                Object.defineProperty(origin, p, prop)
+                Object.defineProperty(origin, p, prop);
             }
             else {
                 origin[p] = add[p];
