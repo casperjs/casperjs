@@ -233,6 +233,10 @@ By default, on timeout the script will exit displaying an error, except in test 
 
 An existing PhantomJS ``WebPage`` instance
 
+.. warning::
+
+   **Overriding** the ``page`` properties can cause some of the casper features **may not work**. For example, overriding the ``onUrlChanged`` property will cause the ``waitForUrl`` feature not work.
+
 .. index:: settings, PhantomJS, SSL, auth, XSS
 
 ``pageSettings``
