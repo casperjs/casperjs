@@ -667,7 +667,7 @@ Tester.prototype.assertNotVisible =
 Tester.prototype.assertInvisible = function assertNotVisible(selector, message) {
     "use strict";
     return this.assert(!this.casper.visible(selector), message, {
-        type: "assertVisible",
+        type: "assertNotVisible",
         standard: "Selector is not visible",
         values: {
             selector: selector
