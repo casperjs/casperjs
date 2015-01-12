@@ -1907,7 +1907,7 @@ Adds a new navigation step to perform code evaluation within the current retriev
 
     casper.run();
 
-This method is basically a convenient a shortcut for chaining a `then()`_ and an `evaluate()`_ calls.
+This method is a convenient shortcut for chaining `then()`_ and `evaluate()`_ calls.
 
 ``thenOpen()``
 -------------------------------------------------------------------------------
