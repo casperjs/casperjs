@@ -79,9 +79,11 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     /*jshint maxstatements:99*/
     "use strict";
     // phantom args
-    // NOTE: we can't use require('system').args here for some very obscure reason
-    //       do not even attempt at using it as it creates infinite recursion
-    var phantomArgs = phantom.args;
+    var sysargs = require('system').args;
+    var phantomArgs = [];
+    for (var i = 1; i < sysargs.length; i++) {
+        phantomArgs.push(sysargs[i]);
+    }
 
     if (phantom.casperLoaded) {
         return;
@@ -161,7 +163,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     // CasperJS root path
     if (!phantom.casperPath) {
         try {
-            phantom.casperPath = phantom.args.map(function _map(arg) {
+            phantom.casperPath = phantomArgs.map(function _map(arg) {
                 var match = arg.match(/^--casper-path=(.*)/);
                 if (match) {
                     return fs.absolute(match[1]);
