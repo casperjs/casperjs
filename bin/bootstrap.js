@@ -87,18 +87,22 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         return;
     }
 
+    function __exit(statusCode){
+        setTimeout(function() { phantom.exit(statusCode); }, 0);
+    }
+
     function __die(message) {
         if (message) {
             console.error(message);
         }
-        phantom.exit(1);
+        __exit(1);
     }
 
     function __terminate(message) {
         if (message) {
             console.log(message);
         }
-        phantom.exit();
+        __exit();
     }
 
     (function (version) {
