@@ -756,7 +756,7 @@ Casper.prototype.exists = function exists(selector) {
 Casper.prototype.exit = function exit(status) {
     "use strict";
     this.emit('exit', status);
-    phantom.exit(status);
+    setTimeout(function() { phantom.exit(status); }, 0);
 };
 
 /**
