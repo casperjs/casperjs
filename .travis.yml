@@ -48,13 +48,17 @@ env:
     - ENGINE="phantomjs" ENGINE_VERSION="1.9.7" MAKE_TEST_COMMAND="test"
       ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+    - ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test-dotNET"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
+    - ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
 
 notifications:
   irc:
