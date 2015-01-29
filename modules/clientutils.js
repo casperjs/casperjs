@@ -784,7 +784,7 @@
             if (settings && settings.overrideMimeType) {
                 xhr.overrideMimeType(settings.overrideMimeType);
             }
-            if (method === "POST") {
+            if (method === "POST" || method === "PUT") {
                 if (typeof data === "object") {
                     for (var k in data) {
                         dataList.push(encodeURIComponent(k) + "=" + encodeURIComponent(data[k].toString()));
@@ -796,7 +796,7 @@
                 }
                 xhr.setRequestHeader("Content-Type", contentType);
             }
-            xhr.send(method === "POST" ? dataString : null);
+            xhr.send(method === "POST" || method === "PUT" ? dataString : null);
             return xhr.responseText;
         };
 
