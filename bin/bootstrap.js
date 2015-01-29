@@ -28,8 +28,7 @@
  *
  */
 
-/*global process, console, phantom, slimer, require:true*/
-/*jshint maxstatements:34, maxcomplexity:10*/
+/*eslint max-statements:0, complexity:0*/
 
 // node check
 if ('process' in this && process.title === "node") {
@@ -40,14 +39,22 @@ if ('process' in this && process.title === "node") {
 // phantom check
 if (!('phantom' in this)) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
+} else {
+    if (phantom.version.major === 2) {
+        //setting other phantom.args if using phantomjs 2.x
+        var system = require('system');
+        var argsdeprecated = system.args;
+        argsdeprecated.shift();
+        phantom.args = argsdeprecated;
+    }
 }
+
 
 // Common polyfills
 if (typeof Function.prototype.bind !== "function") {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility
     Function.prototype.bind = function (oThis) {
         "use strict";
-        /* jshint -W055 */
         if (typeof this !== "function") {
             // closest thing possible to the ECMAScript 5 internal IsCallable function
             throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
@@ -76,7 +83,6 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
 // casperjs env initialization
 (function(global, phantom){
-    /*jshint maxstatements:99*/
     "use strict";
     // phantom args
     // NOTE: we can't use require('system').args here for some very obscure reason
@@ -188,7 +194,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             'CasperJS version ' + phantom.casperVersion.toString() +
             ' at ' + phantom.casperPath + ', using ' + phantom.casperEngine + ' version ' + version,
             fs.read(fs.pathJoin(phantom.casperPath, 'bin', 'usage.txt'))
-        ].join('\n'))
+        ].join('\n'));
     }
 
     /**
@@ -288,7 +294,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      * Initializes the CasperJS Command Line Interface.
      */
     function initCasperCli(casperArgs) {
-        /* jshint maxcomplexity:99 */
+        /*eslint complexity:0*/
         var baseTestsPath = fs.pathJoin(phantom.casperPath, 'tests');
 
         function setScriptBaseDir(scriptName) {
@@ -300,7 +306,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
 
         if (!!casperArgs.options.version) {
-            return __terminate(phantom.casperVersion.toString())
+            return __terminate(phantom.casperVersion.toString());
         } else if (casperArgs.get(0) === "test") {
             phantom.casperScript = fs.absolute(fs.pathJoin(baseTestsPath, 'run.js'));
             phantom.casperTest = true;

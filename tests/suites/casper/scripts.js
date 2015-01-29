@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('remote script includes tests', 4, {
     setUp: function() {
         casper.options.remoteScripts = [

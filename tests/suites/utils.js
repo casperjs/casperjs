@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false, maxstatements:99*/
+/*eslint strict:0, max-statements:0*/
 var utils = require('utils'),
     t = casper.test,
     x = require('casper').selectXPath;
@@ -327,7 +326,7 @@ casper.test.begin('isJsFile() tests', 5, function(test) {
 
 
 casper.test.begin('mergeObjects() tests', 10, function(test) {
-    /* jshint eqeqeq:false */
+    /*eslint eqeqeq:0 */
     var testCases = [
         {
             obj1: {a: 1}, obj2: {b: 2}, merged: {a: 1, b: 2}

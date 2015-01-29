@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false, maxstatements: 99*/
+/*eslint strict:0, max-statements:0*/
 
 casper.test.begin('reload() tests', 3, function(test) {
     var formUrl = 'tests/site/form.html';

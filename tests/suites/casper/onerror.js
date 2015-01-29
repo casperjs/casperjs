@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('page.error event tests', 2, function(test) {
     var error = {};
     var expectedMessage;

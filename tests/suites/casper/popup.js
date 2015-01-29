@@ -1,4 +1,4 @@
-/*jshint strict:false, maxstatements:99*/
+/*eslint strict:0, max-statements:0*/
 /*global CasperError, casper, console, phantom, require*/
 var utils = require('utils');
 var x = require('casper').selectXPath;

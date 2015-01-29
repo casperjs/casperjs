@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var currentRequest;
 
 function onResourceRequested(requestData, request) {

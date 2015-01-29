@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('prompt tests', 1, function(test) {
     casper.setFilter('page.prompt', function(message, value) {
         return 'Chuck ' + value;

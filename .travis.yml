@@ -17,10 +17,17 @@ before_install:
   - export ENGINE_EXECUTABLE="$ENGINE_EXECUTABLE $ENGINE_FLAGS"
 
 install:
-  - sudo apt-get install -qq mono-devel mono-mcs
+  - if [ "$MAKE_TEST_COMMAND" == "test-dotNET" ]; then
+      echo "dotNET build detected, installing Mono related stuff";
+      sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF;
+      echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list;
+      sudo apt-get update;
+      sudo apt-get install aptitude -qq;
+      sudo aptitude install --assume-yes mono-devel mono-mcs;
+    fi
 
 before_script:
-  - "npm install -g jshint@2.0.1"
+  - "npm install -g eslint"
 
 script:
   - "make $MAKE_TEST_COMMAND"
@@ -47,14 +54,20 @@ env:
       ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2"
     - ENGINE="phantomjs" ENGINE_VERSION="1.9.7" MAKE_TEST_COMMAND="test"
       ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2"
+    - ENGINE="phantomjs" ENGINE_VERSION="1.9.8" MAKE_TEST_COMMAND="test"
+      ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/v0.8/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+    - ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test-dotNET"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
+    - ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
 
 notifications:
   irc:

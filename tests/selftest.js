@@ -1,4 +1,3 @@
-/*global phantom, casper, patchRequire, require:true*/
 
 var require = patchRequire(require);
 var colorizer = require('colorizer').create('Colorizer');
@@ -14,7 +13,7 @@ function info(message) {
 }
 
 service = server.listen(testServerPort, function(request, response) {
-    /*jshint maxstatements:20*/
+    /*eslint max-statements:0*/
     "use strict";
     var requestPath = request.url;
     if (requestPath.indexOf('?') !== -1) {

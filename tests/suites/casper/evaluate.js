@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false, maxparams:99*/
+/*eslint strict:0, max-params:0*/
 casper.test.begin('mapping argument context', 1, function(test) {
     casper.start();
     var context = {
@@ -78,7 +77,7 @@ casper.test.begin('natural arguments context (phantomjs equivalent)', 3, functio
 
 casper.test.begin('thenEvaluate() tests', 2, function(test) {
     casper.start().thenEvaluate(function(a, b) {
-        window.a = a
+        window.a = a;
         window.b = b;
     }, "foo", "bar");
     casper.then(function() {

@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var server = require('webserver').create();
 var service = server.listen(8090, function(request, response) {
     response.statusCode = 200;
@@ -17,7 +16,7 @@ casper.test.begin('Casper.headers.get() using file protocol', 1, function(test) 
         test.assertEquals(response, {data: null}, 'Empty http response on local page');
     }).run(function() {
         test.done();
-    })
+    });
 });
 
 casper.test.begin('Casper.headers.get() using http protocol', 3, function(test) {
@@ -29,5 +28,5 @@ casper.test.begin('Casper.headers.get() using http protocol', 3, function(test) 
     }).run(function() {
         server.close();
         test.done();
-    })
+    });
 });

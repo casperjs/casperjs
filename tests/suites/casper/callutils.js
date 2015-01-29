@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('Casper.callUtils()', 2, function(test) {
     casper.start("tests/site/index.html", function(){
         this.evaluate(function() {

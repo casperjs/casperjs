@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var fs = require('fs');
 
 casper.test.begin('fs.dirname() tests', 8, function(test) {

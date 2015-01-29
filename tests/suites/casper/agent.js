@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 function testUA(ua, match) {
     casper.test.assertMatch(
         ua, match, 'Default user agent matches ' + match

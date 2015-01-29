@@ -192,7 +192,7 @@ Emitted when the ``Casper.log()`` method has been called. The ``entry`` paramete
         date:    "a javascript Date instance"
     }
 
-..index:: click
+.. index:: click
 
 ``mouse.click``
 ~~~~~~~~~~~~~~~
