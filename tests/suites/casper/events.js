@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('events', 2, function(test) {
     casper.plopped = false;
     casper.once("plop", function() {

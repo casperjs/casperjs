@@ -33,6 +33,12 @@ Run CasperJS' test suite to see you didn't break something:
 
 The result status bar **must be green** before sending your PR.
 
+**Lint the code**
+
+Run [ESLint](http://eslint.org) on the JavaScript files, by using the configuration available in `.eslintrc` and make sure there are no warnings nor errors.
+
+    $ eslint modules/casper.js
+
 ## Communicate
 
 **Improvement and feature request**. If you have an improvement idea, please send an email to the [mailing list](http://groups.google.com/group/casperjs) (preferable than contacting the developers directly) so that other people can give their insights and opinions. This is also important to avoid duplicate work.

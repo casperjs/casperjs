@@ -28,8 +28,6 @@
  *
  */
 
-/*global CasperError, exports, phantom, __utils__, patchRequire, require:true*/
-
 var require = patchRequire(require);
 var fs = require('fs');
 var events = require('events');
@@ -84,7 +82,7 @@ exports.create = function create(casper, options) {
  */
 var Tester = function Tester(casper, options) {
     "use strict";
-    /*jshint maxstatements:99*/
+    /*eslint max-statements:0*/
     if (!utils.isCasperObject(casper)) {
         throw new CasperError("Tester needs a Casper instance");
     }
@@ -224,7 +222,7 @@ var Tester = function Tester(casper, options) {
     };
 
     this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout, details) {
-        /*jshint maxcomplexity:10*/
+        /*eslint complexity:0*/
         var message = f("Wait timeout occured (%dms)", timeout);
         details = details || {};
 
@@ -450,7 +448,6 @@ Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, messa
 };
 
 function baseFieldAssert(inputName, expected, actual, message) {
-    /*jshint validthis:true */
     "use strict";
 
     return this.assert(utils.equals(actual, expected),  message, {
@@ -777,7 +774,7 @@ Tester.prototype.assertTextExist = function assertTextExists(text, message) {
  */
 Tester.prototype.assertTruthy = function assertTruthy(subject, message) {
     "use strict";
-    /*jshint eqeqeq:false*/
+    /*eslint eqeqeq:0*/
     return this.assert(utils.isTruthy(subject), message, {
         type: "assertTruthy",
         standard: "Subject is truthy",
@@ -796,7 +793,7 @@ Tester.prototype.assertTruthy = function assertTruthy(subject, message) {
  */
 Tester.prototype.assertFalsy = function assertFalsy(subject, message) {
     "use strict";
-    /*jshint eqeqeq:false*/
+    /*eslint eqeqeq:0*/
     return this.assert(utils.isFalsy(subject), message, {
         type: "assertFalsy",
         standard: "Subject is falsy",
@@ -1134,7 +1131,7 @@ Tester.prototype.comment = function comment(message) {
  */
 Tester.prototype.done = function done() {
     "use strict";
-    /*jshint maxstatements:20, maxcomplexity:20*/
+    /*eslint max-statements:0, complexity:0*/
     var planned, config = this.currentSuite && this.currentSuite.config || {};
 
     if (arguments.length && utils.isNumber(arguments[0])) {
@@ -1348,7 +1345,7 @@ function getStackEntry(error, testFile) {
             sourceURL = sourceURL.split('->')[1].trim();
         }
         if (sourceURL === testFile) {
-            return { sourceURL: sourceURL, line: m[3]}
+            return { sourceURL: sourceURL, line: m[3]};
         }
     }
     return null;
@@ -1490,7 +1487,7 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
-    /*jshint maxstatements:25*/
+    /*eslint max-statements:0*/
     save = save || this.options.save;
     var exitStatus = 0,
         failed = this.suiteResults.countFailed(),

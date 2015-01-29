@@ -1,5 +1,4 @@
-/*global casper, __utils__*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var tester = require('tester');
 var testpage = require('webpage').create();
 

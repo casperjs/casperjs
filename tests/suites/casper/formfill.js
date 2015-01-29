@@ -1,12 +1,11 @@
-/*global casper, __utils__*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var fs = require('fs');
 
 function testFormValues(test) {
     test.assertField('email', 'chuck@norris.com',
         'can fill an input[type=text] form field');
     test.assertField('password', 'chuck',
-        'can fill an input[type=password] form field')
+        'can fill an input[type=password] form field');
     test.assertField('content', 'Am watching thou',
         'can fill a textarea form field');
     test.assertField('topic', 'bar',

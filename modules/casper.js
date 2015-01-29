@@ -28,8 +28,6 @@
  *
  */
 
-/*global CasperError, console, exports, phantom, __utils__, patchRequire, require:true*/
-
 var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
@@ -84,7 +82,7 @@ exports.selectXPath = selectXPath;
  */
 var Casper = function Casper(options) {
     "use strict";
-    /*jshint maxstatements:40*/
+    /*eslint max-statements:0*/
     // init & checks
     if (!(this instanceof Casper)) {
         return new Casper(options);
@@ -220,7 +218,7 @@ var Casper = function Casper(options) {
 
     // deprecated direct option
     if (this.cli.has('direct')) {
-        this.emit("deprecated", "--direct option has been deprecated since 1.1; you should use --verbose instead.")
+        this.emit("deprecated", "--direct option has been deprecated since 1.1; you should use --verbose instead.");
     }
 };
 
@@ -305,7 +303,7 @@ Casper.prototype.callUtils = function callUtils(method) {
  */
 Casper.prototype.capture = function capture(targetFile, clipRect, imgOptions) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*eslint max-statements:0*/
     this.checkStarted();
     var previousClipRect;
     targetFile = fs.absolute(targetFile);
@@ -344,7 +342,7 @@ Casper.prototype.capture = function capture(targetFile, clipRect, imgOptions) {
  */
 Casper.prototype.captureBase64 = function captureBase64(format, area) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*eslint max-statements:0*/
     this.checkStarted();
     var base64, previousClipRect, formats = ['bmp', 'jpg', 'jpeg', 'png', 'ppm', 'tiff', 'xbm', 'xpm'];
     if (formats.indexOf(format.toLowerCase()) === -1) {
@@ -851,7 +849,7 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
             }
         }, selector);
     }
-}
+};
 
 /**
  * Fills a form with provided field values using the Name attribute.
@@ -1020,7 +1018,7 @@ Casper.prototype.getElementsAttr = function getElementsAttr(selector, attribute)
             return element.getAttribute(attribute);
         });
     }, selector, attribute);
-}
+};
 
 /**
  * Retrieves boundaries for a DOM element matching the provided DOM CSS3/XPath selector.
@@ -1192,7 +1190,7 @@ Casper.prototype.getTitle = function getTitle() {
  */
 Casper.prototype.handleReceivedResource = function(resource) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*eslint max-statements:0*/
     if (resource.stage !== "end") {
         return;
     }
@@ -1396,7 +1394,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
  */
 Casper.prototype.open = function open(location, settings) {
     "use strict";
-    /*jshint maxstatements:30*/
+    /*eslint max-statements:0*/
     var baseCustomHeaders = this.page.customHeaders,
         customHeaders = settings && settings.headers || {};
     this.checkStarted();
@@ -1535,7 +1533,7 @@ Casper.prototype.run = function run(onComplete, time) {
  */
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*eslint max-statements:0*/
     this.checkStarted();
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
         stepInfo = f("Step %s %d/%d", step.name || "anonymous", this.step, this.steps.length),
@@ -1627,7 +1625,7 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         this.click(selector);
     }
     var modifiers = utils.computeModifier(options && options.modifiers,
-                                          this.page.event.modifier)
+                                          this.page.event.modifier);
     this.page.sendEvent(options.eventType, keys, null, null, modifiers);
     if (isTextInput && !options.keepFocus) {
         // remove the focus
@@ -1699,7 +1697,7 @@ Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
  */
 Casper.prototype.start = function start(location, then) {
     "use strict";
-    /*jshint maxstatements:30*/
+    /*eslint max-statements:0*/
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
@@ -2100,7 +2098,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function _check(self) {
-            /*jshint maxstatements:20*/
+            /*eslint max-statements:20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
                 return;
@@ -2458,7 +2456,7 @@ Casper.prototype.zoom = function zoom(factor) {
  */
 Casper.extend = function(proto) {
     "use strict";
-    this.emit("deprecated", "Casper.extend() has been deprecated since 0.6; check the docs")
+    this.emit("deprecated", "Casper.extend() has been deprecated since 0.6; check the docs");
     if (!utils.isObject(proto)) {
         throw new CasperError("extends() only accept objects as prototypes");
     }
@@ -2474,7 +2472,7 @@ exports.Casper = Casper;
  * @return WebPage
  */
 function createPage(casper) {
-    /*jshint maxstatements:20*/
+    /*eslint max-statements:0*/
     "use strict";
     var page = require('webpage').create();
     page.onAlert = function onAlert(message) {
@@ -2531,7 +2529,7 @@ function createPage(casper) {
         casper.emit('load.started');
     };
     page.onLoadFinished = function onLoadFinished(status) {
-        /*jshint maxstatements:20*/
+        /*eslint max-statements:0*/
         if (status !== "success") {
             casper.emit('load.failed', {
                 status:      status,
@@ -2568,11 +2566,11 @@ function createPage(casper) {
         if (isMainFrame && casper.requestUrl !== url) {
             var currentUrl = casper.requestUrl;
             var newUrl = url;
-            var pos = currentUrl.indexOf('#')
+            var pos = currentUrl.indexOf('#');
             if (pos !== -1) {
                 currentUrl = currentUrl.substring(0, pos);
             }
-            pos = newUrl.indexOf('#')
+            pos = newUrl.indexOf('#');
             if (pos !== -1) {
                 newUrl = newUrl.substring(0, pos);
             }
