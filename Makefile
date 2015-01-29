@@ -1,10 +1,10 @@
-.PHONY: default test test-dotNET docs selftest compile-dotNET selftest-dotNET clitest clitest-dotNET jshint
+.PHONY: default test test-dotNET docs selftest compile-dotNET selftest-dotNET clitest clitest-dotNET lint
 
 default: test
 
-test: selftest clitest jshint
+test: selftest clitest lint
 
-test-dotNET: compile-dotNET selftest-dotNET clitest-dotNET jshint
+test-dotNET: compile-dotNET selftest-dotNET clitest-dotNET lint
 
 docs:
 	sphinx-build -b html ./docs docs/_build
@@ -24,5 +24,5 @@ clitest:
 clitest-dotNET:
 	python tests/clitests/runtests.py casperjs.exe
 
-jshint:
-	jshint .
+lint:
+	eslint .

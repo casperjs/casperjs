@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 /**
  * Special test server to test for HTTP status codes
  *

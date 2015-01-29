@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('getGLobal() tests', 3, function(test) {
     casper.start('tests/site/global.html', function() {
         test.assertEquals(this.getGlobal('myGlobal'), 'awesome string',

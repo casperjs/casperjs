@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var x = require('casper').selectXPath;
 
 casper.test.begin('getElementAttribute() tests', 4, function(test) {

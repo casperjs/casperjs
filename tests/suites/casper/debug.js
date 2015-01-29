@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('getHTML() tests', 2, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertEquals(this.getHTML('ul li'), 'one',
