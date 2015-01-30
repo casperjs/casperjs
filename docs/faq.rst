@@ -364,11 +364,13 @@ Here are some great resources to get started efficiently with the language:
 How do I use PhantomJS page module API in casperjs?
 ---------------------------------------------------
 
-After casperjs.start(), you have phantomjs page module available in casper.page
+After casperjs.start(), you have phantomjs page module available in casper.page (http://docs.casperjs.org/en/latest/modules/casper.html#page)
 
 You can simply do like below::
 
   casper.page.pageModuleApi()
+  
+PhantomJS Web Page API: http://phantomjs.org/api/webpage/
 
 
 How do I provide my implementation of a remote resource?
