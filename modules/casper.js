@@ -179,7 +179,9 @@ var Casper = function Casper(options) {
             throw new CasperError('casper.test property is only available using the `casperjs test` command');
         }
         if (!utils.isObject(this._test)) {
-            this._test = tester.create(this);
+            this._test = tester.create(this, {
+                concise: this.cli.get('concise')
+            });
         }
         return this._test;
     });
