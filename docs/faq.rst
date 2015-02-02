@@ -360,3 +360,30 @@ Here are some great resources to get started efficiently with the language:
 .. _PhantomJS: http://phantomjs.org/
 .. _Qt: http://qt.digia.com/
 .. _WebKit: http://www.webkit.org/
+
+How do I use PhantomJS page module API in casperjs?
+---------------------------------------------------
+
+After casperjs.start(), you have phantomjs page module available in casper.page (http://docs.casperjs.org/en/latest/modules/casper.html#page)
+
+You can simply do like below::
+
+  casper.page.pageModuleApi()
+  
+PhantomJS Web Page API: http://phantomjs.org/api/webpage/
+
+
+How do I provide my implementation of a remote resource?
+--------------------------------------------------------
+
+Using phantomjs native `onResourceRequested` event, you can override remote resource url to your own implementation. Your own implementation file can be provided from local path too::
+
+  casper.page.onResourceRequested = function(requestData, networkRequest) {
+     var match = requestData.url.match(/wordfamily.js/g);
+     if (match != null) {
+        console.log('Request (#' + requestData.id + '): ' + JSON.stringify(requestData));
+        
+        // overrides wordfamily.js to local newWordFamily.js
+        networkRequest.changeUrl('newWordFamily.js');
+     }
+  };
