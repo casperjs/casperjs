@@ -40,7 +40,16 @@ if ('process' in this && process.title === "node") {
 // phantom check
 if (!('phantom' in this)) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
+} else {
+    if (phantom.version.major === 2) {
+        //setting other phantom.args if using phantomjs 2.x
+        var system = require('system');
+        var argsdeprecated = system.args;
+        argsdeprecated.shift();
+        phantom.args = argsdeprecated;
+    }
 }
+
 
 // Common polyfills
 if (typeof Function.prototype.bind !== "function") {
