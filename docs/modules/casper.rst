@@ -768,7 +768,7 @@ Prints something to stdout, optionally with some fancy color (see the :ref:`colo
 
 **Signature:** ``evaluate(Function fn[, arg1[, arg2[, …]]])``
 
-Basically `PhantomJS' WebPage#evaluate <https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-webpage-evaluate>`_ equivalent. Evaluates an expression **in the current page DOM context**::
+Basically `PhantomJS' WebPage#evaluate <http://phantomjs.org/api/webpage/method/evaluate.html>`_ equivalent. Evaluates an expression **in the current page DOM context**::
 
     casper.evaluate(function(username, password) {
         document.querySelector('#username').value = username;
