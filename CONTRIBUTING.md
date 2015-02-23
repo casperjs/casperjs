@@ -29,7 +29,7 @@ Sample commit message:
 
 Run CasperJS' test suite to see you didn't break something:
 
-    $ casperjs selftest
+    $ casperjs selftest && casper selftest --engine=slimerjs
 
 The result status bar **must be green** before sending your PR.
 
