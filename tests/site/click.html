@@ -26,7 +26,8 @@
                     testup:          [],
                     testmove:        [],
                     testclick:       [],
-                    testdoubleclick: []
+                    testdoubleclick: [],
+                    testrightclick:  []
                 };
                 document.querySelector('#test4').onclick = function(event) {
                     results.test4 = true;
@@ -47,6 +48,9 @@
                 window.ondblclick = function(event) {
                     results.testdoubleclick = [event.clientX, event.clientY];
                 };
+                window.oncontextmenu = function() {
+                   results.testrightclick = [event.clientX, event.clientY];
+                };
                 var test5elem = document.querySelector('#test5');
                 test5elem.addEventListener('mousedown', function(event) {
                     results.test5.push('mousedown');
@@ -56,6 +60,9 @@
                 });
                 test5elem.addEventListener('click', function(event) {
                     results.test5.push('click');
+                });                
+                test5elem.addEventListener('contextmenu', function (e) {
+                    results.test5.push('contextmenu');                    
                 });
 	            document.querySelector('#test6').onclick = function(event) {
 		            results.test6 = true;
