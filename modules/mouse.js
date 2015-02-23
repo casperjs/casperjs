@@ -97,6 +97,34 @@ var Mouse = function Mouse(casper) {
         processEvent('click', arguments);
     };
 
+    this.rightclick = function rightclick() {
+        var array = [];
+        switch (arguments.length) {
+            case 0:
+                throw new CasperError('Mouse.rightclick(): Too few arguments');
+            case 1:
+                array = computeCenter(arguments[0]);
+                break;
+            case 2:
+                array = arguments;
+                break;
+            default:
+                throw new CasperError('Mouse.rightclick(): Too many arguments');
+        }
+
+        casper.page.evaluate(function (clientX, clientY) {
+            var element = document.elementFromPoint(clientX, clientY);
+
+            raiseEvent('contextmenu');
+
+            function raiseEvent(eventType) {
+                var event = document.createEvent('MouseEvent');
+                event.initMouseEvent(eventType, true, true, window, 1, clientX, clientY, clientX, clientY, false, false, false, false, 2, null);
+                element.dispatchEvent(event);
+            }
+        }, array[0], array[1]);
+    };
+
     this.doubleclick = function doubleclick() {
         processEvent('doubleclick', arguments);
     };
