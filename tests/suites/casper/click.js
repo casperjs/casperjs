@@ -126,3 +126,29 @@ casper.test.begin('mouse events on click', 3, function(test) {
         test.done();
     });
 });
+
+casper.test.begin('mouse events on right click', 1, function(test) {
+    casper.start('tests/site/click.html', function() {
+        this.mouse.rightclick('#test5');
+    }).then(function() {
+        var results = this.getGlobal('results');
+
+        test.assert(results.test5.indexOf('contextmenu') !== -1,
+            'Casper.rightclick() triggers contextmenu event');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('mouse events on right click with x,y co-ordinates', 1, function(test) {
+    casper.start('tests/site/click.html', function() {
+        this.mouse.rightclick(200, 100);
+    }).then(function() {
+        var results = this.getGlobal('results');
+
+        test.assertEquals(results.testrightclick, [200, 100],
+            'Mouse.move() has moved to the specified position');
+    }).run(function() {
+        test.done();
+    });
+});
