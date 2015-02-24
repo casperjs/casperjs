@@ -124,7 +124,7 @@ for arg in SYS_ARGS:
     if not found and arg_name != 'engine':
         CASPER_ARGS.append(arg)
 
-CASPER_COMMAND = ENGINE_EXECUTABLE.split(' ')
+CASPER_COMMAND = [ENGINE_EXECUTABLE]
 CASPER_COMMAND.extend(ENGINE_ARGS)
 CASPER_COMMAND.extend([
     os.path.join(CASPER_PATH, 'bin', 'bootstrap.js'),
