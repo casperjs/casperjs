@@ -142,7 +142,7 @@ class casperjs {
                     CASPER_ARGS.Add(arg);
         }
 
-        var ENGINE_EXEC = new List<string>(ENGINE_EXECUTABLE.Split(' '));
+        var ENGINE_EXEC = new List<string>(new [] {ENGINE_EXECUTABLE});
         var ENGINE_FILE = ENGINE_EXEC[0];
         ENGINE_EXEC.RemoveAt(0);
 
