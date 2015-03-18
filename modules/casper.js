@@ -1253,7 +1253,7 @@ Casper.prototype.injectClientScripts = function injectClientScripts() {
         if (this.page.injectJs(script)) {
             this.log(f('Automatically injected %s client side', script), "debug");
         } else {
-            this.warn('Failed injecting %s client side', script);
+            this.warn(f('Failed injecting %s client side', script));
         }
     }.bind(this));
     return this;
