@@ -150,7 +150,7 @@ Colorized output
 
    .. versionadded:: 1.1-beta1
 
-   Windows users will get colorized output if ansicon_ is installed.
+   Windows users will get colorized output if ansicon_ is installed or if the user is using ConEmu_ with ANSI colors enabled.
 
 .. index:: Bugs, REPL
 
@@ -170,3 +170,4 @@ Known Bugs & Limitations
 .. _SlimerJS: http://slimerjs.org/
 .. _ansicon: https://github.com/adoxa/ansicon
 .. _Mono: http://www.mono-project.com/
+.. _ConEmu: https://code.google.com/p/conemu-maximus5/
