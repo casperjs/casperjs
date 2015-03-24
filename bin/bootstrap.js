@@ -40,16 +40,7 @@ if ('process' in this && process.title === "node") {
 // phantom check
 if (!('phantom' in this)) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
-} else {
-    if (phantom.version.major === 2) {
-        //setting other phantom.args if using phantomjs 2.x
-        var system = require('system');
-        var argsdeprecated = system.args;
-        argsdeprecated.shift();
-        phantom.args = argsdeprecated;
-    }
 }
-
 
 // Common polyfills
 if (typeof Function.prototype.bind !== "function") {
@@ -88,9 +79,12 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     /*jshint maxstatements:99*/
     "use strict";
     // phantom args
-    // NOTE: we can't use require('system').args here for some very obscure reason
-    //       do not even attempt at using it as it creates infinite recursion
-    var phantomArgs = phantom.args;
+    var system = system || require('system');
+    var phantomArgs = [];
+    // Skip the first arg, this mimics the contents of the old phantom.args
+    for (var i = 1; i < system.args.length; i++) {
+        phantomArgs.push(system.args[i]);
+    }
 
     if (phantom.casperLoaded) {
         return;
@@ -124,7 +118,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
                 return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
             }
         } else if (version.major === 2) {
-            console.log("Warning PhantomJS v2.0 not yet released. There will not be any official support for any bugs until stable version is released!");
+            console.log("Warning: PhantomJS v2.0 support is experimental.");
         }
         else return __die('CasperJS needs PhantomJS v1.x or v2.x');
     })(phantom.version);
@@ -174,7 +168,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     // CasperJS root path
     if (!phantom.casperPath) {
         try {
-            phantom.casperPath = phantom.args.map(function _map(arg) {
+            phantom.casperPath = phantomArgs.map(function _map(arg) {
                 var match = arg.match(/^--casper-path=(.*)/);
                 if (match) {
                     return fs.absolute(match[1]);
