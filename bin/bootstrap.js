@@ -85,7 +85,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
 // casperjs env initialization
 (function(global, phantom){
-    /*jshint maxstatements:99*/
+    /*jshint maxstatements:99, maxcomplexity:15*/
     "use strict";
     // phantom args
     // NOTE: we can't use require('system').args here for some very obscure reason
@@ -398,8 +398,40 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     // casper cli args
     phantom.casperArgs = require('cli').parse(phantomArgs);
+    var getopts = phantom.casperArgs.get.bind(phantom.casperArgs);
+    var cliargs = phantom.casperArgs.raw.args;
 
-    if (true === phantom.casperArgs.get('cli')) {
+    if (getopts('cli')) {
+        var unaryarg = getopts(1);
+        if (require('utils').isFileExtOfType(unaryarg, 'json')) {
+            var config;
+            try {
+                config = require(unaryarg);
+            } catch (e) {
+                return __die('Unable to parse config file: ' + e.message);
+            }
+
+            if (getopts(0).match(/^(selftest|test)$/)) {
+                cliargs = [getopts(0)];
+            }
+
+            if (config.paths) {
+                cliargs = cliargs.concat([]
+                    .slice.call(config.paths)
+                    .map(function(x) {
+                        return fs.absolute(fs.pathJoin(fs.dirname(unaryarg), x));
+                    }));
+                delete config.paths;
+            }
+
+            Object.keys(config).forEach(function(key) {
+                if (config[key]) phantom.casperArgs.raw.options[key] = config[key].toString();
+            });
+
+            phantom.casperArgs.args = phantom.casperArgs.raw.args = [].slice.call(cliargs);
+            phantom.casperArgs.options = phantom.casperArgs.raw.options;
+        }
+        
         initCasperCli(phantom.casperArgs);
     }
 
