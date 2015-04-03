@@ -96,7 +96,7 @@ if (utils.gteVersion(phantom.version, '1.9.0')) {
                           modifiers.ctrl | modifiers.alt | modifiers.shift,
                          'computeModifier() computes a "ctrl+alt+shift" modifier');
         test.assertThrows(utils.computeModifier, ["chucknorris", modifiers],
-                         'computeModifier() checks for a valid modifier');
+                         'computeModifier() checks for a valid modifier '+ JSON.stringify(modifiers,null,4));
         test.assertThrows(utils.computeModifier, ["chuck+norris", modifiers],
                          'computeModifier() checks for a valid complex modifier');
         test.done();

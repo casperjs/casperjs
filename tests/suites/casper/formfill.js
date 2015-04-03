@@ -6,7 +6,7 @@ function testFormValues(test) {
     test.assertField('email', 'chuck@norris.com',
         'can fill an input[type=text] form field');
     test.assertField('password', 'chuck',
-        'can fill an input[type=password] form field')
+        'can fill an input[type=password] form field');
     test.assertField('content', 'Am watching thou',
         'can fill a textarea form field');
     test.assertField('topic', 'bar',
@@ -87,7 +87,7 @@ casper.test.begin('fillLabels() tests', 17, function(test) {
         testFormValues(test);
         test.assertEvalEquals(function() {
             return __utils__.findOne('input[name="file"]').files.length === 1;
-        }, true, 'can select a file to upload');
+        }, true, 'can select a file to upload '+fpath);
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);

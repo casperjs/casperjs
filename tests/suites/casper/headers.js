@@ -17,7 +17,7 @@ casper.test.begin('Casper.headers.get() using file protocol', 1, function(test) 
         test.assertEquals(response, {data: null}, 'Empty http response on local page');
     }).run(function() {
         test.done();
-    })
+    });
 });
 
 casper.test.begin('Casper.headers.get() using http protocol', 3, function(test) {
@@ -29,5 +29,5 @@ casper.test.begin('Casper.headers.get() using http protocol', 3, function(test) 
     }).run(function() {
         server.close();
         test.done();
-    })
+    });
 });

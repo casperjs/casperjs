@@ -214,6 +214,25 @@ Retrieves boundaries for all DOM element matching the provided :ref:`selector <s
 
 It returns an array of objects each having four keys: ``top``, ``left``, ``width`` and ``height``.
 
+.. index:: Link text
+
+``getElementByLinkText()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getElementByLinkText(String text [, HTMLElement scope])``
+
+Retrieves a single DOM element matching a given :ref:`Link text <selectors>`.
+
+.. versionadded:: 1.1
+
+The ``scope`` argument allow to set the context for searching text on "a" tags::
+
+    // will be performed against the whole document
+    __utils__.getElementByLinkText('a link text');
+
+    // will be performed against a given DOM element
+    __utils__.getElementByLinkText('a link text', __utils__.findOne('div.main'));
+
 .. index:: XPath
 
 ``getElementByXPath()``
@@ -232,6 +251,21 @@ The ``scope`` argument allow to set the context for executing the XPath query::
 
     // will be performed against a given DOM element
     __utils__.getElementByXPath('.//a', __utils__.findOne('div.main'));
+
+.. index:: Link text
+
+``getElementsByLinkText()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getElementsByLinkText(String text [, HTMLElement scope])``
+
+Retrieves all DOM elements matching a given :ref:`link text <selectors>`, if any.
+
+.. versionadded:: 1.1.4
+
+The ``scope`` argument allows to set the context for searching text on "a" tags.
+
+.. _clientutils_getfieldvalue:
 
 .. index:: XPath
 

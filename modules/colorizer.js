@@ -80,7 +80,7 @@ var Colorizer = function Colorizer() {
      * @return  String
      */
     this.colorize = function colorize(text, styleName, pad) {
-        if ((fs.isWindows() && !env['ANSICON']) || !(styleName in styles)) {
+        if ((fs.isWindows() && !env.ANSICON) || !(styleName in styles)) {
             return text;
         }
         return this.format(text, styles[styleName], pad);
@@ -94,7 +94,7 @@ var Colorizer = function Colorizer() {
      * @return String
      */
     this.format = function format(text, style, pad) {
-        if ((fs.isWindows() && !env['ANSICON']) || !utils.isObject(style)) {
+        if ((fs.isWindows() && !env.ANSICON) || !utils.isObject(style)) {
             return text;
         }
         var codes = [];

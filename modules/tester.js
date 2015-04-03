@@ -1348,7 +1348,7 @@ function getStackEntry(error, testFile) {
             sourceURL = sourceURL.split('->')[1].trim();
         }
         if (sourceURL === testFile) {
-            return { sourceURL: sourceURL, line: m[3]}
+            return { sourceURL: sourceURL, line: m[3]};
         }
     }
     return null;

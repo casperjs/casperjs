@@ -54,12 +54,14 @@
             -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
         );
-        var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
+        var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath', 'link_text'];
 
         // public members
         this.options = options || {};
         this.options.scope = this.options.scope || document;
 
+		// hack jshint limitation statements
+		(function(){
         /**
          * Calls a method part of the current prototype, with arguments.
          *
@@ -148,6 +150,53 @@
         };
 
         /**
+        * Prepares a string for xpath expression with the condition [text()=].
+        *
+        * @param  String  string
+        * @return String
+        */
+        this.quoteXPathAttributeString = function quoteXPathAttributeString(string) {
+            if (/"/g.test(string)) {
+                return 'concat("' + string.toString().replace(/"/g, '", \'"\', "') + '")';
+            }
+            return '"' + string + '"';
+        };
+
+        /**
+        * Formats a string with passed parameters. Ported from nodejs `util.format()`.
+        *
+        * @return String
+        */
+        this.format = function format(f) {
+            var i = 1;
+            var args = arguments;
+            var len = args.length;
+            var str = String(f).replace(/%[sdj%]/g, function _replace(x) {
+                if (i >= len) return x;
+                switch (x) {
+                case '%s':
+                    return String(args[i++]);
+                case '%d':
+                    return Number(args[i++]);
+                case '%j':
+                    return JSON.stringify(args[i++]);
+                case '%%':
+                    return '%';
+                default:
+                    return x;
+                }
+            });
+            for (var x = args[i]; i < len; x = args[++i]) {
+                if (x === null || typeof x !== 'object') {
+                    str += ' ' + x;
+                } else {
+                    str += '[obj]';
+                }
+            }
+            return str;
+        };
+
+        /**
          * Checks if a given DOM element is visible in remove page.
          *
          * @param  Object   element  DOM element
@@ -168,7 +217,23 @@
                 return true;
             }
             return elem.clientHeight > 0 && elem.clientWidth > 0;
-        }
+        };
+
+        /**
+         * Checks if a given DOM element as a style propertyValue in remove page.
+         *
+         * @param  Object   element  DOM element
+         * @param  String   propertyName the style property
+         * @param  String   value    the value expected
+         * @return Boolean
+         */
+        this.elementStyle = function elementStyle(elem, propertyName) {
+            try {
+                return window.getComputedStyle(elem, null).getPropertyValue(propertyName);
+            } catch (e) {
+                return "";
+            }
+        };
 
         /**
          * Base64 encodes a string, even binary ones. Succeeds where
@@ -204,7 +269,7 @@
             }
             return out;
         };
-
+	}).call(this);
         /**
          * Checks if a given DOM element exists in remote page.
          *
@@ -335,9 +400,11 @@
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementsByXPath(pSelector.path, scope);
-                } else {
-                    return Array.prototype.slice.call(scope.querySelectorAll(pSelector.path));
                 }
+                if (pSelector.type === 'link_text') {
+                    return this.getElementsByLinkText(pSelector.path, scope);
+                }
+                return Array.prototype.slice.call(scope.querySelectorAll(pSelector.path));
             } catch (e) {
                 this.log('findAll(): invalid selector provided "' + selector + '":' + e, "error");
             }
@@ -356,9 +423,11 @@
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementByXPath(pSelector.path, scope);
-                } else {
-                    return scope.querySelector(pSelector.path);
                 }
+                if (pSelector.type === 'link_text') {
+                    return this.getElementByLinkText(pSelector.path, scope);
+                }
+                return scope.querySelector(pSelector.path);
             } catch (e) {
                 this.log('findOne(): invalid selector provided "' + selector + '":' + e, "error");
             }
@@ -467,6 +536,22 @@
         };
 
         /**
+         * Retrieves information about the node computed style the provided selector.
+         *
+         * @param  String|Object  selector  CSS3/XPath selector
+         * @return Object
+         */
+        this.getElementStyle = function getElementStyle(selector) {
+            var element = this.findOne(selector);
+            var styles = window.getComputedStyle(element, null);
+            var properties = {};
+            [].forEach.call(styles, function(propertyName){
+                properties[propertyName] = styles.getPropertyValue(propertyName);
+            });
+            return properties;
+        };
+
+        /**
          * Retrieves information about the node matching the provided selector.
          *
          * @param  String|Object  selector  CSS3/XPath selector
@@ -491,6 +576,24 @@
                 height: bounds.height,
                 visible: this.visible(selector)
             };
+        };
+
+        /**
+         * Retrieves information about the nodes computed styles the provided selector.
+         *
+         * @param  String|Object  selector  CSS3/XPath selector
+         * @return Object
+         */
+        this.getElementsStyle = function getElementsStyle(selector) {
+            var element = this.findOne(selector);
+            return [].map.call(this.findAll(selector), function(element, index) {
+                var properties = {};
+                var styles = window.getComputedStyle(element, null);
+                [].forEach.call(styles, function(propertyName){
+                    properties[propertyName] = styles.getPropertyValue(propertyName);
+                });
+                return properties;
+            });
         };
 
         /**
@@ -538,6 +641,38 @@
         };
 
         /**
+         * Retrieves a single DOM element matching a given link text.
+         *
+         * @param  String            expression  The link text
+         * @param  HTMLElement|null  scope       Element to search child elements within
+         * @return HTMLElement or null
+         */
+        this.getElementByLinkText = function getElementByLinkText(expression, scope) {
+            scope = scope || this.options.scope;
+            var text, style;
+            var a = [].filter.call(scope.querySelectorAll("a"), this.elementVisible), i=0, l=a.length;
+            var capitalize = function(txt){
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            };
+            for (i=0; i < l; i++) {
+                var n, str='', walk=document.createTreeWalker(a[i], NodeFilter.SHOW_TEXT, null, false);
+                while((n=walk.nextNode())){
+                    text = n.nodeValue;
+                    style = window.getComputedStyle(n.parentNode, null).getPropertyValue("text-transform");
+                    switch(style){
+                        case "uppercase": text = text.toUpperCase();break;
+                        case "lowercase": text = text.toLowerCase();break;
+                        case "capitalize": text = text.replace(/\S+/g, capitalize);break;
+                    }
+                    str=str.concat(text);
+                }
+                str=str.replace(/^\s*|\s*$/g, "").replace(/\s+/g, " ");
+                if (expression === str)
+                    return a[i];
+            }
+        };
+
+        /**
          * Retrieves all DOM elements matching a given XPath expression.
          *
          * @param  String            expression  The XPath expression
@@ -554,6 +689,38 @@
             return nodes;
         };
 
+        /**
+         * Retrieves all DOM elements matching a given link text.
+         *
+         * @param  String            expression  The link text
+         * @param  HTMLElement|null  scope       Element to search child elements within
+         * @return Array
+         */
+        this.getElementsByLinkText = function getElementByLinkText(expression, scope) {
+            scope = scope || this.options.scope;
+            var nodes = [], text, style;
+            var a = [].filter.call(scope.querySelectorAll("a"), this.elementVisible), i=0, l=a.length;
+            var capitalize = function(txt){
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            };
+            for (i=0; i < l; i++) {
+                var n, str='', walk=document.createTreeWalker(a[i], NodeFilter.SHOW_TEXT, null, false);
+                while((n=walk.nextNode())){
+                    text = n.nodeValue;
+                    style = window.getComputedStyle(n.parentNode, null).getPropertyValue("text-transform");
+                    switch(style){
+                        case "uppercase": text = text.toUpperCase();break;
+                        case "lowercase": text = text.toLowerCase();break;
+                        case "capitalize": text = text.replace(/\S+/g, capitalize);break;
+                    }
+                    str=str.concat(text);
+                }
+                str=str.replace(/^\s*|\s*$/g, "").replace(/\s+/g, " ");
+                if (expression === str)
+                    nodes.push(a[i]);
+            }
+            return nodes;
+        };
         /**
          * Retrieves the value of a form field.
          *
@@ -761,7 +928,7 @@
          */
         this.scrollToBottom = function scrollToBottom() {
             this.scrollTo(0, this.getDocumentHeight());
-        },
+        };
 
         /**
          * Performs an AJAX request.
@@ -920,6 +1087,17 @@
          */
         this.visible = function visible(selector) {
             return [].some.call(this.findAll(selector), this.elementVisible);
+        };
+
+        /**
+         * Checks if any element matching a given selector has style value in remote page.
+         *
+         * @param  String  selector  CSS3 selector
+         * @param  String  property  The style propertyName
+         * @return String    value
+         */
+        this.hasStyle = function hasStyle(selector, propertyName) {
+            return this.elementStyle(this.findOne(selector), propertyName);
         };
     };
 })(typeof exports ===  "object" && !(exports instanceof Element) ? exports : window);

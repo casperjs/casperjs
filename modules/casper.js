@@ -78,6 +78,25 @@ function selectXPath(expression) {
 exports.selectXPath = selectXPath;
 
 /**
+ * Shortcut to build an LinkText selector object.
+ *
+ * @param  String  expression  The text
+ * @return Object
+ * @see    http://casperjs.org/selectors.html
+ */
+function selectLinkText(expression) {
+    "use strict";
+    return {
+        type: 'link_text',
+        path: expression,
+        toString: function() {
+            return this.type + ' selector: ' + this.path;
+        }
+    };
+}
+exports.selectLinkText = selectLinkText;
+
+/**
  * Main Casper object.
  *
  * @param  Object  options  Casper options
@@ -220,7 +239,7 @@ var Casper = function Casper(options) {
 
     // deprecated direct option
     if (this.cli.has('direct')) {
-        this.emit("deprecated", "--direct option has been deprecated since 1.1; you should use --verbose instead.")
+        this.emit("deprecated", "--direct option has been deprecated since 1.1; you should use --verbose instead.");
     }
 };
 
@@ -339,7 +358,7 @@ Casper.prototype.capture = function capture(targetFile, clipRect, imgOptions) {
  * `xbm` and `xpm`.
  *
  * @param  String                   format    The image format
- * @param  String|Object|undefined  selector  DOM CSS3/XPath selector or clipRect object (optional)
+ * @param  String|Object|undefined  selector  DOM CSS3/XPath/LinkText selector or clipRect object (optional)
  * @return Casper
  */
 Casper.prototype.captureBase64 = function captureBase64(format, area) {
@@ -375,7 +394,7 @@ Casper.prototype.captureBase64 = function captureBase64(format, area) {
  * Captures the page area matching the provided selector.
  *
  * @param  String  targetFile  Target destination file path.
- * @param  String  selector    DOM CSS3/XPath selector
+ * @param  String  selector    DOM CSS3/XPath/LinkText selector
  * @return Casper
  */
 Casper.prototype.captureSelector = function captureSelector(targetFile, selector, imgOptions) {
@@ -534,7 +553,7 @@ Casper.prototype.createStep = function createStep(fn, options) {
 /**
  * Logs the HTML code of the current page.
  *
- * @param  String   selector  A DOM CSS3/XPath selector (optional)
+ * @param  String   selector  A DOM CSS3/XPath/LinkText selector (optional)
  * @param  Boolean  outer     Whether to fetch outer HTML contents (default: false)
  * @return Casper
  */
@@ -705,7 +724,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         return utils.clone(this.page.evaluate(fn));
     } else if (arguments.length === 2) {
         // check for closure signature if it matches context
-        if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
+        if (utils.isObject(context) && fn.length === Object.keys(context).length) {
             context = utils.objectValues(context);
         } else {
             context = [context];
@@ -737,10 +756,10 @@ Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message, status) {
 };
 
 /**
- * Checks if an element matching the provided DOM CSS3/XPath selector exists in
+ * Checks if an element matching the provided DOM CSS3/XPath/LinkText selector exists in
  * current page DOM.
  *
- * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  String  selector  A DOM CSS3/XPath/LinkText selector
  * @return Boolean
  */
 Casper.prototype.exists = function exists(selector) {
@@ -762,10 +781,10 @@ Casper.prototype.exit = function exit(status) {
 };
 
 /**
- * Fetches plain text contents contained in the DOM element(s) matching a given CSS3/XPath
+ * Fetches plain text contents contained in the DOM element(s) matching a given CSS3/XPath/LinkText
  * selector.
  *
- * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  String  selector  A DOM CSS3/XPath/LinkText selector
  * @return String
  */
 Casper.prototype.fetchText = function fetchText(selector) {
@@ -777,7 +796,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
 /**
  * Fills a form with provided field values.
  *
- * @param  String selector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  String selector  A DOM CSS3/XPath/LinkText selector to the target form to fill
  * @param  Object vals      Field values
  * @param  Object options   The fill settings (optional)
  */
@@ -851,12 +870,12 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
             }
         }, selector);
     }
-}
+};
 
 /**
  * Fills a form with provided field values using the Name attribute.
  *
- * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  String  formSelector  A DOM CSS3/XPath/LinkText selector to the target form to fill
  * @param  Object  vals          Field values
  * @param  Boolean submit        Submit the form?
  */
@@ -871,7 +890,7 @@ Casper.prototype.fillNames = function fillNames(formSelector, vals, submit) {
 /**
  * Fills a form with provided field values using associated label text.
  *
- * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  String  formSelector  A DOM CSS3/XPath/LinkText selector to the target form to fill
  * @param  Object  vals          Field values
  * @param  Boolean submit        Submit the form?
  */
@@ -886,7 +905,7 @@ Casper.prototype.fillLabels = function fillLabels(formSelector, vals, submit) {
 /**
  * Fills a form with provided field values using CSS3 selectors.
  *
- * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  String  formSelector  A DOM CSS3/XPath/LinkText selector to the target form to fill
  * @param  Object  vals          Field values
  * @param  Boolean submit        Submit the form?
  */
@@ -901,7 +920,7 @@ Casper.prototype.fillSelectors = function fillSelectors(formSelector, vals, subm
 /**
  * Fills a form with provided field values using the Name attribute by default.
  *
- * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  String  formSelector  A DOM CSS3/XPath/LinkText selector to the target form to fill
  * @param  Object  vals          Field values
  * @param  Boolean submit        Submit the form?
  */
@@ -910,7 +929,7 @@ Casper.prototype.fill = Casper.prototype.fillNames;
 /**
  * Fills a form with provided field values using XPath selectors.
  *
- * @param  String  formSelector  A DOM CSS3/XPath selector to the target form to fill
+ * @param  String  formSelector  A DOM CSS3/XPath/LinkText selector to the target form to fill
  * @param  Object  vals          Field values
  * @param  Boolean submit        Submit the form?
  */
@@ -988,9 +1007,9 @@ Casper.prototype.getCurrentUrl = function getCurrentUrl() {
 
 /**
  * Retrieves the value of an attribute on the first element matching the provided
- * DOM CSS3/XPath selector.
+ * DOM CSS3/XPath/LinkText selector.
  *
- * @param  String  selector   A DOM CSS3/XPath selector
+ * @param  String  selector   A DOM CSS3/XPath/LinkText selector
  * @param  String  attribute  The attribute name to lookup
  * @return String  The requested DOM element attribute value
  */
@@ -1005,9 +1024,9 @@ Casper.prototype.getElementAttr = function getElementAttr(selector, attribute) {
 
 /**
  * Retrieves the value of an attribute for each element matching the provided
- * DOM CSS3/XPath selector.
+ * DOM CSS3/XPath/LinkText selector.
  *
- * @param  String  selector   A DOM CSS3/XPath selector
+ * @param  String  selector   A DOM CSS3/XPath/LinkText selector
  * @param  String  attribute  The attribute name to lookup
  * @return Array
  */
@@ -1020,12 +1039,12 @@ Casper.prototype.getElementsAttr = function getElementsAttr(selector, attribute)
             return element.getAttribute(attribute);
         });
     }, selector, attribute);
-}
+};
 
 /**
- * Retrieves boundaries for a DOM element matching the provided DOM CSS3/XPath selector.
+ * Retrieves boundaries for a DOM element matching the provided DOM CSS3/XPath/LinkText selector.
  *
- * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  String  selector  A DOM CSS3/XPath/LinkText selector
  * @return Object
  */
 Casper.prototype.getElementBounds = function getElementBounds(selector) {
@@ -1052,7 +1071,7 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
 /**
  * Retrieves information about the node matching the provided selector.
  *
- * @param  String|Objects  selector  CSS3/XPath selector
+ * @param  String|Objects  selector  CSS3/XPath/LinkText selector
  * @return Object
  */
 Casper.prototype.getElementInfo = function getElementInfo(selector) {
@@ -1067,7 +1086,7 @@ Casper.prototype.getElementInfo = function getElementInfo(selector) {
 /**
  * Retrieves information about the nodes matching the provided selector.
  *
- * @param String|Objects  selector  CSS3/XPath selector
+ * @param String|Objects  selector  CSS3/XPath/LinkText selector
  * @return Array
  */
 Casper.prototype.getElementsInfo = function getElementsInfo(selector) {
@@ -1080,9 +1099,9 @@ Casper.prototype.getElementsInfo = function getElementsInfo(selector) {
 };
 
 /**
- * Retrieves boundaries for all the DOM elements matching the provided DOM CSS3/XPath selector.
+ * Retrieves boundaries for all the DOM elements matching the provided DOM CSS3/XPath/LinkText selector.
  *
- * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  String  selector  A DOM CSS3/XPath/LinkText selector
  * @return Array
  */
 Casper.prototype.getElementsBounds = function getElementsBounds(selector) {
@@ -1108,7 +1127,7 @@ Casper.prototype.getElementsBounds = function getElementsBounds(selector) {
 /**
  * Retrieves a given form all of its field values.
  *
- * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  String  selector  A DOM CSS3/XPath/LinkText selector
  * @return Object
  */
 Casper.prototype.getFormValues = function(selector) {
@@ -1150,10 +1169,10 @@ Casper.prototype.getGlobal = function getGlobal(name) {
 };
 
 /**
- * Retrieves current HTML code matching the provided CSS3/XPath selector.
+ * Retrieves current HTML code matching the provided CSS3/XPath/LinkText selector.
  * Returns the HTML contents for the whole page if no arg is passed.
  *
- * @param  String   selector  A DOM CSS3/XPath selector
+ * @param  String   selector  A DOM CSS3/XPath/LinkText selector
  * @param  Boolean  outer     Whether to fetch outer HTML contents (default: false)
  * @return String
  */
@@ -1626,8 +1645,7 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         }, selector);
         this.click(selector);
     }
-    var modifiers = utils.computeModifier(options && options.modifiers,
-                                          this.page.event.modifier)
+    var modifiers = utils.computeModifier(options && options.modifiers, this.page.event.modifier);
     this.page.sendEvent(options.eventType, keys, null, null, modifiers);
     if (isTextInput && !options.keepFocus) {
         // remove the focus
@@ -1997,17 +2015,31 @@ Casper.prototype.viewport = function viewport(width, height, then) {
 };
 
 /**
- * Checks if an element matching the provided DOM CSS3/XPath selector is visible
+ * Checks if an element matching the provided DOM CSS3/XPath/LinkText selector is visible
  * current page DOM by checking that offsetWidth and offsetHeight are
  * both non-zero.
  *
- * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  String  selector  A DOM CSS3/XPath/LinkText selector
  * @return Boolean
  */
 Casper.prototype.visible = function visible(selector) {
     "use strict";
     this.checkStarted();
     return this.callUtils("visible", selector);
+};
+
+/**
+ * Checks if an element matching the provided DOM CSS3/XPath/LinkText selector hasProperty
+ * current page DOM by checking that offsetWidth and offsetHeight are
+ * both non-zero.
+ *
+ * @param  String  selector  A DOM CSS3/XPath/LinkText selector
+ * @return Boolean
+ */
+Casper.prototype.getElementStyle = function getElementStyle(selector) {
+    "use strict";
+    this.checkStarted();
+    return this.callUtils("getElementStyle", selector);
 };
 
 /**
@@ -2223,10 +2255,10 @@ Casper.prototype.waitForUrl = function waitForUrl(url, then, onTimeout, timeout)
 };
 
 /**
- * Waits until an element matching the provided DOM CSS3/XPath selector exists in
+ * Waits until an element matching the provided DOM CSS3/XPath/LinkText selector exists in
  * remote DOM to process a next step.
  *
- * @param  String    selector   A DOM CSS3/XPath selector
+ * @param  String    selector   A DOM CSS3/XPath/LinkText selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
@@ -2264,10 +2296,10 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
 };
 
 /**
- * Waits until the text on an element matching the provided DOM CSS3/XPath selector
+ * Waits until the text on an element matching the provided DOM CSS3/XPath/LinkText selector
  * is changed to a different value.
  *
- * @param String    selector    A DOM CSS3/XPath selector
+ * @param String    selector    A DOM CSS3/XPath/LinkText selector
  * @param Function  then        The next step to preform (optional)
  * @param Function  onTimeout   A callback function to call on timeout (optional)
  * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
@@ -2284,10 +2316,10 @@ Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout,
 };
 
 /**
- * Waits until an element matching the provided DOM CSS3/XPath selector does not
+ * Waits until an element matching the provided DOM CSS3/XPath/LinkText selector does not
  * exist in the remote DOM to process a next step.
  *
- * @param  String    selector   A DOM CSS3/XPath selector
+ * @param  String    selector   A DOM CSS3/XPath/LinkText selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
@@ -2306,10 +2338,33 @@ Casper.prototype.waitWhileSelector = function waitWhileSelector(selector, then, 
 };
 
 /**
- * Waits until an element matching the provided DOM CSS3/XPath selector is
+ * Waits until an element matching the provided DOM CSS3/XPath/LinkText selector has
+ * match property condition in the remote DOM to process a next step.
+ *
+ * @param  String            selector     A DOM CSS3/XPath/LinkText selector
+ * @param  Function          condition    The test condition Function with Object of StyleProperty
+ * @param  Function          then         The next step to perform (optional)
+ * @param  Function          onTimeout    A callback function to call on timeout (optional)
+ * @param  Number            timeout      The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitStyleProperties = function waitStyleProperties( selector, condition, then, onTimeout, timeout) {
+    "use strict";
+    this.checkStarted();
+    timeout = timeout ? timeout : this.options.waitTimeout;
+    return this.waitFor(function _check() {
+		if (utils.isFunction(condition)) {
+            return condition.call(this, this.getElementStyle(selector));
+        }
+        throw new CasperError('invalid condition argument');
+    }, then, onTimeout, timeout, { StyleProperty: selector });
+};
+
+/**
+ * Waits until an element matching the provided DOM CSS3/XPath/LinkText selector is
  * visible in the remote DOM to process a next step.
  *
- * @param  String    selector   A DOM CSS3/XPath selector
+ * @param  String    selector   A DOM CSS3/XPath/LinkText selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
@@ -2325,10 +2380,10 @@ Casper.prototype.waitUntilVisible = function waitUntilVisible(selector, then, on
 };
 
 /**
- * Waits until an element matching the provided DOM CSS3/XPath selector is no
+ * Waits until an element matching the provided DOM CSS3/XPath/LinkText selector is no
  * longer visible in remote DOM to process a next step.
  *
- * @param  String    selector   A DOM CSS3/XPath selector
+ * @param  String    selector   A DOM CSS3/XPath/LinkText selector
  * @param  Function  then       The next step to perform (optional)
  * @param  Function  onTimeout  A callback function to call on timeout (optional)
  * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
@@ -2438,7 +2493,7 @@ Casper.prototype.zoom = function zoom(factor) {
  */
 Casper.extend = function(proto) {
     "use strict";
-    this.emit("deprecated", "Casper.extend() has been deprecated since 0.6; check the docs")
+    this.emit("deprecated", "Casper.extend() has been deprecated since 0.6; check the docs");
     if (!utils.isObject(proto)) {
         throw new CasperError("extends() only accept objects as prototypes");
     }
@@ -2490,7 +2545,7 @@ function createPage(casper) {
     };
 
     page.onCallback = function onCallback(data){
-        casper.emit('remote.callback',data);
+        casper.emit('remote.callback', data);
     };
 
     page.onError = function onError(msg, trace) {
@@ -2548,11 +2603,11 @@ function createPage(casper) {
         if (isMainFrame && casper.requestUrl !== url) {
             var currentUrl = casper.requestUrl;
             var newUrl = url;
-            var pos = currentUrl.indexOf('#')
+            var pos = currentUrl.indexOf('#');
             if (pos !== -1) {
                 currentUrl = currentUrl.substring(0, pos);
             }
-            pos = newUrl.indexOf('#')
+            pos = newUrl.indexOf('#');
             if (pos !== -1) {
                 newUrl = newUrl.substring(0, pos);
             }
