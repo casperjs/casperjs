@@ -101,7 +101,15 @@ function initRunner() {
 
     // test suites completion listener
     casper.test.on('tests.complete', function() {
-        this.renderResults(this.options.autoExit, undefined, casper.cli.get('xunit') || undefined);
+        var format = casper.cli.get('format') || undefined;
+        var file = casper.cli.get('file') || undefined;
+
+        // ensure BC on --xunit option 
+        if (casper.cli.has('xunit')) {
+            format = 'xunit';
+            file = casper.cli.get('xunit');
+        }
+        this.renderResults(this.options.autoExit, undefined, format, file);
         if (this.options.failFast && this.testResults.failures.length > 0) {
             casper.warn('Test suite failed fast, all tests may not have been executed.');
         }

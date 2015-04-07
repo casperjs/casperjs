@@ -714,13 +714,14 @@ function ms2seconds(milliseconds) {
 exports.ms2seconds = ms2seconds;
 
 /**
- * Creates an (SG|X)ML node element.
+ * Creates an (SG|X|HT)ML node element.
  *
  * @param  String  name        The node name
  * @param  Object  attributes  Optional attributes
+ * @param  String text  Optional text inside HTMLElement
  * @return HTMLElement
  */
-function node(name, attributes) {
+function node(name, attributes, text) {
     "use strict";
     var _node   = document.createElement(name);
     for (var attrName in attributes) {
@@ -729,6 +730,11 @@ function node(name, attributes) {
             _node.setAttribute(attrName, value);
         }
     }
+    if(text) {
+        var textNode = document.createTextNode(text);
+        _node.appendChild(textNode);
+    }
+
     return _node;
 }
 exports.node = node;
