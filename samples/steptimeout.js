@@ -1,5 +1,9 @@
 /*jshint strict:false*/
-/*global CasperError, console, phantom, require*/
+/*global casper, CasperError, console, phantom, require*/
+
+/**
+ * $ casperjs samples/steptimout.js
+ */
 
 var failed = [];
 var start = null;
@@ -11,19 +15,17 @@ var links = [
     "http://cdiscount.fr/"
 ];
 
-var casper = require("casper").create({
-    onStepTimeout: function() {
-        failed.push(this.requestUrl);
-        this.test.fail(this.requestUrl + " loads in less than " + timeout + "ms.");
-    }
-});
+casper.options.onStepTimeout = function() {
+    failed.push(this.requestUrl);
+    this.test.fail(this.requestUrl + " loads in less than " + timeout + "ms.");
+};
 
 casper.on("load.finished", function() {
     this.echo(this.requestUrl + " loaded in " + (new Date() - start) + "ms", "PARAMETER");
 });
 
 var timeout = ~~casper.cli.get(0);
-casper.options.stepTimeout = timeout > 0 ? timeout : 1000;
+casper.options.stepTimeout = (timeout = timeout > 0 ? timeout : 1000);
 
 casper.echo("Testing with timeout=" + casper.options.stepTimeout + "ms, please be patient.");
 

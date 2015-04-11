@@ -1,5 +1,5 @@
 /*jshint strict:false*/
-/*global CasperError, casper, console, phantom, require*/
+/*global CasperError, casper, console, phantom, require, __utils__*/
 /**
  * Google sample testing.
  *
