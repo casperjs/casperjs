@@ -110,6 +110,8 @@ Logging level (see the logging section for more information)
 
 **Default:** ``null``
 
+**Signature:** ``onAlert(String message)``
+
 A function to be called when a javascript alert() is triggered
 
 ``onDie``
