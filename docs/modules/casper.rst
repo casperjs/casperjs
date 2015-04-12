@@ -110,6 +110,8 @@ Logging level (see the logging section for more information)
 
 **Default:** ``null``
 
+**Signature:** ``onAlert(String message)``
+
 A function to be called when a javascript alert() is triggered
 
 ``onDie``
@@ -118,6 +120,8 @@ A function to be called when a javascript alert() is triggered
 **Type:** ``Function``
 
 **Default:** ``null``
+
+**Signature:** ``onDie(Object Casper, String message, String status)``
 
 A function to be called when Casper#die() is called
 
@@ -130,6 +134,8 @@ A function to be called when Casper#die() is called
 
 **Default:** ``null``
 
+**Signature:** ``onError(String msg, Array backtrace)``
+
 A function to be called when an "error" level event occurs
 
 .. index:: error, Error handling
@@ -141,6 +147,8 @@ A function to be called when an "error" level event occurs
 
 **Default:** ``null``
 
+**Signature:** ``onLoadError(Object Casper, String casper.requestUrl, String status)``
+
 A function to be called when a requested resource cannot be loaded
 
 ``onPageInitialized``
@@ -149,6 +157,8 @@ A function to be called when a requested resource cannot be loaded
 **Type:** ``Function``
 
 **Default:** ``null``
+
+**Signature:** ``onPageInitialized(Object page)``
 
 A function to be called after ``WebPage`` instance has been initialized
 
@@ -160,6 +170,8 @@ A function to be called after ``WebPage`` instance has been initialized
 **Type:** ``Function``
 
 **Default:** ``null``
+
+**Signature:** ``onResourceReceived(Object resource)``
 
 Proxy method for PhantomJS' ``WebPage#onResourceReceived()`` callback, but the current Casper instance is passed as first argument.
 
@@ -183,6 +195,8 @@ Proxy method for PhantomJS' WebPage#onResourceRequested() callback, but the curr
 
 **Default:** ``null``
 
+**Signature:** ``onStepComplete(Object Casper, stepResult)``
+
 A function to be executed when a step function execution is finished.
 
 .. index:: Step stack, Error handling, timeout
@@ -193,6 +207,8 @@ A function to be executed when a step function execution is finished.
 **Type:** ``Function``
 
 **Default:** ``Function``
+
+**Signature:** ``onStepTimeout(Integer timeout, Integer stepNum)``
 
 A function to be executed when a step function execution time exceeds the value of the stepTimeout option, if any has been set.
 
@@ -207,6 +223,8 @@ By default, on timeout the script will exit displaying an error, except in test 
 
 **Default:** ``Function``
 
+**Signature:** ``onTimeout(Integer timeout)``
+
 A function to be executed when script execution time exceeds the value of the timeout option, if any has been set.
 
 By default, on timeout the script will exit displaying an error, except in test environment where it will just add a failure to the suite results.
@@ -219,6 +237,8 @@ By default, on timeout the script will exit displaying an error, except in test 
 **Type:** ``Function``
 
 **Default:** ``Function``
+
+**Signature:** ``onWaitTimeout(Integer timeout)``
 
 A function to be executed when a ``waitFor*`` function execution time exceeds the value of the waitTimeout option, if any has been set.
 
