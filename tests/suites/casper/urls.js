@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('urls tests', 6, function(test) {
     casper.start('tests/site/urls.html', function() {
         this.clickLabel('raw unicode', 'a');

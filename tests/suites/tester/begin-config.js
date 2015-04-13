@@ -1,5 +1,4 @@
-/*jshint strict:false, eqeqeq:false*/
-/*global CasperError, casper, console, phantom, require*/
+/*eslint strict:0, eqeqeq:0*/
 var steps = [];
 
 casper.test.begin('Tester.begin() configuration', 10, {

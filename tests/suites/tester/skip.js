@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('Skip tests', 4, function(test) {
     test.assert(true, 'First test executed');
     test.assert(true, 'Second test executed');

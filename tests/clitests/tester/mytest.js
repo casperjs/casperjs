@@ -1,4 +1,4 @@
-/*jshint strict:false*/
+/*eslint strict:0*/
 /*global CasperError casper console phantom require*/
 casper.start('about:blank', function() {
     this.test.pass('ok1');

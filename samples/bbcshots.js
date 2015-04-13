@@ -1,5 +1,5 @@
-/*jshint strict:false*/
-/*global CasperError, console, phantom, require*/
+/*eslint strict:0*/
+/*global CasperError, console*/
 
 /**
  * Create a mosaic image from all headline photos on BBC homepage
