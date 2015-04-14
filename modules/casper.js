@@ -1816,14 +1816,14 @@ Casper.prototype.thenClick = function thenClick(selector, then) {
  * current retrieved page DOM.
  *
  * @param  function  fn       The function to be evaluated within current page DOM
- * @param  object    context  Optional function parameters context
+ * @param  Array     args...  The rest of arguments passed to fn
  * @return Casper
  * @see    Casper#evaluate
  */
-Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
+Casper.prototype.thenEvaluate = function thenEvaluate(fn) {
     "use strict";
     this.checkStarted();
-    var args = [fn].concat([].slice.call(arguments, 1));
+    var args = arguments;
     return this.then(function _step() {
         this.evaluate.apply(this, args);
     });
