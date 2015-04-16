@@ -1058,9 +1058,9 @@ Casper.prototype.getElementInfo = function getElementInfo(selector) {
     this.checkStarted();
     if (!this.exists(selector)) {
         if (utils.isObject(selector) && selector.type === 'xpath') {
-            throw new CasperError(f("Cannot get information from %s: no elements found.", selector.path));
+            throw new CasperError(f("Cannot get information from %s: element not found.", selector.path));
         } else {
-            throw new CasperError(f("Cannot get information from %s: no elements found.", selector));
+            throw new CasperError(f("Cannot get information from %s: element not found.", selector));
         }
     }
     return this.callUtils("getElementInfo", selector);
