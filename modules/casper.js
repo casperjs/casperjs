@@ -458,7 +458,9 @@ Casper.prototype.click = function click(selector) {
     "use strict";
     this.checkStarted();
     var success = this.mouseEvent('mousedown', selector) && this.mouseEvent('mouseup', selector);
-    success = success && this.mouseEvent('click', selector);
+    if(this.exists(selector)) {
+        success = success && this.mouseEvent('click', selector);
+    }
     this.evaluate(function(selector) {
         var element = __utils__.findOne(selector);
         if (element) {
