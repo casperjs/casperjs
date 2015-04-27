@@ -2010,6 +2010,18 @@ Casper.prototype.visible = function visible(selector) {
 };
 
 /**
+ * Checks if all elements matching the provided DOM CSS3/XPath selector are visible
+ *
+ * @param  String  selector  A DOM CSS3/XPath selector
+ * @return Boolean
+ */
+Casper.prototype.allVisible = function allVisible(selector) {
+    "use strict";
+    this.checkStarted();
+    return this.callUtils("allVisible", selector);
+};
+
+/**
  * Displays a warning message onto the console and logs the event. Also emits a
  * `warn` event with the message passed.
  *

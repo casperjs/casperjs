@@ -1,7 +1,7 @@
 /*eslint strict:0, max-statements:0*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 47, function(test) {
+casper.test.begin('Common assertions tests', 50, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
@@ -63,6 +63,10 @@ casper.test.begin('Common assertions tests', 47, function(test) {
         test.assertUrlMatch(/index\.html$/, "Tester.assertUrlMatch() works as expected");
         test.assertUrlMatches(/index\.html$/, "Tester.assertUrlMatches() works as expected [alias]");
         test.assertVisible('img', 'Tester.assertVisible() works as expected');
+        test.assertAllVisible('li', 'Tester.assertAllVisible() passes as expected');
+        test.assertFail(function(){
+            test.assertAllVisible('img, p#hidden');
+        }, 'Tester.assertAllVisible() fails as expected.');
         test.assertNotVisible('p#hidden', 'Tester.assertNotVisible() works as expected');
         test.assertInvisible('p#hidden', 'Tester.assertInvisible() works as expected [alias]');
         test.assertExists('div#exports', 'Tester.assertExists() works as expected with reserved word id');

@@ -921,5 +921,15 @@
         this.visible = function visible(selector) {
             return [].some.call(this.findAll(selector), this.elementVisible);
         };
+
+        /**
+         * Checks if all elements matching a given selector are visible in remote page.
+         *
+         * @param  String  selector  CSS3 selector
+         * @return Boolean
+         */
+        this.allVisible = function allVisible(selector) {
+            return [].every.call(this.findAll(selector), this.elementVisible);
+        };
     };
 })(typeof exports ===  "object" && !(exports instanceof Element) ? exports : window);
