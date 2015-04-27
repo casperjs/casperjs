@@ -320,7 +320,10 @@ Asserts that the element matching the provided :ref:`selector expression <select
         });
     });
 
-.. seealso:: `assertVisible()`_
+.. seealso::
+
+   - `assertVisible()`_
+   - `assertAllVisible()`_
 
 .. index:: error
 
@@ -559,7 +562,7 @@ Asserts that the current page url matches the provided RegExp pattern::
 
 **Signature:** ``assertVisible(String selector[, String message])``
 
-Asserts that the element matching the provided :ref:`selector expression <selectors>` is visible::
+Asserts that at least one element matching the provided :ref:`selector expression <selectors>` is visible::
 
     casper.test.begin('assertVisible() tests', 1, function(test) {
         casper.start('http://www.google.fr/', function() {
@@ -569,7 +572,32 @@ Asserts that the element matching the provided :ref:`selector expression <select
         });
     });
 
-.. seealso:: `assertNotVisible()`_
+.. seealso::
+
+   - `assertAllVisible()`_
+   - `assertNotVisible()`_
+
+.. index:: DOM
+
+``assertAllVisible()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``assertAllVisible(String selector[, String message])``
+
+Asserts that all elements matching the provided :ref:`selector expression <selectors>` are visible::
+
+    casper.test.begin('assertAllVisible() tests', 1, function(test) {
+        casper.start('http://www.google.fr/', function() {
+            test.assertAllVisible('input[type="submit"]');
+        }).run(function() {
+            test.done();
+        });
+    });
+
+.. seealso::
+
+   - `assertVisible()`_
+   - `assertNotVisible()`_
 
 .. _tester_begin:
 
