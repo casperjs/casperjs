@@ -12,7 +12,7 @@ Prerequisites
 
 .. index:: PhantomJS, Python, SlimerJS
 
-- PhantomJS_ 1.8.2 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
+- PhantomJS_ 1.8.2 or greater, but less than 2.0. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
 - Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
 
 .. versionadded:: 1.1
