@@ -1681,7 +1681,7 @@ Of course you can directly pass the auth string in the url to open::
 
 **Signature:** ``start(String url[, Function then])``
 
-Configures and starts Casper, then open the provided ``url`` and optionally adds the step provided by the ``then`` argument::
+Configures and starts Casper, then opens the provided ``url`` and optionally adds the step provided by the ``then`` argument::
 
     casper.start('http://google.fr/', function() {
         this.echo("I'm loaded.");
