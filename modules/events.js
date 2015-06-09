@@ -69,6 +69,7 @@ EventEmitter.prototype.emit = function emit() {
   var handler = this._events[type];
   if (!handler) return false;
 
+  var l,args,i;
   if (typeof handler === 'function') {
     try {
       switch (arguments.length) {
@@ -84,9 +85,9 @@ EventEmitter.prototype.emit = function emit() {
           break;
         // slower
         default:
-          var l = arguments.length;
-          var args = new Array(l - 1);
-          for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+          l = arguments.length;
+          args = new Array(l - 1);
+          for (i = 1; i < l; i++) args[i - 1] = arguments[i];
           handler.apply(this, args);
       }
     } catch (err) {
@@ -95,12 +96,12 @@ EventEmitter.prototype.emit = function emit() {
     return true;
 
   } else if (isArray(handler)) {
-    var l = arguments.length;
-    var args = new Array(l - 1);
-    for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+    l = arguments.length;
+    args = new Array(l - 1);
+    for (i = 1; i < l; i++) args[i - 1] = arguments[i];
 
     var listeners = handler.slice();
-    for (var i = 0, l = listeners.length; i < l; i++) {
+    for (i = 0, l = listeners.length; i < l; i++) {
       listeners[i].apply(this, args);
     }
     return true;

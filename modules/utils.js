@@ -80,11 +80,11 @@ exports.betterTypeOf = betterTypeOf;
 function betterInstanceOf(input, constructor) {
     "use strict";
     /*eslint eqeqeq:0 */
-    if (typeof input == 'undefined' || input == null) {
+    if (typeof input == 'undefined' || input === null) {
       return false;
     }
     var inputToTest = input;
-    while (inputToTest != null) {
+    while (inputToTest !== null) {
       if (inputToTest == constructor.prototype) {
         return true;
       }
@@ -94,7 +94,7 @@ function betterInstanceOf(input, constructor) {
       if (typeof inputToTest == 'undefined') {
         return false;
       }
-      inputToTest = inputToTest.__proto__;
+      inputToTest = (inputToTest instanceof Object || isObject(inputToTest)) && Object.getPrototypeOf(inputToTest);
     }
     return equals(input.constructor.name, constructor.name);
 }

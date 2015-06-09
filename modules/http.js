@@ -67,6 +67,11 @@ exports.augmentResponse = function(response) {
     if (!utils.isHTTPResource(response)) {
         return;
     }
-    response.headers.__proto__ = responseHeaders.prototype;
+    
+    if (Object.setPrototypeOf) 
+       Object.setPrototypeOf(response.headers,responseHeaders.prototype);
+    else
+       response.headers.__proto__ = responseHeaders.prototype;
+    
     return response;
 };

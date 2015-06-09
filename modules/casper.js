@@ -703,7 +703,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         return utils.clone(this.page.evaluate(fn));
     } else if (arguments.length === 2) {
         // check for closure signature if it matches context
-        if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
+        if (utils.isObject(context) && fn.length === Object.keys(context).length) {
             context = utils.objectValues(context);
         } else {
             context = [context];

@@ -761,7 +761,7 @@
          */
         this.scrollToBottom = function scrollToBottom() {
             this.scrollTo(0, this.getDocumentHeight());
-        },
+        };
 
         /**
          * Performs an AJAX request.
