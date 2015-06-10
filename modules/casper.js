@@ -1118,6 +1118,15 @@ Casper.prototype.getFormValues = function(selector) {
     return this.callUtils("getFormValues", selector);
 };
 
+Casper.prototype.getFieldValue = function(selector) {
+	"use strict";
+	this.checkStarted();
+	if (!this.exists(selector)) {
+		throw new CasperError(f('Field matching selector "%s" not found', selector));
+	};
+	return this.callUtils("getFieldValue", selector);
+};
+
 /**
  * Retrieves global variable.
  *
