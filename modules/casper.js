@@ -862,6 +862,8 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
             }
         }, selector);
     }
+    
+    return this;
 };
 
 /**
