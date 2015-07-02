@@ -816,7 +816,7 @@ Basically `PhantomJS' WebPage#evaluate <http://phantomjs.org/api/webpage/method/
 ``evaluateOrDie()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``evaluateOrDie(Function fn[, String message])``
+**Signature:** ``evaluateOrDie(Function fn[, String message, int status])``
 
 Evaluates an expression within the current page DOM and ``die()`` if it returns anything but ``true``::
 
