@@ -116,6 +116,13 @@ var Colorizer = function Colorizer() {
         return "\u001b[" + codes.join(';') + 'm' + text + "\u001b[0m";
     };
 
+    /**
+     * Adds another style to the 'styles' list
+     *
+     * @param  String  name - name of new style
+     * @param  Object  style - style properties e.g. { bg: "red", fg: "black", bold: true }  
+     * @return Object  new style list (new style list also gets saved into the colorizer object)
+     */
     this.addStyle = function addStyle(name, style){
         if (!styles[name]){
             styles[name] = {};
@@ -131,6 +138,7 @@ var Colorizer = function Colorizer() {
                 }
             }
         }
+        return styles;
     }
 };
 
