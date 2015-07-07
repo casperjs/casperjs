@@ -115,7 +115,26 @@ var Colorizer = function Colorizer() {
         }
         return "\u001b[" + codes.join(';') + 'm' + text + "\u001b[0m";
     };
+
+    this.addStyle = function addStyle(name, style){
+        if (!styles[name]){
+            styles[name] = {};
+            if (style.fg) {
+                styles[name].fg = style.fg;
+            }
+            if (style.bg) {
+                styles[name].bg = style.bg;
+            }
+            for (var option in options) {
+                if (option in style && style[option] === true) {
+                    styles[name][option] = true;
+                }
+            }
+        }
+    }
 };
+
+
 exports.Colorizer = Colorizer;
 
 /**
