@@ -1054,7 +1054,7 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
  * @param  String  selector   A DOM CSS3/XPath selector
  * @return String  The requested DOM element text
  */
-Casper.prototype.getElementText = function getElementText(selector) {
+Casper.prototype.getSelectorText = function getElementText(selector) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
@@ -1069,7 +1069,7 @@ Casper.prototype.getElementText = function getElementText(selector) {
  * @param  String  selector   A DOM CSS3/XPath selector
  * @return String  The requested DOM element value
  */
-Casper.prototype.getElementValue = function getElementValue(selector) {
+Casper.prototype.getSelectorValue = function getElementValue(selector) {
     "use strict";
     this.checkStarted();
     return this.evaluate(function _evaluate(selector) {
