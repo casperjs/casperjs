@@ -1048,6 +1048,36 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
 };
 
 /**
+ * Retrieves the text of an selector
+ * DOM CSS3/XPath selector.
+ *
+ * @param  String  selector   A DOM CSS3/XPath selector
+ * @return String  The requested DOM element text
+ */
+Casper.prototype.getElementText = function getElementText(selector) {
+    "use strict";
+    this.checkStarted();
+    return this.evaluate(function _evaluate(selector) {
+        return $(selector).text();
+    }, selector);
+};
+
+/**
+ * Retrieves the value of an selector
+ * DOM CSS3/XPath selector.
+ *
+ * @param  String  selector   A DOM CSS3/XPath selector
+ * @return String  The requested DOM element value
+ */
+Casper.prototype.getElementValue = function getElementValue(selector) {
+    "use strict";
+    this.checkStarted();
+    return this.evaluate(function _evaluate(selector) {
+        return $(selector).val();
+    }, selector);
+};
+
+/**
  * Retrieves information about the node matching the provided selector.
  *
  * @param  String|Objects  selector  CSS3/XPath selector
