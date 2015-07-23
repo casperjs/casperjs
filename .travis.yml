@@ -63,8 +63,6 @@ env:
       ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test"
       ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
-    allow_failures:
-      - ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test"
 
 notifications:
   irc:
