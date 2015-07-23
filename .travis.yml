@@ -1,3 +1,5 @@
+sudo: false
+
 branches:
   only:
     - "master"
