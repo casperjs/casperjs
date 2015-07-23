@@ -56,6 +56,21 @@ Sends a ``doubleclick`` mouse event onto the element matching the provided argum
         this.mouse.doubleclick(400, 300);   // doubleclicks at coordinates x=400; y=300
     });
 
+``rightclick()``
+-------------------------------------------------------------------------------
+
+**Signature:**
+
+- ``rightclick(Number x, Number y)``
+- ``rightclick(String selector)``
+
+Sends a ``contextmenu`` mouse event onto the element matching the provided arguments::
+
+    casper.then(function() {
+        this.mouse.rightclick("#my-link"); // doubleclicks <a id="my-link">hey</a>
+        this.mouse.rightclick(400, 300);   // doubleclicks at coordinates x=400; y=300
+    });
+
 ``down()``
 -------------------------------------------------------------------------------
 

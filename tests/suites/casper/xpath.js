@@ -1,5 +1,4 @@
-/*global casper, __utils__*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var x = require('casper').selectXPath;
 
 casper.test.begin('XPath tests', 6, function(test) {

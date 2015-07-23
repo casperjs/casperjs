@@ -1,6 +1,6 @@
-/*jshint strict:false*/
+/*eslint strict:0*/
 /*global CasperError, casper, console, phantom, require*/
-var utils = require('utils')
+var utils = require('utils');
 
 if (utils.ltVersion(phantom.version, '1.8.0')) {
     // https://github.com/n1k0/casperjs/issues/101

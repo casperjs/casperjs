@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('Casper.bypass() can bypass a step', 1, function(test) {
     casper.start();
     casper.then(function(){

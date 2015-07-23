@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('steps tests', 8, function(test) {
     casper.start('tests/site/index.html');
 

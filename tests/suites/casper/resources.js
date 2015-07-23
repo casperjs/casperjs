@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin("Basic resources tests", 5, function(test) {
   casper.start("tests/site/resources.html", function() {
     test.assertEquals(this.resources.length, 1, "only one resource found");

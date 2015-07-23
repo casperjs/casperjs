@@ -1,5 +1,4 @@
-/*global casper, __utils__*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('handling frames', 16, function(test) {
     casper.start('tests/site/frames.html');
 

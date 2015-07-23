@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false, maxstatements: 99*/
+/*eslint strict:0, max-statements: 99*/
 var utils = require('utils');
 
 casper.test.begin('click() tests', 2, function(test) {
@@ -23,7 +22,7 @@ casper.test.begin('onclick variants tests', 8, function(test) {
         var results = this.getGlobal('results');
         if (phantom.casperEngine === 'slimerjs') {
             // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
-            test.skip(1)
+            test.skip(1);
         }
         else
             test.assert(results.test1, 'Casper.click() has clicked an `href="javascript:` link');
@@ -52,7 +51,7 @@ casper.test.begin('clickLabel tests tests', 12, function(test) {
         var results = this.getGlobal('results');
         if (phantom.casperEngine === 'slimerjs') {
             // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
-            test.skip(1)
+            test.skip(1);
         }
         else
             test.assert(results.test1,
@@ -101,10 +100,10 @@ casper.test.begin('casper.mouse tests', 4, function(test) {
 
 casper.test.begin('element focus on click', 1, function(test) {
     casper.start().then(function() {
-        this.page.content = '<form><input type="text" name="foo"></form>'
-        this.click('form input[name=foo]')
+        this.page.content = '<form><input type="text" name="foo"></form>';
+        this.click('form input[name=foo]');
         this.page.sendEvent('keypress', 'bar');
-        test.assertEquals(this.getFormValues('form')['foo'], 'bar',
+        test.assertEquals(this.getFormValues('form').foo, 'bar',
             'Casper.click() sets the focus on clicked element');
     }).run(function() {
         test.done();
@@ -122,6 +121,32 @@ casper.test.begin('mouse events on click', 3, function(test) {
             'Casper.click() triggers mouseup event');
         test.assert(results.test5.indexOf('click') !== -1,
             'Casper.click() triggers click event');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('mouse events on right click', 1, function(test) {
+    casper.start('tests/site/click.html', function() {
+        this.mouse.rightclick('#test5');
+    }).then(function() {
+        var results = this.getGlobal('results');
+
+        test.assert(results.test5.indexOf('contextmenu') !== -1,
+            'Casper.rightclick() triggers contextmenu event');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('mouse events on right click with x,y co-ordinates', 1, function(test) {
+    casper.start('tests/site/click.html', function() {
+        this.mouse.rightclick(200, 100);
+    }).then(function() {
+        var results = this.getGlobal('results');
+
+        test.assertEquals(results.testrightclick, [200, 100],
+            'Mouse.move() has moved to the specified position');
     }).run(function() {
         test.done();
     });

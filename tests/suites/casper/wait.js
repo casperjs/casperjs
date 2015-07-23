@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('wait() tests', 1, function(test) {
     var waitStart;
 

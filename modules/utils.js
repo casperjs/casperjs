@@ -28,7 +28,6 @@
  *
  */
 
-/*global CasperError, console, exports, phantom, patchRequire, require:true*/
 
 var require = patchRequire(require);
 
@@ -80,7 +79,7 @@ exports.betterTypeOf = betterTypeOf;
  */
 function betterInstanceOf(input, constructor) {
     "use strict";
-    /*jshint eqnull:true, eqeqeq:false */
+    /*eslint eqeqeq:0 */
     if (typeof input == 'undefined' || input == null) {
       return false;
     }
@@ -428,7 +427,7 @@ exports.isClipRect = isClipRect;
  */
 function isFalsy(subject) {
     "use strict";
-    /*jshint eqeqeq:false*/
+    /*eslint eqeqeq:0*/
     return !subject;
 }
 exports.isFalsy = isFalsy;
@@ -537,7 +536,7 @@ exports.isString = isString;
  */
 function isTruthy(subject) {
     "use strict";
-    /*jshint eqeqeq:false*/
+    /*eslint eqeqeq:0*/
     return !!subject;
 }
 exports.isTruthy = isTruthy;
@@ -655,7 +654,7 @@ function mergeObjectsInGecko(origin, add, opts) {
             // directly the value
             var prop = Object.getOwnPropertyDescriptor(add, p);
             if (prop.get && !prop.set) {
-                Object.defineProperty(origin, p, prop)
+                Object.defineProperty(origin, p, prop);
             }
             else {
                 origin[p] = add[p];
