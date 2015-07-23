@@ -136,7 +136,7 @@
     "vars-on-top": 0,
     "wrap-iife": [1, "inside"],
     "wrap-regex": 0,
-    "yoda": "never"
+    "yoda": [2, "never"]
   },
   "env": {
     "browser": true,
