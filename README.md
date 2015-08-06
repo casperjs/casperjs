@@ -11,7 +11,7 @@
 >
 >[Travis-CI](http://travis-ci.org/n1k0/casperjs) build status:
 >
->- ![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master) `master` branch
+>- [![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master)](https://travis-ci.org/n1k0/casperjs) `master` branch
 >- 1.0 tests unfortunately have to be run manually using the `casperjs selftest` command
 
 CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/)
