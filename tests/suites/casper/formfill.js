@@ -4,7 +4,7 @@ var fs = require('fs');
 function testFormValues(test) {
     test.assertField('email', 'chuck@norris.com',
         'can fill an input[type=text] form field');
-    test.assertField('password', 'chuck',
+    test.assertField('password', '42',
         'can fill an input[type=password] form field');
     test.assertField('content', 'Am watching thou',
         'can fill a textarea form field');
@@ -30,7 +30,7 @@ function testFormValues(test) {
 function testUrl(test) {
     casper.waitForUrl(/(^\?|&)submit=submit($|&)/, function() {
         test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
-        test.assertUrlMatch(/password=chuck/, 'input[type=password] field was submitted');
+        test.assertUrlMatch(/password=42/, 'input[type=password] field was submitted');
         test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
         test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
         test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
@@ -61,7 +61,7 @@ casper.test.begin('fill() & fillNames() tests', 18, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             email:         'chuck@norris.com',
-            password:      'chuck',
+            password:      42,
             content:       'Am watching thou',
             check:         true,
             choice:        'no',
@@ -92,7 +92,7 @@ casper.test.begin('fillLabels() tests', 18, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fillLabels('form[action="result.html"]', {
             Email:         'chuck@norris.com',
-            Password:      'chuck',
+            Password:      42,
             Content:       'Am watching thou',
             Check:         true,
             No:            true,
@@ -124,7 +124,7 @@ casper.test.begin('fillSelectors() tests', 18, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fillSelectors('form[action="result.html"]', {
             "input[name='email']":        'chuck@norris.com',
-            "input[name='password']":     'chuck',
+            "input[name='password']":     42,
             "textarea[name='content']":   'Am watching thou',
             "input[name='check']":        true,
             "input[name='choice']":       'no',
@@ -153,7 +153,7 @@ casper.test.begin('fillXPath() tests', 17, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fillXPath('form[action="result.html"]', {
             '//input[@name="email"]':       'chuck@norris.com',
-            '//input[@name="password"]':    'chuck',
+            '//input[@name="password"]':    42,
             '//textarea[@name="content"]':  'Am watching thou',
             '//input[@name="check"]':       true,
             '//input[@name="choice"]':      'no',
@@ -232,7 +232,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             email:         'chuck@norris.com',
-            password:      'chuck',
+            password:      42,
             language:      'english',
             content:       'Am watching thou',
             check:         true,
@@ -251,8 +251,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "no",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            // FIXME: regression "file": fileValue,
-            "password": "chuck",
+            "file": fileValue,
+            "password": "42",
             "submit": "submit",
             "language": "english",
             "topic": "bar",
@@ -263,7 +263,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
     casper.then(function() {
         this.fill('form[action="result.html"]', {
             email:         'chuck@norris.com',
-            password:      'chuck',
+            password:      '42',
             language:      'english',
             content:       'Am watching thou',
             check:         true,
@@ -282,8 +282,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "yes",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            // FIXME: regression "file": fileValue,
-            "password": "chuck",
+            "file": fileValue,
+            "password": "42",
             "language": "english",
             "submit": "submit",
             "topic": "bar",
