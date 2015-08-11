@@ -1958,11 +1958,10 @@ TestCaseResult.prototype.addSkip = function addSkip(skipped, time) {
 /**
  * Adds a warning record.
  *
- * @param Object  warning
+ * @param String  warning
  */
 TestCaseResult.prototype.addWarning = function addWarning(warning) {
     "use strict";
-    warning.suite = this.name;
     this.warnings.push(warning);
 };
 
