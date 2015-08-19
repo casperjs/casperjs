@@ -2110,7 +2110,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function _check(self) {
-            /*eslint max-statements:20*/
+            /*eslint max-statements: [1, 20]*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
                 return;
