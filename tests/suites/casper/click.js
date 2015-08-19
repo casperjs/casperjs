@@ -1,4 +1,4 @@
-/*eslint strict:0, max-statements: 99*/
+/*eslint strict:0, max-statements: [1, 99]*/
 var utils = require('utils');
 
 casper.test.begin('click() tests', 2, function(test) {
