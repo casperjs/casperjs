@@ -28,7 +28,6 @@
  *
  */
 
-var require = patchRequire(require);
 var fs = require('fs');
 var events = require('events');
 var utils = require('utils');
