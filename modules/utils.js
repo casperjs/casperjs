@@ -29,8 +29,6 @@
  */
 
 
-var require = patchRequire(require);
-
 /**
  * Provides a better typeof operator equivalent, able to retrieve the array
  * type.
