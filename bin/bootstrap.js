@@ -39,14 +39,6 @@ if ('process' in this && process.title === "node") {
 // phantom check
 if (!('phantom' in this)) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
-} else {
-    if (phantom.version.major === 2) {
-        //setting other phantom.args if using phantomjs 2.x
-        var system = require('system');
-        var argsdeprecated = system.args;
-        argsdeprecated.shift();
-        phantom.args = argsdeprecated;
-    }
 }
 
 
@@ -82,12 +74,10 @@ var CasperError = function CasperError(msg) {
 CasperError.prototype = Object.getPrototypeOf(new Error());
 
 // casperjs env initialization
-(function(global, phantom){
+(function(global, phantom, system){
     "use strict";
     // phantom args
-    // NOTE: we can't use require('system').args here for some very obscure reason
-    //       do not even attempt at using it as it creates infinite recursion
-    var phantomArgs = phantom.args;
+    var phantomArgs = system.args.slice(1);
 
     if (phantom.casperLoaded) {
         return;
@@ -171,7 +161,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     // CasperJS root path
     if (!phantom.casperPath) {
         try {
-            phantom.casperPath = phantom.args.map(function _map(arg) {
+            phantom.casperPath = phantomArgs.map(function _map(arg) {
                 var match = arg.match(/^--casper-path=(.*)/);
                 if (match) {
                     return fs.absolute(match[1]);
@@ -416,4 +406,4 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     if (phantom.casperScript && !phantom.injectJs(phantom.casperScript)) {
         return __die('Unable to load script ' + phantom.casperScript + '; check file syntax');
     }
-})(this, phantom);
+})(this, phantom, require('system'));
