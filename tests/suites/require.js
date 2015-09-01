@@ -15,11 +15,15 @@ casper.test.begin('Javascript module loading', 1, function(test) {
 
 casper.test.begin('CoffeeScript module loading', 1, function(test) {
     var csmod;
-    try {
-        csmod = require(fs.pathJoin(modroot, 'csmodule'));
-        test.assertTrue(csmod.ok, 'require() patched version can load a coffeescript module');
-    } catch (e) {
-        test.fail('require() patched version can load a coffeescript module');
+    if (Object.keys(require.extensions).indexOf('.coffee') !== -1) {
+        try {
+            csmod = require(fs.pathJoin(modroot, 'csmodule'));
+            test.assertTrue(csmod.ok, 'require() patched version can load a coffeescript module');
+        } catch (e) {
+            test.fail('require() patched version can load a coffeescript module');
+        }
+    } else {
+        test.pass();
     }
     test.done();
 });
