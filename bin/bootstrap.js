@@ -80,10 +80,27 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         __exit();
     }
 
+    if ("slimer" in global) {
+        phantom.casperEngine = "slimerjs";
+    } else {
+        phantom.casperEngine = "phantomjs";
+    }
+
     (function (version) {
         // required version check
-        if (version.major !== 2) {
-            return __die('CasperJS needs PhantomJS v2.x');
+        if (phantom.casperEngine === 'phantomjs') {
+            if (version.major === 1) {
+                if (version.minor < 8) {
+                    return __die('CasperJS needs at least PhantomJS v1.8 or later.');
+                }
+                if (version.minor === 8 && version.patch < 1) {
+                    return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
+                }
+            } else if (version.major === 2) {
+                // No requirements yet known
+            } else {
+                return __die('CasperJS needs PhantomJS v1.x or v2.x');
+            }
         }
     })(phantom.version);
 
@@ -237,14 +254,22 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         };
     })(phantom.casperPath);
 
-    // declare a dummy patchRequire function so errors aren't thrown
-    global.patchRequire = function(req) {return req;}
-    if ("slimer" in global) {
-        require.globals.CasperError = CasperError;
-        phantom.casperEngine = "slimerjs";
+    if ("paths" in global.require) {
+        // declare a dummy patchRequire function
+        global.patchRequire = function(req) {return req;};
+        if (phantom.casperEngine === 'slimerjs') {
+            require.globals.patchRequire = global.patchRequire;
+            require.globals.CasperError = CasperError;
+        }
+
+        require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
+        require.paths.push(fs.workingDirectory);
     } else {
-        phantom.casperEngine = "phantomjs";
+        global.__require = require;
+        global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
+        global.require = patchRequire(global.require);
     }
+
 
     require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
     require.paths.push(fs.workingDirectory);
