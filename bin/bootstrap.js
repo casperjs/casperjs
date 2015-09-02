@@ -101,19 +101,28 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         __exit();
     }
 
+    if ("slimer" in global) {
+        phantom.casperEngine = "slimerjs";
+    } else {
+        phantom.casperEngine = "phantomjs";
+    }
+
     (function (version) {
         // required version check
-        if (version.major === 1) {
-            if (version.minor < 8) {
-                return __die('CasperJS needs at least PhantomJS v1.8 or later.');
+        if (phantom.casperEngine === 'phantomjs') {
+            if (version.major === 1) {
+                if (version.minor < 8) {
+                    return __die('CasperJS needs at least PhantomJS v1.8 or later.');
+                }
+                if (version.minor === 8 && version.patch < 1) {
+                    return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
+                }
+            } else if (version.major === 2) {
+                // No requirements yet known
+            } else {
+                return __die('CasperJS needs PhantomJS v1.x or v2.x');
             }
-            if (version.minor === 8 && version.patch < 1) {
-                return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
-            }
-        } else if (version.major === 2) {
-            console.log("Warning PhantomJS v2.0 not yet released. There will not be any official support for any bugs until stable version is released!");
         }
-        else return __die('CasperJS needs PhantomJS v1.x or v2.x');
     })(phantom.version);
 
     // Hooks in default phantomjs error handler
@@ -366,6 +375,10 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     if ("paths" in global.require) {
         // declare a dummy patchRequire function
         global.patchRequire = function(req) {return req;};
+        if (phantom.casperEngine === 'slimerjs') {
+            require.globals.patchRequire = global.patchRequire;
+            require.globals.CasperError = CasperError;
+        }
 
         require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
         require.paths.push(fs.workingDirectory);
@@ -375,13 +388,6 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         global.require = patchRequire(global.require);
     }
 
-    if ("slimer" in global) {
-        require.globals.patchRequire = global.patchRequire;
-        require.globals.CasperError = CasperError;
-        phantom.casperEngine = "slimerjs";
-    } else {
-        phantom.casperEngine = "phantomjs";
-    }
 
     // casper cli args
     phantom.casperArgs = require('cli').parse(phantomArgs);
