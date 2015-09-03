@@ -464,10 +464,11 @@ exports.isHTTPResource = isHTTPResource;
 function isJsFile(file) {
     "use strict";
     var ext = fileExt(file);
-    var valid = Object.keys(require.extensions).map(function (val) {
+    var valid = Object.keys(require.extensions).map(function(val) {
         return val.replace(/^\./, '');
+    }).filter(function(ext) {
+        return ext !== 'json';
     });
-    valid.splice(valid.indexOf('json'), 1);
     return isString(ext, "string") && valid.indexOf(ext) !== -1;
 }
 exports.isJsFile = isJsFile;
