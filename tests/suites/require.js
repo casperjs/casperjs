@@ -13,20 +13,19 @@ casper.test.begin('Javascript module loading', 1, function(test) {
     test.done();
 });
 
-casper.test.begin('CoffeeScript module loading', 1, function(test) {
-    var csmod;
-    if (Object.keys(require.extensions).indexOf('.coffee') !== -1) {
+// only test if the engine supports coffeescript
+if (".coffee" in require.extensions) {
+    casper.test.begin('CoffeeScript module loading', 1, function(test) {
+        var csmod;
         try {
             csmod = require(fs.pathJoin(modroot, 'csmodule'));
             test.assertTrue(csmod.ok, 'require() patched version can load a coffeescript module');
         } catch (e) {
             test.fail('require() patched version can load a coffeescript module');
         }
-    } else {
-        test.pass();
-    }
-    test.done();
-});
+        test.done();
+    });
+}
 
 casper.test.begin('JSON module loading', 1, function(test) {
     var config;
