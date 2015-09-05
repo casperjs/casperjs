@@ -7,18 +7,13 @@ before_install:
   - wget $ENGINE_ARCHIVE_URL --output-document=engine.tar.bz2
   - mkdir engine && tar --strip-components=1 -xvf engine.tar.bz2 -C engine
   - if [[ $CASPERJS_ENGINE == 'phantomjs' ]]; then
-      if [[ $ENGINE_VERSION == '2.0.0' ]]; then
-        ENGINE_EXECUTABLE="engine/phantomjs";
-      else
-        ENGINE_EXECUTABLE="engine/bin/phantomjs";
-      fi
+      ENGINE_EXECUTABLE="engine/bin/phantomjs";
     elif [[ $CASPERJS_ENGINE == 'slimerjs' ]]; then
       ENGINE_EXECUTABLE="engine/slimerjs";
     else
       echo "Unsupported engine $CASPERJS_ENGINE";
     fi
   - ls -la $ENGINE_EXECUTABLE && $ENGINE_EXECUTABLE --version;
-  - export ENGINE_EXECUTABLE="$ENGINE_EXECUTABLE $ENGINE_FLAGS"
 
 install:
   - if [ "$MAKE_TEST_COMMAND" == "test-dotNET" ]; then
@@ -65,9 +60,9 @@ env:
     - CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.8" MAKE_TEST_COMMAND="test"
       ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
     - CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2"
+      ENGINE_ARCHIVE_URL="https://github.com/hexid/phantomjs/releases/download/2.0.0/phantomjs-2.0.0-linux-x86_64.tar.bz2"
     - CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2"
+      ENGINE_ARCHIVE_URL="https://github.com/hexid/phantomjs/releases/download/2.0.0/phantomjs-2.0.0-linux-x86_64.tar.bz2"
     - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test-dotNET"
       ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
     - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test"
@@ -81,9 +76,9 @@ env:
     - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test"
       ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
     - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.6" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.6-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
     - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.6" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.6-linux-x86_64.tar.bz2"
+      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
 
 notifications:
   irc:

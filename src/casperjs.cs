@@ -106,6 +106,11 @@ class casperjs {
         string ENGINE = Environment.GetEnvironmentVariable("CASPERJS_ENGINE")
                 ?? "phantomjs";
         var ENGINE_ARGS = new List<string>();
+        string _ENGINE_FLAGS = Environment.GetEnvironmentVariable("ENGINE_FLAGS")
+                ?? null;
+        if(_ENGINE_FLAGS != null) {
+          ENGINE_ARGS.Add(_ENGINE_FLAGS);
+        }
         string[] ENGINE_NATIVE_ARGS = {};
         string ENGINE_EXECUTABLE = "";
 
