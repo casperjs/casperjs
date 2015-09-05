@@ -103,7 +103,8 @@ class casperjs {
             {"slimerjs", new slimerjs()}
         };
 
-        string ENGINE = "phantomjs";
+        string ENGINE = Environment.GetEnvironmentVariable("CASPERJS_ENGINE")
+                ?? "phantomjs";
         var ENGINE_ARGS = new List<string>();
         string[] ENGINE_NATIVE_ARGS = {};
         string ENGINE_EXECUTABLE = "";
@@ -122,6 +123,7 @@ class casperjs {
         if(SUPPORTED_ENGINES.ContainsKey(ENGINE)) {
             ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE].native_args();
             ENGINE_EXECUTABLE = Environment.GetEnvironmentVariable(SUPPORTED_ENGINES[ENGINE].env_varname())
+                    ?? Environment.GetEnvironmentVariable("ENGINE_EXECUTABLE")
                     ?? SUPPORTED_ENGINES[ENGINE].default_exec();
         } else {
             Console.WriteLine("Bad engine name. Only phantomjs and slimerjs are supported");
