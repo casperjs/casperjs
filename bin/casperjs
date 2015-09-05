@@ -83,7 +83,7 @@ SUPPORTED_ENGINES = {
     },
 }
 
-ENGINE = 'phantomjs'
+ENGINE = os.environ.get('CASPERJS_ENGINE', 'phantomjs')
 ENGINE_ARGS = []
 ENGINE_NATIVE_ARGS = []
 ENGINE_EXECUTABLE = ''
@@ -105,7 +105,8 @@ if not ENGINE in SUPPORTED_ENGINES:
 
 ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
 ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'],
-                                   SUPPORTED_ENGINES[ENGINE]['default_exec'])
+                                   os.environ.get('ENGINE_EXECUTABLE',
+                                       SUPPORTED_ENGINES[ENGINE]['default_exec']))
 
 def extract_arg_name(arg):
     "parse out any option name"
