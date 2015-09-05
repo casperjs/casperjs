@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import shlex
 import sys
 
 def resolve(path):
@@ -84,7 +85,7 @@ SUPPORTED_ENGINES = {
 }
 
 ENGINE = os.environ.get('CASPERJS_ENGINE', 'phantomjs')
-ENGINE_ARGS = []
+ENGINE_ARGS = shlex.split(os.environ.get('ENGINE_FLAGS', ''))
 ENGINE_NATIVE_ARGS = []
 ENGINE_EXECUTABLE = ''
 
