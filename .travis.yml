@@ -7,9 +7,9 @@ before_install:
   - wget $ENGINE_ARCHIVE_URL --output-document=engine.tar.bz2
   - mkdir engine && tar --strip-components=1 -xvf engine.tar.bz2 -C engine
   - if [[ $CASPERJS_ENGINE == 'phantomjs' ]]; then
-      ENGINE_EXECUTABLE="engine/bin/phantomjs";
+      export ENGINE_EXECUTABLE="engine/bin/phantomjs";
     elif [[ $CASPERJS_ENGINE == 'slimerjs' ]]; then
-      ENGINE_EXECUTABLE="engine/slimerjs";
+      export ENGINE_EXECUTABLE="engine/slimerjs";
     else
       echo "Unsupported engine $CASPERJS_ENGINE";
     fi
