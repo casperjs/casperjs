@@ -30,9 +30,9 @@ before_script:
 
 script:
   - if [ "$ENGINE_XVFB" == "1" ]; then
-      xvfb-run -a make "$MAKE_TEST_COMMAND"
+      xvfb-run -a make "$MAKE_TEST_COMMAND";
     else
-      make "$MAKE_TEST_COMMAND"
+      make "$MAKE_TEST_COMMAND";
     fi
 
 env:
