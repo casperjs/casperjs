@@ -5,9 +5,17 @@ branches:
 before_install:
   - echo "Installing $ENGINE $ENGINE_VERSION from $ENGINE_ARCHIVE_URL"
   - wget $ENGINE_ARCHIVE_URL --output-document=engine.tar.bz2
-  - mkdir engine && tar --strip-components=1 -xvf engine.tar.bz2 -C engine
+  - if [[ $ENGINE == 'phantomjs' && $ENGINE_VERSION == '2.0.0' ]]; then
+      mkdir engine && tar -xvf engine.tar.bz2 -C engine;
+    else
+      mkdir engine && tar --strip-components=1 -xvf engine.tar.bz2 -C engine;
+    fi
   - if [[ $ENGINE == 'phantomjs' ]]; then
-      ENGINE_EXECUTABLE="engine/bin/phantomjs";
+      if [[ $ENGINE_VERSION == '2.0.0' ]]; then
+        ENGINE_EXECUTABLE="engine/phantomjs";
+      else
+        ENGINE_EXECUTABLE="engine/bin/phantomjs";
+      fi
     elif [[ $ENGINE == 'slimerjs' ]]; then
       ENGINE_EXECUTABLE="engine/slimerjs";
     else
@@ -27,7 +35,7 @@ install:
     fi
 
 before_script:
-  - "npm install -g eslint"
+  - "npm install -g eslint@v1.2.1"
 
 script:
   - "make $MAKE_TEST_COMMAND"
