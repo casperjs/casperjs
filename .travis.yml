@@ -27,7 +27,7 @@ install:
     fi
 
 before_script:
-  - "npm install -g eslint@v1.2.1"
+  - "npm install -g eslint"
 
 script:
   - "make $MAKE_TEST_COMMAND"
@@ -56,6 +56,8 @@ env:
       ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2"
     - ENGINE="phantomjs" ENGINE_VERSION="1.9.8" MAKE_TEST_COMMAND="test"
       ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
+    - ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test"
+      ENGINE_ARCHIVE_URL="https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test-dotNET"
       ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
     - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test"
