@@ -4,7 +4,7 @@ casper.test.begin('prompt tests', 1, function(test) {
         return 'Chuck ' + value;
     });
     casper.start('tests/site/prompt.html', function() {
-        test.assertEquals(this.getGlobal('name'), 'Chuck Norris', 'prompted value has been received');
+        test.assertEquals(this.getGlobal('username'), 'Chuck Norris', 'prompted value has been received');
     }).run(function() {
         test.done();
     });
