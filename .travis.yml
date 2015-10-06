@@ -27,7 +27,7 @@ install:
     fi
 
 before_script:
-  - "npm install -g eslint"
+  - "npm install -g eslint@v1.2.1"
 
 script:
   - "make $MAKE_TEST_COMMAND"

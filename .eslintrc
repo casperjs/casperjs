@@ -17,7 +17,7 @@
     "no-undef": 2,
 
     "block-scoped-var": 0,
-    "brace-style": ["1", "stroustrup"],
+    "brace-style": [1, "stroustrup"],
     "camelcase": 0,
     "comma-spacing": [1, {"before": false, "after": true}],
     "comma-style": [1, "last"],
@@ -136,7 +136,7 @@
     "vars-on-top": 0,
     "wrap-iife": [1, "inside"],
     "wrap-regex": 0,
-    "yoda": "never"
+    "yoda": [1, "never"]
   },
   "env": {
     "browser": true,
