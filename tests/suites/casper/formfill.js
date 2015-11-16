@@ -34,10 +34,11 @@ function testUrl(test) {
     test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
     test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
     test.assertUrlMatch(/topic=bar/, 'select field was submitted');
+    test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
     test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
 }
 
-casper.test.begin('fill() & fillNames() tests', 17, function(test) {
+casper.test.begin('fill() & fillNames() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -66,7 +67,7 @@ casper.test.begin('fill() & fillNames() tests', 17, function(test) {
     });
 });
 
-casper.test.begin('fillLabels() tests', 17, function(test) {
+casper.test.begin('fillLabels() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -96,7 +97,7 @@ casper.test.begin('fillLabels() tests', 17, function(test) {
     });
 });
 
-casper.test.begin('fillSelectors() tests', 17, function(test) {
+casper.test.begin('fillSelectors() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -125,7 +126,7 @@ casper.test.begin('fillSelectors() tests', 17, function(test) {
     });
 });
 
-casper.test.begin('fillXPath() tests', 16, function(test) {
+casper.test.begin('fillXPath() tests', 17, function(test) {
     casper.start('tests/site/form.html', function() {
         this.fillXPath('form[action="result.html"]', {
             '//input[@name="email"]':       'chuck@norris.com',
@@ -259,6 +260,26 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "multitopic": ["bar", "car"],
             "strange": "very"
         }, 'Casper.getFormValues() correctly retrieves values from radio inputs regardless of order');
+    });
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('fillSelectors() tests', 4, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+
+    casper.start('tests/site/form.html', function() {
+        this.fillSelectors('form[action="result.html"]', {
+            "select[name='topic']":       'baz',
+            "select[name='multitopic']":  ['baz', 'caz'],
+        });
+        test.assertField('topic', 'bar', 'can pick a value from a select form field by text value');
+        test.assertField('multitopic', ['bar', 'car'], 'can pick a set of values from a multiselect form field by text value');
+    });
+    casper.thenClick('input[type="submit"]', function() {
+        test.assertUrlMatch(/topic=bar/, 'select field was submitted');
+        test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
     });
     casper.run(function() {
         test.done();
