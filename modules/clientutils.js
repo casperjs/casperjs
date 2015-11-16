@@ -886,7 +886,7 @@
                         });
 
                         // If the values can't be found, try search options text
-                        if (field.value == "") {
+                        if (field.value === "") {
                           [].forEach.call(field.options, function(option) {
                                 option.selected = value.indexOf(option.text) !== -1;
                           });
@@ -897,8 +897,8 @@
                       // If the value can't be found, try search options text
                       if (field.value !== value) {
                         [].some.call(field.options, function(option) {
-                              option.selected = value == option.text;
-                              return value == option.text;
+                              option.selected = value === option.text;
+                              return value === option.text;
                         });
                       }
                     }
