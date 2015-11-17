@@ -16,6 +16,7 @@ casper.test.begin('viewport() tests', 3, function(test) {
 casper.test.begin('viewport() asynchronous tests', 2, function(test) {
     var screenshotData;
 
+    casper.options.pageSettings.javascriptEnabled = true;
     casper.start('tests/site/index.html').viewport(800, 600, function() {
         this.setContent(utils.format('<img src="data:image/png;base64,%s">',
                                      this.captureBase64('png')));
