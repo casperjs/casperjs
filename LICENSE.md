@@ -1,4 +1,4 @@
-Copyright (c) 2011-2012 Nicolas Perriault
+Copyright (c) 2011-2015 Nicolas Perriault
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
