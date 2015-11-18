@@ -1,21 +1,6 @@
 /*eslint strict:0, max-statements:0*/
 var fs = require('fs');
 
-/**
- * Known regression in 2.0.0, will be fixed in 2.0.1
- * https://github.com/ariya/phantomjs/issues/12506
- */
-function skipPhantom200 (test) {
-  if (phantom.casperEngine === 'phantomjs2') {
-    var version = phantom.version;
-    if (0 === version.minor && 0 === version.patch) {
-      test.skip(1, '2.0.0 form regression 12506');
-      return true;
-    }
-  }
-  return false;
-}
-
 casper.test.begin('Common assertions tests', 47, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
@@ -133,9 +118,7 @@ casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
         test.assertField('check', true, 'Tester.assertField() works as expected with checkboxes');
         test.assertField('choice', 'no', 'Tester.assertField() works as expected with radios');
         test.assertField('topic', 'bar', 'Tester.assertField() works as expected with selects');
-        if (!skipPhantom200(test)) {
-            test.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
-        }
+        test.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
     }).run(function() {
         test.done();
     });
