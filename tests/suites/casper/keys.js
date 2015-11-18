@@ -25,7 +25,7 @@ casper.test.begin('sendKeys() tests', 4, function(test) {
     });
 });
 
-casper.test.begin('sendKeys() works on content-editable elements', function(test) {
+casper.test.begin('sendKeys() works on content-editable elements', 1, function(test) {
     casper.start('tests/site/elementattribute.html', function() {
         this.click('#content-editable-div');
         this.sendKeys('#content-editable-div', 'A Clockwork Orange');
