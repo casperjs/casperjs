@@ -42,13 +42,17 @@ function testUrl(test) {
  * Known regression in 2.0.0, will be fixed in 2.0.1
  * https://github.com/ariya/phantomjs/issues/12506
  */
+function isPhantom200() {
+    if (phantom.casperEngine !== 'phantomjs2') {
+        return false;
+    }
+    var version = phantom.version;
+    return 0 === version.minor && 0 === version.patch;
+}
 function skipPhantom200 (test) {
-    if (phantom.casperEngine === 'phantomjs2') {
-        var version = phantom.version;
-        if (0 === version.minor && 0 === version.patch) {
-            test.skip(1, '2.0.0 form regression 12506');
-            return true;
-        }
+    if (isPhantom200()) {
+        test.skip(1, '2.0.0 form regression 12506');
+        return true;
     }
     return false;
 }
@@ -216,10 +220,10 @@ casper.test.begin('field array', 1, function(test) {
 casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
-    if (phantom.casperEngine === 'phantomjs'
-        || phantom.casperEngine === 'phantomjs2'
-    ) {
+    if (phantom.casperEngine === 'phantomjs') {
         fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
+    } else if (isPhantom200()) {
+        fileValue = '';
     }
 
     casper.start('tests/site/form.html', function() {
