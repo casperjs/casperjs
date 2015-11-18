@@ -3,8 +3,11 @@ modules/vendors
 modules/events.js
 modules/querystring.js
 samples/**
+tests/**
 tests/clitests/**
 tests/testdir/**
+tests/suites/**
+tests/site/**
 tmp
 ./*.js
 ./phantomjs*/*
