@@ -26,7 +26,7 @@ casper.test.begin('can confirm dialog', 2, {
     }
 });
 
-casper.test.begin('can cancel dialog', {
+casper.test.begin('can cancel dialog', 1, {
     received: undefined,
 
     setUp: function(test) {
