@@ -29,6 +29,8 @@
  */
 
 
+var require = patchRequire(require);
+
 /**
  * Provides a better typeof operator equivalent, able to retrieve the array
  * type.
@@ -52,7 +54,6 @@ function betterTypeOf(input) {
             var type = Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
             if (type === 'object' &&
                 phantom.casperEngine !== "phantomjs" &&
-                phantom.casperEngine !== "phantomjs2" &&
                 '__type' in input) {
                 type = input.__type;
             }

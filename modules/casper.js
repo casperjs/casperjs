@@ -28,6 +28,7 @@
  *
  */
 
+var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');
@@ -1498,9 +1499,7 @@ Casper.prototype.resourceExists = function resourceExists(test) {
         case "function":
             testFn = test;
             // FIXME: check why this was here in the first place
-            if (phantom.casperEngine !== "phantomjs" &&
-              phantom.casperEngine !== "phantomjs2"
-            ) {
+            if (phantom.casperEngine !== "phantomjs") {
                 testFn.name = "_testResourceExists_Function";
             }
             break;

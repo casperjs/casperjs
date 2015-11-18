@@ -28,8 +28,9 @@
  *
  */
 
-/*global CasperError, exports, require:true*/
+/*global CasperError, exports, patchRequire, require:true*/
 
+var require = patchRequire(require);
 var utils = require('utils');
 
 exports.create = function create(casper) {
