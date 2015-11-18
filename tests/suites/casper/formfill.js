@@ -43,11 +43,12 @@ function testUrl(test) {
  * https://github.com/ariya/phantomjs/issues/12506
  */
 function isPhantom200() {
-    if (phantom.casperEngine !== 'phantomjs2') {
+    if (phantom.casperEngine !== 'phantomjs') {
         return false;
     }
     var version = phantom.version;
-    return 0 === version.minor && 0 === version.patch;
+    return 2 === version.major &&
+           0 === version.minor && 0 === version.patch;
 }
 function skipPhantom200 (test) {
     if (isPhantom200()) {
@@ -227,9 +228,11 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
     if (phantom.casperEngine === 'phantomjs') {
-        fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
-    } else if (isPhantom200()) {
-        fileValue = '';
+        if (isPhantom200()) {
+            fileValue = '';
+        } else {
+            fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
+        }
     }
 
     casper.start('tests/site/form.html', function() {

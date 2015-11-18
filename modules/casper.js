@@ -28,6 +28,7 @@
  *
  */
 
+var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');
@@ -1497,7 +1498,8 @@ Casper.prototype.resourceExists = function resourceExists(test) {
             break;
         case "function":
             testFn = test;
-            if (phantom.casperEngine !== "slimerjs")
+            // FIXME: check why this was here in the first place
+            if (phantom.casperEngine !== "phantomjs") {
                 testFn.name = "_testResourceExists_Function";
             break;
         default:
