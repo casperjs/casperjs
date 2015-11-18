@@ -2,6 +2,8 @@ branches:
   only:
     - "master"
 
+sudo: false
+
 before_install:
   - echo "Installing $ENGINE $ENGINE_VERSION from $ENGINE_ARCHIVE_URL"
   - wget $ENGINE_ARCHIVE_URL --output-document=engine.tar.bz2
@@ -15,15 +17,13 @@ before_install:
     fi
   - ls -la $ENGINE_EXECUTABLE && $ENGINE_EXECUTABLE --version;
 
-install:
-  - if [ "$MAKE_TEST_COMMAND" == "test-dotNET" ]; then
-      echo "dotNET build detected, installing Mono related stuff";
-      sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF;
-      echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list;
-      sudo apt-get update;
-      sudo apt-get install aptitude -qq;
-      sudo aptitude install --assume-yes mono-devel mono-mcs;
-    fi
+addons:
+  apt:
+    sources:
+      - mono
+    packages:
+      - mono-devel
+      - mono-mcs
 
 before_script:
   - "npm install -g eslint@v1.2.1"
