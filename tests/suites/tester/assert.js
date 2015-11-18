@@ -1,7 +1,7 @@
 /*eslint strict:0, max-statements:0*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 50, function(test) {
+casper.test.begin('Common assertions tests', 47, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');
@@ -120,10 +120,6 @@ casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
         test.assertField('check', true, 'Tester.assertField() works as expected with checkboxes');
         test.assertField('choice', 'no', 'Tester.assertField() works as expected with radios');
         test.assertField('topic', 'bar', 'Tester.assertField() works as expected with selects');
-        /* FIXME: known regression phantomjs 2.0.0:
-        test.assertField('file', fileValue,
-            'Tester.assertField() works as expected with file inputs');
-        */
         test.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
     }).run(function() {
         test.done();
