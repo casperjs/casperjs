@@ -2,7 +2,9 @@
 casper.test.begin('page.error event tests', 2, function(test) {
     var error = {};
     var expectedMessage;
-    if (phantom.casperEngine === 'phantomjs') {
+    if (phantom.casperEngine === 'phantomjs' ||
+        phantom.casperEngine === 'phantomjs2'
+    ) {
         expectedMessage = "ReferenceError: Can't find variable: plop";
     }
     else {

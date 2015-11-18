@@ -52,6 +52,7 @@ function betterTypeOf(input) {
             var type = Object.prototype.toString.call(input).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
             if (type === 'object' &&
                 phantom.casperEngine !== "phantomjs" &&
+                phantom.casperEngine !== "phantomjs2" &&
                 '__type' in input) {
                 type = input.__type;
             }
@@ -462,7 +463,12 @@ exports.isHTTPResource = isHTTPResource;
 function isJsFile(file) {
     "use strict";
     var ext = fileExt(file);
-    return isString(ext, "string") && ['js', 'coffee'].indexOf(ext) !== -1;
+    var valid = Object.keys(require.extensions).map(function(val) {
+        return val.replace(/^\./, '');
+    }).filter(function(ext) {
+        return ext !== 'json';
+    });
+    return isString(ext, "string") && valid.indexOf(ext) !== -1;
 }
 exports.isJsFile = isJsFile;
 

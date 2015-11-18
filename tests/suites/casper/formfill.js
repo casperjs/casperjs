@@ -38,7 +38,22 @@ function testUrl(test) {
     test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
 }
 
-casper.test.begin('fill() & fillNames() tests', /* FIXME 18 */ 17, function(test) {
+/**
+ * Known regression in 2.0.0, will be fixed in 2.0.1
+ * https://github.com/ariya/phantomjs/issues/12506
+ */
+function skipPhantom200 (test) {
+    if (phantom.casperEngine === 'phantomjs2') {
+        var version = phantom.version;
+        if (0 === version.minor && 0 === version.patch) {
+            test.skip(1, '2.0.0 form regression 12506');
+            return true;
+        }
+    }
+    return false;
+}
+
+casper.test.begin('fill() & fillNames() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -50,18 +65,16 @@ casper.test.begin('fill() & fillNames() tests', /* FIXME 18 */ 17, function(test
             choice:        'no',
             topic:         'bar',
             multitopic:    ['bar', 'car'],
-            // FIXME: regression file:          fpath,
+            file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"
         });
         testFormValues(test);
-        if (false) {
-            // FIXME: known regression in 2.0.0, will be fixed in 2.0.1
-            // https://github.com/ariya/phantomjs/issues/12506
+        if (!skipPhantom200(test)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
-				}
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -71,7 +84,7 @@ casper.test.begin('fill() & fillNames() tests', /* FIXME 18 */ 17, function(test
     });
 });
 
-casper.test.begin('fillLabels() tests', /* FIXME 18 */ 17, function(test) {
+casper.test.begin('fillLabels() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -83,19 +96,17 @@ casper.test.begin('fillLabels() tests', /* FIXME 18 */ 17, function(test) {
             No:            true,
             Topic:         'bar',
             Multitopic:    ['bar', 'car'],
-            // FIXME: regression File:          fpath,
+            File:          fpath,
             "1":           true,
             "3":           true,
             Strange:       "very"
         });
         testFormValues(test);
-        if (false) {
-            // FIXME: known regression in 2.0.0, will be fixed in 2.0.1
-            // https://github.com/ariya/phantomjs/issues/12506
+        if (!skipPhantom200(test)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
-				}
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -105,7 +116,7 @@ casper.test.begin('fillLabels() tests', /* FIXME 18 */ 17, function(test) {
     });
 });
 
-casper.test.begin('fillSelectors() tests', /* FIXME 18 */ 17, function(test) {
+casper.test.begin('fillSelectors() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -117,18 +128,16 @@ casper.test.begin('fillSelectors() tests', /* FIXME 18 */ 17, function(test) {
             "input[name='choice']":       'no',
             "select[name='topic']":       'bar',
             "select[name='multitopic']":  ['bar', 'car'],
-            // "input[name='file']":         fpath,
+            "input[name='file']":         fpath,
             "input[name='checklist[]']":  ['1', '3'],
             "input[name='strange']":      "very"
         });
         testFormValues(test);
-        if (false) {
-            // FIXME: known regression in 2.0.0, will be fixed in 2.0.1
-            // https://github.com/ariya/phantomjs/issues/12506
+        if (!skipPhantom200(test)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
-				}
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -207,7 +216,9 @@ casper.test.begin('field array', 1, function(test) {
 casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
-    if (phantom.casperEngine === 'phantomjs') {
+    if (phantom.casperEngine === 'phantomjs'
+        || phantom.casperEngine === 'phantomjs2'
+    ) {
         fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
     }
 
@@ -220,8 +231,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
-            multitopic:         ['bar', 'car'],
-            // FIXME: regression file:          fpath,
+            multitopic:    ['bar', 'car'],
+            file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"
         });
@@ -233,7 +244,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "no",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            // FIXME: regression "file": fileValue,
+            "file": fileValue,
             "password": "chuck",
             "submit": "submit",
             "language": "english",
@@ -252,7 +263,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             choice:        'yes',
             topic:         'bar',
             multitopic:    ["bar", "car"],
-            // FIXME: regression file:          fpath,
+            file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"
         });
@@ -264,7 +275,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             "choice": "yes",
             "content": "Am watching thou",
             "email": "chuck@norris.com",
-            // FIXME: regression "file": fileValue,
+            "file": fileValue,
             "password": "chuck",
             "language": "english",
             "submit": "submit",

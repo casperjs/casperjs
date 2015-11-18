@@ -1,6 +1,21 @@
 /*eslint strict:0, max-statements:0*/
 var fs = require('fs');
 
+/**
+ * Known regression in 2.0.0, will be fixed in 2.0.1
+ * https://github.com/ariya/phantomjs/issues/12506
+ */
+function skipPhantom200 (test) {
+  if (phantom.casperEngine === 'phantomjs2') {
+    var version = phantom.version;
+    if (0 === version.minor && 0 === version.patch) {
+      test.skip(1, '2.0.0 form regression 12506');
+      return true;
+    }
+  }
+  return false;
+}
+
 casper.test.begin('Common assertions tests', 47, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
@@ -79,15 +94,15 @@ casper.test.begin('Tester.assertField(): filled inputs', 7, function(test) {
             'check':       false,
             'choice':      '',
             'topic':       '',
-            //FIXME: known regression phantomjs 2.0.0: 'file':        '',
+            'file':        '',
             'checklist[]': []
         });
         test.assertField('email', '', 'Tester.assertField() works as expected with inputs');
         test.assertField('content', '', 'Tester.assertField() works as expected with textarea');
         test.assertField('check', false, 'Tester.assertField() works as expected with checkboxes');
         test.assertField('choice', null, 'Tester.assertField() works as expected with radios');
-        test.assertField('topic', 'foo', 'Tester.assertField() works as expected with selects');
-        //FIXME: known regression phantomjs 2.0.0: test.assertField('file', '', 'Tester.assertField() works as expected with file inputs');
+        test.assertField('topic', '', 'Tester.assertField() works as expected with selects');
+        test.assertField('file', '', 'Tester.assertField() works as expected with file inputs');
         test.assertField('checklist[]', [], 'Tester.assertField() works as expected with check lists');
     }).run(function() {
         test.done();
@@ -97,7 +112,9 @@ casper.test.begin('Tester.assertField(): filled inputs', 7, function(test) {
 casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
-    if (phantom.casperEngine === 'phantomjs') {
+    if (phantom.casperEngine === 'phantomjs'
+        || phantom.casperEngine === 'phantomjs2'
+    ) {
         fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
     }
 
@@ -108,7 +125,7 @@ casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
             'check':       true,
             'choice':      'no',
             'topic':       'bar',
-            //FIXME: known regression phantomjs 2.0.0: 'file':        fpath,
+            'file':        fpath,
             'checklist[]': ['1', '3']
         });
         test.assertField('email', 'chuck@norris.com', 'Tester.assertField() works as expected with inputs');
@@ -116,11 +133,9 @@ casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
         test.assertField('check', true, 'Tester.assertField() works as expected with checkboxes');
         test.assertField('choice', 'no', 'Tester.assertField() works as expected with radios');
         test.assertField('topic', 'bar', 'Tester.assertField() works as expected with selects');
-        /* FIXME: known regression phantomjs 2.0.0:
-        test.assertField('file', fileValue,
-            'Tester.assertField() works as expected with file inputs');
-        */
-        test.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
+        if (!skipPhantom200(test)) {
+            test.assertField('checklist[]', ['1', '3'], 'Tester.assertField() works as expected with check lists');
+        }
     }).run(function() {
         test.done();
     });
