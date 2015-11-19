@@ -128,7 +128,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             } else if (version.major === 2) {
                 // No requirements yet known
             } else {
-                return __die('CasperJS needs PhantomJS v1.x or v2.x');
+                return __die('CasperJS needs PhantomJS v1.9.x or v2.x');
             }
         }
     })(phantom.version);
@@ -383,7 +383,10 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     if ("paths" in global.require) {
         // declare a dummy patchRequire function
         global.patchRequire = function(req) {return req;};
-
+        if (phantom.casperEngine === 'slimerjs') {
+            require.globals.patchRequire = global.patchRequire;
+            require.globals.CasperError = CasperError;
+        }
         require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
         require.paths.push(fs.workingDirectory);
     } else {
