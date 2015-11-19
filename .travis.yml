@@ -97,17 +97,18 @@ matrix:
 #      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
 #      os: linux
 #      addons: {apt: {packages: *apt_cs}}
-#    - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
-#      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
-#      os: linux
+    - env: >
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
+        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
+      os: linux
 #    - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.6" MAKE_TEST_COMMAND="test-dotNET" ENGINE_XVFB="1"
 #      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
 #      os: linux
 #      addons: {apt: {packages: *apt_cs}}
-    - env: >
-        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.6" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
-        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
-      os: linux
+#    - env: >
+#        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.6" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
+#        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
+#      os: linux
 
 notifications:
   irc:
