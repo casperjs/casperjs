@@ -28,7 +28,6 @@
  *
  */
 
-var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');

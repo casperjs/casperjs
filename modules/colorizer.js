@@ -28,9 +28,8 @@
  *
  */
 
-/*global exports, console, patchRequire, require:true*/
+/*global exports, console, require:true*/
 
-var require = patchRequire(require);
 var fs = require('fs');
 var utils = require('utils');
 var env = require('system').env;
