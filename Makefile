@@ -17,14 +17,14 @@ compile-dotNET:
 	mcs -langversion:3 -out:bin/casperjs.exe src/casperjs.cs
 
 selftest-dotNET:
-	bin/casperjs.exe --help
-	bin/casperjs.exe selftest
+	mono bin/casperjs.exe --help
+	mono bin/casperjs.exe selftest
 
 clitest:
 	python tests/clitests/runtests.py
 
 clitest-dotNET:
-	python tests/clitests/runtests.py casperjs.exe
+	python tests/clitests/runtests.py mono casperjs.exe
 
 lint:
 	eslint .
