@@ -10,15 +10,15 @@ docs:
 	sphinx-build -b html ./docs docs/_build
 
 selftest:
-	bin/casperjs --help
-	bin/casperjs selftest
+	bin/casperjs --help --engine=$(ENGINE)
+	bin/casperjs selftest --engine=$(ENGINE)
 
 compile-dotNET:
 	mcs -langversion:3 -out:bin/casperjs.exe src/casperjs.cs
 
 selftest-dotNET:
-	mono bin/casperjs.exe --help
-	mono bin/casperjs.exe selftest
+	bin/casperjs.exe --help --engine=$(ENGINE)
+	bin/casperjs.exe selftest --engine=$(ENGINE)
 
 clitest:
 	python tests/clitests/runtests.py
