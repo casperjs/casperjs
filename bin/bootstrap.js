@@ -383,16 +383,17 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     if ("paths" in global.require) {
         // declare a dummy patchRequire function
         global.patchRequire = function(req) {return req;};
-        if (phantom.casperEngine === 'slimerjs') {
-            require.globals.patchRequire = global.patchRequire;
-            require.globals.CasperError = CasperError;
-        }
         require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
         require.paths.push(fs.workingDirectory);
     } else {
         global.__require = require;
         global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
         global.require = patchRequire(global.require);
+    }
+
+    if (phantom.casperEngine === 'slimerjs') {
+        require.globals.patchRequire = global.patchRequire;
+        require.globals.CasperError = CasperError;
     }
 
     // casper cli args
