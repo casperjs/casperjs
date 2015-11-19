@@ -957,7 +957,10 @@ Casper.prototype.getPageContent = function getPageContent() {
     if (!utils.isString(contentType) || contentType.indexOf("text/html") !== -1) {
         return this.page.frameContent;
     }
-    return this.page.framePlainText;
+		// FIXME: with slimerjs this will work only for
+		// text/* and application/json content types.
+		// see FIXME in slimerjs src/modules/webpageUtils.jsm getWindowContent
+    return this.page.framePlainText; // || this.page.frameContent;
 };
 
 /**
