@@ -1,6 +1,6 @@
-branches:
-  only:
-    - "master"
+#branches:
+#  only:
+#    - "master"
 
 sudo: false
 
