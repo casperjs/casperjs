@@ -31,9 +31,9 @@
 /*eslint max-statements:0, complexity:0*/
 
 // node check
-if ('process' in this && process.title === "node") {
+if ('process' in this && this.process.title === "node") {
     console.error('CasperJS cannot be executed within a nodejs environment');
-    process.exit(1);
+    this.process.exit(1);
 }
 
 // phantom check
@@ -61,13 +61,13 @@ if (typeof Function.prototype.bind !== "function") {
         }
         var aArgs = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
-            fNOP = function() {},
+            NOP = function() {},
             fBound = function() {
-              return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+              return fToBind.apply(this instanceof NOP && oThis ? this : oThis,
                                    aArgs.concat(Array.prototype.slice.call(arguments)));
             };
-        fNOP.prototype = this.prototype;
-        fBound.prototype = new fNOP();
+        NOP.prototype = this.prototype;
+        fBound.prototype = new NOP();
         return fBound;
     };
 }
@@ -195,6 +195,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      * Prints CasperJS help.
      */
     function printHelp() {
+        /* global slimer */
         var engine = phantom.casperEngine === 'slimerjs' ? slimer : phantom;
         var version = [engine.version.major, engine.version.minor, engine.version.patch].join('.');
         return __terminate([

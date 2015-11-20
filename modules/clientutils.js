@@ -761,7 +761,7 @@
          */
         this.scrollToBottom = function scrollToBottom() {
             this.scrollTo(0, this.getDocumentHeight());
-        },
+        };
 
         /**
          * Performs an AJAX request.
@@ -886,25 +886,25 @@
                         });
                         // If the values can't be found, try search options text
                         if (field.value === "") {
-                          [].forEach.call(field.options, function(option) {
+                            [].forEach.call(field.options, function(option) {
                                 option.selected = value.indexOf(option.text) !== -1;
-                          });
+                            });
                         }
                     } else {
-                      // PhantomJS 1.x.x can't handle setting value to ''
-                      if ('' === value) {
-                          field.selectedIndex = -1;
-                      } else {
-                          field.value = value;
-                      }
+                        // PhantomJS 1.x.x can't handle setting value to ''
+                        if ('' === value) {
+                            field.selectedIndex = -1;
+                        } else {
+                            field.value = value;
+                        }
 
-                      // If the value can't be found, try search options text
-                      if (field.value !== value) {
-                        [].some.call(field.options, function(option) {
-                              option.selected = value === option.text;
-                              return value === option.text;
-                        });
-                      }
+                        // If the value can't be found, try search options text
+                        if (field.value !== value) {
+                            [].some.call(field.options, function(option) {
+                                option.selected = value === option.text;
+                                return value === option.text;
+                            });
+                        }
                     }
                     break;
                 case "textarea":

@@ -28,6 +28,7 @@
  *
  */
 
+/*global __utils__, CasperError, console, exports, phantom, patchRequire, require:true*/
 var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');

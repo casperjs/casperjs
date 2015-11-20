@@ -1,3 +1,4 @@
+/*global casper*/
 /*eslint strict:0, max-statements: [1, 99]*/
 var utils = require('utils');
 

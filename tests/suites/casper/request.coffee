@@ -1,3 +1,5 @@
+#global casper
+
 #eslint strict:0
 
 utils = require "utils"
