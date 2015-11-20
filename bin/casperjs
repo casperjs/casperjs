@@ -109,6 +109,11 @@ ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'],
                                    os.environ.get('ENGINE_EXECUTABLE',
                                        SUPPORTED_ENGINES[ENGINE]['default_exec']))
 
+# make it to an absolute path, because some test change the working directory
+# and relative path to phantomjs would be invalid
+if not os.path.isabs(ENGINE_EXECUTABLE):
+    os.environ['ENGINE_EXECUTABLE'] = os.path.join(CASPER_PATH, ENGINE_EXECUTABLE)
+
 def extract_arg_name(arg):
     "parse out any option name"
     try:
@@ -136,6 +141,7 @@ CASPER_COMMAND.extend([
 CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
+    # print(CASPER_COMMAND)
     os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
 except OSError as err:
     print('Fatal: %s; did you install %s?' % (err, ENGINE))
