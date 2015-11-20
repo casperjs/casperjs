@@ -28,6 +28,7 @@
  *
  */
 
+/*global __utils__, CasperError, console, exports, phantom, patchRequire, require:true*/
 var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
@@ -82,7 +83,7 @@ exports.selectXPath = selectXPath;
  */
 var Casper = function Casper(options) {
     "use strict";
-    /*eslint max-statements:0*/
+    /*jshint maxstatements:45*/
     // init & checks
     if (!(this instanceof Casper)) {
         return new Casper(options);
@@ -389,6 +390,7 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     if (self.pendingWait || self.loadInProgress || self.navigationRequested || self.browserInitializing) {
         return;
     }
@@ -781,6 +783,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
  */
 Casper.prototype.fillForm = function fillForm(selector, vals, options) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     this.checkStarted();
 
     var selectorType = options && options.selectorType || "names",
@@ -1193,7 +1196,7 @@ Casper.prototype.getTitle = function getTitle() {
  */
 Casper.prototype.handleReceivedResource = function(resource) {
     "use strict";
-    /*eslint max-statements:0*/
+    /*jslint maxstatements:20*/
     if (resource.stage !== "end") {
         return;
     }
@@ -1323,6 +1326,7 @@ Casper.prototype.includeRemoteScripts = function includeRemoteScripts() {
  */
 Casper.prototype.log = function log(message, level, space) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
     space = space ? space : "phantom";
     if (level === "error" && utils.isFunction(this.options.onError)) {
@@ -1397,7 +1401,8 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
  */
 Casper.prototype.open = function open(location, settings) {
     "use strict";
-    /*eslint max-statements:0*/
+    /*jshint maxcomplexity:15*/
+    /*jshint maxstatements:30*/
     var baseCustomHeaders = this.page.customHeaders,
         customHeaders = settings && settings.headers || {};
     this.checkStarted();
@@ -1534,7 +1539,8 @@ Casper.prototype.run = function run(onComplete, time) {
  */
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
-    /*eslint max-statements:0*/
+    /*jshint maxcomplexity:10*/
+    /*jshint maxstatements:20*/
     this.checkStarted();
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
         stepInfo = f("Step %s %d/%d", step.name || "anonymous", this.step, this.steps.length),
@@ -1598,6 +1604,7 @@ Casper.prototype.runStep = function runStep(step) {
  */
 Casper.prototype.sendKeys = function(selector, keys, options) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     this.checkStarted();
     options = utils.mergeObjects({
         eventType: 'keypress',
@@ -1698,7 +1705,8 @@ Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
  */
 Casper.prototype.start = function start(location, then) {
     "use strict";
-    /*eslint max-statements:0*/
+    /*jshint maxcomplexity:10*/
+    /*jslint maxstatements:30*/
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
@@ -2112,7 +2120,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function _check(self) {
-            /*eslint max-statements: [1, 20]*/
+            /*jslint maxstatements: 20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
                 return;

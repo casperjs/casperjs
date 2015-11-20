@@ -62,6 +62,7 @@ var Mouse = function Mouse(casper) {
     }
 
     function processEvent(type, args) {
+        /*jshint maxcomplexity:10*/
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
             throw new CasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }

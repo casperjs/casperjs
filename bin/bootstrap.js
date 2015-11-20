@@ -28,12 +28,10 @@
  *
  */
 
-/*eslint max-statements:0, complexity:0*/
-
 // node check
-if ('process' in this && process.title === "node") {
+if ('process' in this && this.process.title === "node") {
     console.error('CasperJS cannot be executed within a nodejs environment');
-    process.exit(1);
+    this.process.exit(1);
 }
 
 // phantom check
@@ -61,13 +59,13 @@ if (typeof Function.prototype.bind !== "function") {
         }
         var aArgs = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
-            fNOP = function() {},
+            NOP = function() {},
             fBound = function() {
-              return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+              return fToBind.apply(this instanceof NOP && oThis ? this : oThis,
                                    aArgs.concat(Array.prototype.slice.call(arguments)));
             };
-        fNOP.prototype = this.prototype;
-        fBound.prototype = new fNOP();
+        NOP.prototype = this.prototype;
+        fBound.prototype = new NOP();
         return fBound;
     };
 }
@@ -84,6 +82,8 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 // casperjs env initialization
 (function(global, phantom, system){
     "use strict";
+    /*jshint maxcomplexity:15*/
+    /*jshint maxstatements:50*/
     // phantom args
     var phantomArgs = system.args.slice(1);
 
@@ -119,11 +119,11 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         // required version check
         if (phantom.casperEngine === 'phantomjs') {
             if (version.major === 1) {
-                if (version.minor < 8) {
-                    return __die('CasperJS needs at least PhantomJS v1.8 or later.');
+                if (version.minor < 9) {
+                    return __die('CasperJS needs at least PhantomJS v1.9 or later.');
                 }
-                if (version.minor === 8 && version.patch < 1) {
-                    return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
+                if (version.minor === 9 && version.patch < 1) {
+                    return __die('CasperJS needs at least PhantomJS v1.9.1 or later.');
                 }
             } else if (version.major === 2) {
                 // No requirements yet known
@@ -195,6 +195,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      * Prints CasperJS help.
      */
     function printHelp() {
+        /* global slimer */
         var engine = phantom.casperEngine === 'slimerjs' ? slimer : phantom;
         var version = [engine.version.major, engine.version.minor, engine.version.patch].join('.');
         return __terminate([
@@ -301,7 +302,8 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      * Initializes the CasperJS Command Line Interface.
      */
     function initCasperCli(casperArgs) {
-        /*eslint complexity:0*/
+        /*jshint maxcomplexity:15*/
+        /*jshint maxstatements:25*/
         var baseTestsPath = fs.pathJoin(phantom.casperPath, 'tests');
 
         function setScriptBaseDir(scriptName) {
@@ -350,6 +352,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     // CasperJS version, extracted from package.json - see http://semver.org/
     phantom.casperVersion = (function getCasperVersion(path) {
+        /*jshint maxcomplexity:10*/
         var parts, patchPart, pkg, pkgFile;
         pkgFile = fs.absolute(fs.pathJoin(path, 'package.json'));
         if (!fs.exists(pkgFile)) {

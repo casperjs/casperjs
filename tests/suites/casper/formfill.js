@@ -75,13 +75,11 @@ casper.test.begin('fill() & fillNames() tests', 18, function(test) {
             strange:       "very"
         });
         testFormValues(test);
-        if (false) {
-            // FIXME: known regression in 2.0.0, will be fixed in 2.0.1
-            // https://github.com/ariya/phantomjs/issues/12506
+        if (!skipPhantom200(test)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
-				}
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -91,7 +89,7 @@ casper.test.begin('fill() & fillNames() tests', 18, function(test) {
     });
 });
 
-casper.test.begin('fillLabels() tests', /* FIXME 18 */ 17, function(test) {
+casper.test.begin('fillLabels() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -109,13 +107,11 @@ casper.test.begin('fillLabels() tests', /* FIXME 18 */ 17, function(test) {
             Strange:       "very"
         });
         testFormValues(test);
-        if (false) {
-            // FIXME: known regression in 2.0.0, will be fixed in 2.0.1
-            // https://github.com/ariya/phantomjs/issues/12506
+        if (!skipPhantom200(test)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
-				}
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -125,7 +121,7 @@ casper.test.begin('fillLabels() tests', /* FIXME 18 */ 17, function(test) {
     });
 });
 
-casper.test.begin('fillSelectors() tests', /* FIXME 18 */ 17, function(test) {
+casper.test.begin('fillSelectors() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -142,13 +138,11 @@ casper.test.begin('fillSelectors() tests', /* FIXME 18 */ 17, function(test) {
             "input[name='strange']":      "very"
         });
         testFormValues(test);
-        if (false) {
-            // FIXME: known regression in 2.0.0, will be fixed in 2.0.1
-            // https://github.com/ariya/phantomjs/issues/12506
+        if (!skipPhantom200(test)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
-				}
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -244,8 +238,8 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
-            multitopic:         ['bar', 'car'],
-            // FIXME: regression file:          fpath,
+            multitopic:    ['bar', 'car'],
+            file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"
         });

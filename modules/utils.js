@@ -190,6 +190,7 @@ exports.dump = dump;
  */
 function equals(v1, v2) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     if (isFunction(v1)) {
         return v1.toString() === v2.toString();
     }

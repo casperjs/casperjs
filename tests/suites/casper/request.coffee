@@ -1,5 +1,6 @@
-#eslint strict:0
+#global casper
 
+#jshint strict:false
 utils = require "utils"
 
 if utils.ltVersion(phantom.version, '1.9.0')

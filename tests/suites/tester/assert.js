@@ -103,8 +103,8 @@ casper.test.begin('Tester.assertField(): filled inputs', 7, function(test) {
         test.assertField('content', '', 'Tester.assertField() works as expected with textarea');
         test.assertField('check', false, 'Tester.assertField() works as expected with checkboxes');
         test.assertField('choice', null, 'Tester.assertField() works as expected with radios');
-        test.assertField('topic', 'foo', 'Tester.assertField() works as expected with selects');
-        //FIXME: known regression phantomjs 2.0.0: test.assertField('file', '', 'Tester.assertField() works as expected with file inputs');
+        test.assertField('topic', '', 'Tester.assertField() works as expected with selects');
+        test.assertField('file', '', 'Tester.assertField() works as expected with file inputs');
         test.assertField('checklist[]', [], 'Tester.assertField() works as expected with check lists');
     }).run(function() {
         test.done();
