@@ -2,7 +2,7 @@
 
 default: test
 
-test: selftest clitest jshint
+test: selftest clitest lint
 
 test-dotNET: compile-dotNET selftest-dotNET clitest-dotNET lint
 
@@ -26,5 +26,5 @@ clitest:
 clitest-dotNET:
 	python tests/clitests/runtests.py mono casperjs.exe
 
-jshint:
-	jshint .
+lint:
+	eslint .

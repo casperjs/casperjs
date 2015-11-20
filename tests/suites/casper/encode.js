@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var fs = require('fs');
 
 casper.test.begin('base64encode() and download() tests', 2, function(test) {

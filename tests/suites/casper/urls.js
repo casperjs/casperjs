@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('urls tests', 6, function(test) {
     var assertURL = function(match, message) {
         test.assertHttpStatus(200);

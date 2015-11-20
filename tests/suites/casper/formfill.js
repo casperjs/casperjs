@@ -1,5 +1,4 @@
-/*global casper, __utils__*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var fs = require('fs');
 
 function testFormValues(test) {
@@ -39,26 +38,6 @@ function testUrl(test) {
     test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
 }
 
-/**
- * Known regression in 2.0.0, will be fixed in 2.0.1
- * https://github.com/ariya/phantomjs/issues/12506
- */
-function isPhantom200() {
-    if (phantom.casperEngine !== 'phantomjs') {
-        return false;
-    }
-    var version = phantom.version;
-    return 2 === version.major &&
-           0 === version.minor && 0 === version.patch;
-}
-function skipPhantom200 (test) {
-    if (isPhantom200()) {
-        test.skip(1, '2.0.0 form regression 12506');
-        return true;
-    }
-    return false;
-}
-
 casper.test.begin('fill() & fillNames() tests', 18, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
@@ -76,11 +55,9 @@ casper.test.begin('fill() & fillNames() tests', 18, function(test) {
             strange:       "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test)) {
-            test.assertEvalEquals(function() {
-                return __utils__.findOne('input[name="file"]').files.length === 1;
-            }, true, 'can select a file to upload');
-        }
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'can select a file to upload');
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -108,11 +85,9 @@ casper.test.begin('fillLabels() tests', 18, function(test) {
             Strange:       "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test)) {
-            test.assertEvalEquals(function() {
-                return __utils__.findOne('input[name="file"]').files.length === 1;
-            }, true, 'can select a file to upload');
-        }
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'can select a file to upload');
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -139,11 +114,9 @@ casper.test.begin('fillSelectors() tests', 18, function(test) {
             "input[name='strange']":      "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test)) {
-            test.assertEvalEquals(function() {
-                return __utils__.findOne('input[name="file"]').files.length === 1;
-            }, true, 'can select a file to upload');
-        }
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'can select a file to upload');
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -223,11 +196,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
     if (phantom.casperEngine === 'phantomjs') {
-        if (isPhantom200()) {
-            fileValue = '';
-        } else {
-            fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
-        }
+        fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
     }
 
     casper.start('tests/site/form.html', function() {

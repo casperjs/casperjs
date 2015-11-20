@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('exists() tests', 2, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assert(this.exists('a'), 'Casper.exists() can check if an element exists');

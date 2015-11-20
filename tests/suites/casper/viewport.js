@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var utils = require('utils');
 
 casper.test.begin('viewport() tests', 3, function(test) {

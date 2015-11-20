@@ -28,7 +28,7 @@
  *
  */
 
-/*global console, escape, exports, NodeList, window*/
+/*global escape, NodeList*/
 
 (function(exports) {
     "use strict";
@@ -41,7 +41,7 @@
      * Casper client-side helpers.
      */
     exports.ClientUtils = function ClientUtils(options) {
-        /*jshint maxstatements:40*/
+        /*eslint max-statements:0*/
         // private members
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
@@ -96,7 +96,7 @@
          * @return string
          */
         this.decode = function decode(str) {
-            /*jshint maxstatements:30, maxcomplexity:30 */
+            /*eslint max-statements:0, complexity:0 */
             var c1, c2, c3, c4, i = 0, len = str.length, out = "";
             while (i < len) {
                 do {
@@ -178,7 +178,7 @@
          * @return string
          */
         this.encode = function encode(str) {
-            /*jshint maxstatements:30 */
+            /*eslint max-statements:0 */
             var out = "", i = 0, len = str.length, c1, c2, c3;
             while (i < len) {
                 c1 = str.charCodeAt(i++) & 0xff;
@@ -245,7 +245,7 @@
          * @return Object                        An object containing setting result for each field, including file uploads
          */
         this.fill = function fill(form, vals, findType) {
-            /*jshint maxcomplexity:12*/
+            /*eslint complexity:0*/
             var out = {
                 errors: [],
                 fields: [],
@@ -774,7 +774,6 @@
          * @return  String            Response text.
          */
         this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
-            /*jshint maxcomplexity:10*/
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];
@@ -809,7 +808,7 @@
          * @param  mixed                 value  The field value to set
          */
         this.setField = function setField(field, value) {
-            /*jshint maxcomplexity:30*/
+            /*eslint complexity:0*/
             var logValue, fields, out;
             value = logValue = (value || "");
 
@@ -887,9 +886,9 @@
                         });
                         // If the values can't be found, try search options text
                         if (field.value === "") {
-                            [].forEach.call(field.options, function(option) {
+                          [].forEach.call(field.options, function(option) {
                                 option.selected = value.indexOf(option.text) !== -1;
-                            });
+                          });
                         }
                     } else {
                         // PhantomJS 1.x.x can't handle setting value to ''
@@ -899,13 +898,14 @@
                             field.value = value;
                         }
 
-                        // If the value can't be found, try search options text
-                        if (field.value !== value) {
-                            [].some.call(field.options, function(option) {
-                                option.selected = value === option.text;
-                                return value === option.text;
-                            });
-                        }
+
+                      // If the value can't be found, try search options text
+                      if (field.value !== value) {
+                        [].some.call(field.options, function(option) {
+                              option.selected = value === option.text;
+                              return value === option.text;
+                        });
+                      }
                     }
                     break;
                 case "textarea":

@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 casper.test.begin('fetchText() basic tests', 1, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertEquals(this.fetchText('ul li'), 'onetwothree',

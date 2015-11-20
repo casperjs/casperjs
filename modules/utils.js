@@ -28,7 +28,6 @@
  *
  */
 
-/*global CasperError, console, exports, phantom, patchRequire, require:true*/
 
 var require = patchRequire(require);
 
@@ -80,7 +79,7 @@ exports.betterTypeOf = betterTypeOf;
  */
 function betterInstanceOf(input, constructor) {
     "use strict";
-    /*jshint eqnull:true, eqeqeq:false */
+    /*eslint eqeqeq:0 */
     if (typeof input == 'undefined' || input == null) {
       return false;
     }
@@ -191,7 +190,6 @@ exports.dump = dump;
  */
 function equals(v1, v2) {
     "use strict";
-    /*jshint maxcomplexity:10*/
     if (isFunction(v1)) {
         return v1.toString() === v2.toString();
     }
@@ -429,7 +427,7 @@ exports.isClipRect = isClipRect;
  */
 function isFalsy(subject) {
     "use strict";
-    /*jshint eqeqeq:false*/
+    /*eslint eqeqeq:0*/
     return !subject;
 }
 exports.isFalsy = isFalsy;
@@ -543,7 +541,7 @@ exports.isString = isString;
  */
 function isTruthy(subject) {
     "use strict";
-    /*jshint eqeqeq:false*/
+    /*eslint eqeqeq:0*/
     return !!subject;
 }
 exports.isTruthy = isTruthy;

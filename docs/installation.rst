@@ -12,7 +12,7 @@ Prerequisites
 
 .. index:: PhantomJS, Python, SlimerJS
 
-- PhantomJS_ 1.8.2 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
+- PhantomJS_ 1.8.2 or greater, but less than 2.0. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
 - Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
 
 .. versionadded:: 1.1
@@ -150,7 +150,7 @@ Colorized output
 
    .. versionadded:: 1.1-beta1
 
-   Windows users will get colorized output if ansicon_ is installed.
+   Windows users will get colorized output if ansicon_ is installed or if the user is using ConEmu_ with ANSI colors enabled.
 
 .. index:: Bugs, REPL
 
@@ -170,3 +170,4 @@ Known Bugs & Limitations
 .. _SlimerJS: http://slimerjs.org/
 .. _ansicon: https://github.com/adoxa/ansicon
 .. _Mono: http://www.mono-project.com/
+.. _ConEmu: https://code.google.com/p/conemu-maximus5/

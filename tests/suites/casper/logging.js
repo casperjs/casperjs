@@ -1,5 +1,5 @@
-/*jshint strict:false*/
-/*global casper, __utils__*/
+/*eslint strict:0*/
+
 casper.test.begin('logging tests', 4, function(test) {
     var oldLevel;
     casper.start('tests/site/index.html');

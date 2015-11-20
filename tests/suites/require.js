@@ -1,5 +1,4 @@
-/*global casper*/
-/*jshint strict:false*/
+/*eslint strict:0*/
 var fs = require('fs');
 var modroot = fs.pathJoin(phantom.casperPath, 'tests', 'sample_modules');
 
