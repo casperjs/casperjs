@@ -14,8 +14,9 @@ function info(message) {
 }
 
 service = server.listen(testServerPort, function(request, response) {
-    /*jshint maxstatements:20*/
     "use strict";
+    /*jshint maxcomplexity:10*/
+    /*jshint maxstatements:30*/
     var requestPath = request.url;
     if (requestPath.indexOf('?') !== -1) {
         requestPath = request.url.split('?')[0];
@@ -28,12 +29,26 @@ service = server.listen(testServerPort, function(request, response) {
     } else {
         var headers = {};
         var binMode = false;
-        if (/js$/.test(pageFile)) {
+				if (/html$/.test(pageFile)) {
+            headers['Content-Type'] = "text/html";
+				}
+        else if (/js$/.test(pageFile)) {
             headers['Content-Type'] = "application/javascript";
         }
+				else if (/json$/.test(pageFile)) {
+            headers['Content-Type'] = "application/json";
+				}
+				else if (/txt$/.test(pageFile)) {
+            headers['Content-Type'] = "text/plain";
+				}
         else if (/png$/.test(pageFile)) {
+            headers['Content-Type'] = "image/png";
             binMode = true;
         }
+				else {
+            headers['Content-Type'] = "application/octet-stream";
+						binMode = true;
+				}
         response.writeHead(200, headers);
         if (binMode) {
             response.write(fs.read(pageFile, 'b'));

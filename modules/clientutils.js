@@ -168,7 +168,7 @@
                 return true;
             }
             return elem.clientHeight > 0 && elem.clientWidth > 0;
-        }
+        };
 
         /**
          * Base64 encodes a string, even binary ones. Succeeds where
@@ -230,7 +230,7 @@
             var text = '', elements = this.findAll(selector);
             if (elements && elements.length) {
                 Array.prototype.forEach.call(elements, function _forEach(element) {
-                    text += element.textContent || element.innerText || element.value;
+                    text += element.textContent || element.innerText || element.value || '';
                 });
             }
             return text;
@@ -245,7 +245,7 @@
          * @return Object                        An object containing setting result for each field, including file uploads
          */
         this.fill = function fill(form, vals, findType) {
-            /*jshint maxcomplexity:8*/
+            /*jshint maxcomplexity:12*/
             var out = {
                 errors: [],
                 fields: [],
@@ -761,7 +761,7 @@
          */
         this.scrollToBottom = function scrollToBottom() {
             this.scrollTo(0, this.getDocumentHeight());
-        },
+        };
 
         /**
          * Performs an AJAX request.
@@ -774,6 +774,7 @@
          * @return  String            Response text.
          */
         this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
+            /*jshint maxcomplexity:10*/
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];
@@ -808,7 +809,7 @@
          * @param  mixed                 value  The field value to set
          */
         this.setField = function setField(field, value) {
-            /*jshint maxcomplexity:99 */
+            /*jshint maxcomplexity:30*/
             var logValue, fields, out;
             value = logValue = (value || "");
 
@@ -884,8 +885,27 @@
                         [].forEach.call(field.options, function(option) {
                             option.selected = value.indexOf(option.value) !== -1;
                         });
+                        // If the values can't be found, try search options text
+                        if (field.value === "") {
+                            [].forEach.call(field.options, function(option) {
+                                option.selected = value.indexOf(option.text) !== -1;
+                            });
+                        }
                     } else {
-                      field.value = value;
+                        // PhantomJS 1.x.x can't handle setting value to ''
+                        if ('' === value) {
+                            field.selectedIndex = -1;
+                        } else {
+                            field.value = value;
+                        }
+
+                        // If the value can't be found, try search options text
+                        if (field.value !== value) {
+                            [].some.call(field.options, function(option) {
+                                option.selected = value === option.text;
+                                return value === option.text;
+                            });
+                        }
                     }
                     break;
                 case "textarea":

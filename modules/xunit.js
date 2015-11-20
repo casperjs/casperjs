@@ -46,6 +46,7 @@ var TestSuiteResult = require('tester').TestSuiteResult;
  */
 function generateClassName(classname) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     classname = (classname || "").replace(phantom.casperPath, "").trim();
     var script = classname || phantom.casperScript || "";
     if (script.indexOf(fs.workingDirectory) === 0) {
@@ -162,7 +163,7 @@ XUnitExporter.prototype.getSerializedXML = function getSerializedXML(xml) {
     "use strict";
     var serializer = new XMLSerializer();
     return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this.getXML());
-}
+};
 
 /**
  * Sets test results.

@@ -11,6 +11,7 @@ TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
 CASPER_EXEC_FILE = sys.argv[1] if (len(sys.argv) == 2) else 'casperjs'
 CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', CASPER_EXEC_FILE)
+ENGINE_NAME = os.path.basename(os.environ.get('CASPERJS_ENGINE', 'phantomjs'))
 ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
                              os.environ.get('PHANTOMJS_EXECUTABLE',
                                             "phantomjs"))
@@ -18,6 +19,11 @@ ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
 # and relative path to phantomjs would be invalid
 if not os.path.isabs(ENGINE_EXEC):
     os.environ['ENGINE_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, ENGINE_EXEC)
+
+# FIXME: slimerjs is not yet ready to be used as CLI because it is not
+# possible to pass arguments to the main script with slimerjs
+if 'slimerjs' == ENGINE_NAME:
+    sys.exit(0)
 
 class TimeoutException(Exception):
     pass

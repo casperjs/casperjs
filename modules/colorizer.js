@@ -94,6 +94,7 @@ var Colorizer = function Colorizer() {
      * @return String
      */
     this.format = function format(text, style, pad) {
+        /*jshint maxcomplexity:10*/
         if ((fs.isWindows() && !env['ANSICON']) || !utils.isObject(style)) {
             return text;
         }

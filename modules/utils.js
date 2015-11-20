@@ -191,6 +191,7 @@ exports.dump = dump;
  */
 function equals(v1, v2) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     if (isFunction(v1)) {
         return v1.toString() === v2.toString();
     }
@@ -465,7 +466,12 @@ exports.isHTTPResource = isHTTPResource;
 function isJsFile(file) {
     "use strict";
     var ext = fileExt(file);
-    return isString(ext, "string") && ['js', 'coffee'].indexOf(ext) !== -1;
+    var valid = Object.keys(require.extensions).map(function(val) {
+        return val.replace(/^\./, '');
+    }).filter(function(ext) {
+        return ext !== 'json';
+    });
+    return isString(ext, "string") && valid.indexOf(ext) !== -1;
 }
 exports.isJsFile = isJsFile;
 
@@ -655,7 +661,7 @@ function mergeObjectsInGecko(origin, add, opts) {
             // directly the value
             var prop = Object.getOwnPropertyDescriptor(add, p);
             if (prop.get && !prop.set) {
-                Object.defineProperty(origin, p, prop)
+                Object.defineProperty(origin, p, prop);
             }
             else {
                 origin[p] = add[p];

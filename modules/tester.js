@@ -137,6 +137,7 @@ var Tester = function Tester(casper, options) {
     });
 
     this.on('fail', function onFail(failure) {
+        /*jshint maxcomplexity:10*/
         // export
         var valueKeys = Object.keys(failure.values),
             timeElapsed = new Date() - this.currentTestStartTime;
@@ -224,7 +225,7 @@ var Tester = function Tester(casper, options) {
     };
 
     this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout, details) {
-        /*jshint maxcomplexity:10*/
+        /*jshint maxcomplexity:20*/
         var message = f("Wait timeout occured (%dms)", timeout);
         details = details || {};
 
@@ -1030,10 +1031,12 @@ Tester.prototype.tearDown = function tearDown(fn) {
  */
 Tester.prototype.begin = function begin() {
     "use strict";
+    /*jshint maxcomplexity:10*/
     if (this.started && this.running)
         return this.queue.push(arguments);
 
     function getConfig(args) {
+        /*jshint maxcomplexity:10*/
         var config = {
             setUp: function(){},
             tearDown: function(){}
@@ -1348,7 +1351,7 @@ function getStackEntry(error, testFile) {
             sourceURL = sourceURL.split('->')[1].trim();
         }
         if (sourceURL === testFile) {
-            return { sourceURL: sourceURL, line: m[3]}
+            return { sourceURL: sourceURL, line: m[3]};
         }
     }
     return null;
@@ -1490,6 +1493,7 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     /*jshint maxstatements:25*/
     save = save || this.options.save;
     var exitStatus = 0,

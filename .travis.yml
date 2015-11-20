@@ -1,66 +1,115 @@
-branches:
-  only:
-    - "master"
+#branches:
+#  only:
+#    - "master"
+
+sudo: false
+
+language: generic
 
 before_install:
   - echo "Installing $ENGINE $ENGINE_VERSION from $ENGINE_ARCHIVE_URL"
   - wget $ENGINE_ARCHIVE_URL --output-document=engine.tar.bz2
   - mkdir engine && tar --strip-components=1 -xvf engine.tar.bz2 -C engine
-  - if [[ $ENGINE == 'phantomjs' ]]; then
-      ENGINE_EXECUTABLE="engine/bin/phantomjs";
-    elif [[ $ENGINE == 'slimerjs' ]]; then
-      ENGINE_EXECUTABLE="engine/slimerjs";
+  - if [[ $CASPERJS_ENGINE == 'phantomjs' ]]; then
+      export ENGINE_EXECUTABLE="engine/bin/phantomjs";
+    elif [[ $CASPERJS_ENGINE == 'slimerjs' ]]; then
+      export ENGINE_EXECUTABLE="engine/slimerjs";
     else
-      echo "Unsupported engine $ENGINE";
+      echo "Unsupported engine $CASPERJS_ENGINE";
     fi
   - ls -la $ENGINE_EXECUTABLE && $ENGINE_EXECUTABLE --version;
-  - export ENGINE_EXECUTABLE="$ENGINE_EXECUTABLE $ENGINE_FLAGS"
 
-install:
-  - sudo apt-get install -qq mono-devel mono-mcs
+apt_targets:
+  - &apt_cs [mono-devel, mono-mcs]
 
 before_script:
-  - "npm install -g jshint@2.0.1"
+  - "npm install -g jshint@v2.8.0"
 
 script:
-  - "make $MAKE_TEST_COMMAND"
+  - if [ "$ENGINE_XVFB" == "1" ]; then
+      xvfb-run -a make "$MAKE_TEST_COMMAND";
+    else
+      make "$MAKE_TEST_COMMAND";
+    fi
 
 env:
   global:
     - ENGINE_FLAGS="--local-to-remote-url-access=yes --ignore-ssl-errors=yes"
-  matrix:
-    - ENGINE="phantomjs" ENGINE_VERSION="1.8.2" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.8.2" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.0" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.0" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.1" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.1-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.1" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.1-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.2" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.2" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.7" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2"
-    - ENGINE="phantomjs" ENGINE_VERSION="1.9.8" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
-    - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
-    - ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
-    - ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
-    - ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
-    - ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test-dotNET"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
-    - ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test"
-      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
+
+matrix:
+  include:
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.1" MAKE_TEST_COMMAND="test-dotNET"
+        ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.1-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.1" MAKE_TEST_COMMAND="test"
+        ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.1-linux-x86_64.tar.bz2"
+      os: linux
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.2" MAKE_TEST_COMMAND="test-dotNET"
+        ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.2" MAKE_TEST_COMMAND="test"
+        ENGINE_ARCHIVE_URL="https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2"
+      os: linux
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.7" MAKE_TEST_COMMAND="test-dotNET"
+        ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.7" MAKE_TEST_COMMAND="test"
+        ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2"
+      os: linux
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.8" MAKE_TEST_COMMAND="test-dotNET"
+        ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.8" MAKE_TEST_COMMAND="test"
+        ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
+      os: linux
+    - env: >
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test-dotNET" ENGINE_XVFB="1"
+        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - env: >
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.8.4" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
+        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.4/slimerjs-0.8.4-linux-x86_64.tar.bz2"
+      os: linux
+    - env: >
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test-dotNET" ENGINE_XVFB="1"
+        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - env: >
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.8.5" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
+        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.8.5/slimerjs-0.8.5-linux-x86_64.tar.bz2"
+      os: linux
+    - env: >
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test-dotNET" ENGINE_XVFB="1"
+        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - env: >
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.5" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
+        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.5/slimerjs-0.9.5-linux-x86_64.tar.bz2"
+      os: linux
+# TODO: slimerjs 0.9.6 coffeescript breaks
+#    - CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.6" MAKE_TEST_COMMAND="test-dotNET" ENGINE_XVFB="1"
+#      ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
+#      os: linux
+#      addons: {apt: {packages: *apt_cs}}
+#    - env: >
+#        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.9.6" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
+#        ENGINE_ARCHIVE_URL="http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
+#      os: linux
 
 notifications:
   irc:

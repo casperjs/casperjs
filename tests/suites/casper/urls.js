@@ -1,25 +1,42 @@
 /*global casper*/
 /*jshint strict:false*/
 casper.test.begin('urls tests', 6, function(test) {
+    var assertURL = function(match, message) {
+        test.assertHttpStatus(200);
+        test.assertUrlMatches(match, message);
+    };
+
     casper.start('tests/site/urls.html', function() {
         this.clickLabel('raw unicode', 'a');
     });
 
+    casper.waitForUrl(/Forlì/,
+        assertURL.bind(this,
+            'Forlì',
+            'Casper.getCurrentUrl() retrieves a raw unicode URL'
+        ));
+
     casper.then(function() {
-        test.assertHttpStatus(200);
-        test.assertUrlMatches('Forlì', 'Casper.getCurrentUrl() retrieves a raw unicode URL');
         this.clickLabel('escaped', 'a');
     });
 
+    casper.waitForUrl(/Farlì/,
+        assertURL.bind(this,
+            'Farlì',
+            'Casper.getCurrentUrl() retrieves an escaped URL'
+        ));
+
     casper.then(function() {
-        test.assertHttpStatus(200);
-        test.assertUrlMatches('Forlì', 'Casper.getCurrentUrl() retrieves an escaped URL');
         this.clickLabel('uri encoded', 'a');
     });
 
+    casper.waitForUrl(/Furlì/,
+        assertURL.bind(this,
+            'Furlì',
+            'Casper.getCurrentUrl() retrieves a decoded URL'
+        ));
+
     casper.run(function() {
-        test.assertHttpStatus(200);
-        test.assertUrlMatches('Forlì', 'Casper.getCurrentUrl() retrieves a decoded URL');
         test.done();
     });
 });

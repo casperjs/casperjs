@@ -28,8 +28,7 @@
  *
  */
 
-/*global CasperError, console, exports, phantom, __utils__, patchRequire, require:true*/
-
+/*global __utils__, CasperError, console, exports, phantom, patchRequire, require:true*/
 var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
@@ -84,7 +83,7 @@ exports.selectXPath = selectXPath;
  */
 var Casper = function Casper(options) {
     "use strict";
-    /*jshint maxstatements:40*/
+    /*jshint maxstatements:45*/
     // init & checks
     if (!(this instanceof Casper)) {
         return new Casper(options);
@@ -220,7 +219,7 @@ var Casper = function Casper(options) {
 
     // deprecated direct option
     if (this.cli.has('direct')) {
-        this.emit("deprecated", "--direct option has been deprecated since 1.1; you should use --verbose instead.")
+        this.emit("deprecated", "--direct option has been deprecated since 1.1; you should use --verbose instead.");
     }
 };
 
@@ -391,6 +390,7 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     if (self.pendingWait || self.loadInProgress || self.navigationRequested || self.browserInitializing) {
         return;
     }
@@ -783,6 +783,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
  */
 Casper.prototype.fillForm = function fillForm(selector, vals, options) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     this.checkStarted();
 
     var selectorType = options && options.selectorType || "names",
@@ -851,7 +852,7 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
             }
         }, selector);
     }
-}
+};
 
 /**
  * Fills a form with provided field values using the Name attribute.
@@ -1020,7 +1021,7 @@ Casper.prototype.getElementsAttr = function getElementsAttr(selector, attribute)
             return element.getAttribute(attribute);
         });
     }, selector, attribute);
-}
+};
 
 /**
  * Retrieves boundaries for a DOM element matching the provided DOM CSS3/XPath selector.
@@ -1192,7 +1193,7 @@ Casper.prototype.getTitle = function getTitle() {
  */
 Casper.prototype.handleReceivedResource = function(resource) {
     "use strict";
-    /*jshint maxstatements:20*/
+    /*jslint maxstatements:20*/
     if (resource.stage !== "end") {
         return;
     }
@@ -1253,7 +1254,7 @@ Casper.prototype.injectClientScripts = function injectClientScripts() {
         if (this.page.injectJs(script)) {
             this.log(f('Automatically injected %s client side', script), "debug");
         } else {
-            this.warn('Failed injecting %s client side', script);
+            this.warn(f('Failed injecting %s client side', script));
         }
     }.bind(this));
     return this;
@@ -1322,6 +1323,7 @@ Casper.prototype.includeRemoteScripts = function includeRemoteScripts() {
  */
 Casper.prototype.log = function log(message, level, space) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
     space = space ? space : "phantom";
     if (level === "error" && utils.isFunction(this.options.onError)) {
@@ -1396,6 +1398,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
  */
 Casper.prototype.open = function open(location, settings) {
     "use strict";
+    /*jshint maxcomplexity:15*/
     /*jshint maxstatements:30*/
     var baseCustomHeaders = this.page.customHeaders,
         customHeaders = settings && settings.headers || {};
@@ -1500,8 +1503,6 @@ Casper.prototype.resourceExists = function resourceExists(test) {
             break;
         case "function":
             testFn = test;
-            if (phantom.casperEngine !== "slimerjs")
-                testFn.name = "_testResourceExists_Function";
             break;
         default:
             throw new CasperError("Invalid type");
@@ -1535,6 +1536,7 @@ Casper.prototype.run = function run(onComplete, time) {
  */
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     /*jshint maxstatements:20*/
     this.checkStarted();
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
@@ -1599,6 +1601,7 @@ Casper.prototype.runStep = function runStep(step) {
  */
 Casper.prototype.sendKeys = function(selector, keys, options) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     this.checkStarted();
     options = utils.mergeObjects({
         eventType: 'keypress',
@@ -1627,7 +1630,7 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         this.click(selector);
     }
     var modifiers = utils.computeModifier(options && options.modifiers,
-                                          this.page.event.modifier)
+                                          this.page.event.modifier);
     this.page.sendEvent(options.eventType, keys, null, null, modifiers);
     if (isTextInput && !options.keepFocus) {
         // remove the focus
@@ -1699,7 +1702,8 @@ Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
  */
 Casper.prototype.start = function start(location, then) {
     "use strict";
-    /*jshint maxstatements:30*/
+    /*jshint maxcomplexity:10*/
+    /*jslint maxstatements:30*/
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
@@ -1818,14 +1822,14 @@ Casper.prototype.thenClick = function thenClick(selector, then) {
  * current retrieved page DOM.
  *
  * @param  function  fn       The function to be evaluated within current page DOM
- * @param  object    context  Optional function parameters context
+ * @param  Array     args...  The rest of arguments passed to fn
  * @return Casper
  * @see    Casper#evaluate
  */
-Casper.prototype.thenEvaluate = function thenEvaluate(fn, context) {
+Casper.prototype.thenEvaluate = function thenEvaluate(fn) {
     "use strict";
     this.checkStarted();
-    var args = [fn].concat([].slice.call(arguments, 1));
+    var args = arguments;
     return this.then(function _step() {
         this.evaluate.apply(this, args);
     });
@@ -1908,15 +1912,16 @@ Casper.prototype.thenBypassUnless = function thenBypassUnless(condition, nb) {
  *
  * @param  String    location  The url to open
  * @param  function  fn        The function to be evaluated within current page DOM
- * @param  object    context   Optional function parameters context
+ * @param  Array     args...   The rest of arguments will passed to the evaluate function
  * @return Casper
  * @see    Casper#evaluate
  * @see    Casper#open
  */
-Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn, context) {
+Casper.prototype.thenOpenAndEvaluate = function thenOpenAndEvaluate(location, fn) {
     "use strict";
     this.checkStarted();
-    return this.thenOpen(location).thenEvaluate(fn, context);
+    var args = [].slice.call(arguments, 1);
+    return this.thenOpen(location).thenEvaluate.apply(this, args);
 };
 
 /**
@@ -2100,7 +2105,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function _check(self) {
-            /*jshint maxstatements:20*/
+            /*jslint maxstatements: 20*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
                 return;
@@ -2121,14 +2126,13 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
                     if (!self.options.silentErrors) {
                         throw error;
                     }
-                } finally {
-                    return;
                 }
-            }
-            self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
-            clearInterval(interval);
-            if (then) {
-                self.then(then);
+            } else {
+                self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
+                clearInterval(interval);
+                if (then) {
+                    self.then(then);
+                }
             }
         }, this.options.retryTimeout, this);
         this.waiters.push(interval);
@@ -2439,7 +2443,7 @@ Casper.prototype.zoom = function zoom(factor) {
  */
 Casper.extend = function(proto) {
     "use strict";
-    this.emit("deprecated", "Casper.extend() has been deprecated since 0.6; check the docs")
+    this.emit("deprecated", "Casper.extend() has been deprecated since 0.6; check the docs");
     if (!utils.isObject(proto)) {
         throw new CasperError("extends() only accept objects as prototypes");
     }
@@ -2549,11 +2553,11 @@ function createPage(casper) {
         if (isMainFrame && casper.requestUrl !== url) {
             var currentUrl = casper.requestUrl;
             var newUrl = url;
-            var pos = currentUrl.indexOf('#')
+            var pos = currentUrl.indexOf('#');
             if (pos !== -1) {
                 currentUrl = currentUrl.substring(0, pos);
             }
-            pos = newUrl.indexOf('#')
+            pos = newUrl.indexOf('#');
             if (pos !== -1) {
                 newUrl = newUrl.substring(0, pos);
             }

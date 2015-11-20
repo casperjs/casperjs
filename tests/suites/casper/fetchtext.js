@@ -28,3 +28,14 @@ casper.test.begin('fetchText() handles HTML entities', 1, function(test) {
         test.done();
     });
 });
+
+casper.test.begin('fetchText() handles empty elements', 1, function(test) {
+    casper.start().then(function() {
+        this.setContent('<html><body></body></html>');
+        test.assertEquals(this.fetchText('body'), '',
+            'Casper.fetchText() fetches empty string');
+    });
+    casper.run(function() {
+        test.done();
+    });
+});
