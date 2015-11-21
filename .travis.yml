@@ -27,7 +27,7 @@ apt_targets:
   - &apt_cs [mono-devel, mono-mcs]
 
 before_script:
-  - "npm install -g jshint@v2.8.0"
+  - "npm install -g eslint@v1.10.1"
 
 script:
   - if [ "$ENGINE_XVFB" == "1" ]; then
