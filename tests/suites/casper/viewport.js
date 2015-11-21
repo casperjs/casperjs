@@ -16,6 +16,7 @@ casper.test.begin('viewport() tests', 3, function(test) {
 casper.test.begin('viewport() asynchronous tests', 2, function(test) {
     var screenshotData;
 
+    casper.options.pageSettings.javascriptEnabled = true;
     casper.start('tests/site/index.html').viewport(800, 600, function() {
         this.setContent(utils.format('<img src="data:image/png;base64,%s">',
                                      this.captureBase64('png')));
@@ -26,7 +27,7 @@ casper.test.begin('viewport() asynchronous tests', 2, function(test) {
         if (phantom.casperEngine === "slimerjs" && imgInfo.width !== 800) {
             // sometimes, setting viewport could take more time in slimerjs/gecko
             // and the image is not still ready: :-/
-            test.skip(2);
+            test.skip(2, "Casper.viewport() change test skipped for slimer engine");
         }
         else {
             test.assertEquals(imgInfo.width, 800, 'Casper.viewport() changes width asynchronously');

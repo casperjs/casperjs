@@ -208,7 +208,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
-            multitopic:         ['bar', 'car'],
+            multitopic:    ['bar', 'car'],
             file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"

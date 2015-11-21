@@ -6,9 +6,11 @@
     </head>
     <body>
         <ul>
-            <li><a href="?test=Forlì">raw unicode</a></li>
-            <li><a href="?test=Forl%EC">escaped</a></li>
-            <li><a href="?test=Forl%C3%AC">uri encoded</a></li>
+            <!-- NOTE: slimerjs does not open up / change URL for
+            "?test=Forlì" hrefs, so use full url for this test -->
+            <li><a href="urls.html?test=Forlì">raw unicode</a></li>
+            <li><a href="urls.html?test=Farl%EC">escaped</a></li>
+            <li><a href="urls.html?test=Furl%C3%AC">uri encoded</a></li>
         </ul>
     </body>
 </html>

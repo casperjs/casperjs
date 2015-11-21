@@ -1,3 +1,4 @@
+/*global casper*/
 /*eslint strict:0, max-statements: [1, 99]*/
 var utils = require('utils');
 
@@ -22,7 +23,7 @@ casper.test.begin('onclick variants tests', 8, function(test) {
         var results = this.getGlobal('results');
         if (phantom.casperEngine === 'slimerjs') {
             // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
-            test.skip(1);
+            test.skip(1, 'Casper.click() on javascript: skipped for slimer engine');
         }
         else
             test.assert(results.test1, 'Casper.click() has clicked an `href="javascript:` link');
@@ -51,7 +52,7 @@ casper.test.begin('clickLabel tests tests', 12, function(test) {
         var results = this.getGlobal('results');
         if (phantom.casperEngine === 'slimerjs') {
             // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
-            test.skip(1);
+            test.skip(1, 'Casper.click() on javascript: skipped for slimer engine');
         }
         else
             test.assert(results.test1,

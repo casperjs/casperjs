@@ -28,6 +28,7 @@
  *
  */
 
+/*global __utils__, CasperError, console, exports, phantom, patchRequire, require:true*/
 var require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
@@ -1498,8 +1499,6 @@ Casper.prototype.resourceExists = function resourceExists(test) {
             break;
         case "function":
             testFn = test;
-            if (phantom.casperEngine !== "slimerjs")
-                testFn.name = "_testResourceExists_Function";
             break;
         default:
             throw new CasperError("Invalid type");
