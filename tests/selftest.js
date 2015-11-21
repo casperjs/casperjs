@@ -28,26 +28,26 @@ service = server.listen(testServerPort, function(request, response) {
     } else {
         var headers = {};
         var binMode = false;
-				if (/html$/.test(pageFile)) {
+        if (/html$/.test(pageFile)) {
             headers['Content-Type'] = "text/html";
-				}
+        }
         else if (/js$/.test(pageFile)) {
             headers['Content-Type'] = "application/javascript";
         }
-				else if (/json$/.test(pageFile)) {
+        else if (/json$/.test(pageFile)) {
             headers['Content-Type'] = "application/json";
-				}
-				else if (/txt$/.test(pageFile)) {
+        }
+        else if (/txt$/.test(pageFile)) {
             headers['Content-Type'] = "text/plain";
-				}
+        }
         else if (/png$/.test(pageFile)) {
             headers['Content-Type'] = "image/png";
             binMode = true;
         }
-				else {
+        else {
             headers['Content-Type'] = "application/octet-stream";
-						binMode = true;
-				}
+            binMode = true;
+        }
         response.writeHead(200, headers);
         if (binMode) {
             response.write(fs.read(pageFile, 'b'));
