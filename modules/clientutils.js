@@ -41,7 +41,7 @@
      * Casper client-side helpers.
      */
     exports.ClientUtils = function ClientUtils(options) {
-        /*eslint max-statements:0*/
+        /*eslint max-statements:0, no-multi-spaces:0*/
         // private members
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var BASE64_DECODE_CHARS = new Array(
