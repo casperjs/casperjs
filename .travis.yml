@@ -78,13 +78,18 @@ matrix:
         CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="1.9.8" MAKE_TEST_COMMAND="test"
         ENGINE_ARCHIVE_URL="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
       os: linux
-#    - CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test-dotNET"
-#      ENGINE_ARCHIVE_URL="https://github.com/hexid/phantomjs/releases/download/2.0.0/phantomjs-2.0.0-linux-x86_64.tar.bz2"
-#      os: linux
-#      addons: {apt: {packages: *apt_cs}}
-#    - CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test"
-#      ENGINE_ARCHIVE_URL="https://github.com/hexid/phantomjs/releases/download/2.0.0/phantomjs-2.0.0-linux-x86_64.tar.bz2"
-#      os: linux
+    - CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test-dotNET"
+      ENGINE_ARCHIVE_URL="https://github.com/hexid/phantomjs/releases/download/2.0.0/phantomjs-2.0.0-linux-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
+    - CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.0" MAKE_TEST_COMMAND="test"
+      ENGINE_ARCHIVE_URL="https://github.com/hexid/phantomjs/releases/download/2.0.0/phantomjs-2.0.0-linux-x86_64.tar.bz2"
+      os: linux
+    - env: >
+        CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.1" MAKE_TEST_COMMAND="test-dotNET"
+        ENGINE_ARCHIVE_URL="https://github.com/istr/phantomjs/releases/download/2.0.1-regression-12506-testing/phantomjs-2.0.1-precise-x86_64.tar.bz2"
+      os: linux
+      addons: {apt: {packages: *apt_cs}}
     - env: >
         CASPERJS_ENGINE="phantomjs" ENGINE_VERSION="2.0.1" MAKE_TEST_COMMAND="test"
         ENGINE_ARCHIVE_URL="https://github.com/istr/phantomjs/releases/download/2.0.1-regression-12506-testing/phantomjs-2.0.1-precise-x86_64.tar.bz2"
