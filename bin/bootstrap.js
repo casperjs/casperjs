@@ -141,7 +141,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             console.error('Hint: you may want to use the `casperjs test` command.');
         }
         // exits on syntax error
-        if (msg.indexOf('SyntaxError: Parse error') === 0) {
+        if (msg.indexOf('SyntaxError: ') === 0) {
             __die();
         }
     };
@@ -383,15 +383,18 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         };
     })(phantom.casperPath);
 
-    if ("paths" in global.require) {
+    // phantomjs2 has paths in require, but needs patchRequire anyway
+    if (!("paths" in global.require) ||
+        ('phantomjs' === phantom.casperEngine && 1 < phantom.version.major)
+    ) {
+        global.__require = require;
+        global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
+        global.require = patchRequire(global.require);
+    } else {
         // declare a dummy patchRequire function
         global.patchRequire = function(req) {return req;};
         require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
         require.paths.push(fs.workingDirectory);
-    } else {
-        global.__require = require;
-        global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
-        global.require = patchRequire(global.require);
     }
 
     if (phantom.casperEngine === 'slimerjs') {
