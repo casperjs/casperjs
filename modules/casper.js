@@ -196,6 +196,10 @@ var Casper = function Casper(options) {
             notices.push('  in module ' + match[2]);
             msg = match[3];
         }
+        /* FIXME:
+        this leads to a recursive on('error'...) trigger,
+        at least in phantomjs2
+
         console.error(c.colorize(msg, 'RED_BAR', 80));
         notices.forEach(function(notice) {
             console.error(c.colorize(notice, 'COMMENT'));
@@ -207,6 +211,7 @@ var Casper = function Casper(options) {
             }
             console.error("  " + message);
         });
+        */
     });
 
     // deprecated feature event handler
@@ -960,10 +965,10 @@ Casper.prototype.getPageContent = function getPageContent() {
     if (!utils.isString(contentType) || contentType.indexOf("text/html") !== -1) {
         return this.page.frameContent;
     }
-		// FIXME: with slimerjs this will work only for
-		// text/* and application/json content types.
-		// see FIXME in slimerjs src/modules/webpageUtils.jsm getWindowContent
-    return this.page.framePlainText; // || this.page.frameContent;
+    // FIXME: with slimerjs this will work only for
+    // text/* and application/json content types.
+    // see FIXME in slimerjs src/modules/webpageUtils.jsm getWindowContent
+    return this.page.framePlainText;
 };
 
 /**
