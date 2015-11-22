@@ -1359,15 +1359,15 @@ function getStackEntry(error, testFile) {
     if (! ('stack' in error))
         return null;
 
-    var r = /^\s*(.*)@(.*):(\d+)\s*$/gm;
+    var r = /\r?\n\s*(.*?)(at |@)([^:]*?):(\d+):?(\d*)/g;
     var m;
     while ((m = r.exec(error.stack))) {
-        var sourceURL = m[2];
+        var sourceURL = m[3];
         if (sourceURL.indexOf('->') !== -1) {
             sourceURL = sourceURL.split('->')[1].trim();
         }
         if (sourceURL === testFile) {
-            return { sourceURL: sourceURL, line: m[3]};
+            return { sourceURL: sourceURL, line: m[4], column: m[5]};
         }
     }
     return null;
