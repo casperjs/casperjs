@@ -11,7 +11,6 @@ TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
 CASPER_EXEC_FILE = sys.argv[1] if (len(sys.argv) == 2) else 'casperjs'
 CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', CASPER_EXEC_FILE)
-ENGINE_NAME = os.path.basename(os.environ.get('CASPERJS_ENGINE', 'phantomjs'))
 ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
                              os.environ.get('PHANTOMJS_EXECUTABLE',
                                             "phantomjs"))
@@ -20,9 +19,22 @@ ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
 if not os.path.isabs(ENGINE_EXEC):
     os.environ['ENGINE_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, ENGINE_EXEC)
 
+def getEngineVersion(engine_exec):
+    cmd_args = [engine_exec, '--version']
+    version = subprocess.check_output(cmd_args).strip()
+    parts = version.split('.', 3)
+    return {'MAJOR': parts[0], 'MINOR': parts[1], 'PATCH': parts[2]}
+
+ENGINE = {
+    'NAME': os.path.basename(os.environ.get('CASPERJS_ENGINE', 'phantomjs')),
+    'VERSION': getEngineVersion(ENGINE_EXEC)
+}
+
+print("ENGINE %s" % ENGINE)
+
 # FIXME: slimerjs is not yet ready to be used as CLI because it is not
 # possible to pass arguments to the main script with slimerjs
-if 'slimerjs' == ENGINE_NAME:
+if 'slimerjs' == ENGINE['NAME']:
     sys.exit(0)
 
 class TimeoutException(Exception):
@@ -98,6 +110,8 @@ class RequireScriptFullPathTest(CasperExecTestBase):
 
     @timeout(20)
     def test_require_coffee(self):
+        if ('phantomjs' == ENGINE['NAME'] and 1 < ENGINE['VERSION']['MAJOR']):
+            return
         script_path = os.path.join(TEST_ROOT, 'modules', 'test_coffee.js')
         self.assertCommandOutputEquals(script_path, '42')
 
@@ -146,6 +160,8 @@ class RequireWithOnlyScriptNameTest(CasperExecTestBase):
 
     @timeout(20)
     def test_require_coffee(self):
+        if ('phantomjs' == ENGINE['NAME'] and 1 < ENGINE['VERSION']['MAJOR']):
+            return
         self.assertCommandOutputEquals('test_coffee.js', '42')
 
     @timeout(20)
@@ -186,6 +202,8 @@ class RequireWithRelativeScriptPathTest(CasperExecTestBase):
 
     @timeout(20)
     def test_require_coffee(self):
+        if ('phantomjs' == ENGINE['NAME'] and 1 < ENGINE['VERSION']['MAJOR']):
+            return
         self.assertCommandOutputEquals('./test_coffee.js', '42')
 
     @timeout(20)
