@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+from os.path import normpath
 import sys
 
 def resolve(path):
@@ -41,7 +42,8 @@ SUPPORTED_ENGINES = {
             'w',
         ],
         'env_varname': 'PHANTOMJS_EXECUTABLE',
-        'default_exec' : 'phantomjs'
+        'default_exec_candidates' : ['../node_modules/phantomjs/bin/phantomjs', '../../.bin/phantomjs'],
+        'default_exec_fallback' : 'phantomjs'
     },
     'slimerjs': {
         'native_args': [
@@ -79,7 +81,7 @@ SUPPORTED_ENGINES = {
             'w',
         ],
         'env_varname': 'SLIMERJS_EXECUTABLE',
-        'default_exec' : 'slimerjs'
+        'default_exec_fallback' : 'slimerjs'
     },
 }
 
@@ -103,9 +105,48 @@ if not ENGINE in SUPPORTED_ENGINES:
     print('Bad engine name. Only phantomjs and slimerjs are supported')
     sys.exit(1)
 
+def which(exe=None):
+    '''
+    Python clone of POSIX's /usr/bin/which
+    '''
+    if exe:
+        (path, name) = os.path.split(exe)
+        if os.access(exe, os.X_OK):
+            return exe
+        for path in os.environ.get('PATH').split(os.pathsep):
+            full_path = os.path.join(path, exe)
+            if os.access(full_path, os.X_OK):
+                return full_path
+    return None
+
+def getEngineExec():
+    '''Returns an engine executable'''
+    engine = SUPPORTED_ENGINES[ENGINE]
+    if 'default_exec_fallback' in engine:
+        fallback = engine['default_exec_fallback']
+    else:
+        fallback = None
+
+    if 'default_exec_candidates' not in engine:
+        return fallback
+
+    for candidate in engine['default_exec_candidates']:
+        # os.path.realpath eliminates symlinks in the path
+        # Since relative_path relies on the real path to the current source directory
+        # os.path.realpath is essential.
+        source_path = os.path.realpath(__file__)
+        source_dir = os.path.dirname(source_path)
+        relative_path = normpath(os.path.join(source_dir, candidate))
+        if os.access(relative_path, os.X_OK):
+            return relative_path
+        elif which(candidate) != None:
+            return candidate
+
+    return fallback
+
 ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
 ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'],
-                                   SUPPORTED_ENGINES[ENGINE]['default_exec'])
+                                   getEngineExec())
 
 def extract_arg_name(arg):
     "parse out any option name"
