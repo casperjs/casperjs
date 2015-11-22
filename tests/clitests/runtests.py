@@ -10,8 +10,7 @@ import unittest
 import sys
 from threading  import Thread
 
-BASE_TIMEOUT = 2
-ON_POSIX = 'posix' in sys.builtin_module_names
+BASE_TIMEOUT = 10
 TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
 CASPER_EXEC_FILE = sys.argv[1] if (len(sys.argv) == 2) else 'casperjs'
@@ -52,7 +51,6 @@ class Timeout(Exception):
         self.timeout = timeout
         self.output = output
         self.err = err
-        print("TIMEOUT OUTPUT %s" % (self.output))
 
     def __str__(self):
         return "Command '%s' timed out after %d second(s)." % \
@@ -83,7 +81,7 @@ class Command(object):
         self.command = command
 
     def __str__(self):
-        return "'%s'" % (self.command)
+        return "'%s'" % (' '.join(self.command))
 
     def run(self, timeout=None, **kwargs):
         def target(**kwargs):
@@ -133,8 +131,10 @@ class CasperExecTestBase(unittest.TestCase):
             raise IOError('Command %s exited: %s \n %s'
                           % (cmd, err.retcode, err.output.decode('utf-8')))
         except Timeout as err:
-            raise IOError('Command %s timed out after %d seconds:\n %s'
-                          % (cmd, err.timeout, err.output.decode('utf-8')))
+            raise IOError('Command %s timed out after %d seconds:\n%s\n%s'
+                          % (cmd, err.timeout, err.output.decode('utf-8'),
+                          err.err.decode('utf-8')
+                          ))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
         self.assertEqual(self.runCommand(cmd), result)
