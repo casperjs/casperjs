@@ -1979,13 +1979,14 @@ TestCaseResult.prototype.addSkip = function addSkip(skipped, time) {
 
 
 /**
- * Adds a warning record.
+ * Adds a warning message.
+ * NOTE: quite contrary to addError, addSuccess, and addSkip
+ * this adds a String value, NOT an Object
  *
- * @param Object  warning
+ * @param String  warning
  */
 TestCaseResult.prototype.addWarning = function addWarning(warning) {
     "use strict";
-    warning.suite = this.name;
     this.warnings.push(warning);
 };
 
