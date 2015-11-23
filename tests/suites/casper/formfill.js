@@ -11,7 +11,7 @@ function testFormValues(test) {
     test.assertField('topic', 'bar',
         'can pick a value from a select form field');
     test.assertField('multitopic', ['bar', 'car'],
-            'can pick a set of values from a multiselect form field');
+        'can pick a set of values from a multiselect form field');
     test.assertField('check', true,
         'can check a form checkbox');
     test.assertEvalEquals(function() {
@@ -28,14 +28,16 @@ function testFormValues(test) {
 }
 
 function testUrl(test) {
-    test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
-    test.assertUrlMatch(/password=chuck/, 'input[type=password] field was submitted');
-    test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
-    test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
-    test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
-    test.assertUrlMatch(/topic=bar/, 'select field was submitted');
-    test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
-    test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
+    casper.waitForUrl(/(^\?|&)submit=submit($|&)/, function() {
+        test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
+        test.assertUrlMatch(/password=chuck/, 'input[type=password] field was submitted');
+        test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
+        test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
+        test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
+        test.assertUrlMatch(/topic=bar/, 'select field was submitted');
+        test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
+        test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
+    });
 }
 
 /**
