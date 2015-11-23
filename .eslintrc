@@ -17,7 +17,7 @@
     "no-undef": 2,
 
     "block-scoped-var": 0,
-    "brace-style": [1, "stroustrup"],
+    "brace-style": [1, "1tbs"],
     "camelcase": 0,
     "comma-spacing": [1, {"before": false, "after": true}],
     "comma-style": [1, "last"],
