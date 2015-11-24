@@ -8,6 +8,7 @@ import time
 import subprocess
 import unittest
 import sys
+import re
 from threading  import Thread
 
 BASE_TIMEOUT = 10
@@ -23,22 +24,37 @@ ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
 if not os.path.isabs(ENGINE_EXEC):
     os.environ['ENGINE_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, ENGINE_EXEC)
 
-def getEngineVersion(engine_exec):
+def getEngine(engine_exec):
+    rawname = os.environ.get('CASPERJS_ENGINE', engine_exec)
+    rawname = os.path.basename(rawname)
+    name = re.match('^[a-zA-Z]*', rawname)
+    if None == name:
+        print("Could not get engine name from %s\n" % (rawname))
+        sys.exit(1)
+    name = name.group(0).lower()
     cmd_args = [engine_exec, '--version']
     version = subprocess.check_output(cmd_args).strip()
-    parts = version.split('.', 3)
-    return {'MAJOR': parts[0], 'MINOR': parts[1], 'PATCH': parts[2]}
+    parts = re.match('^[^0-9]*([0-9]+)\.([0-9]+)\.([^\s])', version)
+    if None == parts:
+        print("Could not get engine version from %s\n" % (version))
+        sys.exit(1)
+    return {
+        'NAME': name,
+        'VERSION': {
+            'MAJOR': parts.group(1),
+            'MINOR': parts.group(2),
+            'PATCH': parts.group(3)
+        }
+    }
 
-ENGINE = {
-    'NAME': os.path.basename(os.environ.get('CASPERJS_ENGINE', 'phantomjs')),
-    'VERSION': getEngineVersion(ENGINE_EXEC)
-}
+ENGINE = getEngine(ENGINE_EXEC)
 
 print("ENGINE %s" % ENGINE)
 
 # FIXME: slimerjs is not yet ready to be used as CLI because it is not
 # possible to pass arguments to the main script with slimerjs
 if 'slimerjs' == ENGINE['NAME']:
+    print("Skip cli tests for slimerjs")
     sys.exit(0)
 
 # timeout handling as per https://gist.github.com/kirpit/1306188
