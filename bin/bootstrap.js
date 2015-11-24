@@ -39,14 +39,7 @@ if ('process' in this && this.process.title === "node") {
 // phantom check
 if (!('phantom' in this)) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
-} else if (phantom.version.major === 2) {
-    // setting other phantom.args if using phantomjs 2.x
-    var system = require('system');
-    var argsdeprecated = system.args;
-    argsdeprecated.shift();
-    phantom.args = argsdeprecated;
 }
-
 
 // Common polyfills
 if (typeof Function.prototype.bind !== "function") {
@@ -176,7 +169,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     // CasperJS root path
     if (!phantom.casperPath) {
         try {
-            phantom.casperPath = phantom.args.map(function _map(arg) {
+            phantom.casperPath = phantomArgs.map(function _map(arg) {
                 var match = arg.match(/^--casper-path=(.*)/);
                 if (match) {
                     return fs.absolute(match[1]);
