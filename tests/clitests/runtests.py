@@ -49,8 +49,6 @@ def getEngine(engine_exec):
 
 ENGINE = getEngine(ENGINE_EXEC)
 
-print("ENGINE %s" % ENGINE)
-
 # FIXME: slimerjs is not yet ready to be used as CLI because it is not
 # possible to pass arguments to the main script with slimerjs
 if 'slimerjs' == ENGINE['NAME']:
