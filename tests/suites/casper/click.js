@@ -21,12 +21,13 @@ casper.test.begin('onclick variants tests', 8, function(test) {
         test.assert(this.click('#test3'), 'Casper.click() can click an `onclick=".*; return false"` link');
         test.assert(this.click('#test4'), 'Casper.click() can click an unobstrusive js handled link');
         var results = this.getGlobal('results');
-        if (phantom.casperEngine === 'slimerjs') {
-            // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
-            test.skip(1, 'Casper.click() on javascript: skipped for slimer engine');
-        }
-        else
+        // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
+        if (!test.skipIfEngine(1, {
+          name: 'slimerjs',
+          message: 'Casper.click() on javascript'
+        })) {
             test.assert(results.test1, 'Casper.click() has clicked an `href="javascript:` link');
+        }
         test.assert(results.test2, 'Casper.click() has clicked an `href="#"` link');
         test.assert(results.test3, 'Casper.click() has clicked an `onclick=".*; return false"` link');
         test.assert(results.test4, 'Casper.click() has clicked an unobstrusive js handled link');
@@ -50,13 +51,14 @@ casper.test.begin('clickLabel tests tests', 12, function(test) {
         test.assert(this.clickLabel("Label with single 'quotes'"),
             'Casper.clickLabel() can click the link with the single quotes in the label');
         var results = this.getGlobal('results');
-        if (phantom.casperEngine === 'slimerjs') {
-            // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
-            test.skip(1, 'Casper.click() on javascript: skipped for slimer engine');
-        }
-        else
+        // "javascript:" link in Gecko are executed asynchronously, so we don't have result at this time
+        if (!test.skipIfEngine(1, {
+          name: 'slimerjs',
+          message: 'Casper.click() on javascript'
+        })) {
             test.assert(results.test1,
                 'Casper.clickLabel() has clicked an `href="javascript:` link');
+        }
         test.assert(results.test2,
             'Casper.clickLabel() has clicked an `href="#"` link');
         test.assert(results.test3,
