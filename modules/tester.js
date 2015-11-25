@@ -286,6 +286,55 @@ Tester.prototype.skip = function skip(nb, message) {
 };
 
 /**
+ * Skip `nb` test on specific engine(s).
+ *
+ * A skip specifier is an object of the form:
+ * {
+ *     name: 'casperjs' | 'phantomjs',
+ *     version: {
+ *         min:   Object,
+ *         max:   Object
+ *     },
+ *     message: String
+ * }
+ *
+ * Minimal and maximal versions to be skipped are determined using
+ * utils.matchEngine.
+ *
+ * @param  Integer  nb        Number of tests to skip
+ * @param  Mixed    skipSpec  a single skip specifier object or
+ *                            an Array of skip specifier objects
+ * @return Object
+ */
+Tester.prototype.skipIfEngine = function skipIfEngine(nb, skipSpec) {
+    skipSpec = utils.matchEngine(skipSpec);
+    if (skipSpec) {
+        var message = skipSpec.name;
+        var version = skipSpec.version;
+        var skipMessage = skipSpec.message;
+        if (version) {
+            var min = version.min;
+            var max = version.max;
+            if (min && min === max) {
+                message += ' ' + min;
+            } else {
+                if (min) {
+                    message += ' from ' + min;
+                }
+                if (max) {
+                    message += ' to ' + max;
+                }
+            }
+        }
+        if (skipMessage) {
+            message += ' ' + skipMessage;
+        }
+        return this.skip(nb, message);
+    }
+    return false;
+};
+
+/**
  * Asserts that a condition strictly resolves to true. Also returns an
  * "assertion object" containing useful informations about the test case
  * results.
