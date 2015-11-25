@@ -24,20 +24,25 @@ ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
 if not os.path.isabs(ENGINE_EXEC):
     os.environ['ENGINE_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, ENGINE_EXEC)
 
+def exit(message, status):
+    print(message)
+    sys.exit(status)
+
+def die(message):
+    exit(message, 1)
+
 def getEngine(engine_exec):
     rawname = os.environ.get('CASPERJS_ENGINE', engine_exec)
     rawname = os.path.basename(rawname)
     name = re.match('^[a-zA-Z]*', rawname)
     if None == name:
-        print("Could not get engine name from %s\n" % (rawname))
-        sys.exit(1)
+        die("Could not get engine name from %s\n" % (rawname))
     name = name.group(0).lower()
     cmd_args = [engine_exec, '--version']
     version = subprocess.check_output(cmd_args).strip()
     parts = re.match('^[^0-9]*([0-9]+)\.([0-9]+)\.([^\s])', version)
     if None == parts:
-        print("Could not get engine version from %s\n" % (version))
-        sys.exit(1)
+        die("Could not get engine version from %s\n" % (version))
     return {
         'NAME': name,
         'VERSION': {
@@ -52,8 +57,7 @@ ENGINE = getEngine(ENGINE_EXEC)
 # FIXME: slimerjs is not yet ready to be used as CLI because it is not
 # possible to pass arguments to the main script with slimerjs
 if 'slimerjs' == ENGINE['NAME']:
-    print("Skip cli tests for slimerjs")
-    sys.exit(0)
+    exit("Skip cli tests for slimerjs", 0)
 
 # timeout handling as per https://gist.github.com/kirpit/1306188
 # Based on jcollado's solution:
