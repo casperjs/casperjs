@@ -7,6 +7,16 @@ var server = require('webserver').create();
 var service;
 var testServerPort = 54321;
 
+var contentTypes = {
+    html: {type: 'text/html', binMode: false},
+    js: {type: 'application/javascript', binMode: false},
+    json: {type: 'application/json', binMode: false},
+    txt: {type: 'text/plain', binMode: false},
+    png: {type: 'image/png', binMode: true},
+    _default: {type: 'application/octet-stream', binMode: true}
+};
+var extensionRE = /\.([a-zA-Z]*)$/;
+
 function info(message) {
     "use strict";
     console.log(colorizer.colorize('INFO', 'INFO_BAR') + ' ' + message);
@@ -27,28 +37,18 @@ service = server.listen(testServerPort, function(request, response) {
         response.write("404 - NOT FOUND");
     } else {
         var headers = {};
-        var binMode = false;
-        if (/html$/.test(pageFile)) {
-            headers['Content-Type'] = "text/html";
-        }
-        else if (/js$/.test(pageFile)) {
-            headers['Content-Type'] = "application/javascript";
-        }
-        else if (/json$/.test(pageFile)) {
-            headers['Content-Type'] = "application/json";
-        }
-        else if (/txt$/.test(pageFile)) {
-            headers['Content-Type'] = "text/plain";
-        }
-        else if (/png$/.test(pageFile)) {
-            headers['Content-Type'] = "image/png";
-            binMode = true;
-        }
-        else {
-            headers['Content-Type'] = "application/octet-stream";
-            binMode = true;
-        }
+        var binMode;
+
+        var extension = extensionRE.exec(pageFile);
+        extension = extension && extension[1];
+        var contentType = contentTypes[extension] ||
+                          contentTypes._default;
+
+        headers['Content-Type'] = contentType.type;
+        binMode = contentType.binMode;
+
         response.writeHead(200, headers);
+
         if (binMode) {
             response.write(fs.read(pageFile, 'b'));
         }
