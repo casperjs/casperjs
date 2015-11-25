@@ -15,6 +15,7 @@ casper.test.begin("Casper.getPageContent() text/html content", 1, function(test)
 casper.test.begin("Casper.getPageContent() non text/html content", 2, function(test) {
     // NOTE due to a bug in slimerjs we can only use text/* and
     // application/json content here
+    // https://github.com/laurentj/slimerjs/issues/405
     casper.start("tests/site/dummy.json");
     casper.waitForUrl("tests/site/dummy.json", function() {
         test.assertEquals(this.getPageContent(), '{"dummy":"json"}\n',
