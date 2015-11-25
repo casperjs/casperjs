@@ -17,7 +17,7 @@ Prerequisites
 
 .. versionadded:: 1.1
 
-- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit (just add `--engine=slimerjs` to your command line options). To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_.
+- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit (just add `--engine=slimerjs` to your command line options). To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_. Note that it is known that coffescript support breaks as of SlimerJS_ 0.9.6; we are investigating that issue.
 
 .. index:: Homebrew
 
