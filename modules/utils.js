@@ -809,6 +809,21 @@ function unique(array) {
 exports.unique = unique;
 
 /**
+ * Convert a version object to a string.
+ *
+ * @param  Mixed version  a version string or object
+ */
+function versionToString(version) {
+    if (isObject(version)) {
+        try {
+            return [version.major, version.minor, version.patch].join('.');
+        } catch (e) {}
+    }
+    return version;
+}
+exports.versionToString = versionToString;
+
+/**
  * Compare two version numbers represented as strings.
  *
  * @param  String  a  Version a
@@ -818,14 +833,6 @@ exports.unique = unique;
 function cmpVersion(a, b) {
     "use strict";
     var i, cmp, len, re = /(\.0)+[^\.]*$/;
-    function versionToString(version) {
-        if (isObject(version)) {
-            try {
-                return [version.major, version.minor, version.patch].join('.');
-            } catch (e) {}
-        }
-        return version;
-    }
     a = versionToString(a);
     b = versionToString(b);
     a = (a + '').replace(re, '').split('.');
@@ -866,3 +873,55 @@ function ltVersion(a, b) {
     return cmpVersion(a, b) < 0;
 }
 exports.ltVersion = ltVersion;
+
+/**
+ * Checks if the engine matches a specifier.
+ *
+ * A match specifier is an object of the form:
+ * {
+ *     name: 'casperjs' | 'phantomjs',
+ *     version: {
+ *         min:   Object,
+ *         max:   Object
+ *     },
+ *     message: String
+ * }
+ *
+ * Minimal and maximal versions to be matched are determined using
+ * utils.cmpVersion.
+ *
+ * @param  Mixed    matchSpec  a single match specifier object or
+ *                             an Array of match specifier objects
+ * @return Boolean
+ */
+function matchEngine(matchSpec) {
+    if (Array !== matchSpec.constructor) {
+        matchSpec = [matchSpec];
+    }
+    var idx;
+    var len = matchSpec.length;
+
+    var engineName = phantom.casperEngine;
+    var engineVersion = phantom.version;
+
+    for (idx = 0; idx < len; ++idx) {
+        var match = matchSpec[idx];
+        var version = match.version;
+        var min = version && version.min;
+        var max = version && version.max;
+        if ('*' === min) {
+            min = null;
+        }
+        if ('*' === max) {
+            max = null;
+        }
+        if (match.name === engineName &&
+            (!min || gteVersion(engineVersion, min)) &&
+            (!max || !ltVersion(max, engineVersion))
+        ) {
+            return match;
+        }
+    }
+    return false;
+}
+exports.matchEngine = matchEngine;
