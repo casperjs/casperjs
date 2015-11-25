@@ -1,5 +1,5 @@
 # CasperJS
-
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/n1k0/casperjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 >**Important note:** the `master` branch hosts the development version of CasperJS, which is now pretty stable and should be the right version to use if you ask me.
 >
 >Use the [`1.0` branch](https://github.com/n1k0/casperjs/tree/1.0) if you want to keep in sync with the stable old version, or [use tagged versions](https://github.com/n1k0/casperjs/tags).
