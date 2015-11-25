@@ -75,7 +75,7 @@ class TimeoutException(Exception):
                (self.cmd, self.timeout)
 
 
-class Retcode(Exception):
+class RetcodeException(Exception):
     def __init__(self, cmd, retcode, output=None, err=None):
         self.cmd = cmd
         self.retcode = retcode
@@ -124,7 +124,7 @@ class Command(object):
             thread.join(0)
             raise TimeoutException(self.command, timeout, self.output, self.error)
         if self.status:
-            raise Retcode(self.command, self.status, self.output, self.error)
+            raise RetcodeException(self.command, self.status, self.output, self.error)
         return self.output, self.error
 
 
@@ -143,7 +143,7 @@ class CasperExecTestBase(unittest.TestCase):
             return out.strip().decode('utf-8')
             if failing:
                 raise AssertionError('Command %s has not failed' % cmd)
-        except Retcode as err:
+        except RetcodeException as err:
             if failing:
                 return err.output.decode('utf-8')
             raise IOError('Command %s exited: %s \n %s'
