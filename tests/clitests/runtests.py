@@ -63,7 +63,7 @@ if 'slimerjs' == ENGINE['NAME']:
 # Based on jcollado's solution:
 # http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
 # using ideas from https://gist.github.com/wkettler/9235609
-class Timeout(Exception):
+class TimeoutException(Exception):
     def __init__(self, cmd, timeout, output=None, err=None):
         self.cmd = cmd
         self.timeout = timeout
@@ -122,7 +122,7 @@ class Command(object):
         if thread.is_alive():
             self.process.terminate()
             thread.join(0)
-            raise Timeout(self.command, timeout, self.output, self.error)
+            raise TimeoutException(self.command, timeout, self.output, self.error)
         if self.status:
             raise Retcode(self.command, self.status, self.output, self.error)
         return self.output, self.error
@@ -148,7 +148,7 @@ class CasperExecTestBase(unittest.TestCase):
                 return err.output.decode('utf-8')
             raise IOError('Command %s exited: %s \n %s'
                           % (cmd, err.retcode, err.output.decode('utf-8')))
-        except Timeout as err:
+        except TimeoutException as err:
             raise IOError('Command %s timed out after %d seconds:\n%s\n%s'
                           % (cmd, err.timeout, err.output.decode('utf-8'),
                           err.err.decode('utf-8')
