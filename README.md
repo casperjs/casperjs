@@ -72,7 +72,7 @@ Run the script:
 
 Try to find someone to address your specific problem and [post a reward at bountysource](https://www.bountysource.com).
 
-If need to have a known issue resolved and don't have the time or skills to do it on your own, you could [post a reward for any open issue directly](https://www.bountysource.com/teams/casperjs/issues).
+If you need to have a known issue resolved and don't have the time or skills to do it on your own, you could [post a reward for any open issue directly](https://www.bountysource.com/teams/casperjs/issues).
 
 ## Contributing
 
