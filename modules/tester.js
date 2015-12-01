@@ -286,6 +286,55 @@ Tester.prototype.skip = function skip(nb, message) {
 };
 
 /**
+ * Skip `nb` test on specific engine(s).
+ *
+ * A skip specifier is an object of the form:
+ * {
+ *     name: 'casperjs' | 'phantomjs',
+ *     version: {
+ *         min:   Object,
+ *         max:   Object
+ *     },
+ *     message: String
+ * }
+ *
+ * Minimal and maximal versions to be skipped are determined using
+ * utils.matchEngine.
+ *
+ * @param  Integer  nb        Number of tests to skip
+ * @param  Mixed    skipSpec  a single skip specifier object or
+ *                            an Array of skip specifier objects
+ * @return Object
+ */
+Tester.prototype.skipIfEngine = function skipIfEngine(nb, skipSpec) {
+    skipSpec = utils.matchEngine(skipSpec);
+    if (skipSpec) {
+        var message = skipSpec.name;
+        var version = skipSpec.version;
+        var skipMessage = skipSpec.message;
+        if (version) {
+            var min = version.min;
+            var max = version.max;
+            if (min && min === max) {
+                message += ' ' + min;
+            } else {
+                if (min) {
+                    message += ' from ' + min;
+                }
+                if (max) {
+                    message += ' to ' + max;
+                }
+            }
+        }
+        if (skipMessage) {
+            message += ' ' + skipMessage;
+        }
+        return this.skip(nb, message);
+    }
+    return false;
+};
+
+/**
  * Asserts that a condition strictly resolves to true. Also returns an
  * "assertion object" containing useful informations about the test case
  * results.
@@ -1337,15 +1386,15 @@ function getStackEntry(error, testFile) {
     if (! ('stack' in error))
         return null;
 
-    var r = /^\s*(.*)@(.*):(\d+)\s*$/gm;
+    var r = /\r?\n\s*(.*?)(at |@)([^:]*?):(\d+):?(\d*)/g;
     var m;
     while ((m = r.exec(error.stack))) {
-        var sourceURL = m[2];
+        var sourceURL = m[3];
         if (sourceURL.indexOf('->') !== -1) {
             sourceURL = sourceURL.split('->')[1].trim();
         }
         if (sourceURL === testFile) {
-            return { sourceURL: sourceURL, line: m[3]};
+            return { sourceURL: sourceURL, line: m[4], column: m[5]};
         }
     }
     return null;
@@ -1956,13 +2005,14 @@ TestCaseResult.prototype.addSkip = function addSkip(skipped, time) {
 
 
 /**
- * Adds a warning record.
+ * Adds a warning message.
+ * NOTE: quite contrary to addError, addSuccess, and addSkip
+ * this adds a String value, NOT an Object
  *
- * @param Object  warning
+ * @param String  warning
  */
 TestCaseResult.prototype.addWarning = function addWarning(warning) {
     "use strict";
-    warning.suite = this.name;
     this.warnings.push(warning);
 };
 

@@ -1,9 +1,11 @@
+#global casper
+
 #eslint strict:0
 
 utils = require "utils"
 
-if utils.ltVersion(phantom.version, '1.9.0')
-  casper.test.skip(6, 'PhantomJS version <1.9.0 does not implement request.abort()')
+if phantom.casperEngine == 'slimerjs'
+  casper.test.skip(6, 'request.abort() test is broken for slimerjs')
   casper.test.done()
 else
   SERVER = 'http://localhost:54321/'

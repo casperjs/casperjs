@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import shlex
 import sys
 
 def resolve(path):
@@ -83,8 +84,8 @@ SUPPORTED_ENGINES = {
     },
 }
 
-ENGINE = 'phantomjs'
-ENGINE_ARGS = []
+ENGINE = os.environ.get('CASPERJS_ENGINE', 'phantomjs')
+ENGINE_ARGS = shlex.split(os.environ.get('ENGINE_FLAGS', ''))
 ENGINE_NATIVE_ARGS = []
 ENGINE_EXECUTABLE = ''
 
@@ -105,7 +106,8 @@ if not ENGINE in SUPPORTED_ENGINES:
 
 ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
 ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'],
-                                   SUPPORTED_ENGINES[ENGINE]['default_exec'])
+                                   os.environ.get('ENGINE_EXECUTABLE',
+                                       SUPPORTED_ENGINES[ENGINE]['default_exec']))
 
 def extract_arg_name(arg):
     "parse out any option name"
@@ -134,6 +136,7 @@ CASPER_COMMAND.extend([
 CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
+    # print(CASPER_COMMAND)
     os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
 except OSError as err:
     print('Fatal: %s; did you install %s?' % (err, ENGINE))

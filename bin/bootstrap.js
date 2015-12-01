@@ -31,24 +31,15 @@
 /*eslint max-statements:0, complexity:0*/
 
 // node check
-if ('process' in this && process.title === "node") {
+if ('process' in this && this.process.title === "node") {
     console.error('CasperJS cannot be executed within a nodejs environment');
-    process.exit(1);
+    this.process.exit(1);
 }
 
 // phantom check
 if (!('phantom' in this)) {
     console.error('CasperJS needs to be executed in a PhantomJS environment http://phantomjs.org/');
-} else {
-    if (phantom.version.major === 2) {
-        //setting other phantom.args if using phantomjs 2.x
-        var system = require('system');
-        var argsdeprecated = system.args;
-        argsdeprecated.shift();
-        phantom.args = argsdeprecated;
-    }
 }
-
 
 // Common polyfills
 if (typeof Function.prototype.bind !== "function") {
@@ -61,13 +52,13 @@ if (typeof Function.prototype.bind !== "function") {
         }
         var aArgs = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
-            fNOP = function() {},
+            NOP = function() {},
             fBound = function() {
-              return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+              return fToBind.apply(this instanceof NOP && oThis ? this : oThis,
                                    aArgs.concat(Array.prototype.slice.call(arguments)));
             };
-        fNOP.prototype = this.prototype;
-        fBound.prototype = new fNOP();
+        NOP.prototype = this.prototype;
+        fBound.prototype = new NOP();
         return fBound;
     };
 }
@@ -82,12 +73,16 @@ var CasperError = function CasperError(msg) {
 CasperError.prototype = Object.getPrototypeOf(new Error());
 
 // casperjs env initialization
-(function(global, phantom){
+(function(global, phantom, system){
     "use strict";
     // phantom args
-    // NOTE: we can't use require('system').args here for some very obscure reason
-    //       do not even attempt at using it as it creates infinite recursion
-    var phantomArgs = phantom.args;
+    var phantomArgs = system.args.slice(1);
+
+    if ("slimer" in global) {
+        phantom.casperEngine = "slimerjs";
+    } else {
+        phantom.casperEngine = "phantomjs";
+    }
 
     if (phantom.casperLoaded) {
         return;
@@ -113,17 +108,20 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     (function (version) {
         // required version check
-        if (version.major === 1) {
-            if (version.minor < 8) {
-                return __die('CasperJS needs at least PhantomJS v1.8 or later.');
+        if (phantom.casperEngine === 'phantomjs') {
+            if (version.major === 1) {
+                if (version.minor < 9) {
+                    return __die('CasperJS needs at least PhantomJS v1.9 or later.');
+                }
+                if (version.minor === 9 && version.patch < 1) {
+                    return __die('CasperJS needs at least PhantomJS v1.9.1 or later.');
+                }
+            } else if (version.major === 2) {
+                // No requirements yet known
+            } else {
+                return __die('CasperJS needs PhantomJS v1.9.x or v2.x');
             }
-            if (version.minor === 8 && version.patch < 1) {
-                return __die('CasperJS needs at least PhantomJS v1.8.1 or later.');
-            }
-        } else if (version.major === 2) {
-            console.log("Warning PhantomJS v2.0 not yet released. There will not be any official support for any bugs until stable version is released!");
         }
-        else return __die('CasperJS needs PhantomJS v1.x or v2.x');
     })(phantom.version);
 
     // Hooks in default phantomjs error handler
@@ -134,7 +132,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             console.error('Hint: you may want to use the `casperjs test` command.');
         }
         // exits on syntax error
-        if (msg.indexOf('SyntaxError: Parse error') === 0) {
+        if (msg.indexOf('SyntaxError: ') === 0) {
             __die();
         }
     };
@@ -171,7 +169,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     // CasperJS root path
     if (!phantom.casperPath) {
         try {
-            phantom.casperPath = phantom.args.map(function _map(arg) {
+            phantom.casperPath = phantomArgs.map(function _map(arg) {
                 var match = arg.match(/^--casper-path=(.*)/);
                 if (match) {
                     return fs.absolute(match[1]);
@@ -188,6 +186,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      * Prints CasperJS help.
      */
     function printHelp() {
+        /* global slimer */
         var engine = phantom.casperEngine === 'slimerjs' ? slimer : phantom;
         var version = [engine.version.major, engine.version.minor, engine.version.patch].join('.');
         return __terminate([
@@ -373,24 +372,23 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         };
     })(phantom.casperPath);
 
-    if ("paths" in global.require) {
-        // declare a dummy patchRequire function
-        global.patchRequire = function(req) {return req;};
-
-        require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
-        require.paths.push(fs.workingDirectory);
-    } else {
+    // phantomjs2 has paths in require, but needs patchRequire anyway
+    if (!("paths" in global.require) ||
+        ('phantomjs' === phantom.casperEngine && 1 < phantom.version.major)
+    ) {
         global.__require = require;
         global.patchRequire = patchRequire; // must be called in every casperjs module as of 1.1
         global.require = patchRequire(global.require);
+    } else {
+        // declare a dummy patchRequire function
+        global.patchRequire = function(req) {return req;};
+        require.paths.push(fs.pathJoin(phantom.casperPath, 'modules'));
+        require.paths.push(fs.workingDirectory);
     }
 
-    if ("slimer" in global) {
+    if (phantom.casperEngine === 'slimerjs') {
         require.globals.patchRequire = global.patchRequire;
         require.globals.CasperError = CasperError;
-        phantom.casperEngine = "slimerjs";
-    } else {
-        phantom.casperEngine = "phantomjs";
     }
 
     // casper cli args
@@ -416,4 +414,4 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
     if (phantom.casperScript && !phantom.injectJs(phantom.casperScript)) {
         return __die('Unable to load script ' + phantom.casperScript + '; check file syntax');
     }
-})(this, phantom);
+})(this, phantom, require('system'));

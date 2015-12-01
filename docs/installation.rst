@@ -12,12 +12,12 @@ Prerequisites
 
 .. index:: PhantomJS, Python, SlimerJS
 
-- PhantomJS_ 1.8.2 or greater, but less than 2.0. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
+- PhantomJS_ 1.9.1 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
 - Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
 
 .. versionadded:: 1.1
 
-- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit (just add `--engine=slimerjs` to your command line options). To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_.
+- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit (just add `--engine=slimerjs` to your command line options). To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_. Note that it is known that coffescript support breaks as of SlimerJS_ 0.9.6; we are investigating that issue.
 
 .. index:: Homebrew
 

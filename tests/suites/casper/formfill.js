@@ -11,7 +11,7 @@ function testFormValues(test) {
     test.assertField('topic', 'bar',
         'can pick a value from a select form field');
     test.assertField('multitopic', ['bar', 'car'],
-            'can pick a set of values from a multiselect form field');
+        'can pick a set of values from a multiselect form field');
     test.assertField('check', true,
         'can check a form checkbox');
     test.assertEvalEquals(function() {
@@ -28,14 +28,31 @@ function testFormValues(test) {
 }
 
 function testUrl(test) {
-    test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
-    test.assertUrlMatch(/password=chuck/, 'input[type=password] field was submitted');
-    test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
-    test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
-    test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
-    test.assertUrlMatch(/topic=bar/, 'select field was submitted');
-    test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
-    test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
+    casper.waitForUrl(/(^\?|&)submit=submit($|&)/, function() {
+        test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
+        test.assertUrlMatch(/password=chuck/, 'input[type=password] field was submitted');
+        test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
+        test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
+        test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
+        test.assertUrlMatch(/topic=bar/, 'select field was submitted');
+        test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
+        test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
+    });
+}
+
+/**
+ * Known regression in 2.0.0, will be fixed in 2.0.1
+ * https://github.com/ariya/phantomjs/issues/12506
+ */
+function skipPhantom200 (test, nb) {
+    return test.skipIfEngine(nb, {
+        name: 'phantomjs',
+        version: {
+            min: '2.0.0',
+            max: '2.0.0'
+        },
+        message: 'form regression 12506'
+    });
 }
 
 casper.test.begin('fill() & fillNames() tests', 18, function(test) {
@@ -55,9 +72,11 @@ casper.test.begin('fill() & fillNames() tests', 18, function(test) {
             strange:       "very"
         });
         testFormValues(test);
-        test.assertEvalEquals(function() {
-            return __utils__.findOne('input[name="file"]').files.length === 1;
-        }, true, 'can select a file to upload');
+        if (!skipPhantom200(test, 1)) {
+            test.assertEvalEquals(function() {
+                return __utils__.findOne('input[name="file"]').files.length === 1;
+            }, true, 'can select a file to upload');
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -85,9 +104,11 @@ casper.test.begin('fillLabels() tests', 18, function(test) {
             Strange:       "very"
         });
         testFormValues(test);
-        test.assertEvalEquals(function() {
-            return __utils__.findOne('input[name="file"]').files.length === 1;
-        }, true, 'can select a file to upload');
+        if (!skipPhantom200(test, 1)) {
+            test.assertEvalEquals(function() {
+                return __utils__.findOne('input[name="file"]').files.length === 1;
+            }, true, 'can select a file to upload');
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -114,9 +135,11 @@ casper.test.begin('fillSelectors() tests', 18, function(test) {
             "input[name='strange']":      "very"
         });
         testFormValues(test);
-        test.assertEvalEquals(function() {
-            return __utils__.findOne('input[name="file"]').files.length === 1;
-        }, true, 'can select a file to upload');
+        if (!skipPhantom200(test, 1)) {
+            test.assertEvalEquals(function() {
+                return __utils__.findOne('input[name="file"]').files.length === 1;
+            }, true, 'can select a file to upload');
+        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -196,7 +219,14 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
     if (phantom.casperEngine === 'phantomjs') {
-        fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
+        if (utils.matchEngine({
+            name: 'phantomjs',
+            version: {min: '2.0.0', max: '2.0.0'}
+        })) {
+            fileValue = '';
+        } else {
+            fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
+        }
     }
 
     casper.start('tests/site/form.html', function() {
@@ -208,7 +238,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
-            multitopic:         ['bar', 'car'],
+            multitopic:    ['bar', 'car'],
             file:          fpath,
             'checklist[]': ['1', '3'],
             strange:       "very"

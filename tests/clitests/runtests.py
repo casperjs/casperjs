@@ -2,11 +2,16 @@
 
 import json
 import os
+import select
 import signal
+import time
 import subprocess
 import unittest
 import sys
+import re
+from threading  import Thread
 
+BASE_TIMEOUT = 10
 TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
 CASPER_EXEC_FILE = sys.argv[1] if (len(sys.argv) == 2) else 'casperjs'
@@ -19,27 +24,108 @@ ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
 if not os.path.isabs(ENGINE_EXEC):
     os.environ['ENGINE_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, ENGINE_EXEC)
 
+def exit(message, status):
+    print(message)
+    sys.exit(status)
+
+def die(message):
+    exit(message, 1)
+
+def getEngine(engine_exec):
+    rawname = os.environ.get('CASPERJS_ENGINE', engine_exec)
+    rawname = os.path.basename(rawname)
+    name = re.match('^[a-zA-Z]*', rawname)
+    if None == name:
+        die("Could not get engine name from %s\n" % (rawname))
+    name = name.group(0).lower()
+    cmd_args = [engine_exec, '--version']
+    version = subprocess.check_output(cmd_args).strip()
+    parts = re.match('^[^0-9]*([0-9]+)\.([0-9]+)\.([^\s])', version)
+    if None == parts:
+        die("Could not get engine version from %s\n" % (version))
+    return {
+        'NAME': name,
+        'VERSION': {
+            'MAJOR': parts.group(1),
+            'MINOR': parts.group(2),
+            'PATCH': parts.group(3)
+        }
+    }
+
+ENGINE = getEngine(ENGINE_EXEC)
+
+# FIXME: slimerjs is not yet ready to be used as CLI because it is not
+# possible to pass arguments to the main script with slimerjs
+if 'slimerjs' == ENGINE['NAME']:
+    exit("Skip cli tests for slimerjs", 0)
+
+# timeout handling as per https://gist.github.com/kirpit/1306188
+# Based on jcollado's solution:
+# http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
+# using ideas from https://gist.github.com/wkettler/9235609
 class TimeoutException(Exception):
-    pass
+    def __init__(self, cmd, timeout, output=None, err=None):
+        self.cmd = cmd
+        self.timeout = timeout
+        self.output = output
+        self.err = err
+
+    def __str__(self):
+        return "Command '%s' timed out after %d second(s)." % \
+               (self.cmd, self.timeout)
 
 
-def timeout(timeout_time):
-    def timeout_function(f):
-        def f2(*args):
-            def timeout_handler(signum, frame):
-                raise TimeoutException()
-            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(timeout_time) # triger alarm in timeout_time seconds
+class RetcodeException(Exception):
+    def __init__(self, cmd, retcode, output=None, err=None):
+        self.cmd = cmd
+        self.retcode = retcode
+        self.output = output
+        self.err = err
+
+    def __str__(self):
+        return "Command '%s' returned non-zero exit status %d" % \
+               (self.cmd, self.returncode)
+
+
+class Command(object):
+    command = None
+    process = None
+    status = None
+    output, error = '', ''
+
+    def __init__(self, command):
+        if isinstance(command, basestring):
+            command = shlex.split(command)
+        self.command = command
+
+    def __str__(self):
+        return "'%s'" % (' '.join(self.command))
+
+    def run(self, timeout=None, **kwargs):
+        def target(**kwargs):
             try:
-                retval = f(*args)
-            except TimeoutException:
-                raise AssertionError('timeout of %ds. exhausted' % timeout_time)
-            finally:
-                signal.signal(signal.SIGALRM, old_handler)
-            signal.alarm(0)
-            return retval
-        return f2
-    return timeout_function
+                self.process = subprocess.Popen(self.command, **kwargs)
+                self.output, self.error = self.process.communicate()
+                self.status = self.process.returncode
+            except:
+                self.error = traceback.format_exc()
+                self.status = -1
+        # default stdout and stderr
+        if 'stdout' not in kwargs:
+            kwargs['stdout'] = subprocess.PIPE
+        if 'stderr' not in kwargs:
+            kwargs['stderr'] = subprocess.PIPE
+        # thread
+        thread = Thread(target=target, kwargs=kwargs)
+        thread.start()
+        thread.join(timeout)
+        if thread.is_alive():
+            self.process.terminate()
+            thread.join(0)
+            raise TimeoutException(self.command, timeout, self.output, self.error)
+        if self.status:
+            raise RetcodeException(self.command, self.status, self.output, self.error)
+        return self.output, self.error
 
 
 class CasperExecTestBase(unittest.TestCase):
@@ -49,16 +135,24 @@ class CasperExecTestBase(unittest.TestCase):
 
     def runCommand(self, cmd, **kwargs):
         failing = kwargs.get('failing', False)
+        timeout = kwargs.get('timeout', BASE_TIMEOUT)
         cmd_args = [CASPER_EXEC, '--no-colors'] + cmd.split(' ')
         try:
-            return subprocess.check_output(cmd_args).strip().decode('utf-8')
+            cmd = Command(cmd_args)
+            out, err = cmd.run(timeout, stderr=subprocess.STDOUT)
+            return out.strip().decode('utf-8')
             if failing:
                 raise AssertionError('Command %s has not failed' % cmd)
-        except subprocess.CalledProcessError as err:
+        except RetcodeException as err:
             if failing:
                 return err.output.decode('utf-8')
             raise IOError('Command %s exited: %s \n %s'
-                          % (cmd, err, err.output.decode('utf-8')))
+                          % (cmd, err.retcode, err.output.decode('utf-8')))
+        except TimeoutException as err:
+            raise IOError('Command %s timed out after %d seconds:\n%s\n%s'
+                          % (cmd, err.timeout, err.output.decode('utf-8'),
+                          err.err.decode('utf-8')
+                          ))
 
     def assertCommandOutputEquals(self, cmd, result, **kwargs):
         self.assertEqual(self.runCommand(cmd), result)
@@ -75,44 +169,38 @@ class CasperExecTestBase(unittest.TestCase):
 
 
 class BasicCommandsTest(CasperExecTestBase):
-    @timeout(20)
     def test_version(self):
         self.assertCommandOutputEquals('--version', self.pkg_version)
 
-    @timeout(20)
     def test_help(self):
         self.assertCommandOutputContains('--help', self.pkg_version)
 
 
 class RequireScriptFullPathTest(CasperExecTestBase):
-    @timeout(20)
     def test_simple_require(self):
         script_path = os.path.join(TEST_ROOT, 'modules', 'test.js')
         self.assertCommandOutputEquals(script_path, 'hello, world')
 
-    @timeout(20)
     def test_require_coffee(self):
+        if ('phantomjs' == ENGINE['NAME'] and 1 < ENGINE['VERSION']['MAJOR']):
+            return
         script_path = os.path.join(TEST_ROOT, 'modules', 'test_coffee.js')
         self.assertCommandOutputEquals(script_path, '42')
 
-    @timeout(20)
     def test_node_module_require(self):
         script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_mod.js')
         self.assertCommandOutputEquals(script_path, '42')
 
-    @timeout(20)
     def test_node_module_require_index(self):
         script_path = os.path.join(
             TEST_ROOT, 'modules', 'test_node_mod_index.js')
         self.assertCommandOutputEquals(script_path, '42')
 
-    @timeout(20)
     def test_node_module_require_json_package(self):
         script_path = os.path.join(
             TEST_ROOT, 'modules', 'test_node_mod_json_package.js')
         self.assertCommandOutputEquals(script_path, '42')
 
-    @timeout(20)
     def test_node_module_require_json(self):
         script_path = os.path.join(TEST_ROOT, 'modules', 'test_node_json.js')
         self.assertCommandOutputEquals(script_path, '42')
@@ -129,32 +217,27 @@ class RequireWithOnlyScriptNameTest(CasperExecTestBase):
         os.chdir(self.currentPath)
         super(RequireWithOnlyScriptNameTest, self).tearDown()
 
-    @timeout(20)
     def test_simple_require(self):
         self.assertCommandOutputEquals('test.js', 'hello, world')
 
-    @timeout(20)
     def test_simple_patched_require(self):
         self.assertCommandOutputEquals(
             'test_patched_require.js', 'hello, world')
 
-    @timeout(20)
     def test_require_coffee(self):
+        if ('phantomjs' == ENGINE['NAME'] and 1 < ENGINE['VERSION']['MAJOR']):
+            return
         self.assertCommandOutputEquals('test_coffee.js', '42')
 
-    @timeout(20)
     def test_node_module_require(self):
         self.assertCommandOutputEquals('test_node_mod.js', '42')
 
-    @timeout(20)
     def test_node_module_require_index(self):
         self.assertCommandOutputEquals('test_node_mod_index.js', '42')
 
-    @timeout(20)
     def test_node_module_require_json_package(self):
         self.assertCommandOutputEquals('test_node_mod_json_package.js', '42')
 
-    @timeout(20)
     def test_node_module_require_json(self):
         self.assertCommandOutputEquals('test_node_json.js', '42')
 
@@ -169,65 +252,59 @@ class RequireWithRelativeScriptPathTest(CasperExecTestBase):
         os.chdir(self.currentPath)
         super(RequireWithRelativeScriptPathTest, self).tearDown()
 
-    @timeout(20)
     def test_simple_require(self):
         self.assertCommandOutputEquals('./test.js', 'hello, world')
 
-    @timeout(20)
     def test_simple_patched_require(self):
         self.assertCommandOutputEquals(
             'test_patched_require.js', 'hello, world')
 
-    @timeout(20)
     def test_require_coffee(self):
+        if ('phantomjs' == ENGINE['NAME'] and 1 < ENGINE['VERSION']['MAJOR']):
+            return
         self.assertCommandOutputEquals('./test_coffee.js', '42')
 
-    @timeout(20)
     def test_node_module_require(self):
         self.assertCommandOutputEquals('./test_node_mod.js', '42')
 
-    @timeout(20)
     def test_node_module_require_index(self):
         self.assertCommandOutputEquals('./test_node_mod_index.js', '42')
 
-    @timeout(20)
     def test_node_module_require_json_package(self):
         self.assertCommandOutputEquals('./test_node_mod_json_package.js', '42')
 
-    @timeout(20)
     def test_node_module_require_json(self):
         self.assertCommandOutputEquals('./test_node_json.js', '42')
 
-    @timeout(20)
     def test_node_module_require_subdir(self):
         self.assertCommandOutputEquals('./test_node_subdir/test_node_mod.js', '42')
 
 
 class ScriptOutputTest(CasperExecTestBase):
-    @timeout(20)
     def test_simple_script(self):
         script_path = os.path.join(TEST_ROOT, 'scripts', 'script.js')
         self.assertCommandOutputEquals(script_path, 'it works')
 
 
 class ScriptErrorTest(CasperExecTestBase):
-    @timeout(20)
     def test_syntax_error(self):
+        # phantomjs and slimerjs 'SyntaxError: Parse error'
+        # phantomjs2 message is 'SyntaxError: Unexpected token \'!\''
         script_path = os.path.join(TEST_ROOT, 'error', 'syntax.js')
         self.assertCommandOutputContains(script_path, [
-            'SyntaxError: Parse error',
+            'SyntaxError: ',
         ], failing=True)
 
-    @timeout(20)
     def test_syntax_error_in_test(self):
+        # phantomjs and slimerjs message is 'SyntaxError: Parse error'
+        # phantomjs2 message is 'SyntaxError: Unexpected token \'!\''
         script_path = os.path.join(TEST_ROOT, 'error', 'syntax.js')
         self.assertCommandOutputContains('test %s' % script_path, [
-            'SyntaxError: Parse error',
+            'SyntaxError: ',
         ], failing=True)
 
 
 class TestCommandOutputTest(CasperExecTestBase):
-    @timeout(20)
     def test_simple_test_script(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'mytest.js')
         self.assertCommandOutputContains('test ' + script_path, [
@@ -242,7 +319,6 @@ class TestCommandOutputTest(CasperExecTestBase):
             '0 skipped',
         ])
 
-    @timeout(20)
     def test_new_style_test(self):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
@@ -257,7 +333,6 @@ class TestCommandOutputTest(CasperExecTestBase):
             '0 skipped',
         ])
 
-    @timeout(20)
     def test_new_failing_test(self):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'failing.js')
@@ -276,7 +351,6 @@ class TestCommandOutputTest(CasperExecTestBase):
             '0 skipped',
         ], failing=True)
 
-    @timeout(20)
     def test_step_throwing_test(self):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'step_throws.js')
@@ -294,7 +368,6 @@ class TestCommandOutputTest(CasperExecTestBase):
             '0 skipped',
         ], failing=True)
 
-    @timeout(20)
     def test_waitFor_timeout(self):
         # using begin()
         script_path = os.path.join(TEST_ROOT, 'tester', 'waitFor_timeout.js')
@@ -309,14 +382,12 @@ class TestCommandOutputTest(CasperExecTestBase):
             'did not evaluate to something truthy in'
         ], failing=True)
 
-    @timeout(20)
     def test_casper_test_instance_overriding(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'casper-instance-override.js')
         self.assertCommandOutputContains('test ' + script_path, [
             "Fatal: you can't override the preconfigured casper instance",
         ], failing=True)
 
-    @timeout(20)
     def test_dubious_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'dubious.js')
         self.assertCommandOutputContains('test ' + script_path, [
@@ -329,7 +400,6 @@ class TestCommandOutputTest(CasperExecTestBase):
             '0 skipped',
         ], failing=True)
 
-    @timeout(20)
     def test_exit_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'exit.js')
         self.assertCommandOutputContains('test ' + script_path, [
@@ -344,7 +414,6 @@ class TestCommandOutputTest(CasperExecTestBase):
             'exited'
         ])
 
-    @timeout(20)
     def test_skipped_test(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'skipped.js')
         self.assertCommandOutputContains('test ' + script_path, [
@@ -357,7 +426,6 @@ class TestCommandOutputTest(CasperExecTestBase):
             '1 skipped',
         ])
 
-    @timeout(60)
     def test_full_suite(self):
         folder_path = os.path.join(TEST_ROOT, 'tester')
         failing_script = os.path.join(folder_path, 'failing.js')
@@ -387,9 +455,8 @@ class TestCommandOutputTest(CasperExecTestBase):
             '0 skipped',
             'Details for the 1 failed test:',
             'assert: Subject is strictly true',
-        ], failing=True)
+        ], failing=True, timeout=3 * BASE_TIMEOUT)
 
-    @timeout(60)
     def test_fail_fast(self):
         folder_path = os.path.join(TEST_ROOT, 'fail-fast', 'standard')
         self.assertCommandOutputContains('test %s --fail-fast' % folder_path, [
@@ -402,9 +469,8 @@ class TestCommandOutputTest(CasperExecTestBase):
             '1 failed',
             '0 dubious',
             '0 skipped',
-        ], failing=True)
+        ], failing=True, timeout=3 * BASE_TIMEOUT)
 
-    @timeout(60)
     def test_manual_abort(self):
         folder_path = os.path.join(TEST_ROOT, 'fail-fast', 'manual-abort')
         self.assertCommandOutputContains('test %s --fail-fast' % folder_path, [
@@ -412,7 +478,7 @@ class TestCommandOutputTest(CasperExecTestBase):
             'PASS test 1',
             'PASS test 5',
             'this is my abort message',
-        ], failing=True)
+        ], failing=True, timeout=3 * BASE_TIMEOUT)
 
 
 class XUnitReportTest(CasperExecTestBase):
