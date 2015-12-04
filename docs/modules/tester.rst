@@ -920,7 +920,7 @@ Skips a given number of planned tests::
 
 **Signature:** ``tearDown([Function fn])``
 
-Defines a function which will be executed before after every test defined using `begin()`_::
+Defines a function which will be executed after every test defined using `begin()`_::
 
     casper.test.tearDown(function() {
         casper.echo('See ya');
