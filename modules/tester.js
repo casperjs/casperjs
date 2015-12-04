@@ -214,11 +214,11 @@ var Tester = function Tester(casper, options) {
 
     // specific timeout callbacks
     this.casper.options.onStepTimeout = function test_onStepTimeout(timeout, step) {
-        throw new TimedOutError(f("Step timeout occured at step %s (%dms)", step, timeout));
+        errorHandlerAndDone(new TimedOutError(f("Step timeout occured at step %s (%dms)", step, timeout)));
     };
 
     this.casper.options.onTimeout = function test_onTimeout(timeout) {
-        throw new TimedOutError(f("Timeout occured (%dms)", timeout));
+        errorHandlerAndDone(new TimedOutError(f("Timeout occured (%dms)", timeout)));
     };
 
     this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout, details) {
@@ -1211,6 +1211,13 @@ Tester.prototype.done = function done() {
             this.executed = 0;
         }
         this.emit('test.done');
+
+        // Reset all the state that blocks the next step from running
+        this.casper.pendingWait = false;
+        this.casper.loadInProgress = false;
+        this.casper.navigationRequested = false;
+        this.casper.browserInitializing = false;
+
         this.casper.currentHTTPResponse = {};
         this.running = this.started = false;
         var nextTest = this.queue.shift();
