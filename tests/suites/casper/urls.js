@@ -1,12 +1,21 @@
 /*eslint strict:0*/
 
-casper.test.begin('urls tests', 6, function(test) {
+casper.test.begin('urls tests', 9, function(test) {
     var assertURL = function(match, message) {
         test.assertHttpStatus(200);
         test.assertUrlMatches(match, message);
     };
 
-    casper.start('tests/site/urls.html', function() {
+    casper.start('tests/site/urls.html#fragment');
+
+    casper.waitForUrl(/urls.html/, function() {
+        assertURL('urls.html', 'Casper.start loads URL with fragment');
+        test.assertEqual(casper.evaluate(function() {
+            return location.hash;
+        }), '#fragment', 'location.hash equals fragment');
+    });
+
+    casper.then(function() {
         this.clickLabel('raw unicode', 'a');
     });
 
