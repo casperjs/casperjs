@@ -2116,14 +2116,13 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
                     if (!self.options.silentErrors) {
                         throw error;
                     }
-                } finally {
-                    return;
                 }
-            }
-            self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
-            clearInterval(interval);
-            if (then) {
-                self.then(then);
+            } else {
+                self.log(f("waitFor() finished in %dms.", new Date().getTime() - start), "info");
+                clearInterval(interval);
+                if (then) {
+                    self.then(then);
+                }
             }
         }, this.options.retryTimeout, this);
         this.waiters.push(interval);
