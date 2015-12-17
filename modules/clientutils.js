@@ -825,7 +825,7 @@
 
             if (this.options && this.options.safeLogs && field.getAttribute('type') === "password") {
                 // obfuscate password value
-                logValue = new Array(value.length + 1).join("*");
+                logValue = new Array((''+value).length + 1).join("*");
             }
 
             this.log('Set "' + field.getAttribute('name') + '" field value to ' + logValue, "debug");
