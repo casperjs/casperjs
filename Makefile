@@ -24,7 +24,7 @@ clitest:
 	python tests/clitests/runtests.py
 
 clitest-dotNET:
-	python tests/clitests/runtests.py mono casperjs.exe
+	python tests/clitests/runtests.py casperjs.exe
 
 lint:
 	eslint .
