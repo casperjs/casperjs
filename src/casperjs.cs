@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 
 interface engine {
     string env_varname();
@@ -120,7 +121,7 @@ class casperjs {
         string CASPER_PATH = Path.GetFullPath(Path.Combine(Path.Combine(EXE_FILE, ".."), ".."));
 
         foreach(string arg in args) {
-            if(arg.StartsWith("--engine")) {
+            if(arg.StartsWith("--engine=")) {
                 ENGINE = arg.Substring(9);
                 break;
             }
@@ -136,12 +137,18 @@ class casperjs {
             Environment.Exit(1);
         }
 
+        Regex arg_regex = new Regex("^--([^=]+)(?:=(.*))?$");
+        
         foreach(string arg in args) {
             bool found = false;
-            foreach(string native in ENGINE_NATIVE_ARGS) {
-                if(arg.StartsWith("--" + native)) {
-                    ENGINE_ARGS.Add(arg);
-                    found = true;
+            Match arg_match = arg_regex.Match(arg);
+            if (arg_match.Success) {
+                string arg_name = arg_match.Groups[0].Captures[0].ToString();
+                foreach(string native in ENGINE_NATIVE_ARGS) {
+                    if (arg_name == native) {
+                        ENGINE_ARGS.Add(arg);
+                        found = true;
+                    }
                 }
             }
 
