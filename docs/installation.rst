@@ -60,8 +60,8 @@ You can install CasperJS using `npm <http://npmjs.org/>`_::
 
 .. warning::
 
-   While CasperJS is installable via npm, :ref:`it's not a NodeJS package <faq_node>`, neither it's capable to require native NodeJS modules.
-
+   While CasperJS is installable via npm, :ref:`it's not a NodeJS package <faq_node>`. **You cannot load casper by using require('casperjs') in node.**
+   
 .. index:: git
 
 Installing from git
