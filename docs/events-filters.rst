@@ -321,13 +321,6 @@ Emitted when a new window has been loaded.
 
 Emitted when a new opened window has been closed.
 
-``popup.created``
-~~~~~~~~~~~~~~~~~
-
-**Arguments:** ``WebPage``
-
-Emitted when a new window has been opened.
-
 ``remote.alert``
 ~~~~~~~~~~~~~~~~
 
