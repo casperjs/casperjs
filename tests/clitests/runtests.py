@@ -19,10 +19,12 @@ CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', CASPER_EXEC_FILE)
 ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
                              os.environ.get('PHANTOMJS_EXECUTABLE',
                                             "phantomjs"))
-# make it to an absolute path, because some test change the working directory
-# and relative path to phantomjs would be invalid
-if not os.path.isabs(ENGINE_EXEC):
-    os.environ['ENGINE_EXECUTABLE'] = os.path.join(CASPERJS_ROOT, ENGINE_EXEC)
+# Make absolute path to engine executable because some tests change the working directory
+# and relative path to phantomjs would be invalid.
+# Don't make absolute path if the executable is not an actual file path, such as when
+# the engine is in the current search PATH.
+if os.path.exists(ENGINE_EXEC) and not os.path.isabs(ENGINE_EXEC):
+    os.environ['ENGINE_EXECUTABLE'] = os.path.abspath(ENGINE_EXEC)
 
 def exit(message, status):
     print(message)

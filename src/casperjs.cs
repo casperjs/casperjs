@@ -23,6 +23,7 @@ class phantomjs : engine {
             "config",
             "debug",
             "disk-cache",
+            "disk-cache-path",
             "ignore-ssl-errors",
             "load-images",
             "load-plugins",
