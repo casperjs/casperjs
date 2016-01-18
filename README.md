@@ -64,11 +64,16 @@ Run the script:
 
 ##Support
 
-Need help with getting CasperJS up and running? Got a time-consuming problem you want to get solved quickly?
+**Help request**. If you're stuck using CasperJS and don't understand how to achieve something, please [ask on the mailing-list](https://groups.google.com/forum/#!forum/casperjs) first. If the discussion reveals that you have found a real issue that might need a change within CasperJS, file an issue.
 
-Get <a href="http://codersclan.net/?repo_id=32">CasperJS support on CodersClan.</a>
+**Filing issues**. It takes a lot of time to review, validate, and de-duplicate filed issues. This time could be spent better on actually improving on CasperJS. Filing an issue might be a helpful contribution, but we expect you to read our [CONTRIBUTING.md](https://github.com/n1k0/casperjs/blob/master/CONTRIBUTING.md) guidelines first. 
 
-<a href="http://codersclan.net/?repo_id=32"><img src="http://www.codersclan.net/gs_button/?repo_id=32" width="200"></a>
+**Professional Support**. Need help with getting CasperJS up and running? Got a time-consuming problem you want to get solved quickly?
+
+Try to find someone to address your specific problem and [post a reward at bountysource](https://www.bountysource.com).
+
+If you need to have a known issue resolved and don't have the time or skills to do it on your own, you could [post a reward for any open issue directly](https://www.bountysource.com/teams/casperjs/issues).
+
 ## Contributing
 
 ### Contributing code
