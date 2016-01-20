@@ -40,7 +40,7 @@ From your root casper script::
 
 .. hint::
 
-    Like PhantomJS, CasperJS allows using nodejs modules installed through npm_.
+    CasperJS allows using nodejs modules installed through npm_. Note that since CasperJS uses it's own JavaScript environment, npm modules that use node-specific features will not work under CasperJS.
 
 As an example, let's install the underscore_ library:
 
