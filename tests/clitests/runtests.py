@@ -2,6 +2,7 @@
 
 import json
 import os
+import platform
 import select
 import signal
 import time
@@ -16,6 +17,7 @@ TEST_ROOT = os.path.abspath(os.path.dirname(__file__))
 CASPERJS_ROOT = os.path.abspath(os.path.join(TEST_ROOT, '..', '..'))
 CASPER_EXEC_FILE = sys.argv[1] if (len(sys.argv) == 2) else 'casperjs'
 CASPER_EXEC = os.path.join(CASPERJS_ROOT, 'bin', CASPER_EXEC_FILE)
+NEEDS_MONO = CASPER_EXEC.endswith('.exe') and platform.system() != 'Windows'
 ENGINE_EXEC = os.environ.get('ENGINE_EXECUTABLE',
                              os.environ.get('PHANTOMJS_EXECUTABLE',
                                             "phantomjs"))
@@ -139,6 +141,8 @@ class CasperExecTestBase(unittest.TestCase):
         failing = kwargs.get('failing', False)
         timeout = kwargs.get('timeout', BASE_TIMEOUT)
         cmd_args = [CASPER_EXEC, '--no-colors'] + cmd.split(' ')
+        if NEEDS_MONO:
+            cmd_args = ['mono'] + cmd_args;
         try:
             cmd = Command(cmd_args)
             out, err = cmd.run(timeout, stderr=subprocess.STDOUT)
