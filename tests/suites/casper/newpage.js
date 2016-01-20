@@ -17,8 +17,5 @@ casper.test.begin('newPage() tests', 5, function(test) {
     }).run(function() {
         test.done();
     });
-
     test.assert(casper.started, 'Casper.start() started');
-
-
 });
