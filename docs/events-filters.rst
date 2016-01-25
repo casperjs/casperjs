@@ -37,6 +37,31 @@ Of course you can emit your own events, using the ``Casper.emit()`` method::
     });
 
     casper.run();
+    
+Removing events
++++++++++++++++++++++++
+
+You can also remove events. This is particularly useful when running a lot of tests where you might need to add and remove different events for different tests::
+
+    var casper = require('casper').create();
+    
+    // listener function for requested resources
+    var listener = function(resource, request) {
+      this.echo(resource.url);
+    };
+    
+    // listening to all resources requests
+    casper.on("resource.requested", listener);
+    
+    // load the casperjs homepage
+    casper.start('http://google.com/', function() {
+      this.echo(this.getTitle());
+    });
+    
+    casper.run().then(function() {
+      // remove the event listener
+      this.removeListener("resource.requested", listener);
+    });
 
 .. _events_list:
 
