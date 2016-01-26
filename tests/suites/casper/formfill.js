@@ -201,6 +201,23 @@ casper.test.begin('multiple forms', 1, function(test) {
     });
 });
 
+casper.test.begin('file multiple', 1, function(test) {
+    var fpaths = [fs.pathJoin(phantom.casperPath, 'README.md'),
+                  fs.pathJoin(phantom.casperPath, 'LICENSE.md')
+                 ];
+
+    casper.start('tests/site/field-file-multiple.html', function() {
+        this.fillSelectors('form[action="result.html"]', {
+            'input[name="files[]"]': fpaths
+        });
+        test.assertEval(function() {
+            return __utils__.findOne('input[type="file"]').files.length === 2;
+        });
+    }).run(function() {
+        test.done();
+    });
+});
+
 casper.test.begin('field array', 1, function(test) {
     // issue #267: array syntax field names
     casper.start('tests/site/field-array.html', function() {
@@ -219,7 +236,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
     if (phantom.casperEngine === 'phantomjs') {
-        if (utils.matchEngine({
+        if (!utils.matchEngine({
             name: 'phantomjs',
             version: {min: '2.0.0', max: '2.0.0'}
         })) {
