@@ -827,7 +827,7 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
                                 throw new CasperError('Cannot upload nonexistent file: ' + filePath);
                             }
                         },this);
-                var fielFieldSelector;
+                var fileFieldSelector;
                 if (file.type === "names") {
                     fileFieldSelector = [selector, 'input[name="' + file.selector + '"]'].join(' ');
                 } else if (file.type === "css" || file.type === "labels") {
