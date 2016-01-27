@@ -37,30 +37,64 @@ Of course you can emit your own events, using the ``Casper.emit()`` method::
     });
 
     casper.run();
-    
+
 Removing events
 +++++++++++++++++++++++
 
 You can also remove events. This is particularly useful when running a lot of tests where you might need to add and remove different events for different tests::
 
     var casper = require('casper').create();
-    
+
     // listener function for requested resources
     var listener = function(resource, request) {
-      this.echo(resource.url);
+        this.echo(resource.url);
     };
-    
+
     // listening to all resources requests
     casper.on("resource.requested", listener);
-    
-    // load the casperjs homepage
+
+    // load the google homepage
     casper.start('http://google.com/', function() {
-      this.echo(this.getTitle());
+        this.echo(this.getTitle());
     });
-    
+
     casper.run().then(function() {
-      // remove the event listener
-      this.removeListener("resource.requested", listener);
+        // remove the event listener
+        this.removeListener("resource.requested", listener);
+    });
+
+Here is an example of how to use this in a casperjs test within the tearDown function.::
+
+    var currentRequest;
+
+    //Resource listener
+    function onResourceRequested(requestData, request) {
+        if (/\/jquery\.min\.js/.test(requestData.url)) {
+            currentRequest = requestData;
+        }
+    }
+
+    casper.test.begin('JQuery Test', 1, {
+        setUp: function() {
+            // Attach the resource listener
+            casper.on('resource.requested', onResourceRequested);
+        },
+
+        tearDown: function() {
+            // Remove the resource listener
+            casper.removeListener('resource.requested', onResourceRequested);
+            currentRequest = undefined;
+        },
+
+        test: function(test) {
+            casper.start('http://casperjs.org/', function() {
+                test.assert(currentRequest !== undefined, "JQuery Exists");
+            });
+
+            casper.run(function() {
+                test.done();
+            });
+        }
     });
 
 .. _events_list:
