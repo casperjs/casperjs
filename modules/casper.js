@@ -821,7 +821,7 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
                 if (!file || !file.path) {
                     return;
                 }
-                var paths = (utils.isArray(file.path) && file.path.length > 1) ? file.path :[file.path];
+                var paths = (utils.isArray(file.path) && file.path.length > 0) ? file.path :[file.path];
                 paths.map(function(filePath) {
                             if (!fs.exists(filePath)) {
                                 throw new CasperError('Cannot upload nonexistent file: ' + filePath);
@@ -833,7 +833,7 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
                 } else if (file.type === "css" || file.type === "labels") {
                     fileFieldSelector = [selector, file.selector].join(' ');
                 }
-                this.page.uploadFile(fileFieldSelector,paths);
+                this.page.uploadFile(fileFieldSelector, paths);
             }.bind(this));
         }
     }
