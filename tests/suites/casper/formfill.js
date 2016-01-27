@@ -210,9 +210,11 @@ casper.test.begin('file multiple', 1, function(test) {
         this.fillSelectors('form[action="result.html"]', {
             'input[name="files[]"]': fpaths
         });
-        test.assertEval(function() {
-            return __utils__.findOne('input[type="file"]').files.length === 2;
-        });
+        if (!skipPhantom200(test, 1)) {
+            test.assertEval(function() {
+                return __utils__.findOne('input[type="file"]').files.length === 2;
+            });
+        }
     }).run(function() {
         test.done();
     });
