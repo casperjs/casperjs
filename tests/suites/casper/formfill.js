@@ -236,7 +236,7 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
     if (phantom.casperEngine === 'phantomjs') {
-        if (!utils.matchEngine({
+        if (utils.matchEngine({
             name: 'phantomjs',
             version: {min: '2.0.0', max: '2.0.0'}
         })) {
