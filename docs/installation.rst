@@ -49,10 +49,17 @@ Installing from npm
 
 .. versionadded:: 1.1-beta3
 
-You can install CasperJS using `npm <http://npmjs.org/>`_::
+You can install CasperJS using `npm <http://npmjs.org/>`_:
 
-    For beta3: $ npm install -g casperjs@1.1.0-beta3
-    For beta2: $ npm install -g casperjs@1.1.0-beta2
+- For most users:
+
+    $ npm install -g casperjs
+    
+- If want specific version:
+
+    - For beta3: $ npm install -g casperjs@1.1.0-beta3
+
+    - For beta2: $ npm install -g casperjs@1.1.0-beta2
 
 .. note::
 
