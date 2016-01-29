@@ -29,6 +29,7 @@ The ``Mouse`` class is an abstraction on top of various mouse operations like mo
 
 - ``click(Number x, Number y)``
 - ``click(String selector)``
+- ``click(String selector, Number x, Number y)``
 
 Performs a click on the first element found matching the provided :doc:`selector expression <../selectors>` or at given coordinates if two numbers are passed::
 
@@ -48,6 +49,7 @@ Performs a click on the first element found matching the provided :doc:`selector
 
 - ``doubleclick(Number x, Number y)``
 - ``doubleclick(String selector)``
+- ``doubleclick(String selector, Number x, Number y)``
 
 Sends a ``doubleclick`` mouse event onto the element matching the provided arguments::
 
@@ -63,6 +65,7 @@ Sends a ``doubleclick`` mouse event onto the element matching the provided argum
 
 - ``rightclick(Number x, Number y)``
 - ``rightclick(String selector)``
+- ``rightclick(String selector, Number x, Number y)``
 
 Sends a ``contextmenu`` mouse event onto the element matching the provided arguments::
 
@@ -78,6 +81,7 @@ Sends a ``contextmenu`` mouse event onto the element matching the provided argum
 
 - ``down(Number x, Number y)``
 - ``down(String selector)``
+- ``down(String selector, Number x, Number y)``
 
 Sends a ``mousedown`` mouse event onto the element matching the provided arguments::
 
@@ -93,6 +97,7 @@ Sends a ``mousedown`` mouse event onto the element matching the provided argumen
 
 - ``move(Number x, Number y)``
 - ``move(String selector)``
+- ``move(String selector, Number x, Number y)``
 
 Moves the mouse cursor onto the element matching the provided arguments::
 
@@ -108,6 +113,7 @@ Moves the mouse cursor onto the element matching the provided arguments::
 
 - ``up(Number x, Number y)``
 - ``up(String selector)``
+- ``up(String selector, Number x, Number y)``
 
 Sends a ``mouseup`` mouse event onto the element matching the provided arguments::
 

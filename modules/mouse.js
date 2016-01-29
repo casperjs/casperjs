@@ -33,11 +33,6 @@
 var require = patchRequire(require);
 var utils = require('utils');
 
-exports.create = function create(casper) {
-    "use strict";
-    return new Mouse(casper);
-};
-
 var Mouse = function Mouse(casper) {
     "use strict";
     if (!utils.isCasperObject(casper)) {
@@ -45,85 +40,95 @@ var Mouse = function Mouse(casper) {
     }
 
     var slice = Array.prototype.slice,
-        nativeEvents = ['mouseup', 'mousedown', 'click', 'mousemove'];
+        nativeEvents = ['mouseup', 'mousedown', 'click', 'mousemove'],
+        nativeButtons = ['left', 'middle', 'right'];
     if (utils.gteVersion(phantom.version, '1.8.0')) {
         nativeEvents.push('doubleclick');
     }
-    var emulatedEvents = ['mouseover', 'mouseout'],
+    if (utils.gteVersion(phantom.version, '2.1.0')) {
+        nativeEvents.push('contextmenu');
+    }
+    var emulatedEvents = ['mouseover', 'mouseout', 'mouseenter', 'mouseleave'],
         supportedEvents = nativeEvents.concat(emulatedEvents);
 
-    function computeCenter(selector) {
+    var computeCenter = function computeCenter(selector) {
         var bounds = casper.getElementBounds(selector);
         if (utils.isClipRect(bounds)) {
-            var x = Math.round(bounds.left + bounds.width / 2);
-            var y = Math.round(bounds.top  + bounds.height / 2);
+            var x = Math.round(bounds.left + bounds.width / 2),
+                y = Math.round(bounds.top + bounds.height / 2);
             return [x, y];
         }
-    }
+        return [0, 0];
+    };
 
-    function processEvent(type, args) {
-        /*jshint maxcomplexity:10*/
+    var getPointFromViewPort = function getPointFromViewPort(page, x, y){
+        var px = x - x % page.viewportSize.width;
+        var py = y - y % page.viewportSize.height;
+        var max = casper.evaluate(function() {
+                return [__utils__.getDocumentWidth(), __utils__.getDocumentHeight()];
+            });
+        if (py > max[0] - page.viewportSize.width && max[0] > page.viewportSize.width){
+            px = max[0] - page.viewportSize.width;
+        }
+        if (py > max[1] - page.viewportSize.height && max[1] > page.viewportSize.height){
+            py = max[1] - page.viewportSize.height;
+        }
+        page.scrollPosition = { 'left': px, 'top': py };
+        return [ x - px, y - py ];
+    };
+
+    var getPointFromSelectorCoords = function getPointFromSelectorCoords(selector, clientX, clientY){
+        var convertNumberToIntAndPercentToFloat = function convertNumberToIntAndPercentToFloat(a, def){
+            return !!a && !isNaN(a) && parseInt(a, 10) ||
+            !!a && !isNaN(parseFloat(a)) && parseFloat(a) >= 0 &&
+              parseFloat(a) <= 100 && parseFloat(a) / 100 ||
+            def;
+        };
+        var bounds = casper.getElementBounds(selector),
+            px = convertNumberToIntAndPercentToFloat(clientX, 0.5),
+            py = convertNumberToIntAndPercentToFloat(clientY, 0.5);
+
+        if (utils.isClipRect(bounds)) {
+            return [ bounds.left + (px ^ 0) + Math.round(bounds.width * (px - (px ^ 0)).toFixed(10)),
+                     bounds.top + (py ^ 0) + Math.round(bounds.height * (py - (py ^ 0)).toFixed(10)) ];
+        }
+        return [1, 1];
+    };
+
+    var processEvent = function processEvent(type, args) {
+        var button = nativeButtons[0], selector = 'html', index = 0, point,
+            scroll = casper.page.scrollPosition;
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
             throw new CasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }
         if (emulatedEvents.indexOf(type) > -1) {
             casper.log("Mouse.processEvent(): no native fallback for type " + type, "warning");
         }
-        args = slice.call(args); // cast Arguments -> Array
-        casper.emit('mouse.' + type.replace('mouse', ''), args);
-        switch (args.length) {
-            case 0:
-                throw new CasperError('Mouse.processEvent(): Too few arguments');
-            case 1:
-                // selector
-                casper.page.sendEvent.apply(casper.page, [type].concat(computeCenter(args[0])));
-                break;
-            case 2:
-                // coordinates
-                if (!utils.isNumber(args[0]) || !utils.isNumber(args[1])) {
-                    throw new CasperError('Mouse.processEvent(): No valid coordinates passed: ' + args);
-                }
-                casper.page.sendEvent(type, args[0], args[1]);
-                break;
-            default:
-                throw new CasperError('Mouse.processEvent(): Too many arguments');
+        args = [].slice.call(args); // cast Arguments -> Array
+        if (args.length === 0) {
+            throw new CasperError('Mouse.processEvent(): Too few arguments');
         }
-    }
-
-    this.processEvent = function() {
-        processEvent(arguments[0], slice.call(arguments, 1));
+        if (isNaN(parseInt(args[0], 10)) && casper.exists(args[0])) {
+            selector = args[0];
+            index++;
+        }
+        if (args.length >= index + 2) {
+            point = getPointFromSelectorCoords(selector, args[index], args[index + 1]);
+        } else {
+            point = computeCenter(selector);
+        }
+        index = nativeButtons.indexOf(args[args.length - 1]);
+        if (index > -1) {
+            button = nativeButtons[index];
+        }
+        casper.emit('mouse.' + type.replace('mouse', ''), args);
+        point = getPointFromViewPort(casper.page, point[0], point[1]);
+        casper.page.sendEvent.apply(casper.page, [type].concat(point).concat([button]));
+        casper.page.scrollPosition = scroll;
     };
 
     this.click = function click() {
         processEvent('click', arguments);
-    };
-
-    this.rightclick = function rightclick() {
-        var array = [];
-        switch (arguments.length) {
-            case 0:
-                throw new CasperError('Mouse.rightclick(): Too few arguments');
-            case 1:
-                array = computeCenter(arguments[0]);
-                break;
-            case 2:
-                array = arguments;
-                break;
-            default:
-                throw new CasperError('Mouse.rightclick(): Too many arguments');
-        }
-
-        casper.page.evaluate(function (clientX, clientY) {
-            var element = document.elementFromPoint(clientX, clientY);
-
-            raiseEvent('contextmenu');
-
-            function raiseEvent(eventType) {
-                var event = document.createEvent('MouseEvent');
-                event.initMouseEvent(eventType, true, true, window, 1, clientX, clientY, clientX, clientY, false, false, false, false, 2, null);
-                element.dispatchEvent(event);
-            }
-        }, array[0], array[1]);
     };
 
     this.doubleclick = function doubleclick() {
@@ -138,8 +143,68 @@ var Mouse = function Mouse(casper) {
         processEvent('mousemove', arguments);
     };
 
+    this.processEvent = function() {
+        processEvent(arguments[0], [].slice.call(arguments, 1));
+    };
+
+    this.rightclick = function rightclick() {
+        try {
+            processEvent('contextmenu', arguments);
+        } catch (e) {
+            var args = slice.call(arguments);
+        switch (args.length) {
+                case 0:
+                    throw new CasperError('Mouse.rightclick(): Too few arguments');
+                case 1:
+                    casper.mouseEvent('contextmenu', args[0]);
+                    break;
+                case 2:
+                    if (!utils.isNumber(args[0]) || !utils.isNumber(args[1])) {
+                       throw new CasperError('Mouse.rightclick(): No valid coordinates passed: ' + args);
+                    }
+                    var struct = casper.page.evaluate(function (clientX, clientY) {
+                        var xpath = function xpath(el) {
+                            if (typeof el === "string") {
+                                return document.evaluate(el, document, null, 0, null);
+                            }
+                            if (!el || el.nodeType !== 1) {
+                                return '';
+                            }
+                            if (el.id) {
+                                return "//*[@id='" + el.id + "']";
+                            }
+                            var sames = [].filter.call(el.parentNode.children, function (x) {
+                                return x.tagName === el.tagName;
+                            });
+                            return xpath(el.parentNode) + '/' + el.tagName.toLowerCase() +
+                                (sames.length > 1 ? '[' + ([].indexOf.call(sames, el) + 1) + ']' : '');
+                        };
+                        try {
+                           var elem = document.elementFromPoint(clientX, clientY);
+                           var rec = elem.getBoundingClientRect();
+                           return { "selector": {"type": "xpath", "path": xpath(elem)},
+                                    "relX": clientX - rec.left, "relY": clientY - rec.top };
+                        } catch (ex) {
+                        return { "selector": {"type": "xpath", "path": "//html"},
+                                 "relX": clientX, "relY": clientY };
+                       }
+                    }, args[0], args[1]);
+                    casper.mouseEvent('contextmenu', struct.selector, struct.relX, struct.relY);
+                    break;
+                default:
+                    throw new CasperError('Mouse.rightclick(): Too many arguments');
+            }
+        }
+    };
+
     this.up = function up() {
         processEvent('mouseup', arguments);
     };
 };
+
+exports.create = function create(casper) {
+    "use strict";
+    return new Mouse(casper);
+};
+
 exports.Mouse = Mouse;

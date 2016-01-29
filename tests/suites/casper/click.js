@@ -154,3 +154,115 @@ casper.test.begin('mouse events on right click with x,y co-ordinates', 1, functi
         test.done();
     });
 });
+
+casper.test.begin('click() on coordinates in selector', 6, function(test) {
+    var zone;
+    casper.start('tests/site/area.html', function() {
+        zone = this.getElementBounds("#contentContainer");
+          this.click("#contentContainer",10,20);          
+    }).then(function() {
+        var results = this.getElementBounds("#thing");
+        test.assertEquals(results.left, Math.floor(10-(results.width)/2)+zone.left,
+            'click() on specific X position 1');
+        test.assertEquals(results.top, Math.floor(20-(results.height)/2)+zone.top,
+            'click() on specific Y position 1');
+    }).then(function() {
+          this.click("#contentContainer",100,200);          
+    }).then(function() {
+        var results = this.getElementBounds("#thing");
+        test.assertEquals(results.left, Math.floor(100-(results.width)/2)+zone.left,
+            'click() on specific X position 2');
+        test.assertEquals(results.top, Math.floor(200-(results.height)/2)+zone.top,
+            'click() on specific Y position 2 ');
+    }).then(function() {        
+          this.click("#contentContainer","80%","60%");          
+    }).then(function() {
+        var results = this.getElementBounds("#thing");
+        test.assertEquals(results.left, Math.floor((zone.width*0.8)-(results.width)/2)+zone.left,
+            'click() on specific X position with percent');
+        test.assertEquals(results.top, Math.floor((zone.height*0.6)-(results.height)/2)+zone.top,
+            'click() on specific Y position with percent');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('click() on scroll in selector', 4, function(test) {
+    var zone;
+    casper.start('tests/site/area.html', function() {
+        zone = this.getElementBounds("#out");
+         this.click("#out");
+    }).then(function() {
+        var results = this.getElementBounds("#thinga");
+        test.assertEquals(results.left, Math.floor((zone.width-results.width)/2)+zone.left,
+            'Mouse.click() on default X position 50%');
+        test.assertEquals(results.top, Math.floor((zone.height-results.height)/2)+zone.top,
+            'Mouse.click() on default Y position 50%');
+   }).then(function() {
+          this.click("#out",10,20);          
+    }).then(function() {
+        var results = this.getElementBounds("#thinga");
+        test.assertEquals(results.left, Math.floor(10-(results.width)/2)+zone.left,
+            'Mouse.click() on specific X position');
+        test.assertEquals(results.top, Math.floor(20-(results.height)/2)+zone.top,
+            'Mouse.move() on specific Y position');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('casper.mouse() on coordinates in selector', 6, function(test) {
+    var zone;
+    casper.start('tests/site/area.html', function() {    
+        zone = this.getElementBounds("#contentContainer");
+         this.mouse.click("#contentContainer");
+    }).then(function() {
+        var results = this.getElementBounds("#thing");
+        test.assertEquals(results.left, Math.floor((zone.width-results.width)/2)+zone.left,
+            'Mouse.click() on default X position 50%');
+        test.assertEquals(results.top, Math.floor((zone.height-results.height)/2)+zone.top,
+            'Mouse.click() on default Y position 50%');
+   }).then(function() {
+          this.mouse.click("#contentContainer",10,20);          
+    }).then(function() {
+        var results = this.getElementBounds("#thing");
+        test.assertEquals(results.left, Math.floor(10-(results.width)/2)+zone.left,
+            'Mouse.click() on specific X position');
+        test.assertEquals(results.top, Math.floor(20-(results.height)/2)+zone.top,
+            'Mouse.move() on specific Y position');
+    }).then(function() {        
+          this.mouse.click("#contentContainer","80%","60%");          
+    }).then(function() {
+        var results = this.getElementBounds("#thing");
+        test.assertEquals(results.left, Math.floor((zone.width*0.8)-(results.width)/2)+zone.left,
+            'Mouse.click() on specific X position with percent');
+        test.assertEquals(results.top, Math.floor((zone.height*0.6)-(results.height)/2)+zone.top,
+            'Mouse.click() on specific Y position with percent');
+    }).run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('casper.mouse() on scroll in selector', 4, function(test) {
+    var zone;
+    casper.start('tests/site/area.html', function() {
+        zone = this.getElementBounds("#out");
+        this.mouse.click("#out");
+    }).then(function() {
+        var results = this.getElementBounds("#thinga");
+        test.assertEquals(results.left, Math.floor((zone.width-results.width)/2)+zone.left,
+            'Mouse.click() on default X position 50%');
+        test.assertEquals(results.top, Math.floor((zone.height-results.height)/2)+zone.top,
+            'Mouse.click() on default Y position 50%');
+   }).then(function() {
+          this.mouse.click("#out",10,20);          
+    }).then(function() {
+        var results = this.getElementBounds("#thinga");        
+        test.assertEquals(results.left, Math.floor(10-(results.width)/2)+zone.left,
+            'Mouse.click() on specific X position');
+        test.assertEquals(results.top, Math.floor(20-(results.height)/2)+zone.top,
+            'Mouse.move() on specific Y position');
+    }).run(function() {
+        test.done();
+    });
+});

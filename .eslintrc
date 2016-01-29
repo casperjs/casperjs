@@ -115,7 +115,7 @@
     "no-with": 1,
     "one-var": 0,
     "operator-assignment": [1, "always"],
-    "quote-props": 1,
+    "quote-props": [1, "as-needed", { "keywords": true }],
     "radix": 1,
     "semi-spacing": 1,
     "sort-vars": 0,
