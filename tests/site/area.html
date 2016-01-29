@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+<title>Move to Click Position</title>
+<style type="text/css">
+body {
+    background-color: #FFF;
+    margin: 0px;
+    margin-top: 0px;
+    left:0px
+    top:0px
+}
+#contentContainer {
+	position: absolute;
+	left: 10px;
+	top: 15px;
+    width: 150px;
+    height: 250px;
+    border: 0px black solid;
+    overflow: hidden;
+    background-color: #D2D2D2;
+    cursor: pointer;
+}
+#out {
+	position: absolute;
+	left: 30px;
+	top: 2000px;
+	width: 100px;
+    height: 100px;
+    background-color: blue;
+}
+#thing,#thinga {
+	outline: 2px black solid;
+	background-color: red;
+    position: relative;
+    display:block;
+    left: 60px;
+    top: 62px;
+    width: 20px;
+    height: 22px;
+    outline-radius: 50% 50%;
+    border-radius: 45% 45%;
+    //transition: left .2s ease-in, top .2s ease-in;
+}
+</style>
+</head>
+ 
+<body>
+<div id="contentContainer">
+    <div id="thing"> </div>
+</div>
+ 
+<div id="out"> 
+	 <div id="thinga"> </div>
+</div>
+ 
+<script src="http://www.kirupa.com/prefixfree.min.js"></script>
+<script>
+(function(window) {
+  var theThing = document.querySelector("#thing");
+  var container = document.querySelector("#contentContainer");
+  var out = document.querySelector("#out");
+ 
+  container.addEventListener("click", getClickPosition, false);
+  out.addEventListener("click", getClickPosition, false);
+ 
+  function getPosition(element) {
+    var xPosition = 0;
+    var yPosition = 0;
+      
+    while (element) {
+        xPosition += (element.offsetLeft  + element.clientLeft);
+        yPosition += (element.offsetTop  + element.clientTop);
+        element = element.offsetParent;
+    }
+
+    return { x: xPosition, y: yPosition };
+  }
+
+  function getClickPosition(e) {
+
+	var elem = e.currentTarget;
+	var div = elem.querySelector('div');
+    var parentPosition = getPosition(e.currentTarget);
+
+    var xOffset = Math.max(document.documentElement.scrollLeft,document.body.scrollLeft);
+    var yOffset = Math.max(document.documentElement.scrollTop,document.body.scrollTop); 
+    var xPosition = xOffset + e.clientX - parentPosition.x - (div.clientWidth / 2);
+    var yPosition = yOffset + e.clientY - parentPosition.y - (div.clientHeight / 2);
+
+    div.style.left = xPosition + "px";
+    div.style.top  = yPosition + "px";
+  }
+})(window);
+</script>
+</body>
+</html>

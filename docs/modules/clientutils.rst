@@ -135,7 +135,26 @@ Retrieves a single DOM element by a :ref:`selector expression <selectors>`::
 
     casper.run(function() {
         this.echo(href).exit();
+    });    
+    
+``forceTarget()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``forceTarget(String selector, String target)``
+
+Force the engine to use another target instead of the one provided. Very useful to limit the number of open windows and reduce memory consumption::
+
+    casper.start('http://foo.bar/', function() {
+        var href = this.evaluate(function() {
+            return __utils__.forceTarget('#my_id', '_self').click();
+        });
+        this.echo(href);
     });
+
+    casper.run(function() {
+        this.exit();
+    });
+        
 
 .. index:: Base64
 
@@ -195,6 +214,26 @@ Retrieves current document height::
     });
 
     casper.run();
+    
+``getDocumentWidth()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getDocumentWidth()``
+
+.. versionadded:: 1.0
+
+Retrieves current document width::
+
+    var documentHeight;
+
+    casper.start('http://google.com/', function() {
+        documentWidth = this.evaluate(function() {
+            return __utils__.getDocumentWidth();
+        });
+        this.echo('Document width is ' + documentWidth + 'px');
+    });
+
+    casper.run();    
 
 ``getElementBounds()``
 -------------------------------------------------------------------------------
@@ -349,11 +388,11 @@ Examples::
 ``mouseEvent()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``mouseEvent(String type, String selector)``
+**Signature:** ``mouseEvent(String type, String selector, [Number|String X, Number|String Y])``
 
 Dispatches a mouse event to the DOM element behind the provided selector.
 
-Supported events are ``mouseup``, ``mousedown``, ``click``, ``mousemove``, ``mouseover`` and ``mouseout``.
+Supported events are ``mouseup``, ``mousedown``, ``click``, ``dblclick``, ``mousemove``, ``mouseover``, ``mouseout``, ``mouseenter``, ``mouseleave`` and ``contextmenu``::
 
 .. index:: XPath
 

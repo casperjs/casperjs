@@ -458,13 +458,16 @@ Casper.prototype.clear = function clear() {
  * In case of success, `true` is returned, `false` otherwise.
  *
  * @param  String   selector  A DOM CSS3 compatible selector
+ * @param  String   target    A HTML target '_blank','_self','_parent','_top','framename' (optional)
+ * @param  Number   x         X position (optional)
+ * @param  Number   y         Y position (optional)
  * @return Boolean
  */
-Casper.prototype.click = function click(selector) {
+Casper.prototype.click = function click(selector, x, y) {
     "use strict";
     this.checkStarted();
-    var success = this.mouseEvent('mousedown', selector) && this.mouseEvent('mouseup', selector);
-    success = success && this.mouseEvent('click', selector);
+    var success = this.mouseEvent('mousedown', selector, x, y) && this.mouseEvent('mouseup', selector, x, y);
+    success = success && this.mouseEvent('click', selector, x, y);
     this.evaluate(function(selector) {
         var element = __utils__.findOne(selector);
         if (element) {
@@ -1372,21 +1375,23 @@ Casper.prototype.log = function log(message, level, space) {
  *
  * @param  String   type      Type of event to emulate
  * @param  String   selector  A DOM CSS3 compatible selector
+ * @param  {Number} x X position
+ * @param  {Number} y Y position
  * @return Boolean
  */
-Casper.prototype.mouseEvent = function mouseEvent(type, selector) {
+Casper.prototype.mouseEvent = function mouseEvent(type, selector, x, y) {
     "use strict";
     this.checkStarted();
     this.log("Mouse event '" + type + "' on selector: " + selector, "debug");
     if (!this.exists(selector)) {
         throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
     }
-    if (this.callUtils("mouseEvent", type, selector)) {
+    if (this.callUtils("mouseEvent", type, selector, x, y)) {
         return true;
     }
     // fallback onto native QtWebKit mouse events
     try {
-        return this.mouse.processEvent(type, selector);
+        return this.mouse.processEvent(type, selector, x, y);
     } catch (e) {
         this.log(f("Couldn't emulate '%s' event on %s: %s", type, selector, e), "error");
     }
