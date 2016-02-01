@@ -6,10 +6,6 @@ sudo: false
 
 language: generic
 
-sudo: false
-
-language: generic
-
 before_install:
   - echo "Installing $ENGINE $ENGINE_VERSION from $ENGINE_ARCHIVE_URL"
   - wget $ENGINE_ARCHIVE_URL --output-document=engine.tar.bz2
