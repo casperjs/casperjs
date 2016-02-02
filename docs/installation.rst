@@ -141,7 +141,7 @@ Casperjs installation additions
 
 .. versionadded:: 1.1-beta3
 
-- Append ``";C:\casperjs\bin"`` to your ``PATH`` environment variable.
+- Append ``";C:\casperjs\batchbin"`` (versions < 1.1beta3) or ``;C:\casperjs"`` (versions >=1.1 beta3) to your ``PATH`` environment variable.
 - Modify this path appropriately if you installed CasperJS to a different location.
 - If your computer uses both discrete and integrated graphics you need to disable autoselect and explicitly choose graphics processor - otherwise ``exit()`` will not exit casper.
 
