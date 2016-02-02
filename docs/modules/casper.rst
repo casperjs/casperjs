@@ -445,6 +445,38 @@ encode::
         this.echo(base64contents).exit();
     });
 
+``binary()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``binary(String url [, String method, Object data])``
+
+Get a resource as binary using client-side XMLHttpRequest.
+
+Example: retrieving google logo image::
+
+    var binarylogo = null;
+    casper.start('http://www.google.fr/', function() {
+        binarylogo = this.binary('http://www.google.fr/images/srpr/logo3w.png');
+    });
+
+    casper.run(function() {
+        this.echo(binarylogo).exit();
+    });
+
+You can also perform an HTTP POST request to retrieve the contents::
+
+    var binarycontents = null;
+    casper.start('http://domain.tld/download.html', function() {
+        binarycontents = this.binary('http://domain.tld/', 'POST', {
+            param1: 'foo',
+            param2: 'bar'
+        });
+    });
+
+    casper.run(function() {
+        this.echo(binarycontents).exit();
+    });
+
 .. index:: bypass, Step stack
 
 ``bypass()``
@@ -704,6 +736,26 @@ Saves a remote resource onto the filesystem. You can optionally set the HTTP met
 .. note::
 
    If you have some troubles downloading files, try to :ref:`disable web security <faq_web_security>`.
+
+``downloadBinary()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``downloadBinary(String url, String target[, String method, Object data])``
+
+Saves a remote resource onto the filesystem. You can optionally set the HTTP method using the ``method`` argument, and pass request arguments through the ``data`` object (see `binary()`_)::
+
+    casper.start('http://www.google.fr/', function() {
+        var url = 'http://www.google.fr/intl/fr/about/corporate/company/';
+        this.downloadBinary(url, 'google_company.html');
+    });
+
+    casper.run(function() {
+        this.echo('Done.').exit();
+    });
+
+.. note::
+
+   This function is difference from `download()`_ that this function will download and save file as binary. It's safe for download csv or plain text.
 
 ``each()``
 -------------------------------------------------------------------------------
