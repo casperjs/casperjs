@@ -15,7 +15,8 @@
 >- 1.0 tests unfortunately have to be run manually using the `casperjs selftest` command
 
 CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/)
-and [SlimerJS](http://slimerjs.org/). It eases the process of defining a full navigation
+and [SlimerJS](http://slimerjs.org/) (still experimental).
+It eases the process of defining a full navigation
 scenario and provides useful high-level functions, methods & syntaxic sugar for doing common
 tasks such as:
 
