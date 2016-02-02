@@ -12,12 +12,18 @@ Prerequisites
 
 .. index:: PhantomJS, Python, SlimerJS
 
-- PhantomJS_ 1.9.1 or greater. Installation instructions can be found `here <http://phantomjs.org/download.html>`_
+- PhantomJS_ 1.9.1 or greater. Please read the `installation instructions for PhantomJS <http://phantomjs.org/download.html>`_
 - Python_ 2.6 or greater for ``casperjs`` in the ``bin/`` directory
 
 .. versionadded:: 1.1
 
-- **Experimental:** as of 1.1-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit (just add `--engine=slimerjs` to your command line options). To see PhantomJS API compatibility of SlimerJS, please `refer to this page <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_. Note that it is known that coffescript support breaks as of SlimerJS_ 0.9.6; we are investigating that issue.
+- **Experimental:** as of 1.1.0-beta1, SlimerJS_ 0.8 or greater to run your tests against Gecko (Firefox) instead of Webkit (just add `--engine=slimerjs` to your command line options). The SlimerJS developers documented `the PhantomJS API compatibility of SlimerJS <https://github.com/laurentj/slimerjs/blob/master/API_COMPAT.md>`_ as well as `the differences between PhantomJS and SlimerJS <http://docs.slimerjs.org/current/differences-with-phantomjs.html>`_. Note that it is known that coffescript support breaks as of SlimerJS_ 0.9.6; we are investigating that issue.
+
+.. versionadded:: 1.1.0-beta4
+
+.. warning::
+
+   Versions before 1.1.0-beta4 that were installed through npm required an unspecific PhantomJS version by means of an npm dependency. This led to lots of confusion and issues against CasperJS not working properly if installed through npm. Starting with 1.1.0 the installation of an engine (PhantomJS, SlimerJS) will be a real prerequisite, regardless of the installation method you choose for CasperJS.
 
 .. index:: Homebrew
 
@@ -42,24 +48,28 @@ If you have already installed casperjs and want to have the last release (stable
 
     $ brew upgrade casperjs
 
-Upgrade only update to the latest release branch (1.0.x|1.1-dev).
+Upgrade only update to the latest release branch (1.0.x|1.1.0-dev).
 
 Installing from npm
 -------------------
 
-.. versionadded:: 1.1-beta3
+.. versionadded:: 1.1.0-beta3
 
 You can install CasperJS using `npm <http://npmjs.org/>`_:
 
-- For most users:
+- For most users (current version 1.1.0-beta4):
 
     $ npm install -g casperjs
     
-- If want specific version:
+- If you want a specific older version:
 
     - For beta3: $ npm install -g casperjs@1.1.0-beta3
 
     - For beta2: $ npm install -g casperjs@1.1.0-beta2
+
+- If you want to install the current master from git using npm:
+
+    $ npm install -g git+https://github.com/n1k0/casperjs.git
 
 .. note::
 
@@ -67,7 +77,7 @@ You can install CasperJS using `npm <http://npmjs.org/>`_:
 
 .. warning::
 
-   While CasperJS is installable via npm, :ref:`it's not a NodeJS package <faq_node>`. **You cannot load casper by using require('casperjs') in node.**
+   While CasperJS is installable via npm, :ref:`it is not a NodeJS module <faq_node>` and will not work with NodeJS out of the box. **You cannot load casper by using require('casperjs') in node.** Note that CasperJS is not capable of using a vast majority of NodeJS modules out there. **Experiment and use your best judgement.**
    
 .. index:: git
 
@@ -92,7 +102,7 @@ Once PhantomJS and CasperJS installed on your machine, you should obtain somethi
     $ phantomjs --version
     1.9.2
     $ casperjs
-    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using phantomjs version 1.9.2
+    CasperJS version 1.1.0-beta4 at /Users/niko/Sites/casperjs, using phantomjs version 1.9.2
     # ...
 
 Or if SlimerJS is your thing:
@@ -102,7 +112,7 @@ Or if SlimerJS is your thing:
     $ slimerjs --version
     Innophi SlimerJS 0.8pre, Copyright 2012-2013 Laurent Jouanneau & Innophi
     $ casperjs
-    CasperJS version 1.1.0-DEV at /Users/niko/Sites/casperjs, using slimerjs version 0.8.0
+    CasperJS version 1.1.0-beta4 at /Users/niko/Sites/casperjs, using slimerjs version 0.8.0
 
 You are now ready to write your :doc:`first script <quickstart>`!
 
@@ -139,9 +149,9 @@ Phantomjs installation additions
 Casperjs installation additions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 1.1-beta3
+.. versionadded:: 1.1.0-beta3
 
-- Append ``";C:\casperjs\batchbin"`` (versions < 1.1beta3) or ``;C:\casperjs"`` (versions >=1.1 beta3) to your ``PATH`` environment variable.
+- Append ``";C:\casperjs\bin"`` to your ``PATH`` environment variable (for versions before 1.1.0-beta3 append ``";C:\casperjs\batchbin"`` to your ``PATH`` environment variable).
 - Modify this path appropriately if you installed CasperJS to a different location.
 - If your computer uses both discrete and integrated graphics you need to disable autoselect and explicitly choose graphics processor - otherwise ``exit()`` will not exit casper.
 
@@ -156,7 +166,7 @@ Colorized output
 
 .. note::
 
-   .. versionadded:: 1.1-beta1
+   .. versionadded:: 1.1.0-beta1
 
    Windows users will get colorized output if ansicon_ is installed or if the user is using ConEmu_ with ANSI colors enabled.
 
