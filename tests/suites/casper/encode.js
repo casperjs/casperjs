@@ -20,10 +20,9 @@ casper.test.begin('base64encode() and download() tests', 2, function(test) {
 casper.test.begin('binary() and downloadBinary() tests', 2, function(test) {
     // FIXME: https://github.com/ariya/phantomjs/pull/364 has been merged, update scheme
     casper.start('file://' + phantom.casperPath + '/tests/site/index.html', function() {
-        var imagePath = phantom.casperPath + '/tests/site/images/phantom.png',
-            imageUrl = 'file://' + imagePath,
+        var imageUrl = 'file://' + phantom.casperPath + '/tests/site/images/phantom.png',
             image = this.binary(imageUrl);
-        test.assertEquals(image.length, fs.size(imagePath), 'Casper.binary() can retrieve binary contents');
+        test.assertEquals(image.length, 4618, 'Casper.binary() can retrieve binary contents');
         this.downloadBinary(imageUrl, '__test_logo.png');
         test.assert(fs.exists('__test_logo.png'), 'Casper.downloadBinary() downloads a file');
         if (fs.exists('__test_logo.png')) {
