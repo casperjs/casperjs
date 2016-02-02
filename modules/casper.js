@@ -1570,7 +1570,11 @@ Casper.prototype.runStep = function runStep(step) {
     }
     this.emit('step.start', step);
     if (this.currentResponse) {
-        this.currentResponse.data = step.options && step.options.data || null;
+        if (step.options && (undefined !== step.options.data)) {
+            this.currentResponse.data = step.options.data;
+        } else {
+            this.currentResponse.data = null;
+        }
     }
     try {
         stepResult = step.call(this, this.currentResponse);
