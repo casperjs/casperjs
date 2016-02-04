@@ -173,6 +173,16 @@ class CasperExecTestBase(unittest.TestCase):
         else:
             self.assertIn(what, self.runCommand(cmd))
 
+    def assertCommandOutputDoesNotContain(self, cmd, what, **kwargs):
+        if not what:
+            raise AssertionError('Empty lookup')
+        if isinstance(what, (list, tuple)):
+            output = self.runCommand(cmd, **kwargs)
+            for entry in what:
+                self.assertNotIn(entry, output)
+        else:
+            self.assertNotIn(what, self.runCommand(cmd))
+
 
 class BasicCommandsTest(CasperExecTestBase):
     def test_version(self):
@@ -290,6 +300,30 @@ class ScriptOutputTest(CasperExecTestBase):
     def test_simple_script(self):
         script_path = os.path.join(TEST_ROOT, 'scripts', 'script.js')
         self.assertCommandOutputEquals(script_path, 'it works')
+
+
+class ScriptOptionsTest(CasperExecTestBase):
+    def test_script_options(self):
+        script_path = os.path.join(TEST_ROOT, 'scripts', 'options.js')
+        # Specify a mix of engine and script options.
+        # --whoops is special in that it starts with --w, which is a phantomjs engine command.
+        #  At one time was mishandled in src/casperjs.cs.
+        script_path_script_args = script_path + ' --debug=no --load-images=no --whoops --this-is-a=test'
+        self.assertCommandOutputContains(script_path_script_args, [
+            '    "whoops": true,',
+            '    "this-is-a": "test"',
+        ])
+
+    def test_engine_options(self):
+        script_path = os.path.join(TEST_ROOT, 'scripts', 'options.js')
+        # Specify a mix of engine and script options.
+        # --whoops is special in that it starts with --w, which is a phantomjs engine command.
+        #  At one time was mishandled in src/casperjs.cs.
+        script_path_script_args = script_path + ' --debug=no --load-images=no --whoops --this-is-a=test'
+        self.assertCommandOutputDoesNotContain(script_path_script_args, [
+            '    "debug": false,',
+            '    "load-images": false,',
+        ])
 
 
 class ScriptErrorTest(CasperExecTestBase):
