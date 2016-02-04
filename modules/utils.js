@@ -28,7 +28,8 @@
  *
  */
 
-
+/*eslint func-style: [2, "declaration"]*/
+/*eslint no-use-before-define: [2, "nofunc"]*/
 var require = patchRequire(require);
 
 /**
@@ -56,9 +57,8 @@ function betterTypeOf(input) {
                 phantom.casperEngine !== "phantomjs" &&
                 '__type' in input) {
                 type = input.__type;
-            }
             // gecko returns window instead of domwindow
-            else if (type === 'window') {
+            } else if (type === 'window') {
                 return 'domwindow';
             }
             return type;
@@ -80,11 +80,11 @@ exports.betterTypeOf = betterTypeOf;
 function betterInstanceOf(input, constructor) {
     "use strict";
     /*eslint eqeqeq:0 */
-    if (typeof input == 'undefined' || input == null) {
+    if (typeof input == 'undefined' || input === null) {
       return false;
     }
     var inputToTest = input;
-    while (inputToTest != null) {
+    while (inputToTest !== null) {
       if (inputToTest == constructor.prototype) {
         return true;
       }
@@ -94,7 +94,8 @@ function betterInstanceOf(input, constructor) {
       if (typeof inputToTest == 'undefined') {
         return false;
       }
-      inputToTest = inputToTest.__proto__;
+      inputToTest = (inputToTest instanceof Object || isObject(inputToTest))
+                    && Object.getPrototypeOf(inputToTest);
     }
     return equals(input.constructor.name, constructor.name);
 }
@@ -139,12 +140,16 @@ exports.clone = clone;
  */
 function computeModifier(modifierString, modifiers) {
     "use strict";
-    var modifier = 0,
-        checkKey = function(key) {
-            if (key in modifiers) return;
+    var modifier = 0;
+        function checkKey(key) {
+            if (key in modifiers) {
+                return;
+            }
             throw new CasperError(format('%s is not a supported key modifier', key));
-        };
-    if (!modifierString) return modifier;
+        }
+    if (!modifierString) {
+        return modifier;
+    }
     var keys = modifierString.split('+');
     keys.forEach(checkKey);
     return keys.reduce(function(acc, key) {
@@ -220,7 +225,7 @@ function fileExt(file) {
     "use strict";
     try {
         return file.split('.').pop().toLowerCase().trim();
-    } catch(e) {
+    } catch (e) {
         return '';
     }
 }
@@ -254,7 +259,9 @@ function format(f) {
     var args = arguments;
     var len = args.length;
     var str = String(f).replace(/%[sdj%]/g, function _replace(x) {
-        if (i >= len) return x;
+        if (i >= len) {
+            return x;
+        }
         switch (x) {
         case '%s':
             return String(args[i++]);
@@ -296,7 +303,7 @@ function formatTestValue(value, name) {
     } else if (name === 'stack') {
         if (isArray(value)) {
             formatted += value.map(function(entry) {
-                return format('in %s() in %s:%d', (entry['function'] || "anonymous"), entry.file, entry.line);
+                return format('in %s() in %s:%d', entry.function || "anonymous", entry.file, entry.line);
             }).join('\n');
         } else {
             formatted += 'not provided';
@@ -369,11 +376,11 @@ function inherits(ctor, superCtor) {
     "use strict";
     ctor.super_ = ctor.__super__ = superCtor;
     ctor.prototype = Object.create(superCtor.prototype, {
-        constructor: {
-            value: ctor,
-            enumerable: false,
-            writable: true,
-            configurable: true
+        "constructor": {
+            "value": ctor,
+            "enumerable": false,
+            "writable": true,
+            "configurable": true
         }
     });
 }
@@ -411,11 +418,10 @@ exports.isCasperObject = isCasperObject;
  */
 function isClipRect(value) {
     "use strict";
-    return isType(value, "cliprect") || (
+    return isType(value, "cliprect") ||
         isObject(value) &&
         isNumber(value.top) && isNumber(value.left) &&
-        isNumber(value.width) && isNumber(value.height)
-    );
+        isNumber(value.width) && isNumber(value.height);
 }
 exports.isClipRect = isClipRect;
 
@@ -466,8 +472,8 @@ function isJsFile(file) {
     var ext = fileExt(file);
     var valid = Object.keys(require.extensions).map(function(val) {
         return val.replace(/^\./, '');
-    }).filter(function(ext) {
-        return ext !== 'json';
+    }).filter(function(_ext) {
+        return _ext !== 'json';
     });
     return isString(ext, "string") && valid.indexOf(ext) !== -1;
 }
@@ -586,7 +592,7 @@ function isValidSelector(value) {
         try {
             // phantomjs env has a working document object, let's use it
             document.querySelector(value);
-        } catch(e) {
+        } catch (e) {
             if ('name' in e && (e.name === 'SYNTAX_ERR' || e.name === 'SyntaxError')) {
                 return false;
             }
@@ -620,14 +626,13 @@ function isWebPage(what) {
 }
 exports.isWebPage = isWebPage;
 
-
-
 function isPlainObject(obj) {
     "use strict";
-    if (!obj || typeof(obj) !== 'object')
+    if (!obj || typeof obj !== 'object'){
         return false;
+    }
     var type = Object.prototype.toString.call(obj).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
-    return (type === 'object');
+    return type === 'object';
 }
 
 /**
@@ -660,8 +665,7 @@ function mergeObjectsInGecko(origin, add, opts) {
             var prop = Object.getOwnPropertyDescriptor(add, p);
             if (prop.get && !prop.set) {
                 Object.defineProperty(origin, p, prop);
-            }
-            else {
+            } else {
                 origin[p] = add[p];
             }
         }
@@ -726,11 +730,10 @@ exports.ms2seconds = ms2seconds;
  */
 function node(name, attributes) {
     "use strict";
-    var _node   = document.createElement(name);
+    var _node = document.createElement(name);
     for (var attrName in attributes) {
-        var value = attributes[attrName];
         if (attributes.hasOwnProperty(attrName) && isString(attrName)) {
-            _node.setAttribute(attrName, value);
+            _node.setAttribute(attrName, attributes[attrName]);
         }
     }
     return _node;
@@ -773,14 +776,14 @@ exports.quoteXPathAttributeString = quoteXPathAttributeString;
  * @param  Mixed  value
  * @return String
  */
-function serialize(value, indent) {
+function serialize(value, _indent) {
     "use strict";
     if (isArray(value)) {
         value = value.map(function _map(prop) {
             return isFunction(prop) ? prop.toString().replace(/\s{2,}/, '') : prop;
         });
     }
-    return JSON.stringify(value, null, indent);
+    return JSON.stringify(value, null, _indent);
 }
 exports.serialize = serialize;
 
@@ -813,10 +816,13 @@ exports.unique = unique;
  * @param  Mixed version  a version string or object
  */
 function versionToString(version) {
+    "use strict";
     if (isObject(version)) {
         try {
             return [version.major, version.minor, version.patch].join('.');
-        } catch (e) {}
+        } catch (e) {
+            return version;
+        }
     }
     return version;
 }
@@ -894,6 +900,7 @@ exports.ltVersion = ltVersion;
  * @return Boolean
  */
 function matchEngine(matchSpec) {
+    "use strict";
     if (Array !== matchSpec.constructor) {
         matchSpec = [matchSpec];
     }
@@ -908,10 +915,10 @@ function matchEngine(matchSpec) {
         var version = match.version;
         var min = version && version.min;
         var max = version && version.max;
-        if ('*' === min) {
+        if (min === '*') {
             min = null;
         }
-        if ('*' === max) {
+        if (max === '*') {
             max = null;
         }
         if (match.name === engineName &&

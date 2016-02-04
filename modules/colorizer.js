@@ -38,7 +38,7 @@ var env = require('system').env;
 exports.create = function create(type) {
     "use strict";
     if (!type) {
-        return;
+        return undefined;
     }
     if (!(type in exports)) {
         throw new Error(utils.format('Unsupported colorizer type "%s"', type));
@@ -55,22 +55,24 @@ exports.create = function create(type) {
 var Colorizer = function Colorizer() {
     "use strict";
     /*eslint no-multi-spaces:0*/
-    var options    = { bold: 1, underscore: 4, blink: 5, reverse: 7, conceal: 8 };
-    var foreground = { black: 30, red: 31, green: 32, yellow: 33, blue: 34, magenta: 35, cyan: 36, white: 37 };
-    var background = { black: 40, red: 41, green: 42, yellow: 43, blue: 44, magenta: 45, cyan: 46, white: 47 };
+    var options    = { 'bold': 1, 'underscore': 4, 'blink': 5, 'reverse': 7, 'conceal': 8 };
+    var foreground = { 'black': 30, 'red': 31, 'green': 32, 'yellow': 33, 'blue': 34,
+                       'magenta': 35, 'cyan': 36, 'white': 37 };
+    var background = { 'black': 40, 'red': 41, 'green': 42, 'yellow': 43, 'blue': 44,
+                       'magenta': 45, 'cyan': 46, 'white': 47 };
     var styles     = {
-        'ERROR':     { bg: 'red', fg: 'white', bold: true },
-        'INFO':      { fg: 'green', bold: true },
-        'TRACE':     { fg: 'green', bold: true },
-        'PARAMETER': { fg: 'cyan' },
-        'COMMENT':   { fg: 'yellow' },
-        'WARNING':   { fg: 'red', bold: true },
-        'GREEN_BAR': { fg: 'white', bg: 'green', bold: true },
-        'RED_BAR':   { fg: 'white', bg: 'red', bold: true },
-        'INFO_BAR':  { bg: 'cyan', fg: 'white', bold: true },
-        'WARN_BAR':  { bg: 'yellow', fg: 'white', bold: true },
-        'SKIP':      { fg: 'magenta', bold: true },
-        'SKIP_BAR':  { bg: 'magenta', fg: 'white', bold: true }
+            'ERROR': { 'bg': 'red', 'fg': 'white', 'bold': true },
+             'INFO': { 'fg': 'green', 'bold': true },
+            'TRACE': { 'fg': 'green', 'bold': true },
+        'PARAMETER': { 'fg': 'cyan' },
+          'COMMENT': { 'fg': 'yellow' },
+          'WARNING': { 'fg': 'red', 'bold': true },
+        'GREEN_BAR': { 'fg': 'white', 'bg': 'green', 'bold': true },
+          'RED_BAR': { 'fg': 'white', 'bg': 'red', 'bold': true },
+         'INFO_BAR': { 'bg': 'cyan', 'fg': 'white', 'bold': true },
+         'WARN_BAR': { 'bg': 'yellow', 'fg': 'white', 'bold': true },
+             'SKIP': { 'fg': 'magenta', 'bold': true },
+         'SKIP_BAR': { 'bg': 'magenta', 'fg': 'white', 'bold': true }
     };
 
     /**
@@ -81,7 +83,7 @@ var Colorizer = function Colorizer() {
      * @return  String
      */
     this.colorize = function colorize(text, styleName, pad) {
-        if ((fs.isWindows() && (!env['ANSICON'] && env['ConEmuANSI'] !== 'ON')) || !(styleName in styles)) {
+        if (fs.isWindows() && (!env.ANSICON && env.ConEmuANSI !== 'ON') || !(styleName in styles)) {
             return text;
         }
         return this.format(text, styles[styleName], pad);
@@ -95,7 +97,7 @@ var Colorizer = function Colorizer() {
      * @return String
      */
     this.format = function format(text, style, pad) {
-        if ((fs.isWindows() && (!env['ANSICON'] && env['ConEmuANSI'] !== 'ON')) || !utils.isObject(style)) {
+        if (fs.isWindows() && (!env.ANSICON && env.ConEmuANSI !== 'ON') || !utils.isObject(style)) {
             return text;
         }
         var codes = [];
@@ -125,10 +127,10 @@ exports.Colorizer = Colorizer;
  */
 var Dummy = function Dummy() {
     "use strict";
-    this.colorize = function colorize(text, styleName, pad) {
+    this.colorize = function colorize(text) {
         return text;
     };
-    this.format = function format(text, style, pad){
+    this.format = function format(text){
         return text;
     };
 };

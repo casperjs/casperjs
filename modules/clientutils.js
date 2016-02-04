@@ -44,7 +44,7 @@
         /*eslint max-statements:0, no-multi-spaces:0*/
         // private members
         var BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        var BASE64_DECODE_CHARS = new Array(
+        var BASE64_DECODE_CHARS = [
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
@@ -53,7 +53,7 @@
             15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
             -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
-        );
+        ];
         var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
 
         // public members
@@ -69,7 +69,7 @@
          */
         this.__call = function __call(method, args) {
             if (method === "__call") {
-                return;
+                return undefined;
             }
             try {
                 return this[method].apply(this, args);
@@ -111,17 +111,18 @@
                 if (c2 === -1) {
                     break;
                 }
-                out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
+                out += String.fromCharCode(c1 << 2 | (c2 & 0x30) >> 4);
                 do {
                     c3 = str.charCodeAt(i++) & 0xff;
-                    if (c3 === 61)
-                    return out;
+                    if (c3 === 61) {
+                        return out;
+                    }
                     c3 = BASE64_DECODE_CHARS[c3];
                 } while (i < len && c3 === -1);
                 if (c3 === -1) {
                     break;
                 }
-                out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
+                out += String.fromCharCode((c2 & 0XF) << 4 | (c3 & 0x3C) >> 2);
                 do {
                     c4 = str.charCodeAt(i++) & 0xff;
                     if (c4 === 61) {
@@ -132,7 +133,7 @@
                 if (c4 === -1) {
                     break;
                 }
-                out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
+                out += String.fromCharCode((c3 & 0x03) << 6 | c4);
             }
             return out;
         };
@@ -191,15 +192,15 @@
                 c2 = str.charCodeAt(i++);
                 if (i === len) {
                     out += BASE64_ENCODE_CHARS.charAt(c1 >> 2);
-                    out += BASE64_ENCODE_CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+                    out += BASE64_ENCODE_CHARS.charAt((c1 & 0x3) << 4 | (c2 & 0xF0) >> 4);
                     out += BASE64_ENCODE_CHARS.charAt((c2 & 0xF) << 2);
                     out += "=";
                     break;
                 }
                 c3 = str.charCodeAt(i++);
                 out += BASE64_ENCODE_CHARS.charAt(c1 >> 2);
-                out += BASE64_ENCODE_CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-                out += BASE64_ENCODE_CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+                out += BASE64_ENCODE_CHARS.charAt((c1 & 0x3) << 4 | (c2 & 0xF0) >> 4);
+                out += BASE64_ENCODE_CHARS.charAt((c2 & 0xF) << 2 | (c3 & 0xC0) >> 6);
                 out += BASE64_ENCODE_CHARS.charAt(c3 & 0x3F);
             }
             return out;
@@ -242,14 +243,15 @@
          * @param  HTMLElement|String  form      A form element, or a CSS3 selector to a form element
          * @param  Object              vals      Field values
          * @param  Function            findType  Element finder type (css, names, xpath)
-         * @return Object                        An object containing setting result for each field, including file uploads
+         * @return Object                        An object containing setting result for each field,
+         *                                       including file uploads
          */
         this.fill = function fill(form, vals, findType) {
             /*eslint complexity:0*/
             var out = {
-                errors: [],
-                fields: [],
-                files:  []
+                "errors": [],
+                "fields": [],
+                "files": []
             };
 
             if (!(form instanceof HTMLElement) || typeof form === "string") {
@@ -270,20 +272,21 @@
             }
 
             var finders = {
-                css: function(inputSelector, formSelector) {
+                "css": function(inputSelector) {
                     return this.findAll(inputSelector, form);
                 },
-                labels: function(labelText, formSelector, value) {
-                    var label = this.findOne({type: "xpath", path: '//label[text()="' + labelText + '"]'}, form);
-                    if(label && label.htmlFor) {
+                "labels": function(labelText) {
+                    var label = this.findOne({"type": "xpath", "path": '//label[text()="' +
+                                             labelText + '"]'}, form);
+                    if (label && label.htmlFor) {
                         return this.findAll('#' + label.htmlFor, form);
                     }
                 },
-                names: function(elementName, formSelector) {
+                "names": function(elementName) {
                     return this.findAll('[name="' + elementName + '"]', form);
                 },
-                xpath: function(xpath, formSelector) {
-                    return this.findAll({type: "xpath", path: xpath}, form);
+                "xpath": function(xpath) {
+                    return this.findAll({"type": "xpath", "path": xpath}, form);
                 }
             };
 
@@ -294,7 +297,8 @@
                 var field = finders[findType || "names"].call(this, fieldSelector, form),
                     value = vals[fieldSelector];
                 if (!field || field.length === 0) {
-                    out.errors.push('no field matching ' + findType + ' selector "' + fieldSelector + '" in form');
+                    out.errors.push('no field matching ' + findType + ' selector "' +
+                                    fieldSelector + '" in form');
                     continue;
                 }
                 try {
@@ -302,15 +306,15 @@
                 } catch (err) {
                     if (err.name === "FileUploadError") {
                         var selector;
-                        if(findType === "labels") {
+                        if (findType === "labels") {
                           selector = '#' + field[0].id;
                         } else {
                           selector = fieldSelector;
                         }
                         out.files.push({
-                            type: findType,
-                            selector: selector,
-                            path: err.path
+                            "type": findType,
+                            "selector": selector,
+                            "path": err.path
                         });
                     } else if (err.name === "FieldNotFound") {
                         out.errors.push('Unable to find field element in form: ' + err.toString());
@@ -389,11 +393,12 @@
         this.getBinary = function getBinary(url, method, data) {
             try {
                 return this.sendAJAX(url, method, data, false, {
-                    overrideMimeType: "text/plain; charset=x-user-defined"
+                    "overrideMimeType": "text/plain; charset=x-user-defined"
                 });
             } catch (e) {
                 if (e.name === "NETWORK_ERR" && e.code === 101) {
-                    this.log("getBinary(): Unfortunately, casperjs cannot make cross domain ajax requests", "warning");
+                    this.log("getBinary(): Unfortunately, casperjs cannot make " +
+                             "cross domain ajax requests", "warning");
                 }
                 this.log("getBinary(): Error while fetching " + url + ": " + e, "error");
                 return "";
@@ -427,10 +432,10 @@
             try {
                 var clipRect = this.findOne(selector).getBoundingClientRect();
                 return {
-                    top:    clipRect.top,
-                    left:   clipRect.left,
-                    width:  clipRect.width,
-                    height: clipRect.height
+                    "top": clipRect.top,
+                    "left": clipRect.left,
+                    "width": clipRect.width,
+                    "height": clipRect.height
                 };
             } catch (e) {
                 this.log("Unable to fetch bounds for element " + selector, "warning");
@@ -450,15 +455,14 @@
          */
         this.getElementsBounds = function getElementsBounds(selector) {
             var elements = this.findAll(selector);
-            var self = this;
             try {
                 return Array.prototype.map.call(elements, function(element) {
                     var clipRect = element.getBoundingClientRect();
                     return {
-                        top:    clipRect.top,
-                        left:   clipRect.left,
-                        width:  clipRect.width,
-                        height: clipRect.height
+                        "top": clipRect.top,
+                        "left": clipRect.left,
+                        "width": clipRect.width,
+                        "height": clipRect.height
                     };
                 });
             } catch (e) {
@@ -480,16 +484,16 @@
                 attributes[attr.name.toLowerCase()] = attr.value;
             });
             return {
-                nodeName: element.nodeName.toLowerCase(),
-                attributes: attributes,
-                tag: element.outerHTML,
-                html: element.innerHTML,
-                text: element.textContent || element.innerText,
-                x: bounds.left,
-                y: bounds.top,
-                width: bounds.width,
-                height: bounds.height,
-                visible: this.visible(selector)
+                "nodeName": element.nodeName.toLowerCase(),
+                "attributes": attributes,
+                "tag": element.outerHTML,
+                "html": element.innerHTML,
+                "text": element.textContent || element.innerText,
+                "x": bounds.left,
+                "y": bounds.top,
+                "width": bounds.width,
+                "height": bounds.height,
+                "visible": this.visible(selector)
             };
         };
 
@@ -508,16 +512,16 @@
                     attributes[attr.name.toLowerCase()] = attr.value;
                 });
                 return {
-                    nodeName: element.nodeName.toLowerCase(),
-                    attributes: attributes,
-                    tag: element.outerHTML,
-                    html: element.innerHTML,
-                    text: element.textContent || element.innerText,
-                    x: bounds[index].left,
-                    y: bounds[index].top,
-                    width: bounds[index].width,
-                    height: bounds[index].height,
-                    visible: eleVisible(element)
+                    "nodeName": element.nodeName.toLowerCase(),
+                    "attributes": attributes,
+                    "tag": element.outerHTML,
+                    "html": element.innerHTML,
+                    "text": element.textContent || element.innerText,
+                    "x": bounds[index].left,
+                    "y": bounds[index].top,
+                    "width": bounds[index].width,
+                    "height": bounds[index].height,
+                    "visible": eleVisible(element)
                 };
             });
         };
@@ -561,9 +565,9 @@
          * @param  Object  options    Object with formSelector, optional
          * @return Mixed
          */
-        this.getFieldValue = function getFieldValue(inputName, options) {
-            options = options || {};
-            function getSingleValue(input) {
+        this.getFieldValue = function getFieldValue(inputName, _options) {
+            _options = _options || {};
+            var getSingleValue = function getSingleValue(input) {
                 var type;
                 try {
                     type = input.getAttribute('type').toLowerCase();
@@ -587,8 +591,8 @@
                     return input.checked ? input.getAttribute('value') : undefined;
                 }
                 return input.checked;
-            }
-            function getMultipleValues(inputs) {
+            };
+            var getMultipleValues = function getMultipleValues(inputs) {
                 var type;
                 type = inputs[0].getAttribute('type').toLowerCase();
                 if (type === 'radio') {
@@ -606,19 +610,19 @@
                     });
                     return values;
                 }
-            }
+            };
             var formSelector = '';
-            if (options.formSelector) {
-                formSelector = options.formSelector + ' ';
+            if (_options.formSelector) {
+                formSelector = _options.formSelector + ' ';
             }
             var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
 
-            if (options.inputSelector) {
-                inputs = inputs.concat(this.findAll(options.inputSelector));
+            if (_options.inputSelector) {
+                inputs = inputs.concat(this.findAll(_options.inputSelector));
             }
 
-            if (options.inputXPath) {
-                inputs = inputs.concat(this.getElementsByXPath(options.inputXPath));
+            if (_options.inputXPath) {
+                inputs = inputs.concat(this.getElementsByXPath(_options.inputXPath));
             }
 
             switch (inputs.length) {
@@ -641,7 +645,7 @@
             [].forEach.call(form.elements, function(element) {
                 var name = element.getAttribute('name');
                 if (name && !values[name]) {
-                    values[name] = self.getFieldValue(name, {formSelector: selector});
+                    values[name] = self.getFieldValue(name, {"formSelector": selector});
                 }
             });
             return values;
@@ -668,7 +672,8 @@
         this.mouseEvent = function mouseEvent(type, selector) {
             var elem = this.findOne(selector);
             if (!elem) {
-                this.log("mouseEvent(): Couldn't find any element matching '" + selector + "' selector", "error");
+                this.log("mouseEvent(): Couldn't find any element matching '" +
+                         selector + "' selector", "error");
                 return false;
             }
             try {
@@ -678,8 +683,9 @@
                     var pos = elem.getBoundingClientRect();
                     center_x = Math.floor((pos.left + pos.right) / 2);
                     center_y = Math.floor((pos.top + pos.bottom) / 2);
-                } catch(e) {}
-                evt.initMouseEvent(type, true, true, window, 1, 1, 1, center_x, center_y, false, false, false, false, 0, elem);
+                } catch (e) {}
+                evt.initMouseEvent(type, true, true, window, 1, 1, 1, center_x, center_y,
+                                   false, false, false, false, 0, elem);
                 // dispatchEvent return value is false if at least one of the event
                 // handlers which handled this event called preventDefault;
                 // so we cannot returns this results as it cannot accurately informs on the status
@@ -709,7 +715,7 @@
          */
         this.processSelector = function processSelector(selector) {
             var selectorObject = {
-                toString: function toString() {
+                "toString": function toString() {
                     return this.type + ' selector: ' + this.path;
                 }
             };
@@ -740,7 +746,8 @@
          * @return Array
          */
         this.removeElementsByXPath = function removeElementsByXPath(expression) {
-            var a = document.evaluate(expression, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+            var a = document.evaluate(expression, document, null,
+                                      XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
             for (var i = 0; i < a.snapshotLength; i++) {
                 a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
             }
@@ -787,7 +794,10 @@
             if (method === "POST") {
                 if (typeof data === "object") {
                     for (var k in data) {
-                        dataList.push(encodeURIComponent(k) + "=" + encodeURIComponent(data[k].toString()));
+                        if (data.hasOwnProperty(k)) {
+                            dataList.push(encodeURIComponent(k) + "=" +
+                                          encodeURIComponent(data[k].toString()));
+                        }
                     }
                     dataString = dataList.join('&');
                     this.log("sendAJAX(): Using request data: '" + dataString + "'", "debug");
@@ -810,7 +820,7 @@
         this.setField = function setField(field, value) {
             /*eslint complexity:0*/
             var logValue, fields, out;
-            value = logValue = (value || "");
+            value = logValue = value || "";
 
             if (field instanceof NodeList || field instanceof Array) {
                 fields = field;
@@ -825,7 +835,7 @@
 
             if (this.options && this.options.safeLogs && field.getAttribute('type') === "password") {
                 // obfuscate password value
-                logValue = new Array((''+value).length + 1).join("*");
+                logValue = new Array(('' + value).length + 1).join("*");
             }
 
             this.log('Set "' + field.getAttribute('name') + '" field value to ' + logValue, "debug");
@@ -857,15 +867,15 @@
                             break;
                         case "file":
                             throw {
-                                name:    "FileUploadError",
-                                message: "File field must be filled using page.uploadFile",
-                                path:    value
+                                "name": "FileUploadError",
+                                "message": "File field must be filled using page.uploadFile",
+                                "path": value
                             };
                         case "radio":
                             if (fields) {
                                 if (fields.length > 1) {
                                     Array.prototype.forEach.call(fields, function _forEach(e) {
-                                        e.checked = (e.value === value);
+                                        e.checked = e.value === value;
                                     });
                                 } else {
                                     field.checked = value ? true : false;
@@ -892,7 +902,7 @@
                         }
                     } else {
                         // PhantomJS 1.x.x can't handle setting value to ''
-                        if ('' === value) {
+                        if (value === '') {
                             field.selectedIndex = -1;
                         } else {
                             field.value = value;
@@ -926,7 +936,8 @@
             try {
                 field.blur();
             } catch (err) {
-                this.log("Unable to blur() input field " + field.getAttribute('name') + ": " + err, "warning");
+                this.log("Unable to blur() input field " + field.getAttribute('name') +
+                         ": " + err, "warning");
             }
             return out;
         };

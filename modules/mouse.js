@@ -33,11 +33,6 @@
 var require = patchRequire(require);
 var utils = require('utils');
 
-exports.create = function create(casper) {
-    "use strict";
-    return new Mouse(casper);
-};
-
 var Mouse = function Mouse(casper) {
     "use strict";
     if (!utils.isCasperObject(casper)) {
@@ -52,16 +47,16 @@ var Mouse = function Mouse(casper) {
     var emulatedEvents = ['mouseover', 'mouseout'],
         supportedEvents = nativeEvents.concat(emulatedEvents);
 
-    function computeCenter(selector) {
+    var computeCenter = function computeCenter(selector) {
         var bounds = casper.getElementBounds(selector);
         if (utils.isClipRect(bounds)) {
             var x = Math.round(bounds.left + bounds.width / 2);
-            var y = Math.round(bounds.top  + bounds.height / 2);
+            var y = Math.round(bounds.top + bounds.height / 2);
             return [x, y];
         }
-    }
+    };
 
-    function processEvent(type, args) {
+    var processEvent = function processEvent(type, args) {
         if (!utils.isString(type) || supportedEvents.indexOf(type) === -1) {
             throw new CasperError('Mouse.processEvent(): Unsupported mouse event type: ' + type);
         }
@@ -87,7 +82,7 @@ var Mouse = function Mouse(casper) {
             default:
                 throw new CasperError('Mouse.processEvent(): Too many arguments');
         }
-    }
+    };
 
     this.processEvent = function() {
         processEvent(arguments[0], slice.call(arguments, 1));
@@ -115,13 +110,13 @@ var Mouse = function Mouse(casper) {
         casper.page.evaluate(function (clientX, clientY) {
             var element = document.elementFromPoint(clientX, clientY);
 
-            raiseEvent('contextmenu');
-
-            function raiseEvent(eventType) {
+            var raiseEvent = function raiseEvent(eventType) {
                 var event = document.createEvent('MouseEvent');
-                event.initMouseEvent(eventType, true, true, window, 1, clientX, clientY, clientX, clientY, false, false, false, false, 2, null);
+                event.initMouseEvent(eventType, true, true, window, 1, clientX, clientY,
+                                     clientX, clientY, false, false, false, false, 2, null);
                 element.dispatchEvent(event);
-            }
+            };
+            raiseEvent('contextmenu');
         }, array[0], array[1]);
     };
 
@@ -140,5 +135,10 @@ var Mouse = function Mouse(casper) {
     this.up = function up() {
         processEvent('mouseup', arguments);
     };
+};
+
+exports.create = function create(casper) {
+    "use strict";
+    return new Mouse(casper);
 };
 exports.Mouse = Mouse;

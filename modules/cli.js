@@ -32,7 +32,25 @@
 
 var require = patchRequire(require);
 var utils = require('utils');
-var system = require('system');
+
+/**
+ * Cast a string argument to its typed equivalent.
+ *
+ * @param  String  arg
+ * @return Mixed
+ */
+var castArgument = function castArgument(arg) {
+    "use strict";
+    if (arg.match(/^-?\d+$/)) {
+        return parseInt(arg, 10);
+    } else if (arg.match(/^-?\d+\.\d+$/)) {
+        return parseFloat(arg);
+    } else if (arg.match(/^(true|false)$/i)) {
+        return arg.trim().toLowerCase() === "true" ? true : false;
+    } else {
+        return arg;
+    }
+};
 
 /**
  * Extracts, normalize and organize PhantomJS CLI arguments in a dedicated
@@ -44,13 +62,13 @@ var system = require('system');
 exports.parse = function parse(phantomArgs) {
     "use strict";
     var extract = {
-        args: [],
-        options: {},
-        raw: {
-            args: [],
-            options: {}
+        "args": [],
+        "options": {},
+        "raw": {
+            "args": [],
+            "options": {}
         },
-        drop: function drop(what) {
+        "drop": function drop(what) {
             if (utils.isNumber(what)) {
                 // deleting an arg by its position
                 this.args = this.args.filter(function _filter(arg, index) {
@@ -80,7 +98,7 @@ exports.parse = function parse(phantomArgs) {
                 throw new CasperError("Cannot drop argument of type " + typeof what);
             }
         },
-        has: function has(what) {
+        "has": function has(what) {
             if (utils.isNumber(what)) {
                 return what in this.args;
             }
@@ -89,7 +107,7 @@ exports.parse = function parse(phantomArgs) {
             }
             throw new CasperError("Unsupported cli arg tester " + typeof what);
         },
-        get: function get(what, def) {
+        "get": function get(what, def) {
             if (utils.isNumber(what)) {
                 return what in this.args ? this.args[what] : def;
             }
@@ -120,30 +138,11 @@ exports.parse = function parse(phantomArgs) {
         }
     });
     extract.raw = utils.mergeObjects(extract.raw, {
-        drop: function() {
+        "drop": function() {
             return extract.drop.apply(extract, arguments);
         },
-        has: extract.has,
-        get: extract.get
+        "has": extract.has,
+        "get": extract.get
     });
     return extract;
 };
-
-/**
- * Cast a string argument to its typed equivalent.
- *
- * @param  String  arg
- * @return Mixed
- */
-function castArgument(arg) {
-    "use strict";
-    if (arg.match(/^-?\d+$/)) {
-        return parseInt(arg, 10);
-    } else if (arg.match(/^-?\d+\.\d+$/)) {
-        return parseFloat(arg);
-    } else if (arg.match(/^(true|false)$/i)) {
-        return arg.trim().toLowerCase() === "true" ? true : false;
-    } else {
-        return arg;
-    }
-}

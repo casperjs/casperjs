@@ -34,17 +34,13 @@ var require = patchRequire(require);
 var utils = require('utils');
 var f = utils.format;
 
-function create() {
-    "use strict";
-    return new Stack();
-}
-exports.create = create;
-
 /**
  * Popups container. Implements Array prototype.
  *
  */
-var Stack = function Stack(){};
+var Stack = function Stack(){
+    "use strict";
+};
 exports.Stack = Stack;
 
 Stack.prototype = [];
@@ -164,4 +160,10 @@ Stack.prototype.list = function list() {
 Stack.prototype.toString = function toString() {
     "use strict";
     return f("[Object Stack], having %d popup(s)" % this.length);
+};
+
+
+exports.create = function create() {
+    "use strict";
+    return new Stack();
 };

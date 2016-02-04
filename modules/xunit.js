@@ -44,7 +44,7 @@ var TestSuiteResult = require('tester').TestSuiteResult;
  * @param  String  classname
  * @return String
  */
-function generateClassName(classname) {
+var generateClassName = function generateClassName(classname) {
     "use strict";
     classname = (classname || "").replace(phantom.casperPath, "").trim();
     var script = classname || phantom.casperScript || "";
@@ -62,16 +62,6 @@ function generateClassName(classname) {
         script = phantom.casperScript;
     }
     return script || "unknown";
-}
-
-/**
- * Creates a XUnit instance
- *
- * @return XUnit
- */
-exports.create = function create() {
-    "use strict";
-    return new XUnitExporter();
 };
 
 /**
@@ -97,37 +87,37 @@ XUnitExporter.prototype.getXML = function getXML() {
     }
     this.results.forEach(function(result) {
         var suiteNode = utils.node('testsuite', {
-            name: result.name,
-            tests: result.assertions,
-            failures: result.failed,
-            errors: result.crashed,
-            time: utils.ms2seconds(result.calculateDuration()),
-            timestamp: (new Date()).toISOString(),
-            'package': generateClassName(result.file)
+            "name": result.name,
+            "tests": result.assertions,
+            "failures": result.failed,
+            "errors": result.crashed,
+            "time": utils.ms2seconds(result.calculateDuration()),
+            "timestamp": (new Date()).toISOString(),
+            "package": generateClassName(result.file)
         });
         // succesful test cases
         result.passes.forEach(function(success) {
             var testCase = utils.node('testcase', {
-                name: success.message || success.standard,
-                classname: generateClassName(success.file),
-                time: utils.ms2seconds(~~success.time)
+                "name": success.message || success.standard,
+                "classname": generateClassName(success.file),
+                "time": utils.ms2seconds(~~success.time)
             });
             suiteNode.appendChild(testCase);
         });
         // failed test cases
         result.failures.forEach(function(failure) {
             var testCase = utils.node('testcase', {
-                name: failure.name || failure.message || failure.standard,
-                classname: generateClassName(failure.file),
-                time: utils.ms2seconds(~~failure.time)
+                "name": failure.name || failure.message || failure.standard,
+                "classname": generateClassName(failure.file),
+                "time": utils.ms2seconds(~~failure.time)
             });
             var failureNode = utils.node('failure', {
-                type: failure.type || "failure"
+                "type": failure.type || "failure"
             });
             failureNode.appendChild(document.createTextNode(failure.message || "no message left"));
             if (failure.values && failure.values.error instanceof Error) {
                 var errorNode = utils.node('error', {
-                    type: utils.betterTypeOf(failure.values.error)
+                    "type": utils.betterTypeOf(failure.values.error)
                 });
                 errorNode.appendChild(document.createTextNode(failure.values.error.stack));
                 testCase.appendChild(errorNode);
@@ -138,7 +128,7 @@ XUnitExporter.prototype.getXML = function getXML() {
         // errors
         result.errors.forEach(function(error) {
             var errorNode = utils.node('error', {
-                type: error.name
+                "type": error.name
             });
             errorNode.appendChild(document.createTextNode(error.stack ? error.stack : error.message));
             suiteNode.appendChild(errorNode);
@@ -158,7 +148,7 @@ XUnitExporter.prototype.getXML = function getXML() {
  *
  * @return string
  */
-XUnitExporter.prototype.getSerializedXML = function getSerializedXML(xml) {
+XUnitExporter.prototype.getSerializedXML = function getSerializedXML() {
     "use strict";
     var serializer = new XMLSerializer();
     return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this.getXML());
@@ -176,4 +166,14 @@ XUnitExporter.prototype.setResults = function setResults(results) {
     }
     this.results = results;
     return results;
+};
+
+/**
+ * Creates a XUnit instance
+ *
+ * @return XUnit
+ */
+exports.create = function create() {
+    "use strict";
+    return new XUnitExporter();
 };
