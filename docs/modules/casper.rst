@@ -386,6 +386,28 @@ Default wait timeout, for ``wait*`` family functions.
 ``Casper`` prototype
 ++++++++++++++++++++
 
+``abort()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``abort(Function onAbort)``
+
+Aborts running Casper without onComplete call.::
+
+    casper.start('http://foo.bar/1')
+    casper.then(function(){
+       this.abort(function onAbort(){
+          console.log("finished : display");
+       });
+    });    
+    casper.then(function(){
+       this.echo("not display");
+    }); 
+    casper.run(function() {
+        console.log("finished : not display");
+    });
+
+Also have a look at `run()`_.
+
 ``back()``
 -------------------------------------------------------------------------------
 
@@ -1707,6 +1729,26 @@ Returns the status of current Casper instance::
     });
 
     casper.run();
+
+``stop()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``stop()``
+
+Stops running Casper with onComplete call.::
+
+    casper.start('http://foo.bar/1')
+    casper.then(function(){
+       this.stop();
+    });    
+    casper.then(function(){
+       this.echo("not display");
+    }); 
+    casper.run(function() {
+        console.log("finished : display");
+    });
+
+Also have a look at `run()`_.
 
 .. index:: Step stack, Asynchronicity
 

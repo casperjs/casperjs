@@ -144,6 +144,7 @@ var Casper = function Casper(options) {
     this.popups = pagestack.create();
     // properties
     this.checker = null;
+    this.stepTimeoutCheckInterval = null;
     this.currentResponse = {};
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = null;
@@ -151,6 +152,7 @@ var Casper = function Casper(options) {
     this.loadInProgress = false;
     this.navigationRequested = false;
     this.browserInitializing = false;
+    this.aborting = false;
     this.logFormats = {};
     this.logLevels = ["debug", "info", "warning", "error"];
     this.logStyles = {
@@ -230,6 +232,26 @@ var Casper = function Casper(options) {
 
 // Casper class is an EventEmitter
 utils.inherits(Casper, events.EventEmitter);
+
+/**
+ * Abort running Casper without onComplete call.
+ *
+ * @return Casper
+ */
+Casper.prototype.abort = function abort( onAbort ) {
+    "use strict";
+    var self = this;
+    self.aborting = true;
+    self.checkStarted();
+    self.stop();
+    if (self.checker !== null){
+        clearInterval(self.checker);
+    }
+    if (utils.isFunction(onAbort)) {
+        setTimeout(onAbort, self.time, self);
+    }
+    return self;
+};
 
 /**
  * Go a step back in browser's history
@@ -395,6 +417,10 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
+    if (self.aborting){
+        self.aborting = false;
+        return;
+    }
     if (self.pendingWait || self.loadInProgress || self.navigationRequested || self.browserInitializing) {
         return;
     }
@@ -1524,6 +1550,9 @@ Casper.prototype.resourceExists = function resourceExists(test) {
 Casper.prototype.run = function run(onComplete, time) {
     "use strict";
     this.checkStarted();
+    if (this.aborting){
+        return;
+    }
     if (!this.steps || this.steps.length < 1) {
         throw new CasperError('No steps defined, aborting');
     }
@@ -1713,6 +1742,7 @@ Casper.prototype.start = function start(location, then) {
     this.popups = pagestack.create();
     this.steps = [];
     this.step = 0;
+    this.aborting = false;
     // Option checks
     if (this.logLevels.indexOf(this.options.logLevel) < 0) {
         this.log(f("Unknown log level '%d', defaulting to 'warning'", this.options.logLevel), "warning");
@@ -1763,6 +1793,23 @@ Casper.prototype.status = function status(asString) {
         currentStatus[property] = this[property];
     }.bind(this));
     return asString === true ? utils.dump(currentStatus) : currentStatus;
+};
+
+/**
+ * Abort running Casper with onComplete call.
+ *
+ * @return Casper
+ */
+Casper.prototype.stop = function abort() {
+    "use strict";
+    this.checkStarted();
+    if (self.checker !== null){
+        this.step = this.steps.length+1;
+        this.pendingWait = this.loadInProgress = this.navigationRequested = this.browserInitializing = false;
+        this.unwait();
+        clearInterval(this.stepTimeoutCheckInterval);
+    }
+    return this;
 };
 
 /**
