@@ -1,7 +1,7 @@
 {
   "name": "casperjs",
   "description": "A navigation scripting & testing utility for PhantomJS and SlimerJS",
-  "version": "1.1.0-beta4",
+  "version": "1.1.0-beta5",
   "keywords": [
     "phantomjs",
     "slimerjs",
