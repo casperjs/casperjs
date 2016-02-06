@@ -2420,6 +2420,26 @@ Casper.prototype.withPopup = function withPopup(popupInfo, then) {
 };
 
 /**
+* Allow user to create a new page object after calling a casper.page.close()
+* @return WebPage
+*/
+
+Casper.prototype.newPage = function newPage() {
+    "use strict";
+    this.checkStarted();
+    this.page.close();
+    this.page = this.mainPage = createPage(this);
+    this.page.settings = utils.mergeObjects(this.page.settings, this.options.pageSettings);
+    if (utils.isClipRect(this.options.clipRect)) {
+        this.page.clipRect = this.options.clipRect;
+    }
+    if (utils.isObject(this.options.viewportSize)) {
+        this.page.viewportSize = this.options.viewportSize;
+    }
+    return this.page;
+};
+
+/**
  * Changes the current page zoom factor.
  *
  * @param  Number  factor  The zoom factor
