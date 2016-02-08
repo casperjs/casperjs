@@ -343,3 +343,40 @@ casper.test.begin('open() PUT tests', 2, {
         });
     }
 });
+
+
+casper.test.begin('open() POST json object with utf8 content', 2, {
+    setUp: setUp,
+    tearDown: tearDown,
+    test: function(test) {
+        casper.open('tests/site/index.html', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            encoding: 'utf8',
+            data:   {
+                plop: 42,
+                chuck: 'nórrïs',
+                john: {'Doe': 'ïs here™€'}
+            }
+        }).then(function() {
+            test.pass("Casper.open() can POST a JSON object");
+            test.assertEquals(usedSettings, {
+                method: "POST",
+                encoding: 'utf8',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                data: '{"plop":42,"chuck":"nórrïs","john":{"Doe":"ïs here™€"}}'
+            }, "Casper.open() used the expected POST settings");
+        });
+
+        casper.run(function() {
+            test.done();
+        });
+    }
+});
+
+
+

@@ -1447,10 +1447,16 @@ Casper.prototype.open = function open(location, settings) {
     this.page.customHeaders = utils.mergeObjects(utils.clone(baseCustomHeaders), customHeaders);
     // perfom request
     this.browserInitializing = true;
-    this.page.openUrl(this.requestUrl, {
+    var phantomJsSettings = {
         operation: settings.method,
         data:      settings.data
-    }, this.page.settings);
+    };
+    // override any default encoding setting in phantomjs
+    if ('encoding' in settings) {
+        phantomJsSettings.encoding = settings.encoding;
+    }
+
+    this.page.openUrl(this.requestUrl, phantomJsSettings, this.page.settings);
     // revert base custom headers
     this.page.customHeaders = baseCustomHeaders;
     return this;
