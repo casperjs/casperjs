@@ -1442,7 +1442,8 @@ Casper.prototype.open = function open(location, settings) {
     this.browserInitializing = true;
     this.page.openUrl(this.requestUrl, {
         operation: settings.method,
-        data:      settings.data
+        data:      settings.data,
+        encoding:  settings.encoding
     }, this.page.settings);
     // revert base custom headers
     this.page.customHeaders = baseCustomHeaders;
