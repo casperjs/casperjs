@@ -28,17 +28,18 @@ var QueryString = exports;
 // obj.hasOwnProperty(prop) will break.
 // See: https://github.com/joyent/node/issues/1707
 function hasOwnProperty(obj, prop) {
+  "use strict";
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-
 function charCode(c) {
+  "use strict";
   return c.charCodeAt(0);
 }
 
-
 // a safe fast alternative to decodeURIComponent
 QueryString.unescapeBuffer = function(s, decodeSpaces) {
+  "use strict";
   var out = new Buffer(s.length);
   var state = 'CHAR'; // states: CHAR, HEX0, HEX1
   var n, m, hexchar;
@@ -54,8 +55,11 @@ QueryString.unescapeBuffer = function(s, decodeSpaces) {
             state = 'HEX0';
             break;
           case charCode('+'):
-            if (decodeSpaces) c = charCode(' ');
-            // pass thru
+            if (decodeSpaces) {
+              c = charCode(' ');
+            }
+            out[outIndex++] = c;
+            break;
           default:
             out[outIndex++] = c;
             break;
@@ -95,25 +99,26 @@ QueryString.unescapeBuffer = function(s, decodeSpaces) {
         }
         out[outIndex++] = 16 * n + m;
         break;
+        default:
+        break;
     }
   }
-
   // TODO support returning arbitrary buffers.
-
   return out.slice(0, outIndex - 1);
 };
 
-
 QueryString.unescape = function(s, decodeSpaces) {
+  "use strict";
   return QueryString.unescapeBuffer(s, decodeSpaces).toString();
 };
 
-
 QueryString.escape = function(str) {
+  "use strict";
   return encodeURIComponent(str);
 };
 
 var stringifyPrimitive = function(v) {
+  "use strict";
   switch (typeof v) {
     case 'string':
       return v;
@@ -129,8 +134,8 @@ var stringifyPrimitive = function(v) {
   }
 };
 
-
 QueryString.stringify = QueryString.encode = function(obj, sep, eq, name) {
+  "use strict";
   sep = sep || '&';
   eq = eq || '=';
   if (obj === null) {
@@ -151,13 +156,16 @@ QueryString.stringify = QueryString.encode = function(obj, sep, eq, name) {
 
   }
 
-  if (!name) return '';
+  if (!name) {
+    return '';
+  }
   return QueryString.escape(stringifyPrimitive(name)) + eq +
          QueryString.escape(stringifyPrimitive(obj));
 };
 
 // Parse a key=val string.
 QueryString.parse = QueryString.decode = function(qs, sep, eq, options) {
+  "use strict";
   sep = sep || '&';
   eq = eq || '=';
   var obj = {};
@@ -209,6 +217,5 @@ QueryString.parse = QueryString.decode = function(qs, sep, eq, options) {
       obj[k] = [obj[k], v];
     }
   }
-
   return obj;
 };

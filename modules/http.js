@@ -34,7 +34,9 @@ var utils = require('utils');
 /*
  * Building an Array subclass
  */
-function responseHeaders(){}
+function responseHeaders(){
+    "use strict";
+}
 responseHeaders.prototype = [];
 
 /**
@@ -65,8 +67,13 @@ responseHeaders.prototype.get = function get(name){
 exports.augmentResponse = function(response) {
     "use strict";
     if (!utils.isHTTPResource(response)) {
-        return;
+        return undefined;
     }
-    response.headers.__proto__ = responseHeaders.prototype;
+    Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
+        obj.__proto__ = proto;
+        return obj;
+    };
+
+    Object.setPrototypeOf(response.headers, responseHeaders.prototype);
     return response;
 };

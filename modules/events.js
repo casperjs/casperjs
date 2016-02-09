@@ -33,6 +33,7 @@
 var isArray = Array.isArray;
 
 function EventEmitter() {
+  "use strict";
   this._filters = {};
 }
 exports.EventEmitter = EventEmitter;
@@ -45,18 +46,19 @@ exports.EventEmitter = EventEmitter;
 // that to be increased. Set to zero for unlimited.
 var defaultMaxListeners = 10;
 EventEmitter.prototype.setMaxListeners = function(n) {
-  if (!this._events) this._events = {};
+  "use strict";
+  if (!this._events) {
+    this._events = {};
+  }
   this._maxListeners = n;
 };
 
-
 EventEmitter.prototype.emit = function emit() {
+  "use strict";
   var type = arguments[0];
   // If there is no 'error' event listener then throw.
   if (type === 'error') {
-    if (!this._events || !this._events.error ||
-        (isArray(this._events.error) && !this._events.error.length))
-    {
+    if (!this._events || !this._events.error || isArray(this._events.error) && !this._events.error.length) {
       if (arguments[1] instanceof Error) {
         throw arguments[1]; // Unhandled 'error' event
       } else {
@@ -65,9 +67,13 @@ EventEmitter.prototype.emit = function emit() {
     }
   }
 
-  if (!this._events) return false;
-  var handler = this._events[type];
-  if (!handler) return false;
+  if (!this._events) {
+    return false;
+  }
+  var handler = this._events[type], i, args, l;
+  if (!handler) {
+    return false;
+  }
 
   if (typeof handler === 'function') {
     try {
@@ -84,9 +90,11 @@ EventEmitter.prototype.emit = function emit() {
           break;
         // slower
         default:
-          var l = arguments.length;
-          var args = new Array(l - 1);
-          for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+          l = arguments.length;
+          args = new Array(l - 1);
+          for (i = 1; i < l; i++) {
+            args[i - 1] = arguments[i];
+          }
           handler.apply(this, args);
       }
     } catch (err) {
@@ -95,12 +103,14 @@ EventEmitter.prototype.emit = function emit() {
     return true;
 
   } else if (isArray(handler)) {
-    var l = arguments.length;
-    var args = new Array(l - 1);
-    for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+    l = arguments.length;
+    args = new Array(l - 1);
+    for (i = 1; i < l; i++) {
+      args[i - 1] = arguments[i];
+    }
 
     var listeners = handler.slice();
-    for (var i = 0, l = listeners.length; i < l; i++) {
+    for (i = 0, l = listeners.length; i < l; i++) {
       listeners[i].apply(this, args);
     }
     return true;
@@ -113,11 +123,14 @@ EventEmitter.prototype.emit = function emit() {
 // EventEmitter is defined in src/node_events.cc
 // EventEmitter.prototype.emit() is also defined there.
 EventEmitter.prototype.addListener = function addListener(type, listener) {
-  if ('function' !== typeof listener) {
+  "use strict";
+  if (typeof listener !== 'function') {
     throw new CasperError('addListener only takes instances of Function');
   }
 
-  if (!this._events) this._events = {};
+  if (!this._events) {
+    this._events = {};
+  }
 
   // To avoid recursion in the case that type == "newListeners"! Before
   // adding it to the listeners, first emit "newListeners".
@@ -129,7 +142,7 @@ EventEmitter.prototype.addListener = function addListener(type, listener) {
   } else if (isArray(this._events[type])) {
 
     // If we've already got an array, just append.
-    this._events[type]['fail' === type ? 'unshift' : 'push'](listener);
+    this._events[type][type === 'fail' ? 'unshift' : 'push'](listener);
 
     // Check for listener leak
     if (!this._events[type].warned) {
@@ -151,18 +164,21 @@ EventEmitter.prototype.addListener = function addListener(type, listener) {
     }
   } else {
     // Adding the second element, need to change to array.
-    this._events[type] = 'fail' === type ? [listener, this._events[type]] : [this._events[type], listener];
+    this._events[type] = type === 'fail' ? [listener, this._events[type]] : [this._events[type], listener];
   }
 
   return this;
 };
 
 EventEmitter.prototype.prependListener = function prependListener(type, listener) {
-  if ('function' !== typeof listener) {
+  "use strict";
+  if (typeof listener !== 'function') {
     throw new CasperError('addListener only takes instances of Function');
   }
 
-  if (!this._events) this._events = {};
+  if (!this._events) {
+    this._events = {};
+  }
 
   // To avoid recursion in the case that type == "newListeners"! Before
   // adding it to the listeners, first emit "newListeners".
@@ -205,7 +221,8 @@ EventEmitter.prototype.prependListener = function prependListener(type, listener
 EventEmitter.prototype.on = EventEmitter.prototype.addListener;
 
 EventEmitter.prototype.once = function once(type, listener) {
-  if ('function' !== typeof listener) {
+  "use strict";
+  if (typeof listener !== 'function') {
     throw new CasperError('.once only takes instances of Function');
   }
 
@@ -222,33 +239,34 @@ EventEmitter.prototype.once = function once(type, listener) {
 };
 
 EventEmitter.prototype.removeListener = function removeListener(type, listener) {
-  if ('function' !== typeof listener) {
+  "use strict";
+  if (typeof listener !== 'function') {
     throw new CasperError('removeListener only takes instances of Function');
   }
 
   // does not use listeners(), so no side effect of creating _events[type]
-  if (!this._events || !this._events[type]) return this;
-
+  if (!this._events || !this._events[type]) {
+    return this;
+  }
   var list = this._events[type];
 
   if (isArray(list)) {
     var position = -1;
     for (var i = 0, length = list.length; i < length; i++) {
-      if (list[i] === listener ||
-          (list[i].listener && list[i].listener === listener))
-      {
+      if (list[i] === listener || list[i].listener && list[i].listener === listener) {
         position = i;
         break;
       }
     }
 
-    if (position < 0) return this;
+    if (position < 0) {
+      return this;
+    }
     list.splice(position, 1);
-    if (list.length === 0)
+    if (list.length === 0) {
       delete this._events[type];
-  } else if (list === listener ||
-             (list.listener && list.listener === listener))
-  {
+    }
+  } else if (list === listener || list.listener && list.listener === listener) {
     delete this._events[type];
   }
 
@@ -256,19 +274,27 @@ EventEmitter.prototype.removeListener = function removeListener(type, listener) 
 };
 
 EventEmitter.prototype.removeAllListeners = function removeAllListeners(type) {
+  "use strict";
   if (arguments.length === 0) {
     this._events = {};
     return this;
   }
 
   // does not use listeners(), so no side effect of creating _events[type]
-  if (type && this._events && this._events[type]) this._events[type] = null;
+  if (type && this._events && this._events[type]) {
+    this._events[type] = null;
+  }
   return this;
 };
 
 EventEmitter.prototype.listeners = function listeners(type) {
-  if (!this._events) this._events = {};
-  if (!this._events[type]) this._events[type] = [];
+  "use strict";
+  if (!this._events) {
+    this._events = {};
+  }
+  if (!this._events[type]) {
+    this._events[type] = [];
+  }
   if (!isArray(this._events[type])) {
     this._events[type] = [this._events[type]];
   }
@@ -277,20 +303,22 @@ EventEmitter.prototype.listeners = function listeners(type) {
 
 // Added for CasperJS: filters a value attached to an event
 EventEmitter.prototype.filter = function filter() {
+  "use strict";
   var type = arguments[0];
   if (!this._filters) {
     this._filters = {};
-    return;
+    return undefined;
   }
 
   var _filter = this._filters[type];
   if (typeof _filter !== 'function') {
-    return;
+    return undefined;
   }
   return _filter.apply(this, Array.prototype.splice.call(arguments, 1));
 };
 
 EventEmitter.prototype.removeAllFilters = function removeAllFilters(type) {
+  "use strict";
   if (arguments.length === 0) {
     this._filters = {};
     return this;
@@ -302,10 +330,11 @@ EventEmitter.prototype.removeAllFilters = function removeAllFilters(type) {
 };
 
 EventEmitter.prototype.setFilter = function setFilter(type, filterFn) {
+  "use strict";
   if (!this._filters) {
     this._filters = {};
   }
-  if ('function' !== typeof filterFn) {
+  if (typeof filterFn !== 'function') {
     throw new CasperError('setFilter only takes instances of Function');
   }
   if (!this._filters[type]) {
