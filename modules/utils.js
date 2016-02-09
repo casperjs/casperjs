@@ -94,8 +94,7 @@ function betterInstanceOf(input, constructor) {
       if (typeof inputToTest == 'undefined') {
         return false;
       }
-      inputToTest = (inputToTest instanceof Object || isObject(inputToTest))
-                    && Object.getPrototypeOf(inputToTest);
+      inputToTest = inputToTest.__proto__;
     }
     return equals(input.constructor.name, constructor.name);
 }
