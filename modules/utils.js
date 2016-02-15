@@ -726,7 +726,7 @@ exports.ms2seconds = ms2seconds;
  */
 function node(name, attributes) {
     "use strict";
-    var _node   = document.createElement(name);
+    var _node   = document.createElementNS('', name);
     for (var attrName in attributes) {
         var value = attributes[attrName];
         if (attributes.hasOwnProperty(attrName) && isString(attrName)) {
