@@ -96,3 +96,17 @@ casper.test.begin('XUnitReporter() can handle custom name attribute for a test c
     test.assertEquals(casper.getElementInfo('failure[type="footype"]').text, 'footext');
     test.done();
 });
+
+casper.test.begin('XUnitReporter() does not have default XML namespace', 1, function suite(test) {
+    var xunit = require('xunit').create();
+    var results = new tester.TestSuiteResult();
+    var suite1 = new tester.TestCaseResult({
+        name: 'foo',
+        file: '/foo'
+    });
+    results.push(suite1);
+    xunit.setResults(results);
+    casper.start().setContent(xunit.getSerializedXML());
+    test.assertNotExists('testsuites[xmlns]');
+    test.done();
+});
