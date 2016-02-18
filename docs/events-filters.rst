@@ -462,6 +462,13 @@ Emitted when Casper has been started using ``Casper.start()``.
 
 Emitted when a new navigation step has been added to the stack.
 
+``step.bypassed``
+~~~~~~~~~~~~~~
+
+**Arguments:** ``step, step``
+
+Emitted when a new navigation step has been reached by bypass (destination, origin).
+
 ``step.complete``
 ~~~~~~~~~~~~~~~~~
 
