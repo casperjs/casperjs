@@ -270,9 +270,11 @@ Casper.prototype.bypass = function bypass(nb) {
     "use strict";
     var step = this.step,
         steps = this.steps,
-        last = steps.length;
+        last = steps.length,
+        targetStep = Math.min(step + nb, last);
     this.checkStarted();
-    this.step = Math.min(step + nb, last);
+    this.step = targetStep;
+    this.emit('step.bypassed', targetStep, step);
     return this;
 };
 
