@@ -43,6 +43,22 @@ Just drag the following link onto your favorites toobar; when clicking it, a ``_
 ``ClientUtils`` prototype
 +++++++++++++++++++++++++
 
+.. index:: css
+
+``addPseudoClassToElement()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``addPseudoClassToElement(String pseudoClass, String selector)``
+
+.. versionadded:: 1.1
+
+Adds a pseudo class to simulate css hover style and other pseudo class::
+
+    casper.start('http://foo.ner/').thenEvaluate(function() {
+        __utils__.addPseudoClassToElement('hover','#id'); 
+    });
+
+
 .. index:: echo
 
 ``echo()``
@@ -363,6 +379,24 @@ Supported events are ``mouseup``, ``mousedown``, ``click``, ``mousemove``, ``mou
 **Signature:** ``removeElementsByXPath(String expression)``
 
 Removes all DOM elements matching a given :ref:`XPath expression <selectors>`.
+
+
+.. index:: css
+
+``removePseudoClassFromElement()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``removePseudoClassFromElement(String pseudoClass, String selector)``
+
+.. versionadded:: 1.1
+
+Removes a pseudo class css::
+
+    casper.start('http://foo.ner/').thenEvaluate(function() {
+        __utils__.removePseudoClassFromElement('hover','#id'); 
+    });
+
+
 
 .. index:: AJAX
 

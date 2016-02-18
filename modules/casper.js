@@ -246,6 +246,18 @@ Casper.prototype.back = function back() {
 };
 
 /**
+ * Adds a pseudo class to simulate css hover style and other pseudo class
+ *
+ * @param  String  pseudoclassname     Type of css pseudoClass
+ * @param  String  selector            DOM CSS3/XPath selector
+ */
+Casper.prototype.addPseudoClass = function addPseudoClass(pseudoclassname, selector) {
+    "use strict";
+    this.checkStarted();
+    return this.callUtils("addPseudoClassToElement", pseudoclassname, selector);
+};
+
+/**
  * Encodes a resource using the base64 algorithm synchronously using
  * client-side XMLHttpRequest.
  *
@@ -1473,6 +1485,18 @@ Casper.prototype.reload = function reload(then) {
         this.then(this.createStep(then));
     }
     return this;
+};
+
+/**
+ * Removes a pseudo class css hover style and other pseudo class
+ *
+ * @param  String  pseudoclassname     Type of css pseudoClass
+ * @param  String  selector            DOM CSS3/XPath selector
+ */
+Casper.prototype.removePseudoClass = function removePseudoClass(pseudoclassname, selector) {
+    "use strict";
+    this.checkStarted();
+    return this.callUtils("removePseudoClassFromElement", pseudoclassname, selector);
 };
 
 /**

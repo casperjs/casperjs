@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Test</title>
+        <style>
+            body {
+                padding: 0px;
+                margin: 0px;
+            }
+            div {
+                display: none;
+                width: 120px;
+                height: 120px;
+            }
+            #cssPseudo {
+                background-color: red;
+                display: block;
+            }
+            #cssPseudo:hover #cssPseudoRight {
+                display: block;
+                background-color: green;
+                margin-left: 120px;
+            }
+            #elseCss {
+                background-color: blue;
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="cssPseudo">
+            <div id="cssPseudoRight"></div>
+        </div>
+       <div id="elseCss">
+        </div>
+    </body>
+</html>
