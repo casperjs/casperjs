@@ -1458,7 +1458,7 @@ To POST some data with utf-8 encoding::
            }
     });
 
-.. versionadded:: 1.0
+.. versionadded:: 1.1
 
 
 You can also set custom request headers to send when performing an outgoing request, passing the ``headers`` option::
