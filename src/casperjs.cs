@@ -143,7 +143,7 @@ class casperjs {
             bool found = false;
             Match arg_match = arg_regex.Match(arg);
             if (arg_match.Success) {
-                string arg_name = arg_match.Groups[0].Captures[0].ToString();
+                string arg_name = arg_match.Groups[1].Captures[0].ToString();
                 foreach(string native in ENGINE_NATIVE_ARGS) {
                     if (arg_name == native) {
                         ENGINE_ARGS.Add(arg);
