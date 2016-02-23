@@ -308,7 +308,7 @@ class ScriptOptionsTest(CasperExecTestBase):
         # Specify a mix of engine and script options.
         # --whoops is special in that it starts with --w, which is a phantomjs engine command.
         #  At one time was mishandled in src/casperjs.cs.
-        script_path_script_args = script_path + ' --debug=no --load-images=no --whoops --this-is-a=test'
+        script_path_script_args = script_path + ' --debug=no --load-images=no --whoops --this-is-a=test --max-disk-cache-size=1024'
         self.assertCommandOutputContains(script_path_script_args, [
             '    "whoops": true,',
             '    "this-is-a": "test"',
@@ -319,10 +319,11 @@ class ScriptOptionsTest(CasperExecTestBase):
         # Specify a mix of engine and script options.
         # --whoops is special in that it starts with --w, which is a phantomjs engine command.
         #  At one time was mishandled in src/casperjs.cs.
-        script_path_script_args = script_path + ' --debug=no --load-images=no --whoops --this-is-a=test'
+        script_path_script_args = script_path + ' --debug=no --load-images=no --whoops --this-is-a=test --max-disk-cache-size=1024'
         self.assertCommandOutputDoesNotContain(script_path_script_args, [
-            '    "debug": false,',
-            '    "load-images": false,',
+            '    "debug": "no",',
+            '    "load-images": "no",',
+            '    "max-disk-cache-size": 1024',
         ])
 
 
