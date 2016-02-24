@@ -1571,7 +1571,7 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
         exitStatus = 1;
         statusText = this.options.warnText;
         style = 'WARN_BAR';
-        result = f("%s Looks like you didn't run any test.", statusText);
+        result = f("%s Looks like you didn't run any tests.", statusText);
     } else {
         if (this.suiteResults.isFailed()) {
             exitStatus = 1;
