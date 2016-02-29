@@ -1686,6 +1686,62 @@ Casper.prototype.setContent = function setContent(content) {
     return this;
 };
 
+
+/**
+ * Sets a value to form field by CSS3, XPath selector or by it's name attribute or label text.
+ *
+ * @param String|Object selector    CSS3, XPath, name or label
+ * @param Mixed         value       Value being set
+ * @param String|Object form        (optional) CSS3 or XPath selector of form
+ * @param Object        options     Options to setFieldValue, it accepts:
+ *                                  - options.selectorType name|labes|xpath|css3 - type of selector, where
+ *                                    CSS3 and XPath(object) is autodetected (need not be set)
+ */
+Casper.prototype.setFieldValue = function setFieldValue(selector, value, form, options) {
+    "use strict";
+    this.checkStarted();
+
+    var selectorType = options && options.selectorType;
+
+    var result = this.evaluate(function _evaluate(selector, value, form, selectorType) {
+        if (selectorType) {
+            selector = __utils__.makeSelector(selector, selectorType);
+        }
+        return __utils__.setFieldValue(selector, value, {'formSelector': form});
+    }, selector, value, form, selectorType);
+
+    if (!result) {
+        throw new CasperError("Unable to set field '" + selector + " to value: " + value) +
+            ' in setFieldValue().';
+    }
+};
+
+/**
+ * Alias to setFieldValue() with implicit type name
+ *
+ * @param String        name    Name of form field
+ * @param Mixed         value   Value being set
+ * @param String|Object form    (optional) CSS3 or XPath selector of form
+ */
+Casper.prototype.setFieldValueName = function setFieldValueName(name, value, form) {
+    "use strict";
+    this.checkStarted();
+    this.setFieldValue(name, value, form, {'selectorType': 'name'});
+};
+
+/**
+ * Alias to setFieldValue() with implicit type label
+ *
+ * @param String        name    Name of form field
+ * @param Mixed         value   Value being set
+ * @param String|Object form    (optional) CSS3 or XPath selector of form
+ */
+Casper.prototype.setFieldValueLabel = function setFieldValueLabel(label, value, form) {
+    "use strict";
+    this.checkStarted();
+    this.setFieldValue(label, value, form, {'selectorType': 'label'});
+};
+
 /**
  * Sets current WebPage instance the credentials for HTTP authentication.
  *

@@ -1,5 +1,6 @@
 /*eslint strict:0*/
 var fs = require('fs');
+var x = require('casper').selectXPath;
 
 function testFormValues(test) {
     test.assertField('email', 'chuck@norris.com',
@@ -315,3 +316,108 @@ casper.test.begin('fillSelectors() tests', 4, function(test) {
         test.done();
     });
 });
+
+//
+// setFieldValue() tests
+//
+casper.test.begin('setFieldValue() tests with css3 selector and form', 9, function(test) {
+    casper.start('tests/site/form.html', function() {
+        var data = {
+            "input[name='email']":        'chuck@norris.com',
+            "input[name='password']":     42,
+            "textarea[name='content']":   'Am watching thou',
+            "input[name='check']":        true,
+            "input[name='choice']":       'no',
+            "select[name='topic']":       'bar',
+            "select[name='multitopic']":  ['bar', 'car'],
+            "input[name='checklist[]']":  ['1', '3'],
+            "input[name='strange']":      "very"
+        };
+
+        for (var selector in data){
+            this.setFieldValue(selector, data[selector], 'form[action="result.html"]');
+        }
+        testFormValues(test);
+    });
+
+    casper.run(function() {
+        test.done();    
+    });
+});
+
+casper.test.begin('setFieldValue() tests with XPath selector', 9, function(test) {
+    casper.start('tests/site/form.html', function() {
+        var data = {
+            '//input[@name="email"]':       'chuck@norris.com',
+            '//input[@name="password"]':    42,
+            '//textarea[@name="content"]':  'Am watching thou',
+            '//input[@name="check"]':       true,
+            '//input[@name="choice"]':      'no',
+            '//select[@name="topic"]':      'bar',
+            '//select[@name="multitopic"]': ['bar', 'car'],
+            '//input[@name="checklist[]"]': ['1', '3'],
+            '//input[@name="strange"]':     "very"
+        };
+
+        for (var selector in data){
+            this.setFieldValue(x(selector), data[selector]);
+        }
+        testFormValues(test);
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('setFieldValueName() tests', 9, function(test) {
+    casper.start('tests/site/form.html', function() {
+        var data = {
+            email:         'chuck@norris.com',
+            password:      42,
+            content:       'Am watching thou',
+            check:         true,
+            choice:        'no',
+            topic:         'bar',
+            multitopic:    ['bar', 'car'],
+            'checklist[]': ['1', '3'],
+            strange:       "very"
+        };
+
+        for (var selector in data){
+            this.setFieldValueName(selector, data[selector]);
+        }
+        testFormValues(test);
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('setFieldValueLabel() tests', 9, function(test) {
+    casper.start('tests/site/form.html', function() {
+        var data = {
+            Email:         'chuck@norris.com',
+            Password:      42,
+            Content:       'Am watching thou',
+            Check:         true,
+            No:            true,
+            Topic:         'bar',
+            Multitopic:    ['bar', 'car'],
+            "1":           true,
+            "3":           true,
+            Strange:       "very"     
+        };
+
+        for (var selector in data){
+            this.setFieldValueLabel(selector, data[selector]);
+        }
+        testFormValues(test);
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+// end setFieldValue() test
