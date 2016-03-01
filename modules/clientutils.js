@@ -660,23 +660,23 @@
             type = type || 'xpath'; // default type
             var ret;
 
-            if (typeof selector === "object") { //selector object (CSS3 | XPath) could by passed
+            if (typeof selector === "object") { // selector object (CSS3 | XPath) could by passed
                 selector = selector.path;
             }
 
             switch (type) {
-                case 'css': //do nothing
+                case 'css': // do nothing
                     ret = selector;
                     break;
-                case 'name': //convert to css 
+                case 'name': // convert to css 
                 case 'names': 
                     ret = '[name="' + selector + '"]';
                     break;
-                case 'label': //covert to xpath object
+                case 'label': // covert to xpath object
                 case 'labels': 
                     ret = {type:'xpath', path:'//*[@id=string(//label[text()="' + selector + '"]/@for)]'};
                     break;
-                case 'xpath': //covert to xpath object
+                case 'xpath': // covert to xpath object
                     ret = {type:'xpath', path: selector};
                     break;
                 default:
@@ -684,7 +684,7 @@
             }
 
             return ret;
-        }
+        };
 
         /**
          * Dispatches a mouse event to the DOM element behind the provided selector.
@@ -871,7 +871,7 @@
                 return false;
             }
             return true;
-        }
+        };
 
         /**
          * Sets a field (or a set of fields) value. Fails silently, but log
