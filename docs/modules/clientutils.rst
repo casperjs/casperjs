@@ -317,14 +317,14 @@ Logs a message with an optional level. Will format the message a way CasperJS wi
 
 .. versionadded:: 1.1-beta5
 
-Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for XPath type - it makes XPath object. Function also accepts name attribute of the form filed or can select element by its label text.
+Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for XPath type - it makes XPath object. Function also accepts name attribute of the form field or can select element by its label text.
 
-Parametr ``type`` values:
+Parameter ``type`` values:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 - 'css'
    
-  CSS3 selector - selector is returned trasparently
+  CSS3 selector - selector is returned transparently
    
 - 'xpath' || null
     
@@ -336,7 +336,7 @@ Parametr ``type`` values:
 
 - 'label' || 'labels'
  
-  select input of specific label, internally covert to XPath selector. As selector is label's text used
+  select input of specific label, internally converted into XPath selector. As selector is label's text used
    
 Examples::
 
@@ -405,7 +405,7 @@ Sends an AJAX request, using the following parameters:
 .. versionadded:: 1.1-beta5
 
 Sets a value to form field by CSS3 or XPath selector.
-With `makeSelector()`_ function can by easily used with ``name`` or ``label`` selector 
+With `makeSelector()`_ function can be easily used with ``name`` or ``label`` selector 
 
 Options
 ~~~~~~~
