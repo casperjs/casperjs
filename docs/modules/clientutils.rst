@@ -309,6 +309,43 @@ Logs a message with an optional level. Will format the message a way CasperJS wi
         __utils__.log("We've got a problem on client side", 'error');
     });
 
+
+``makeSelector()``
+-----------------------------------------------------------------------------
+
+**Signature:** ``makeSelector(String selector [, String type])``
+
+.. versionadded:: 1.1-beta5
+
+Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for XPath type - it makes XPath object. Function also accepts name attribute of the form filed or can select element by its label text.
+
+Parametr ``type`` values:
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+- 'css'
+   
+  CSS3 selector - selector is returned trasparently
+   
+- 'xpath' || null
+    
+  XPath selector - return XPath object    
+
+- 'name' || 'names'
+ 
+  select input of specific name, internally covert to CSS3 selector
+
+- 'label' || 'labels'
+ 
+  select input of specific label, internally covert to XPath selector. As selector is label's text used
+   
+Examples::
+
+    __utils__.makeSelector('//li[text()="blah"]', 'xpath'); // return {type: 'xpath', path: '//li[text()="blah"]'}
+    __utils__.makeSelector('parameter', 'name'); // return '[name="parameter"]'
+    __utils__.makeSelector('My label', 'label'); // return {type: 'xpath', path: '//*[@id=string(//label[text()="My label"]/@for)]'}
+
+
+
 ``mouseEvent()``
 -------------------------------------------------------------------------------
 
@@ -359,6 +396,30 @@ Sends an AJAX request, using the following parameters:
        casper.then(function() {
            require('utils').dump(data);
        });
+
+``setFieldValue()``
+-----------------------------------------------------------------------------
+
+**Signature:** ``setFieldValue(String|Object selector, Mixed value [, Object options])``
+
+.. versionadded:: 1.1-beta5
+
+Sets a value to form field by CSS3 or XPath selector.
+With `makeSelector()`_ function can by easily used with ``name`` or ``label`` selector 
+
+Options
+~~~~~~~
+    
+- ``(String|Object) formSelector: selector :``
+
+  specific form scope
+
+Examples::
+
+    __utils__.setFieldValue("input[name='email']", 'chuck@norris.com');
+    __utils__.setFieldValue("input[name='email']", 'chuck@norris.com', {'formSelector': '#myform'});
+    __utils__.setFieldValue(__utils__.makeSelector('email', 'name'), 'chuck@norris.com');
+
 
 ``visible()``
 -------------------------------------------------------------------------------
