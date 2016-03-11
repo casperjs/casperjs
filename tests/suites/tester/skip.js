@@ -1,12 +1,12 @@
 /*eslint strict:0*/
-casper.test.begin('Skip tests', 4, function(test) {
+casper.test.begin('Skip tests after', 4, function(test) {
     test.assert(true, 'First test executed');
     test.assert(true, 'Second test executed');
     test.skip(2, 'Two tests skipped');
     test.done();
 });
 
-casper.test.begin('Skip tests after', 4, function(test) {
+casper.test.begin('Skip tests before', 4, function(test) {
     test.skip(2, 'Two tests skipped');
     test.assert(true, 'Third test executed');
     test.assert(true, 'Fourth test executed');
