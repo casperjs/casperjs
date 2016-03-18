@@ -837,6 +837,8 @@ Evaluates an expression within the current page DOM and ``die()`` if it returns 
 
 Exits PhantomJS with an optional exit status code.
 
+Note: You can not rely on the fact that your script will be turned off immediately, because this method works asynchronously. It means that your script may continue to be executed after the call of this method. More info `here <https://github.com/n1k0/casperjs/issues/193>`_.
+
 .. index:: DOM
 
 ``exists()``
