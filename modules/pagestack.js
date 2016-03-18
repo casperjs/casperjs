@@ -50,22 +50,20 @@ exports.Stack = Stack;
 Stack.prototype = [];
 
 /**
- * Cleans the stack from closed popup.
+ * Cleans the stack from any closed popups.
  *
- * @param  WebPage  closed  Closed popup page instance
  * @return Number           New stack length
  */
-Stack.prototype.clean = function clean(closed) {
+Stack.prototype.clean = function clean() {
     "use strict";
-    var closedIndex = -1;
+    var self = this;
+
     this.forEach(function(popup, index) {
-        if (closed === popup) {
-            closedIndex = index;
+        // window references lose the parent attribute when they are no longer valid
+        if (popup.parent === null || typeof popup.parent === "undefined") {
+            self.splice(index, 1);
         }
     });
-    if (closedIndex > -1) {
-        this.splice(closedIndex, 1);
-    }
     return this.length;
 };
 

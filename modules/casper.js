@@ -2645,7 +2645,7 @@ function createPage(casper) {
             casper.emit('popup.loaded', popupPage);
         };
         popupPage.onClosing = function onClosing(closedPopup) {
-            casper.popups.clean(closedPopup);
+            casper.popups.clean();
             casper.emit('popup.closed', closedPopup);
         };
     };
