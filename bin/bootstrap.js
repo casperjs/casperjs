@@ -424,6 +424,12 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     // casper loading status flag
     phantom.casperLoaded = true;
+    if (phantom.version.major === 2
+        && phantom.casperScript
+        && phantom.casperScript.split('.').pop() === 'coffee'
+        ) {
+        return __terminate('CoffeeScript is not supported by PhantomJS > 2.');
+    }
 
     // passed casperjs script execution
     if (phantom.casperScript && !phantom.injectJs(phantom.casperScript)) {
