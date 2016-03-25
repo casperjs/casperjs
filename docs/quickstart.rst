@@ -129,7 +129,7 @@ Run it:
 CoffeeScript version
 --------------------
 
-You can also write Casper scripts using the `CoffeeScript syntax <http://jashkenas.github.com/coffee-script/>`_:
+You can also write Casper scripts using the `CoffeeScript syntax <http://coffeescript.org/>`_:
 
 .. code-block:: coffeescript
 
