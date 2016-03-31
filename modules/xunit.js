@@ -80,8 +80,15 @@ exports.create = function create() {
  */
 function XUnitExporter() {
     "use strict";
+
+    // Since we are outputting XML, let's do our own document type
+    var documentType = document.implementation.createDocumentType("casperjs", "-//CasperJS//XUnit Test Results", "testsuites");
+
+    this._xmlDocument = document.implementation.createDocument("", "", documentType);
+    this._xml = this._xmlDocument.appendChild(this._xmlDocument.createElement("testsuites"));
+
+    // Initialize everything else
     this.results = undefined;
-    this._xml = utils.node('testsuites');
 }
 exports.XUnitExporter = XUnitExporter;
 
@@ -92,6 +99,9 @@ exports.XUnitExporter = XUnitExporter;
  */
 XUnitExporter.prototype.getXML = function getXML() {
     "use strict";
+
+    var self = this;
+
     if (!(this.results instanceof TestSuiteResult)) {
         throw new CasperError('Results not set, cannot get XML.');
     }
@@ -105,7 +115,7 @@ XUnitExporter.prototype.getXML = function getXML() {
             timestamp: (new Date()).toISOString(),
             'package': generateClassName(result.file)
         });
-        // succesful test cases
+        // successful test cases
         result.passes.forEach(function(success) {
             var testCase = utils.node('testcase', {
                 name: success.message || success.standard,
@@ -124,12 +134,12 @@ XUnitExporter.prototype.getXML = function getXML() {
             var failureNode = utils.node('failure', {
                 type: failure.type || "failure"
             });
-            failureNode.appendChild(document.createTextNode(failure.message || "no message left"));
+            failureNode.appendChild(self._xmlDocument.createCDATASection(failure.message || "no message left"));
             if (failure.values && failure.values.error instanceof Error) {
                 var errorNode = utils.node('error', {
                     type: utils.betterTypeOf(failure.values.error)
                 });
-                errorNode.appendChild(document.createTextNode(failure.values.error.stack));
+                errorNode.appendChild(self._xmlDocument.createCDATASection(failure.values.error.stack));
                 testCase.appendChild(errorNode);
             }
             testCase.appendChild(failureNode);
@@ -140,17 +150,18 @@ XUnitExporter.prototype.getXML = function getXML() {
             var errorNode = utils.node('error', {
                 type: error.name
             });
-            errorNode.appendChild(document.createTextNode(error.stack ? error.stack : error.message));
+            errorNode.appendChild(self._xmlDocument.createCDATASection(error.stack ? error.stack : error.message));
             suiteNode.appendChild(errorNode);
         });
         // warnings
         var warningNode = utils.node('system-out');
-        warningNode.appendChild(document.createTextNode(result.warnings.join('\n')));
+        warningNode.appendChild(self._xmlDocument.createCDATASection(result.warnings.join('\n')));
         suiteNode.appendChild(warningNode);
         this._xml.appendChild(suiteNode);
     }.bind(this));
+
     this._xml.setAttribute('time', utils.ms2seconds(this.results.calculateDuration()));
-    return this._xml;
+    return this._xmlDocument;
 };
 
 /**
@@ -158,10 +169,10 @@ XUnitExporter.prototype.getXML = function getXML() {
  *
  * @return string
  */
-XUnitExporter.prototype.getSerializedXML = function getSerializedXML(xml) {
+XUnitExporter.prototype.getSerializedXML = function getSerializedXML() {
     "use strict";
     var serializer = new XMLSerializer();
-    return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this.getXML());
+    return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this._xmlDocument);
 };
 
 /**
