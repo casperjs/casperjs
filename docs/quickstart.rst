@@ -161,6 +161,10 @@ You can also write Casper scripts using the `CoffeeScript syntax <http://coffees
 
 Just remember to suffix your script with the ``.coffee`` extension.
 
+.. note::
+
+   CoffeeScript is not natively supported in PhantomJS versions 2.0.0 and above.  If you are going to use CoffeeScript you'll have to transpile it into vanilla Javascript.  See :ref:`known issues <known_issues>` for more details.
+
 A minimal testing script
 ------------------------
 
