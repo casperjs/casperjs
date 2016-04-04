@@ -249,3 +249,38 @@ casper.test.begin('ClientUtils.getElementInfo() visibility tests', 4, function(t
 
     test.done();
 });
+
+casper.test.begin('ClientUtils.makeSelector() tests', 8, function(test) {
+    var clientutils = require('clientutils').create();
+    
+    // CSS selector
+    var cssSelector = clientutils.makeSelector('#css3selector', 'css');
+    test.assertEquals(cssSelector, '#css3selector',
+        'ClientUtils.makeSelector() can process a CSS3 selector');
+
+    // XPath selector 
+    var xpathSelector = clientutils.makeSelector('//li[text()="blah"]', 'xpath');
+    test.assertType(xpathSelector, 'object',
+        'ClientUtils.makeSelector() can process a XPath selector');
+    test.assertEquals(xpathSelector.type, 'xpath',
+        'ClientUtils.makeSelector() can process a XPath selector');
+    test.assertEquals(xpathSelector.path, '//li[text()="blah"]',
+        'ClientUtils.makeSelector() can process a XPath selector');
+
+    // Name selector
+    var nameSelector = clientutils.makeSelector('parameter', 'names');
+    test.assertEquals(nameSelector, '[name="parameter"]',
+        'ClientUtils.makeSelector() can process a XPath selector');
+
+    // Label selector
+    var labelSelector = clientutils.makeSelector('Male', 'labels');
+    test.assertType(labelSelector, 'object',
+        'ClientUtils.makeSelector() can process a Label selector');
+    test.assertEquals(labelSelector.type, 'xpath',
+        'ClientUtils.makeSelector() can process a Label selector');
+    test.assertEquals(labelSelector.path, '//*[@id=string(//label[text()="Male"]/@for)]',
+        'ClientUtils.makeSelector() can process a Label selector');
+
+    test.done();
+});
+
