@@ -25,6 +25,7 @@ CasperJS_ is a navigation scripting & testing utility for the PhantomJS_ (WebKit
    cookbook
    changelog
    upgrading/index
+   known_issues
    credits
    license
 
