@@ -478,7 +478,7 @@ Bypasses a given number of defined navigation steps::
 ``click()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``click(String selector)``
+**Signature:** ``click(String selector, [Number|String X, Number|String Y])``
 
 Performs a click on the element matching the provided :doc:`selector expression <../selectors>`. The method tries two strategies sequentially:
 
@@ -498,6 +498,17 @@ Example::
         // Click on 1st result link
         this.click('h3.r a');
     });
+    
+    casper.then(function() {
+        // Click on 1st result link
+        this.click('h3.r a',10,10);
+    });
+    
+    casper.then(function() {
+        // Click on 1st result link
+        this.click('h3.r a',"50%","50%");
+    });
+    
 
     casper.then(function() {
         console.log('clicked ok, new location is ' + this.getCurrentUrl());
@@ -1359,16 +1370,22 @@ Retrieves current page title::
 ``mouseEvent()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``mouseEvent(String type, String selector)``
+**Signature:** ``mouseEvent(String type, String selector, [Number|String X, Number|String Y])``
 
 .. versionadded:: 0.6.9
+.. versionupdate:: 1.1.0-beta6
 
 Triggers a mouse event on the first element found matching the provided selector.
 
-Supported events are ``mouseup``, ``mousedown``, ``click``, ``mousemove``, ``mouseover`` and ``mouseout``::
+Supported events are ``mouseup``, ``mousedown``, ``click``, ``dblclick``, ``mousemove``, ``mouseover``, ``mouseout``
+and for phantomjs >= 1.9.8 ``mouseenter``, ``mouseleave`` and ``contextmenu``::
+
+.. warning::
+The list of supported events depends on the version of the engine in use. 
+Older engines only provide partial support. For best support use recent builds of PhantomJS or SlimerJS."
 
     casper.start('http://www.google.fr/', function() {
-        this.mouseEvent('click', 'h2 a');
+        this.mouseEvent('click', 'h2 a', "20%", "50%");
     });
 
     casper.run();

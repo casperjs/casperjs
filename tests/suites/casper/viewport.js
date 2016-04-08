@@ -18,7 +18,12 @@ casper.test.begin('viewport() asynchronous tests', 2, function(test) {
 
     casper.start('tests/site/index.html').viewport(800, 600, function() {
         this.setContent(utils.format('<img src="data:image/png;base64,%s">',
-                                     this.captureBase64('png')));
+                                     this.captureBase64('png',{
+                                        top: 0,
+                                        left: 0,
+                                        width: 800,
+                                        height: 600
+                            })));
     });
 
     casper.then(function() {
