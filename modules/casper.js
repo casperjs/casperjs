@@ -1212,7 +1212,9 @@ Casper.prototype.handleReceivedResource = function(resource) {
         return;
     }
     this.resources.push(resource);
-    if (utils.decodeUrl(resource.url) !== this.requestUrl) {
+
+    var checkUrl = utils.ltVersion(phantom.version, '2.1.0') ? utils.decodeUrl(resource.url) : resource.url;
+    if (checkUrl !== this.requestUrl) {
         return;
     }
     this.currentHTTPStatus = null;
@@ -2642,7 +2644,8 @@ function createPage(casper) {
     };
     page.onResourceRequested = function onResourceRequested(requestData, request) {
         casper.emit('resource.requested', requestData, request);
-        if (requestData.url === casper.requestUrl) {
+    	var checkUrl = utils.ltVersion(phantom.version, '2.1.0') ? utils.decodeUrl(requestData.url) : requestData.url;
+        if (checkUrl === casper.requestUrl) {
             casper.emit('page.resource.requested', requestData, request);
         }
         if (utils.isFunction(casper.options.onResourceRequested)) {
