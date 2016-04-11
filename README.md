@@ -94,6 +94,7 @@ To view the source files on github, head to [the gh-pages branch](https://github
 - Laurent Jouanneau ([@laurentj](https://github.com/laurentj))
 - Mickaël Andrieu ([@mickaelandrieu](https://github.com/mickaelandrieu))
 - Matt DuVall ([@mduvall](https://github.com/mduvall))
+- Ryan Null ([@BIGjuevos](https://github.com/BIGjuevos))
 
 ## License
 
