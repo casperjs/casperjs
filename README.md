@@ -1,18 +1,16 @@
 # CasperJS
 
->**Important note:** the `master` branch hosts the development version of CasperJS, which is now pretty stable and should be the right version to use if you ask me.
+[Travis-CI](http://travis-ci.org/n1k0/casperjs) build status: [![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master)](https://travis-ci.org/n1k0/casperjs) `master` branch
+
+>**Important note:** the `master` branch hosts the development version of CasperJS, which is now pretty stable and should be the right version to use if you ask me. Users interested in a pretty stable, recent version working with PhantomJS 2.0 and newer should choose the packaged 1.1.0 and following releases.
 >
->Use the [`1.0` branch](https://github.com/n1k0/casperjs/tree/1.0) if you want to keep in sync with the stable old version, or [use tagged versions](https://github.com/n1k0/casperjs/tags).
->
->Currently, available documentation is:
->
->- **hosted on [docs.casperjs.org](http://docs.casperjs.org/) for the development branch**
->- hosted on [casperjs.org](http://casperjs.org/) for the 1.0 branch
->
->[Travis-CI](http://travis-ci.org/n1k0/casperjs) build status:
->
->- [![Build Status](https://travis-ci.org/n1k0/casperjs.png?branch=master)](https://travis-ci.org/n1k0/casperjs) `master` branch
+> The [`1.0` branch](https://github.com/n1k0/casperjs/tree/1.0) is now obsolete. Please note that
+>- it is only recommended if you need to keep old production tests running that could do with the now **unmaintained PhantomJS 1.9**
 >- 1.0 tests unfortunately have to be run manually using the `casperjs selftest` command
+> 
+> **Note that all versions up to and including 1.1-beta3 do not support PhantomJS 2.0 and newer.**
+
+The complete documentation for the current releases is **hosted on [docs.casperjs.org](http://docs.casperjs.org/).**
 
 CasperJS is a navigation scripting & testing utility for [PhantomJS](http://www.phantomjs.org/)
 and [SlimerJS](http://slimerjs.org/) (still experimental).

@@ -4,7 +4,7 @@
 Quickstart
 ==========
 
-Once CasperJS is :doc:`properly installed <installation>`, you can write your first script. You can use plain :ref:`Javascript <quickstart_javascript>` or :ref:`CoffeeScript <quickstart_coffeescript>`.
+Once CasperJS is :doc:`properly installed <installation>`, you can write your first script. You can use plain :ref:`Javascript <quickstart_javascript>` (or :ref:`CoffeeScript <quickstart_coffeescript>` with PhantomJS versions before 2.0).
 
 .. hint::
 
