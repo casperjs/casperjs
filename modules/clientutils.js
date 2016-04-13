@@ -245,12 +245,13 @@
          *
          * @param  HTMLElement|String  form      A form element, or a CSS3 selector to a form element
          * @param  Object              vals      Field values
-         * @param  Function            findType  Element finder type (css, names, xpath)
-         * @return Object                        An object containing setting result for each field,
-         *                                       including file uploads
+         * @param  String              findType  Element finder type (css, names, xpath, labels)
+         * @return Object                        An object containing setting result for each field, including file uploads
          */
         this.fill = function fill(form, vals, findType) {
-            /*jshint maxcomplexity:12*/
+            findType = findType || "names";
+
+            /*eslint complexity:0*/
             var out = {
                 errors: [],
                 fields: [],
@@ -274,31 +275,13 @@
                 return out;
             }
 
-            var finders = {
-                css: function(inputSelector) {
-                    return this.findAll(inputSelector, form);
-                },
-                labels: function(labelText) {
-                    var label = this.findOne({type: "xpath", path: '//label[text()="' +
-                        labelText + '"]'}, form);
-                    if (label && label.htmlFor) {
-                        return this.findAll('#' + label.htmlFor, form);
-                    }
-                },
-                names: function(elementName) {
-                    return this.findAll('[name="' + elementName + '"]', form);
-                },
-                xpath: function(xpath) {
-                    return this.findAll({type: "xpath", path: xpath}, form);
-                }
-            };
-
             for (var fieldSelector in vals) {
                 if (!vals.hasOwnProperty(fieldSelector)) {
                     continue;
                 }
-                var field = finders[findType || "names"].call(this, fieldSelector, form),
-                    value = vals[fieldSelector];
+
+                var field = this.findAll(this.makeSelector(fieldSelector, findType), form);
+                var value = vals[fieldSelector];
                 if (!field || field.length === 0) {
                     out.errors.push('no field matching ' + findType + ' selector "' +
                         fieldSelector + '" in form');
@@ -332,7 +315,7 @@
         /**
          * Finds all DOM elements matching by the provided selector.
          *
-         * @param  String            selector  CSS3 selector
+         * @param  String | Object   selector  CSS3 selector (String only) or XPath object
          * @param  HTMLElement|null  scope     Element to search child elements within
          * @return Array|undefined
          */
@@ -353,7 +336,7 @@
         /**
          * Finds a DOM element by the provided selector.
          *
-         * @param  String            selector  CSS3 selector
+         * @param  String | Object   selector  CSS3 selector (String only) or XPath object
          * @param  HTMLElement|null  scope     Element to search child elements within
          * @return HTMLElement|undefined
          */
@@ -699,6 +682,49 @@
         };
 
         /**
+         * Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for 
+         * XPath type - it makes XPath object. 
+         * Function also accepts name attribut of the form filed or can select element by its label text.
+         *
+         * @param  String selector Selector of defined type
+         * @param  String|null  type Type of selector, it can have these values:     
+         *         css - CSS3 selector - selector is returned trasparently
+         *         xpath - XPath selector - return XPath object    
+         *         name|names - select input of specific name, internally covert to CSS3 selector
+         *         label|labels - select input of specific label, internally covert to XPath selector. As selector is label's text used.
+         * @return String|Object          
+         */
+        this.makeSelector = function makeSelector(selector, type){
+            type = type || 'xpath'; // default type
+            var ret;
+
+            if (typeof selector === "object") { // selector object (CSS3 | XPath) could by passed
+                selector = selector.path;
+            }
+
+            switch (type) {
+                case 'css': // do nothing
+                    ret = selector;
+                    break;
+                case 'name': // convert to css 
+                case 'names': 
+                    ret = '[name="' + selector + '"]';
+                    break;
+                case 'label': // covert to xpath object
+                case 'labels': 
+                    ret = {type:'xpath', path:'//*[@id=string(//label[text()="' + selector + '"]/@for)]'};
+                    break;
+                case 'xpath': // covert to xpath object
+                    ret = {type:'xpath', path: selector};
+                    break;
+                default:
+                    throw new Error("Unsupported selector type: " + type);
+            }
+
+            return ret;
+        };
+
+        /**
          * Dispatches a mouse event to the DOM element behind the provided selector.
          *
          * @param  String   type      Type of event to dispatch
@@ -857,6 +883,50 @@
             }
             xhr.send(method === "POST" ? dataString : null);
             return xhr.responseText;
+        };
+
+        /**
+         * Sets a value to form field by CSS3 or XPath selector. 
+         *
+         * With makeSelector() helper can by easily used with name or label selector 
+         *     @exemple setFieldValue(this.makeSelector('email', 'name'), 'value')
+         *  
+         * @param String|Object CSS3|XPath selector
+         * @param Mixed         Input value
+         * @param Object options Options for setFieldValue, accept formSelector: selector (optional)
+         * @return bool
+         */
+        this.setFieldValue = function setFieldValue(selector, value, options){
+            options = options || {};
+            var scope;
+            var formSelector = '';
+
+            if (options.formSelector) {
+                formSelector = options.formSelector;
+                if (!(scope = this.findOne(formSelector))) {
+                    this.log('setFieldValue() could not find form with selector: ' + selector, "error");
+                    return false;
+                } 
+            }
+            
+            var field = this.findAll(selector, scope);
+
+            if (!field || field.length === 0) {
+                this.log('setFieldValue(): unable to find field ' + selector, "error");
+                return false;
+            }
+            
+            try {
+                var ret = this.setField(field, value);
+            } catch (err) {
+                if (err.message) {
+                    this.log(err.message, "error");
+                }else{
+                    this.log('Error in setFieldValue() with selector: ' + selector, "error");
+                }
+                return false;
+            }
+            return true;
         };
 
         /**
