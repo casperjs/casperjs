@@ -254,6 +254,6 @@ texinfo_documents = [
 
 
 extlinks = {
-    'issue': ('https://github.com/n1k0/casperjs/issues/%s', '#'),
-    'repo': ('https://github.com/n1k0/casperjs/%s', ''),
+    'issue': ('https://github.com/casperjs/casperjs/issues/%s', '#'),
+    'repo': ('https://github.com/casperjs/casperjs/%s', ''),
 }

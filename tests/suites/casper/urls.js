@@ -50,7 +50,7 @@ casper.test.begin('urls tests', 9, function(test) {
     });
 });
 
-// https://github.com/n1k0/casperjs/issues/841
+// https://github.com/casperjs/casperjs/issues/841
 casper.test.begin('url tests with javascript disabled', 1, function(test) {
     casper.options.pageSettings.javascriptEnabled = false;
     casper.start('tests/site/urls.html');
