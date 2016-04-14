@@ -278,7 +278,7 @@ CasperJS has its own unit and functional test suite, located in the ``tests`` su
 
 .. note::
 
-   Running this test suite is a great way to find any bug on your platform. If it fails, feel free to `file an issue <https://github.com/n1k0/casperjs/issues/new>`_ or to ask on the `CasperJS mailing-list <https://groups.google.com/forum/#!forum/casperjs>`_.
+   Running this test suite is a great way to find any bug on your platform. If it fails, feel free to `file an issue <https://github.com/casperjs/casperjs/issues/new>`_ or to ask on the `CasperJS mailing-list <https://groups.google.com/forum/#!forum/casperjs>`_.
 
 
 .. index:: extending
@@ -302,4 +302,4 @@ So if you want to extend Casper capabilities for your tests, your best bet is to
 
 .. hint::
 
-   You can find the default runner code in `run.js <https://github.com/n1k0/casperjs/blob/master/tests/run.js>`_.
+   You can find the default runner code in `run.js <https://github.com/casperjs/casperjs/blob/master/tests/run.js>`_.

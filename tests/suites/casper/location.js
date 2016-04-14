@@ -3,7 +3,7 @@
 var utils = require('utils');
 
 if (utils.ltVersion(phantom.version, '1.8.0')) {
-    // https://github.com/n1k0/casperjs/issues/101
+    // https://github.com/casperjs/casperjs/issues/101
     casper.warn('document.location is broken under phantomjs < 1.8');
     casper.test.done();
 } else {

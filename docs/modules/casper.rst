@@ -739,7 +739,7 @@ Iterates over provided array items and execute a callback::
 
 .. hint::
 
-   Have a look at the `googlematch.js <https://github.com/n1k0/casperjs/blob/master/samples/googlematch.js>`_ sample script for a concrete use case.
+   Have a look at the `googlematch.js <https://github.com/casperjs/casperjs/blob/master/samples/googlematch.js>`_ sample script for a concrete use case.
 
 ``eachThen()``
 -------------------------------------------------------------------------------
@@ -813,7 +813,7 @@ Basically `PhantomJS' WebPage#evaluate <http://phantomjs.org/api/webpage/method/
 
 .. warning::
 
-   The pre-1.0 way of passing arguments using an object has been kept for BC purpose, though it may `not work in some case <https://github.com/n1k0/casperjs/issues/349>`_; so you're encouraged to use the method described above.
+   The pre-1.0 way of passing arguments using an object has been kept for BC purpose, though it may `not work in some case <https://github.com/casperjs/casperjs/issues/349>`_; so you're encouraged to use the method described above.
 
 .. topic:: Understanding ``evaluate()``
 
@@ -848,7 +848,7 @@ Evaluates an expression within the current page DOM and ``die()`` if it returns 
 
 Exits PhantomJS with an optional exit status code.
 
-Note: You can not rely on the fact that your script will be turned off immediately, because this method works asynchronously. It means that your script may continue to be executed after the call of this method. More info `here <https://github.com/n1k0/casperjs/issues/193>`_.
+Note: You can not rely on the fact that your script will be turned off immediately, because this method works asynchronously. It means that your script may continue to be executed after the call of this method. More info `here <https://github.com/casperjs/casperjs/issues/193>`_.
 
 .. index:: DOM
 

@@ -100,10 +100,10 @@ Run it:
 
     $ casperjs googlelinks.js
     20 links found:
-     - https://github.com/n1k0/casperjs
-     - https://github.com/n1k0/casperjs/issues/2
-     - https://github.com/n1k0/casperjs/tree/master/samples
-     - https://github.com/n1k0/casperjs/commits/master/
+     - https://github.com/casperjs/casperjs
+     - https://github.com/casperjs/casperjs/issues/2
+     - https://github.com/casperjs/casperjs/tree/master/samples
+     - https://github.com/casperjs/casperjs/commits/master/
      - http://www.facebook.com/people/Casper-Js/100000337260665
      - http://www.facebook.com/public/Casper-Js
      - http://hashtags.org/tag/CasperJS/

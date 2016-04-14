@@ -10,7 +10,7 @@ Casper ships with a ``tester`` module and a ``Tester`` class providing an API fo
 
 .. note::
 
-   The best way to learn how to use the Tester API and see it in action is probably to have a look at `CasperJS' own test suites <https://github.com/n1k0/casperjs/blob/master/tests/suites/>`_.
+   The best way to learn how to use the Tester API and see it in action is probably to have a look at `CasperJS' own test suites <https://github.com/casperjs/casperjs/blob/master/tests/suites/>`_.
 
 
 The ``Tester`` prototype
