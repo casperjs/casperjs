@@ -428,6 +428,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         && phantom.casperScript
         && phantom.casperScript.split('.').pop() === 'coffee'
         ) {
+        var CoffeeScript;
         var coffeeFile = fs.pathJoin(phantom.casperPath,'modules','extras','coffee-script.js');
         if (!fs.isFile(coffeeFile) || !phantom.injectJs(coffeeFile)){
             return __terminate('CoffeeScript is not supported by PhantomJS > 2.');
