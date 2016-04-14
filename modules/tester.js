@@ -1275,13 +1275,20 @@ Tester.prototype.exec = function exec(file) {
     "use strict";
     file = this.filter('exec.file', file) || file;
     if (!fs.isFile(file) || !utils.isJsFile(file)) {
-        var e = new CasperError(f("Cannot exec %s: can only exec() files with .js or .coffee extensions",
-                                  file));
-        e.fileName = e.file = e.sourceURL = file;
-        throw e;
+        var coffeeFile = fs.pathJoin(phantom.casperPath,'modules','extras','coffee-script.js');
+        if (file.split('.').pop() === 'coffee' && fs.isFile(coffeeFile) && phantom.injectJs(coffeeFile)) {
+            this.currentTestFile = file;
+            window.CoffeeScript.run(fs.read(file));
+        } else {
+            var e = new CasperError(f("Cannot exec %s: can only exec() files with .js or .coffee extensions",
+                                    file));
+            e.fileName = e.file = e.sourceURL = file;
+            throw e;
+        }
+    } else {
+        this.currentTestFile = file;
+        phantom.injectJs(file);
     }
-    this.currentTestFile = file;
-    phantom.injectJs(file);
 };
 
 /**

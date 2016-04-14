@@ -2,6 +2,7 @@ docs
 modules/vendors
 modules/events.js
 modules/querystring.js
+modules/extras/coffee-script.js
 samples/**
 tests/**
 tests/clitests/**
