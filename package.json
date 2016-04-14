@@ -11,16 +11,15 @@
   ],
   "bin": "./bin/casperjs",
   "author": {
-    "name": "Nicolas Perriault",
-    "email": "nicolas@perriault.net",
-    "web": "https://nicolas.perriault.net/"
+    "name": "CasperJS Organization",
+    "web": "https://casperjs.org/"
   },
   "bugs": {
-    "url": "https://github.com/n1k0/casperjs/issues"
+    "url": "https://github.com/casperjs/casperjs/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/n1k0/casperjs.git"
+    "url": "git://github.com/casperjs/casperjs.git"
   },
   "licenses": [
     {

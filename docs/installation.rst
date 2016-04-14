@@ -73,7 +73,7 @@ You can install CasperJS using `npm <http://npmjs.org/>`_:
 
 - If you want to install the current master from git using npm:
 
-    $ npm install -g git+https://github.com/n1k0/casperjs.git
+    $ npm install -g git+https://github.com/casperjs/casperjs.git
 
 .. note::
 
@@ -88,14 +88,14 @@ You can install CasperJS using `npm <http://npmjs.org/>`_:
 Installing from git
 -------------------
 
-Installation can be achieved using `git <http://git-scm.com/>`_. The code is mainly hosted on `Github <https://github.com/n1k0/casperjs>`_.
+Installation can be achieved using `git <http://git-scm.com/>`_. The code is mainly hosted on `Github <https://github.com/casperjs/casperjs>`_.
 
 From the master branch
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: text
 
-    $ git clone git://github.com/n1k0/casperjs.git
+    $ git clone git://github.com/casperjs/casperjs.git
     $ cd casperjs
     $ ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
 
@@ -116,7 +116,7 @@ Or if SlimerJS is your thing:
     $ slimerjs --version
     Innophi SlimerJS 0.8pre, Copyright 2012-2013 Laurent Jouanneau & Innophi
     $ casperjs
-    CasperJS version 1.1.0-beta4 at /Users/niko/Sites/casperjs, using slimerjs version 0.8.0
+    CasperJS version 1.1.0 at /Users/niko/Sites/casperjs, using slimerjs version 0.8.0
 
 You are now ready to write your :doc:`first script <quickstart>`!
 
@@ -128,13 +128,13 @@ You can download tagged archives of CasperJS code:
 
 **Latest development version (master branch):**
 
-- https://github.com/n1k0/casperjs/zipball/master (zip)
-- https://github.com/n1k0/casperjs/tarball/master (tar.gz)
+- https://github.com/casperjs/casperjs/zipball/master (zip)
+- https://github.com/casperjs/casperjs/tarball/master (tar.gz)
 
 **Latest stable version:**
 
-- https://github.com/n1k0/casperjs/zipball/1.0.3 (zip)
-- https://github.com/n1k0/casperjs/tarball/1.0.3 (tar.gz)
+- https://github.com/casperjs/casperjs/zipball/1.1.0 (zip)
+- https://github.com/casperjs/casperjs/tarball/1.1.0 (tar.gz)
 
 Operations are then the same as with a git checkout.
 

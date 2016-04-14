@@ -5,7 +5,7 @@
 Cookbook
 ========
 
-.. _github: https://github.com/n1k0/casperjs
+.. _github: https://github.com/casperjs/casperjs
 
 This is a collection of scripts and ideas that aim to solve common situations that are encountered by users.  This is by no means an exhaustive list, and we encourage you to contribute your recipes on github_.
 

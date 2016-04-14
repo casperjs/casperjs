@@ -14,7 +14,7 @@ PhantomJS
 
   There is a known issue while doing clicks within the page that causes execution to halt.  It has been fixed in v2.0.0+ in phantomjs.
 
-  It is mentioned in the following issues: `#233 <https://github.com/n1k0/casperjs/issues/223>`_
+  It is mentioned in the following issues: `#233 <https://github.com/casperjs/casperjs/issues/223>`_
 
 ::
 

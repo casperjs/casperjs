@@ -90,7 +90,7 @@ casper.test.begin('thenEvaluate() tests', 2, function(test) {
     });
 });
 
-// https://github.com/n1k0/casperjs/issues/489
+// https://github.com/casperjs/casperjs/issues/489
 // https://groups.google.com/forum/?fromgroups=#!topic/casperjs/95IgDMFnEKM
 casper.test.begin("evaluate() returns a value which can be altered", 1, function(test) {
     var list;
@@ -110,7 +110,7 @@ casper.test.begin("evaluate() returns a value which can be altered", 1, function
     });
 });
 
-// https://github.com/n1k0/casperjs/issues/841
+// https://github.com/casperjs/casperjs/issues/841
 casper.test.begin("evaluate() with js disabled, throws error", 1, function(test) {
     casper.options.pageSettings.javascriptEnabled = false;
     casper.start().then(function() {

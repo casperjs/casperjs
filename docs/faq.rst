@@ -30,8 +30,8 @@ I'm stuck! I think there's a bug! What can I do?
 Before rage-tweeting:
 
 1. Read the `docs <http://casperjs.org/>`_
-2. Check if an `issue <https://github.com/n1k0/casperjs/issues>`_ has been open about your problem already
-3. Check you're running the `latest stable tag <https://github.com/n1k0/casperjs/tags>`_
+2. Check if an `issue <https://github.com/casperjs/casperjs/issues>`_ has been open about your problem already
+3. Check you're running the `latest stable tag <https://github.com/casperjs/casperjs/tags>`_
 4. Check you're running the `latest version <http://code.google.com/p/phantomjs/downloads/list>`_ of PhantomJS_
 5. Ask on the `project mailing list <https://groups.google.com/forum/#!forum/casperjs>`_:
 
@@ -39,7 +39,7 @@ Before rage-tweeting:
    b. compare casperjs results with native phantomjs ones
    c. if the problem also occurs with native phantomjs, ask on `phantomjs mailing list <https://groups.google.com/forum/#!forum/phantomjs>`_
 
-6. Eventually, `file an issue <https://github.com/n1k0/casperjs/issues/new>`_.
+6. Eventually, `file an issue <https://github.com/casperjs/casperjs/issues/new>`_.
 
 
 .. index:: Testing
