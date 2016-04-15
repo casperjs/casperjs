@@ -81,14 +81,11 @@ exports.create = function create() {
 function XUnitExporter() {
     "use strict";
 
-    // Since we are outputting XML, let's do our own document type
-    var documentType = document.implementation.createDocumentType("casperjs", "-//CasperJS//XUnit Test Results", "testsuites");
+    this.setupDocument();
 
-    this._xmlDocument = document.implementation.createDocument("", "", documentType);
-    this._xml = this._xmlDocument.appendChild(this._xmlDocument.createElement("testsuites"));
-
-    // Initialize everything else
+    // Initialize state
     this.results = undefined;
+    this.rendered = false;
 }
 exports.XUnitExporter = XUnitExporter;
 
@@ -161,6 +158,9 @@ XUnitExporter.prototype.getXML = function getXML() {
     }.bind(this));
 
     this._xml.setAttribute('time', utils.ms2seconds(this.results.calculateDuration()));
+
+    this.rendered = true;
+
     return this._xmlDocument;
 };
 
@@ -171,8 +171,13 @@ XUnitExporter.prototype.getXML = function getXML() {
  */
 XUnitExporter.prototype.getSerializedXML = function getSerializedXML() {
     "use strict";
-    var serializer = new XMLSerializer();
-    return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(this._xmlDocument);
+    var serializer = new XMLSerializer(),
+        document;
+
+    if ( !this.rendered ) {
+        document = this.getXML();
+    }
+    return '<?xml version="1.0" encoding="UTF-8"?>' + serializer.serializeToString(document);
 };
 
 /**
@@ -186,5 +191,23 @@ XUnitExporter.prototype.setResults = function setResults(results) {
         throw new CasperError('Invalid results type.');
     }
     this.results = results;
+
+    // New results let's re-initialize
+    this.setupDocument();
+    this.rendered = false;
+
     return results;
+};
+
+/**
+ * Initializes the XML to an empty document
+ *
+ * @return void
+ */
+XUnitExporter.prototype.setupDocument = function() {
+    // Since we are outputting XML, let's do our own document type
+    var documentType = document.implementation.createDocumentType("casperjs", "-//CasperJS//XUnit Test Results", "testsuites");
+
+    this._xmlDocument = document.implementation.createDocument("", "", documentType);
+    this._xml = this._xmlDocument.appendChild(this._xmlDocument.createElement("testsuites"));
 };
