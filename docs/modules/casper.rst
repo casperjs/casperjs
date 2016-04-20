@@ -1397,6 +1397,8 @@ Older engines only provide partial support. For best support use recent builds o
 
 .. versionadded:: 1.1
 
+**Only available since version 1.1.0.**
+
 Creates a new WebPage instance::
 
     casper.start('http://google.com', function() {
