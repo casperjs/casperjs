@@ -206,9 +206,8 @@ XUnitExporter.prototype.setResults = function setResults(results) {
  * @return void
  */
 XUnitExporter.prototype.setupDocument = function() {
-    // Since we are outputting XML, let's do our own document type
-    var documentType = document.implementation.createDocumentType("casperjs", "-//CasperJS//XUnit Test Results", "testsuites");
-
-    this._xmlDocument = document.implementation.createDocument("", "", documentType);
+    // Note that we do NOT use a documentType here, because validating
+    // parsers try to fetch the (non-existing) DTD and fail #1528
+    this._xmlDocument = document.implementation.createDocument("", "");
     this._xml = this._xmlDocument.appendChild(this._xmlDocument.createElement("testsuites"));
 };
