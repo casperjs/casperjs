@@ -153,3 +153,4 @@ notifications:
   irc:
     channels:
       - "irc.freenode.org#casperjs"
+  slack: casperjs:jwoh8W8mOfMiBtWOHY9utob0
