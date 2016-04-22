@@ -369,7 +369,7 @@ After casperjs.start(), you have phantomjs page module available in casper.page 
 You can simply do like below::
 
   casper.page.pageModuleApi()
-  
+
 PhantomJS Web Page API: http://phantomjs.org/api/webpage/
 
 
@@ -382,8 +382,21 @@ Using phantomjs native `onResourceRequested` event, you can override remote reso
      var match = requestData.url.match(/wordfamily.js/g);
      if (match != null) {
         console.log('Request (#' + requestData.id + '): ' + JSON.stringify(requestData));
-        
+
         // overrides wordfamily.js to local newWordFamily.js
         networkRequest.changeUrl('newWordFamily.js');
      }
   };
+
+I'm getting intermittent test failure, what can I do to fix them?
+-----------------------------------------------------------------
+
+This is probably because you are executing a test before the resource or element is available and the page is fully loaded/rendered.  This can even happen on things like modals and dynamic content.
+
+You can solve this problem by using the `wait*` operations::
+
+  casper.thenOpen(url, function initialAppearance() {
+    casper.waitForText('Text in deep part of page or modal');
+  });
+
+It is good practice to wait for DOM nodes, text, or resources before beginning your tests.  It will help make them stable and predictable while still running fast.
