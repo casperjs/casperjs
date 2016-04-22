@@ -498,17 +498,17 @@ Example::
         // Click on 1st result link
         this.click('h3.r a');
     });
-    
+
     casper.then(function() {
         // Click on 1st result link
         this.click('h3.r a',10,10);
     });
-    
+
     casper.then(function() {
         // Click on 1st result link
         this.click('h3.r a',"50%","50%");
     });
-    
+
 
     casper.then(function() {
         console.log('clicked ok, new location is ' + this.getCurrentUrl());
@@ -1020,7 +1020,7 @@ are referenced by ``CSS3`` selectors::
             'input[name="attachment"]': '/Users/chuck/roundhousekick.doc'
         }, true);
     });
-    
+
 ``fillLabels()``
 -------------------------------------------------------------------------------
 
@@ -1381,7 +1381,7 @@ Supported events are ``mouseup``, ``mousedown``, ``click``, ``dblclick``, ``mous
 and for phantomjs >= 1.9.8 ``mouseenter``, ``mouseleave`` and ``contextmenu``::
 
 .. warning::
-The list of supported events depends on the version of the engine in use. 
+The list of supported events depends on the version of the engine in use.
 Older engines only provide partial support. For best support use recent builds of PhantomJS or SlimerJS."
 
     casper.start('http://www.google.fr/', function() {
@@ -2185,6 +2185,8 @@ Example using the ``onTimeout`` callback::
 
 ``details`` is a property bag of various information that will be passed to the ``waitFor.timeout`` event, if it is emitted.
 This can be used for better error messages or to conditionally ignore some timeout events.
+
+Please note, that all `waitFor` methods are not chainable.  Consider wrapping each of them in a `casper.then` in order to acheive this functionality.
 
 .. index:: alert
 
