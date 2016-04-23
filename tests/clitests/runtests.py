@@ -533,17 +533,20 @@ class XUnitReportTest(CasperExecTestBase):
         if os.path.exists(self.XUNIT_LOG):
             os.remove(self.XUNIT_LOG)
 
-    def test_xunit_report_passing(self):
-        script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
-        command = 'test %s --xunit=%s' % (script_path, self.XUNIT_LOG)
-        self.runCommand(command, failing=False)
-        self.assertTrue(os.path.exists(self.XUNIT_LOG))
-
     def test_xunit_report_failing(self):
         script_path = os.path.join(TEST_ROOT, 'tester', 'failing.js')
         command = 'test %s --xunit=%s' % (script_path, self.XUNIT_LOG)
         self.runCommand(command, failing=True)
         self.assertTrue(os.path.exists(self.XUNIT_LOG))
+        self.assertTrue(open(self.XUNIT_LOG).read().find('classname="tests/clitests/tester/failing"'))
+
+    def test_xunit_report_passing(self):
+        script_path = os.path.join(TEST_ROOT, 'tester', 'passing.js')
+        command = 'test %s --xunit=%s' % (script_path, self.XUNIT_LOG)
+        self.runCommand(command, failing=False)
+        self.assertTrue(os.path.exists(self.XUNIT_LOG))
+        self.assertTrue(open(self.XUNIT_LOG).read().find('classname="tests/clitests/tester/passing"'))
+
 
 if __name__ == '__main__':
     del sys.argv[1:]
