@@ -1,6 +1,6 @@
 /*eslint strict:0*/
 var fs = require('fs');
-var x = require('casper').selectXPath;
+var selectXPath = require('casper').selectXPath;
 
 function fakeDocument(html) {
     window.document.body.innerHTML = html;
@@ -39,9 +39,9 @@ casper.test.begin('ClientUtils.exists() tests', 5, function(test) {
     test.assert(clientutils.exists('ul.foo li'),
         'ClientUtils.exists() checks that an element exist');
     // xpath
-    test.assert(clientutils.exists(x('//ul')),
+    test.assert(clientutils.exists( selectXPath('//ul')),
         'ClientUtils.exists() checks that an element exist using XPath');
-    test.assertNot(clientutils.exists(x('//ol')),
+    test.assertNot(clientutils.exists( selectXPath('//ol')),
         'ClientUtils.exists() checks that an element exist using XPath');
     fakeDocument(null);
     test.done();
@@ -64,7 +64,7 @@ casper.test.begin('ClientUtils.findAll() tests', 7, function(test) {
         'ClientUtils.findAll() can find matching DOM elements within a given scope');
     test.assertEquals(clientutils.findAll('li', scope).length, 2,
         'ClientUtils.findAll() can find matching DOM elements within a given scope');
-    test.assertType(clientutils.findAll(x('//li'), scope), 'array',
+    test.assertType(clientutils.findAll( selectXPath('//li'), scope), 'array',
         'ClientUtils.findAll() can find matching DOM elements using XPath within a given scope');
     fakeDocument(null);
     test.done();
@@ -81,7 +81,7 @@ casper.test.begin('ClientUtils.findOne() tests', 4, function(test) {
     var scope = clientutils.findOne('ul');
     test.assertType(clientutils.findOne('li', scope), 'htmllielement',
         'ClientUtils.findOne() can find a matching DOM element within a given scope');
-    test.assertType(clientutils.findOne(x('//li'), scope), 'htmllielement',
+    test.assertType(clientutils.findOne( selectXPath('//li'), scope), 'htmllielement',
         'ClientUtils.findOne() can find a matching DOM element using XPath within a given scope');
     fakeDocument(null);
     test.done();
@@ -99,7 +99,7 @@ casper.test.begin('ClientUtils.processSelector() tests', 6, function(test) {
     test.assertEquals(cssSelector.path, 'html body > ul.foo li',
         'ClientUtils.processSelector() can process a CSS3 selector');
     // XPath selector
-    var xpathSelector = clientutils.processSelector(x('//li[text()="blah"]'));
+    var xpathSelector = clientutils.processSelector( selectXPath('//li[text()="blah"]'));
     test.assertType(xpathSelector, 'object',
         'ClientUtils.processSelector() can process a XPath selector');
     test.assertEquals(xpathSelector.type, 'xpath',
@@ -249,3 +249,38 @@ casper.test.begin('ClientUtils.getElementInfo() visibility tests', 4, function(t
 
     test.done();
 });
+
+casper.test.begin('ClientUtils.makeSelector() tests', 8, function(test) {
+    var clientutils = require('clientutils').create();
+    
+    // CSS selector
+    var cssSelector = clientutils.makeSelector('#css3selector', 'css');
+    test.assertEquals(cssSelector, '#css3selector',
+        'ClientUtils.makeSelector() can process a CSS3 selector');
+
+    // XPath selector 
+    var xpathSelector = clientutils.makeSelector('//li[text()="blah"]', 'xpath');
+    test.assertType(xpathSelector, 'object',
+        'ClientUtils.makeSelector() can process a XPath selector');
+    test.assertEquals(xpathSelector.type, 'xpath',
+        'ClientUtils.makeSelector() can process a XPath selector');
+    test.assertEquals(xpathSelector.path, '//li[text()="blah"]',
+        'ClientUtils.makeSelector() can process a XPath selector');
+
+    // Name selector
+    var nameSelector = clientutils.makeSelector('parameter', 'names');
+    test.assertEquals(nameSelector, '[name="parameter"]',
+        'ClientUtils.makeSelector() can process a XPath selector');
+
+    // Label selector
+    var labelSelector = clientutils.makeSelector('Male', 'labels');
+    test.assertType(labelSelector, 'object',
+        'ClientUtils.makeSelector() can process a Label selector');
+    test.assertEquals(labelSelector.type, 'xpath',
+        'ClientUtils.makeSelector() can process a Label selector');
+    test.assertEquals(labelSelector.path, '//*[@id=string(//label[text()="Male"]/@for)]',
+        'ClientUtils.makeSelector() can process a Label selector');
+
+    test.done();
+});
+
