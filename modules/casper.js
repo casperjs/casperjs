@@ -844,6 +844,7 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
             }.bind(this));
         }
     }
+
     // Form submission?
     if (submit) {
         this.evaluate(function _evaluate(selector) {
@@ -1727,12 +1728,11 @@ Casper.prototype.setFieldValue = function setFieldValue(selector, value, form, o
     this.checkStarted();
 
     var selectorType = options && options.selectorType;
-
     var result = this.evaluate(function _evaluate(selector, value, form, selectorType) {
         if (selectorType) {
             selector = __utils__.makeSelector(selector, selectorType);
         }
-        return __utils__.setFieldValue(selector, value, {'formSelector': form});
+        return __utils__.setFieldValue(selector, value, form);
     }, selector, value, form, selectorType);
 
     if (!result) {

@@ -292,7 +292,7 @@ The ``scope`` argument allows to set the context for executing the XPath query.
 ``getFieldValue()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``getFieldValue(String inputName[, Object options])``
+**Signature:** ``getFieldValue(String selector[, HTMLElement scope])``
 
 .. versionadded:: 1.0
 
@@ -306,11 +306,9 @@ Retrieves the value from the field named against the ``inputNamed`` argument:
 
 Using the ``getFieldValue()`` method for ``plop``::
 
-    __utils__.getFieldValue('plop'); // 42
+    __utils__.getFieldValue('[name="plop"]'); // 42
 
 Options:
-
-- ``formSelector``: allows to set the selector for the form containing the target field.
 
 .. index:: Form
 
@@ -439,7 +437,7 @@ Sends an AJAX request, using the following parameters:
 ``setFieldValue()``
 -----------------------------------------------------------------------------
 
-**Signature:** ``setFieldValue(String|Object selector, Mixed value [, Object options])``
+**Signature:** ``setFieldValue(String|Object selector, Mixed value [, HTMLElement scope])``
 
 .. versionadded:: 1.1-beta5
 
@@ -449,7 +447,7 @@ With `makeSelector()`_ function can be easily used with ``name`` or ``label`` se
 Options
 ~~~~~~~
     
-- ``(String|Object) formSelector: selector :``
+- ``(String|Object) scope: selector :``
 
   specific form scope
 
