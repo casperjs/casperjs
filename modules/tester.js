@@ -556,9 +556,9 @@ Tester.prototype.assertField = function assertField(input, expected, message, op
         }
     }
 
-    var actual = this.casper.evaluate(function(inputName, options) {
-        return __utils__.getFieldValue(inputName, options);
-    }, input, options);
+    var actual = this.casper.evaluate(function(inputName) {
+        return __utils__.getFieldValue(__utils__.makeSelector(inputName,'name'));
+    }, input);
 
     return baseFieldAssert.call(this, input, expected, actual, message);
 };
@@ -573,9 +573,9 @@ Tester.prototype.assertField = function assertField(input, expected, message, op
  */
 Tester.prototype.assertFieldCSS = function assertFieldCSS(cssSelector, expected, message) {
     "use strict";
-    var actual = this.casper.evaluate(function(inputName, cssSelector) {
-        return __utils__.getFieldValue(inputName, {inputSelector: cssSelector});
-    }, null, cssSelector);
+    var actual = this.casper.evaluate(function(inputName) {
+        return __utils__.getFieldValue(__utils__.makeSelector(inputName,'css'));
+    }, cssSelector);
 
     return baseFieldAssert.call(this, null, expected, actual, message);
 };
@@ -590,9 +590,9 @@ Tester.prototype.assertFieldCSS = function assertFieldCSS(cssSelector, expected,
  */
 Tester.prototype.assertFieldXPath = function assertFieldXPath(xPathSelector, expected, message) {
     "use strict";
-    var actual = this.casper.evaluate(function(inputName, xPathSelector) {
-        return __utils__.getFieldValue(inputName, {inputXPath: xPathSelector});
-    }, null, xPathSelector);
+    var actual = this.casper.evaluate(function(inputName) {
+        return __utils__.getFieldValue(__utils__.makeSelector(inputName,'xpath'));
+    }, xPathSelector);
 
     return baseFieldAssert.call(this, null, expected, actual, message);
 };
