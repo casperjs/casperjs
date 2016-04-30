@@ -2364,7 +2364,15 @@ Waits until an element matching the provided :doc:`selector expression <../selec
 
 **Signature:** ``waitWhileVisible(String selector[, Function then, Function onTimeout, Number timeout])``
 
-Waits until an element matching the provided :doc:`selector expression <../selectors>` is no longer visible in remote DOM to process a next step. Uses `waitFor()`_.
+Waits until an element matching the provided :doc:`selector expression <../selectors>` is no longer visible in remote DOM to process a next step. Uses `waitFor()`_::
+
+    var casper = require('casper').create();
+    
+    casper.start('https://www.example.com/').thenClick('html body div p a', function () { 
+        this.waitWhileVisible('body > div:nth-child(1) > p:nth-child(2)', function () {
+            this.echo("The selected element existed in previous page but doesn't exist in this page.");
+        })
+    }).run();
 
 ``warn()``
 -------------------------------------------------------------------------------
