@@ -496,19 +496,8 @@ Example::
 
     casper.then(function() {
         // Click on 1st result link
-        this.click('h3.r a');
-    });
-
-    casper.then(function() {
-        // Click on 1st result link
-        this.click('h3.r a',10,10);
-    });
-
-    casper.then(function() {
-        // Click on 1st result link
         this.click('h3.r a',"50%","50%");
     });
-
 
     casper.then(function() {
         console.log('clicked ok, new location is ' + this.getCurrentUrl());
