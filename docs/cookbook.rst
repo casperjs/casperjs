@@ -188,3 +188,31 @@ Run it with:
   casperjs 404checker.js http://mysite.tld/ [--max-depth=42]
 
 `Reference gist <https://gist.github.com/n1k0/4509789>`_.
+
+Test drag&drop
+--------------
+
+Assuming a page containing a draggable element like that `one <http://codepen.io/ebrehault/pen/grQdyN/>`_, we can test drag&drop that way:
+
+.. code-block:: javascript
+
+  casper.test.begin('Test drag&drop', 2, function(test) {
+    casper.start('http://localhost:8000/example.html', function() {
+      test.assertEval(function() {
+        var pos = $('#box').position();
+        return (pos.left == 0 && pos.top == 0);
+      }, "The box is at the top");
+      this.mouse.down(5, 5);
+      this.mouse.move(400, 200);
+      this.mouse.up(400, 200);
+    });
+    casper.then(function() {
+      test.assertEval(function() {
+        var pos = $('#box').position();
+        return (pos.left == 395 && pos.top == 195);
+      }, "The box has been moved");
+    });
+    casper.run(function() {
+      test.done();
+    });
+  });
