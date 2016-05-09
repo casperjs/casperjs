@@ -1,208 +1,271 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="http://casperjs.org/">
-    <title>CasperJS, a navigation scripting and testing utility for PhantomJS and SlimerJS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+
     <meta name="keywords" content="phantomjs, phantom, slimerjs, slimer, casperjs, casper, browser, javascript, navigation, scripting, test, testing, scrape, scraping">
     <meta name="description" content="CasperJS is a browser navigation scripting &amp; testing utility written in Javascript for PhantomJS or SlimerJS.">
     <meta name="google-site-verification" content="SEcGmVv4IsGYP6-xMJquQcrUrYjIZNXyX0VGfly2m1o">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
-    <link rel="stylesheet" href="prettify/prettify.css?1363162175523">
-    <link rel="stylesheet" href="css/casper.css?1363162175523">
+
+    <title>CasperJS, a navigation scripting and testing utility for PhantomJS and SlimerJS</title>
+
+    <link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/casper.css" rel="stylesheet">
+    <link href="css/prism.css" rel="stylesheet">
+    <link href="css/octicons.css" rel="stylesheet">
     <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Asap:400,700,400italic,700italic&amp;subset=latin,latin-ext">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
-    <a href="http://github.com/casperjs/casperjs" class="contribute">
-        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
-    </a>
-    <div class="navbar navbar-fixed-top" id="topbar">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-                <a class="brand" href="./index.html">CasperJS</a>
-                <div class="nav-collapse">
-                    <ul class="nav">
-                        <li><a href="http://docs.casperjs.org/en/latest/">Documentation</a></li>
-                        <li><a href="http://docs.casperjs.org/en/latest/upgrading/1.1.html">Upgrade to 1.1</a></li>
-                        <li><a href="http://docs.casperjs.org/en/latest/faq.html"><abbr title="Frequently Asked Questions">FAQ</abbr></a></li>
-                        <li><a href="https://github.com/casperjs/casperjs">Github</a></li>
-                        <li><a href="https://groups.google.com/forum/#!forum/casperjs">Support</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container" id="overview">
-        <div class="content"><section id="about">
-    <div class="page-header">
-        <h1>
-            CasperJS
-            <small>
-                is a navigation scripting &amp; testing utility for
-                <a href="http://phantomjs.org/">PhantomJS</a> and
-                <a href="http://slimerjs.org/">SlimerJS</a> written in Javascript
-            </small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="span8">
-            <article class="just-informative casper-intro">
-                <p>
-                    CasperJS is an open source <strong>navigation scripting &amp;
-                    testing utility</strong> written in Javascript for the
-                    <a href="http://www.phantomjs.org/">PhantomJS</a> WebKit headless browser and
-                    <a href="http://www.slimerjs.org/">SlimerJS</a> (Gecko).
-                    It eases the process of <strong>defining a full navigation
-                    scenario</strong> and provides useful <strong>high-level functions,
-                    methods &amp; syntactic sugar</strong> for doing common tasks such as:
-                </p>
-                <ul>
-                    <li>defining &amp; ordering browsing <a href="http://docs.casperjs.org/en/latest/quickstart.html">navigation steps</a></li>
-                    <li>filling &amp; submitting <a href="http://docs.casperjs.org/en/latest/modules/casper.html#fill">forms</a></li>
-                    <li><a href="http://docs.casperjs.org/en/latest/modules/casper.html#click">clicking</a> &amp; following links</li>
-                    <li>capturing <a href="http://docs.casperjs.org/en/latest/modules/casper.html#captureselector">screenshots</a> of a page (or part of it)</li>
-                    <li><a href="http://docs.casperjs.org/en/latest/modules/tester.html">testing</a> remote DOM</li>
-                    <li><a href="http://docs.casperjs.org/en/latest/modules/casper.html#logging.html">logging</a> events</li>
-                    <li><a href="http://docs.casperjs.org/en/latest/modules/casper.html#download">downloading</a> resources, including binary ones</li>
-                    <li>writing <a href="http://docs.casperjs.org/en/latest/testing.html">functional test suites</a>, saving results as JUnit XML</li>
-                    <li><a href="https://github.com/casperjs/casperjs/blob/master/samples/">scraping</a> Web contents</li>
+    <header class="header">
+        <div class="container">
+            <ul class="navigation pull-right hidden-sm hidden-xs">
+                <li>
+                    <a id="link-quickstart-full" href="http://docs.casperjs.org/en/latest/quickstart.html">Quickstart</a>
+                </li>
+                <li>
+                    <a id="link-documentation-full" href="http://docs.casperjs.org/en/latest/">Documentation</a>
+                </li>
+                <li>
+                    <a id="link-contribute-full" href="https://github.com/casperjs/casperjs">Contribute</a>
+                </li>
+                <li>
+                    <a id="link-support-full" href="https://groups.google.com/forum/#!forum/casperjs">Support</a>
+                </li>
+            </ul>
+            <div class="dropdown pull-right hidden-lg hidden-md">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-navigation" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Navigation
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a id="link-quickstart" href="http://docs.casperjs.org/en/latest/quickstart.html">Quickstart</a>
+                    </li>
+                    <li>
+                        <a id="link-documentation" href="http://docs.casperjs.org/en/latest/">Documentation</a>
+                    </li>
+                    <li>
+                        <a id="link-contribute" href="https://github.com/casperjs/casperjs">Contribute</a>
+                    </li>
+                    <li>
+                        <a id="link-support" href="https://groups.google.com/forum/#!forum/casperjs">Support</a>
+                    </li>
                 </ul>
-            </article>
+                </div>
+            <h1>
+                CasperJS
+                <small>Navigation scripting &amp; testing for PhantomJS and SlimerJS</small>
+            </h1>
         </div>
-        <aside class="span4 download">
-            <h1>Download</h1>
-            <p>
-                CasperJS latest stable version is <strong>1.1.1</strong>,<br>
-                see the <a href="https://github.com/casperjs/casperjs/releases/tag/1.1.1">changelog</a> and
-                <a href="http://docs.casperjs.org/en/latest/upgrading/1.1.html">upgrading documentation</a>.
-            </p>
-            <div class="dl-links">
-                <p><a href="https://github.com/casperjs/casperjs/zipball/1.1.1" class="btn btn-success">
-                    Download 1.1.1 (ZIP)
-                </a></p>
-            </div>
-            <div class="dl-alternate">
-                <p>
-                    CasperJS latest old stable version is <strong>1.0.4</strong>,<br>
-                    see the <a href="https://github.com/casperjs/casperjs/releases/tag/1.0.4">changelog</a>.<br>
-                    <em>NOTE: this version is now considered outdated and unmaintained,
-                    just like the PhantomJS versions supported by this release.</em>
-                </p>
-                <div class="dl-links">
-                    <p><a href="https://github.com/casperjs/casperjs/zipball/1.0.4" class="btn btn-warning">
-                        Download 1.0.4 (ZIP)
-                    </a></p>
+    </header>
+
+    <!-- INSTALLATION -->
+
+    <section class="install">
+        <div class="container">
+            <div class="install-directions center-block">
+                Install <a href="http://phantomjs.org/">PhantomJS</a> or <a href="https://slimerjs.org/">SlimerJS</a>, then:
+                <pre class="code"><code class="language-markup">
+npm install casperjs
+node_modules/casperjs/bin/casperjs selftest</code></pre>
+
+                <a class="more" href="http://docs.casperjs.org/en/latest/installation.html">Other install options</a>
+
+
+                <div class="row">
+                    <div class="col-xs-12 center-block">
+                        <a href="https://github.com/casperjs/casperjs/archive/1.1.1.zip" class="btn btn-default btn-lg">Download CasperJS</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 center-block cool-facts">
+                        <span class="cool-fact">
+                            <span class="octicon octicon-star"></span>
+                            5,605 Stargazers
+                        </span>
+                        <span class="cool-fact">
+                            <span class="octicon octicon-git-branch"></span>
+                            896 Forks
+                        </span>
+                    </div>
                 </div>
             </div>
-            <p>
-                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                    <input type="hidden" name="cmd" value="_s-xclick">
-                    <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="Donate" title="Donate">
-                    <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
-                </form>
-                <small>(ghosts have bills, you know)</small>
-            </p>
-        </aside>
-    </div>
-    <div class="row">
-        <div class="span12">
-            <blockquote>
-                <q>In case you haven’t seen CasperJS yet, go and take a look, it’s an <em>extremely</em> useful companion to PhantomJS.</q>
-                <cite><a href="http://ariya.ofilabs.com/2012/03/phantomjs-and-travis-ci.html">Ariya Hidayat</a>, creator of PhantomJS</cite>
-            </blockquote>
         </div>
-    </div>
-    <div class="row">
-        <article class="span5">
-            <h1>Get started</h1>
-            <p>
-                Browse the <a href="http://docs.casperjs.org/en/latest/">documentation</a> and
-                <a href="http://docs.casperjs.org/en/latest/quickstart.html">get started</a>.
-                Get <a href="https://groups.google.com/forum/#!forum/casperjs">support</a>.
-                Checkout the <a href="https://github.com/casperjs/casperjs">code at Github</a>.
-                Don't hesitate to fork and send a pull request for any cool example
-                of yours as well!
-            </p>
-            <p>
-                Troubleshooting? Read the <a href="faq.html">FAQ</a> or
-                <a href="https://github.com/casperjs/casperjs/issues">open an issue</a>. Follow
-                <a href="https://twitter.com/casperjs_org">@casperjs_org</a> on Twitter.
-            </p>
-        </article>
-        <div class="span7 demo">
-            <p class="center"><img alt="" src="images/demo.png"></p>
-        </div>
-    </div>
-</section>
+    </section>
 
-<section id="license">
-    <div class="page-header">
-        <h1>
-            <span class="section-title">License</span>
-            <small class="section-subtitle">CasperJS is MIT licensed</small>
-        </h1>
+    <div class="container">
+        <hr />
     </div>
-    <div class="section-content">
-        <p>
-            <a href="http://casperjs.org">Casper.js</a> is released under the terms
-            of the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
-        </p>
-        <pre>Copyright (c) 2011-2016 Nicolas Perriault
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.</pre>
+
+    <!-- NAVIGATION -->
+
+    <section class="navigation-section">
+        <div class="container text-center">
+            <h2>Navigation &amp; Automation</h2>
+
+            <p>CasperJS allows you to build full navigation scenarios using high-level functions and a straight forward interface to accomplish all sizes of tasks.</p>
+
+            <pre class="code"><code class="language-javascript">
+var casper = require('casper').create();
+casper.start('http://casperjs.org/');
+
+casper.then(function() {
+    this.echo('First Page: ' + this.getTitle());
+});
+
+casper.thenOpen('http://phantomjs.org', function() {
+    this.echo('Second Page: ' + this.getTitle());
+});
+
+casper.run();</code></pre>
+
+            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+
+            <pre class="code"><code class="language-markup">
+$ casperjs sample.js
+First Page: CasperJS - a navigation scripting & testing utility for PhantomJS and SlimerJS written in Javascript
+Second Page: PhantomJS | PhantomJS</code></pre>
+        </div>
+    </section>
+
+    <div class="container">
+        <hr />
     </div>
-</section>
-</div>
-        <footer>
-            <hr>
-            <p>
-                © 2011-2016 <a href="https://nicolas.perriault.net/">Nicolas Perriault</a> — get
-                the source code on GitHub: <a href="http://github.com/casperjs/casperjs">casperjs/casperjs</a> —
-                logo by <a href="http://www.linkedin.com/pub/j%C3%A9r%C3%A9my-forveille/15/315/691">Jeremy Forveille</a> -
-                <a href="https://plus.google.com/106641872690063476159" rel="publisher">Google+</a> -
-                <a href="http://flattr.com/thing/586241/CasperJS-a-navigation-scripting-and-testing-utility-for-PhantomJS" class="flattr" target="_blank"><img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0"></a>
-            </p>
-        </footer>
+
+    <!-- TESTING -->
+
+    <section class="testing-section">
+        <div class="container text-center">
+            <h2>Testing</h2>
+
+            <p>CasperJS comes with a basic testing suite that allows you to run full featured tests without the overhead of a full browser.  Output the tests to xunit for long term code health as well.</p>
+
+            <pre class="code"><code class="language-javascript">
+casper.test.begin('Hello, Test!', 1, function(test) {
+    test.assert(true);
+    test.done();
+});</code></pre>
+
+            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+
+            <pre class="code"><code class="language-markup">
+$ casperjs test sample-test.js
+Test file: sample-test.js
+# Hello, Test!
+PASS Subject is strictly true
+PASS 1 test executed in 0.023s, 1 passed, 0 failed, 0 dubious, 0 skipped.</code></pre>
+        </div>
+    </section>
+
+    <div class="container">
+        <hr />
     </div>
-    <script type="text/javascript" src="js/jquery.min.js?1363162175523"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js?1363162175523"></script>
-    <script type="text/javascript" src="prettify/prettify.js?1363162175523"></script>
-    <script type="text/javascript" src="js/application.js?1363162175523"></script>
-    <script type="text/javascript">
-    (function() {
-        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-        po.src = 'https://apis.google.com/js/plusone.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
-    </script>
-    <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-71239-7']);
-    _gaq.push(['_trackPageview']);
-    (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-    </script>
-</body></html>
+
+    <!-- SCRAPING -->
+
+    <section class="scraping-section">
+        <div class="container text-center">
+            <h2>Scraping</h2>
+
+            <p>Capture data from web pages simply that don't contain APIs.  Validate your production environment on a regular basis. Alternatively, use this to load your application with data.</p>
+
+            <pre class="code"><code class="language-javascript">
+var casper = require('casper').create();
+var links;
+
+function getLinks() {
+  var links = document.querySelectorAll('h3.r a');
+  return Array.prototype.map.call(links, function(e) {
+    return e.getAttribute('href')
+  });
+}
+
+casper.start('https://google.com/', function() {
+  // search for 'casperjs' from google form
+  this.fill('form[action="/search"]', { q: 'casperjs' }, true);
+});
+
+casper.then(function() {
+  // aggregate results for the 'casperjs' search
+  links = this.evaluate(getLinks);
+});
+
+casper.run(function() {
+  for ( var i in links ) {
+    console.log(links[i]);
+  }
+  casper.done();
+});</code></pre>
+
+            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+
+
+            <pre class="code"><code class="language-markup">
+$ casperjs query-google.js
+/url?q=http://casperjs.org/&sa=U&ved=0ahUKEwjaseDX9qjMAhUBs4MKHbidDTkQFggVMAA&usg=AFQjCNHq6IAs8Qmi3AHLHdNjktEWzeq4nQ
+/url?q=http://docs.casperjs.org/&sa=U&ved=0ahUKEwjaseDX9qjMAhUBs4MKHbidDTkQjBAIHDAB&usg=AFQjCNEiNJ-CGdgMW2V4yEdWIoKIjS-KkA
+/url?q=http://docs.casperjs.org/en/latest/quickstart.html&sa=U&ved=0ahUKEwjaseDX9qjMAhUBs4MKHbidDTkQjBAIHjAD&usg=AFQjCNFVey45dwA-1Y_o28SoIKHogl11JQ
+[...snip...]</code></pre>
+
+        </div>
+    </section>
+
+    <div class="container">
+        <hr />
+    </div>
+
+    <!-- DEVELOPMENT -->
+
+    <section class="development-section">
+        <div class="container text-center">
+            <h2>Support Development</h2>
+
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----MIIHRwYJKoZIhvcNAQcEoIIHODCCBzQCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYC4JCGS/3BUKEbRk75JLTu8saEZukn/6Zl5RMoVI55A2wpXdaYcILRy3L7CC4Exu9QaUzHTqQY5livIcptZaOM+aJYYr4ltJbyRW1hvFfrp0ZKMEgUuaU3m9+KQl4kzF9mRUIb5fwTd2j0FfEOllIDYLhEs6sCf39iI8yNeHsuTqjELMAkGBSsOAwIaBQAwgcQGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQIHb+LDTLRE8+AgaD85VPtS5//ZnqYKJMBxlWxI6ob8L8Zk71t9NAwDY3YB3phdkyYSQtax1QxSYz1zFdNlaN5+zlFVg3chctbR6W/kC1sf4hI+AVRm9JlwYKdPOE2FOescC7QuqwAiCZlTfdejznoE0B3aVfq4OMx2k0STtVv3Ld9prW57EtMZ7xDXIW5ss62IWpsBY8eW2VPbX/Xy8TncrpDLHzJ67OKmj/KoIIDhzCCA4MwggLsoAMCAQICAQAwDQYJKoZIhvcNAQEFBQAwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMB4XDTA0MDIxMzEwMTMxNVoXDTM1MDIxMzEwMTMxNVowgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBR07d/ETMS1ycjtkpkvjXZe9k+6CieLuLsPumsJ7QC1odNz3sJiCbs2wC0nLE0uLGaEtXynIgRqIddYCHx88pb5HTXv4SZeuv0Rqq4+axW9PLAAATU8w04qqjaSXgbGLP3NmohqM6bV9kZZwZLR/klDaQGo1u9uDb9lr4Yn+rBQIDAQABo4HuMIHrMB0GA1UdDgQWBBSWn3y7xm8XvVk/UtcKG+wQ1mSUazCBuwYDVR0jBIGzMIGwgBSWn3y7xm8XvVk/UtcKG+wQ1mSUa6GBlKSBkTCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb22CAQAwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQCBXzpWmoBa5e9fo6ujionW1hUhPkOBakTr3YCDjbYfvJEiv/2P+IobhOGJr85+XHhN0v4gUkEDI8r2/rNk1m0GA8HKddvTjyGw/XqXa+LSTlDYkqI8OwR8GEYj4efEtcRpRYBxV8KxAW93YDWzFGvruKnnLbDAF6VR5w/cCMn5hzGCAZowggGWAgEBMIGUMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbQIBADAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTIwNjI0MTUzOTU1WjAjBgkqhkiG9w0BCQQxFgQUCTlRbQ9Lu+bilBvGXOco0qlRC/8wDQYJKoZIhvcNAQEBBQAEgYBVibaMfUxJXJkA636MBqV4iWXc/F070Tsov5/kALg++/rD5qmH5MV6U8X0H8V1bCFZMBpTtLbCQ9xgeMjaK1gaCrvUw0503tBnvuPDz4bS1dspNHE9boiBJdN5vNZGqxXKij8CgKBeHYmcyCKjywHyUfSDADt1vgb7qQ5bOIvbzA==-----END PKCS7-----">
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="Donate" title="Donate">
+                <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="col-md-6 col-sm-12">
+                <p>
+                    CasperJS is licensed under <a href="http://en.wikipedia.org/wiki/MIT_License">MIT License</a>.
+                </p>
+                <p>
+                    Copyright &copy; 2011-2016 Nicolas Perriault and CasperJS Contributors.
+                </p>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <p>
+                    Logo by <a href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-forveille-69131515">Jeremy Forveille</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+</body>
+</html>
