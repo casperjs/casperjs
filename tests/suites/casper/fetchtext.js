@@ -39,7 +39,7 @@ casper.test.begin('fetchText() handles empty elements', 1, function(test) {
     });
 });
 
-casper.test.begin('fetchText() tests', 1, function(test) {
+casper.test.begin('fetchText() handles documents with no CONTENT TYPE header', 1, function(test) {
     casper.start('tests/site/plaintext.notype', function() {
         test.assertEquals(this.fetchText('html'), 'This is a plain and very simple sentence.',
             'Casper.fetchText(\'html\') can retrieve plain text with no content type');
