@@ -38,3 +38,12 @@ casper.test.begin('fetchText() handles empty elements', 1, function(test) {
         test.done();
     });
 });
+
+casper.test.begin('fetchText() tests', 1, function(test) {
+    casper.start('tests/site/plaintext.notype', function() {
+        test.assertEquals(this.fetchText('html'), 'This is a plain and very simple sentence.',
+            'Casper.fetchText(\'html\') can retrieve plain text with no content type');
+    }).run(function() {
+        test.done();
+    });
+});
