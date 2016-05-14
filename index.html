@@ -189,37 +189,51 @@ var casper = require('casper').create();
 var links;
 
 function getLinks() {
-  var links = document.querySelectorAll('h3.r a');
-  return Array.prototype.map.call(links, function(e) {
-    return e.getAttribute('href')
-  });
+    var links = document.querySelectorAll('h3.r a');
+    return Array.prototype.map.call(links, function (e) {
+        return e.getAttribute('href')
+    });
 }
 
-casper.start('https://google.com/', function() {
-  // search for 'casperjs' from google form
-  this.fill('form[action="/search"]', { q: 'casperjs' }, true);
+//Cleans urls of the google search results
+function CleanUrl(url) {
+    var start = url.indexOf("?q=") + 3;
+    var end = url.indexOf("&", start)
+    var encodedUrl = url.substring(start, end);
+    return decodeURIComponent(encodedUrl);
+}
+
+casper.start('https://google.com/', function () {
+    // search for 'casperjs' from google form
+    this.fill('form[action="/search"]', {
+        q: 'casperjs'
+    }, true);
 });
 
-casper.then(function() {
-  // aggregate results for the 'casperjs' search
-  links = this.evaluate(getLinks);
+casper.then(function () {
+    // aggregate results for the 'casperjs' search
+    links = this.evaluate(getLinks);
 });
 
-casper.run(function() {
-  for ( var i in links ) {
-    console.log(links[i]);
-  }
-  casper.done();
-});</code></pre>
+casper.run(function () {
+    for(var i in links) {
+        console.log(CleanUrl(links[i]));
+    }
+    casper.done();
+});
+</code></pre>
 
             <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
 
 
             <pre class="code"><code class="language-markup">
 $ casperjs query-google.js
-/url?q=http://casperjs.org/&sa=U&ved=0ahUKEwjaseDX9qjMAhUBs4MKHbidDTkQFggVMAA&usg=AFQjCNHq6IAs8Qmi3AHLHdNjktEWzeq4nQ
-/url?q=http://docs.casperjs.org/&sa=U&ved=0ahUKEwjaseDX9qjMAhUBs4MKHbidDTkQjBAIHDAB&usg=AFQjCNEiNJ-CGdgMW2V4yEdWIoKIjS-KkA
-/url?q=http://docs.casperjs.org/en/latest/quickstart.html&sa=U&ved=0ahUKEwjaseDX9qjMAhUBs4MKHbidDTkQjBAIHjAD&usg=AFQjCNFVey45dwA-1Y_o28SoIKHogl11JQ
+http://docs.casperjs.org/
+http://docs.casperjs.org/en/latest/modules/
+http://docs.casperjs.org/en/latest/installation.html
+http://docs.casperjs.org/en/latest/cli.html
+http://docs.casperjs.org/en/latest/quickstart.html
+http://docs.casperjs.org/en/latest/modules/casper.html
 [...snip...]</code></pre>
 
         </div>
