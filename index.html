@@ -189,35 +189,23 @@ var casper = require('casper').create();
 var links;
 
 function getLinks() {
-    var links = document.querySelectorAll('h3.r a');
+// Scrape the links from top-right nav of the website
+    var links = document.querySelectorAll('ul.navigation li a');
     return Array.prototype.map.call(links, function (e) {
         return e.getAttribute('href')
     });
 }
 
-//Cleans urls of the google search results
-function CleanUrl(url) {
-    var start = url.indexOf("?q=") + 3;
-    var end = url.indexOf("&", start)
-    var encodedUrl = url.substring(start, end);
-    return decodeURIComponent(encodedUrl);
-}
-
-casper.start('https://google.com/', function () {
-    // search for 'casperjs' from google form
-    this.fill('form[action="/search"]', {
-        q: 'casperjs'
-    }, true);
-});
+// Opens casperjs homepage
+casper.start('http://casperjs.org/');
 
 casper.then(function () {
-    // aggregate results for the 'casperjs' search
     links = this.evaluate(getLinks);
 });
 
 casper.run(function () {
     for(var i in links) {
-        console.log(CleanUrl(links[i]));
+        console.log(links[i]);
     }
     casper.done();
 });
@@ -227,13 +215,11 @@ casper.run(function () {
 
 
             <pre class="code"><code class="language-markup">
-$ casperjs query-google.js
-http://docs.casperjs.org/
-http://docs.casperjs.org/en/latest/modules/
-http://docs.casperjs.org/en/latest/installation.html
-http://docs.casperjs.org/en/latest/cli.html
+$ casperjs query-casperjs.js
 http://docs.casperjs.org/en/latest/quickstart.html
-http://docs.casperjs.org/en/latest/modules/casper.html
+http://docs.casperjs.org/en/latest/
+https://github.com/casperjs/casperjs
+https://groups.google.com/forum/#!forum/casperjs
 [...snip...]</code></pre>
 
         </div>
