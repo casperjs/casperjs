@@ -465,7 +465,7 @@
          */
         this.getElementBounds = function getElementBounds(selector) {
             try {
-                return getBoundingClientRect(this.findOne(selector))
+                return getBoundingClientRect(this.findOne(selector));
             } catch (e) {
                 this.log("Unable to fetch bounds for element " + selector, "warning");
             }
