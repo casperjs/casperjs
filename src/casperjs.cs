@@ -41,6 +41,7 @@ class phantomjs : engine {
             "script-encoding",
             "ssl-protocol",
             "ssl-certificates-path",
+            "ssl-client-certificate-file",
             "web-security",
             "webdriver",
             "webdriver-logfile",
