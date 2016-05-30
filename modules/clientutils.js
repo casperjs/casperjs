@@ -862,7 +862,8 @@
          * @param   String   method   HTTP method (default: GET).
          * @param   Object   data     Request parameters.
          * @param   Boolean  async    Asynchroneous request? (default: false)
-         * @param   Object   settings Other settings when perform the ajax request like some undocumented Request Headers.
+         * @param   Object   settings Other settings when perform the ajax request like some undocumented
+         * Request Headers.
          * WARNING: an invalid header here may make the request fail silently.
          * @return  String            Response text.
          */
@@ -880,7 +881,9 @@
             }
             if (settings && settings.headers) {
                for(var header in settings.headers) {
-                   if(header === CONTENT_TYPE_HEADER) {//this way Content-Type is correctly overriden, otherwise it is strangely concatenated by xhr.setRequestHeader()
+                   if(header === CONTENT_TYPE_HEADER) { // this way Content-Type is correctly overriden,
+                                                        // otherwise it is strangely concatenated by
+                                                        // xhr.setRequestHeader()
                        contentTypeValue = settings.headers[header];
                    } else {
                        xhr.setRequestHeader(header, settings.headers[header]);
