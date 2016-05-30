@@ -416,7 +416,7 @@ Sends an AJAX request, using the following parameters:
 - ``method``: The HTTP method (default: ``GET``).
 - ``data``: Request parameters (default: ``null``).
 - ``async``: Flag for an asynchroneous request? (default: ``false``)
-- ``settings``: Other settings when perform the AJAX request (default: ``null``)
+- ``settings``: Custom Headers when perform the AJAX request (default: ``null``). WARNING: an invalid header here may make the request fail silently.
 
 .. warning::
 
