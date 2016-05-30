@@ -862,19 +862,30 @@
          * @param   String   method   HTTP method (default: GET).
          * @param   Object   data     Request parameters.
          * @param   Boolean  async    Asynchroneous request? (default: false)
-         * @param   Object   settings Other settings when perform the ajax request
+         * @param   Object   settings Other settings when perform the ajax request like some undocumented Request Headers.
+         * WARNING: an invalid header here may make the request fail silently.
          * @return  String            Response text.
          */
         this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];
+            var CONTENT_TYPE_HEADER = "Content-Type";
             method = method && method.toUpperCase() || "GET";
-            var contentType = settings && settings.contentType || "application/x-www-form-urlencoded";
+            var contentTypeValue = settings && settings.contentType || "application/x-www-form-urlencoded";
             xhr.open(method, url, !!async);
             this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
             if (settings && settings.overrideMimeType) {
                 xhr.overrideMimeType(settings.overrideMimeType);
+            }
+            if (settings && settings.headers) {
+               for(var header in settings.headers) {
+                   if(header === CONTENT_TYPE_HEADER) {//this way Content-Type is correctly overriden, otherwise it is strangely concatenated by xhr.setRequestHeader()
+                       contentTypeValue = settings.headers[header];
+                   } else {
+                       xhr.setRequestHeader(header, settings.headers[header]);
+                   }
+              }
             }
             if (method === "POST") {
                 if (typeof data === "object") {
@@ -889,7 +900,7 @@
                 } else if (typeof data === "string") {
                     dataString = data;
                 }
-                xhr.setRequestHeader("Content-Type", contentType);
+                xhr.setRequestHeader(CONTENT_TYPE_HEADER, contentTypeValue);
             }
             xhr.send(method === "POST" ? dataString : null);
             return xhr.responseText;
