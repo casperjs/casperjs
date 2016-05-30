@@ -438,6 +438,23 @@
         };
 
         /**
+         * Helper function.
+         * Retrieves bounding rect coordinates of HTML element
+         *
+         * @param Node
+         * @return object
+         */
+        function getBoundingClientRect(element){
+            var clipRect = element.getBoundingClientRect();
+            return {
+                top: clipRect.top + window.scrollY,
+                left: clipRect.left + window.scrollX,
+                width: clipRect.width,
+                height: clipRect.height
+            };
+        }
+
+        /**
          * Retrieves bounding rect coordinates of the HTML element matching the
          * provided CSS3 selector in the following form:
          *
@@ -448,13 +465,7 @@
          */
         this.getElementBounds = function getElementBounds(selector) {
             try {
-                var clipRect = this.findOne(selector).getBoundingClientRect();
-                return {
-                    top: clipRect.top,
-                    left: clipRect.left,
-                    width: clipRect.width,
-                    height: clipRect.height
-                };
+                return getBoundingClientRect(this.findOne(selector));
             } catch (e) {
                 this.log("Unable to fetch bounds for element " + selector, "warning");
             }
@@ -474,15 +485,7 @@
         this.getElementsBounds = function getElementsBounds(selector) {
             var elements = this.findAll(selector);
             try {
-                return Array.prototype.map.call(elements, function(element) {
-                    var clipRect = element.getBoundingClientRect();
-                    return {
-                        top: clipRect.top,
-                        left: clipRect.left,
-                        width: clipRect.width,
-                        height: clipRect.height
-                    };
-                });
+                return Array.prototype.map.call(elements, getBoundingClientRect);
             } catch (e) {
                 this.log("Unable to fetch bounds for elements matching " + selector, "warning");
             }
@@ -681,17 +684,17 @@
         };
 
         /**
-         * Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for 
-         * XPath type - it makes XPath object. 
+         * Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for
+         * XPath type - it makes XPath object.
          * Function also accepts name attribut of the form filed or can select element by its label text.
          *
          * @param  String selector Selector of defined type
-         * @param  String|null  type Type of selector, it can have these values:     
+         * @param  String|null  type Type of selector, it can have these values:
          *         css - CSS3 selector - selector is returned trasparently
-         *         xpath - XPath selector - return XPath object    
+         *         xpath - XPath selector - return XPath object
          *         name|names - select input of specific name, internally covert to CSS3 selector
          *         label|labels - select input of specific label, internally covert to XPath selector. As selector is label's text used.
-         * @return String|Object          
+         * @return String|Object
          */
         this.makeSelector = function makeSelector(selector, type){
             type = type || 'xpath'; // default type
@@ -705,12 +708,12 @@
                 case 'css': // do nothing
                     ret = selector;
                     break;
-                case 'name': // convert to css 
-                case 'names': 
+                case 'name': // convert to css
+                case 'names':
                     ret = '[name="' + selector + '"]';
                     break;
                 case 'label': // covert to xpath object
-                case 'labels': 
+                case 'labels':
                     ret = {type:'xpath', path:'//*[@id=string(//label[text()="' + selector + '"]/@for)]'};
                     break;
                 case 'xpath': // covert to xpath object
@@ -884,11 +887,11 @@
         };
 
         /**
-         * Sets a value to form field by CSS3 or XPath selector. 
+         * Sets a value to form field by CSS3 or XPath selector.
          *
-         * With makeSelector() helper can by easily used with name or label selector 
+         * With makeSelector() helper can by easily used with name or label selector
          *     @exemple setFieldValue(this.makeSelector('email', 'name'), 'value')
-         *  
+         *
          * @param String|Object CSS3|XPath selector
          * @param Mixed         Input value
          * @param Object options Options for setFieldValue, accept formSelector: selector (optional)
@@ -904,16 +907,16 @@
                 if (!(scope = this.findOne(formSelector))) {
                     this.log('setFieldValue() could not find form with selector: ' + selector, "error");
                     return false;
-                } 
+                }
             }
-            
+
             var field = this.findAll(selector, scope);
 
             if (!field || field.length === 0) {
                 this.log('setFieldValue(): unable to find field ' + selector, "error");
                 return false;
             }
-            
+
             try {
                 var ret = this.setField(field, value);
             } catch (err) {
