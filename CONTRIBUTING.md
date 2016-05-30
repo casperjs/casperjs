@@ -67,7 +67,7 @@ Some good practices for the feature branch:
 
 ### Write tests
 
-CasperJS being partly a testing framework, how irrelevant would be to send a pull request with no test? So, please take the time to write and attach tests to your PR. Furthermore, testing with CasperJS is quite [exhaustively documented](http://casperjs.org/testing.html).
+CasperJS being partly a testing framework, how irrelevant would be to send a pull request with no test? So, please take the time to write and attach tests to your PR. Furthermore, testing with CasperJS is quite [exhaustively documented](http://docs.casperjs.org/en/latest/testing.html).
 
 ### Run tests!
 
