@@ -136,7 +136,6 @@ CASPER_COMMAND.extend([
 ])
 CASPER_COMMAND.extend(CASPER_ARGS)
 
-print CASPER_COMMAND
 
 try:
     # print(CASPER_COMMAND)
