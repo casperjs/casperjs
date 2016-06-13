@@ -52,11 +52,11 @@ casper.test.begin('handling of array context', 3, function(test) {
     test.assertEquals(casper.evaluate(function(a) {
         return a;
     }, ["foo"]), ["foo"], 'Casper.evaluate() accepts an array as arguments context');
-    test.assertEquals(casper.evaluate(function(a, b) {
-        return [a, b];
+    test.assertEquals(casper.evaluate(function(a) {
+        return a;
     }, ["foo", "bar"]), ["foo", "bar"], 'Casper.evaluate() accepts an array as arguments context');
-    test.assertEquals(casper.evaluate(function(a, b, c) {
-        return [a, b, c];
+    test.assertEquals(casper.evaluate(function(a) {
+        return a;
     }, ["foo", "bar", "baz"]), ["foo", "bar", "baz"], 'Casper.evaluate() accepts an array as arguments context');
     test.done();
 });
