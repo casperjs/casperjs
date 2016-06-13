@@ -715,8 +715,17 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         return utils.clone(this.page.evaluate(fn));
     } else if (arguments.length === 2) {
         // check for closure signature if it matches context
-        if (!utils.isArray(context) && utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
-            context = utils.objectValues(context);
+        if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
+            /** 
+             * in case if user passes argument as one array with only one object.
+             * evaluate shlould return original array with one object
+             * instead of converte this array to object
+             */
+            if (utils.isArray(context) && context.length === 1) {
+                context = [context];
+            } else {
+                context = utils.objectValues(context);
+            }
         } else {
             context = [context];
         }
