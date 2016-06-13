@@ -50,7 +50,7 @@ casper.test.begin('handling of object context (BC mode)', 3, function(test) {
 casper.test.begin('handling of array context', 3, function(test) {
     casper.start();
     test.assertEquals(casper.evaluate(function(a) {
-        return [a];
+        return a;
     }, ["foo"]), ["foo"], 'Casper.evaluate() accepts an array as arguments context');
     test.assertEquals(casper.evaluate(function(a, b) {
         return [a, b];
