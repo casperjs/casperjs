@@ -983,6 +983,17 @@ Casper.prototype.getPageContent = function getPageContent() {
 };
 
 /**
+ * Retrieves current page contents in plain text.
+ *
+ * @return String
+ */
+Casper.prototype.getPlainText = function getPlainText() {
+    "use strict";
+    this.checkStarted();
+    return this.page.framePlainText;
+};
+
+/**
  * Retrieves current document url.
  *
  * @return String
