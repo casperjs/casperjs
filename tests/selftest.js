@@ -13,6 +13,7 @@ var contentTypes = {
     json: {type: 'application/json', binMode: false},
     txt: {type: 'text/plain', binMode: false},
     png: {type: 'image/png', binMode: true},
+    notype: {type: null, binMode: false},
     _default: {type: 'application/octet-stream', binMode: true}
 };
 var extensionRE = /\.([a-zA-Z]*)$/;
@@ -43,7 +44,9 @@ service = server.listen(testServerPort, function(request, response) {
         var contentType = contentTypes[extension] ||
                           contentTypes._default;
 
-        headers['Content-Type'] = contentType.type;
+        if (contentType.type) {
+            headers['Content-Type'] = contentType.type;
+        }
         binMode = contentType.binMode;
 
         response.writeHead(200, headers);
