@@ -1038,6 +1038,25 @@ Tester.prototype.assertVisible = function assertVisible(selector, message) {
 };
 
 /**
+ * Asserts that all elements matching selector expression are currently visible.
+ * Fails if even one element is not visible.
+ *
+ * @param  String  expected  selector expression
+ * @param  String  message   Test description
+ * @return Object            An assertion result object
+ */
+Tester.prototype.assertAllVisible = function assertAllVisible(selector, message) {
+    "use strict";
+    return this.assert(this.casper.allVisible(selector), message, {
+        type: "assertAllVisible",
+        standard: "All elements matching selector are visible",
+        values: {
+            selector: selector
+        }
+    });
+};
+
+/**
  * Prints out a colored bar onto the console.
  *
  */
