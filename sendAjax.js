@@ -35,8 +35,11 @@ casper.test.begin("__utils__.sendAJAX() POST Custom Headers tests", 7, {
                         "Content-Type": "multipart/form-data",
                         "Host" : "192.168.0.2:8584",
                         "Origin": "http://google.com"
-                        //For some reason underlying XMLHttpRequest.setRequestHeader() doesn't let you
-                        //set this and others Headers as well.
+                        /* For security reasons, you may not set any header you like here.
+                        See: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/setRequestHeader
+                             https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_header_name
+                             https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_response_header_name
+                        */
                         //,"User-Agent": "Googlebot/2.1 (+http://www.google.com/bot.html)"
                     }
                 };

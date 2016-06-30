@@ -880,10 +880,12 @@
                 xhr.overrideMimeType(settings.overrideMimeType);
             }
             if (settings && settings.headers) {
-               for(var header in settings.headers) {
-                   if(header === CONTENT_TYPE_HEADER) { // this way Content-Type is correctly overriden,
-                                                        // otherwise it is strangely concatenated by
-                                                        // xhr.setRequestHeader()
+               for (var header in settings.headers) {
+                   if (header === CONTENT_TYPE_HEADER) {
+                      // this way Content-Type is correctly overriden,
+                      // otherwise it is concatenated by xhr.setRequestHeader()
+                      // see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/setRequestHeader
+                      // If the header was already set, the value will be augmented.
                        contentTypeValue = settings.headers[header];
                    } else {
                        xhr.setRequestHeader(header, settings.headers[header]);
