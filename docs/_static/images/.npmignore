@@ -1,0 +1,4 @@
+.npmignore
+*.ai
+*.pdf
+*.eps
