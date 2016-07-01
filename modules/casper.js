@@ -163,6 +163,7 @@ var Casper = function Casper(options) {
     this.pendingWait = false;
     this.requestUrl = 'about:blank';
     this.resources = [];
+    this.ajax = [];
     this.result = {
         log:    [],
         status: "success",
@@ -231,6 +232,38 @@ var Casper = function Casper(options) {
 // Casper class is an EventEmitter
 utils.inherits(Casper, events.EventEmitter);
 
+
+/**
+ * Checks if an ajax request was done.
+ *
+ * @param  Function/String/RegExp  test  A test function, string or regular expression.
+ *                                       In case a string is passed, url matching will be tested.
+ * @return Boolean
+ */
+Casper.prototype.ajaxExists = function ajaxExists(test) {
+    "use strict";
+    this.checkStarted();
+    var testFn;
+    switch (utils.betterTypeOf(test)) {
+        case "string":
+            testFn = function _testAjaxExists_String(res) {
+                return res.url.indexOf(test) !== -1 && !!res.done;
+            };
+            break;
+        case "regexp":
+            testFn = function _testAjaxExists_Regexp(res) {
+                return test.test(res.url) && !!res.done;
+            };
+            break;
+        case "function":
+            testFn = test;
+            break;
+        default:
+            throw new CasperError("Invalid type");
+    }
+    return this.ajax.some(testFn);
+};
+
 /**
  * Go a step back in browser's history
  *
@@ -251,14 +284,51 @@ Casper.prototype.back = function back() {
  *
  * NOTE: we cannot use window.btoa() for some strange reasons here.
  *
- * @param  String  url     The url to download
- * @param  String  method  The method to use, optional: default GET
- * @param  String  data    The data to send, optional
- * @return string          Base64 encoded result
+ * @param  String  url            The url to download
+ * @param  String  method         The method to use, optional: default GET
+ * @param  String  data           The data to send, optional
+ * @param  Boolean asynchronous   Asynchroneous request? (default: false)
+ * @return string                 Base64 encoded result
  */
-Casper.prototype.base64encode = function base64encode(url, method, data) {
+Casper.prototype.base64encode = function base64encode(url, method, data, asynchronous) {
     "use strict";
-    return this.callUtils("getBase64", url, method, data);
+    asynchronous = (typeof asynchronous !== "undefined") ? asynchronous : false;
+    if ((phantom.version.major > 1) && (!asynchronous)) {
+       throw new CasperError("asynchronous parameter must be 'true' with base64encode");
+    }
+    var dl = { "url": url },
+        dls = this.ajax.filter( function searchDownload( ajax ) {
+           return (ajax.url === url) && (typeof (ajax.filename) === "undefined");
+        });
+    if (dls.length === 0) {
+        this.ajax.push(dl);
+    } else {
+        dl = dls[0];
+    }
+    dl.content = this.callUtils("getBase64", url, method, data, asynchronous);
+    if ((!asynchronous) && (!!dl.filename)) dl.done = true;
+    return dl.content;
+};
+
+/**
+ * Write a base64 resource after a decode process.
+ *
+ * NOTE: we cannot use window.atob() for some strange reasons here.
+ *
+ * @param  String  str  The base64 encoded contents
+ * @param  String  targetPath  The destination file path
+ * @return Casper
+ */
+Casper.prototype.base64write = function base64write(str, targetPath) {
+    "use strict";
+    var cu = require('clientutils').create(utils.mergeObjects({}, this.options));
+    try {
+        fs.write(targetPath, cu.decode(str), 'wb');
+        this.log(f("Saved resource in %s", targetPath));
+    } catch (e) {
+        this.log(f("Error while saving %s: %s", targetPath, e), "error");
+    }
+    return this;
 };
 
 /**
@@ -593,24 +663,67 @@ Casper.prototype.die = function die(message, status) {
 /**
  * Downloads a resource and saves it on the filesystem.
  *
- * @param  String  url         The url of the resource to download
- * @param  String  targetPath  The destination file path
- * @param  String  method      The HTTP method to use (default: GET)
- * @param  String  data        Optional data to pass performing the request
+ * @param  String  url           The url of the resource to download
+ * @param  String  targetPath    The destination file path
+ * @param  String  method        The HTTP method to use (default: GET)
+ * @param  String  data          Optional data to pass performing the request
+ * @param  Boolean asynchronous  Asynchroneous request? (default: false)
  * @return Casper
  */
-Casper.prototype.download = function download(url, targetPath, method, data) {
+Casper.prototype.download = function download(url, targetPath, method, data, asynchronous) {
     "use strict";
     this.checkStarted();
-    var cu = require('clientutils').create(utils.mergeObjects({}, this.options));
-    try {
-        fs.write(targetPath, cu.decode(this.base64encode(url, method, data)), 'wb');
+    asynchronous = (typeof asynchronous !== "undefined")? asynchronous : false;
+    if ((phantom.version.major > 1) && (!asynchronous)) {
+       throw new CasperError("asynchronous parameter must be 'true' with base64encode");
+    }
+    var str, dls = this.ajax.filter( function searchDownload( dow ){
+                return (dow.url === url) && (!!dow.filename);
+            }), dl = {"url": url, "filename" : targetPath};
+
+    if (dls.length) {
+        dls[0].filename = targetPath;
+    } else {
+        this.ajax.push(dl);
+    }
+    str = this.callUtils("getBase64", url, method, data, asynchronous);
+    if (!asynchronous) {
+        this.base64write(str, targetPath);
+        dl.done = true;
         this.emit('downloaded.file', targetPath);
-        this.log(f("Downloaded and saved resource in %s", targetPath));
-    } catch (e) {
-        this.log(f("Error while downloading %s to %s: %s", url, targetPath, e), "error");
     }
     return this;
+};
+
+/**
+ * Checks if a given download was done.
+ *
+ * @param  Function/String/RegExp  test  A test function, string or regular expression.
+ *                                       In case a string is passed, url matching will be tested.
+ * @return Boolean
+ */
+Casper.prototype.downloadExists = function downloadExists(test) {
+    "use strict";
+    this.checkStarted();
+    var testFn;
+    switch (utils.betterTypeOf(test)) {
+        case "string":
+            testFn = function _testDownloadExists_String(res) {
+                return res.url.indexOf(test) !== -1 && !!res.filename && !!res.done;
+            };
+            break;
+        case "regexp":
+            testFn = function _testDownloadExists_Regexp(res) {
+                return test.test(res.url) && !!res.filename && !!res.done;
+            };
+            break;
+        case "function":
+            testFn = test;
+            break;
+        default:
+            throw new CasperError("Invalid type");
+    }
+    return this.ajax.some(testFn);
 };
 
 /**
@@ -948,6 +1061,25 @@ Casper.prototype.forward = function forward() {
         this.emit('forward');
         this.page.goForward();
     });
+};
+
+/**
+ * Retrieves an encoded base64 resource after an asynchronous base64encode call
+ *
+ * @param  String  url         The url of the resource to download
+ * @return string          Base64 encoded result
+ */
+Casper.prototype.getAjaxBase64 = function getAjaxBase64(url) {
+    "use strict";
+    this.checkStarted();
+    var str, dls = this.ajax.filter( function searchAJAX( ajax ){
+      return (ajax.url === url) && (typeof (ajax.filename) === "undefined");
+    });
+    str = (dls.length>0)? dls[0].content: "";
+    this.ajax = this.ajax.filter( function searchAJAX( ajax ){
+      return ((ajax.url !== url) || (typeof (ajax.filename) !== "undefined"));
+    });
+    return str;
 };
 
 /**
@@ -2289,6 +2421,44 @@ Casper.prototype.waitForAlert = function(then, onTimeout, timeout) {
 };
 
 /**
+ * Waits until a given client-side XMLHttpRequest is done
+ *
+ * @param  String/Function/RegExp  test       A function to test if the download exists.
+ *                                            A string will be matched against the download url.
+ * @param  Function                then       The next step to perform (optional)
+ * @param  Function                onTimeout  A callback function to call on timeout (optional)
+ * @param  Number                  timeout    The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForAJAX = function waitForAJAX(test, then, onTimeout, timeout) {
+    "use strict";
+    this.checkStarted();
+    timeout = timeout ? timeout : this.options.waitTimeout;
+    return this.waitFor(function _check() {
+        return this.ajaxExists(test);
+    }, then, onTimeout, timeout, { resource: test });
+};
+
+/**
+ * Waits until a given download is done
+ *
+ * @param  String/Function/RegExp  test       A function to test if the download exists.
+ *                                            A string will be matched against the download url.
+ * @param  Function                then       The next step to perform (optional)
+ * @param  Function                onTimeout  A callback function to call on timeout (optional)
+ * @param  Number                  timeout    The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForDownload = function waitForDownload(test, then, onTimeout, timeout) {
+    "use strict";
+    this.checkStarted();
+    timeout = timeout ? timeout : this.options.waitTimeout;
+    return this.waitFor(function _check() {
+        return this.downloadExists(test);
+    }, then, onTimeout, timeout, { resource: test });
+};
+
+/**
  * Waits for a popup page having its url matching the provided pattern to be opened
  * and loaded.
  *
@@ -2640,7 +2810,21 @@ function createPage(casper) {
     };
 
     page.onCallback = function onCallback(data){
-        casper.emit('remote.callback',data);
+        if (data && data.type && (data.type === "casper.sendAJAX") && data.url) {
+            casper.ajax.forEach( function searchDownload( dow , i){
+                if (dow.url === data.url) {
+                    if (!!dow.filename){
+                       casper.base64write(data.content, dow.filename);
+                       casper.emit('downloaded.file', dow.filename);
+                    } else {
+                       dow.content = data.content;
+                    }
+                    dow.done = true;
+                }
+            });
+        } else {
+            casper.emit('remote.callback',data);
+        }
     };
 
     page.onError = function onError(msg, trace) {

@@ -161,7 +161,7 @@ Force the engine to use another target instead of the one provided. Very useful 
 ``getBase64()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``getBase64(String url[, String method, Object data])``
+**Signature:** ``getBase64(String url[, String method, Object data, Boolean asynchronous])``
 
 This method will retrieved a base64 encoded version of any resource behind a url. For example, let's imagine we want to retrieve the base64 representation of some website's logo::
 
@@ -182,7 +182,7 @@ This method will retrieved a base64 encoded version of any resource behind a url
 ``getBinary()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``getBinary(String url[, String method, Object data])``
+**Signature:** ``getBinary(String url[, String method, Object data, Boolean asynchronous])``
 
 This method will retrieved the raw contents of a given binary resource; unfortunately though, PhantomJS cannot process these data directly so you'll have to process them within the remote DOM environment. If you intend to download the resource, use `getBase64()`_ or :ref:`Casper.base64encode() <casper_base64encode>` instead::
 

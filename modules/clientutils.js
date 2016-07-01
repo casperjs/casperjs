@@ -376,27 +376,29 @@
          * Downloads a resource behind an url and returns its base64-encoded
          * contents.
          *
-         * @param  String  url     The resource url
-         * @param  String  method  The request method, optional (default: GET)
-         * @param  Object  data    The request data, optional
-         * @return String          Base64 contents string
+         * @param  String  url          The resource url
+         * @param  String  method       The request method, optional (default: GET)
+         * @param  Object  data         The request data, optional
+         * @param  Boolean asynchronous Asynchroneous request? (default: false)
+         * @return String               Base64 contents string
          */
-        this.getBase64 = function getBase64(url, method, data) {
-            return this.encode(this.getBinary(url, method, data));
+        this.getBase64 = function getBase64(url, method, data, asynchronous) {
+            return this.encode(this.getBinary(url, method, data, asynchronous));
         };
 
         /**
          * Retrieves string contents from a binary file behind an url. Silently
          * fails but log errors.
          *
-         * @param   String   url     Url.
-         * @param   String   method  HTTP method.
-         * @param   Object   data    Request parameters.
+         * @param   String   url          Url.
+         * @param   String   method       HTTP method.
+         * @param   Object   data         Request parameters.
+         * @param   Boolean  asynchronous Asynchroneous request? (default: false)
          * @return  String
          */
-        this.getBinary = function getBinary(url, method, data) {
+        this.getBinary = function getBinary(url, method, data, asynchronous) {
             try {
-                return this.sendAJAX(url, method, data, false, {
+                return this.sendAJAX(url, method, data, asynchronous, {
                     overrideMimeType: "text/plain; charset=x-user-defined"
                 });
             } catch (e) {
@@ -846,20 +848,33 @@
         /**
          * Performs an AJAX request.
          *
-         * @param   String   url      Url.
-         * @param   String   method   HTTP method (default: GET).
-         * @param   Object   data     Request parameters.
-         * @param   Boolean  async    Asynchroneous request? (default: false)
-         * @param   Object   settings Other settings when perform the ajax request
-         * @return  String            Response text.
+         * @param   String   url          Url.
+         * @param   String   method       HTTP method (default: GET).
+         * @param   Object   data         Request parameters.
+         * @param   Boolean  asynchronous Asynchroneous request? (default: true)
+         * @param   Object   settings     Other settings when perform the ajax request
+         * @return  String                Response text.
          */
-        this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
+        this.sendAJAX = function sendAJAX(url, method, data, asynchronous, settings) {
+            var cli = this;
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];
+            asynchronous = (typeof asynchronous !== "undefined") ? asynchronous : false;
             method = method && method.toUpperCase() || "GET";
             var contentType = settings && settings.contentType || "application/x-www-form-urlencoded";
-            xhr.open(method, url, !!async);
+            xhr.open(method, url, asynchronous);
+            if (asynchronous) {
+                xhr.responseType = 'arraybuffer';
+                xhr.addEventListener('load', function onTransferComplete() {
+                    var content = btoa([].reduce.call(new Uint8Array(xhr.response), function(p, c) {
+                        return p + String.fromCharCode(c);
+                    }, ''));
+                    if (typeof window.callPhantom === 'function') {
+                        window.callPhantom({"type": "casper.sendAJAX", "url": url, "content": content});
+                    }
+                });
+            }
             this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
             if (settings && settings.overrideMimeType) {
                 xhr.overrideMimeType(settings.overrideMimeType);
