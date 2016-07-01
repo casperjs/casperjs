@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>CasperJS test mouse events</title>
+        <style>#menu { display:block;} #menu:hover ul { display:block !important;visibility:visible !important; }</style>
     </head>
     <body>
         <a id="test1" href="#" onmousedown="results.test1 = true;">test</a>
@@ -13,6 +14,11 @@
         <a id="test6" href="#">test</a>
         <a id="test7" href="#" onmouseout="results.test7 = true;">test</a>
         <a id="test8" href="#">test</a>
+	<span id="menu"><a class="menu-survol" href="javascript:void(0)">MENU (move over me)</a>
+		<ul style="display:none;visibility:hidden;"><li><a id="test9" href="#" onclick="results.test9 = true;">test</a></li>
+		<ul style="display:none;visibility:hidden;"><li><a id="test10" href="#">test</a></li>
+	</ul>
+	</span>
         <script>
             (function(window) {
                 window.results = {
@@ -23,7 +29,9 @@
                     test5: false,
                     test6: false,
                     test7: false,
-                    test8: false
+                    test8: false,
+                    test9: false,
+                    test10: false
                 };
                 document.querySelector('#test2').onmousedown = function(event) {
                     results.test2 = true;
@@ -39,6 +47,10 @@
                 };
                 document.querySelector('#test8').onmouseout = function(event) {
                     results.test8 = true;
+                    event.preventDefault();
+                };
+                document.querySelector('#test10').onclcik = function(event) {
+                    results.test10 = true;
                     event.preventDefault();
                 };
             })(window);
