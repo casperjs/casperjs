@@ -278,33 +278,22 @@
                 if (!vals.hasOwnProperty(fieldSelector)) {
                     continue;
                 }
-
-                var field = this.findAll(this.makeSelector(fieldSelector, findType), form);
-                var value = vals[fieldSelector];
-                if (!field || field.length === 0) {
-                    out.errors.push('no field matching ' + findType + ' selector "' +
-                        fieldSelector + '" in form');
-                    continue;
-                }
                 try {
-                    out.fields[fieldSelector] = this.setField(field, value);
+                    out.fields[fieldSelector] = this.setFieldValue(this.makeSelector(fieldSelector, findType), vals[fieldSelector], form);
                 } catch (err) {
-                    if (err.name === "FileUploadError") {
-                        var selector;
-                        if (findType === "labels") {
-                          selector = '#' + field[0].id;
-                        } else {
-                          selector = fieldSelector;
-                        }
-                        out.files.push({
-                            type: findType,
-                            selector: selector,
-                            path: err.path
-                        });
-                    } else if (err.name === "FieldNotFound") {
-                        out.errors.push('Unable to find field element in form: ' + err.toString());
-                    } else {
-                        out.errors.push(err.toString());
+                    switch (err.name) {
+                        case "FieldNotFound":
+                            out.errors.push('Unable to find field element in form: ' + err.toString());
+                        break;
+                        case "FileUploadError":
+                            out.files.push({
+                                type: findType,
+                                selector: findType === "labels" ? '#' + err.id : fieldSelector,
+                                path: err.path
+                            });
+                        break;
+                        default:
+                            out.errors.push(err.toString());
                     }
                 }
             }
@@ -319,7 +308,7 @@
          * @return Array|undefined
          */
         this.findAll = function findAll(selector, scope) {
-            scope = scope || this.options.scope;
+            scope = scope instanceof HTMLElement ? scope : scope && this.findOne(scope) || this.options.scope;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
@@ -340,7 +329,7 @@
          * @return HTMLElement|undefined
          */
         this.findOne = function findOne(selector, scope) {
-            scope = scope || this.options.scope;
+            scope = scope instanceof HTMLElement ? scope : scope && this.findOne(scope) || this.options.scope;
             try {
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
@@ -577,93 +566,116 @@
         };
 
         /**
-         * Retrieves the value of a form field.
+         * Retrieves the value of an element
          *
          * @param  String  inputName  The for input name attr value
          * @param  Object  options    Object with formSelector, optional
          * @return Mixed
          */
-        this.getFieldValue = function getFieldValue(inputName, _options) {
-            _options = _options || {};
-            var getSingleValue = function getSingleValue(input) {
-                var type;
-                try {
-                    type = input.getAttribute('type').toLowerCase();
-                } catch (e) {
-                    type = 'other';
-                }
+        this.getFieldValue = function getFieldValue(selector, scope) {
+            var self = this;
+            var fields = this.findAll(selector, scope);
+            var type;
 
-                if (input.type === 'select-multiple') {
-                    return [].filter.call(input.options, function(option) {
-                        return !!option.selected;
-                    }).map(function(option) {
-                        return option.value;
-                    });
-                }
-
-                if (['checkbox', 'radio'].indexOf(type) === -1) {
-                    return input.value;
-                }
-                // single checkbox or… radio button (weird, I know)
-                if (input.hasAttribute('value')) {
-                    return input.checked ? input.getAttribute('value') : undefined;
-                }
-                return input.checked;
-            };
-            var getMultipleValues = function getMultipleValues(inputs) {
-                var type;
-                type = inputs[0].getAttribute('type').toLowerCase();
-                if (type === 'radio') {
-                    var value;
-                    [].forEach.call(inputs, function(radio) {
-                        value = radio.checked ? radio.value : value;
-                    });
-                    return value;
-                } else if (type === 'checkbox') {
-                    var values = [];
-                    [].forEach.call(inputs, function(checkbox) {
-                        if (checkbox.checked) {
-                            values.push(checkbox.value);
-                        }
-                    });
-                    return values;
-                }
-            };
-            var formSelector = '';
-            if (_options.formSelector) {
-                formSelector = _options.formSelector + ' ';
-            }
-            var inputs = this.findAll(formSelector + '[name="' + inputName + '"]');
-
-            if (_options.inputSelector) {
-                inputs = inputs.concat(this.findAll(_options.inputSelector));
+            // for Backward Compatibility
+            if (!(fields instanceof NodeList || fields instanceof Array)) {
+                this.log("attempting to fetch field element from selector: '" + selector + "'", "info");
+                fields = this.findAll('[name="' + selector + '"]');
             }
 
-            if (_options.inputXPath) {
-                inputs = inputs.concat(this.getElementsByXPath(_options.inputXPath));
+            if (fields && fields.length > 1) {
+                type = fields[0].hasAttribute('type') ? fields[0].getAttribute('type') : "other";
+                fields = [].filter.call(fields, function(elm){
+                    if (elm.nodeName.toLowerCase() === 'input' &&
+                        ['checkbox', 'radio'].indexOf(elm.getAttribute('type')) !== -1) {
+                        return elm.checked;
+                    }
+                    return true;
+                });
             }
 
-            switch (inputs.length) {
-                case 0: return undefined;
-                case 1: return getSingleValue(inputs[0]);
-                default: return getMultipleValues(inputs);
+            if (fields.length === 0 ) {
+                return type !== "radio" ? [] : undefined;
             }
+
+            if (fields.length > 1 ) {
+                return [].map.call(fields, function(elm) {
+                    var ret = self.getField(elm);
+                    return ret && type === 'checkbox' ? elm.value : ret;
+                });
+            }
+
+            return this.getField(fields[0]);
+        };
+
+        /**
+         * Retrieves the value of a form field.
+         *
+         * @param  HTMLElement  An html element
+         * @return Mixed
+         */
+        this.getField = function getField(field) {
+            var nodeName, type;
+
+            if (!(field instanceof HTMLElement)) {
+                var error = new Error('getFieldValue: Invalid field ; only HTMLElement is supported');
+                error.name = 'FieldNotFound';
+                throw error;
+            }
+
+            nodeName = field.nodeName.toLowerCase();
+            type = field.hasAttribute('type') ? field.getAttribute('type').toLowerCase() : 'text';
+            if (nodeName === "select" && field.multiple) {
+                return [].filter.call(field.options, function(option){
+                    return !!option.selected;
+                }).map(function(option){
+                    return option.value || option.text;
+                });
+            }
+            if (type === 'radio') {
+                return field.checked ? field.value : null;
+            }
+            if (type === 'checkbox') {
+                return field.checked;
+            }
+            return field.value || '';
         };
 
         /**
          * Retrieves a given form all of its field values.
          *
-         * @param  String  selector  A DOM CSS3/XPath selector
+         * @param  HTMLElement|String  form      A form element, or a CSS3 selector to a form element
          * @return Object
          */
-        this.getFormValues = function getFormValues(selector) {
-            var form = this.findOne(selector);
-            var values = {};
+        this.getFormValues = function getFormValues(form) {
             var self = this;
-            [].forEach.call(form.elements, function(element) {
-                var name = element.getAttribute('name');
-                if (name && !values[name]) {
-                    values[name] = self.getFieldValue(name, {formSelector: selector});
+            var values = {}, checked = {};
+
+            if (!(form instanceof HTMLElement) || typeof form === "string") {
+                this.log("attempting to fetch form element from selector: '" + form + "'", "info");
+                try {
+                    form = this.findOne(form);
+                } catch (e) {
+                    this.log("invalid form selector provided: '" + form + "'");
+                    return {};
+                }
+            }
+
+            [].forEach.call(form.elements, function(elm) {
+                var name = elm.getAttribute('name');
+                var value = self.getField(elm);
+                var multi = !!value && elm.hasAttribute('type') &&
+                            elm.type === 'checkbox' ? elm.value : value;
+                if (!!name && value !== null && !(elm.type === 'checkbox' && value === false)) {
+                    if (typeof values[name] === "undefined") {
+                        values[name] = value;
+                        checked[name] = multi;
+                    } else {
+                        if (!Array.isArray(values[name])) {
+                            values[name] = [checked[name]];
+                        }
+                        values[name].push(multi);
+                    }
                 }
             });
             return values;
@@ -681,17 +693,17 @@
         };
 
         /**
-         * Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for 
-         * XPath type - it makes XPath object. 
+         * Makes selector by defined type XPath, Name or Label. Function has same result as selectXPath in Casper module for
+         * XPath type - it makes XPath object.
          * Function also accepts name attribut of the form filed or can select element by its label text.
          *
          * @param  String selector Selector of defined type
-         * @param  String|null  type Type of selector, it can have these values:     
+         * @param  String|null  type Type of selector, it can have these values:
          *         css - CSS3 selector - selector is returned trasparently
-         *         xpath - XPath selector - return XPath object    
+         *         xpath - XPath selector - return XPath object
          *         name|names - select input of specific name, internally covert to CSS3 selector
          *         label|labels - select input of specific label, internally covert to XPath selector. As selector is label's text used.
-         * @return String|Object          
+         * @return String|Object
          */
         this.makeSelector = function makeSelector(selector, type){
             type = type || 'xpath'; // default type
@@ -705,16 +717,16 @@
                 case 'css': // do nothing
                     ret = selector;
                     break;
-                case 'name': // convert to css 
-                case 'names': 
+                case 'name': // convert to css
+                case 'names':
                     ret = '[name="' + selector + '"]';
                     break;
                 case 'label': // covert to xpath object
-                case 'labels': 
-                    ret = {type:'xpath', path:'//*[@id=string(//label[text()="' + selector + '"]/@for)]'};
+                case 'labels':
+                    ret = {type: 'xpath', path: '//*[@id=string(//label[text()="' + selector + '"]/@for)]'};
                     break;
                 case 'xpath': // covert to xpath object
-                    ret = {type:'xpath', path: selector};
+                    ret = {type: 'xpath', path: selector};
                     break;
                 default:
                     throw new Error("Unsupported selector type: " + type);
@@ -884,68 +896,56 @@
         };
 
         /**
-         * Sets a value to form field by CSS3 or XPath selector. 
+         * Sets a value to form element by CSS3 or XPath selector.
          *
-         * With makeSelector() helper can by easily used with name or label selector 
+         * With makeSelector() helper can by easily used with name or label selector
          *     @exemple setFieldValue(this.makeSelector('email', 'name'), 'value')
-         *  
-         * @param String|Object CSS3|XPath selector
-         * @param Mixed         Input value
-         * @param Object options Options for setFieldValue, accept formSelector: selector (optional)
+         *
+         * @param String|Object            CSS3|XPath selector
+         * @param Mixed                    Input value
+         * @param HTMLElement|String|null  scope Element to search child elements within
          * @return bool
          */
-        this.setFieldValue = function setFieldValue(selector, value, options){
-            options = options || {};
-            var scope;
-            var formSelector = '';
+        this.setFieldValue = function setFieldValue(selector, value, scope) {
+            var self = this;
+            var fields = this.findAll(selector, scope);
+            var values = value;
 
-            if (options.formSelector) {
-                formSelector = options.formSelector;
-                if (!(scope = this.findOne(formSelector))) {
-                    this.log('setFieldValue() could not find form with selector: ' + selector, "error");
-                    return false;
-                } 
+            if (!Array.isArray(value)) {
+                values = [value];
             }
-            
-            var field = this.findAll(selector, scope);
 
-            if (!field || field.length === 0) {
-                this.log('setFieldValue(): unable to find field ' + selector, "error");
-                return false;
-            }
-            
-            try {
-                var ret = this.setField(field, value);
-            } catch (err) {
-                if (err.message) {
-                    this.log(err.message, "error");
-                }else{
-                    this.log('Error in setFieldValue() with selector: ' + selector, "error");
-                }
-                return false;
+            if (fields && fields.length > 1) {
+                fields = [].filter.call(fields, function(elm){
+                    if (elm.nodeName.toLowerCase() === 'input' &&
+                        ['checkbox', 'radio'].indexOf(elm.getAttribute('type')) !== -1) {
+                        return values.indexOf(elm.getAttribute('value')) !== -1;
+                    }
+                    return true;
+                });
+                [].forEach.call(fields, function(elm) {
+                    self.setField(elm, value);
+                });
+            } else {
+                this.setField(fields[0], value);
             }
             return true;
         };
 
         /**
-         * Sets a field (or a set of fields) value. Fails silently, but log
+         * Sets a field value. Fails silently, but log
          * error messages.
          *
-         * @param  HTMLElement|NodeList  field  One or more element defining a field
-         * @param  mixed                 value  The field value to set
+         * @param  HTMLElement  field  One element defining a field
+         * @param  mixed        value  The field value to set
          */
         this.setField = function setField(field, value) {
             /*eslint complexity:0*/
-            var logValue, fields, out;
+            var logValue, out, filter;
             value = logValue = value || "";
 
-            if (field instanceof NodeList || field instanceof Array) {
-                fields = field;
-                field = fields[0];
-            }
-
             if (!(field instanceof HTMLElement)) {
-                var error = new Error('Invalid field type; only HTMLElement and NodeList are supported');
+                var error = new Error('setField: Invalid field ; only HTMLElement is supported');
                 error.name = 'FieldNotFound';
                 throw error;
             }
@@ -954,7 +954,6 @@
                 // obfuscate password value
                 logValue = new Array(('' + value).length + 1).join("*");
             }
-
             this.log('Set "' + field.getAttribute('name') + '" field value to ' + logValue, "debug");
 
             try {
@@ -963,48 +962,19 @@
                 this.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
             }
 
-            var nodeName = field.nodeName.toLowerCase();
-
-            switch (nodeName) {
-                case "input":
-                    var type = field.getAttribute('type') || "text";
-                    switch (type.toLowerCase()) {
-                        case "checkbox":
-                            if (fields.length > 1) {
-                                var values = value;
-                                if (!Array.isArray(values)) {
-                                    values = [values];
-                                }
-                                Array.prototype.forEach.call(fields, function _forEach(f) {
-                                    f.checked = values.indexOf(f.value) !== -1 ? true : false;
-                                });
-                            } else {
-                                field.checked = value ? true : false;
-                            }
-                            break;
-                        case "file":
-                            throw {
-                                name: "FileUploadError",
-                                message: "File field must be filled using page.uploadFile",
-                                path: value
-                            };
-                        case "radio":
-                            if (fields) {
-                                if (fields.length > 1) {
-                                    Array.prototype.forEach.call(fields, function _forEach(e) {
-                                        e.checked = e.value === value;
-                                    });
-                                } else {
-                                    field.checked = value ? true : false;
-                                }
-                            } else {
-                                out = 'Provided radio elements are empty';
-                            }
-                            break;
-                        default:
-                            field.value = value;
-                            break;
-                    }
+            filter = String(field.getAttribute('type') ? field.getAttribute('type') : field.nodeName).toLowerCase();
+            switch (filter) {
+                case "checkbox":
+                case "radio":
+                    field.checked = value ? true : false;
+                    break;
+                case "file":
+                    throw {
+                        name: "FileUploadError",
+                        message: "File field must be filled using page.uploadFile",
+                        path: value,
+                        id: field.id || null
+                    };
                     break;
                 case "select":
                     if (field.multiple) {
@@ -1034,15 +1004,10 @@
                         }
                     }
                     break;
-                case "textarea":
-                    field.value = value;
-                    break;
                 default:
-                    out = 'Unsupported field type: ' + nodeName;
-                    break;
+                    field.value = value;
             }
 
-            // firing the `change` and `input` events
             ['change', 'input'].forEach(function(name) {
                 var event = document.createEvent("HTMLEvents");
                 event.initEvent(name, true, true);

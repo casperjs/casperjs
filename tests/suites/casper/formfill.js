@@ -437,6 +437,8 @@ casper.test.begin('setFieldValueLabel() tests', 9, function(test) {
 
     casper.run(function() {
         test.done();
+        casper.result.log = [];
     });
 });
+
 // end setFieldValue() test
