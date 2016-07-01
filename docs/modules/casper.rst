@@ -386,6 +386,33 @@ Default wait timeout, for ``wait*`` family functions.
 ``Casper`` prototype
 ++++++++++++++++++++
 
+.. _casper_ajaxExists:
+
+.. index:: HTTP
+
+``ajaxExists()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``ajaxExists(String|Function|RegExp test)``
+
+Checks if an ajax request has been requested by base64encode or download methods. You can pass either a function, a string or a ``RegExp`` instance to perform the test::
+
+    casper.start('http://www.google.com/', function() {
+        base64logo = this.base64encode('http://www.google.fr/images/srpr/logo3w.png');
+        if (this.ajaxExists('logo3w.png')) {
+            this.echo('Google logo loaded');
+        } else {
+            this.echo('Google logo not loaded yet', 'ERROR');
+        }
+    });
+
+    casper.run();
+
+.. note::
+
+   If you want to wait for a resource to be loaded, use the `waitForAJAX()`_ method.
+
+
 ``back()``
 -------------------------------------------------------------------------------
 
@@ -410,7 +437,7 @@ Also have a look at `forward()`_.
 ``base64encode()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``base64encode(String url [, String method, Object data])``
+**Signature:** ``base64encode(String url [, String method [, Object data, Boolean async ] ] )``
 
 Encodes a resource using the base64 algorithm synchronously using
 client-side XMLHttpRequest.
@@ -443,6 +470,39 @@ encode::
 
     casper.run(function() {
         this.echo(base64contents).exit();
+    });
+
+.. note::
+
+   Use this method with waitForAJAX putting async parameter set to 'true'
+
+.. _casper_base64write:
+
+.. index:: Base64
+
+``base64write()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``base64write(String str, String targetPath)``
+
+Saves a base64 string onto the filesystem after decode it.::
+
+    casper.start('http://www.google.fr/', function() {
+        var str = this.evaluate( function() {
+            function getBase64Image(img) {
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                return canvas.toDataURL().replace(/[^,]*,/,"");
+            }
+            return getBase64Image(document.images[0]);
+        });
+        this.base64write(str, "logo.png');
+    });
+    casper.run(function() {
+        this.echo('Done.').exit();
     });
 
 .. index:: bypass, Step stack
@@ -699,9 +759,15 @@ Exits phantom with a logged error message and an optional exit status code::
 ``download()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``download(String url, String target[, String method, Object data])``
+**Signature:** ``download(String url, String target[, String method, Object data, Boolean async])``
 
 Saves a remote resource onto the filesystem. You can optionally set the HTTP method using the ``method`` argument, and pass request arguments through the ``data`` object (see `base64encode()`_)::
+
+.. note::
+
+since phantomJS 2.0.0 synchronous downloads are forbidden : By default async is true / For backward compatibilty async is false with phantomJS 1.x.x::
+
+deprecated use::
 
     casper.start('http://www.google.fr/', function() {
         var url = 'http://www.google.fr/intl/fr/about/corporate/company/';
@@ -712,9 +778,53 @@ Saves a remote resource onto the filesystem. You can optionally set the HTTP met
         this.echo('Done.').exit();
     });
 
+better use::
+
+    var url = 'http://www.google.fr/intl/fr/about/corporate/company/';
+    casper.start('http://www.google.fr/', function() {
+        this.download(url, 'google_company.html');
+    });
+
+    casper.then(function(){
+        this.waitForDownload(url){function(){
+           this.echo('Done.');
+        });
+    });
+
+    casper.run(function() {
+        this.exit();
+    });
+
 .. note::
 
    If you have some troubles downloading files, try to :ref:`disable web security <faq_web_security>`.
+
+.. _casper_downloadexists:
+
+.. index:: download
+
+``downloadExists()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``downloadExists(String|Function|RegExp test)``
+
+Checks if a download has been done. You can pass either a function, a string or a ``RegExp`` instance to perform the test::
+
+    casper.start('https://duckduckgo.com/', function() {
+        if (this.downloadExists('https://duckduckgo.com/assets/logo_homepage.normal.v107.svg')) {
+            this.echo('DuckDuckGo logo downloaded');
+        } else {
+            this.echo('DuckDuckGo logo not downloaded', 'ERROR');
+        }
+    });
+
+    casper.run();
+
+.. note::
+
+   If you want to wait for a download to be done, use the `waitForDownload()`_ method.
+
+
 
 ``each()``
 -------------------------------------------------------------------------------
@@ -1072,6 +1182,36 @@ Fills form fields with given values and optionally submits it. While the ``form`
    The ``fillXPath()`` method currently can't fill **file fields using XPath selectors**; PhantomJS natively only allows the use of CSS3 selectors in its ``uploadFile()`` method, hence this limitation.
 
 .. index:: URL
+
+
+
+.. _casper_getAjaxBase64:
+
+.. index:: Base64
+
+``getAjaxBase64()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``getAjaxBase64(String url)``
+
+Retrieves an encoded base64 resource after an asynchronous base64encode call using client-side XMLHttpRequest::
+
+    var base64contents = null;
+    casper.start("http://www.google.fr/", function() {
+        var logo = "http://www.google.fr/images/srpr/logo3w.png";
+        this.base64encode(logo, "logo.png",'GET',{},true);
+        this.waitForAJAX(logo,function (){
+            base64contents = this.getAjaxBase64(logo);
+        });
+    });
+
+    casper.run(function() {
+        this.echo(base64contents).exit();
+    });
+
+.. note::
+
+   this method get and drop content.
 
 ``getCurrentUrl()``
 -------------------------------------------------------------------------------
@@ -2188,6 +2328,25 @@ This can be used for better error messages or to conditionally ignore some timeo
 
 Please note, that all `waitFor` methods are not chainable.  Consider wrapping each of them in a `casper.then` in order to acheive this functionality.
 
+.. index:: download, Asynchronicity
+
+``waitForAJAX()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForAJAX(String|Function|RegExp testFx[, Function then, Function onTimeout, Number timeout])``
+
+Wait until a client-side XMLHttpRequest occurs that matches an ajax matching constraints defined by ``testFx`` are satisfied to process a next step.
+
+The ``testFx`` argument can be either a string, a function or a ``RegExp`` instance::
+
+    casper.waitForAJAX("foobar.png", function() {
+        this.echo('foobar.png has been loaded.');
+    });
+
+..note::
+
+    Similar to waitForDownload without file writing check.
+
 .. index:: alert
 
 ``waitForAlert()``
@@ -2202,6 +2361,36 @@ Waits until a `JavaScript alert <https://developer.mozilla.org/en-US/docs/Web/AP
     casper.waitForAlert(function(response) {
         this.echo("Alert received: " + response.data);
     });
+
+.. index:: download, Asynchronicity
+
+``waitForDownload()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForDownload(String|Function|RegExp testFx[, Function then, Function onTimeout, Number timeout])``
+
+Wait until a download that matches a download matching constraints defined by ``testFx`` are satisfied to process a next step.
+
+The ``testFx`` argument can be either a string, a function or a ``RegExp`` instance::
+
+    casper.waitForDownload("foobar.png", function() {
+        this.echo('foobar.png has been loaded.');
+    });
+
+Using a regexp::
+
+    casper.waitForDownload(/foo(bar|baz)\.png$/, function() {
+        this.echo('foobar.png or foobaz.png has been downloaded.');
+    });
+
+Using a function::
+
+    casper.waitForDownload(function testDownload(download) {
+        return download.url.indexOf("https") === 0;
+    }, function onReceived() {
+        this.echo('a secure download has been done.');
+    });
+
 
 .. _casper_waitforpopup:
 
