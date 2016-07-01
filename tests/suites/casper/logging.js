@@ -7,6 +7,7 @@ casper.test.begin('logging tests', 4, function(test) {
     casper.then(casper.createStep(function() {
         oldLevel = casper.options.logLevel;
 
+        casper.result.log = [];
         casper.options.logLevel = 'info';
         casper.options.verbose = false;
     }, {skipLog: true}));

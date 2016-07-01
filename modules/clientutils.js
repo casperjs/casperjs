@@ -746,7 +746,7 @@
          */
         this.mouseEvent = function mouseEvent(type, selector, x, y) {
             var elem = this.findOne(selector);
-            if (!elem) {
+            if (!elem || !this.elementVisible(elem)) {
                 this.log("mouseEvent(): Couldn't find any element matching '" +
                     selector + "' selector", "error");
                 return false;

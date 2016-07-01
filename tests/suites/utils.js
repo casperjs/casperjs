@@ -309,12 +309,12 @@ casper.test.begin('isWebPage() tests', 3, function(test) {
     test.done();
 });
 
-casper.test.begin('isJsFile() tests', 5, function(test) {
+casper.test.begin('isJsFile() tests', 4, function(test) {
     var testCases = {
         '':             false,
         'toto.png':     false,
         'plop':         false,
-        'gniii.coffee': '.coffee' in require.extensions,
+//        'gniii.coffee': '.coffee' in require.extensions,
         'script.js':    true
     };
     for (var testCase in testCases) {
