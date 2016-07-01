@@ -203,10 +203,10 @@ The `options` parameter allows to set the options to use with
 
 Asserts that a given form field has the provided value::
 
-    casper.test.begin('assertField() tests', 1, function(test) {
+    casper.test.begin('assertFieldName() tests', 1, function(test) {
         casper.start('http://www.google.fr/', function() {
             this.fill('form[name="gs"]', { q: 'plop' }, false);
-            test.assertField('q', 'plop', 'did not plop', {formSelector: 'plopper'});
+            test.assertFieldName('q', 'plop', 'did not plop', {formSelector: 'plopper'});
         }).run(function() {
             test.done();
         });
@@ -221,10 +221,10 @@ Asserts that a given form field has the provided value::
 
 Asserts that a given form field has the provided value given a CSS selector::
 
-    casper.test.begin('assertField() tests', 1, function(test) {
+    casper.test.begin('assertFieldCSS() tests', 1, function(test) {
         casper.start('http://www.google.fr/', function() {
             this.fill('form[name="gs"]', { q: 'plop' }, false);
-            test.assertField('q', 'plop', 'did not plop', 'input.plop');
+            test.assertFieldCSS('q', 'plop', 'did not plop', 'input.plop');
         }).run(function() {
             test.done();
         });
@@ -239,10 +239,10 @@ Asserts that a given form field has the provided value given a CSS selector::
 
 Asserts that a given form field has the provided value given a XPath selector::
 
-    casper.test.begin('assertField() tests', 1, function(test) {
+    casper.test.begin('assertFieldXPath() tests', 1, function(test) {
         casper.start('http://www.google.fr/', function() {
             this.fill('form[name="gs"]', { q: 'plop' }, false);
-            test.assertField('q', 'plop', 'did not plop', '/html/body/form[0]/input[1]');
+            test.assertFieldXPath('q', 'plop', 'did not plop', '/html/body/form[0]/input[1]');
         }).run(function() {
             test.done();
         });
