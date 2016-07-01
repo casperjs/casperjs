@@ -467,7 +467,7 @@ function isJsFile(file) {
     var valid = Object.keys(require.extensions).map(function(val) {
         return val.replace(/^\./, '');
     }).filter(function(ext) {
-        return ext !== 'json';
+        return ext === 'js';
     });
     return isString(ext, "string") && valid.indexOf(ext) !== -1;
 }
