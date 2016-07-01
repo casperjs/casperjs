@@ -1042,8 +1042,8 @@
                     break;
             }
 
-            // firing the `change` and `input` events
-            ['change', 'input'].forEach(function(name) {
+            // firing the `change`, `input` and `blur` events
+            ['change', 'input', 'blur'].forEach(function(name) {
                 var event = document.createEvent("HTMLEvents");
                 event.initEvent(name, true, true);
                 field.dispatchEvent(event);
