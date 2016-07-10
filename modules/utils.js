@@ -468,7 +468,7 @@ function isJsFile(file) {
     var valid = Object.keys(require.extensions).map(function(val) {
         return val.replace(/^\./, '');
     }).filter(function(ext) {
-        return ext === 'js';
+        return ext === 'js' || ext === 'coffee';
     });
     return isString(ext, "string") && valid.indexOf(ext) !== -1;
 }
