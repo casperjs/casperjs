@@ -1,6 +1,6 @@
 # CasperJS
 
-[Travis-CI](http://travis-ci.org/casperjs/casperjs) build status: [![Build Status](https://travis-ci.org/casperjs/casperjs.png?branch=master)](https://travis-ci.org/casperjs/casperjs) `master` branch
+[![Build Status](https://travis-ci.org/casperjs/casperjs.svg?branch=master)](https://travis-ci.org/casperjs/casperjs)
 
 >**Important note:** the `master` branch hosts the development version of CasperJS, which is now pretty stable and should be the right version to use if you ask me. Users interested in a pretty stable, recent version working with PhantomJS 2.0 and newer should choose the packaged 1.1.0 and following releases.
 >
