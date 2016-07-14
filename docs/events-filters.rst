@@ -156,6 +156,13 @@ Emitted when the ``Casper.die()`` method has been called.
 
 Emitted when a file has been downloaded by :ref:`Casper.download() <casper_download>`; ``target`` will contain the path to the downloaded file.
 
+``downloaded.error``
+~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``url``
+
+Emitted when a file has encoutered an error when downloaded by :ref:`Casper.download() <casper_download>`; ``url`` will contain the url of the downloaded file.
+
 .. index:: error
 
 ``error``
