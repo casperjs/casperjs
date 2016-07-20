@@ -1593,6 +1593,42 @@ Casper suite **will run**::
 
 Binding a callback to ``complete.error`` will trigger when the ``onComplete`` callback fails.
 
+``runScript()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``runScript(Function fn[, arg1[, arg2[, …]]], callback)``
+
+Basically `PhantomJS' WebPage#evaluateAsync <http://phantomjs.org/api/webpage/method/evaluateAsync.html>`_ equivalent. Asynchronous evaluates an expression **in the current page DOM context**::
+
+    casper.runScript(function(text) {
+        return document.title;
+    }, 'new title : ',
+    function(ret) {
+        this.echo(ret);
+    });
+
+    casper.runScript(function(text) {
+        callCasper(document.title);
+    }, function(ret) {
+        this.echo(ret);
+    });
+
+
+    casper.runScript(function(text) {
+        document.addEventListener('click',function(){
+            callCasper(document.title);
+        });
+    }, 
+    function(ret) {
+        this.echo(ret);
+    });
+.. note::
+
+   For forcing return use the "callCasper" method
+
+.. topic:: Understanding ``evaluate()``
+
+
 .. index:: Scroll
 
 ``scrollTo()``
