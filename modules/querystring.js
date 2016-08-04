@@ -55,7 +55,8 @@ QueryString.unescapeBuffer = function(s, decodeSpaces) {
             break;
           case charCode('+'):
             if (decodeSpaces) c = charCode(' ');
-            // pass thru
+            out[outIndex++] = c;
+            break;
           default:
             out[outIndex++] = c;
             break;

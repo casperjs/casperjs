@@ -490,7 +490,7 @@ Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, messa
         values: {
             fn: fn,
             params: params,
-            subject:  subject,
+            subject: subject,
             expected: expected
         }
     });
@@ -499,7 +499,7 @@ Tester.prototype.assertEvalEqual = function assertEvalEquals(fn, expected, messa
 function baseFieldAssert(inputName, expected, actual, message) {
     "use strict";
 
-    return this.assert(utils.equals(actual, expected),  message, {
+    return this.assert(utils.equals(actual, expected), message, {
         type: 'assertField',
         standard: f('"%s" input field has the value "%s"', inputName, expected),
         values: {

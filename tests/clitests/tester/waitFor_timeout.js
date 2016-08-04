@@ -104,7 +104,7 @@ casper.test.begin('waitFor fails with expected message', 1, function(test) {
     casper.start('../site/waitFor.html');
 
     casper.waitFor(function() {
-      return false
+      return false;
     }, function() {
         throw new Error('waitFor fasely succeeded');
     });
