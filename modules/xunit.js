@@ -114,8 +114,9 @@ XUnitExporter.prototype.addSuccess = function addSuccess(classname, name, durati
  * @param  String  message
  * @param  String  type
  * @param  Number  duration  Test duration in milliseconds
+ * @param  Object  values Object with subject and expected properties
  */
-XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type, duration) {
+XUnitExporter.prototype.addFailure = function addFailure(classname, name, message, type, duration, values) {
     "use strict";
     var fnode = utils.node('testcase', {
         classname: generateClassName(classname),
@@ -128,6 +129,17 @@ XUnitExporter.prototype.addFailure = function addFailure(classname, name, messag
         type: type || "unknown"
     });
     failure.appendChild(document.createTextNode(message || "no message left"));
+
+    if (values.expected && values.subject) {
+        var expectedNode = utils.node('expected', {});
+        var subjectNode = utils.node('subject', {});
+
+        expectedNode.appendChild(document.createTextNode(values.expected || "expected value unknown"));
+        subjectNode.appendChild(document.createTextNode(values.subject || "subject value unknown"));
+        failure.appendChild(expectedNode);
+        failure.appendChild(subjectNode);
+    }
+
     fnode.appendChild(failure);
     this._xml.appendChild(fnode);
 };

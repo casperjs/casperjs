@@ -110,10 +110,11 @@ var Tester = function Tester(casper, options) {
         this.testResults.failuresTime.push(timeElapsed - this.lastAssertTime);
         this.exporter.addFailure(
             fs.absolute(failure.file),
-            failure.message  || failure.standard,
             failure.standard || "test failed",
+            failure.message  || failure.standard,
             failure.type     || "unknown",
-            (timeElapsed - this.lastAssertTime)
+            (timeElapsed - this.lastAssertTime),
+            failure.values || {}
         );
         this.lastAssertTime = timeElapsed;
         this.testResults.failures.push(failure);
