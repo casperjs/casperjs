@@ -151,7 +151,7 @@
         };
 
         /**
-         * Checks if a given DOM element is visible in remove page.
+         * Checks if a given DOM element is visible in remote page.
          *
          * @param  Object   element  DOM element
          * @return Boolean
