@@ -1,7 +1,7 @@
 /*eslint strict:0, max-statements:0*/
 var fs = require('fs');
 
-casper.test.begin('Common assertions tests', 47, function(test) {
+casper.test.begin('Common assertions tests', 50, function(test) {
     casper.start('tests/site/index.html', function() {
         test.assertTextExists('form', 'Tester.assertTextExists() checks that page body contains text');
         test.assertTextExist('form', 'Tester.assertTextExist() checks that page body contains text [alias]');

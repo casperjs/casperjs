@@ -25,8 +25,7 @@ function info(message) {
 
 service = server.listen(testServerPort, function(request, response) {
     "use strict";
-    /*jshint maxcomplexity:10*/
-    /*jshint maxstatements:30*/
+    /*eslint max-statements:0*/
     var requestPath = request.url;
     if (requestPath.indexOf('?') !== -1) {
         requestPath = request.url.split('?')[0];

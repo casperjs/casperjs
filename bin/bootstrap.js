@@ -28,6 +28,8 @@
  *
  */
 
+/*eslint max-statements:0, complexity:0*/
+
 // node check
 if ('process' in this && this.process.title === "node") {
     console.error('CasperJS cannot be executed within a nodejs environment');
@@ -308,8 +310,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
      * Initializes the CasperJS Command Line Interface.
      */
     function initCasperCli(casperArgs) {
-        /*jshint maxcomplexity:15*/
-        /*jshint maxstatements:25*/
+        /*eslint complexity:0*/
         var baseTestsPath = fs.pathJoin(phantom.casperPath, 'tests');
 
         function setScriptBaseDir(scriptName) {

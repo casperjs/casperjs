@@ -83,7 +83,7 @@ exports.selectXPath = selectXPath;
  */
 var Casper = function Casper(options) {
     "use strict";
-    /*jshint maxstatements:45*/
+    /*eslint max-statements:0*/
     // init & checks
     if (!(this instanceof Casper)) {
         return new Casper(options);
@@ -1224,7 +1224,7 @@ Casper.prototype.getTitle = function getTitle() {
  */
 Casper.prototype.handleReceivedResource = function(resource) {
     "use strict";
-    /*jslint maxstatements:20*/
+    /*eslint max-statements:0*/
     if (resource.stage !== "end") {
         return;
     }
@@ -1434,8 +1434,7 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector, x, y) {
  */
 Casper.prototype.open = function open(location, settings) {
     "use strict";
-    /*jshint maxcomplexity:15*/
-    /*jshint maxstatements:30*/
+    /*eslint max-statements:0*/
     var baseCustomHeaders = this.page.customHeaders,
         customHeaders = settings && settings.headers || {};
     this.checkStarted();
@@ -1578,8 +1577,7 @@ Casper.prototype.run = function run(onComplete, time) {
  */
 Casper.prototype.runStep = function runStep(step) {
     "use strict";
-    /*jshint maxcomplexity:10*/
-    /*jshint maxstatements:20*/
+    /*eslint max-statements:0*/
     this.checkStarted();
     var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
         stepInfo = f("Step %s %d/%d", step.name || "anonymous", this.step, this.steps.length),
@@ -1803,8 +1801,7 @@ Casper.prototype.setHttpAuth = function setHttpAuth(username, password) {
  */
 Casper.prototype.start = function start(location, then) {
     "use strict";
-    /*jshint maxcomplexity:10*/
-    /*jslint maxstatements:30*/
+    /*eslint max-statements:0*/
     this.emit('starting');
     this.log('Starting...', "info");
     this.startTime = new Date().getTime();
@@ -2239,7 +2236,7 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         var start = new Date().getTime();
         var condition = false;
         var interval = setInterval(function _check(self) {
-            /*jslint maxstatements: 20*/
+            /*eslint max-statements: [1, 20]*/
             if ((new Date().getTime() - start < timeout) && !condition) {
                 condition = testFx.call(self, self);
                 return;

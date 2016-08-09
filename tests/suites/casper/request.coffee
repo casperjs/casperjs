@@ -1,6 +1,7 @@
 #global casper
 
-#jshint strict:false
+#eslint strict:0
+
 utils = require "utils"
 
 if phantom.casperEngine == 'slimerjs'

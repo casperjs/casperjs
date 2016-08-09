@@ -223,7 +223,7 @@ var Tester = function Tester(casper, options) {
     };
 
     this.casper.options.onWaitTimeout = function test_onWaitTimeout(timeout, details) {
-        /*jshint maxcomplexity:20*/
+        /*eslint complexity:0*/
         var message = f("Wait timeout occured (%dms)", timeout);
         details = details || {};
 
@@ -1558,8 +1558,7 @@ Tester.prototype.renderFailureDetails = function renderFailureDetails() {
  */
 Tester.prototype.renderResults = function renderResults(exit, status, save) {
     "use strict";
-    /*jshint maxcomplexity:10*/
-    /*jshint maxstatements:25*/
+    /*eslint max-statements:0*/
     save = save || this.options.save;
     var exitStatus = 0,
         failed = this.suiteResults.countFailed(),
