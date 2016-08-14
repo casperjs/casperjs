@@ -230,7 +230,7 @@ casper.test.begin('ClientUtils.getElementsInfo() second element tests', 10, func
     test.done();
 });
 
-casper.test.begin('ClientUtils.getElementInfo() visibility tests', 4, function(test) {
+casper.test.begin('ClientUtils.getElementInfo() visibility tests', 6, function(test) {
     casper.page.content = '<a href="plop" class="plip plup" style="display: inline"><i>paf</i></a>';
     var info = casper.getElementInfo('a.plip');
     test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline');
@@ -247,18 +247,26 @@ casper.test.begin('ClientUtils.getElementInfo() visibility tests', 4, function(t
     info = casper.getElementInfo('a.plip');
     test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display none');
 
+    casper.page.content = '<a href="plop" class="plip plup" style="display: inline-flex"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline-flex');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="display: flex"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display flex');
+
     test.done();
 });
 
 casper.test.begin('ClientUtils.makeSelector() tests', 8, function(test) {
     var clientutils = require('clientutils').create();
-    
+
     // CSS selector
     var cssSelector = clientutils.makeSelector('#css3selector', 'css');
     test.assertEquals(cssSelector, '#css3selector',
         'ClientUtils.makeSelector() can process a CSS3 selector');
 
-    // XPath selector 
+    // XPath selector
     var xpathSelector = clientutils.makeSelector('//li[text()="blah"]', 'xpath');
     test.assertType(xpathSelector, 'object',
         'ClientUtils.makeSelector() can process a XPath selector');
@@ -283,4 +291,3 @@ casper.test.begin('ClientUtils.makeSelector() tests', 8, function(test) {
 
     test.done();
 });
-

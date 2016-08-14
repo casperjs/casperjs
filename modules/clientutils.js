@@ -167,7 +167,8 @@
             if (hidden) {
                 return false;
             }
-            if (style.display === "inline" || style.display === "inline-block") {
+            var visibles = ["inline", "inline-block", "flex", "inline-flex"];
+            if (visibles.indexOf(style.display) !== -1) {
                 return true;
             }
             return elem.clientHeight > 0 && elem.clientWidth > 0;
