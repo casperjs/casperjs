@@ -2212,7 +2212,7 @@ Waits until a `JavaScript alert <https://developer.mozilla.org/en-US/docs/Web/AP
 ``waitForPopup()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``waitForPopup(String|RegExp urlPattern[, Function then, Function onTimeout, Number timeout])``
+**Signature:** ``waitForPopup(String|RegExp|Object urlPattern[, Function then, Function onTimeout, Number timeout])``
 
 .. versionadded:: 1.0
 
@@ -2229,7 +2229,27 @@ The currently loaded popups are available in the ``Casper.popups`` array-like pr
     casper.waitForPopup(/popup\.html$/, function() {
         this.test.assertEquals(this.popups.length, 1);
     });
+    
+    // this will wait for the first popup to be opened and loaded
+    casper.waitForPopup(0, function() {
+        this.test.assertEquals(this.popups.length, 1);
+    });
+    
+    // this will wait for the popup's named to be opened and loaded
+    casper.waitForPopup({windowName: "mainPopup"}, function() {
+        this.test.assertEquals(this.popups.length, 1);
+    });
 
+    // this will wait for the popup's title to be opened and loaded
+    casper.waitForPopup({title: "Popup Title"}, function() {
+        this.test.assertEquals(this.popups.length, 1);
+    });
+    
+    // this will wait for the popup's url to be opened and loaded
+    casper.waitForPopup({url: 'http://foo.bar/'}, function() {
+        this.test.assertEquals(this.popups.length, 1);
+    });
+    
     // this will set the popup DOM as the main active one only for time the
     // step closure being executed
     casper.withPopup(/popup\.html$/, function() {
@@ -2447,6 +2467,18 @@ Switches the main page to a popup matching the information passed as argument, a
         this.test.assertTitle('Popup title');
     });
 
+    // this will set the popup DOM as the main active one only for time the
+    // step closure being executed
+    casper.withPopup(0, function() {
+        this.test.assertTitle('Popup title');
+    });
+    
+    // this will set the popup DOM as the main active one only for time the
+    // step closure being executed
+    casper.withPopup({windowName: "mainPopup", title:'Popup title', url:'http://foo.bar/'}, function() {
+        this.test.assertTitle('Popup title');
+    });
+    
     // next step will automatically revert the current page to the initial one
     casper.then(function() {
         this.test.assertTitle('Main page title');

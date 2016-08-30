@@ -5,14 +5,14 @@
         <title>CasperJS test popup</title>
     </head>
     <body>
-        <a href="/tests/site/form.html" target="_blank">new window</a>
+        <a href="/tests/site/redirect.html" target="form">new window</a>
         <a href="#" class="close", onclick="w && w.close();return false">close</a>
         <script>
         var w;
         setTimeout(function() {
-            w = window.open("http://localhost:54321/tests/site/index.html",
+            w = window.open("index.html",
                             "popup", "menubar=no, status=no, scrollbars=no, menubar=no, width=400, height=300");
-        }, 200);
+        }, 500);
         </script>
     </body>
 </html>
