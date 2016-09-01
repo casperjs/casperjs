@@ -40,11 +40,7 @@ Above all, don't forget to update Formulaes::
 
     $ brew update
 
-For the 1.1 development version (recommended)::
-
-    $ brew install casperjs --devel
-
-For the 1.0.x stable version::
+For the 1.1.* version (recommended)::
 
     $ brew install casperjs
 
