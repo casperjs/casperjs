@@ -47,6 +47,39 @@ casper.test.begin('ClientUtils.exists() tests', 5, function(test) {
     test.done();
 });
 
+casper.test.begin('ClientUtils.exists() with svg tests', 3, function(test) {
+  var clientutils = require('clientutils').create();
+  fakeDocument('<div class="foo"><svg><text>SVG</text></svg></div>');
+  test.assert(clientutils.exists('div.foo svg'),
+      'ClientUtils.exists() checks that an svg element exist');
+  test.assert(clientutils.exists(selectXPath('//div/svg:svg')),
+      'ClientUtils.exists() checks that an svg element exist using XPath');
+  test.assert(clientutils.exists(selectXPath('//div/svg:svg/svg:text')),
+      'ClientUtils.exists() checks that an svg element exist using XPath');
+  fakeDocument(null);
+  test.done();
+});
+
+casper.test.begin('ClientUtils.exists() with mathml tests', 3, function(test) {
+  var clientutils = require('clientutils').create();
+  var html = "<div class='foo'>We will now prove the Pythogorian theorem:";
+      html +=   "<math> <mrow>"
+      html +=     "<msup><mi> a </mi><mn>2</mn></msup> <mo> + </mo>";
+      html +=     "<msup><mi> b </mi><mn>2</mn></msup>";
+      html +=     "<mo> = </mo> <msup><mi> c </mi><mn>2</mn></msup>";
+      html +=   "</mrow> </math>";
+      html += "</div>";
+  fakeDocument(html);
+  test.assert(clientutils.exists('div.foo math'),
+      'ClientUtils.exists() checks that an math element exist');
+  test.assert(clientutils.exists(selectXPath('//div/mathml:math')),
+      'ClientUtils.exists() checks that an math element exist using XPath');
+  test.assert(clientutils.exists(selectXPath('//div/mathml:math/mathml:mrow/mathml:msup[1]')),
+      'ClientUtils.exists() checks that an math element exist using XPath');
+  fakeDocument(null);
+  test.done();
+});
+
 casper.test.begin('ClientUtils.findAll() tests', 7, function(test) {
     var clientutils = require('clientutils').create();
     fakeDocument('<ul class="foo"><li>bar</li><li>baz</li></ul>');
