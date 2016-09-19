@@ -72,10 +72,15 @@ Fire up your favorite editor and save the javascript code below in a
     }
 
     casper.start('http://google.fr/', function() {
-        // search for 'casperjs' from google form
-        this.fill('form[action="/search"]', { q: 'casperjs' }, true);
+       // Wait for the page to be loaded
+       this.waitForSelector('form[action="/search"]');
     });
-
+   
+    casper.then(function() {
+       // search for 'casperjs' from google form
+       this.fill('form[action="/search"]', { q: 'casperjs' }, true);
+    });
+    
     casper.then(function() {
         // aggregate results for the 'casperjs' search
         links = this.evaluate(getLinks);
