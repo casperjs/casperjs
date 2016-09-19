@@ -60,6 +60,14 @@
             mathml: 'http://www.w3.org/1998/Math/MathML'
         };
 
+        function form_urlencoded(str) {
+            return encodeURIComponent(str)
+                    .replace(/%20/g, '+')
+                    .replace(/[!'()*]/g, function(c) {
+                        return '%' + c.charCodeAt(0).toString(16);
+                    });
+        }
+
         // public members
         this.options = options || {};
         this.options.scope = this.options.scope || document;
@@ -895,8 +903,8 @@
                 if (typeof data === "object") {
                     for (var k in data) {
                         if (data.hasOwnProperty(k)) {
-                            dataList.push(encodeURIComponent(k) + "=" +
-                             encodeURIComponent(data[k].toString()));
+                            dataList.push(form_urlencoded(k) + "=" +
+                             form_urlencoded(data[k].toString()));
                         }
                     }
                     dataString = dataList.join('&');
