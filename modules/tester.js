@@ -1128,15 +1128,6 @@ Tester.prototype.begin = function begin() {
         config = getConfig([].slice.call(arguments)),
         next = function() {
             config.test(this, this.casper);
-            if (!this.options.concise) {
-                this.casper.echo([
-                    this.colorize('PASS', 'INFO'),
-                    this.formatMessage(description),
-                    this.colorize(f('(%d test%s)',
-                                    config.planned,
-                                    config.planned > 1 ? 's' : ''), 'INFO')
-                ].join(' '));
-            }
         }.bind(this);
 
     if (!this.options.concise)
@@ -1226,6 +1217,17 @@ Tester.prototype.done = function done() {
         }
         if (this.currentSuite) {
             this.suiteResults.push(this.currentSuite);
+            
+            if (!this.options.concise) {
+                this.casper.echo([
+                    this.colorize('PASS', 'INFO'),
+                    this.formatMessage(this.currentSuite.name),
+                    this.colorize(f('(%d test%s)',
+                            config.planned,
+                            config.planned > 1 ? 's' : ''), 'INFO')
+                ].join(' '));
+            }
+            
             this.currentSuite = undefined;
             this.executed = 0;
         }
