@@ -167,3 +167,57 @@ casper.test.begin('waitForUrl() string tests', 1, function(test) {
         test.done();
     });
 });
+
+casper.test.begin('waitForLabel() tests', 1, function(test) {
+    casper.start('tests/site/waitFor.html');
+
+    casper.waitForLabel('four', function() {
+        test.pass('Casper.waitForLabel() waits for label');
+    }, function() {
+        test.fail('Casper.waitForLabel() waits for label');
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('waitForLabelContains() tests', 3, function(test) {
+    casper.start('tests/site/waitFor.html');
+
+    casper.waitForLabel('fou', function() {
+        test.pass('Casper.waitForLabelContains() waits for part of the label at the start');
+    }, function() {
+        test.fail('Casper.waitForLabelContains() waits for part of the label at the start');
+    });
+
+    casper.waitForLabel('our', function() {
+        test.pass('Casper.waitForLabelContains() waits for part of the label at the end');
+    }, function() {
+        test.fail('Casper.waitForLabelContains() waits for part of the label at the end');
+    });
+
+    casper.waitForLabel('ou', function() {
+        test.pass('Casper.waitForLabelContains() waits for part of the label in the middle');
+    }, function() {
+        test.fail('Casper.waitForLabelContains() waits for part of the label in the middle');
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('waitForTitle() tests', 1, function(test) {
+    casper.start('tests/site/waitFor.html');
+
+    casper.waitForLabel('waitFor test', function() {
+        test.pass('Casper.waitForTitle() waits for title');
+    }, function() {
+        test.fail('Casper.waitForTitle() waits for title');
+    });
+
+    casper.run(function() {
+        test.done();
+    });
+});
