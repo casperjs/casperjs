@@ -188,4 +188,4 @@ Known Bugs & Limitations
 .. _SlimerJS: http://slimerjs.org/
 .. _ansicon: https://github.com/adoxa/ansicon
 .. _Mono: http://www.mono-project.com/
-.. _ConEmu: https://code.google.com/p/conemu-maximus5/
+.. _ConEmu: https://conemu.github.io/
