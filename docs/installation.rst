@@ -182,7 +182,7 @@ Known Bugs & Limitations
 
 - Due to its asynchronous nature, CasperJS doesn't work well with `PhantomJS' REPL <http://phantomjs.org/repl.html>`_.
 
-.. _Homebrew: http://mxcl.github.com/homebrew/
+.. _Homebrew: http://brew.sh/
 .. _PhantomJS: http://phantomjs.org/
 .. _Python: http://python.org/
 .. _SlimerJS: http://slimerjs.org/
