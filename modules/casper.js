@@ -365,7 +365,13 @@ Casper.prototype.captureBase64 = function captureBase64(format, area) {
     } else if (utils.isValidSelector(area)) {
         // if area is a selector string or object
         this.log(f("Capturing base64 %s representation of %s", format, area), "debug");
-        base64 = this.captureBase64(format, this.getElementBounds(area));
+        var scrollPos = this.evaluate(function() {
+            return { x: scrollX, y: scrollY };
+        });
+        var elementBounds = this.getElementBounds(area);
+        elementBounds.top += scrollPos.y;
+        elementBounds.left += scrollPos.x;
+        base64 = this.captureBase64(format, elementBounds);
     } else {
         // whole page capture
         this.log(f("Capturing base64 %s representation of page", format), "debug");
@@ -386,7 +392,13 @@ Casper.prototype.captureBase64 = function captureBase64(format, area) {
  */
 Casper.prototype.captureSelector = function captureSelector(targetFile, selector, imgOptions) {
     "use strict";
-    return this.capture(targetFile, this.getElementBounds(selector), imgOptions);
+    var scrollPos = this.evaluate(function() {
+        return { x: scrollX, y: scrollY };
+    });
+    var elementBounds = this.getElementBounds(selector);
+    elementBounds.top += scrollPos.y;
+    elementBounds.left += scrollPos.x;
+    return this.capture(targetFile, elementBounds, imgOptions);
 };
 
 /**
