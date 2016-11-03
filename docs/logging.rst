@@ -34,12 +34,12 @@ Also, by default Casper is configured to filter logging which is under the ``err
         logLevel: 'debug'
     });
 
-You can also dump a JSON log of your Casper suite just by rendering the contents of the ``Casper.logs`` property::
+You can also dump a JSON log of your Casper suite just by rendering the contents of the ``Casper.result.log`` property::
 
     var casper = require('casper').create({
     // ...
     casper.run(function() {
-        require('utils').dump(this.logs);
+        require('utils').dump(this.result.log);
         this.exit();
     });
 
