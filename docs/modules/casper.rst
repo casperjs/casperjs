@@ -110,7 +110,7 @@ Logging level (see the logging section for more information)
 
 **Default:** ``null``
 
-**Signature:** ``onAlert(String message)``
+**Signature:** ``onAlert(Object Casper, String message)``
 
 A function to be called when a javascript alert() is triggered
 
@@ -134,7 +134,7 @@ A function to be called when Casper#die() is called
 
 **Default:** ``null``
 
-**Signature:** ``onError(String msg, Array backtrace)``
+**Signature:** ``onError(Object Casper, String msg, Array backtrace)``
 
 A function to be called when an "error" level event occurs
 
@@ -171,7 +171,7 @@ A function to be called after ``WebPage`` instance has been initialized
 
 **Default:** ``null``
 
-**Signature:** ``onResourceReceived(Object resource)``
+**Signature:** ``onResourceReceived(Object Casper, Object resource)``
 
 Proxy method for PhantomJS' ``WebPage#onResourceReceived()`` callback, but the current Casper instance is passed as first argument.
 
@@ -183,6 +183,8 @@ Proxy method for PhantomJS' ``WebPage#onResourceReceived()`` callback, but the c
 **Type:** ``Function``
 
 **Default:** ``null``
+
+**Signature:** ``onResourceRequested(Object Casper, Object resource)``
 
 Proxy method for PhantomJS' WebPage#onResourceRequested() callback, but the current Casper instance is passed as first argument.
 
