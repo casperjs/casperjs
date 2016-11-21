@@ -2334,6 +2334,62 @@ Casper.prototype.waitForPopup = function waitForPopup(urlPattern, then, onTimeou
 };
 
 /**
+ * Waits until a screen capture matching the image File to process a next step.
+ *
+ * @param  String    filePath   A DOM CSS3/XPath selector
+ * @param  Function  then       The next step to perform (optional)
+ * @param  Function  onTimeout  A callback function to call on timeout (optional)
+ * @param  Number    timeout    The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForRender = function waitForRender(filePath, then, onTimeout, timeout) {
+    "use strict";
+    this.checkStarted();
+    var base64 = filePath;
+    var baseName = 'default_template';
+
+    if (!/data:image\/(png|jpeg|gif|bmp);base64,/.test(filePath)) {
+        var formats = ['bmp', 'jpeg', 'png', 'gif'];
+        var format = filePath.replace(/.*[.]/, '').replace('jpg', 'jpeg').toLowerCase();
+        baseName = fs.basename(filePath);
+        if (formats.indexOf(format) === -1) {
+            throw new CasperError(f('Unsupported format "%s"', format));
+        }
+        if (!fs.exists(filePath) || !fs.isFile(filePath) || !fs.isReadable(filePath)) {
+            throw new CasperError("File not found: " + filePath);
+        }
+        base64 = "data:image/" + format + ";base64," +
+            this.callUtils("encode", fs.read(filePath, {mode: 'rb'}));
+    }
+
+    var result = this.evaluate(function(background, capture, identifier) {
+            __utils__.loadImageBase64ToCanvas('screenshot', background);
+            __utils__.loadImageBase64ToCanvas(identifier, capture);
+            return JSON.stringify(__utils__.compare);
+        },
+        "data:image/png;base64," + this.captureBase64('png'),
+        base64,
+        baseName
+    );
+    return this.waitFor(
+        function check() {
+            var self = this;
+            result = self.evaluate(function (identifier, background) {
+                var coords = __utils__.findPatternInImage('screenshot', identifier);
+                if (coords !== false) {
+                    return coords;
+                }
+                __utils__.loadImageBase64ToCanvas('screenshot', background);
+                return false;
+            }, baseName, "data:image/png;base64," + this.captureBase64('png'));
+            return utils.isObject(result);
+        }, function() {
+            then(result);
+        }, onTimeout, timeout
+    );
+};
+
+/**
  * Waits until a given resource is loaded
  *
  * @param  String/Function/RegExp  test       A function to test if the resource exists.

@@ -2240,7 +2240,28 @@ The currently loaded popups are available in the ``Casper.popups`` array-like pr
     casper.then(function() {
         this.test.assertTitle('Main page title');
     });
+    
+.. index:: screenshot
 
+``waitForRender()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``waitForRender(String filePath[, Function then, Function onTimeout, Number timeout])``
+
+.. versionadded:: 1.1.4
+
+Waits until a screen capture matching the image File to process a next step.
+
+
+    casper.start('http://foo.bar/').then(function() {
+        this.test.assertTitle('Main page title');
+        this.waitForRender('pattern.png', function(coords){
+            console.log("pattern has been found at x:" + coords.x0 + "y" + coords.y0);
+        });
+    });
+
+    casper.run();
+    
 .. index:: HTTP, Asynchronicity
 
 ``waitForResource()``
