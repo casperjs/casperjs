@@ -200,7 +200,9 @@ var Casper = function Casper(options) {
         this leads to a recursive on('error'...) trigger,
         at least in phantomjs2
 
-        console.error(c.colorize(msg, 'RED_BAR', 80));
+        if (msg !== "") {
+            console.error(c.colorize(msg, 'RED_BAR', 80));
+        }
         notices.forEach(function(notice) {
             console.error(c.colorize(notice, 'COMMENT'));
         });
