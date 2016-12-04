@@ -3,6 +3,7 @@ var x = require('casper').selectXPath;
 
 casper.test.begin('XPath tests', 6, function(test) {
     casper.start('tests/site/index.html', function() {
+        casper.debugPage();
         test.assertExists({
             type: 'xpath',
             path: '/html/body/ul/li[2]'
