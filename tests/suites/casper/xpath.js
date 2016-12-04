@@ -2,7 +2,9 @@
 var x = require('casper').selectXPath;
 
 casper.test.begin('XPath tests', 6, function(test) {
-    casper.start('tests/site/index.html');
+    casper.start('tests/site/index.html').then( function{
+        this.wait( 100 );
+    });
 
     casper.then( function() {
         test.assertExists({
