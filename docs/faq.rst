@@ -368,7 +368,7 @@ After casperjs.start(), you have phantomjs page module available in casper.page 
 
 You can simply do like below::
 
-  casper.page.nameOfMethod()
+  casper.page.pageModuleApi()
 
 PhantomJS Web Page API: http://phantomjs.org/api/webpage/
 
