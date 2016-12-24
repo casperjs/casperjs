@@ -169,21 +169,9 @@
          * @return Boolean
          */
         this.elementVisible = function elementVisible(elem) {
-            var style;
-            try {
-                style = window.getComputedStyle(elem, null);
-            } catch (e) {
-                return false;
-            }
-            var hidden = style.visibility === 'hidden' || style.display === 'none';
-            if (hidden) {
-                return false;
-            }
-            var visibles = ["inline", "inline-block", "flex", "inline-flex"];
-            if (visibles.indexOf(style.display) !== -1) {
-                return true;
-            }
-            return elem.clientHeight > 0 && elem.clientWidth > 0;
+            if(elem.style.visibility === 'hidden' || elem.style.display === 'none') return false;//is there possibly a need to use window.getComputedStyle() ?
+            var cr = elem.getBoundingClientRect();
+            return cr.width > 0 && cr.height > 0;
         };
 
         /**

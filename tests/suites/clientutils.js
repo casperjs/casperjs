@@ -263,7 +263,7 @@ casper.test.begin('ClientUtils.getElementsInfo() second element tests', 10, func
     test.done();
 });
 
-casper.test.begin('ClientUtils.getElementInfo() visibility tests', 6, function(test) {
+casper.test.begin('ClientUtils.getElementInfo() visibility tests', 7, function(test) {
     casper.page.content = '<a href="plop" class="plip plup" style="display: inline"><i>paf</i></a>';
     var info = casper.getElementInfo('a.plip');
     test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline');
@@ -287,6 +287,15 @@ casper.test.begin('ClientUtils.getElementInfo() visibility tests', 6, function(t
     casper.page.content = '<a href="plop" class="plip plup" style="display: flex"><i>paf</i></a>';
     info = casper.getElementInfo('a.plip');
     test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display flex');
+
+    //casper.page.content = '<div style="visibility: hidden"><a href="plop" class="plip plup"><i>paf</i></a></div>';
+    //info = casper.getElementInfo('a.plip');
+    //test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility when parent\'s visibility is set to hidden');
+
+    casper.page.content = '<div style="display: none"><a href="plop" class="plip plup"><i>paf</i></a></div>';
+    info = casper.getElementInfo('a.plip');
+    test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility when parent\'s display is set to none');
+
 
     test.done();
 });
