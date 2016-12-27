@@ -2416,6 +2416,69 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
 };
 
 /**
+ * Waits until an element with text equal to the given label is visible on the page.
+ * Uses waitUntilVisible.
+ *
+ * @param String    label       Element innerText value
+ * @param String    tag         Tag name that contains given text (optional)
+ * @param Function  then        The next step to perform (optional)
+ * @param Function  onTimeout   A callback function to call on timeout (optional)
+ * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
+ * @return Casper
+ */
+Casper.prototype.waitForLabel = function(label, tag, then, onTimeout, timeout){
+    "use strict";
+
+    if(!tag){
+        tag = "*";
+    }
+
+    // Examples of different XPath queries for text:
+    //var selectorString = "//*[contains(text(), 'Yahoo')]";
+    //var selector = selectXPath(f('//%s[contains(text(), %s)]', tag, label));
+    //var selector = selectXPath(f('//text()[.="%s"]', label));
+    var selector = selectXPath(f('//%s[text()="%s"]', tag, label));
+    return this.waitUntilVisible(selector, then, onTimeout, timeout);
+};
+
+/**
+ * Waits until an element that contains given label is visible.
+ * Uses waitUntilVisible.
+ *
+ * @param String    text        Text to search for
+ * @param Function  then        The next step to perform (optional)
+ * @param Function  onTimeout   A callback function to call on timeout (optional)
+ * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
+ * @returns {*}
+ */
+Casper.prototype.waitForLabelContains = function(text, then, onTimeout, timeout){
+    "use strict";
+    var selector = selectXPath(f('text()[contains(., "%s"]', text));
+    return this.waitUntilVisible(selector, then, onTimeout, timeout);
+};
+
+/**
+ * Waits until the page title equals given value.
+ *
+ * @param String    title       Title to check for
+ * @param Function  then        The next step to perform (optional)
+ * @param Function  onTimeout   A callback function to call on timeout (optional)
+ * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
+ * @returns {*}
+ */
+Casper.prototype.waitForTitle = function(title, then, onTimeout, timeout){
+    "use strict";
+    var wait = function(){
+        return this.evaluate(function(pageTitle){
+            return document.title === pageTitle;
+        }, {
+            pageTitle: title
+        });
+    };
+    return this.waitFor(wait, then, onTimeout, timeout);
+};
+
+/**
  * Waits until the text on an element matching the provided DOM CSS3/XPath selector
  * is changed to a different value.
  *
@@ -2423,7 +2486,7 @@ Casper.prototype.waitForText = function(pattern, then, onTimeout, timeout) {
  * @param Function  then        The next step to preform (optional)
  * @param Function  onTimeout   A callback function to call on timeout (optional)
  * @param Number    timeout     The max amount of time to wait, in milliseconds (optional)
- * @return Casper
+ * @returns Casper
  */
 Casper.prototype.waitForSelectorTextChange = function(selector, then, onTimeout, timeout) {
     "use strict";
