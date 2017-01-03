@@ -401,6 +401,20 @@ Emitted when a remote ``alert()`` call has been performed.
 
 Emitted when a remote `window.callPhantom(data) <https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#wiki-webpage-onCallback>`_ call has been performed.
 
+``remote.longRunningScript``
+~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``WebPage``
+
+Emitted when any remote longRunningScript call has been performed.
+
+You have to call ``stopJavaScript`` method ::
+
+    casper.on('remote.longRunningScript', function stopLongScript(webpage) {
+        webpage.stopJavaScript();
+        return true;
+    });
+
 ``remote.message``
 ~~~~~~~~~~~~~~~~~~
 
@@ -433,6 +447,16 @@ Emitted when any resource has been received.
 **Arguments:** ``request``
 
 Emitted when any resource has been requested.
+
+
+``resource.timeout``
+~~~~~~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``request``
+
+Emitted when the execution time of any resource has exceeded the value of settings.resourceTimeout.
+
+you can configure timeout with ``settings.resourceTimeout`` parameter.
 
 ``run.complete``
 ~~~~~~~~~~~~~~~~

@@ -1485,6 +1485,7 @@ Casper.prototype.open = function open(location, settings) {
     this.log(f('opening url: %s, HTTP %s', this.requestUrl, settings.method.toUpperCase()), "debug");
     // reset resources
     this.resources = [];
+    this.resourcesTime = [];
     // custom headers
     this.page.customHeaders = utils.mergeObjects(utils.clone(baseCustomHeaders), customHeaders);
     // perfom request
@@ -2713,6 +2714,9 @@ function createPage(casper) {
         casper.emit('load.finished', status);
         casper.loadInProgress = false;
     };
+    page.onLongRunningScript = function onLongRunningScript() {
+        casper.emit('remote.longRunningScript', this);
+    };
     page.onNavigationRequested = function onNavigationRequested(url, type, willNavigate, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, willNavigate=%s, isMainFrame=%s',
                      url, type, willNavigate, isMainFrame), "debug");
@@ -2783,6 +2787,9 @@ function createPage(casper) {
     };
     page.onResourceError = function onResourceError(resourceError) {
         casper.emit('resource.error', resourceError);
+    };
+    page.onResourceTimeout = function onResourceTimeout(resourceError) {
+        casper.emit('resource.timeout', resourceError);
     };
     page.onUrlChanged = function onUrlChanged(url) {
         casper.log(f('url changed to "%s"', url), "debug");
