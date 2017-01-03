@@ -196,22 +196,18 @@ var Casper = function Casper(options) {
             notices.push('  in module ' + match[2]);
             msg = match[3];
         }
-        /* FIXME:
-        this leads to a recursive on('error'...) trigger,
-        at least in phantomjs2
 
-        console.error(c.colorize(msg, 'RED_BAR', 80));
+        console.log(c.colorize(msg, 'RED_BAR', 80));
         notices.forEach(function(notice) {
-            console.error(c.colorize(notice, 'COMMENT'));
+            console.log(c.colorize(notice, 'COMMENT'));
         });
         (backtrace || []).forEach(function(item) {
             var message = fs.absolute(item.file) + ":" + c.colorize(item.line, "COMMENT");
             if (item['function']) {
                 message += " in " + c.colorize(item['function'], "PARAMETER");
             }
-            console.error("  " + message);
+            console.log("  " + message);
         });
-        */
     });
 
     // deprecated feature event handler
