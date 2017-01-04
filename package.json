@@ -21,6 +21,9 @@
     "type": "git",
     "url": "git://github.com/casperjs/casperjs.git"
   },
+  "dependencies": {
+    "phantomjs-prebuilt": "2.1.x"
+  },
   "licenses": [
     {
       "type": "MIT",
