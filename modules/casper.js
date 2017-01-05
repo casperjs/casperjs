@@ -716,6 +716,10 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     if (!utils.isFunction(fn) && !utils.isString(fn)) { // phantomjs allows functions defs as string
         throw new CasperError("evaluate() only accepts functions or strings");
     }
+    // ensure local client scripts are always injected
+    this.injectClientScripts();
+    // ensure remote client scripts are always injected
+    this.includeRemoteScripts();
     // ensure client utils are always injected
     this.injectClientUtils();
     // function context
