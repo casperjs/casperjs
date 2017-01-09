@@ -889,6 +889,7 @@
          * @return  String            Response text.
          */
         this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
+            /*jshint maxcomplexity:10*/
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];

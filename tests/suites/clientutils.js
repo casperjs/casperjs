@@ -272,6 +272,14 @@ casper.test.begin('ClientUtils.getElementInfo() visibility tests', 6, function(t
     info = casper.getElementInfo('a.plip');
     test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline-block');
 
+    casper.page.content = '<a href="plop" class="plip plup" style="display: inline-flex"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display inline-flex');
+
+    casper.page.content = '<a href="plop" class="plip plup" style="display: flex"><i>paf</i></a>';
+    info = casper.getElementInfo('a.plip');
+    test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display flex');
+
     casper.page.content = '<a href="plop" class="plip plup" style="visibility: hidden"><i>paf</i></a>';
     info = casper.getElementInfo('a.plip');
     test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with visibility hidden');

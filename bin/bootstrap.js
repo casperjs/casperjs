@@ -91,6 +91,8 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 // casperjs env initialization
 (function(global, phantom, system){
     "use strict";
+    /*jshint maxcomplexity:15*/
+    /*jshint maxstatements:50*/
     // phantom args
     var phantomArgs = system.args.slice(1);
 
@@ -360,6 +362,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     // CasperJS version, extracted from package.json - see http://semver.org/
     phantom.casperVersion = (function getCasperVersion(path) {
+        /*jshint maxcomplexity:10*/
         var parts, patchPart, pkg, pkgFile;
         pkgFile = fs.absolute(fs.pathJoin(path, 'package.json'));
         if (!fs.exists(pkgFile)) {

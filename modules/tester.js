@@ -135,6 +135,7 @@ var Tester = function Tester(casper, options) {
     });
 
     this.on('fail', function onFail(failure) {
+        /*jshint maxcomplexity:10*/
         // export
         var valueKeys = Object.keys(failure.values),
             timeElapsed = new Date() - this.currentTestStartTime;
@@ -1095,10 +1096,12 @@ Tester.prototype.tearDown = function tearDown(fn) {
  */
 Tester.prototype.begin = function begin() {
     "use strict";
+    /*jshint maxcomplexity:10*/
     if (this.started && this.running)
         return this.queue.push(arguments);
 
     function getConfig(args) {
+        /*jshint maxcomplexity:10*/
         var config = {
             setUp: function(){},
             tearDown: function(){}

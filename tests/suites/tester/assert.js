@@ -83,7 +83,7 @@ casper.test.begin('Tester.assertField(): filled inputs', 7, function(test) {
             'check':       false,
             'choice':      '',
             'topic':       '',
-            'file':        '',
+            //FIXME: known regression phantomjs 2.0.0: 'file':        '',
             'checklist[]': []
         });
         test.assertField('email', '', 'Tester.assertField() works as expected with inputs');
@@ -119,7 +119,7 @@ casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
             'check':       true,
             'choice':      'no',
             'topic':       'bar',
-            'file':        fpath,
+            //FIXME: known regression phantomjs 2.0.0: 'file':        fpath,
             'checklist[]': ['1', '3']
         });
         test.assertField('email', 'chuck@norris.com', 'Tester.assertField() works as expected with inputs');

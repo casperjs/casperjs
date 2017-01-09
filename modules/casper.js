@@ -405,6 +405,7 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     if (self.pendingWait || self.loadInProgress || self.navigationRequested || self.browserInitializing) {
         return;
     }
@@ -810,6 +811,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
  */
 Casper.prototype.fillForm = function fillForm(selector, vals, options) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     this.checkStarted();
 
     var selectorType = options && options.selectorType || "names",
@@ -1372,6 +1374,7 @@ Casper.prototype.includeRemoteScripts = function includeRemoteScripts() {
  */
 Casper.prototype.log = function log(message, level, space) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     level = level && this.logLevels.indexOf(level) > -1 ? level : "debug";
     space = space ? space : "phantom";
     if (level === "error" && utils.isFunction(this.options.onError)) {
@@ -1660,6 +1663,7 @@ Casper.prototype.runStep = function runStep(step) {
  */
 Casper.prototype.sendKeys = function(selector, keys, options) {
     "use strict";
+    /*jshint maxcomplexity:10*/
     this.checkStarted();
     options = utils.mergeObjects({
         eventType: 'keypress',
