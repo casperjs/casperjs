@@ -884,11 +884,12 @@
          * @param   String   url      Url.
          * @param   String   method   HTTP method (default: GET).
          * @param   Object   data     Request parameters.
+         * @param   Object   headers  Request headers.
          * @param   Boolean  async    Asynchroneous request? (default: false)
          * @param   Object   settings Other settings when perform the ajax request
          * @return  String            Response text.
          */
-        this.sendAJAX = function sendAJAX(url, method, data, async, settings) {
+        this.sendAJAX = function sendAJAX(url, method, data, headers, async, settings) {
             var xhr = new XMLHttpRequest(),
                 dataString = "",
                 dataList = [];
@@ -898,6 +899,9 @@
             this.log("sendAJAX(): Using HTTP method: '" + method + "'", "debug");
             if (settings && settings.overrideMimeType) {
                 xhr.overrideMimeType(settings.overrideMimeType);
+            }
+            for(var header in headers) {
+                xhr.setRequestHeader(header, headers[header]);
             }
             if (method === "POST") {
                 if (typeof data === "object") {
