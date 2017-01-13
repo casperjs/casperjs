@@ -128,3 +128,43 @@ casper.test.begin("evaluate() with js disabled, throws error", 1, function(test)
         casper.options.pageSettings.javascriptEnabled = true;
     });
 });
+
+casper.test.begin('runScript() tests', 4, function(test) {
+    casper.options.waitTimeout = 20000;
+    casper.start().then(function() {
+        casper.runScript(function() {
+            return "foo";
+        },  function(ret) {
+           test.assertEquals(ret, "foo", "Casper.runScript() no arg");
+        });
+    });
+    casper.then(function() {
+        casper.runScript(function(a, b) {
+            return a + b;
+        }, "foo", "bar", function(ret) {
+           test.assertEquals(ret, "foobar", "Casper.runScript() sets args");
+        });
+    });
+    casper.then(function() {
+        casper.runScript(function(a, b) {
+            callCasper(a + b );
+            return a + a;
+        }, "foo", "bar", function(ret) {
+           test.assertEquals(ret, "foobar", "Casper.runScript() sets args diff return value");
+        });
+    });
+    casper.then(function() {
+        casper.runScript(function(a, b) {
+	    setTimeout(function(){
+                callCasper(a + b );
+            },300);
+            return a + a;
+        }, "foo", "bar", function(ret) {
+           test.assertEquals(ret, "foobar", "Casper.runScript() sets args and setTimeout");
+        });
+    });
+    casper.run(function() {
+        test.done();
+        casper.options.waitTimeout = 5000;
+    });
+});

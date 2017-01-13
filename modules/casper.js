@@ -143,6 +143,7 @@ var Casper = function Casper(options) {
     this.mouse = mouse.create(this);
     this.popups = pagestack.create();
     // properties
+    this.callbacks = {};
     this.checker = null;
     this.currentResponse = {};
     this.currentUrl = 'about:blank';
@@ -1586,6 +1587,95 @@ Casper.prototype.run = function run(onComplete, time) {
     return this;
 };
 
+
+/**
+ * Evaluates an expression in the page context, without blocking the current execution
+ * a bit like what WebPage#evaluateAsync does, but the passed function can also accept
+ * parameters if a context Object is also passed:
+ *
+ *     casper.runScript(function(username, password) {
+ *         setTimeout(function(){
+ *             document.querySelector('#username').value = username;
+ *             document.querySelector('#password').value = password;
+ *             document.querySelector('#submit').click();
+ *         }, 1000);
+ *         return "launch";
+ *     }, 'Bazoonga', 'baz00nga', function(ret){
+ *         this.echo(ret);
+ *     });
+ *
+ * @param  Function  fn       The function to be evaluated within current page DOM
+ * @param  Object    context  Object containing the parameters to inject into the function (optional)
+ * @param  Function  callback A callback function to call when script ended
+ * @return mixed
+ * @see    WebPage#evaluateAsync
+ */
+Casper.prototype.runScript = function runScript(fn, context, callback) {
+    "use strict";
+    this.checkStarted();
+    // check whether javascript is enabled !!
+    if (this.options.pageSettings.javascriptEnabled === false) {
+        throw new CasperError("evaluate() requires javascript to be enabled");
+    }
+    // preliminary checks
+    if (!utils.isFunction(fn) && !utils.isString(fn)) { // phantomjs allows functions defs as string
+        throw new CasperError("evaluate() only accepts functions or strings");
+    }
+    // ensure client utils are always injected
+    this.injectClientUtils();
+    // function context
+    var args = [].slice.call(arguments);
+    var code = new Date().getTime();
+    while (this.callbacks[code]){
+        code = new Date().getTime();
+    }
+    if (args.length > 0 && utils.isFunction(args[args.length-1])) {
+        callback = args[args.length-1];
+    }
+    if (args.length === 1) {
+        context = [];
+    } else if (args.length === 2) {
+        // check for closure signature if it matches context
+        if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
+            context = utils.objectValues(context);
+        } else {
+            context = [context];
+        }
+    } else {
+        // phantomjs-style signature
+        context = [].slice.call(args, 1);
+    }
+    var closure = ["function(){var args=[].slice.apply(arguments);var code=args.pop();"+
+    "function callCasper(data){window.callPhantom({'type':'casperJs-runScript','id':code,'ret':data});}",
+    "}"];
+ 
+    if (fn.toString().indexOf("callCasper") === -1) {
+        fn = closure.join("callCasper((" + fn.toString() + ").apply(null,args));");
+    } else {
+        fn = closure.join("(" + fn.toString() + ").apply(null,args);");
+    }
+    
+    if (!(phantom.casperEngine === 'slimerjs' && utils.ltVersion(slimer.version, '0.10.0'))) {
+        // reverse parameter because of phantom bug
+        context = (phantom.casperEngine === 'slimerjs')? context.concat([code]) : context.concat([code]).reverse();
+
+        this.page.evaluateAsync.apply(this.page, [fn].concat([1]).concat(context));
+        
+    } else {
+
+        fn = "function() { setTimeout(" + fn + ", 1" ;
+        for (var i=0,l=context.length+1;i<l;i++){
+            fn += ", arguments[" + (i+1) + "]";
+        }
+        fn += "); }";
+        this.page.evaluate.apply(this.page, [fn].concat([1]).concat(context).concat([code]));
+    }
+    this.callbacks[code] = callback;
+    return this.waitFor(function isEvaluateReceived() {
+        return Object.keys(this.callbacks).length === 0 ;
+    });
+};
+
 /**
  * Runs a step.
  *
@@ -2660,6 +2750,13 @@ function createPage(casper) {
     };
 
     page.onCallback = function onCallback(data){
+        if (data && data.type === "casperJs-runScript") {
+            if (data.id && casper.callbacks[data.id]) {
+                casper.callbacks[data.id](data.ret);
+                delete casper.callbacks[data.id];
+                return;
+            }
+        }
         casper.emit('remote.callback',data);
     };
 
