@@ -2791,6 +2791,7 @@ function createPage(casper) {
     page.onUrlChanged = function onUrlChanged(url) {
         casper.log(f('url changed to "%s"', url), "debug");
         casper.navigationRequested = false;
+        casper.requestUrl = url;
         casper.emit('url.changed', url);
     };
     casper.emit('page.created', page);
