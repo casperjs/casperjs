@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>CasperJS test close-popup</title>
+    </head>
+    <body>
+        <a class="closepopup" href="#" onclick="return window.close();">close popup</a>
+        <script>
+        var w;
+        setTimeout(function() {
+            w = window.open("index.html",
+                            "index", "menubar=no, status=no, scrollbars=no, menubar=no, width=400, height=300");
+        }, 200);
+        </script>
+    </body>
+</html>

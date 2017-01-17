@@ -13,7 +13,7 @@ casper.test.begin('viewport() tests', 3, function(test) {
     test.done();
 });
 
-casper.test.begin('viewport() asynchronous tests', 2, function(test) {
+casper.test.begin('viewport() asynchronous tests', 4, function(test) {
     var screenshotData;
 
     casper.start('tests/site/index.html').viewport(800, 600, function() {
@@ -30,8 +30,10 @@ casper.test.begin('viewport() asynchronous tests', 2, function(test) {
         var imgInfo = this.getElementInfo('img');
         // sometimes, setting viewport could take more time in slimerjs/gecko
         // and the image is not still ready: :-/
+        
         if (!test.skipIfEngine(2, {
           name: 'slimerjs',
+          version : { max: '1.9.0'},
           message: 'Casper.viewport() change test'
         })) {
             test.assertEquals(imgInfo.width, 800, 'Casper.viewport() changes width asynchronously');
@@ -39,6 +41,15 @@ casper.test.begin('viewport() asynchronous tests', 2, function(test) {
         }
     });
 
+    casper.thenOpen('tests/site/popup.html',function() {
+        casper.waitForPopup("index.html", function() {
+            casper.withPopup('index.html', function() {
+                test.assertEquals(casper.page.viewportSize.width, 800, 'Casper.viewport() popup changes width asynchronously');
+                test.assertEquals(casper.page.viewportSize.height, 600, 'Casper.viewport() popup changes height asynchronously');
+            });
+        });
+    });
+    
     casper.run(function() {
         test.done();
     });

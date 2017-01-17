@@ -1,0 +1,115 @@
+/*eslint strict:0, max-statements:0*/
+/*global CasperError, casper, console, phantom, require*/
+var utils = require('utils');
+var x = require('casper').selectXPath;
+var server = require('webserver').create();
+var service = server.listen(8090, function(request, response) {
+    response.statusCode = 200;
+    response.setHeader('Content-type', 'text/html');
+    response.write('<a href="/link">a link</a>');
+    response.write('<form action="/form" method="POST"><input type="submit" /></form>');
+    response.close();
+});
+
+//------------------------------------------------
+casper.test.begin('multiple-popups tests', 19, function(test) {
+
+    casper.removeAllListeners('popup.created');
+    casper.removeAllListeners('popup.loaded');
+    casper.removeAllListeners('popup.closed');
+
+    casper.on('popup.created', function(popup) {
+        test.pass('"popup.created" event is fired');
+        test.assert(utils.isWebPage(popup),
+            '"popup.created" event callback get a popup page instance');
+    });
+
+    casper.once('popup.loaded', function(popup) {
+        test.pass('"popup.loaded" event is fired');
+        test.assertEquals(popup.evaluate(function() {
+            return document.title;
+        }), 'CasperJS test close-popup',
+            '"popup.loaded" is triggered when popup content is actually loaded');
+            
+        casper.once('popup.loaded', function(popup) {
+            test.pass('"popup.loaded" event is fired on second level of popup');
+            test.assertEquals(popup.evaluate(function() {
+                return document.title;
+            }), 'CasperJS test index',
+            '"popup.loaded" is triggered when popup content is actually loaded');
+            this.removeAllListeners('popup.created');
+            this.removeAllListeners('popup.loaded');
+            this.removeAllListeners('popup.closed');
+        });
+    });
+
+    casper.once('popup.closed', function(popup) {
+        test.assertEquals(0, 0, '"popup.closed" event is fired ['+popup.windowName+']');
+    });
+
+    casper.start('tests/site/multiple-popups.html');
+
+    casper.waitForSelector('.openpopup', function success() {
+        casper.test.assertExists('.openpopup');
+        casper.mouse.move('.openpopup');
+        casper.click('.openpopup');
+    }, function fail() {
+        casper.test.assertExists('.openpopup');
+    });
+
+    casper.waitForPopup( /close\.html/, function then() {
+        test.pass('Casper.waitForPopup() waits for a popup being created [close]');
+        test.assertEquals(this.popups.length, 1, 'A popup has been added [close]');
+        test.assert(utils.isWebPage(this.popups[0]), 'A popup is a WebPage [close]');
+    
+        casper.waitForPopup( /index\.html/, function then() {
+            test.pass('Casper.waitForPopup() waits for a popup being created [index]');
+            test.assertEquals(this.popups.length, 2, 'A popup has been added [index]');
+            test.assert(utils.isWebPage(this.popups[0]), 'A popup is a WebPage [index]');
+    
+            casper.withPopup('close.html', function() {
+                test.assertTitle('CasperJS test close-popup',
+                    'Casper.withPopup() found a popup with expected title');
+                test.assertUrlMatches(/close\.html$/,
+                    'Casper.withPopup() switched to popup as current active one');
+                test.assertEval(function() {
+                    return '__utils__' in window;
+                }, 'Casper.withPopup() has client utils injected');
+                casper.click('.closepopup');
+            });
+        });
+    });
+
+    casper.then(function() {
+        test.assertUrlMatches(/multiple-popups\.html$/,
+            'Casper.withPopup() has reverted to main page after using the popup');
+            
+    });
+    
+    casper.run(function() {
+        setTimeout(function(){
+            test.done();
+        }, 500);
+    });
+});
+
+casper.test.begin('Link Navigation updates response', 2, function(test) {
+    casper.start('http://localhost:8090', function(response) {
+        casper.click('a');
+        casper.then(function(response) {
+            test.assertUrlMatch(
+                /\/link$/,
+                'URL matches anchor href'
+            );
+            test.assertEquals(
+                response.url,
+                casper.page.url,
+                'response is consistent with the internal page'
+            );
+
+        });
+    }).run(function() {
+        test.done();
+        server.close();
+    });
+});

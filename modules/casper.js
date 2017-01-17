@@ -148,9 +148,7 @@ var Casper = function Casper(options) {
     this.currentUrl = 'about:blank';
     this.currentHTTPStatus = null;
     this.history = [];
-    this.loadInProgress = false;
     this.navigationRequested = false;
-    this.browserInitializing = false;
     this.logFormats = {};
     this.logLevels = ["debug", "info", "warning", "error"];
     this.logStyles = {
@@ -405,7 +403,13 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
  */
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
-    if (self.pendingWait || self.loadInProgress || self.navigationRequested || self.browserInitializing) {
+
+    try{
+        var test = self.page.loadInProgress || self.navigationRequested || self.page.browserInitializing ; 
+    } catch(e){
+        self.page = self.mainPage;
+    }
+    if (self.pendingWait || self.page.loadInProgress || self.navigationRequested || self.page.browserInitializing ) {
         return;
     }
     var step = self.steps[self.step++];
@@ -715,6 +719,10 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     // preliminary checks
     if (!utils.isFunction(fn) && !utils.isString(fn)) { // phantomjs allows functions defs as string
         throw new CasperError("evaluate() only accepts functions or strings");
+    }
+    // closed page check
+    if (this.page.closed) {
+        return null;
     }
     // ensure client utils are always injected
     this.injectClientUtils();
@@ -1288,12 +1296,13 @@ Casper.prototype.initErrorHandler = function initErrorHandler() {
  *
  * @return Casper
  */
-Casper.prototype.injectClientScripts = function injectClientScripts() {
+Casper.prototype.injectClientScripts = function injectClientScripts(page) {
     "use strict";
     this.checkStarted();
     if (!this.options.clientScripts) {
         return;
     }
+    page = page || this.page;
     if (utils.isString(this.options.clientScripts)) {
         this.options.clientScripts = [this.options.clientScripts];
     }
@@ -1301,7 +1310,7 @@ Casper.prototype.injectClientScripts = function injectClientScripts() {
         throw new CasperError("The clientScripts option must be an array");
     }
     this.options.clientScripts.forEach(function _forEach(script) {
-        if (this.page.injectJs(script)) {
+        if (page.injectJs(script)) {
             this.log(f('Automatically injected %s client side', script), "debug");
         } else {
             this.warn(f('Failed injecting %s client side', script));
@@ -1314,17 +1323,18 @@ Casper.prototype.injectClientScripts = function injectClientScripts() {
  * Injects Client-side utilities in current page context.
  *
  */
-Casper.prototype.injectClientUtils = function injectClientUtils() {
+Casper.prototype.injectClientUtils = function injectClientUtils(page) {
     "use strict";
     this.checkStarted();
-    var clientUtilsInjected = this.page.evaluate(function() {
+    page = page || this.page;
+    var clientUtilsInjected = page.evaluate(function() {
         return typeof __utils__ === "object";
     });
     if (true === clientUtilsInjected) {
         return;
     }
     var clientUtilsPath = require('fs').pathJoin(phantom.casperPath, 'modules', 'clientutils.js');
-    if (true === this.page.injectJs(clientUtilsPath)) {
+    if (true === page.injectJs(clientUtilsPath)) {
         this.log("Successfully injected Casper client-side utilities", "debug");
     } else {
         this.warn("Failed to inject Casper client-side utilities");
@@ -1332,7 +1342,7 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
     // ClientUtils and Casper shares the same options
     // These are not the lines I'm the most proud of in my life, but it works.
     /*global __options*/
-    this.page.evaluate(function() {
+    page.evaluate(function() {
         window.__utils__ = new window.ClientUtils(__options);
     }.toString().replace('__options', JSON.stringify(this.options)));
 };
@@ -1342,16 +1352,17 @@ Casper.prototype.injectClientUtils = function injectClientUtils() {
  *
  * @return Casper
  */
-Casper.prototype.includeRemoteScripts = function includeRemoteScripts() {
+Casper.prototype.includeRemoteScripts = function includeRemoteScripts(page) {
     "use strict";
     var numScripts = this.options.remoteScripts.length, loaded = 0;
     if (numScripts === 0) {
         return this;
     }
     this.waitStart();
+    page = page || this.page;
     this.options.remoteScripts.forEach(function(scriptUrl) {
         this.log(f("Loading remote script: %s", scriptUrl), "debug");
-        this.page.includeJs(scriptUrl, function() {
+        page.includeJs(scriptUrl, function() {
             loaded++;
             this.log(f("Remote script %s loaded", scriptUrl), "debug");
             if (loaded === numScripts) {
@@ -1486,7 +1497,7 @@ Casper.prototype.open = function open(location, settings) {
     // custom headers
     this.page.customHeaders = utils.mergeObjects(utils.clone(baseCustomHeaders), customHeaders);
     // perfom request
-    this.browserInitializing = true;
+    this.page.browserInitializing = true;
     var phantomJsSettings = {
         operation: settings.method,
         data:      settings.data
@@ -1872,7 +1883,7 @@ Casper.prototype.status = function status(asString) {
                       'options', 'pendingWait', 'requestUrl', 'started', 'step', 'url'];
     var currentStatus = {};
     properties.forEach(function(property) {
-        currentStatus[property] = this[property];
+        currentStatus[property] = this[property] || this.page[property];
     }.bind(this));
     return asString === true ? utils.dump(currentStatus) : currentStatus;
 };
@@ -2074,6 +2085,7 @@ Casper.prototype.userAgent = function userAgent(agent) {
     this.options.pageSettings.userAgent = agent;
     if (this.started && this.page) {
         this.page.settings.userAgent = agent;
+        this.page.customHeaders = {"User-Agent": agent};
     }
     return this;
 };
@@ -2098,6 +2110,8 @@ Casper.prototype.viewport = function viewport(width, height, then) {
         width: width,
         height: height
     };
+    
+    this.options.viewportSize = this.page.viewportSize;
     // setting the viewport could cause a redraw and it can take
     // time. At least for Gecko, we should wait a bit, even
     // if this time could not be enough.
@@ -2626,67 +2640,25 @@ exports.Casper = Casper;
 function createPage(casper) {
     /*eslint max-statements:0*/
     "use strict";
-    var page = require('webpage').create();
-    page.onAlert = function onAlert(message) {
-        casper.log('[alert] ' + message, "info", "remote");
-        casper.emit('remote.alert', message);
-        if (utils.isFunction(casper.options.onAlert)) {
-            casper.options.onAlert.call(casper, casper, message);
-        }
-    };
-    page.onConfirm = function onConfirm(message) {
-        if ('page.confirm' in casper._filters) {
-            return casper.filter('page.confirm', message);
-        }
-        return true;
-    };
-    page.onConsoleMessage = function onConsoleMessage(msg) {
-        // client utils casper console message
-        var consoleTest = /^\[casper\.echo\]\s?([\s\S]*)/.exec(msg);
-        if (consoleTest && consoleTest.length === 2) {
-            casper.echo(consoleTest[1]);
-            return; // don't trigger remote.message event for these
-        }
-        // client utils log messages
-        var logLevel = "info",
-            logTest = /^\[casper:(\w+)\]\s?([\s\S]*)/m.exec(msg);
-        if (logTest && logTest.length === 3) {
-            logLevel = logTest[1];
-            msg = logTest[2];
-            casper.log(msg, logLevel, "remote");
-        } else {
-            casper.emit('remote.message', msg);
+    var mainPage = require('webpage').create();
+    mainPage.isPopup = false;
+
+    var onClosing = function onClosing(closedPopup) {
+        if (this.isPopup) {
+            casper.popups.clean();
+            closedPopup.closed = true;
+            casper.emit('popup.closed', closedPopup);
         }
     };
 
-    page.onCallback = function onCallback(data){
-        casper.emit('remote.callback',data);
-    };
-
-    page.onError = function onError(msg, trace) {
-        casper.emit('page.error', msg, trace);
-    };
-    page.onInitialized = function onInitialized() {
-        casper.emit('page.initialized', page);
-        if (utils.isFunction(casper.options.onPageInitialized)) {
-            casper.log("Post-configuring WebPage instance", "debug");
-            casper.options.onPageInitialized.call(casper, page);
-        }
-    };
-    page.onLoadStarted = function onLoadStarted() {
-        // in some case, there is no navigation requested event, so
-        // be sure that browserInitializing is false to not block checkStep()
-        casper.browserInitializing = false;
-        casper.loadInProgress = true;
-        casper.emit('load.started');
-    };
-    page.onLoadFinished = function onLoadFinished(status) {
+    var onLoadFinished = function onLoadFinished(status) {
+        this.windowNameBackUp = this.windowName;
         /*eslint max-statements:0*/
         if (status !== "success") {
             casper.emit('load.failed', {
                 status:      status,
                 http_status: casper.currentHTTPStatus,
-                url:         casper.requestUrl
+                url:         this.url
             });
             var message = 'Loading resource failed with status=' + status;
             if (casper.currentHTTPStatus) {
@@ -2695,29 +2667,39 @@ function createPage(casper) {
             message += ': ' + casper.requestUrl;
             casper.log(message, "warning");
             casper.navigationRequested = false;
-            casper.browserInitializing = false;
+            this.browserInitializing = false;
             if (utils.isFunction(casper.options.onLoadError)) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
         }
         // local client scripts
-        casper.injectClientScripts();
+        casper.injectClientScripts(this);
         // remote client scripts
-        casper.includeRemoteScripts();
+        casper.includeRemoteScripts(this);
         // Client-side utils injection
-        casper.injectClientUtils();
+        casper.injectClientUtils(this);
         // history
         casper.history.push(casper.getCurrentUrl());
         casper.emit('load.finished', status);
-        casper.loadInProgress = false;
+        this.loadInProgress = false;
+        if (this.isPopup) {
+            casper.popups.push(this);
+            casper.emit('popup.loaded', this);
+        }
     };
-    page.onLongRunningScript = function onLongRunningScript() {
-        casper.emit('remote.longRunningScript', this);
+
+    var onLoadStarted = function onLoadStarted() {
+        // in some case, there is no navigation requested event, so
+        // be sure that browserInitializing is false to not block checkStep()
+        this.browserInitializing = false;
+        this.loadInProgress = true;
+        casper.emit('load.started');
     };
-    page.onNavigationRequested = function onNavigationRequested(url, type, willNavigate, isMainFrame) {
+
+    var onNavigationRequested = function onNavigationRequested(url, type, willNavigate, isMainFrame) {
         casper.log(f('Navigation requested: url=%s, type=%s, willNavigate=%s, isMainFrame=%s',
                      url, type, willNavigate, isMainFrame), "debug");
-        casper.browserInitializing = false;
+        this.browserInitializing = false;
         if (isMainFrame && casper.requestUrl !== url) {
             var currentUrl = casper.requestUrl;
             var newUrl = url;
@@ -2735,64 +2717,145 @@ function createPage(casper) {
             // there will not be loadStarted, loadFinished events
             // so it could cause issues (for exemple, checkStep that
             // do no execute the next step -> infinite loop on checkStep)
-            if (willNavigate && currentUrl !== newUrl)
-                casper.navigationRequested  = true;
-
+            if (willNavigate && currentUrl !== newUrl) {
+                casper.navigationRequested = true;
+            }
             if (willNavigate) {
                 casper.requestUrl = url;
             }
         }
         casper.emit('navigation.requested', url, type, willNavigate, isMainFrame);
     };
-    page.onPageCreated = function onPageCreated(popupPage) {
-        casper.emit('popup.created', popupPage);
-        popupPage.onLoadFinished = function onLoadFinished() {
-            // SlimerJS needs this line of code because of issue
-            // https://github.com/laurentj/slimerjs/issues/48
-            // else checkStep turns into an infinite loop
-            // after clicking on an <a target="_blank">
-            casper.navigationRequested  = false;
-            casper.popups.push(popupPage);
-            casper.emit('popup.loaded', popupPage);
+    
+    var onPageCreated = function onPageCreated(page) {
+        page.isPopup = (typeof page.isPopup === "undefined") ? true : false;
+        page.browserInitializing = false;
+        page.loadInProgress = false; 
+        page.windowNameBackUp = page.windowName;
+
+        page.onClosing =  function() {
+            var p = page;
+            return function() {
+                return onClosing.apply(p, arguments);
+            };
+        }();
+        page.onLoadFinished = function() {
+            var p = page;
+            return function() {
+                return onLoadFinished.apply(p, arguments);
+            };
+        }();
+        page.onLoadStarted = function() {
+            var p = page;
+            return function() {
+                return onLoadStarted.apply(p, arguments);
+            };
+        }();
+        page.onNavigationRequested = function() {
+            var p = page;
+            return function() {
+                return onNavigationRequested.apply(p, arguments);
+            };
+        }();
+        page.onPageCreated = onPageCreated;
+
+        page.onAlert = function onAlert(message) {
+            casper.log('[alert] ' + message, "info", "remote");
+            casper.emit('remote.alert', message);
+            if (utils.isFunction(casper.options.onAlert)) {
+                casper.options.onAlert.call(casper, casper, message);
+            }
         };
-        popupPage.onClosing = function onClosing(closedPopup) {
-            casper.popups.clean();
-            casper.emit('popup.closed', closedPopup);
+        page.onConfirm = function onConfirm(message) {
+            if ('page.confirm' in casper._filters) {
+                return casper.filter('page.confirm', message);
+            }
+            return true;
         };
-    };
-    page.onPrompt = function onPrompt(message, value) {
-        return casper.filter('page.prompt', message, value);
-    };
-    page.onResourceReceived = function onResourceReceived(resource) {
-        http.augmentResponse(resource);
-        casper.emit('resource.received', resource);
-        if (utils.isFunction(casper.options.onResourceReceived)) {
-            casper.options.onResourceReceived.call(casper, casper, resource);
+        page.onConsoleMessage = function onConsoleMessage(msg) {
+            // client utils casper console message
+            var consoleTest = /^\[casper\.echo\]\s?([\s\S]*)/.exec(msg);
+            if (consoleTest && consoleTest.length === 2) {
+                casper.echo(consoleTest[1]);
+                return; // don't trigger remote.message event for these
+            }
+            // client utils log messages
+            var logLevel = "info",
+                logTest = /^\[casper:(\w+)\]\s?([\s\S]*)/m.exec(msg);
+            if (logTest && logTest.length === 3) {
+                logLevel = logTest[1];
+                msg = logTest[2];
+                casper.log(msg, logLevel, "remote");
+            } else {
+                casper.emit('remote.message', msg);
+            }
+        };
+
+        page.onCallback = function onCallback(data){
+            casper.emit('remote.callback', data);
+        };
+        page.onError = function onError(msg, trace) {
+            casper.emit('page.error', msg, trace);
+        };
+        page.onInitialized = function onInitialized() {
+            casper.emit('page.initialized', page);
+            if (utils.isFunction(casper.options.onPageInitialized)) {
+                casper.log("Post-configuring WebPage instance", "debug");
+                casper.options.onPageInitialized.call(casper, page);
+            }
+        };
+        page.onLongRunningScript = function onLongRunningScript() {
+            casper.emit('remote.longRunningScript', this);
+        };
+        page.onPrompt = function onPrompt(message, value) {
+            return casper.filter('page.prompt', message, value);
+        };
+        page.onResourceReceived = function onResourceReceived(resource) {
+            http.augmentResponse(resource);
+            casper.emit('resource.received', resource);
+            if (utils.isFunction(casper.options.onResourceReceived)) {
+                casper.options.onResourceReceived.call(casper, casper, resource);
+            }
+            casper.handleReceivedResource(resource);
+        };
+        page.onResourceRequested = function onResourceRequested(requestData, request) {
+            casper.emit('resource.requested', requestData, request);
+            var checkUrl = ((phantom.casperEngine === 'phantomjs' && utils.ltVersion(phantom.version, '2.1.0')) ||
+                       (phantom.casperEngine === 'slimerjs' && utils.ltVersion(slimer.version, '0.10.0'))) ? utils.decodeUrl(requestData.url) : requestData.url;
+            if (checkUrl === casper.requestUrl) {
+                casper.emit('page.resource.requested', requestData, request);
+            }
+            if (utils.isFunction(casper.options.onResourceRequested)) {
+                casper.options.onResourceRequested.call(casper, casper, requestData, request);
+            }
+        };
+        page.onResourceError = function onResourceError(resourceError) {
+            casper.emit('resource.error', resourceError);
+        };
+        page.onResourceTimeout = function onResourceTimeout(resourceError) {
+            casper.emit('resource.timeout', resourceError);
+        };
+        page.onUrlChanged= function onUrlChanged(url) {
+            casper.log(f('url changed to "%s"', url), "debug");
+            casper.navigationRequested= false;
+            casper.emit('url.changed', url);
+        };
+
+        casper.emit('page.created', page);
+        if (page.isPopup) {
+            casper.emit('popup.created', page);
+            if (casper.options.pageSettings.userAgent !== defaultUserAgent) {
+                page.customHeaders = {"User-Agent": casper.options.pageSettings.userAgent};
+            }
+            page.settings = utils.mergeObjects(page.settings, casper.options.pageSettings);
+            if (utils.isClipRect(casper.options.clipRect)) {
+                page.clipRect = casper.options.clipRect;
+            }
+            if (utils.isObject(casper.options.viewportSize)) {
+                page.viewportSize = casper.options.viewportSize;
+            }
         }
-        casper.handleReceivedResource(resource);
     };
-    page.onResourceRequested = function onResourceRequested(requestData, request) {
-        casper.emit('resource.requested', requestData, request);
-        var checkUrl = ((phantom.casperEngine === 'phantomjs' && utils.ltVersion(phantom.version, '2.1.0')) ||
-                   (phantom.casperEngine === 'slimerjs' && utils.ltVersion(slimer.version, '0.10.0'))) ? utils.decodeUrl(requestData.url) : requestData.url;
-        if (checkUrl === casper.requestUrl) {
-            casper.emit('page.resource.requested', requestData, request);
-        }
-        if (utils.isFunction(casper.options.onResourceRequested)) {
-            casper.options.onResourceRequested.call(casper, casper, requestData, request);
-        }
-    };
-    page.onResourceError = function onResourceError(resourceError) {
-        casper.emit('resource.error', resourceError);
-    };
-    page.onResourceTimeout = function onResourceTimeout(resourceError) {
-        casper.emit('resource.timeout', resourceError);
-    };
-    page.onUrlChanged = function onUrlChanged(url) {
-        casper.log(f('url changed to "%s"', url), "debug");
-        casper.navigationRequested = false;
-        casper.emit('url.changed', url);
-    };
-    casper.emit('page.created', page);
-    return page;
+    onPageCreated(mainPage);
+    return mainPage;
 }
