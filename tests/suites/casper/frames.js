@@ -36,6 +36,15 @@ casper.test.begin('handling frames', 16, function(test) {
     casper.withFrame(1, function() {
         test.assertTitle('CasperJS frame 3');
     });
+    
+    casper.withFrame('frame4', function() {
+        casper.withFrame('frame5', function() {
+            this.clickLabel('index.html');
+        });
+    });
+    casper.then(function(){
+        casper.wait(1000);
+    });
 
     casper.run(function() {
         test.assertTitle('CasperJS test frames');
