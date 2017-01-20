@@ -404,11 +404,6 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
 
-    try{
-        var test = self.page.loadInProgress || self.navigationRequested || self.page.browserInitializing ; 
-    } catch(e){
-        self.page = self.mainPage;
-    }
     if (self.pendingWait || self.page.loadInProgress || self.navigationRequested || self.page.browserInitializing ) {
         return;
     }
@@ -720,10 +715,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
     if (!utils.isFunction(fn) && !utils.isString(fn)) { // phantomjs allows functions defs as string
         throw new CasperError("evaluate() only accepts functions or strings");
     }
-    // closed page check
-    if (this.page.closed) {
-        return null;
-    }
+
     // ensure client utils are always injected
     this.injectClientUtils();
     // function context
@@ -2585,7 +2577,9 @@ Casper.prototype.withPopup = function withPopup(popupInfo, then) {
 Casper.prototype.newPage = function newPage() {
     "use strict";
     this.checkStarted();
-    this.page.close();
+    if (this.page !== null) {
+        this.page.close();
+    }
     this.page = this.mainPage = createPage(this);
     this.page.settings = utils.mergeObjects(this.page.settings, this.options.pageSettings);
     if (utils.isClipRect(this.options.clipRect)) {
@@ -2644,10 +2638,15 @@ function createPage(casper) {
     mainPage.isPopup = false;
 
     var onClosing = function onClosing(closedPopup) {
-        if (this.isPopup) {
+        if (closedPopup.isPopup) {
+            if (casper.page.id === closedPopup.id) {
+                casper.page = casper.mainPage;
+            }
             casper.popups.clean();
-            closedPopup.closed = true;
             casper.emit('popup.closed', closedPopup);
+        } else {
+            casper.page = null;
+            casper.newPage();
         }
     };
 
@@ -2729,6 +2728,7 @@ function createPage(casper) {
     
     var onPageCreated = function onPageCreated(page) {
         page.isPopup = (typeof page.isPopup === "undefined") ? true : false;
+        page.id = new Date().getTime();
         page.browserInitializing = false;
         page.loadInProgress = false; 
         page.windowNameBackUp = page.windowName;

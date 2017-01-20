@@ -12,7 +12,7 @@ var service = server.listen(8090, function(request, response) {
 });
 
 //------------------------------------------------
-casper.test.begin('multiple-popups tests', 19, function(test) {
+casper.test.begin('multiple-popups tests', 20, function(test) {
 
     casper.removeAllListeners('popup.created');
     casper.removeAllListeners('popup.loaded');
@@ -85,7 +85,15 @@ casper.test.begin('multiple-popups tests', 19, function(test) {
             'Casper.withPopup() has reverted to main page after using the popup');
             
     });
-    
+
+    casper.then(function() {
+        casper.evaluate(function(){
+            window.close();
+        });
+        test.assertUrlMatches(/about:blank|multiple-popups.html/,
+            'Casper.withPopup() has ropened a new page after closing main page');
+    });
+
     casper.run(function() {
         setTimeout(function(){
             test.done();
