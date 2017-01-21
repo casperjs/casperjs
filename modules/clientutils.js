@@ -169,7 +169,13 @@
          * @return Boolean
          */
         this.elementVisible = function elementVisible(elem) {
-            if(elem.style.visibility === 'hidden' || elem.style.display === 'none') return false;//is there possibly a need to use window.getComputedStyle() ?
+        var style;
+        try {
+            style = window.getComputedStyle(elem, null);
+        } catch (e) {
+            return false;
+        }
+            if(style.visibility === 'hidden' || style.display === 'none') return false;
             var cr = elem.getBoundingClientRect();
             return cr.width > 0 && cr.height > 0;
         };

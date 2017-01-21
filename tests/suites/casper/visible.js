@@ -8,10 +8,8 @@ casper.test.begin('visibility tests', 11, function(test) {
         test.assert(this.visible('img'), 'Casper.visible() can detect if an element is visible');
         test.assert(!this.visible('#button1'), 'Casper.visible() can detect if an element is invisible when parent has display none');
         test.assert(this.visible('#button2'), 'Casper.visible() can detect if an element is visible when parent is visible');
-        //test.assert(!this.visible('#button3'), 'Casper.visible() can detect if an element is invisible when parent has visibility hidden');//currently this case is not handled
         test.assert(this.visible('#circle1'), 'Casper.visible() can detect if an element inside svg is visible');
         test.assert(!this.visible('#circle2'), 'Casper.visible() can detect if an element inside svg is invisible when parent has display none');
-        //test.assert(!this.visible('#circle3'), 'Casper.visible() can detect if an element inside svg is invisible when parent has visibility hidden');//currently this case is not handled
         this.waitWhileVisible('#img5', function() {
             test.pass('Casper.waitWhileVisible() can wait while an element is visible');
         }, function() {

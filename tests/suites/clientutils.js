@@ -288,10 +288,6 @@ casper.test.begin('ClientUtils.getElementInfo() visibility tests', 7, function(t
     info = casper.getElementInfo('a.plip');
     test.assert(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility with display flex');
 
-    //casper.page.content = '<div style="visibility: hidden"><a href="plop" class="plip plup"><i>paf</i></a></div>';
-    //info = casper.getElementInfo('a.plip');
-    //test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility when parent\'s visibility is set to hidden');
-
     casper.page.content = '<div style="display: none"><a href="plop" class="plip plup"><i>paf</i></a></div>';
     info = casper.getElementInfo('a.plip');
     test.assertNot(info.visible, 'ClientUtils.getElementInfo() retrieves element visibility when parent\'s display is set to none');
