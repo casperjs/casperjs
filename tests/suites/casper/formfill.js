@@ -1,6 +1,7 @@
 /*eslint strict:0*/
 var fs = require('fs');
 var selectXPath = require('casper').selectXPath;
+var exp = false;
 
 function testFormValues(test) {
     test.assertField('email', 'chuck@norris.com',
@@ -56,7 +57,18 @@ function skipPhantom200 (test, nb) {
     });
 }
 
-casper.test.begin('fill() & fillNames() tests', 18, function(test) {
+function skipSlimer095 (test, nb) {
+    return test.skipIfEngine(nb, {
+        name: 'slimerjs',
+        version: {
+            min: '0.8.0',
+            max: '0.9.4'
+        },
+        message: 'filePicker method missing'
+    });
+}
+
+casper.test.begin('fill() & fillNames() tests', 19, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -73,10 +85,15 @@ casper.test.begin('fill() & fillNames() tests', 18, function(test) {
             strange:       "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test, 1)) {
+        if (!skipPhantom200(test, 2)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
+            if (!skipSlimer095(test,1)) {
+                test.assertEvalEquals(function() {
+                   return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
+                }, true, 'can check a form file value');
+            }
         }
     });
     casper.thenClick('input[type="submit"]', function() {
@@ -87,7 +104,7 @@ casper.test.begin('fill() & fillNames() tests', 18, function(test) {
     });
 });
 
-casper.test.begin('fillLabels() tests', 18, function(test) {
+casper.test.begin('fillLabels() tests', 19, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -105,10 +122,15 @@ casper.test.begin('fillLabels() tests', 18, function(test) {
             Strange:       "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test, 1)) {
+        if (!skipPhantom200(test, 2)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
+            if (!skipSlimer095(test,1)) {
+                test.assertEvalEquals(function() {
+                   return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
+                }, true, 'can check a form file value');
+            }
         }
     });
     casper.thenClick('input[type="submit"]', function() {
@@ -119,7 +141,7 @@ casper.test.begin('fillLabels() tests', 18, function(test) {
     });
 });
 
-casper.test.begin('fillSelectors() tests', 18, function(test) {
+casper.test.begin('fillSelectors() tests', 19, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
     casper.start('tests/site/form.html', function() {
@@ -136,10 +158,15 @@ casper.test.begin('fillSelectors() tests', 18, function(test) {
             "input[name='strange']":      "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test, 1)) {
+        if (!skipPhantom200(test, 2)) {
             test.assertEvalEquals(function() {
                 return __utils__.findOne('input[name="file"]').files.length === 1;
             }, true, 'can select a file to upload');
+            if (!skipSlimer095(test,1)) {
+                test.assertEvalEquals(function() {
+                   return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
+                }, true, 'can check a form file value');
+            }
         }
     });
     casper.thenClick('input[type="submit"]', function() {
@@ -150,28 +177,58 @@ casper.test.begin('fillSelectors() tests', 18, function(test) {
     });
 });
 
-casper.test.begin('fillXPath() tests', 17, function(test) {
-    casper.start('tests/site/form.html', function() {
-        this.fillXPath('form[action="result.html"]', {
-            '//input[@name="email"]':       'chuck@norris.com',
-            '//input[@name="password"]':    42,
-            '//textarea[@name="content"]':  'Am watching thou',
-            '//input[@name="check"]':       true,
-            '//input[@name="choice"]':      'no',
-            '//select[@name="topic"]':      'bar',
-            '//select[@name="multitopic"]': ['bar', 'car'],
-            '//input[@name="checklist[]"]': ['1', '3'],
-            '//input[@name="strange"]':     "very"
+casper.test.begin('fillXPath() tests', 19, {
+
+    setUp: function(test) {
+        var self = this;
+        var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+        casper.removeAllFilters('page.filePicker');
+        casper.setFilter('page.filePicker', function() {
+            exp = true;
+            return fpath;
         });
-        testFormValues(test);
-        // note: file inputs cannot be filled using XPath
-    });
-    casper.thenClick('input[type="submit"]', function() {
-        testUrl(test);
-    });
-    casper.run(function() {
-        test.done();
-    });
+    },
+
+    tearDown: function(test) {
+        casper.removeAllFilters('page.filePicker');
+    },
+
+    test: function(test) {
+        casper.start('tests/site/form.html', function() {
+            this.fillXPath('form[action="result.html"]', {
+                '//input[@name="email"]':       'chuck@norris.com',
+                '//input[@name="password"]':    42,
+                '//textarea[@name="content"]':  'Am watching thou',
+                '//input[@name="check"]':       true,
+                '//input[@name="choice"]':      'no',
+                '//select[@name="topic"]':      'bar',
+                '//select[@name="multitopic"]': ['bar', 'car'],
+                '//input[@name="checklist[]"]': ['1', '3'],
+                '//input[@name="strange"]':     "very"
+            });
+        });
+        casper.thenClick(selectXPath('//input[@name="file"]'), function() {
+            testFormValues(test);
+            if (!skipPhantom200(test, 2) && !skipSlimer095(test,2)) {
+                casper.waitFor(function() {
+                    return exp;
+                    }, function() {
+                    test.assertEvalEquals(function() {
+                        return __utils__.findOne('input[name="file"]').files.length === 1;
+                    }, true, 'can select a file to upload');
+                    test.assertEvalEquals(function() {
+                        return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
+                    }, true, 'can check a form file value');
+                });
+            }
+        });
+        casper.thenClick('input[type="submit"]', function() {
+            testUrl(test);
+        });
+        casper.run(function() {
+            test.done();
+        });
+    }
 });
 
 casper.test.begin('nonexistent fields', 1, function(test) {

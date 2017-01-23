@@ -2797,6 +2797,9 @@ function createPage(casper) {
         page.onError = function onError(msg, trace) {
             casper.emit('page.error', msg, trace);
         };
+        page.onFilePicker = function onFilePicker(olderFile) {
+            return casper.filter('page.filePicker', olderFile);
+        };
         page.onInitialized = function onInitialized() {
             casper.emit('page.initialized', page);
             if (utils.isFunction(casper.options.onPageInitialized)) {
