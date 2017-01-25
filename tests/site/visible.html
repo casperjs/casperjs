@@ -5,7 +5,10 @@
         <title>CasperJS test index</title>
         <script>
         setTimeout(function() {
-            document.querySelector('#img1').style.display = 'none';
+            document.querySelector('#img5').style.display = 'none';
+        }, 1000);
+        setTimeout(function() {
+            document.querySelector('#div1').style.display = 'none';
         }, 1000);
         </script>
     </head>
@@ -14,5 +17,21 @@
         <img src="images/phantom.png" id="img2">
         <img src="images/phantom.png" id="img3" style="visibility:hidden">
         <img src="images/phantom.png" id="img4" style="display:flex">
+        <img src="images/phantom.png" id="img5">
+        <div style="display:none"><button id="button1">button</button></div>
+        <div><button id="button2">button</button></div>
+        <!--currently the case of hidden parent is not handled-->
+        <!--<div style="visibility:hidden"><button id="button3">button</button></div>-->
+        <div id="div1"><button id="button4">button</button></div>
+        <svg height="300" version="1.1" width="800" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; position: relative;">
+            <circle id="circle1" cx="719" cy="140" r="15" fill="#000000"></circle>
+            <svg style="display: none">
+                <circle div="circle2" cx="20" cy="20" r="15" fill="#000000"></circle>
+            </svg>
+            <!-- currently the case of hidden parent is not handled-->
+            <!-- <svg style="visibility: hidden">
+                <circle div="circle3" cx="20" cy="20" r="15" fill="#000000"></circle>
+            </svg>-->
+        </svg>
     </body>
 </html>
