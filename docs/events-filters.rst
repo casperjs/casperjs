@@ -664,6 +664,24 @@ Allows to react on a javascript ``confirm()`` call::
     casper.setFilter("page.confirm", function(msg) {
         return msg === "Do you like vbscript?" ? false : true;
     });
+    
+``page.filePicker``
+~~~~~~~~~~~~~~~~
+
+**Arguments:** ``oldFile``
+
+**Return type:** ``String``
+
+.. versionadded:: 1.4
+
+Allows to react on a webpage.onFilePicker call::
+
+    casper.setFilter("page.filePicker", function(oldFile) {
+        if (system.os.name === 'windows') {
+            return 'C:\\Windows\\System32\\drivers\\etc\\hosts';
+        }
+        return '/etc/hosts';
+    });
 
 ``page.prompt``
 ~~~~~~~~~~~~~~~
