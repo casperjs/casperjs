@@ -14,6 +14,16 @@ casper.test.begin('click() tests', 2, function(test) {
     });
 });
 
+casper.test.begin('click() tests', 1, function(test) {
+    casper.start('tests/site/index.html', function() {
+        this.click('area');
+    }).then(function() {
+        test.assertTitle('CasperJS test form', 'Casper.thenClick() can click on an area tag');
+    }).run(function() {
+        test.done();
+    });
+});
+
 casper.test.begin('onclick variants tests', 8, function(test) {
     casper.start('tests/site/click.html', function() {
         test.assert(this.click('#test1'), 'Casper.click() can click an `href="javascript:` link');

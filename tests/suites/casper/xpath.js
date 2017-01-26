@@ -17,7 +17,7 @@ casper.test.begin('XPath tests', 6, function(test) {
         }, 3, 'Correct number of elements are found');
     });
 
-    casper.thenClick(x('/html/body/a[2]'), function() {
+    casper.thenClick(x('/html/body/a[1]'), function() {
         test.assertTitle('CasperJS test form', 'Clicking XPath works as expected');
         this.fill(x('/html/body/form'), {
             email: 'chuck@norris.com'
