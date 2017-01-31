@@ -405,6 +405,31 @@
             }
         };
 
+
+        /**
+         * Convert a Xpath or a css Selector into absolute css3 selector
+         *
+         * @param  String|Object     selector    CSS3/XPath selector
+         * @param  HTMLElement|null  scope       Element to search child elements within
+         * @param  String            limit       Parent limit NodeName
+         * @return String
+         */
+
+        this.getCssSelector = function getCssSelector(selector, scope, limit) {
+            scope = scope || this.options.scope;
+            limit = limit || 'BODY';
+            var elem = this.findOne(selector, scope);
+            if (!!elem) {
+                var str = "";
+                while (elem.nodeName.toUpperCase() !== limit.toUpperCase()) {
+                    str = "> " + elem.nodeName + ':nth-child(' + ([].indexOf.call(elem.parentNode.children, elem) + 1) + ') ' + str;
+                    elem = elem.parentNode;
+                }
+                return str.substring(2);
+            }
+            return this.findOne(selector).nodeName;
+        };
+        
         /**
          * Retrieves total document height.
          * http://james.padolsey.com/javascript/get-document-height-cross-browser/
