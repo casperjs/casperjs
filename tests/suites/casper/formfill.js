@@ -3,45 +3,6 @@ var fs = require('fs');
 var selectXPath = require('casper').selectXPath;
 var exp = false;
 
-function testFormValues(test) {
-    test.assertField('email', 'chuck@norris.com',
-        'can fill an input[type=text] form field');
-    test.assertField('password', '42',
-        'can fill an input[type=password] form field');
-    test.assertField('content', 'Am watching thou',
-        'can fill a textarea form field');
-    test.assertField('topic', 'bar',
-        'can pick a value from a select form field');
-    test.assertField('multitopic', ['bar', 'car'],
-        'can pick a set of values from a multiselect form field');
-    test.assertField('check', true,
-        'can check a form checkbox');
-    test.assertEvalEquals(function() {
-        return __utils__.findOne('input[name="choice"][value="no"]').checked;
-    }, true, 'can check a form radio button 1/2');
-    test.assertEvalEquals(function() {
-        return __utils__.findOne('input[name="choice"][value="yes"]').checked;
-    }, false, 'can check a form radio button 2/2');
-    test.assertEvalEquals(function() {
-        return (__utils__.findOne('input[name="checklist[]"][value="1"]').checked &&
-               !__utils__.findOne('input[name="checklist[]"][value="2"]').checked &&
-                __utils__.findOne('input[name="checklist[]"][value="3"]').checked);
-    }, true, 'can fill a list of checkboxes');
-}
-
-function testUrl(test) {
-    casper.waitForUrl(/(^\?|&)submit=submit($|&)/, function() {
-        test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
-        test.assertUrlMatch(/password=42/, 'input[type=password] field was submitted');
-        test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
-        test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
-        test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
-        test.assertUrlMatch(/topic=bar/, 'select field was submitted');
-        test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
-        test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
-    });
-}
-
 /**
  * Known regression in 2.0.0, will be fixed in 2.0.1
  * https://github.com/ariya/phantomjs/issues/12506
@@ -68,6 +29,57 @@ function skipSlimer095 (test, nb) {
     });
 }
 
+function testFormValues(test) {
+    test.assertField('email', 'chuck@norris.com',
+        'can fill an input[type=text] form field');
+    test.assertField('password', '42',
+        'can fill an input[type=password] form field');
+    test.assertField('content', 'Am watching thou',
+        'can fill a textarea form field');
+    test.assertField('topic', 'bar',
+        'can pick a value from a select form field');
+    test.assertField('multitopic', ['bar', 'car'],
+        'can pick a set of values from a multiselect form field');
+    test.assertField('check', true,
+        'can check a form checkbox');
+    test.assertEvalEquals(function() {
+        return __utils__.findOne('input[name="choice"][value="no"]').checked;
+    }, true, 'can check a form radio button 1/2');
+    test.assertEvalEquals(function() {
+        return __utils__.findOne('input[name="choice"][value="yes"]').checked;
+    }, false, 'can check a form radio button 2/2');
+    test.assertEvalEquals(function() {
+        return (__utils__.findOne('input[name="checklist[]"][value="1"]').checked &&
+               !__utils__.findOne('input[name="checklist[]"][value="2"]').checked &&
+                __utils__.findOne('input[name="checklist[]"][value="3"]').checked);
+    }, true, 'can fill a list of checkboxes');
+    if (!skipPhantom200(test, 2)) {
+        test.assertEvalEquals(function() {
+            return __utils__.findOne('input[name="file"]').files.length === 1;
+        }, true, 'can select a file to upload');
+        if (!skipSlimer095(test,1)) {
+            test.assertEvalEquals(function() {
+               return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
+            }, true, 'can check a form file value');
+        }
+    }
+}
+
+function testUrl(test) {
+    casper.waitForUrl(/(^\?|&)submit=submit($|&)/, function() {
+        test.assertUrlMatch(/email=chuck@norris.com/, 'input[type=email] field was submitted');
+        test.assertUrlMatch(/password=42/, 'input[type=password] field was submitted');
+        test.assertUrlMatch(/content=Am\+watching\+thou/, 'textarea field was submitted');
+        test.assertUrlMatch(/check=on/, 'input[type=checkbox] field was submitted');
+        test.assertUrlMatch(/choice=no/, 'input[type=radio] field was submitted');
+        test.assertUrlMatch(/topic=bar/, 'select field was submitted');
+        test.assertUrlMatch(/multitopic=bar&multitopic=car/, 'multitopic select fields were submitted');
+        test.assertUrlMatch(/strange=very/, 'strangely typed input field was submitted');
+    });
+}
+
+
+
 casper.test.begin('fill() & fillNames() tests', 19, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
 
@@ -85,16 +97,6 @@ casper.test.begin('fill() & fillNames() tests', 19, function(test) {
             strange:       "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test, 2)) {
-            test.assertEvalEquals(function() {
-                return __utils__.findOne('input[name="file"]').files.length === 1;
-            }, true, 'can select a file to upload');
-            if (!skipSlimer095(test,1)) {
-                test.assertEvalEquals(function() {
-                   return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
-                }, true, 'can check a form file value');
-            }
-        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -122,16 +124,6 @@ casper.test.begin('fillLabels() tests', 19, function(test) {
             Strange:       "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test, 2)) {
-            test.assertEvalEquals(function() {
-                return __utils__.findOne('input[name="file"]').files.length === 1;
-            }, true, 'can select a file to upload');
-            if (!skipSlimer095(test,1)) {
-                test.assertEvalEquals(function() {
-                   return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
-                }, true, 'can check a form file value');
-            }
-        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -158,16 +150,6 @@ casper.test.begin('fillSelectors() tests', 19, function(test) {
             "input[name='strange']":      "very"
         });
         testFormValues(test);
-        if (!skipPhantom200(test, 2)) {
-            test.assertEvalEquals(function() {
-                return __utils__.findOne('input[name="file"]').files.length === 1;
-            }, true, 'can select a file to upload');
-            if (!skipSlimer095(test,1)) {
-                test.assertEvalEquals(function() {
-                   return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
-                }, true, 'can check a form file value');
-            }
-        }
     });
     casper.thenClick('input[type="submit"]', function() {
         testUrl(test);
@@ -194,6 +176,7 @@ casper.test.begin('fillXPath() tests', 19, {
     },
 
     test: function(test) {
+        var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
         casper.start('tests/site/form.html', function() {
             this.fillXPath('form[action="result.html"]', {
                 '//input[@name="email"]':       'chuck@norris.com',
@@ -202,6 +185,7 @@ casper.test.begin('fillXPath() tests', 19, {
                 '//input[@name="check"]':       true,
                 '//input[@name="choice"]':      'no',
                 '//select[@name="topic"]':      'bar',
+                '//input[@name="file"]':         fpath,
                 '//select[@name="multitopic"]': ['bar', 'car'],
                 '//input[@name="checklist[]"]': ['1', '3'],
                 '//input[@name="strange"]':     "very"
@@ -209,18 +193,6 @@ casper.test.begin('fillXPath() tests', 19, {
         });
         casper.thenClick(selectXPath('//input[@name="file"]'), function() {
             testFormValues(test);
-            if (!skipPhantom200(test, 2) && !skipSlimer095(test,2)) {
-                casper.waitFor(function() {
-                    return exp;
-                    }, function() {
-                    test.assertEvalEquals(function() {
-                        return __utils__.findOne('input[name="file"]').files.length === 1;
-                    }, true, 'can select a file to upload');
-                    test.assertEvalEquals(function() {
-                        return __utils__.findOne('input[name="file"]').value.indexOf('README.md') !== -1;
-                    }, true, 'can check a form file value');
-                });
-            }
         });
         casper.thenClick('input[type="submit"]', function() {
             testUrl(test);
@@ -396,7 +368,8 @@ casper.test.begin('fillSelectors() tests', 4, function(test) {
 //
 // setFieldValue() tests
 //
-casper.test.begin('setFieldValue() tests with css3 selector and form', 9, function(test) {
+casper.test.begin('setFieldValue() tests with css3 selector and form', 11, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     casper.start('tests/site/form.html', function() {
         var data = {
             "input[name='email']":        'chuck@norris.com',
@@ -405,6 +378,7 @@ casper.test.begin('setFieldValue() tests with css3 selector and form', 9, functi
             "input[name='check']":        true,
             "input[name='choice']":       'no',
             "select[name='topic']":       'bar',
+            "input[name='file']":         fpath,
             "select[name='multitopic']":  ['bar', 'car'],
             "input[name='checklist[]']":  ['1', '3'],
             "input[name='strange']":      "very"
@@ -421,7 +395,8 @@ casper.test.begin('setFieldValue() tests with css3 selector and form', 9, functi
     });
 });
 
-casper.test.begin('setFieldValue() tests with XPath selector', 9, function(test) {
+casper.test.begin('setFieldValue() tests with XPath selector', 11, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     casper.start('tests/site/form.html', function() {
         var data = {
             '//input[@name="email"]':       'chuck@norris.com',
@@ -430,6 +405,7 @@ casper.test.begin('setFieldValue() tests with XPath selector', 9, function(test)
             '//input[@name="check"]':       true,
             '//input[@name="choice"]':      'no',
             '//select[@name="topic"]':      'bar',
+            '//input[@name="file"]':         fpath,
             '//select[@name="multitopic"]': ['bar', 'car'],
             '//input[@name="checklist[]"]': ['1', '3'],
             '//input[@name="strange"]':     "very"
@@ -446,7 +422,8 @@ casper.test.begin('setFieldValue() tests with XPath selector', 9, function(test)
     });
 });
 
-casper.test.begin('setFieldValueName() tests', 9, function(test) {
+casper.test.begin('setFieldValueName() tests', 11, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     casper.start('tests/site/form.html', function() {
         var data = {
             email:         'chuck@norris.com',
@@ -455,6 +432,7 @@ casper.test.begin('setFieldValueName() tests', 9, function(test) {
             check:         true,
             choice:        'no',
             topic:         'bar',
+            file:          fpath,
             multitopic:    ['bar', 'car'],
             'checklist[]': ['1', '3'],
             strange:       "very"
@@ -471,8 +449,9 @@ casper.test.begin('setFieldValueName() tests', 9, function(test) {
     });
 });
 
-casper.test.begin('setFieldValueLabel() tests', 9, function(test) {
-    casper.start('tests/site/form.html', function() {
+casper.test.begin('setFieldValueLabel() tests', 11, function(test) {
+    var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
+    casper.start('tests/site/form.html', function() {0
         var data = {
             Email:         'chuck@norris.com',
             Password:      42,
@@ -480,12 +459,12 @@ casper.test.begin('setFieldValueLabel() tests', 9, function(test) {
             Check:         true,
             No:            true,
             Topic:         'bar',
+            File:          fpath,
             Multitopic:    ['bar', 'car'],
             "1":           true,
             "3":           true,
             Strange:       "very"     
         };
-
         for (var selector in data){
             this.setFieldValueLabel(selector, data[selector]);
         }

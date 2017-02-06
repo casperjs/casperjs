@@ -813,7 +813,7 @@ Casper.prototype.fetchText = function fetchText(selector) {
 Casper.prototype.fillForm = function fillForm(selector, vals, options) {
     "use strict";
     this.checkStarted();
-
+    var self = this;
     var selectorType = options && options.selectorType || "names",
         submit = !!(options && options.submit);
 
@@ -838,29 +838,28 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
 
     // File uploads
     if (fillResults.files && fillResults.files.length > 0) {
-        if (utils.isObject(selector) && selector.type === 'xpath') {
-            this.warn('Filling file upload fields is currently not supported using ' +
-                      'XPath selectors; Please use a CSS selector instead.');
-        } else {
-            fillResults.files.forEach(function _forEach(file) {
-                if (!file || !file.path) {
-                    return;
+        fillResults.files.forEach(function _forEach(file) {
+            if (!file || !file.path) {
+                return;
+            }
+            var paths = (utils.isArray(file.path) && file.path.length > 0) ? file.path : [file.path];
+            paths.map(function(filePath) {
+                if (!fs.exists(filePath)) {
+                    throw new CasperError('Cannot upload nonexistent file: ' + filePath);
                 }
-                var paths = (utils.isArray(file.path) && file.path.length > 0) ? file.path : [file.path];
-                paths.map(function(filePath) {
-                            if (!fs.exists(filePath)) {
-                                throw new CasperError('Cannot upload nonexistent file: ' + filePath);
-                            }
-                        },this);
-                var fileFieldSelector;
-                if (file.type === "names") {
-                    fileFieldSelector = [selector, 'input[name="' + file.selector + '"]'].join(' ');
-                } else if (file.type === "css" || file.type === "labels") {
-                    fileFieldSelector = [selector, file.selector].join(' ');
-                }
-                this.page.uploadFile(fileFieldSelector, paths);
-            }.bind(this));
-        }
+            },this);
+            var fileFieldSelector;
+            if (file.type === "names") {
+                fileFieldSelector = [selector, 'input[name="' + file.selector + '"]'].join(' ');
+            } else if (file.type === "css" || file.type === "labels") {
+                fileFieldSelector = [selector, file.selector].join(' ');
+            } else if (file.type === "xpath") {
+                fileFieldSelector = [selector, self.evaluate(function _evaluate(selector, scope, limit) {
+                    return __utils__.getCssSelector(selector, scope, limit);
+                }, selectXPath(file.selector), selector, 'FORM')].join(' ');
+            }
+            this.page.uploadFile(fileFieldSelector, paths);
+        }.bind(this));
     }
 
     // Form submission?
@@ -1761,12 +1760,21 @@ Casper.prototype.setFieldValue = function setFieldValue(selector, value, form, o
         if (selectorType) {
             selector = __utils__.makeSelector(selector, selectorType);
         }
+        var info = __utils__.getElementInfo(selector);
+        if (!!info && info.nodeName === 'input' && info.attributes.type === 'file') {
+            return __utils__.getCssSelector(selector);
+        }
         return __utils__.setFieldValue(selector, value, form);
     }, selector, value, form, selectorType);
 
     if (!result) {
         throw new CasperError("Unable to set field '" + selector + " to value: " + value) +
             ' in setFieldValue().';
+    } else if (typeof result === "string") {
+        if (!value || !fs.exists(value)) {
+            throw new CasperError('Cannot upload nonexistent file: ' + value);
+        }
+        this.page.uploadFile(result, value);
     }
 };
 
@@ -2651,6 +2659,7 @@ function createPage(casper) {
     mainPage.isPopup = false;
 
     var onClosing = function onClosing(closedPopup) {
+        try {
         if (closedPopup.isPopup) {
             if (casper.page.id === closedPopup.id) {
                 casper.page = casper.mainPage;
@@ -2661,6 +2670,7 @@ function createPage(casper) {
             casper.page = null;
             casper.newPage();
         }
+        } catch(e){}
     };
 
     var onLoadFinished = function onLoadFinished(status) {
