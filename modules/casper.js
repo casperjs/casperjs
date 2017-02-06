@@ -141,6 +141,7 @@ var Casper = function Casper(options) {
     }
     this.colorizer = this.getColorizer();
     this.mouse = mouse.create(this);
+    this.frames = [];
     this.popups = pagestack.create();
     // properties
     this.checker = null;
@@ -2522,18 +2523,30 @@ Casper.prototype.withFrame = function withFrame(frameInfo, then) {
         }
         // make the frame page the currently active one
         this.page.switchToChildFrame(frameInfo);
+        this.frames.push(frameInfo);
     });
     try {
         this.then(then);
     } catch (e) {
         // revert to main page on error
         this.warn("Error while processing frame step: " + e);
-        this.page.switchToParentFrame();
         throw e;
     }
     return this.then(function _step() {
         // revert to main page
-        this.page.switchToParentFrame();
+        this.page.switchToMainFrame();
+        this.frames.pop();
+        for (var i = 0,l = this.frames.length; i < l ; i++) {
+            var frameInfo = this.frames[i];
+            if (utils.isNumber(frameInfo)) {
+                if (frameInfo > this.page.framesCount - 1) {
+                    break;
+                }
+            } else if (this.page.framesName.indexOf(frameInfo) === -1) {
+                break;
+            }
+            this.page.switchToFrame(frameInfo);
+        }
     });
 };
 
@@ -2671,6 +2684,18 @@ function createPage(casper) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
         }
+        casper.page.switchToMainFrame();
+        for (var i = 0,l = casper.frames.length; i < l ; i++) {
+            var frameInfo = casper.frames[i];
+            if (utils.isNumber(frameInfo)) {
+                if (frameInfo > casper.page.framesCount - 1) {
+                    break;
+                }
+            } else if (casper.page.framesName.indexOf(frameInfo) === -1) {
+                break;
+            }
+            casper.page.switchToFrame(frameInfo);
+        }
         // local client scripts
         casper.injectClientScripts(this);
         // remote client scripts
@@ -2699,6 +2724,7 @@ function createPage(casper) {
         casper.log(f('Navigation requested: url=%s, type=%s, willNavigate=%s, isMainFrame=%s',
                      url, type, willNavigate, isMainFrame), "debug");
         this.browserInitializing = false;
+        casper.page.switchToMainFrame();
         if (isMainFrame && casper.requestUrl !== url) {
             var currentUrl = casper.requestUrl;
             var newUrl = url;

@@ -4,9 +4,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>CasperJS test frames</title>
     </head>
-    <frameset cols="50%,50%%">
-        <frame src="frame1.html" name="frame1">
-        <frame src="frame2.html" name="frame2">
+    <frameset rows="50%,50%">
+        <frameset cols="50%,50%">
+            <frame src="frame1.html" name="frame1">
+            <frame src="frame2.html" name="frame2">
+        </frameset>
+        <frame src="frame4.html" name="frame4">
     </frameset>
 </html>
 
