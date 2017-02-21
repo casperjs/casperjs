@@ -145,7 +145,7 @@ matrix:
       addons: 
          firefox: latest-esr
     - env: >
-        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.10.0" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="0.10.2" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
         ENGINE_ARCHIVE_URL="https://github.com/casperjs/slimerjs-builds/releases/download/v0.10.2/slimerjs-0.10.2.zip"
       os: linux
       addons: 
