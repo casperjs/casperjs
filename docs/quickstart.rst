@@ -29,11 +29,29 @@ Fire up your favorite editor, create and save a ``sample.js`` file like below::
 
     casper.run();
 
-Run it:
+Run it (with python):
 
 .. code-block:: text
 
     $ casperjs sample.js
+    
+Run it (with node):
+
+.. code-block:: text
+
+    $ node casperjs.js sample.js
+    
+Run it (with PhantomJS):
+
+.. code-block:: text
+
+    $ phantomjs casperjs.js sample.js
+    
+Run it (on windows):
+
+.. code-block:: text
+
+    C:\casperjs\bin> casperjs.exe sample.js
 
 You should get something like this:
 

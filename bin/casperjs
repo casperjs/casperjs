@@ -136,6 +136,10 @@ for arg in SYS_ARGS:
         if arg_name == native:
             ENGINE_ARGS.append(arg)
             found = True
+    if not found and arg_name == 'env':
+        ENVIRONMENT = arg[6:].split('=')
+        os.putenv(ENVIRONMENT[0], ENVIRONMENT[1].strip("'").strip('"'))
+        found = True
     if not found and arg_name != 'engine':
         CASPER_ARGS.append(arg)
 
@@ -149,8 +153,8 @@ CASPER_COMMAND.extend([
 CASPER_COMMAND.extend(CASPER_ARGS)
 
 try:
-    # print(CASPER_COMMAND)
     os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
-except OSError as err:
+except OSError:
+    err = os.strerror(2)
     print('Fatal: %s; did you install %s?' % (err, ENGINE))
     sys.exit(1)
