@@ -1221,7 +1221,7 @@ Tester.prototype.done = function done() {
             if (!this.options.concise) {
                 var message = [
                     this.colorize('PASS', 'INFO'),
-                    this.formatMessage(description)
+                    this.formatMessage(this.currentSuite.name)
                 ];
 
                 if (config.planned) {
