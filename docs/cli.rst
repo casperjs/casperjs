@@ -72,6 +72,10 @@ Execution results:
 
 .. hint::
 
+   You may need to wrap an option containing a space with escaped double quotes in Windows. --foo=\"space bar\"
+
+.. hint::
+
    What if you want to check if any arg or option has been passed to your script? Here you go::
 
        // removing default options passed by the Python executable
