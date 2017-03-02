@@ -72,7 +72,7 @@ Execution results:
 
 .. hint::
 
-   You may need to wrap an option containing a space with escaped double quotes in Windows. --foo=\"space bar\"
+   You may need to wrap an option containing a space with escaped double quotes in Windows. --foo=\\"space bar\\"
 
 .. hint::
 
