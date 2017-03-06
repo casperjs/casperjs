@@ -44,6 +44,6 @@ casper.test.begin('logging tests', 4, function(test) {
     casper.run(function() {
         test.done();
         casper.options.logLevel = oldLevel;
-        casper.options.verbose = true;
+        casper.options.verbose = false;
     });
 });
