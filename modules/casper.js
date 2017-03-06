@@ -2717,7 +2717,6 @@ function createPage(casper) {
         casper.emit('load.finished', status);
         this.loadInProgress = false;
         if (this.isPopup) {
-            casper.popups.push(this);
             casper.emit('popup.loaded', this);
         }
     };
@@ -2880,7 +2879,6 @@ function createPage(casper) {
             casper.emit('url.changed', url);
         };
 
-        casper.emit('page.created', page);
         if (page.isPopup) {
             casper.emit('popup.created', page);
             if (casper.options.pageSettings.userAgent !== defaultUserAgent) {
@@ -2893,6 +2891,9 @@ function createPage(casper) {
             if (utils.isObject(casper.options.viewportSize)) {
                 page.viewportSize = casper.options.viewportSize;
             }
+            casper.popups.push(page);
+        } else {
+            casper.emit('page.created', page);
         }
     };
     onPageCreated(mainPage);
