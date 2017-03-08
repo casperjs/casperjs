@@ -1229,7 +1229,7 @@ Tester.prototype.done = function done() {
                         this.colorize(f('(%d test%s)',
                         config.planned,
                         config.planned > 1 ? 's' : ''), 'INFO')
-                    ])
+                    ]);
                 }
 
                 this.casper.echo(message.join(' '));
