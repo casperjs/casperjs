@@ -44,6 +44,10 @@ casper.test.begin("__utils__.sendAJAX() POST Custom Headers tests", 8, {
                 return __utils__.sendAJAX(url, 'POST', customData, true, customSettings);
             }, wsurl);
         }).then(function(){
+            casper.waitFor(function(){
+                return requestReceived !== null;
+            });
+        }).then(function(){
             test.assertEquals(requestReceived.method, "POST",
                 "AJAX POST Request has been received!");
             test.assertEquals(requestReceived.post, "requestData=dummydata",

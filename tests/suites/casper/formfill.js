@@ -451,7 +451,7 @@ casper.test.begin('setFieldValueName() tests', 11, function(test) {
 
 casper.test.begin('setFieldValueLabel() tests', 11, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
-    casper.start('tests/site/form.html', function() {0
+    casper.start('tests/site/form.html', function() {
         var data = {
             Email:         'chuck@norris.com',
             Password:      42,

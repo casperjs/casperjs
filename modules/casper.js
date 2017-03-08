@@ -29,7 +29,7 @@
  */
 
 /*global __utils__, CasperError, console, exports, phantom, patchRequire, require:true*/
-var require = patchRequire(require);
+require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
 var fs = require('fs');
@@ -119,6 +119,7 @@ var Casper = function Casper(options) {
         page:                null,
         pageSettings:        {
             localToRemoteUrlAccessEnabled: true,
+            javascriptEnabled:             true,
             userAgent:                     defaultUserAgent
         },
         remoteScripts:       [],
@@ -724,7 +725,7 @@ Casper.prototype.evaluate = function evaluate(fn, context) {
         return utils.clone(this.page.evaluate(fn));
     } else if (arguments.length === 2) {
         // check for closure signature if it matches context
-        if (utils.isObject(context) && eval(fn).length === Object.keys(context).length) {
+        if (utils.isObject(context) && fn.length === Object.keys(context).length) {
             /*
              * in case if user passes argument as one array with only one object.
              * evaluate shlould return original array with one object
@@ -1481,6 +1482,7 @@ Casper.prototype.open = function open(location, settings) {
     // current request url
     this.configureHttpAuth(location, settings);
     this.requestUrl = this.filter('open.location', location) || location;
+
     this.emit('open', this.requestUrl, settings);
     this.log(f('opening url: %s, HTTP %s', this.requestUrl, settings.method.toUpperCase()), "debug");
     // reset resources
@@ -1598,7 +1600,7 @@ Casper.prototype.runStep = function runStep(step) {
     "use strict";
     /*eslint max-statements:0*/
     this.checkStarted();
-    var skipLog = utils.isObject(step.options) && step.options.skipLog === true,
+    var skipLog = !!step.options && utils.isObject(step.options) && step.options.skipLog === true,
         stepInfo = f("Step %s %d/%d", step.name || "anonymous", this.step, this.steps.length),
         stepResult;
     function getCurrentSuiteId(casper) {
@@ -1691,7 +1693,7 @@ Casper.prototype.sendKeys = function(selector, keys, options) {
         }, selector);
         this.click(selector);
     }
-    var modifiers = utils.computeModifier(options && options.modifiers,
+    var modifiers = utils.computeModifier(options && options.modifiers || null,
                                           this.page.event.modifier);
     this.page.sendEvent(options.eventType, keys, null, null, modifiers);
     if (isTextInput && !options.keepFocus) {
@@ -2718,6 +2720,8 @@ function createPage(casper) {
         this.loadInProgress = false;
         if (this.isPopup) {
             casper.emit('popup.loaded', this);
+        } else {
+            casper.emit('page.loaded', this);
         }
     };
 
@@ -2842,8 +2846,8 @@ function createPage(casper) {
                 casper.options.onPageInitialized.call(casper, page);
             }
         };
-        page.onLongRunningScript = function onLongRunningScript() {
-            casper.emit('remote.longRunningScript', this);
+        page.onLongRunningScript = function onLongRunningScript(message) {
+            casper.emit('remote.longRunningScript', page, message);
         };
         page.onPrompt = function onPrompt(message, value) {
             return casper.filter('page.prompt', message, value);

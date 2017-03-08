@@ -181,6 +181,13 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
                 }).join('/');
             };
         }
+        
+        if (phantom.casperEngine === 'slimerjs' && slimer.version.major === 0 && slimer.version.minor <= 9){
+            fs.size = function (filename){
+                var t = fs.read(filename, "rt");
+                return t.length;
+            };
+        }
         return fs;
     })(require('fs'));
 

@@ -1,6 +1,6 @@
 /*eslint strict:0*/
 var server = require('webserver').create();
-var service = server.listen(8090, function(request, response) {
+var service = server.listen(8092, function(request, response) {
     var path = request.url.split('/');
     response.statusCode = 200;
      
@@ -43,15 +43,15 @@ var resourceTimeout =  function resourceTimeout (request) {
     casper.test.pass('resource.timeout matched');
 };
 
-var stopScript =  function stopScript (webpage) {
+var stopScript =  function stopScript (webpage, message) {
     webpage.stopJavaScript();
-    casper.test.pass('remote.longRunningScript matched');
+    casper.test.pass('remote.longRunningScript matched ' + message);
     return true;
 };
 
 var closeService = function closeService(message) {
     casper.test.begin(message, 0, function(test) {
-        casper.start('http://localhost:8090/').run(function() {
+        casper.start('http://localhost:8092/').run(function() {
             test.done();
             server.close();
         });
@@ -59,7 +59,7 @@ var closeService = function closeService(message) {
 };
 
 casper.test.begin('Link Navigation updates response', 2, function(test) {
-    casper.start('http://localhost:8090/', function(response) {
+    casper.start('http://localhost:8092/', function(response) {
         casper.click('a');
         casper.then(function(response) {
             test.assertUrlMatch(
@@ -78,7 +78,7 @@ casper.test.begin('Link Navigation updates response', 2, function(test) {
 });
 
 casper.test.begin('Form Submittal updates the response', 2, function(test) {
-    casper.start('http://localhost:8090/', function(response) {
+    casper.start('http://localhost:8092/', function(response) {
         casper.fill('form', {}, true);
         casper.then(function(response) {
             test.assertUrlMatch(
@@ -103,12 +103,11 @@ if (phantom.casperEngine === 'slimerjs' && utils.ltVersion(slimer.version, '0.10
 
         casper.on("resource.timeout",resourceTimeout);
         casper.page.settings.resourceTimeout = 1000;
-        casper.start('http://localhost:8090/indexscript2', function(response) {
+        casper.start('http://localhost:8092/indexscript2', function(response) {
             delete casper.page.settings.resourceTimeout;
             test.pass('unable to load page on time');
             casper.removeListener("resource.timeout", resourceTimeout);
         }).run(function() {
-            
             test.done();
         });
     });
@@ -116,7 +115,7 @@ if (phantom.casperEngine === 'slimerjs' && utils.ltVersion(slimer.version, '0.10
     casper.test.begin('Catch resourceTimeout on No response', 2, function(test) {
         casper.on("resource.timeout",resourceTimeout);
         casper.page.settings.resourceTimeout = 1000;
-        casper.start('http://localhost:8090/indexscript', function(response) {
+        casper.start('http://localhost:8092/indexscript', function(response) {
             delete casper.page.settings.resourceTimeout;
             test.pass('unable to load page on time');
             casper.removeListener("resource.timeout", resourceTimeout);
@@ -131,7 +130,7 @@ if (phantom.casperEngine === 'slimerjs' && utils.ltVersion(slimer.version, '0.10
     } else {
         casper.test.begin('Catch longRunningScript', 2, function(test) {
             casper.on("remote.longRunningScript", stopScript);
-            casper.start('http://localhost:8090/longScript', function(response) {
+            casper.start('http://localhost:8092/longScript', function(response) {
                 test.pass('unable to load page on time because of script');
                 casper.removeListener("remote.longRunningScript", stopScript);
             }).run(function() {

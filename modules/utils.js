@@ -29,7 +29,7 @@
  */
 
 
-var require = patchRequire(require);
+require = patchRequire(require);
 
 /**
  * Provides a better typeof operator equivalent, able to retrieve the array
@@ -798,7 +798,7 @@ function unique(array) {
         r = [];
     for (var i = 0, len = array.length; i !== len; i++) {
         var d = array[i];
-        if (o[d] !== 1) {
+        if (typeof o[d] === "undefined") {
             o[d] = 1;
             r[r.length] = d;
         }
