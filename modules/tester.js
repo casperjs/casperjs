@@ -1219,13 +1219,20 @@ Tester.prototype.done = function done() {
             this.suiteResults.push(this.currentSuite);
             
             if (!this.options.concise) {
-                this.casper.echo([
+                var message = [
                     this.colorize('PASS', 'INFO'),
-                    this.formatMessage(this.currentSuite.name),
-                    this.colorize(f('(%d test%s)',
-                            config.planned,
-                            config.planned > 1 ? 's' : ''), 'INFO')
-                ].join(' '));
+                    this.formatMessage(this.currentSuite.name)
+                ];
+
+                if (config.planned) {
+                    message.push([
+                        this.colorize(f('(%d test%s)',
+                        config.planned,
+                        config.planned > 1 ? 's' : ''), 'INFO')
+                    ]);
+                }
+
+                this.casper.echo(message.join(' '));
             }
             
             this.currentSuite = undefined;
