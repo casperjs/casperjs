@@ -607,6 +607,8 @@ Filters allow you to alter some values asynchronously. Sounds obscure? Let's tak
 
 There you have it, every single requested url will have this appended. Let me bet you'll find far more interesting use cases than my silly one ;)
 
+Every filter methods called emit an identical event. For instance, "page.confirm" filter sends "page.confirm" event.
+
 Here'a the list of all available filters with their expected return value:
 
 Filters reference
