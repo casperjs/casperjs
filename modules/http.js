@@ -28,7 +28,7 @@
  *
  */
 
-var require = patchRequire(require);
+require = patchRequire(require);
 var utils = require('utils');
 
 /*
@@ -67,6 +67,14 @@ exports.augmentResponse = function(response) {
     if (!utils.isHTTPResource(response)) {
         return;
     }
-    response.headers.__proto__ = responseHeaders.prototype;
+
+    // response.headers.__proto__ = responseHeaders.prototype;
+    Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
+        obj.__proto__ = proto;
+        return obj;
+    };
+
+    Object.setPrototypeOf(response.headers, responseHeaders.prototype);
+
     return response;
 };

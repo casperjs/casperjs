@@ -30,7 +30,7 @@
 
 /*global CasperError, exports, patchRequire, require:true*/
 
-var require = patchRequire(require);
+require = patchRequire(require);
 var utils = require('utils');
 
 var Mouse = function Mouse(casper) {

@@ -1,6 +1,7 @@
 /*eslint strict:0*/
 /*global CasperError, console, phantom, require*/
 
+require = patchRequire(require);
 var casper = require("casper").create();
 
 var links = [

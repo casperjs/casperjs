@@ -30,7 +30,7 @@
 
 /*global exports, console, patchRequire, require:true*/
 
-var require = patchRequire(require);
+require = patchRequire(require);
 var fs = require('fs');
 var utils = require('utils');
 var env = require('system').env;

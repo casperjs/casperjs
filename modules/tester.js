@@ -28,7 +28,7 @@
  *
  */
 
-var require = patchRequire(require);
+require = patchRequire(require);
 var fs = require('fs');
 var events = require('events');
 var utils = require('utils');
@@ -114,6 +114,7 @@ var Tester = function Tester(casper, options) {
         failText: "FAIL", // text to use for a failed test
         passText: "PASS", // text to use for a succesful test
         skipText: "SKIP", // text to use for a skipped test
+        save:     false,  // false to not save 
         pad:      80    , // maximum number of chars for a result line
         warnText: "WARN"  // text to use for a dubious test
     }, options);
