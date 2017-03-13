@@ -272,12 +272,22 @@ PhantomJS's WebPage settings object. Available settings are:
 
 - ``javascriptEnabled`` defines whether to execute the script in the page or not (default to ``true``)
 - ``loadImages`` defines whether to load the inlined images or not
-- ``loadPlugins`` defines whether to load NPAPI plugins (Flash, Silverlight, …) or not
 - ``localToRemoteUrlAccessEnabled`` defines whether local resource (e.g. from file) can access remote URLs or not (default to ``false``)
 - ``userAgent`` defines the user agent sent to server when the web page requests resources
 - ``userName`` sets the user name used for HTTP authentication
 - ``password`` sets the password used for HTTP authentication
+- ``resourceTimeout`` (in milli-secs) defines the timeout after which any resource requested will stop trying and proceed with other parts of the page. onResourceTimeout callback will be called on timeout. undefined (default value) means default gecko parameters.
+
+PhantomJS specific settings :
+
 - ``XSSAuditingEnabled`` defines whether load requests should be monitored for cross-site scripting attempts (default to ``false``)
+- ``webSecurityEnabled`` defines whether web security should be enabled or not (defaults to true)
+
+SlimerJS specific settings :
+
+- ``allowMedia`` false to deactivate the loading of media (audio / video). Default: true. (SlimerJS only)
+- ``maxAuthAttempts`` indicate the maximum of attempts of HTTP authentication. (SlimerJS 0.9)
+- ``plainTextAllContent`` true to indicate that webpage.plainText returns everything, even content of script elements, invisible elements etc.. Default: false.
 
 .. index:: Remote scripts
 
