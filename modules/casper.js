@@ -788,6 +788,7 @@ Casper.prototype.exit = function exit(status) {
     "use strict";
     this.emit('exit', status);
     this.die = function(){};
+    this.exiting = true;
     setTimeout(function() { phantom.exit(status); }, 0);
 };
 
@@ -2661,18 +2662,16 @@ function createPage(casper) {
     mainPage.isPopup = false;
 
     var onClosing = function onClosing(closedPopup) {
-        try {
         if (closedPopup.isPopup) {
             if (casper.page.id === closedPopup.id) {
                 casper.page = casper.mainPage;
             }
             casper.popups.clean();
             casper.emit('popup.closed', closedPopup);
-        } else {
+        } else if (!this.exiting) {
             casper.page = null;
             casper.newPage();
         }
-        } catch(e){}
     };
 
     var onLoadFinished = function onLoadFinished(status) {
