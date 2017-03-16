@@ -237,3 +237,4 @@ Let's say you want to be able to change the Uri your tests visits depending on w
     casper.test.begin(...)
     
 
+You can find the complete documentation for the cli object in http://docs.casperjs.org/en/latest/cli.html 
