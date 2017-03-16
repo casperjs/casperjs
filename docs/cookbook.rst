@@ -216,3 +216,24 @@ Assuming a page containing a draggable element like that `one <http://codepen.io
       test.done();
     });
   });
+
+
+Passing parameters into your tests
+----------------------------------
+
+Let's say you want to be able to change the Uri your tests visits depending on what you are testing. To do this, you can add custom `--parameter=value` to your cli. 
+
+.. code-block:: javascript
+
+    // casperjs test /foo/bar --url=test.html
+    var url = 'http://localhost:8000'
+    var cli = casper.cli
+
+    if (cli.has('url')) {
+      url = cli.get('url')
+    }
+    console.log('\n\tUsing url: ' + url + '\n')
+
+    casper.test.begin(...)
+    
+
