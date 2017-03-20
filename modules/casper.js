@@ -405,7 +405,7 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
 Casper.prototype.checkStep = function checkStep(self, onComplete) {
     "use strict";
 
-    if (self.pendingWait || self.page.loadInProgress || self.navigationRequested || self.page.browserInitializing ) {
+    if (self.page !== null && (self.pendingWait || self.page.loadInProgress || self.navigationRequested || self.page.browserInitializing )) {
         return;
     }
     var step = self.steps[self.step++];
@@ -442,6 +442,9 @@ Casper.prototype.checkStarted = function checkStarted() {
     if (!this.started) {
         throw new CasperError(f("Casper is not started, can't execute `%s()`",
                                 checkStarted.caller.name));
+    }
+    if (this.page === null) {
+        this.newPage();
     }
 };
 
@@ -787,7 +790,6 @@ Casper.prototype.exit = function exit(status) {
     "use strict";
     this.emit('exit', status);
     this.die = function(){};
-    this.exiting = true;
     setTimeout(function() { phantom.exit(status); }, 0);
 };
 
@@ -2840,7 +2842,10 @@ Casper.prototype.withPopup = function withPopup(popupInfo, then) {
 
 Casper.prototype.newPage = function newPage() {
     "use strict";
-    this.checkStarted();
+    if (!this.started) {
+        throw new CasperError(f("Casper is not started, can't execute `%s()`",
+                                newPage.caller.name));
+    }
     if (this.page !== null) {
         this.page.close();
     }
@@ -2903,14 +2908,14 @@ function createPage(casper) {
 
     var onClosing = function onClosing(closedPopup) {
         if (closedPopup.isPopup) {
-            if (casper.page.id === closedPopup.id) {
+            if (casper.page !== null && casper.page.id === closedPopup.id) {
                 casper.page = casper.mainPage;
             }
             casper.popups.clean();
             casper.emit('popup.closed', closedPopup);
-        } else if (!this.exiting) {
+        } else {
             casper.page = null;
-            casper.newPage();
+            casper.emit('page.closed', closedPopup);
         }
     };
 
