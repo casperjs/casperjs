@@ -52,6 +52,7 @@ service = server.listen(testServerPort, function(request, response) {
         response.writeHead(200, headers);
 
         if (binMode) {
+            response.setEncoding("binary");
             response.write(fs.read(pageFile, 'b'));
         }
         else {
