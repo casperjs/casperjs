@@ -429,7 +429,17 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         } else {
             require.paths.push(fs.pathJoin(fs.workingDirectory, phantom.casperScriptBaseDir));
         }
-        require.paths.push(fs.pathJoin(require.paths[require.paths.length-1], 'node_modules'));
+        (function nodeModulePath(path) {
+            var resolved = false, prevBaseDir;
+            var baseDir = path;
+            do {
+                resolved = fs.isDirectory(fs.pathJoin(baseDir, 'node_modules'));
+                prevBaseDir = baseDir;
+                baseDir = fs.absolute(fs.pathJoin(prevBaseDir, '..'));
+            } while (!resolved && baseDir !== '/' && prevBaseDir !== '/' && baseDir !== prevBaseDir);
+            if (!resolved) return;
+            require.paths.push(fs.pathJoin(prevBaseDir, 'node_modules'));
+        })(fs.pathJoin(fs.workingDirectory, phantom.casperScriptBaseDir));
     }
 
     // casper loading status flag
