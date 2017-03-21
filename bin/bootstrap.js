@@ -433,7 +433,8 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             var resolved = false, prevBaseDir;
             var baseDir = path;
             do {
-                resolved = fs.isDirectory(fs.pathJoin(baseDir, 'node_modules'));
+                path = fs.pathJoin(baseDir, 'node_modules');
+                resolved = fs.exists(path) && fs.isDirectory(path);
                 prevBaseDir = baseDir;
                 baseDir = fs.absolute(fs.pathJoin(prevBaseDir, '..'));
             } while (!resolved && baseDir !== '/' && prevBaseDir !== '/' && baseDir !== prevBaseDir);
