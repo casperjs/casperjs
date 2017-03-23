@@ -2215,6 +2215,58 @@ Waits until a `JavaScript alert <https://developer.mozilla.org/en-US/docs/Web/AP
         this.echo("Alert received: " + response.data);
     });
 
+.. _casper_waitforexec:
+
+.. index:: Child Process, Spawn, exec File
+
+``waitForExec()``
+-------------------------------------------------------------------------------
+**Signature:** ``waitForExec(command, parameters[, Function then, Function onTimeout, timeout])``
+
+.. versionadded:: 1.1.5
+
+Waits until ``command`` runs with ``parameters`` and exits. The ``command``, ``parameters``, ``pid``, ``stdout``, ``stderr``, ``elapsedTime`` and ``exitCode`` will be in the ``response.data`` property.
+``command`` must be a string or ``parameters`` must be an array.
+``command`` can be an string of a executable or an string of a executable and its arguments separated by spaces. If ``command`` is falsy or is not a string, system shell (environment variable SHELL or ComSpec) is used. The arguments separated by spaces are concatenated with the ``parameters`` array to be send to executable. If ``parameters`` is falsy or is not an array, an empty array is used.
+``timeout`` can be a number or an array of two numbers, the first is the timeout of ``wait*`` family functions and the second is the timeout between TERM and KILL signals on timeout. If not declared, it assumes the same value of the first element or the default timeout of ``wait*`` family functions.::
+
+    // merge captured PDFs with default system shell (bash on Linux) calling /usr/bin/gs, and runs a small script to remove files
+    casper.waitForExec(null, ['-c','{ /usr/bin/gs -dPDFSETTINGS=/ebook -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=/my_merged_captures.pdf  /my_captures*.pdf && /bin/rm /my_captures*.pdf; } || { /bin/rm /my_merged_captures.pdf && exit 1; }'],
+        function(response) {
+            this.echo("Program finished by itself:" + JSON.stringify(response.data));
+        }, function(timeout, response) {
+            this.echo("Program finished by casper:" + JSON.stringify(response.data));
+    });
+    
+     // merge captured PDFs with bash calling /usr/bin/gs, and runs a small script to remove files
+    casper.waitForExec('/bin/bash -c', ['{ /usr/bin/gs -dPDFSETTINGS=/ebook -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=/my_merged_captures.pdf  /my_captures*.pdf && /bin/rm /my_captures*.pdf; } || { /bin/rm /my_merged_captures.pdf && exit 1; }'],
+        function(response) {
+            this.echo("Program finished by itself:" + JSON.stringify(response.data));
+        }, function(timeout, response) {
+            this.echo("Program finished by casper:" + JSON.stringify(response.data));
+    });
+
+
+    // merge captured PDFs calling /usr/bin/gs
+    casper.waitForExec('/usr/bin/gs',['-dPDFSETTINGS=/ebook','-dBATCH','-dNOPAUSE','-q','-sDEVICE=pdfwrite','-sOutputFile=/my_merged_captures_pdfs.pdf','/my_captures_1.pdf','/my_captures_2.pdf','/my_captures_3.pdf'],
+        function(response) {
+            this.echo("Program finished by itself:" + JSON.stringify(response.data));
+        }, function(timeout, response) {
+            this.echo("Program finished by casper:" + JSON.stringify(response.data));
+    });
+
+    // merge captured PDFs calling /usr/bin/gs
+    casper.waitForExec('/usr/bin/gs -dPDFSETTINGS=/ebook -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=/my_merged_captures_pdfs.pdf /my_captures_1.pdf /my_captures_2.pdf /my_captures_3.pdf', null,
+        function(response) {
+            this.echo("Program finished by itself:" + JSON.stringify(response.data));
+        }, function(timeout, response) {
+            this.echo("Program finished by casper:" + JSON.stringify(response.data));
+    });
+
+.. warning::
+
+   waitForExec() **only kills the called program on timeout**. If the called program calls other processes, they won't be killed when waitForExec() times out.
+
 .. _casper_waitforpopup:
 
 .. index:: Popups, New window, window.open, Tabs
