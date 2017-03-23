@@ -61,7 +61,7 @@ Run the script:
 
 ![](http://cl.ly/image/271e2i403A0F/Capture%20d%E2%80%99%C3%A9cran%202013-01-20%20%C3%A0%2009.26.15.png)
 
-##Support
+## Support
 
 **Help request**. If you're stuck using CasperJS and don't understand how to achieve something, please [ask on the mailing-list](https://groups.google.com/forum/#!forum/casperjs) first. If the discussion reveals that you have found a real issue that might need a change within CasperJS, file an issue.
 
