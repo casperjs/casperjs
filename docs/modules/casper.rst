@@ -667,6 +667,54 @@ Think of it as a way to stop javascript execution within the remote DOM environm
 
     casper.run();
 
+.. _casper_clearcache:
+
+.. index:: Memory
+
+``clearCache()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``clearCache()``
+
+.. versionadded:: 1.1.5
+
+Replace current page by a new page object, with newPage() and clear the memory cache, with clearMemoryCache().
+Example::
+
+    casper.start('http://www.google.fr/', function() {
+        this.clearCache(); // cleared the memory cache and replaced page object with newPage().
+    });
+
+    casper.then(function() {
+        // ...
+    });
+
+    casper.run();
+
+.. _casper_clearmemorycache:
+
+.. index:: Memory
+
+``clearMemoryCache()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``clearMemoryCache()``
+
+.. versionadded:: 1.1.5
+
+Use the engine page.clearMemoryCache() to clear the memory cache.
+Example::
+
+    casper.start('http://www.google.fr/', function() {
+        this.clearMemoryCache(); // cleared the memory cache.
+    });
+
+    casper.then(function() {
+        // ...
+    });
+
+    casper.run();
+
 .. index:: Debugging
 
 ``debugHTML()``

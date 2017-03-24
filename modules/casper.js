@@ -465,6 +465,39 @@ Casper.prototype.clear = function clear() {
 };
 
 /**
+ * Replace currente page by a new page object, with newPage()
+ * Clears the memory cache, with clearMemoryCache()
+ * 
+ * @return Casper
+ */
+Casper.prototype.clearCache = function clearCache() {
+    "use strict";
+    this.checkStarted();
+    this.page = this.newPage();
+    this.clearMemoryCache();
+    return this;
+};
+
+/**
+ * Clears the memory cache, using engine method
+ * reference: https://github.com/ariya/phantomjs/issues/10357
+ *
+ * @return Casper
+ */
+Casper.prototype.clearMemoryCache = function clearMemoryCache() {
+    "use strict";
+    this.checkStarted();
+    if (typeof this.page.clearMemoryCache === 'function') {
+        this.page.clearMemoryCache();
+    } else if ( phantom.casperEngine === 'slimerjs' || utils.matchEngine({name: 'phantomjs', version: {min: '2.0.0'}}) ) {
+        this.log('clearMemoryCache() did nothing: page.clearMemoryCache is not avliable in this engine', "warning");
+    } else {
+        throw new CasperError("clearMemoryCache(): page.clearMemoryCache should be avaliable in this engine");
+    };
+    return this;
+};
+
+/**
  * Emulates a click on the element from the provided selector using the mouse
  * pointer, if possible.
  *
