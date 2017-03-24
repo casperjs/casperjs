@@ -3011,6 +3011,19 @@ function createPage(casper) {
             "y": 0
         };
 
+        page.settings.loadImagesValue = page.settings.loadImages;
+        Object.defineProperty(page.settings,'loadImages', {
+            get: function() { 
+                return page.settings.loadImagesValue;
+            },
+            set: function(newValue) {
+                page.settings.loadImagesValue = newValue;
+                if (typeof page.clearMemoryCache === 'function') {
+                    page.clearMemoryCache();
+                };
+            }
+        });
+
         page.onClosing =  function() {
             var p = page;
             return function() {
