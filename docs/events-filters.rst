@@ -199,6 +199,13 @@ Emitted when a form is filled using the ``Casper.fill()`` method.
 
 Emitted when the embedded browser is asked to go forward a step in its history.
 
+``frame.changed``
+~~~~~~~~~~~~~~~~~
+
+**Arguments:** ``name, status``
+
+Emitted when the current frame is changed with ``Casper.withPopup, Casper.switchToFrame() ...``.
+
 .. index:: auth
 
 ``http.auth``

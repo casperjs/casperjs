@@ -1,7 +1,12 @@
 /*eslint strict:0*/
-casper.test.begin('handling frames', 19, function(test) {
+casper.test.begin('handling frames', 37, function(test) {
     casper.start('tests/site/frames.html');
 
+    casper.on("frame.reset", function(frameInfos) {
+       // console.log(frameInfos.join('-'), 'forceReloaded');
+    });
+    
+    casper.viewport(800,600);
     casper.then( function(){
         casper.withFrame('frame1', function() {
             test.assertTitle('CasperJS frame 1');
@@ -36,6 +41,9 @@ casper.test.begin('handling frames', 19, function(test) {
 
         casper.withFrame(1, function() {
             test.assertTitle('CasperJS frame 3');
+            test.assertEquals( casper.getElementInfo('a').width,100,'read tag a position');
+            casper.mouse.move('a');
+            test.assertEquals( casper.getElementInfo('a').width,200,'read tag a position hovered');
         });
         
         casper.withFrame('frame4', function() {
@@ -78,6 +86,54 @@ casper.test.begin('handling frames', 19, function(test) {
          casper.waitForText("three",function(){
             test.assertMatches( this.getHTML(),/three/,'go on top frame');
         });
+    });
+
+    casper.thenOpen("tests/site/frames.html", function() {
+        var expected = ['frame1','frame1', 'frame2', 'frame2'];
+        casper.page.switchToMainFrame();
+        casper.on('frame.changed', function (name, status) {
+          test.assertEquals(name, expected.shift());
+        });
+        casper.switchToFrame("frame1");
+        test.assertTitle('CasperJS frame 1');
+        casper.then(function() {
+            // Same frame in next step
+            test.assertTitle('CasperJS frame 1');
+            casper.switchToParentFrame();
+            test.assertTitle("CasperJS test frames");
+            casper.switchToFrame("frame2");
+            test.assertTitle('CasperJS frame 2');
+            casper.switchToMainFrame();
+            test.assertTitle("CasperJS test frames");
+            this.removeAllListeners('frame.changed');
+        });
+    });
+
+    casper.thenOpen("tests/site/frames.html", function(){
+        var expected = ['frame4','frame5', 'frame5','frame4'];
+        casper.page.switchToMainFrame();
+        casper.on('frame.changed', function (name , status) {
+          test.assertEquals(name, expected.shift());
+        });
+        casper.switchToFrame("frame4");
+        test.assertTitle('CasperJS frame 4');
+        casper.switchToFrame("frame5");
+        test.assertTitle('CasperJS frame 1');
+        casper.clickLabel('_top');
+    });
+    
+    casper.then(function() {
+        casper.switchToParentFrame();
+        casper.switchToParentFrame();
+        casper.waitForText("three",function(){
+            test.assertMatches( this.getHTML(),/three/,'go on top frame');
+        });
+        casper.switchToParentFrame();
+        casper.switchToParentFrame();
+        casper.switchToParentFrame();
+        casper.switchToParentFrame();
+        casper.switchToParentFrame();
+        this.removeAllListeners('frame.changed');
     });
 
     casper.run(function() {
