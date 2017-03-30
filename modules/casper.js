@@ -142,7 +142,6 @@ var Casper = function Casper(options) {
     }
     this.colorizer = this.getColorizer();
     this.mouse = mouse.create(this);
-    this.frames = [];
     this.popups = pagestack.create();
     // properties
     this.checker = null;
@@ -1076,9 +1075,10 @@ Casper.prototype.getElementsAttr = function getElementsAttr(selector, attribute)
  * Retrieves boundaries for a DOM element matching the provided DOM CSS3/XPath selector.
  *
  * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  Boolean page      A flag that allows to get coords of the full page (iframe includes)
  * @return Object
  */
-Casper.prototype.getElementBounds = function getElementBounds(selector) {
+Casper.prototype.getElementBounds = function getElementBounds(selector, page) {
     "use strict";
     this.checkStarted();
     if (!this.exists(selector)) {
@@ -1095,6 +1095,16 @@ Casper.prototype.getElementBounds = function getElementBounds(selector) {
     }
     if (!utils.isClipRect(clipRect)) {
         throw new CasperError('Could not fetch boundaries for element matching selector: ' + selector);
+    }
+    if (page) {
+        clipRect = {
+            "x": clipRect.left + this.page.context.x,
+            "y": clipRect.top + this.page.context.y,
+            "left": clipRect.left + this.page.context.x,
+            "top": clipRect.top + this.page.context.y,
+            "width": clipRect.width,
+            "height": clipRect.height
+        };
     }
     return clipRect;
 };
@@ -2204,6 +2214,104 @@ function getTimeoutAndCheckNextStepFunction(timeout, then, methodName, defaultTi
 }
 
 /**
+ * Makes the provided frame page as the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @param  String|Number frameInfo  Target frame name or number
+ * @return Casper
+ */
+Casper.prototype.switchToChildFrame = function switchToChildFrame(frameInfo) {
+    "use strict";
+    if (utils.isNumber(frameInfo)) {
+        if (frameInfo > this.page.childFramesCount() - 1) {
+            throw new CasperError(f('Frame number "%d" is out of bounds.', frameInfo));
+        }
+        this.page.context = this.getElementBounds(selectXPath('(//frame|//iframe)[' + (frameInfo + 1) + ']'), true);
+    } else if (this.page.childFramesName().indexOf(frameInfo) === -1) {
+        throw new CasperError(f('No frame named "%s" was found.', frameInfo));
+    } else {
+        this.page.context = this.getElementBounds(selectXPath('(//frame|//iframe)[@name="' + frameInfo + '"]'), true);
+    }
+    // make the frame page the currently active one
+    this.page.switchToFrame(frameInfo);
+
+
+    return this;
+};
+
+/**
+ * Makes the provided frame page as the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @param  String|Number frameInfo  Target frame name or number
+ * @return Casper
+ */
+Casper.prototype.switchToFrame = function switchToFrame(frameInfo) {
+    "use strict";
+    this.switchToChildFrame(frameInfo);
+    this.page.frames.push(this.page.frameName);
+    this.emit('frame.changed', frameInfo, 'enter');
+    
+    return this;
+};
+
+/**
+ * Makes the main frame the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @return Casper
+ */
+Casper.prototype.switchToMainFrame = function switchToMainFrame() {
+    "use strict";
+    this.page.context = {
+        "x": 0,
+        "y": 0
+    };
+
+    var frames = this.page.frames.concat(this.page.framesReloaded);
+    for (var index = frames.length - 1; index >= 0 ; index--) {
+        this.emit('frame.changed', frames[index], 'leave');
+    }
+    this.page.frames = [];
+    this.page.framesReloaded = [];
+    this.page.switchToMainFrame();
+
+    return this;
+};
+
+/**
+ * Makes parent frame of current one the currently active one. Note that the
+ * active page will NOT be reverted when finished.
+ *
+ * @param  String|Number frameInfo  Target frame name or number
+ * @return Casper
+ */
+Casper.prototype.switchToParentFrame = function switchToParentFrame() {
+    "use strict";
+    var l = this.page.frames.length;
+    if (this.page.framesReloaded.length !== 0) {
+        this.emit('frame.changed', this.page.framesReloaded.pop(), 'leave');
+    } else if (l > 0 && this.page.frameName === this.page.frames[l-1]) {
+        this.page.context = {
+            "x": 0,
+            "y": 0
+        };
+        this.page.switchToMainFrame();
+        var frameName = this.page.frames.pop();
+        for (var index = 0; index < l ; index++) {
+            try {
+                this.switchToChildFrame(this.page.frames[index]);
+            } catch(e) {
+                break;
+            }
+        }
+        this.emit('frame.changed', frameName, 'leave');
+    }
+
+    return this;
+};
+
+/**
  * Adds a new step that will wait for a given amount of time (expressed
  * in milliseconds) before processing an optional next one.
  *
@@ -2678,16 +2786,8 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
 Casper.prototype.withFrame = function withFrame(frameInfo, then) {
     "use strict";
     this.then(function _step() {
-        if (utils.isNumber(frameInfo)) {
-            if (frameInfo > this.page.childFramesCount() - 1) {
-                throw new CasperError(f('Frame number "%d" is out of bounds.', frameInfo));
-            }
-        } else if (this.page.childFramesName().indexOf(frameInfo) === -1) {
-            throw new CasperError(f('No frame named "%s" was found.', frameInfo));
-        }
         // make the frame page the currently active one
-        this.page.switchToChildFrame(frameInfo);
-        this.frames.push(frameInfo);
+        this.switchToFrame(frameInfo);
     });
     try {
         this.then(then);
@@ -2697,20 +2797,7 @@ Casper.prototype.withFrame = function withFrame(frameInfo, then) {
         throw e;
     }
     return this.then(function _step() {
-        // revert to main page
-        this.page.switchToMainFrame();
-        this.frames.pop();
-        for (var i = 0,l = this.frames.length; i < l ; i++) {
-            var frameInfo = this.frames[i];
-            if (utils.isNumber(frameInfo)) {
-                if (frameInfo > this.page.framesCount - 1) {
-                    break;
-                }
-            } else if (this.page.framesName.indexOf(frameInfo) === -1) {
-                break;
-            }
-            this.page.switchToFrame(frameInfo);
-        }
+        this.switchToParentFrame();
     });
 };
 
@@ -2848,18 +2935,25 @@ function createPage(casper) {
                 casper.options.onLoadError.call(casper, casper, casper.requestUrl, status);
             }
         }
-        casper.page.switchToMainFrame();
-        for (var i = 0,l = casper.frames.length; i < l ; i++) {
-            var frameInfo = casper.frames[i];
-            if (utils.isNumber(frameInfo)) {
-                if (frameInfo > casper.page.framesCount - 1) {
-                    break;
-                }
-            } else if (casper.page.framesName.indexOf(frameInfo) === -1) {
+
+        var index = 0, currentPage = casper.page;
+        casper.page = this;
+        this.switchToMainFrame();
+        for (var l = this.frames.length; index < l ; index++) {
+            try {
+                casper.switchToChildFrame(this.frames[index]);
+            } catch(e) {
                 break;
             }
-            casper.page.switchToFrame(frameInfo);
         }
+        this.framesReloaded = this.frames.slice(index);
+        this.frames = this.frames.slice(0, index);
+
+        if (this.framesReloaded.length !== 0) {
+            casper.emit('frame.reset', this.framesReloaded);
+        }
+        casper.page = currentPage;
+
         // local client scripts
         casper.injectClientScripts(this);
         // remote client scripts
@@ -2923,6 +3017,12 @@ function createPage(casper) {
         page.browserInitializing = false;
         page.loadInProgress = false; 
         page.windowNameBackUp = page.windowName;
+        page.frames = [];
+        page.framesReloaded = [];
+        page.context = {
+            "x": 0,
+            "y": 0
+        };
 
         page.onClosing =  function() {
             var p = page;

@@ -1141,9 +1141,10 @@ Retrieves the values of an attribute on each element matching the provided :doc:
 ``getElementBounds()``
 -------------------------------------------------------------------------------
 
-**Signature:** ``getElementBounds(String selector)``
+**Signature:** ``getElementBounds(String selector, Boolean page)``
 
 Retrieves boundaries for a DOM element matching the provided :doc:`selector <../selectors>`.
+If you have frames or/and iframes, set 'true' to the page parameter.
 
 It returns an Object with four keys: ``top``, ``left``, ``width`` and ``height``, or ``null`` if the selector doesn't exist::
 
@@ -1778,6 +1779,35 @@ Returns the status of current Casper instance::
     });
 
     casper.run();
+
+``switchToFrame()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``switchToFrame(String|Number frameInfo)``
+
+.. versionadded:: 1.1.5
+
+Switches the main page to the frame having the name or frame index number matching the passed argument. Inject local scripts, remote scripts and client utils into this frame. 
+
+``switchToMainFrame()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``switchToMainFrame()``
+
+.. versionadded:: 1.1.5
+
+Switch the main page to the parent frame of the currently active one.
+
+
+``switchToParentFrame()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``switchToParentFrame()``
+
+.. versionadded:: 1.1.5
+
+Switch the main page to the main frame.
+
 
 .. index:: Step stack, Asynchronicity
 

@@ -52,7 +52,7 @@ var Mouse = function Mouse(casper) {
         supportedEvents = nativeEvents.concat(emulatedEvents);
 
     var computeCenter = function computeCenter(selector) {
-        var bounds = casper.getElementBounds(selector);
+        var bounds = casper.getElementBounds(selector, true);
         if (utils.isClipRect(bounds)) {
             var x = Math.round(bounds.left + bounds.width / 2),
                 y = Math.round(bounds.top + bounds.height / 2);
@@ -84,7 +84,7 @@ var Mouse = function Mouse(casper) {
               parseFloat(a) <= 100 && parseFloat(a) / 100 ||
             def;
         };
-        var bounds = casper.getElementBounds(selector),
+        var bounds = casper.getElementBounds(selector, true),
             px = convertNumberToIntAndPercentToFloat(clientX, 0.5),
             py = convertNumberToIntAndPercentToFloat(clientY, 0.5);
 
