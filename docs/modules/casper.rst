@@ -2498,6 +2498,16 @@ Switches the main page to a popup matching the information passed as argument, a
 
    The currently loaded popups are available in the ``Casper.popups`` array-like property.
 
+``withSelectorScope()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``withSelectorScope(String selector, Function then)``
+
+.. versionadded:: 1.1.5
+
+Switches the main DOM scope to a specific scope the information passed as argument, and processes a step. 
+The scope context switch only lasts until the step execution is finished::
+
 .. index:: Zoom
 
 ``zoom()``

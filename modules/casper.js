@@ -2515,6 +2515,34 @@ Casper.prototype.waitWhileVisible = function waitWhileVisible(selector, then, on
 };
 
 /**
+ * Make the provided scope for page evaluation. Note that the
+ * active scope will be reverted when finished.
+ *
+ * @param  String   selector  A DOM CSS3 / Xpath compatible selector
+ * @param  Function  then     Next step function
+ * @return Casper
+ */
+Casper.prototype.withSelectorScope = function withSelectorScope(selector, then) {
+    "use strict";
+    var currentScope;
+    this.checkStarted();
+    this.then(function _step() {
+        currentScope = this.callUtils("setScope", selector);
+    });
+    try {
+        this.then(then);
+    } catch (e) {
+        // revert to main page on error
+        this.warn("Error while processing selector scope step: " + e);
+        throw e;
+    }
+    return this.then(function _step() {
+        // revert to previous scope or main document
+        this.callUtils("setScope", currentScope);
+    });
+};
+
+/**
  * Makes the provided frame page as the currently active one. Note that the
  * active page will be reverted when finished.
  *
