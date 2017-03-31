@@ -418,8 +418,8 @@
         this.getCssSelector = function getCssSelector(selector, scope, limit) {
             scope = scope || this.options.scope;
             limit = limit || 'BODY';
-            var elem = this.findOne(selector, scope);
-            if (!!elem) {
+            var elem = (selector instanceof Node) ? selector : this.findOne(selector, scope);
+            if (!!elem && elem.nodeName !== "#document") {
                 var str = "";
                 while (elem.nodeName.toUpperCase() !== limit.toUpperCase()) {
                     str = "> " + elem.nodeName + ':nth-child(' + ([].indexOf.call(elem.parentNode.children, elem) + 1) + ') ' + str;
@@ -427,7 +427,7 @@
                 }
                 return str.substring(2);
             }
-            return this.findOne(selector).nodeName;
+            return "";
         };
         
         /**
@@ -1080,6 +1080,18 @@
                  ": " + err, "warning");
             }
             return out;
+        };
+
+        /**
+         * set the default scope selector
+         *
+         * @param  String  selector  CSS3 selector
+         * @return String
+         */
+        this.setScope = function setScope(selector) {
+            var scope = !(this.options.scope instanceof HTMLElement) ? this.getCssSelector(this.options.scope) : "";
+            this.options.scope = (selector !== "") ? this.findOne(selector) : document;
+            return scope;
         };
 
         /**
