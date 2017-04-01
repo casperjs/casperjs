@@ -2378,9 +2378,14 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         this.waitStart();
         var start = new Date().getTime();
         var condition = false;
+        // set conditionTestedAfterTimeout to 1 to test condition not run one time after timeout when !condition
+        var conditionTestedAfterTimeout = 0;
         var interval = setInterval(function _check(self) {
             /*eslint max-statements: [1, 20]*/
-            if ((new Date().getTime() - start < timeout) && !condition) {
+            // refs #1805 #1806
+            // if condition is false do (condition tests before timeout and one condition test after timeout)
+            if ( !condition && ((new Date().getTime() - start < timeout) || !conditionTestedAfterTimeout++) ) {
+            // if ( (!condition && (new Date().getTime() - start < timeout)) || (!condition && !conditionTestedAfterTimeout++) ) {
                 condition = testFx.call(self, self);
                 return;
             }
@@ -2412,7 +2417,6 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         this.waiters.push(interval);
     });
 };
-
 /**
  * Waits until any alert is triggered.
  *
