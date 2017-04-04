@@ -2378,9 +2378,14 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         this.waitStart();
         var start = new Date().getTime();
         var condition = false;
+        // set conditionTestedAfterTimeout to 1 to test condition not run one time after timeout when !condition
+        var conditionTestedAfterTimeout = 0;
         var interval = setInterval(function _check(self) {
             /*eslint max-statements: [1, 20]*/
-            if ((new Date().getTime() - start < timeout) && !condition) {
+            // refs #1805 #1806
+            // if condition is false do (condition tests before timeout and one condition test after timeout)
+            if ( !condition && ((new Date().getTime() - start < timeout) || !conditionTestedAfterTimeout++) ) {
+            // if ( (!condition && (new Date().getTime() - start < timeout)) || (!condition && !conditionTestedAfterTimeout++) ) {
                 condition = testFx.call(self, self);
                 return;
             }
@@ -2412,7 +2417,6 @@ Casper.prototype.waitFor = function waitFor(testFx, then, onTimeout, timeout, de
         this.waiters.push(interval);
     });
 };
-
 /**
  * Waits until any alert is triggered.
  *
@@ -2461,9 +2465,6 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
         killTimeout = timeout;
     };
     
-    
-    // if (utils.isString(command)) {
-    // if (!command === '') {
     if ( (!utils.isString(command)) && (!utils.isArray(parameters))  ) {
         throw new CasperError("waitForExec() needs an command string as program and parameters separated by space to run or an array of parameters. if program is falsy or not a string, it uses default system shell");
     };
@@ -2515,9 +2516,6 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
         var signalToKill = "SIGTERM";
         child.kill(signalToKill);
         
-        // "THIRD" VERSION WITH waitFor()
-        // killTimeout = ~~killTimeout || ~~this.options.waitTimeout;
-        // killTimeout = getTimeoutAndCheckNextStepFunction(killTimeout, __onWaitTimeout, 'waitForExec', this.options.waitTimeout, false);
         killTimeout = getTimeoutAndCheckNextStepFunction(killTimeout, __onWaitTimeout, 'killAndCallOnWaitTimeout', this.options.waitTimeout, false);
         (function killAndCallOnWaitTimeout() {
             // I don't know if it should return
@@ -2525,60 +2523,18 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
             this.waitFor(function isProgramKilled() { // HAVE TO ADD waitFor() TO MAKE child.on("exit"... UPDATES exitCode AND TO child.pid BE UPDATED
                 return !child.pid;
             }, function onProgramKilled() { 
-                    this.log(f("waitForExec() has killed %s (PID %d) with %s", details.data.command, details.data.pid, signalToKill), "info");
+                    this.log(f("waitForExec() has killed %s %s (PID %d) with %s", details.data.command, JSON.stringify(details.data.parameters), details.data.pid, signalToKill), "info");
                     // this.then(this.createStep(__onWaitTimeout, timeout, __details()));
                     __onWaitTimeout.call(this, timeout, __details());
             }, function onProgramNotKilled() {
-                    this.log(f("waitForExec() has not killed %s (PID %d) with %s", details.data.command, details.data.pid, signalToKill), "warning");
+                    this.log(f("waitForExec() has not killed %s %s (PID %d) with %s", details.data.command, JSON.stringify(details.data.parameters), details.data.pid, signalToKill), "warning");
                     signalToKill = (require('system').os.name !== "windows") ? "SIGKILL" : "WM_QUIT"; // "WM_QUIT" SEEMS TO BE THE WINDOWS EQUIVALENT TO UNIX SIGKILL
                     child.kill(signalToKill);
-                    // Change killTimeout to this.options.retryTimeout+1, 
-                    // With killTimeout = 0 it gers the default timeout for wait* family
-                    // With killTimeout = 1 enters an infinite loop (expected behavior or BUG???)
-                    killTimeout = getTimeoutAndCheckNextStepFunction((this.options.retryTimeout+1), __onWaitTimeout, 'killAndCallOnWaitTimeout', this.options.waitTimeout, false);
+                    killTimeout = 1;
                     killAndCallOnWaitTimeout.call(this);
             }, killTimeout);
         }).call(this);
 
-        /* // "SECOND" VERSION WITH wait()
-        killTimeout = ~~killTimeout || ~~this.options.waitTimeout;
-        // killTimeout = getTimeoutAndCheckNextStepFunction(killTimeout, __onWaitTimeout, 'waitForExec', this.options.waitTimeout, false);
-        // killTimeout = getTimeoutAndCheckNextStepFunction(killTimeout, __onWaitTimeout, 'killAndCallOnWaitTimeout', this.options.waitTimeout, false);
-        (function killAndCallOnWaitTimeout() {
-            // I don't know if it should return
-            return this.wait(killTimeout, function() { // HAVE TO ADD wait() TO MAKE child.on("exit"... UPDATES exitCode AND TO child.pid BE UPDATED
-            // this.wait(killTimeout, function() { // HAVE TO ADD wait() TO MAKE child.on("exit"... UPDATES exitCode AND TO child.pid BE UPDATED
-                if (!child.pid) {
-                    this.log(f("waitForExec() has killed %s (PID %d) with %s", details.data.command.program, details.data.pid, signalToKill), "info");
-                    __onWaitTimeout.call(this, timeout, __details());
-                } else {
-                    this.log(f("waitForExec() has not killed %s (PID %d) with %s", details.data.command.program, details.data.pid, signalToKill), "warning");
-                    signalToKill = (require('system').os.name !== "windows") ? "SIGKILL" : "WM_QUIT"; // "WM_QUIT" SEEMS TO BE THE WINDOWS EQUIVALENT TO UNIX SIGKILL
-                    child.kill(signalToKill);
-                    // Change killTimeout to 0, because the process must be killed after SIGKILL, it doesn't makes sense to let it be another value
-                    killTimeout = 0;
-                    killAndCallOnWaitTimeout.call(this);
-                };
-            });
-        }).call(this);
-        */
-
-        /* // "FIRST" VERSION
-		(function killAndCallOnWaitTimeout() {
-            this.wait(0, function() { // HAVE TO ADD wait() TO MAKE child.on("exit"... UPDATES exitCode AND TO child.pid BE UPDATED
-                if (!child.pid) {
-                    this.log(f("waitForExec() has killed %s (PID %d) with %s", details.data.command.program, details.data.pid, signalToKill), "info");
-                    __onWaitTimeout.call(this, timeout, __details());
-                } else {
-                    this.log(f("waitForExec() has not killed %s (PID %d) with %s", details.data.command.program, details.data.pid, signalToKill), "warning");
-                    signalToKill = (require('system').os.name !== "windows") ? "SIGKILL" : "WM_QUIT"; // "WM_QUIT" SEEMS TO BE THE WINDOWS EQUIVALENT TO UNIX SIGKILL
-                    child.kill(signalToKill);
-                    killAndCallOnWaitTimeout.call(this);
-                };
-            });
-        }).call(this);
-		*/
-		
     };
     
     this.log(f("waitForExec() called %s (PID %d) with %s arguments", JSON.stringify(command), realPid, JSON.stringify(parameters)), "info");
