@@ -16,7 +16,7 @@ casper.test.begin('wait() tests', 1, function(test) {
     });
 });
 
-casper.test.begin('waitFor() tests', 2, function(test) {
+casper.test.begin('waitFor() tests', 4, function(test) {
     casper.start('tests/site/waitFor.html');
 
     casper.waitFor(function() {
@@ -36,7 +36,25 @@ casper.test.begin('waitFor() tests', 2, function(test) {
     }, function() {
         test.pass('waitFor() processes onTimeout callback');
     }, 1000);
-
+    
+    casper.reload().waitFor(function(){
+        return true;
+    }, function() {
+        test.pass('waitFor() can run test function when timeout is set to 1');
+    }, function() {
+        test.fail('waitFor() can not run test function when timeout is set to 1');
+    }, 1);
+    
+    var testArray = [false,true];
+    var i = 0;
+    casper.reload().waitFor(function(){
+        return testArray[i++];
+    }, function() {
+        test.pass('waitFor() can run a last test function after timeout');
+    }, function() {
+        test.fail('waitFor() can not run a last test function after timeout');
+    }, (1.5*casper.options.retryTimeout));
+    
     casper.run(function() {
         test.done();
     });
