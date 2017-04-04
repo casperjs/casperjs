@@ -1394,6 +1394,7 @@ Supported events are ``mouseup``, ``mousedown``, ``click``, ``dblclick``, ``mous
 and for phantomjs >= 1.9.8 ``mouseenter``, ``mouseleave`` and ``contextmenu``::
 
 .. warning::
+
 The list of supported events depends on the version of the engine in use.
 Older engines only provide partial support. For best support use recent builds of PhantomJS or SlimerJS."
 
@@ -2227,6 +2228,12 @@ Example using the ``onTimeout`` callback::
 
 ``details`` is a property bag of various information that will be passed to the ``waitFor.timeout`` event, if it is emitted.
 This can be used for better error messages or to conditionally ignore some timeout events.
+
+.. versionadded:: 1.1.5
+
+As of 1.1.5 does a last run of check function after timeout if check function is still false.::
+
+.. warning::
 
 Please note, that all `waitFor` methods are not chainable.  Consider wrapping each of them in a `casper.then` in order to acheive this functionality.
 
