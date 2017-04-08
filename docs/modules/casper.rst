@@ -1439,12 +1439,12 @@ Retrieves current page title::
 Triggers a mouse event on the first element found matching the provided selector.
 
 Supported events are ``mouseup``, ``mousedown``, ``click``, ``dblclick``, ``mousemove``, ``mouseover``, ``mouseout``
-and for phantomjs >= 1.9.8 ``mouseenter``, ``mouseleave`` and ``contextmenu``::
+and for phantomjs >= 1.9.8 ``mouseenter``, ``mouseleave`` and ``contextmenu``.
 
 .. warning::
 
 The list of supported events depends on the version of the engine in use.
-Older engines only provide partial support. For best support use recent builds of PhantomJS or SlimerJS."
+Older engines only provide partial support. For best support use recent builds of PhantomJS or SlimerJS."::
 
     casper.start('http://www.google.fr/', function() {
         this.mouseEvent('click', 'h2 a', "20%", "50%");
@@ -2279,11 +2279,11 @@ This can be used for better error messages or to conditionally ignore some timeo
 
 .. versionadded:: 1.1.5
 
-As of 1.1.5 does a last run of check function after timeout if check function is still false.::
+As of 1.1.5 does a last run of check function after timeout if check function is still false.
 
-.. warning::
+.. note::
 
-Please note, that all `waitFor` methods are not chainable.  Consider wrapping each of them in a `casper.then` in order to acheive this functionality.
+All `waitFor` methods are not chainable.  Consider wrapping each of them in a `casper.then` in order to acheive this functionality.
 
 .. index:: alert
 
@@ -2348,7 +2348,7 @@ Waits until ``command`` runs with ``parameters`` and exits. The ``command``, ``p
             this.echo("Program finished by casper:" + JSON.stringify(response.data));
     });
 
-.. warning::
+.. note::
 
    waitForExec() **only kills the called program on timeout**. If the called program calls other processes, they won't be killed when waitForExec() times out.
 
