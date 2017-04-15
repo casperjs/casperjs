@@ -1654,7 +1654,7 @@ Tester.prototype.runSuites = function runSuites() {
             clearInterval(interval);
             self.aborted = false;
         } else {
-            self.runTest(testFiles[self.currentSuiteNum]);
+            self.runTest(testFiles[self.currentSuiteNum], testFiles.length !== 1);
             self.currentSuiteNum++;
         }
     }, 20, this);
@@ -1664,9 +1664,10 @@ Tester.prototype.runSuites = function runSuites() {
  * Runs a test file
  *
  */
-Tester.prototype.runTest = function runTest(testFile) {
+Tester.prototype.runTest = function runTest(testFile, printTestFile) {
     "use strict";
-    this.bar(f('Test file: %s', testFile), 'INFO_BAR');
+    if (printTestFile)
+        this.bar(f('Test file: %s', testFile), 'INFO_BAR');
     this.running = true; // this.running is set back to false with done()
     this.executed = 0;
     this.exec(testFile);
