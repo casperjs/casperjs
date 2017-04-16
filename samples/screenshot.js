@@ -24,7 +24,7 @@ if (!twitterAccount || !filename || !/\.(png|jpg|pdf)$/i.test(filename)) {
 }
 
 casper.start("https://twitter.com/" + twitterAccount, function() {
-    this.waitForSelector(".stream-container", (function() {
+    this.waitForSelector(".GridTimeline-items", (function() {
         this.captureSelector(filename, "html");
         this.echo("Saved screenshot of " + (this.getCurrentUrl()) + " to " + filename);
     }), (function() {
