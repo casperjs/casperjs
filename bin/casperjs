@@ -98,7 +98,13 @@ SUPPORTED_ENGINES = {
             'w',
         ],
         'env_varname': 'SLIMERJS_EXECUTABLE',
-        'default_exec' : 'slimerjs'
+        'default_exec' : 'slimerjs',
+        'native_args_with_space': [
+            '-P',
+            '-CreateProfile',
+            '-profile'
+        ]
+
     },
 }
 
@@ -123,6 +129,7 @@ if not ENGINE in SUPPORTED_ENGINES:
     sys.exit(1)
 
 ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
+ENGINE_NATIVE_ARGS_WITH_SPACE = SUPPORTED_ENGINES[ENGINE].get('native_args_with_space') or []
 ENGINE_EXECUTABLE = os.environ.get(SUPPORTED_ENGINES[ENGINE]['env_varname'],
                                    os.environ.get('ENGINE_EXECUTABLE',
                                        SUPPORTED_ENGINES[ENGINE]['default_exec']))
@@ -134,17 +141,22 @@ def extract_arg_name(arg):
     except IndexError:
         return arg
 
-for arg in SYS_ARGS:
+arg_iter = iter(SYS_ARGS)
+
+for arg in arg_iter:
     arg_name = extract_arg_name(arg)
     found = False
-    for native in ENGINE_NATIVE_ARGS:
-        if arg_name == native:
-            ENGINE_ARGS.append(arg)
-            found = True
-    if not found and arg_name == 'env':
-        ENVIRONMENT = arg[6:].split('=')
-        os.putenv(ENVIRONMENT[0], ENVIRONMENT[1].strip("'").strip('"'))
+    if arg_name in ENGINE_NATIVE_ARGS:
+        ENGINE_ARGS.append(arg)
+        if arg_name in ENGINE_NATIVE_ARGS_WITH_SPACE:
+            nextArg = next(arg_iter, '')
+            if nextArg == '' or nextArg.startswith('--'):
+                logger.error('Fatal: Missing expected value for parameter %s' % (arg_name))
+                sys.exit(1)
+            else:
+                ENGINE_ARGS.append(nextArg)
         found = True
+
     if not found and arg_name != 'engine':
         CASPER_ARGS.append(arg)
 
