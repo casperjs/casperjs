@@ -3,6 +3,11 @@
 import os
 import shlex
 import sys
+import logging
+
+# Setup logger
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def resolve(path):
     if os.path.islink(path):
@@ -114,7 +119,7 @@ for arg in SYS_ARGS:
         break
 
 if not ENGINE in SUPPORTED_ENGINES:
-    print('Bad engine name. Only phantomjs and slimerjs are supported')
+    logger.error('Bad engine name. Only phantomjs and slimerjs are supported')
     sys.exit(1)
 
 ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE]['native_args']
@@ -156,5 +161,5 @@ try:
     os.execvp(CASPER_COMMAND[0], CASPER_COMMAND)
 except OSError:
     err = os.strerror(2)
-    print('Fatal: %s; did you install %s?' % (err, ENGINE))
+    logger.error('Fatal: %s; did you install %s?' % (err, ENGINE))
     sys.exit(1)
