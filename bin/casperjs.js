@@ -159,14 +159,23 @@ var SUPPORTED_ENGINES = {
     },
     'slimerjs': {
         'native_args': [
-            '-P',
+            // firefox
+            'no-remote',
+            'new-instance',
+            'safe-mode',
+            'browser',
+            'preferences',
+            'jsconsole',
+            'jsdebugger',
+            'devtools',
+            
+            // slimerjs
             '-jsconsole',
-            '-CreateProfile',
-            '-profile',
             'error-log-file',
             'user-agent',
             'viewport-width',
             'viewport-height',
+            
             // phantomjs options
             'cookies-file',
             'config',
@@ -197,8 +206,22 @@ var SUPPORTED_ENGINES = {
             'w'
         ],
         'env_varname': 'SLIMERJS_EXECUTABLE',
-        'default_exec': 'slimerjs'
-    },
+        'default_exec': 'slimerjs',
+        'native_args_with_space': [
+
+            '--createprofile',
+            '--profile',
+            '-P',
+            '-profile',
+            '--private-window',
+            '--UILocale',
+            '--new-window',
+            '--new-tab',
+            '--search',
+            '--recording',
+            '--recording-output'
+        ]
+    }
 };
 
 
@@ -219,11 +242,12 @@ for (var i = 0, l = SYS_ARGS.length; i < l; i++) {
 }
 
 if (typeof SUPPORTED_ENGINES[ENGINE] === 'undefined') {
-    system.stdout.write('Bad engine name. Only phantomjs and slimerjs are supported');
+    system.stderr.write('Bad engine name. Only phantomjs and slimerjs are supported\n');
     system.exit(1);
 }
 
 var ENGINE_NATIVE_ARGS = SUPPORTED_ENGINES[ENGINE].native_args;
+var ENGINE_NATIVE_ARGS_WITH_SPACE = SUPPORTED_ENGINES[ENGINE].native_args_with_space || [];
 var ENGINE_EXECUTABLE = system.env[SUPPORTED_ENGINES[ENGINE].env_varname] ||
                                    system.env.ENGINE_EXECUTABLE ||
                                        SUPPORTED_ENGINES[ENGINE].default_exec;
@@ -239,18 +263,19 @@ var extract_arg_name = function extract_arg_name(arg) {
 
 for (i = 0, l = SYS_ARGS.length; i < l; i++) {
     var arg_name = extract_arg_name(SYS_ARGS[i]);
-    var found = false;
-    for (var n = 0, m = ENGINE_NATIVE_ARGS.length; n < m; n++) {
-        if (arg_name === ENGINE_NATIVE_ARGS[n]) {
-            ENGINE_ARGS.push(SYS_ARGS[i]);
-            found = true;
-        }
-    }
-    if (SYS_ARGS[i].substr(0, 6) === '--env=') {
+
+    if (ENGINE_NATIVE_ARGS.indexOf(arg_name) !== -1) {
+        ENGINE_ARGS.push(SYS_ARGS[i]);
+    } else if (arg_name === "env") {
         var env = SYS_ARGS[i].substring(6).split('=');
         ENVIRONMENT[env[0]] = env[1].replace(/^['"]|['"]$/g, '');
-    }
-    if (!found) {
+    } else if (ENGINE_NATIVE_ARGS_WITH_SPACE.indexOf(SYS_ARGS[i]) !== -1) {
+        if (!SYS_ARGS[i+1] || SYS_ARGS[i+1].substring(0,2) === '--') {
+            system.stderr.write('Fatal: Missing expected value for parameter "' + SYS_ARGS[i] + '"\n');
+            system.exit(1);
+        } 
+        i++;
+    } else {
         CASPER_ARGS.push(SYS_ARGS[i]);
     }
 }
@@ -267,12 +292,12 @@ var child = spawn(ENGINE_EXECUTABLE, CASPER_COMMAND.slice(1), {
 
 child.stdout.on('data', function (data) {
     'use strict';
-    system.stdout.write(data);
+    system.stdout.write(data + "\n");
 });
 
 child.stderr.on('data', function (data) {
     'use strict';
-    system.stderr.write(data);
+    system.stderr.write(data + "\n");
 });
 
 child.on('exit', function (code) {
