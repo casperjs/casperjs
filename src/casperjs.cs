@@ -9,6 +9,7 @@ interface engine {
     string env_varname();
     string default_exec();
     string[] native_args();
+    string[] native_args_with_space();
 }
 
 class phantomjs : engine {
@@ -57,6 +58,9 @@ class phantomjs : engine {
             "wd",
             "w",
         };
+    }
+    public string[] native_args_with_space() {
+        return new []{""};
     }
 }
 
@@ -108,6 +112,21 @@ class slimerjs : engine {
             "w",
         };
     }
+    public string[] native_args_with_space() {
+        return new []{
+            "--createprofile",
+            "--profile",
+            "-P",
+            "-profile",
+            "--private-window",
+            "--UILocale",
+            "--new-window",
+            "--new-tab",
+            "--search",
+            "--recording",
+            "--recording-output"
+        };
+    }
 }
 
 class casperjs {
@@ -145,7 +164,7 @@ class casperjs {
                     ?? Environment.GetEnvironmentVariable("ENGINE_EXECUTABLE")
                     ?? SUPPORTED_ENGINES[ENGINE].default_exec();
         } else {
-            Console.WriteLine("Bad engine name. Only phantomjs and slimerjs are supported");
+            Console.Error.WriteLine("Bad engine name. Only phantomjs and slimerjs are supported");
             Environment.Exit(1);
         }
 
@@ -197,7 +216,7 @@ class casperjs {
             p.WaitForExit();
             return p.ExitCode;
         } catch(Win32Exception e) {
-            Console.WriteLine("Fatal: " + e.Message + "; did you install " + ENGINE + "?");
+            Console.Error.WriteLine("Fatal: " + e.Message + "; did you install " + ENGINE + "?");
             return -1;
         }
     }
