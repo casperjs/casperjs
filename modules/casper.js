@@ -1154,7 +1154,11 @@ Casper.prototype.getElementInfo = function getElementInfo(selector) {
     "use strict";
     this.checkStarted();
     if (!this.exists(selector)) {
-        throw new CasperError(f("Cannot get informations from %s: element not found.", selector));
+        if (utils.isObject(selector) && selector.type === 'xpath') {
+            throw new CasperError(f("Cannot get information from %s: element not found.", selector.path));
+        } else {
+            throw new CasperError(f("Cannot get information from %s: element not found.", selector));
+        }
     }
     return this.callUtils("getElementInfo", selector);
 };
@@ -1169,7 +1173,11 @@ Casper.prototype.getElementsInfo = function getElementsInfo(selector) {
     "use strict";
     this.checkStarted();
     if (!this.exists(selector)) {
-        throw new CasperError(f("Cannot get information from %s: no elements found.", selector));
+        if (utils.isObject(selector) && selector.type === 'xpath') {
+            throw new CasperError(f("Cannot get information from %s: no elements found.", selector.path));
+        } else {
+            throw new CasperError(f("Cannot get information from %s: no elements found.", selector));
+        }
     }
     return this.callUtils("getElementsInfo", selector);
 };
