@@ -257,6 +257,19 @@ Casper.prototype.base64encode = function base64encode(url, method, data) {
 };
 
 /**
+ * Get a resource as binary using client-side XMLHttpRequest.
+ *
+ * @param  String  url     The url to download
+ * @param  String  method  The method to use, optional: default GET
+ * @param  String  data    The data to send, optional
+ * @return string          Binary result
+ */
+Casper.prototype.binary = function binary(url, method, data) {
+    "use strict";
+    return this.callUtils("getBinary", url, method, data);
+};
+
+/**
  * Bypasses `nb` steps.
  *
  * @param  Integer  nb  Number of steps to bypass
@@ -653,6 +666,29 @@ Casper.prototype.download = function download(url, targetPath, method, data) {
         this.log(f("Downloaded and saved resource in %s", targetPath));
     } catch (e) {
         this.emit('downloaded.error', url);
+        this.log(f("Error while downloading %s to %s: %s", url, targetPath, e), "error");
+    }
+    return this;
+};
+
+/**
+ * Downloads a resource as binary and saves it on the filesystem.
+ *
+ * @param  String  url         The url of the resource to download
+ * @param  String  targetPath  The destination file path
+ * @param  String  method      The HTTP method to use (default: GET)
+ * @param  String  data        Optional data to pass performing the request
+ * @return Casper
+ */
+Casper.prototype.downloadBinary = function downloadBinary(url, targetPath, method, data) {
+    "use strict";
+    this.checkStarted();
+    var cu = require('clientutils').create(utils.mergeObjects({}, this.options));
+    try {
+        fs.write(targetPath, this.binary(url, method, data), 'w');
+        this.emit('downloaded.file', targetPath);
+        this.log(f("Downloaded and saved resource in %s", targetPath));
+    } catch (e) {
         this.log(f("Error while downloading %s to %s: %s", url, targetPath, e), "error");
     }
     return this;
