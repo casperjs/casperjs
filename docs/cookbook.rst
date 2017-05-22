@@ -96,11 +96,11 @@ Script to automatically check a page for 404 and 500 errors
   var links = [url];
   var utils = require('utils');
   var f = utils.format;
-
+  
   function absPath(url, base) {
     return new URI(url).resolve(new URI(base)).toString();
   }
-
+  
   // Clean links
   function cleanLinks(urls, base) {
     return utils.unique(urls).filter(function(url) {
@@ -111,7 +111,7 @@ Script to automatically check a page for 404 and 500 errors
       return checked.indexOf(url) === -1;
     });
   }
-
+  
   // Opens the page, perform tests and fetch next links
   function crawl(link) {
     this.start().then(function() {
@@ -136,7 +136,7 @@ Script to automatically check a page for 404 and 500 errors
       this.echo(newLinks.length + " new links found on " + link);
     });
   }
-
+  
   // Fetch all <a> elements from the page and return
   // the ones which contains a href starting with 'http://'
   function searchLinks() {
@@ -146,7 +146,7 @@ Script to automatically check a page for 404 and 500 errors
       });
     }), this.getCurrentUrl());
   }
-
+  
   // As long as it has a next link, and is under the maximum limit, will keep running
   function check() {
     if (links[currentLink] && currentLink < upTo) {
@@ -158,12 +158,13 @@ Script to automatically check a page for 404 and 500 errors
       this.exit();
     }
   }
-
+  
   if (!url) {
     casper.warn('No url passed, aborting.').exit();
   }
-
-  casper.start('https://js-uri.googlecode.com/svn/trunk/lib/URI.js', function() {
+  
+  
+  casper.start('https://gist.githubusercontent.com/pieplu/6be55d1d8f27ea9b8dcf4de6b1933547/raw/5e8d996fe1d86edac93825d0050fd359caf74f8e/URI.js', function() {
     var scriptCode = this.getPageContent() + '; return URI;';
     window.URI = new Function(scriptCode)();
     if (typeof window.URI === "function") {
@@ -171,15 +172,9 @@ Script to automatically check a page for 404 and 500 errors
     } else {
       this.warn('Could not setup URI.js').exit();
     }
-  });
-
-  casper.run(process);
-
-  function process() {
-    casper.start().then(function() {
+  }).then(function() {
       this.echo("Starting");
-    }).run(check);
-  }
+  }).run(check);
 
 Run it with:
 
