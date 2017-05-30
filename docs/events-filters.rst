@@ -183,6 +183,22 @@ Emitted when an error hasn't been explicitly caught within the CasperJS/PhantomJ
 
 Emitted when the ``Casper.exit()`` method has been called.
 
+.. index:: fileDownload
+
+``fileDownloadError``
+~~~~~~~~
+
+**Arguments:** ``error``
+
+Emitted when an error occurs on downloading file.
+
+``fileToDownload``
+~~~~~~~~
+
+**Arguments:** ``Object``
+
+Emitted when response occurs with a Content-Disposition header.
+
 .. index:: fill
 
 ``fill``
@@ -640,6 +656,16 @@ Allows to alter the value of the filename where a screen capture should be store
 **Return type:** ``String``
 
 Allows to alter every message written onto stdout.
+
+``fileDownload``
+~~~~~~~~
+
+**Arguments:** ``url, Object [filename,size,contentType]``
+
+**Return type:** ``String``
+
+Allows to alter the path for the file that must be downloaded.
+
 
 ``log.message``
 ~~~~~~~~~~~~~~~

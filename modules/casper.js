@@ -161,6 +161,7 @@ var Casper = function Casper(options) {
     this.page = null;
     this.pendingWait = false;
     this.requestUrl = 'about:blank';
+    this.requestData = {};
     this.resources = [];
     this.result = {
         log:    [],
@@ -395,6 +396,44 @@ Casper.prototype.captureSelector = function captureSelector(targetFile, selector
     elementBounds.left += scrollPos.x;
     return this.capture(targetFile, elementBounds, imgOptions);
 };
+
+
+/**
+ * Checks if response header contains a "content disposition" value
+ * it calls the onFileDownloadError callback when browser couldn't download it.
+ *
+ * @param  Object  resource  PhantomJS HTTP resource
+ * @return Casper
+ */
+Casper.prototype.checkContentDisposition = function checkContentDisposition(resource) {
+    "use strict";
+    if (utils.isHTTPResource(resource)) {
+        var request = this.requestData[resource.id];
+        delete this.requestData[resource.id];
+
+        if (resource.hasOwnProperty("isFileDownloading") && resource.isFileDownloading === true) {
+            return;
+        }
+        var contentDisposition = resource.headers.get("Content-Disposition");
+        if (contentDisposition !== null) {
+            var filename = contentDisposition.match(/filename=["']?([^"']*)["']?/i);
+            if (filename !== null) {
+                this.page.onFileDownloadError("Can't download file : \"" + filename[1] +"\"");
+                this.emit('fileToDownload', {
+                    "url": resource.url,
+                    "filename": filename[1],
+                    "size": resource.bodySize || 0,
+                    "contentType": resource.contentType,
+                    "method": request.method,
+                    "postData": request.postData,
+                    "headers": request.headers
+                });
+            }
+        }
+    }
+    return this;
+};
+
 
 /**
  * Checks for any further navigation step to process.
@@ -1292,6 +1331,7 @@ Casper.prototype.handleReceivedResource = function(resource) {
         return;
     }
     this.resources.push(resource);
+    this.checkContentDisposition(resource);
 
     var checkUrl = ((phantom.casperEngine === 'phantomjs' && utils.ltVersion(phantom.version, '2.1.0')) ||
                    (phantom.casperEngine === 'slimerjs' && utils.ltVersion(slimer.version, '0.10.0'))) ? utils.decodeUrl(resource.url) : resource.url;
@@ -3124,6 +3164,16 @@ function createPage(casper) {
         page.onFilePicker = function onFilePicker(olderFile) {
             return casper.filter('page.filePicker', olderFile);
         };
+        page.onFileDownload = function onFileDownload(url, data) {
+            if ('fileDownload' in casper._filters) {
+                return casper.filter('fileDownload', url, data);
+            }
+            casper.log("File to download : aborted", "debug");
+            return null;
+        };
+        page.onFileDownloadError = function onFileDownloadError(error) {
+            return casper.emit('fileDownloadError', error);
+        };
         page.onInitialized = function onInitialized() {
             casper.emit('page.initialized', page);
             if (utils.isFunction(casper.options.onPageInitialized)) {
@@ -3155,6 +3205,7 @@ function createPage(casper) {
             if (utils.isFunction(casper.options.onResourceRequested)) {
                 casper.options.onResourceRequested.call(casper, casper, requestData, request);
             }
+            casper.requestData[requestData.id] = requestData;
         };
         page.onResourceError = function onResourceError(resourceError) {
             casper.emit('resource.error', resourceError);
