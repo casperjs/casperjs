@@ -28,7 +28,7 @@
  *
  */
 
-/*global __utils__, CasperError, console, exports, phantom, patchRequire, require:true*/
+/*global __utils__, CasperError, console, exports, phantom, slimer, patchRequire, require:true*/
 require = patchRequire(require);
 var colorizer = require('colorizer');
 var events = require('events');
@@ -493,7 +493,7 @@ Casper.prototype.clearMemoryCache = function clearMemoryCache() {
         this.log('clearMemoryCache() did nothing: page.clearMemoryCache is not avliable in this engine', "warning");
     } else {
         throw new CasperError("clearMemoryCache(): page.clearMemoryCache should be avaliable in this engine");
-    };
+    }
     return this;
 };
 
@@ -512,6 +512,9 @@ Casper.prototype.clearMemoryCache = function clearMemoryCache() {
 Casper.prototype.click = function click(selector, x, y) {
     "use strict";
     this.checkStarted();
+    if (!this.visible(selector)) {
+        this.log(f("Trying to click on hidden element : %s", JSON.stringify(selector)), "debug");
+    }
     var success = this.mouseEvent('mousedown', selector, x, y) && this.mouseEvent('mouseup', selector, x, y);
     success = success && this.mouseEvent('click', selector, x, y);
     this.evaluate(function(selector) {
@@ -2494,19 +2497,19 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
     } else {
         timeout = getTimeoutAndCheckNextStepFunction(timeout, then, 'waitForExec', this.options.waitTimeout);
         killTimeout = timeout;
-    };
-    
+    }
+
     if ( (!utils.isString(command)) && (!utils.isArray(parameters))  ) {
         throw new CasperError("waitForExec() needs an command string as program and parameters separated by space to run or an array of parameters. if program is falsy or not a string, it uses default system shell");
-    };
+    }
     if (utils.isFalsy(command) || !utils.isString(command)) {
         var system = require('system');
         command = (system.env.SHELL || system.env.ComSpec); // SHELL for UNIX(?), ComSpec for Windows(?)
         this.log('Casper.waitForExec()  is going to use default system shell ' + JSON.stringify(command) + ' - command is falsy or is not a string', "warning");
-    };
+    }
     if (utils.isFalsy(parameters) || !utils.isArray(parameters)) {
         parameters = [];
-    };
+    }
 
     // add use of a escape char like '\'??? (e.g.: '/bin/bash -c {\ ls\ /\ &&\ ls\ /home\ }' becomes ['/bin/bash', '-c', '{ ls / && ls /home }']
     command = command.split(' ');
@@ -2515,7 +2518,7 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
     var fs = require('fs');
     if (!fs.isExecutable(command)) {
         this.log('Casper.waitForExec() is going to call non executable file ' + JSON.stringify(command) + ' - maybe runs if is in PATH', "warning");
-    };
+    }
 
     var spawn = require("child_process").spawn;
     var stdout = ''; // VARIABLE TO STORE PROGRAM STDOUT
@@ -2523,11 +2526,11 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
     var exitCode = null; // VARIABLE TO STORE PROGRAM EXIT CODE
     var realPid = null; // VARIABLE TO STORE PROGRAM REAL PID
     var elapsedTime = null; // VARIABLE TO STORE PROGRAM DURATION
-    
+
     var childStartTime = new Date().getTime();
     var child = spawn(command, parameters);
     realPid = child.pid;
-    
+
     child.stdout.on("data", function (standardOut) { // keeps stdout updated
         stdout += standardOut;
     });
@@ -2541,7 +2544,7 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
 
     function __details() {
         return {data: {command: command, parameters: parameters, pid: realPid, stdout: stdout, stderr: stderr, exitCode: exitCode, elapsedTime: elapsedTime, isChildNotFinished: child.pid }};
-    };
+    }
     function __onTimeout(timeout, details) {
         var __onWaitTimeout = onTimeout ? onTimeout : this.options.onWaitTimeout;
         var signalToKill = "SIGTERM";
@@ -2565,9 +2568,7 @@ Casper.prototype.waitForExec = function waitForExec(command, parameters, then, o
                     killAndCallOnWaitTimeout.call(this);
             }, killTimeout);
         }).call(this);
-
-    };
-    
+    }
     this.log(f("waitForExec() called %s (PID %d) with %s arguments", JSON.stringify(command), realPid, JSON.stringify(parameters)), "info");
     return this.waitFor(function isProgramFinished() {
         return !child.pid;
@@ -3053,7 +3054,7 @@ function createPage(casper) {
                 page.settings.loadImagesValue = newValue;
                 if (typeof page.clearMemoryCache === 'function') {
                     page.clearMemoryCache();
-                };
+                }
             }
         });
 
