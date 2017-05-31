@@ -788,7 +788,7 @@
          */
         this.mouseEvent = function mouseEvent(type, selector, x, y) {
             var elem = this.findOne(selector);
-            if (!elem || ( !this.elementVisible(elem) && elem.nodeName.toUpperCase() !== "AREA")) {
+            if (!elem) {
                 this.log("mouseEvent(): Couldn't find any element matching '" +
                     selector + "' selector", "error");
                 return false;
