@@ -2004,7 +2004,7 @@ Casper.prototype.thenEvaluate = function thenEvaluate(fn) {
     this.checkStarted();
     var args = arguments;
     return this.then(function _step() {
-        this.evaluate.apply(this, args);
+        return this.evaluate.apply(this, args);
     });
 };
 
