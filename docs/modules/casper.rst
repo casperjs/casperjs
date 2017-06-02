@@ -271,6 +271,8 @@ An existing PhantomJS ``WebPage`` instance
 PhantomJS's WebPage settings object. Available settings are:
 
 - ``javascriptEnabled`` defines whether to execute the script in the page or not (default to ``true``)
+- ``javascriptCanCloseWindows`` defines if javascript can close windows or not (default to ``true``)
+- ``javascriptCanOpenWindows`` defines if javascript can open windows or not (default to ``true``)
 - ``loadImages`` defines whether to load the inlined images or not
 - ``localToRemoteUrlAccessEnabled`` defines whether local resource (e.g. from file) can access remote URLs or not (default to ``false``)
 - ``userAgent`` defines the user agent sent to server when the web page requests resources
