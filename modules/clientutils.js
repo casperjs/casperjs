@@ -155,7 +155,7 @@
          */
         this.elementVisible = function elementVisible(elem) {
             var style;
-            try {
+            try { 
                 style = window.getComputedStyle(elem, null);
             } catch (e) {
                 return false;
@@ -164,10 +164,9 @@
             if (hidden) {
                 return false;
             }
-            if (style.display === "inline" || style.display === "inline-block") {
-                return true;
-            }
-            return elem.clientHeight > 0 && elem.clientWidth > 0;
+
+            var rect = elem.getBoundingClientRect();
+            return rect.top > 0 && rect.right > 0 && rect.bottom > 0 && rect.left > 0 && elem.offsetWidth > 0 && elem.offsetHeight > 0;
         };
 
         /**
