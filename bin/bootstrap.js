@@ -445,11 +445,19 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
 
     // casper loading status flag
     phantom.casperLoaded = true;
-    if (phantom.version.major === 2
+    if (Object.keys(require.extensions).indexOf('coffee') === -1 
         && phantom.casperScript
         && phantom.casperScript.split('.').pop() === 'coffee'
         ) {
-        return __terminate('CoffeeScript is not supported by PhantomJS > 2.');
+        var CoffeeScript;
+        var coffeeFile = fs.pathJoin(phantom.casperPath,'modules','extras','coffee-script.js');
+        if (!fs.isFile(coffeeFile) || !phantom.injectJs(coffeeFile)){
+            return __terminate('CoffeeScript is not supported by PhantomJS > 2.');
+        } else {
+            console.log('CoffeeScript is compiled because not supported by PhantomJS > 2.');
+            CoffeeScript.run(fs.read(phantom.casperScript));
+            return;
+        }
     }
 
     // passed casperjs script execution
