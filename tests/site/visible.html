@@ -4,22 +4,46 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>CasperJS test index</title>
         <script>
-            setTimeout(function(){
-                document.querySelector('#img1').style.display = 'block';
-
-                setTimeout(function() {
-                    document.querySelector('#img1').style.display = 'none';
-                }, 1000);
-            }, 1000)
+            setTimeout(function() {
+                document.querySelector('#img5').style.display = 'none';
+            }, 1000);
+            setTimeout(function() {
+                document.querySelector('#div1').style.display = 'none';
+            }, 1000);
         </script>
+        <style>
+            .hidden {display: none;}
+            #offScreenLeft {
+                position: absolute;
+                left: -9999px;
+            }
+            #offScreenRight {
+                position: absolute;
+                left: 9999px;
+            }
+            #offScreenTop {
+                position: absolute;
+                top: -9999px;
+            }
+            #offScreenBottom {
+                position: absolute;
+                left: 9999px;
+            }
+
+            html {
+                max-height: 9000px;
+                max-width: 9000px;
+                overflow: hidden;
+            }
+        </style>
     </head>
     <body>
         <img src="images/phantom.png" id="img1" style="display:none">
         <img src="images/phantom.png" id="img2">
         <img src="images/phantom.png" id="img3" style="visibility:hidden">
 
-        <div style="display:none"     ><img src="images/phantom.png" id="img4" style="display: inline;"></div>
-        <div style="visibility:hidden"><img src="images/phantom.png" id="img5" style="visibile: visible;"></div>
+        <div style="display:none"     ><div><img src="images/phantom.png" id="img4a" style="display: inline;"></div></div>
+        <div style="visibility:hidden"><div><img src="images/phantom.png" id="img5a" style="visibile: visible;"></div></div>
 
         <img src="images/phantom.png" id="img6" style="display: inline-block; width:  0;">
         <img src="images/phantom.png" id="img7" style="display: inline-block; height: 0;">
@@ -27,5 +51,36 @@
         <span id="emptyspan"></span>
         <div id="emptydiv"></div>
         <br id="br">
+        <span class="hidden">Can't see me</span>
+        <span class="hidden">Can't see me</span>
+        <span class="hidden">Can't see me</span>
+        <span class="hidden">Can't see me</span>
+
+        <span hidden id="html5hidden">can't see me either</span>
+        <div id="offScreenLeft">I'm out of the viewport</div>
+        <div id="offScreenRight">I'm out of the viewport</div>
+        <div id="offScreenBottom">I'm out of the viewport</div>
+        <div id="offScreenTop">I'm out of the viewport</div>
+
+
+
+        <img src="images/phantom.png" id="img4" style="display:flex">
+        <img src="images/phantom.png" id="img5">
+        <div style="display:none"><button id="button1">button</button></div>
+        <div><button id="button2">button</button></div>
+        <div style="visibility:hidden"><button id="button3">button</button></div>
+        <div id="div1"><button id="button4">button</button></div>
+
+        <svg height="300" version="1.1" width="800" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; position: relative;">
+            <circle id="circle1" cx="719" cy="140" r="15" fill="#000000"></circle>
+
+            <svg style="display: none">
+                <circle div="circle2" cx="20" cy="20" r="15" fill="#000000"></circle>
+            </svg>
+
+            <svg style="visibility: hidden">
+                <circle div="circle3" cx="20" cy="20" r="15" fill="#000000"></circle>
+            </svg>
+        </svg>
     </body>
 </html>

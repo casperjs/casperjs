@@ -155,18 +155,19 @@
          */
         this.elementVisible = function elementVisible(elem) {
             var style;
-            try { 
+            try {
                 style = window.getComputedStyle(elem, null);
             } catch (e) {
                 return false;
             }
-            var hidden = style.visibility === 'hidden' || style.display === 'none';
-            if (hidden) {
-                return false;
-            }
+          
+            if (style.visibility === 'hidden' || style.display === 'none') return false;
+          
+            var cr = elem.getBoundingClientRect();
 
-            var rect = elem.getBoundingClientRect();
-            return rect.top > 0 && rect.right > 0 && rect.bottom > 0 && rect.left > 0 && elem.offsetWidth > 0 && elem.offsetHeight > 0;
+            if (cr.right < 0 || cr.bottom < 0 || cr.top > window.innerHeight || cr.left > window.innerWidth) return false;
+            // return ((cr.bottom - cr.top) > 0) && ((cr.right - cr.left) > 0) && (elem.offsetWidth > 0) && (elem.offsetHeight > 0);
+            return cr.width > 0 && cr.height > 0;
         };
 
         /**
