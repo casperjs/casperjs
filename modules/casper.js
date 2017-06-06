@@ -567,6 +567,29 @@ Casper.prototype.click = function click(selector, x, y) {
 };
 
 /**
+ * Emulates a touch on the element from the provided selector using the mouse
+ * pointer, if possible.
+ *
+ * In case of success, `true` is returned, `false` otherwise.
+ *
+ * @param  String   selector  A DOM CSS3 compatible selector
+ * @return Boolean
+ */
+Casper.prototype.touch = function touch(selector){
+    "use strict";
+    this.checkStarted();
+    var success = this.touchEvent('touchstart', selector) && this.touchEvent('touchend', selector);
+    this.evaluate(function(selector) {
+        var element = __utils__.findOne(selector);
+        if (element) {
+            element.focus();
+        }
+    }, selector);
+    this.emit('touch', selector);
+    return success;
+}
+
+/**
  * Emulates a click on the element having `label` as innerText. The first
  * element matching this label will be selected, so use with caution.
  *
@@ -1523,6 +1546,29 @@ Casper.prototype.mouseEvent = function mouseEvent(type, selector, x, y) {
         return this.mouse.processEvent(type, selector, x, y);
     } catch (e) {
         this.log(f("Couldn't emulate '%s' event on %s: %s", type, selector, e), "error");
+    }
+    return false;
+};
+
+/**
+ * Emulates an event on the element from the provided selector using the touch
+ * pointer, if possible.
+ *
+ * In case of success, `true` is returned, `false` otherwise.
+ *
+ * @param  String   type      Type of event to emulate
+ * @param  String   selector  A DOM CSS3 compatible selector
+ * @return Boolean
+ */
+Casper.prototype.touchEvent = function touchEvent(type, selector) {
+    "use strict";
+    this.checkStarted();
+    this.log("Touch event '" + type + "' on selector: " + selector, "debug");
+    if (!this.exists(selector)) {
+        throw new CasperError(f("Cannot dispatch %s event on nonexistent selector: %s", type, selector));
+    }
+    if (this.callUtils("touchEvent", type, selector)) {
+        return true;
     }
     return false;
 };

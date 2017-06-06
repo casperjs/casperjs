@@ -827,6 +827,59 @@
         };
 
         /**
+         * Dispatches a touch event to the DOM element behind the provided selector.
+         *
+         * @param  String   type     Type of event to dispatch
+         * @param  String  selector  A CSS3 selector to the element to click
+         * @return Boolean
+         */
+        this.touchEvent = function touchEvent(type, selector){
+            var elem = this.findOne(selector);
+            if (!elem) {
+                this.log("touchEvent(): Couldn't find any element matching '" + selector + "' selector", "error");
+                return false;
+            }
+            try {
+                /*
+                 * Following line match W3C spec, but it is not support in the real world at this moment.
+                 * var evt = document.createEvent('TouchEvent');
+                 */
+                var evt = document.createEvent('UIEvent');
+                var center_x = 1, center_y = 1;
+                try {
+                    var pos = elem.getBoundingClientRect();
+                    center_x = Math.floor((pos.left + pos.right) / 2);
+                    center_y = Math.floor((pos.top + pos.bottom) / 2);
+                } catch(e) {
+                    this.log("Failed dispatching " + type + "touch event on " + selector + ": " + e, "error");
+                    return false;
+                }
+                evt.altKey = false;
+                evt.shiftKey = false;
+                evt.srcElement = evt.target = elem;
+                var touch = {
+                    pageX: center_x,
+                    pageY: center_y,
+                    clientX: center_x - elem.scrollLeft,
+                    clientY: center_y - elem.scrollTop,
+                    target: elem};
+                evt.touches = [touch];
+                evt.targetTouches = [touch];
+                evt.changedTouches = [touch];
+                /* 
+                 * Following line match W3C spec, but it is not support in the real world at this moment. 
+                 * evt.initTouchEvent(type, true, true, window, 1, 1, 1, center_x, center_y, false, false, false, false, 0, [elem], [elem], [elem]);
+                 */
+                evt.initUIEvent(type, true, true, window, 1, 1, 1, center_x, center_y, false, false, false, false, 0, [elem], [elem], [elem]);
+                elem.dispatchEvent(evt);
+                return true;
+            } catch (e) {
+                this.log("Failed dispatching " + type + "touch event on " + selector + ": " + e, "error");
+                return false;
+            }
+        };
+
+        /**
          * Processes a selector input, either as a string or an object.
          *
          * If passed an object, if must be of the form:
