@@ -73,6 +73,23 @@
         this.options.scope = this.options.scope || document;
 
         /**
+         * Adds a speudo class to reproduce css hover style and other speudo class
+         *
+         * @param  String  pseudoclassname     Type of css speudoClass
+         * @param  String  selector  A CSS3 selector to the element to click
+         */
+        this.addPseudoClassToElement = function addPseudoClassToElement(pseudoclassname, selector){
+            var elm = this.findOne(selector);
+            if (!elm) return false;
+            this.copyStylesPseudoClasses(pseudoclassname);
+            while(elm!==document.body){
+                elm.className += ' '+pseudoclassname+'PseudoClass';
+                elm=elm.parentNode;
+            }
+            return true;
+        };
+
+        /**
          * Calls a method part of the current prototype, with arguments.
          *
          * @param  {String} method Method name
@@ -101,6 +118,42 @@
          */
         this.click = function click(selector, x, y) {
             return this.mouseEvent('click', selector, x, y);
+        };
+
+        /**
+         * Clones css speudo class as :hover :before :after
+         * private slot
+         *
+         * @param  String  str  The string content speudo class like 'hover, active, target...'
+         */
+        this.copyStylesPseudoClasses = function copyStylesPseudoClasses(pseudoclassname){
+            if ( document.getElementById(pseudoclassname+'PseudoClass') ) return;
+         
+            var NewstylesheetText="",s = document.createElement("style");
+            for(var i=0; i<document.styleSheets.length; i++) {
+                var sheet = document.styleSheets[i];
+                for(var j=0; j<sheet.cssRules.length; j++) {
+                    var cssRule = sheet.cssRules[j];
+                    var media = "";
+                    var rules = [cssRule];
+                    if (cssRule.cssRules) {
+                        rules = cssRule.cssRules;  
+                        media="@media "+cssRule.conditionText+" ";
+                    } 
+                    for(var k=0; k<rules.length; k++) {
+                        var t = rules[k].cssText; 
+                        if (t.toLowerCase().indexOf(':'+pseudoclassname)!==-1){
+                            NewstylesheetText+=media+rules[k].selectorText.replace(':'+pseudoclassname,'.'+pseudoclassname+'PseudoClass')+
+                                     '{'+t.substring(t.indexOf('{')+1,t.indexOf('}'))+"}\n";
+                        }
+                    }
+                }
+            }
+            s.type = "text/css";
+            s.rel = "stylesheet";
+            s.id = pseudoclassname+'PseudoClass';
+            s.innerHTML = NewstylesheetText;
+            document.getElementsByTagName("head")[0].appendChild(s);
         };
 
         /**
@@ -878,6 +931,27 @@
             for (var i = 0; i < a.snapshotLength; i++) {
                 a.snapshotItem(i).parentNode.removeChild(a.snapshotItem(i));
             }
+        };
+
+        /**
+         * Removes a speudo class to clean css hover style and other speudo class
+         *
+         * @param  String  pseudoclassname     Type of css speudoClass
+         * @param  String  selector  A CSS3 selector to the element to click
+         */
+        this.removePseudoClassFromElement = function removePseudoClassFromElement( pseudoclassname, selector) {
+            var elm = this.findOne(selector);
+            if (!elm) return false;
+            while(!!elm && elm!==document.body){
+                var cn = elm.className;
+                var rxp = new RegExp( "\\s?\\b"+pseudoclassname+'PseudoClass'+"\\b", "g" );
+                cn = cn.replace( rxp, '' );
+                elm.className = cn;
+                elm=elm.parentNode;
+            }
+            var stylesheet = document.getElementById(pseudoclassname+'PseudoClass');
+            if (!!stylesheet) stylesheet.parentNode.removeChild(stylesheet);
+            return true;
         };
 
         /**

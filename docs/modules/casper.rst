@@ -398,6 +398,26 @@ Default wait timeout, for ``wait*`` family functions.
 ``Casper`` prototype
 ++++++++++++++++++++
 
+``addPseudoClass()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``addPseudoClass(String pseudoClass, String selector)``
+
+.. versionadded:: 1.1
+
+Adds a pseudo class to simulate css hover style and other pseudo class::
+
+    casper.start("http://foo.bar/1");
+    casper.then(function(){
+      this.addPseudoClass("hover","#id");
+    }); 
+    casper.then(function(){
+      this.click("#id");
+    });
+
+    casper.run();
+Also have a look at `removePseudoClass()`_.
+
 ``back()``
 -------------------------------------------------------------------------------
 
@@ -405,7 +425,7 @@ Default wait timeout, for ``wait*`` family functions.
 
 Moves back a step in browser's history::
 
-    casper.start('http://foo.bar/1')
+    casper.start('http://foo.bar/1');
     casper.thenOpen('http://foo.bar/2');
     casper.thenOpen('http://foo.bar/3');
     casper.back();
@@ -527,6 +547,17 @@ Example::
     });
 
     casper.run();
+
+.. warning::
+
+   This method simulates events witch fives it a greater portability over different javascript engines.
+   But it has limitations : the operarions on css pseudo do not work.
+   triggering simulated events on selector with :hover class css, does nothing.
+
+  You have 2 options:
+
+  - use Native Event with Mouse class method ``casper.mouse.move``,
+  - clone css pseudo class and apply it with ``casper.addPseudoClassToElement``;
 
 .. index:: click
 
@@ -1452,6 +1483,7 @@ and for phantomjs >= 1.9.8 ``mouseenter``, ``mouseleave`` and ``contextmenu``.
 
         casper.run();
 
+<<<<<<< HEAD
 ``newPage()``
 -------------------------------------------------------------------------------
 
@@ -1574,6 +1606,26 @@ Reloads current page location::
     });
 
     casper.run();
+
+``removePseudoClass()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``removePseudoClass(String pseudoClass, String selector)``
+
+.. versionadded:: 1.1
+
+Removes a pseudo class::
+
+    casper.start("http://foo.bar/1");
+    casper.then(function(){
+      this.removePseudoClass("hover","#id1");
+    }); 
+    casper.then(function(){
+      this.click("#id2");
+    });
+
+    casper.run();
+Also have a look at `addPseudoClass()`_.
 
 ``repeat()``
 -------------------------------------------------------------------------------
