@@ -77,6 +77,27 @@ function selectXPath(expression) {
 exports.selectXPath = selectXPath;
 
 /**
+ * Shortcut to build an Regex selector object.
+ *
+ * @param  String  tag         The tag where the regex selection will be performed
+ * @param  Object  attributes  An object with key = attribute name, value = regex to be performed for the attribute.
+ * @return Object
+ * @see    http://casperjs.org/selectors.html
+ */
+function selectRegex(tag, attributes) {
+    "use strict";
+    return {
+        type:      'regex',
+        tag:        tag,
+        attributes: attributes,
+        toString: function() {
+            return this.type + ' tag: ' + this.tag + ' attributes: ' + JSON.stringify(this.attributes);
+        }
+    };
+}
+exports.selectRegex = selectRegex;
+
+/**
  * Main Casper object.
  *
  * @param  Object  options  Casper options
@@ -843,10 +864,10 @@ Casper.prototype.evaluateOrDie = function evaluateOrDie(fn, message, status) {
 };
 
 /**
- * Checks if an element matching the provided DOM CSS3/XPath selector exists in
+ * Checks if an element matching the provided DOM CSS3/XPath/Regex selector exists in
  * current page DOM.
  *
- * @param  String  selector  A DOM CSS3/XPath selector
+ * @param  String | Object  selector  A DOM CSS3/XPath/Regex selector
  * @return Boolean
  */
 Casper.prototype.exists = function exists(selector) {
