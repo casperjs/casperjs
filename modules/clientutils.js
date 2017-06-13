@@ -815,7 +815,7 @@
             var ret;
 
             if (typeof selector === "object") { // selector object (CSS3 | XPath | Regex) could by passed
-                if (type == 'regex' && selector.type == 'regex') {
+                if (type === 'regex' && selector.type === 'regex') {
                     return selector;
                 }
                 selector = selector.path;
@@ -917,7 +917,7 @@
         this.processSelector = function processSelector(selector) {
             var selectorObject = {
                 toString: function toString() {
-                    if (this.type == 'regex') {
+                    if (this.type === 'regex') {
                         return 'regex tag: ' + this.tag + ' attributes: ' + JSON.stringify(this.attributes);
                     }
                     return this.type + ' selector: ' + this.path;
@@ -935,7 +935,7 @@
                 } else if (SUPPORTED_SELECTOR_TYPES.indexOf(selector.type) === -1) {
                     throw new Error("Unsupported selector type: " + selector.type);
                 }
-                if (selector.type == 'regex') {
+                if (selector.type === 'regex') {
                     if (!selector.hasOwnProperty('tag') || !selector.hasOwnProperty('attributes')) {
                         throw new Error("Incomplete selector object");
                     }

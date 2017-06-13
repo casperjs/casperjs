@@ -96,12 +96,12 @@ To ease the use and reading of XPath expressions, a ``selectXPath`` helper is av
 
 
 
-.. index:: Regex Selector
+.. index:: Regex
 
-Regex selector
+Regex
 -----
 
-.. versionadded:: 1.1.5
+.. versionadded:: 1.2.0
 
 Finally, there is the Regex Selector.
 
