@@ -660,6 +660,8 @@ A more asynchronous example::
 
 .. seealso:: `done()`_
 
+.. _tester_begin_configuration:
+
 ``Tester#begin()`` also accepts a test configuration object, so you can add ``setUp()`` and ``tearDown()`` methods::
 
     // cow-test.js

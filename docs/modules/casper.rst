@@ -1773,6 +1773,37 @@ Of course you can directly pass the auth string in the url to open::
 
     casper.run();
 
+.. index:: EventEmitter
+
+``setMaxListeners()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``setMaxListeners(Integer maxListeners)``
+
+Sets the maximum number of listeners that can be added for each type of listener::
+
+    casper.setMaxListeners(12);
+
+.. note::
+
+    Incorrect registering of listeners in your casper scripts can result in a warning
+    message indicating that a possible EventEmitter lead has been detected. Ensure you
+    are adding listeners in the required way.
+
+    If you need a listener that will be processed by all of your scripts then ensure it
+    is only registered once. If you need to add a listener per test suite, for example,
+    ensure the listener is added during setUp and removed during tearDown. See
+    :ref:`Tester#begin() <tester_begin_configuration>` for setUp and tearDown structure.
+
+.. warning::
+
+    Changing the maximum listeners is not recommended. You should only increase it if
+    you require more than the default amount of listeners in your case. Increasing this
+    limit will increase it for all listener types and could result in possible
+    EventEmitter leaks going undetected. If you must increase this limit, increase it
+    in small increments.
+
+
 .. index:: start, initialization
 
 ``start()``
