@@ -180,10 +180,11 @@ EventEmitter.prototype.addListener = function addListener(type, listener) {
 
             if (m && m > 0 && this._events[type].length > m) {
                 this._events[type].warned = true;
-                console.error('(node) warning: possible EventEmitter memory ' +
-                            'leak detected. %d listeners added. ' +
-                            'Use emitter.setMaxListeners() to increase limit.',
-                            this._events[type].length);
+                console.error('Warning: Possible EventEmitter memory leak detected. ' +
+                    this._events[type].length +
+                    ' listeners of type ' + type + ' added. Use casper.setMaxListeners() to increase' +
+                    ' the limit if you are expecting the current limit of ' + m + ' to be exceeded.' +
+                    ' Please refer to online documentation for more information.');
                 console.trace();
             }
         }
@@ -235,10 +236,11 @@ EventEmitter.prototype.prependListener = function prependListener(type, listener
 
             if (m && m > 0 && this._events[type].length > m) {
                 this._events[type].warned = true;
-                console.error('(node) warning: possible EventEmitter memory ' +
-                            'leak detected. %d listeners added. ' +
-                            'Use emitter.setMaxListeners() to increase limit.',
-                            this._events[type].length);
+                console.error('Warning: Possible EventEmitter memory leak detected. ' +
+                    this._events[type].length +
+                    ' listeners of type ' + type + ' added. Use casper.setMaxListeners() to increase' +
+                    ' the limit if you are expecting the current limit of ' + m + ' to be exceeded.' +
+                    ' Please refer to online documentation for more information.');
                 console.trace();
             }
         }
