@@ -1787,7 +1787,7 @@ Sets the maximum number of listeners that can be added for each type of listener
 .. note::
 
     Incorrect registering of listeners in your casper scripts can result in a warning
-    message indicating that a possible EventEmitter lead has been detected. Ensure you
+    message indicating that a possible EventEmitter leak has been detected. Ensure you
     are adding listeners in the required way.
 
     If you need a listener that will be processed by all of your scripts then ensure it
