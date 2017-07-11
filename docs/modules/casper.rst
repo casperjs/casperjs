@@ -634,7 +634,7 @@ Example::
 Captures the page area containing the provided selector and saves it to ``targetFile``::
 
     casper.start('http://www.weather.com/', function() {
-        this.captureSelector('weather.png', '#wx-main');
+        this.captureSelector('weather.png', '#LookingAhead');
     });
 
     casper.run();
