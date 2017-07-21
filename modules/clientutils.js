@@ -1019,53 +1019,55 @@
             } catch (e) {
                 this.log("Unable to focus() input field " + field.getAttribute('name') + ": " + e, "warning");
             }
-
-            filter = String(field.getAttribute('type') ? field.getAttribute('type') : field.nodeName).toLowerCase();
-            switch (filter) {
-                case "checkbox":
-                case "radio":
-                    field.checked = value ? true : false;
-                    break;
-                case "file":
-                    throw {
-                        name: "FileUploadError",
-                        message: "File field must be filled using page.uploadFile",
-                        path: value,
-                        id: field.id || null
-                    };
-                    break;
-                case "select":
-                    if (field.multiple) {
-                        [].forEach.call(field.options, function(option) {
-                            option.selected = value.indexOf(option.value) !== -1;
-                        });
-                        // If the values can't be found, try search options text
-                        if (field.value === "") {
+            if (field.getAttribute('contenteditable')) {
+                field.textContent = value;
+            } else {
+                filter = String(field.getAttribute('type') ? field.getAttribute('type') : field.nodeName).toLowerCase();
+                switch (filter) {
+                    case "checkbox":
+                    case "radio":
+                        field.checked = value ? true : false;
+                        break;
+                    case "file":
+                        throw {
+                            name: "FileUploadError",
+                            message: "File field must be filled using page.uploadFile",
+                            path: value,
+                            id: field.id || null
+                        };
+                        break;
+                    case "select":
+                        if (field.multiple) {
                             [].forEach.call(field.options, function(option) {
-                                option.selected = value.indexOf(option.text) !== -1;
+                                option.selected = value.indexOf(option.value) !== -1;
                             });
-                        }
-                    } else {
-                        // PhantomJS 1.x.x can't handle setting value to ''
-                        if (value === "") {
-                            field.selectedIndex = -1;
+                            // If the values can't be found, try search options text
+                            if (field.value === "") {
+                                [].forEach.call(field.options, function(option) {
+                                    option.selected = value.indexOf(option.text) !== -1;
+                                });
+                            }
                         } else {
-                            field.value = value;
-                        }
+                            // PhantomJS 1.x.x can't handle setting value to ''
+                            if (value === "") {
+                                field.selectedIndex = -1;
+                            } else {
+                                field.value = value;
+                            }
 
-                        // If the value can't be found, try search options text
-                        if (field.value !== value) {
-                            [].some.call(field.options, function(option) {
-                                option.selected = value === option.text;
-                                return value === option.text;
-                            });
+                            // If the value can't be found, try search options text
+                            if (field.value !== value) {
+                                [].some.call(field.options, function(option) {
+                                    option.selected = value === option.text;
+                                    return value === option.text;
+                                });
+                            }
                         }
-                    }
-                    break;
-                default:
-                    field.value = value;
+                        break;
+                    default:
+                        field.value = value;
+                }
             }
-
             ['change', 'input'].forEach(function(name) {
                 var event = document.createEvent("HTMLEvents");
                 event.initEvent(name, true, true);
