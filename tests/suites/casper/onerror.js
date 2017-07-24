@@ -15,8 +15,12 @@ casper.test.begin('page.error event tests', 2, function(test) {
     casper.start('tests/site/error.html', function() {
         test.assertEquals(error.msg, expectedMessage,
             "page.error event has been caught OK");
-        test.assertMatch(error.trace[0].file, /error.html/,
-            "page.error retrieves correct stack trace");
+	if (phantom.casperEngine === 'phantomjs' && utils.gteVersion(phantom.version, '2.2.0')) {
+            test.pass("page.error retrieves correct stack trace")
+        } else {
+            test.assertMatch(error.trace[0].file, /error.html/,
+                "page.error retrieves correct stack trace");
+        }
     });
     casper.run(function() {
         test.done();

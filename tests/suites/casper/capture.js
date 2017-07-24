@@ -24,7 +24,7 @@ casper.test.begin('Casper.capture() tests', 1, {
         var self = this;
 
         casper.start('tests/site/index.html', function() {
-            this.viewport(300, 200);
+            //this.viewport(300, 200);
             this.capture(self.testFile);
             test.assert(fs.isFile(self.testFile), 'Casper.capture() captured a screenshot');
         });

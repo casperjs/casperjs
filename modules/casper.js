@@ -937,6 +937,15 @@ Casper.prototype.fillForm = function fillForm(selector, vals, options) {
                 }, selectXPath(file.selector), selector, 'FORM')].join(' ');
             }
             this.page.uploadFile(fileFieldSelector, paths);
+            if (phantom.casperEngine === 'phantomjs' && utils.gteVersion(phantom.version, '2.5.0')) {
+                this.evaluate(function(selector) {
+                    var element = __utils__.findOne(selector);
+                    if (element) {
+                        element.focus();
+                    }
+                }, fileFieldSelector);
+                this.sendKeys(fileFieldSelector, this.page.event.key.Enter, {keepFocus: false});
+            }
         }.bind(this));
     }
 
@@ -1866,6 +1875,15 @@ Casper.prototype.setFieldValue = function setFieldValue(selector, value, form, o
             throw new CasperError('Cannot upload nonexistent file: ' + value);
         }
         this.page.uploadFile(result, value);
+        if (phantom.casperEngine === 'phantomjs' && utils.gteVersion(phantom.version, '2.5.0')) {
+            this.evaluate(function(selector) {
+                    var element = __utils__.findOne(selector);
+                    if (element) {
+                        element.focus();
+                    }
+                }, result);
+            this.sendKeys(result, this.page.event.key.Enter, {keepFocus: false});
+        }
     }
 };
 
@@ -3152,7 +3170,11 @@ function createPage(casper) {
                 msg = logTest[2];
                 casper.log(msg, logLevel, "remote");
             } else {
-                casper.emit('remote.message', msg);
+                if (phantom.casperEngine === 'phantomjs' && utils.gteVersion(phantom.version, '2.2.0') && /Error: /.test(msg)) {
+                    casper.emit('page.error', msg, [{"line": 0, "file": ""}]);
+                } else {
+                    casper.emit('remote.message', msg);
+                }
             }
         };
 

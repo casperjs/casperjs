@@ -140,6 +140,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
         }
     })(phantom.version);
 
+
     // Hooks in default phantomjs error handler
     phantom.onError = function onPhantomError(msg, trace) {
         phantom.defaultErrorHandler.apply(phantom, arguments);
@@ -152,6 +153,21 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             __die();
         }
     };
+
+    if (phantom.casperEngine === 'phantomjs' && phantom.version.major === 2) {
+        var javaScriptConsoleMessage = function(msg){
+            if (msg.indexOf("ReferenceError: Can't find variable: casper") === 0) {
+                phantom.page.javaScriptConsoleMessageSent.disconnect(javaScriptConsoleMessage);
+                console.error('Hint: you may want to use the `casperjs test` command.');
+                phantom.page.javaScriptConsoleMessageSent.connect(javaScriptConsoleMessage);
+            }
+            // exits on syntax error
+            if (msg.indexOf('SyntaxError: ') === 0) {
+                __die();
+            }
+        };
+        phantom.page.javaScriptConsoleMessageSent.connect(javaScriptConsoleMessage);
+    }
 
     // Patching fs
     var fs = (function patchFs(fs) {

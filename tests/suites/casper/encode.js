@@ -6,7 +6,7 @@ casper.test.begin('base64encode() and download() tests', 8, function(test) {
     casper.start('file://' + phantom.casperPath + '/tests/site/index.html', function() {
         var imageUrl = 'file://' + phantom.casperPath + '/tests/site/images/phantom.png',
             image = this.base64encode(imageUrl);
-        test.assertEquals(image.length, 6160, 'Casper.base64encode() can retrieve base64 contents');
+        test.assertEquals(image.length, 6136, 'Casper.base64encode() can retrieve base64 contents');
         this.download(imageUrl, '__test_logo.png');
         test.assert(fs.exists('__test_logo.png'), 'Casper.download() downloads a file');
         if (fs.exists('__test_logo.png')) {

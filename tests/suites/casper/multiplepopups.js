@@ -5,7 +5,7 @@ var x = require('casper').selectXPath;
 
 
 //------------------------------------------------
-casper.test.begin('multiple-popups tests', 20, function(test) {
+casper.test.begin('multiple-popups tests', 24, function(test) {
 
     casper.removeAllListeners('popup.created');
     casper.removeAllListeners('popup.loaded');
@@ -15,6 +15,13 @@ casper.test.begin('multiple-popups tests', 20, function(test) {
         test.pass('"popup.created" event is fired');
         test.assert(utils.isWebPage(popup),
             '"popup.created" event callback get a popup page instance');
+    });
+
+    casper.on('popup.created', function(popup) {
+        test.pass('"popup.created" event is fired');
+        test.assert(utils.isWebPage(popup),
+            '"popup.created" event callback get a popup page instance');
+        
     });
 
     casper.once('popup.loaded', function(popup) {
