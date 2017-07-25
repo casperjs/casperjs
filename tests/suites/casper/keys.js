@@ -25,12 +25,14 @@ casper.test.begin('sendKeys() tests', 4, function(test) {
     });
 });
 
-casper.test.begin('sendKeys() works on content-editable elements', 1, function(test) {
+casper.test.begin('sendKeys() works on content-editable elements', 2, function(test) {
     casper.start('tests/site/elementattribute.html', function() {
         this.click('#content-editable-div');
         this.sendKeys('#content-editable-div', 'A Clockwork Orange');
     }).then(function() {
         test.assertSelectorHasText('#content-editable-div','A Clockwork Orange');
+        this.sendKeys('#content-editable-div', 'A Paper Apple', { reset: true });
+        test.assertSelectorHasText('#content-editable-div','A Paper Apple');
     }).run(function() {
         test.done();
     });
