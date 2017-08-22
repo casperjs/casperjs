@@ -35,7 +35,7 @@ Run it (with python):
 
     $ casperjs sample.js
     
-Run it (with node):
+Run it (with node): more info here - https://github.com/casperjs/casperjs/issues/1864
 
 .. code-block:: text
 
