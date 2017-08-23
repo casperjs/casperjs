@@ -148,7 +148,7 @@ If you run this script:
 
 As you can see, the ``01234567`` value has been cast to a *Number*.
 
-If you want the original string, use the ``raw`` property of the ``cli`` object, which contains the raw values of the passed parameters. For very long numbers, use the ``raw`` property as there is an ECMA script limitation with a numeric precision of up to 17 places. More info here - https://github.com/casperjs/casperjs/issues/1134
+If you want the original string, use the ``raw`` property of the ``cli`` object, which contains the raw values of the passed parameters::
 
     var casper = require('casper').create();
     var utils = require('utils');
@@ -166,3 +166,4 @@ Sample usage:
     1234567
     "01234567"
 
+For very long numbers, use the ``raw`` property as there is an ECMA script limitation with a numeric precision of up to 17 places. More info here - https://github.com/casperjs/casperjs/issues/1134
