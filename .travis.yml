@@ -157,7 +157,7 @@ matrix:
       addons: 
          firefox: "57.0"
     - env: >
-        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="1.0.0-beta.1" MAKE_TEST_COMMAND="test--headless"
+        CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="1.0.0-beta.1" MAKE_TEST_COMMAND="test-headless"
         ENGINE_ARCHIVE_URL="https://github.com/casperjs/slimerjs-builds/releases/download/v1.0.0-beta.1/slimerjs-1.0.0-beta.1.zip"
       os: linux
       addons: 
