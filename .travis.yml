@@ -155,7 +155,7 @@ matrix:
         ENGINE_ARCHIVE_URL="https://github.com/casperjs/slimerjs-builds/releases/download/v1.0.0-beta.1/slimerjs-1.0.0-beta.1.zip"
       os: linux
       addons: 
-         firefox: "57.0"      
+         firefox: "57.0"
 
 notifications:
   irc:

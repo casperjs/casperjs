@@ -277,6 +277,9 @@ casper.test.begin('getFormValues() tests', 2, function(test) {
             fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
         }
     }
+    if (phantom.casperEngine === 'slimerjs' && !!utils.gteVersion(slimer.version, '1.0.0')) {
+        fileValue = 'C:\\fakepath\\README.md';
+    }
 
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
