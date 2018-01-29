@@ -101,6 +101,7 @@ casper.test.begin('Tester.assertField(): filled inputs', 7, function(test) {
 casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
     var fpath = fs.pathJoin(phantom.casperPath, 'README.md');
     var fileValue = 'README.md';
+
     if (phantom.casperEngine === 'phantomjs') {
         if (utils.matchEngine({
             name: 'phantomjs',
@@ -111,7 +112,10 @@ casper.test.begin('Tester.assertField(): unfilled inputs', 7, function(test) {
             fileValue = 'C:\\fakepath\\README.md'; // phantomjs/webkit sets that;
         }
     }
-
+    if (phantom.casperEngine === 'slimerjs' && !!utils.gteVersion(slimer.version, '1.0.0')) {
+        fileValue = 'C:\\fakepath\\README.md';
+    }
+        
     casper.start('tests/site/form.html', function() {
         this.fill('form[action="result.html"]', {
             'email':       'chuck@norris.com',
