@@ -774,7 +774,7 @@ Saves a remote resource onto the filesystem. You can optionally set the HTTP met
 
 .. note::
 
-   If you have some troubles downloading files, try to :ref:`disable web security <faq_web_security>`.
+   If you have some troubles downloading files, try to :ref:`disable web security <faq_web_security>`. Also, this is meant more for retrieving static resources. If you want to get the JavaScript-rendered HTML DOM use getHTML() instead.
 
 ``each()``
 -------------------------------------------------------------------------------
