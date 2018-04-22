@@ -181,6 +181,7 @@ var SUPPORTED_ENGINES = {
             'config',
             'debug',
             'disk-cache',
+            'headless',
             'ignore-ssl-errors',
             'load-images',
             'load-plugins',

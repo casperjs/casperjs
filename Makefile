@@ -6,6 +6,8 @@ test: selftest clitest lint
 
 test-dotNET: compile-dotNET selftest-dotNET clitest-dotNET lint
 
+test-headless: selftest-headless clitest lint
+
 docs:
 	sphinx-build -b html ./docs docs/_build
 
@@ -19,6 +21,10 @@ compile-dotNET:
 selftest-dotNET:
 	mono bin/casperjs.exe --help
 	mono bin/casperjs.exe selftest
+
+selftest-headless:
+	bin/casperjs --help
+	bin/casperjs selftest --headless
 
 clitest:
 	python tests/clitests/runtests.py
