@@ -152,13 +152,13 @@ matrix:
          firefox: "52.0"
     - env: >
         CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="1.0.0-beta.1" MAKE_TEST_COMMAND="test" ENGINE_XVFB="1"
-        ENGINE_ARCHIVE_URL="https://github.com/casperjs/slimerjs-builds/releases/download/v1.0.0-beta.1/slimerjs-1.0.0-beta.1.zip"
+        ENGINE_ARCHIVE_URL="https://github.com/casperjs/slimerjs-builds/releases/download/v1.0.0-beta.1/slimerjs-1.0.0.zip"
       os: linux
       addons: 
          firefox: "57.0"
     - env: >
         CASPERJS_ENGINE="slimerjs" ENGINE_VERSION="1.0.0-beta.1" MAKE_TEST_COMMAND="test-headless"
-        ENGINE_ARCHIVE_URL="https://github.com/casperjs/slimerjs-builds/releases/download/v1.0.0-beta.1/slimerjs-1.0.0-beta.1.zip"
+        ENGINE_ARCHIVE_URL="https://github.com/casperjs/slimerjs-builds/releases/download/v1.0.0-beta.1/slimerjs-1.0.0.zip"
       os: linux
       addons: 
          firefox: "57.0"         
