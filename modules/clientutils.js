@@ -59,6 +59,7 @@
             svg: 'http://www.w3.org/2000/svg',
             mathml: 'http://www.w3.org/1998/Math/MathML'
         };
+        var TEMPLATE_MATCHING = {};
 
         function form_urlencoded(str) {
             return encodeURIComponent(str)
@@ -66,6 +67,54 @@
                     .replace(/[!'()*]/g, function(c) {
                         return '%' + c.charCodeAt(0).toString(16);
                     });
+        }
+
+        function image_difference(imageData, patternData, coords, delta) {
+            var k = 0;
+            var pos = 0;
+            for (var j=0; j < coords.height; j++) {
+                pos = ((coords.y + j) * delta + coords.x) * 4;
+                for (var i = 0; i < coords.width; i++) {
+                    if (imageData.data[pos] !== patternData.data[k] ||
+                    imageData.data[pos + 1] !== patternData.data[k + 1] ||
+                    imageData.data[pos + 2] !== patternData.data[k + 2]) {
+                        return false;
+                    }
+                    pos += 4;
+                    k += 4;
+                }
+            }
+            return true;
+        }
+
+        function image_integral(img, pow) {
+            var width = img.width + 1, height = img.height + 1, data = img.data, i = 0;
+            var max = width * height, k = 0;
+            var res = typeof window.Float64Array !== "undefined" ? new window.Float64Array(max) : new Array(max);
+
+            while (k < max) {
+                res[k++] = 0.0;
+            }
+            pow |= 2;
+            for (var y = 1; y < height; y++) {
+                for (var x = 1; x < width; x++) {
+                    res[x + y * width] = res[x - 1 + y * width] +
+                        res[ x + (y - 1) * width] -
+                        res[x - 1 + (y - 1) * width] +
+                        Math.pow(Math.floor(0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2]), pow);
+                    i += 4;
+                }
+            }
+            return {
+                matrice: res,
+                width: width,
+                height: height
+            };
+        }
+
+        function image_integral_sum(r, x, y, w, h) {
+            var m = r.matrice, mw = r.width;
+            return  m[x + y * mw] + m[x + w + (y + h) * mw] - m[x + (y + h) * mw] - m[x + w + y * mw];
         }
 
         // public members
@@ -350,6 +399,57 @@
         };
 
         /**
+         * Searchs and finds the location of a template image in a larger image.
+         *
+         * @param   String   screen   screen identifier.
+         * @param   String   template template identifier.
+         * @return  Mixed.
+         */
+        this.findPatternInImage = function findPatternInImage(screenName, templateName) {
+            var sum;
+            if (typeof TEMPLATE_MATCHING[templateName] !== "undefined")  {
+                var screenCanvas = TEMPLATE_MATCHING[screenName].canvas;
+                var templatePattern = TEMPLATE_MATCHING[templateName].canvas;
+                var imageData = screenCanvas.getContext('2d').getImageData(0, 0,
+                    screenCanvas.width, screenCanvas.height);
+                var patternData = templatePattern.getContext('2d').getImageData(0, 0,
+                    templatePattern.width, templatePattern.height);
+                var Iscreen = image_integral(imageData, 2);
+                var Ipattern = image_integral(patternData, 2);
+                var val = image_integral_sum(Iscreen, 0, 0, screenCanvas.width, screenCanvas.height);
+                var vala = image_integral_sum(Ipattern, 0, 0, templatePattern.width, templatePattern.height);
+                compute:
+                for (var y = 0; y < screenCanvas.height; y++) {
+                  for (var x = 0; x < screenCanvas.width; x++) {
+                    sum = Math.abs(image_integral_sum(Iscreen, x, y,
+                            templatePattern.width, templatePattern.height) - vala
+                    );
+                    if (sum <= val) {
+                      val = sum;
+                    }
+                    if (val === 0 && image_difference(imageData, patternData, {
+                            x: x,
+                            y: y,
+                            width: templatePattern.width,
+                            height: templatePattern.height
+                        }, screenCanvas.width)) {
+                        delete TEMPLATE_MATCHING[templateName];
+                        return {
+                            x: x + (templatePattern.width >> 1),
+                            x0: x,
+                            x1: x + templatePattern.width,
+                            y: y + (templatePattern.height >> 1),
+                            y0: y,
+                            y1: y + templatePattern.height
+                        };
+                    }
+                  }
+                }
+            }
+            return false;
+        };
+
+        /**
          * Force target on <FORM> and <A> tag.
          *
          * @param  String     selector  CSS3 selector
@@ -397,8 +497,8 @@
                 });
             } catch (e) {
                 if (e.name === "NETWORK_ERR" && e.code === 101) {
-                    this.log("getBinary(): Unfortunately, casperjs cannot make"
-                        + " cross domain ajax requests", "warning");
+                    this.log("getBinary(): Unfortunately, casperjs cannot make" +
+                        " cross domain ajax requests", "warning");
                 }
                 this.log("getBinary(): Error while fetching " + url + ": " + e, "error");
                 return "";
@@ -721,6 +821,29 @@
                 }
             });
             return values;
+        };
+
+        /**
+         * Load a base64 Image before template matching
+         *
+         * @param  String  name    Image Identifier
+         * @param  String  base64  Image Base64 Data
+         */
+        this.loadImageBase64ToCanvas = function loadImageBase64ToCanvas(name, base64) {
+            var imageElement = new Image();
+            var canvasElement =  document.createElement('canvas');
+
+            imageElement.onload = function() {
+                canvasElement.width = this.width;
+                canvasElement.height = this.height;
+                canvasElement.getContext('2d').drawImage(imageElement,
+                    0, 0, imageElement.width, imageElement.height);
+                TEMPLATE_MATCHING[name] = {
+                    canvas: canvasElement
+                };
+            };
+            imageElement.src = base64;
+            return 1;
         };
 
         /**

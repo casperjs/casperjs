@@ -95,3 +95,20 @@ casper.test.begin('Casper.captureBase64() tests', 4, function(test) {
         test.done();
     });
 });
+
+
+casper.test.begin('Casper.waitForRender() tests', 4, function(test) {
+    casper.start('tests/site/index.html', function() {
+        test.assert(this.captureBase64('png').length > 0,
+            'Casper.captureBase64() rendered a page capture as base64');
+        var base64 = "data:image/png;base64," + this.captureBase64('png', {top: 10, left: 20, width: 30, height: 40});
+        
+        casper.waitForRender(base64, function(coords ) {
+            test.pass('Casper.waitForRender() waits for a template matching'+ JSON.stringify(coords));
+            test.assertEquals(coords.x, 35, 'coords x equals the expected value');
+            test.assertEquals(coords.y, 30, 'coords y equals the expected value');
+        });
+    }).run(function() {
+        test.done();
+    });
+});
