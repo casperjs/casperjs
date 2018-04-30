@@ -10,7 +10,7 @@ if (utils.ltVersion(phantom.version, '1.8.0')) {
     casper.test.begin('document.location tests', 1, function(test) {
         casper.start('tests/site/index.html', function() {
             this.evaluate(function() {
-                document.location = '/tests/site/form.html';
+                document.location = document.location.origin + '/tests/site/form.html';
             });
         });
         casper.then(function() {
