@@ -1101,8 +1101,8 @@ Tester.prototype.begin = function begin() {
 
     function getConfig(args) {
         var config = {
-            setUp: function(){},
-            tearDown: function(){}
+            setUp: null,
+            tearDown: null
         };
 
         if (utils.isFunction(args[1])) {
@@ -1144,22 +1144,25 @@ Tester.prototype.begin = function begin() {
     this.executed = 0;
     this.running = this.started = true;
 
+    var _setUpFn = config.setUp || this._setUp;
+    var _context = utils.isFunction(config.setUp) ? config : this;
+
+    if (!utils.isFunction(_setUpFn)) {
+        return next();
+    }
+
     try {
-        if (config.setUp)
-            config.setUp(this, this.casper);
-
-        if (!this._setUp)
-            return next();
-
-        if (this._setUp.length > 0)
-            return this._setUp.call(this, next); // async
-
-        this._setUp.call(this);                  // sync
-        next();
+        if (_setUpFn.length > 2) {
+            _setUpFn.call(_context, this, this.casper, next); // async
+        } else {
+            _setUpFn.call(_context, this, this.casper); // sync
+            next();
+        }
     } catch (err) {
         this.processError(err);
         this.done();
     }
+
 };
 
 /**
@@ -1199,14 +1202,6 @@ Tester.prototype.done = function done() {
         planned = arguments[0];
     }
 
-    if (config && config.tearDown && utils.isFunction(config.tearDown)) {
-        try {
-            config.tearDown(this, this.casper);
-        } catch (error) {
-            this.processError(error);
-        }
-    }
-
     var next = function() {
         if (this.currentSuite && this.currentSuite.planned &&
             this.currentSuite.planned !== this.executed + this.currentSuite.skipped &&
@@ -1218,7 +1213,7 @@ Tester.prototype.done = function done() {
         }
         if (this.currentSuite) {
             this.suiteResults.push(this.currentSuite);
-            
+
             if (!this.options.concise) {
                 var message = [
                     this.colorize('PASS', 'INFO'),
@@ -1235,7 +1230,7 @@ Tester.prototype.done = function done() {
 
                 this.casper.echo(message.join(' '));
             }
-            
+
             this.currentSuite = undefined;
             this.executed = 0;
         }
@@ -1248,17 +1243,20 @@ Tester.prototype.done = function done() {
         }
     }.bind(this);
 
-    if (!this._tearDown) {
+    var _tearDownFn = config.tearDown || this._tearDown;
+    var _context = utils.isFunction(config.tearDown) ? config : this;
+
+    if (!utils.isFunction(_tearDownFn)) {
         return next();
     }
 
     try {
-        if (this._tearDown.length > 0) {
+        if (_tearDownFn.length > 2) {
             // async
-            this._tearDown.call(this, next);
+            _tearDownFn.call(_context, this, this.casper, next);
         } else {
             // sync
-            this._tearDown.call(this);
+            _tearDownFn.call(_context, this, this.casper);
             next();
         }
     } catch (error) {
@@ -1610,7 +1608,6 @@ Tester.prototype.renderResults = function renderResults(exit, status, save) {
 
 /**
  * Runs all suites contained in the paths passed as arguments.
- *
  */
 Tester.prototype.runSuites = function runSuites() {
     "use strict";

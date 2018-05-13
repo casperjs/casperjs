@@ -681,6 +681,28 @@ A more asynchronous example::
         }
     });
 
+This could even be asynchronous functions:
+
+    var asyncCow;
+    casper.test.begin('Async Cows can fly', 2, {
+        setUp: function(test, globalCasper, callback) {
+            setTimeout(function() {
+                asyncCow = new AsyncCow();
+                callback();
+            }, 10);
+        },
+        tearDown: function(test, globalCasper, callback) {
+            setTimeout(function() {
+                asyncCow.destroy();
+                callback();
+            }, 10);
+        },
+        test: function(test) {
+            test.assertEquals(asyncCow.fly(), 'swoosh!');
+            test.done();
+        }
+    });
+
 .. index:: Colors
 
 ``colorize()``
@@ -919,7 +941,7 @@ Defines a function which will be executed before every test defined using `begin
 
 To perform asynchronous operations, use the ``done`` argument::
 
-    casper.test.setUp(function(done) {
+    casper.test.setUp(function(test, globalCasper, done) {
         casper.start('http://foo').then(function() {
             // ...
         }).run(done);
@@ -958,7 +980,7 @@ Defines a function which will be executed after every test defined using `begin(
 
 To perform asynchronous operations, use the ``done`` argument::
 
-    casper.test.tearDown(function(done) {
+    casper.test.tearDown(function(test, globalCasper, done) {
         casper.start('http://foo/goodbye').then(function() {
             // ...
         }).run(done);
