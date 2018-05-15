@@ -986,7 +986,7 @@ Logs a message with an optional level in an optional space. Available levels are
 **Signature:** ``fill(String selector, Object values[, Boolean submit])``
 
 Fills the fields of a form with given values and optionally submits it. Fields
-are referenced by their ``name`` attribute.
+are referenced by their ``name`` attribute. Function `setFieldValue()`_ can be used for filling single field. 
 
 .. versionchanged:: 1.1 To use :doc:`CSS3 or XPath selectors <../selectors>` instead, check the `fillSelectors()`_ and `fillXPath()`_ methods.
 
@@ -1744,6 +1744,60 @@ Options
   - ``meta``
   - ``keypad``
 
+``setFieldValue()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``setFieldValue(Selector selector, Mixed value [,String form [, Object options]])``
+
+.. versionadded:: 1.1-beta5
+
+Sets a value to form field (input) by CSS3, XPath :doc:`selector <../selectors>`:: or by it's ``name`` attribute or ``label`` text.
+For ``name`` or ``label`` selectors are functions aliasies `setFieldValueName()`_ and `setFieldValueLabel()`_ available::
+
+    var x = require('casper').selectXPath;
+    casper.start('tests/site/form.html', function() {
+        this.setFieldValue('input[name="email"]', 'chuck@norris.com');
+        this.setFieldValue('select[name="multitopic"]', ['bar', 'car'], 'form[action="result.html"]');
+        this.setFieldValue(x('//input[@name="check"]'), true);
+        this.setFieldValue('inputName', 'Input selected by name attribute', null, {selectorType: 'name'});
+        this.setFieldValue('Input Label', 'Input selected by label text', null, {selectorType: 'label'});
+    });
+
+Options
+~~~~~~~
+
+- ``(String) selectorType: name|label|xpath|css3:``
+
+  type of selector, where CSS3 and XPath(object) are autodetected (need not to be set).
+
+
+``setFieldValueLabel()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``setFieldValueLabel(String label, Mixed value [,String form])``
+
+.. versionadded:: 1.1-beta5
+
+Sets a value to form field (input) by ``label`` text::
+
+    casper.start('tests/site/form.html', function() {
+        this.setFieldValueLabel('Your email', 'chuck@norris.com');
+    });
+
+
+``setFieldValueName()``
+-------------------------------------------------------------------------------
+
+**Signature:** ``setFieldValueName(String name, Mixed value [,String form])``
+
+.. versionadded:: 1.1-beta5
+
+Sets a value to form field (input) by ``name`` attribute::
+
+    casper.start('tests/site/form.html', function() {
+        this.setFieldValueName('email', 'chuck@norris.com');
+    });
+
 
 .. index:: auth
 
@@ -1826,7 +1880,7 @@ Alternatively::
     casper.then(function() {
         this.echo("I'm loaded.");
     });
-
+    
     casper.run();
 
 Or alternatively::
