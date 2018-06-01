@@ -6,7 +6,7 @@
 Selectors
 =========
 
-CasperJS makes a heavy use of selectors in order to work with the `DOM <http://www.w3.org/TR/dom/>`_, and can transparently use either `CSS3 <http://www.w3.org/TR/selectors/>`_ or `XPath <http://www.w3.org/TR/xpath/>`_ expressions.
+CasperJS makes a heavy use of selectors in order to work with the `DOM <http://www.w3.org/TR/dom/>`_, and can transparently use either `CSS3 <http://www.w3.org/TR/selectors/>`_, `XPath <http://www.w3.org/TR/xpath/>`_ expressions or the Regex selector.
 
 All the examples below are based on this HTML code:
 
@@ -94,6 +94,39 @@ To ease the use and reading of XPath expressions, a ``selectXPath`` helper is av
         this.test.assertExists(x('//*[@id="plop"]'), 'the element exists');
     });
 
+
+
+.. index:: Regex
+
+Regex
+-----
+
+.. versionadded:: 1.2.0
+
+Finally, there is the Regex Selector.
+
+The Regex selector let you find an element performing a regex match on values of attributes of a certain tag::
+
+    casper.start('http://domain.tld/page.html', function() {
+        this.test.assertExists({
+            type: 'regex',
+            tag: 'a',
+            attributes: {
+                href: '^https?://([\\da-z-_]+\\.)*domain\\.tld(/.*)?$'
+            }
+        }), 'the element exists');
+    });
+
+To ease the use and reading of Regex selector, a ``selectRegex`` helper is available from the ``casper`` module::
+
+    var rs = require('casper').selectRegex;
+
+    casper.start('http://domain.tld/page.html', function() {
+        this.test.assertExists(rs('a', {href: '^https?://([\\da-z-_]+\\.)*domain\\.tld(/.*)?$'}), 'the element exists');
+    });
+
+
+
 .. warning::
 
-   The only limitation of XPath use in CasperJS is in the :ref:`casper.fill() <casper_fill>` method when you want to fill **file fields**; PhantomJS natively only allows the use of CSS3 selectors in its `uploadFile method <https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-webpage-uploadFile>`_, hence this limitation.
+   The only limitation of XPath/Regex use in CasperJS is in the :ref:`casper.fill() <casper_fill>` method when you want to fill **file fields**; PhantomJS natively only allows the use of CSS3 selectors in its `uploadFile method <https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-webpage-uploadFile>`_, hence this limitation.

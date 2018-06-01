@@ -551,6 +551,8 @@ Tester.prototype.assertField = function assertField(input, expected, message, op
                 return this.assertFieldCSS(input.path, expected, message);
             case 'xpath':
                 return this.assertFieldXPath(input.path, expected, message);
+            case 'regex':
+                return this.assertFieldRegex(input, expected, message);
             default:
                 throw new CasperError('Invalid regexp.');
             // no default

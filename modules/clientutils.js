@@ -54,7 +54,7 @@
             -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
         ];
-        var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath'];
+        var SUPPORTED_SELECTOR_TYPES = ['css', 'xpath', 'regex'];
         var XPATH_NAMESPACE = {
             svg: 'http://www.w3.org/2000/svg',
             mathml: 'http://www.w3.org/1998/Math/MathML'
@@ -94,7 +94,7 @@
         /**
          * Clicks on the DOM element behind the provided selector.
          *
-         * @param  String  selector  A CSS3 selector to the element to click
+         * @param  String   selector  A CSS3 selector to the element to click
          * @param  {Number} x         X position
          * @param  {Number} y         Y position
          * @return Boolean
@@ -218,7 +218,7 @@
         /**
          * Checks if a given DOM element exists in remote page.
          *
-         * @param  String  selector  CSS3 selector
+         * @param  String | Object   selector  CSS3 selector (String only), XPath or regex object
          * @return Boolean
          */
         this.exists = function exists(selector) {
@@ -233,7 +233,7 @@
          * Fetches innerText within the element(s) matching a given CSS3
          * selector.
          *
-         * @param  String  selector  A CSS3 selector
+         * @param  String | Object   selector  CSS3 selector (String only), XPath or regex object
          * @return String
          */
         this.fetchText = function fetchText(selector) {
@@ -310,7 +310,7 @@
         /**
          * Finds all DOM elements matching by the provided selector.
          *
-         * @param  String | Object   selector  CSS3 selector (String only) or XPath object
+         * @param  String | Object   selector  CSS3 selector (String only), XPath or regex object
          * @param  HTMLElement|null  scope     Element to search child elements within
          * @return Array|undefined
          */
@@ -320,6 +320,8 @@
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementsByXPath(pSelector.path, scope);
+                } else if (pSelector.type === 'regex') {
+                    return this.getElementsByRegex(pSelector.tag, pSelector.attributes, scope);
                 } else {
                     return Array.prototype.slice.call(scope.querySelectorAll(pSelector.path));
                 }
@@ -331,7 +333,7 @@
         /**
          * Finds a DOM element by the provided selector.
          *
-         * @param  String | Object   selector  CSS3 selector (String only) or XPath object
+         * @param  String | Object   selector  CSS3 selector (String only), XPath or regex object
          * @param  HTMLElement|null  scope     Element to search child elements within
          * @return HTMLElement|undefined
          */
@@ -341,6 +343,8 @@
                 var pSelector = this.processSelector(selector);
                 if (pSelector.type === 'xpath') {
                     return this.getElementByXPath(pSelector.path, scope);
+                } else if (pSelector.type === 'regex') {
+                    return this.getElementByRegex(pSelector.tag, pSelector.attributes, scope);
                 } else {
                     return scope.querySelector(pSelector.path);
                 }
@@ -352,8 +356,8 @@
         /**
          * Force target on <FORM> and <A> tag.
          *
-         * @param  String     selector  CSS3 selector
-         * @param  String     A HTML target '_blank','_self','_parent','_top','framename'
+         * @param  String | Object   selector  CSS3 selector (String only), XPath or regex object
+         * @param  String                      A HTML target '_blank','_self','_parent','_top','framename'
          * @return Boolean
          */
         this.forceTarget = function forceTarget(selector, target) {
@@ -407,9 +411,9 @@
 
 
         /**
-         * Convert a Xpath or a css Selector into absolute css3 selector
+         * Convert a Xpath, Regex or a css Selector into absolute css3 selector
          *
-         * @param  String|Object     selector    CSS3/XPath selector
+         * @param  String|Object     selector    CSS3/XPath/Regex selector
          * @param  HTMLElement|null  scope       Element to search child elements within
          * @param  String            limit       Parent limit NodeName
          * @return String
@@ -460,7 +464,7 @@
 
         /**
          * Retrieves bounding rect coordinates of the HTML element matching the
-         * provided CSS3 selector in the following form:
+         * provided CSS3/XPath/Regex selector in the following form:
          *
          * {top: y, left: x, width: w, height:, h}
          *
@@ -483,7 +487,7 @@
 
         /**
          * Retrieves the list of bounding rect coordinates for all the HTML elements matching the
-         * provided CSS3 selector, in the following form:
+         * provided CSS3/XPath/Regex selector, in the following form:
          *
          * [{top: y, left: x, width: w, height:, h},
          *  {top: y, left: x, width: w, height:, h},
@@ -512,7 +516,7 @@
         /**
          * Retrieves information about the node matching the provided selector.
          *
-         * @param  String|Object  selector  CSS3/XPath selector
+         * @param  String|Object  selector  CSS3/XPath/Regex selector
          * @return Object
          */
         this.getElementInfo = function getElementInfo(selector) {
@@ -539,7 +543,7 @@
         /**
          * Retrieves information about the nodes matching the provided selector.
          *
-         * @param  String|Object  selector  CSS3/XPath selector
+         * @param  String|Object  selector  CSS3/XPath/Regex selector
          * @return Array
          */
         this.getElementsInfo = function getElementsInfo(selector) {
@@ -605,6 +609,65 @@
          */
         this.xpathNamespaceResolver = function xpathNamespaceResolver(prefix) {
           return XPATH_NAMESPACE[prefix] || null;
+        };
+
+        /**
+         * Retrieves a single DOM element matching a given tag and attributes object.
+         *
+         * @param  String            tag         Tag name to be searched
+         * @param  Object            attributes  The object containing the attribute name as key, and the regex as value
+         * @param  HTMLElement|null  scope       Element to search child elements within
+         * @return HTMLElement or null
+         */
+        this.getElementByRegex = function getElementByRegex(tag, attributes, scope) {
+            var self = this;
+            scope = scope || this.options.scope;
+            var result = null;
+            [].every.call(scope.getElementsByTagName(tag), function _every(currElement) {
+                if (self.regexResolver(currElement, attributes)) {
+                    result = currElement;
+                    return false;
+                }
+                return true;
+            });
+            return result;
+        };
+
+        /**
+         * Retrieves all DOM elements matching a given tag and attributes object.
+         *
+         * @param  String            tag         Tag name to be searched
+         * @param  Object            attributes  The object containing the attribute name as key, and the regex string as value
+         * @param  HTMLElement|null  scope       Element to search child elements within
+         * @return Array
+         */
+        this.getElementsByRegex = function getElementsByRegex(tag, attributes, scope) {
+            var self = this;
+            scope = scope || this.options.scope;
+            var result = [];
+            [].every.call(scope.getElementsByTagName(tag), function _every(currElement) {
+                if (self.regexResolver(currElement, attributes)) {
+                    result.push(currElement);
+                }
+                return true;
+            });
+            return result;
+        };
+
+        /**
+         * Returns true if the currElement matches the regex in the attributes object.
+         *
+         * @param  HTMLElement       currElement  The element we are performing the regex check against
+         * @param  Object            attributes   The object containing the attribute name as key, and the regex as value
+         * @return Boolean
+         */
+        this.regexResolver = function regexResolver(currElement, attributes) {
+            for (var key in attributes) {
+                if (!currElement.getAttribute(key) || !currElement.getAttribute(key).match(new RegExp(attributes[key]))) {
+                    return false;
+                }
+            }
+            return true;
         };
 
         /**
@@ -751,7 +814,10 @@
             type = type || 'xpath'; // default type
             var ret;
 
-            if (typeof selector === "object") { // selector object (CSS3 | XPath) could by passed
+            if (typeof selector === "object") { // selector object (CSS3 | XPath | Regex) could by passed
+                if (type === 'regex' && selector.type === 'regex') {
+                    return selector;
+                }
                 selector = selector.path;
             }
 
@@ -781,7 +847,7 @@
          * Dispatches a mouse event to the DOM element behind the provided selector.
          *
          * @param  String   type      Type of event to dispatch
-         * @param  String   selector  A CSS3 selector to the element to click
+         * @param  String   selector  A CSS3/XPath/Regex selector to the element to click
          * @param  {Number} x         X position
          * @param  {Number} y         Y position
          * @return Boolean
@@ -836,6 +902,14 @@
          *         path: <a string>
          *     }
          *
+         * or
+         *
+         *     selectorObject = {
+         *         type: <'regex'>,
+         *         tag:  <a string>,
+         *         attributes: <an object>,
+         *     }
+         *
          * @param  String|Object  selector  The selector string or object
          *
          * @return an object containing 'type' and 'path' keys
@@ -843,6 +917,9 @@
         this.processSelector = function processSelector(selector) {
             var selectorObject = {
                 toString: function toString() {
+                    if (this.type === 'regex') {
+                        return 'regex tag: ' + this.tag + ' attributes: ' + JSON.stringify(this.attributes);
+                    }
                     return this.type + ' selector: ' + this.path;
                 }
             };
@@ -853,10 +930,17 @@
                 return selectorObject;
             } else if (typeof selector === "object") {
                 // validation
-                if (!selector.hasOwnProperty('type') || !selector.hasOwnProperty('path')) {
+                if (!selector.hasOwnProperty('type')) {
                     throw new Error("Incomplete selector object");
                 } else if (SUPPORTED_SELECTOR_TYPES.indexOf(selector.type) === -1) {
                     throw new Error("Unsupported selector type: " + selector.type);
+                }
+                if (selector.type === 'regex') {
+                    if (!selector.hasOwnProperty('tag') || !selector.hasOwnProperty('attributes')) {
+                        throw new Error("Incomplete selector object");
+                    }
+                } else if (!selector.hasOwnProperty('path')) {
+                    throw new Error("Incomplete selector object");
                 }
                 if (!selector.hasOwnProperty('toString')) {
                     selector.toString = selectorObject.toString;
@@ -954,12 +1038,12 @@
         };
 
         /**
-         * Sets a value to form element by CSS3 or XPath selector.
+         * Sets a value to form element by CSS3, XPath or Regex selector.
          *
          * With makeSelector() helper can by easily used with name or label selector
          *     @exemple setFieldValue(this.makeSelector('email', 'name'), 'value')
          *
-         * @param String|Object            CSS3|XPath selector
+         * @param String|Object            CSS3|XPath|Regex selector
          * @param Mixed                    Input value
          * @param HTMLElement|String|null  scope Element to search child elements within
          * @return bool
@@ -1099,7 +1183,7 @@
         /**
          * Checks if any element matching a given selector is visible in remote page.
          *
-         * @param  String  selector  CSS3 selector
+         * @param  String | Object   selector  CSS3 selector (String only), XPath or regex object
          * @return Boolean
          */
         this.visible = function visible(selector) {
@@ -1109,7 +1193,7 @@
         /**
          * Checks if all elements matching a given selector are visible in remote page.
          *
-         * @param  String  selector  CSS3 selector
+         * @param  String | Object   selector  CSS3 selector (String only), XPath or regex object
          * @return Boolean
          */
         this.allVisible = function allVisible(selector) {
