@@ -295,7 +295,7 @@ CasperError.prototype = Object.getPrototypeOf(new Error());
             return resolved;
         }
         function localModulePath(path) {
-            return resolveFile(path, phantom.casperScriptBaseDir || fs.workingDirectory);
+            return resolveFile(path, fs.workingDirectory || phantom.casperScriptBaseDir);
         }
         var patchedRequire = function patchedRequire(path) {
             try {
