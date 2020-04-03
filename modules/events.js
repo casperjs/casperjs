@@ -65,7 +65,7 @@ EventEmitter.prototype.setMaxListeners = function(nb) {
  *
  * @param  Array     args...  The rest of arguments passed to fn
  * @return Boolean
- * @throws {Error}            If invokation failed.
+ * @throws {Error}            If invocation failed.
  */
 EventEmitter.prototype.emit = function emit() {
     "use strict";
@@ -146,7 +146,7 @@ EventEmitter.prototype.emit = function emit() {
  * @param  String    type      An event name.
  * @param  function  filterFn  An options callback to apply on event.
  * @return EventEmitter        A reference to the EventEmitter so calls can be chained
- * @throws {CasperError}       If invokation failed.
+ * @throws {CasperError}       If invocation failed.
  */
 EventEmitter.prototype.addListener = function addListener(type, listener) {
     "use strict";
@@ -201,7 +201,7 @@ EventEmitter.prototype.addListener = function addListener(type, listener) {
  * @param  String    type      An event name.
  * @param  function  filterFn  An options callback to apply on event.
  * @return EventEmitter        A reference to the EventEmitter so calls can be chained
- * @throws {CasperError}       If invokation failed.
+ * @throws {CasperError}       If invocation failed.
  */
 EventEmitter.prototype.prependListener = function prependListener(type, listener) {
     "use strict";
@@ -267,7 +267,7 @@ EventEmitter.prototype.on = EventEmitter.prototype.addListener;
  * @param  String    type      An event name.
  * @param  function  filterFn  An options callback to apply on event.
  * @return EventEmitter        A reference to the EventEmitter so calls can be chained
- * @throws {CasperError}       If invokation failed.
+ * @throws {CasperError}       If invocation failed.
  */
 EventEmitter.prototype.once = function once(type, listener) {
     "use strict";
@@ -293,7 +293,7 @@ EventEmitter.prototype.once = function once(type, listener) {
  * @param  String    type      An event name
  * @param  function  filterFn  An options callback to apply on event
  * @return EventEmitter        A reference to the EventEmitter so calls can be chained
- * @throws {CasperError}      If invokation failed.
+ * @throws {CasperError}      If invocation failed.
  */
 EventEmitter.prototype.removeListener = function removeListener(type, listener) {
     "use strict";
@@ -417,7 +417,7 @@ EventEmitter.prototype.removeAllFilters = function removeAllFilters(type) {
  * @param  String    type      An event name
  * @param  function  filterFn  An options callback to apply on event
  * @return Boolean
- * @throws {CasperError}       If invokation failed
+ * @throws {CasperError}       If invocation failed
  */
 EventEmitter.prototype.setFilter = function setFilter(type, filterFn) {
     "use strict";
