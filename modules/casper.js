@@ -280,7 +280,7 @@ Casper.prototype.bypass = function bypass(nb) {
  * @param  {String}   method  Method name
  * @return {...args}          Arguments
  * @return {Mixed}
- * @throws {CasperError}      If invokation failed.
+ * @throws {CasperError}      If invocation failed.
  */
 Casper.prototype.callUtils = function callUtils(method) {
     "use strict";
